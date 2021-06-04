@@ -259,10 +259,14 @@ def creaComputo(arg=1):
         (opz, ))
     autoexec()
     if arg == 1:
-        DLG.MsgBox(
-            "Prima di procedere è consigliabile salvare il lavoro.\n"
-            "Provvedi subito a dare un nome al file di computo...",
-            "Dai un nome al file...")
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text='''        Prima di procedere è consigliabile dare un nome al file.
+
+Lavorando su un file senza nome, potresti avere dei malfunzionamenti.''')
+        # ~DLG.MsgBox(
+            # ~"Prima di procedere è consigliabile salvare il lavoro.\n"
+            # ~"Provvedi subito a dare un nome al file di computo...",
+            # ~"Dai un nome al file...")
         salva_come()
         DlgMain()
     return document
@@ -412,7 +416,9 @@ def MENU_invia_voce():
         if oSheet.getCellByPosition(
                 0,
                 LeggiPosizioneCorrente()[1]).CellStyle not in ('EP-Cs', 'EP-aS'):
-            DLG.MsgBox('La posizione di PARTENZA non è corretta.', 'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='La posizione di PARTENZA non è corretta.')
+            # ~DLG.MsgBox('La posizione di PARTENZA non è corretta.', 'ATTENZIONE!')
             return
         analisi = getAnalisi(oSheet)[0]
         lrow = getAnalisi(oSheet)[1][0]
@@ -516,9 +522,12 @@ def MENU_invia_voce():
             SR = oRangeAddress.StartRow
             SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
         except AttributeError:
-            DLG.MsgBox(
-                'La selezione delle voci dal COMPUTO di partenza\ndeve essere contigua.',
-                'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='''La selezione delle voci dal COMPUTO
+di partenza deve essere contigua.''')
+            # ~DLG.MsgBox(
+                # ~'La selezione delle voci dal COMPUTO di partenza\ndeve essere contigua.',
+                # ~'ATTENZIONE!')
             return
         ER = oRangeAddress.EndRow
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
@@ -532,7 +541,9 @@ def MENU_invia_voce():
                 lista.append(codice_voce(el))
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
-            DLG.MsgBox('Il foglio di destinazione non è corretto.', 'ATTENZIONE!')
+            # ~DLG.MsgBox('Il foglio di destinazione non è corretto.', 'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='Il foglio di destinazione non è corretto.')
             oDoc.CurrentController.select(
                 oDoc.createInstance(
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -547,7 +558,9 @@ def MENU_invia_voce():
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
                 lrow = LeggiPosizioneCorrente()[1] + 1
             elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
-                DLG.MsgBox('La posizione di destinazione non è corretta.', 'ATTENZIONE!')
+                # ~DLG.MsgBox('La posizione di destinazione non è corretta.', 'ATTENZIONE!')
+                Dialogs.Exclamation(Title = 'ATTENZIONE!',
+                Text='La posizione di destinazione non è corretta.')
                 # unselect
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
                 return
@@ -585,7 +598,9 @@ def MENU_invia_voce():
             paste_clip(insCells=1)
             # EliminaVociDoppieElencoPrezzi()
         if nSheetDCC in ('Elenco Prezzi'):
-            DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
+            # ~DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text="Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
             return
         oDoc.CurrentController.select(
             oDoc.createInstance(
@@ -1891,9 +1906,12 @@ def voce_breve():
     elif oSheet.Name == 'CONTABILITA':
         oSheet = oDoc.getSheets().getByName('S1')
         if oDoc.NamedRanges.hasByName("#Lib#1"):
-            DLG.MsgBox(
-                "Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
-                'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='''Risulta già registrato un SAL, quindi
+    NON E' POSSIBILE PROCEDERE.''')
+            # ~DLG.MsgBox(
+                # ~"Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
+                # ~'ATTENZIONE!')
             return
         else:
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
@@ -2804,9 +2822,12 @@ def EliminaVociDoppieElencoPrezzi():
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     riordina_ElencoPrezzi(oDoc)
     if len(set(lista_tar)) != len(set(lista_come_array)):
-        DLG.MsgBox(
-            'Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo pur essendo diverse.',
-            'C o n t r o l l a!')
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='''Ci sono ancora 2 o più voci che hanno
+lo stesso Codice Articolo pur essendo diverse.''')
+        # ~DLG.MsgBox(
+            # ~'Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo pur essendo diverse.',
+            # ~'C o n t r o l l a!')
 
 
 ########################################################################
@@ -3416,9 +3437,12 @@ def XPWE_out(elaborato, out_file):
         of.write(riga)
         # ~MsgBox('Esportazione in formato XPWE eseguita con successo\nsul file ' + out_file + '!','Avviso.')
     except Exception:
-        DLG.MsgBox(
-            'Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!',
-            'E R R O R E !')
+        Dialogs.Exclamation(Title = 'E R R O R E !',
+            Text='''               Esportazione non eseguita!
+Verifica che il file di destinazione non sia già in uso!''')
+        # ~DLG.MsgBox(
+            # ~'Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!',
+            # ~'E R R O R E !')
 
     EnableAutoCalc()
 
@@ -4177,7 +4201,9 @@ def seleziona(lrow=None):
             else:
                 SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except AttributeError:
-            DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
+            # ~DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='''La selezione deve essere contigua.''')
             return 0
         if lrow is not None:
             ER = oRangeAddress.EndRow
@@ -4224,7 +4250,9 @@ def seleziona(lrow=None):
             else:
                 SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except AttributeError:
-            DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
+            # ~DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text='''La selezione deve essere contigua.''')
             return 0
         if lrow is not None:
             ER = oRangeAddress.EndRow
@@ -6771,12 +6799,13 @@ def MENU_converti_stringhe():
         sCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
         eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
         eCol = oDoc.getCurrentSelection().getRangeAddress().EndColumn
+    if '/' in oSheet.getCellByPosition(sCol, sRow).String:
+                setFormatoNumeri(36) #imposta il formato numerico data dd/mm/yyyy
     for y in range(sCol, eCol + 1):
         for x in range(sRow, eRow + 1):
             try:
                 if oSheet.getCellByPosition(y, x).Type.value == 'TEXT':
                     if '/' in oSheet.getCellByPosition(y, x).String:
-                        setNumberFormat(36) #imposta il formato numerico data dd/mm/yyyy
                         oSheet.getCellByPosition(y, x).Formula = '=DATEVALUE("' + oSheet.getCellByPosition(y, x).String + '")'
                         oSheet.getCellByPosition(y, x).Value = oSheet.getCellByPosition(y, x).Value
                     else:
@@ -6978,7 +7007,9 @@ def filtra_codice(voce=None):
         if not voce:
             voce = oSheet.getCellByPosition(1, sopra + 1).String
     else:
-        DLG.MsgBox('Devi prima selezionare una voce di misurazione.', 'Avviso!')
+        # ~DLG.MsgBox('Devi prima selezionare una voce di misurazione.', 'Avviso!')
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text='''Devi prima selezionare una voce di misurazione.''')
         return
     fine = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
 
@@ -7797,7 +7828,9 @@ def XPWE_export_run():
     for el in lista:
         XPWE_out(el, out_file)
         testo = testo + '● ' + out_file + '-' + el + '.xpwe\n\n'
-    DLG.MsgBox('Esportazione in formato XPWE eseguita con successo su:\n' + testo, 'Avviso.')
+    # ~DLG.MsgBox('Esportazione in formato XPWE eseguita con successo su:\n' + testo, 'Avviso.')
+    Dialogs.Info(Title = 'Avviso.',
+    Text='Esportazione in formato XPWE eseguita con successo su:\n' + testo)
 
 
 ########################################################################
@@ -8512,9 +8545,11 @@ def descrizione_in_una_colonna(flag=False):
                 oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
     if oDoc.getSheets().hasByName('CONTABILITA'):
         if oDoc.NamedRanges.hasByName("#Lib#1"):
-            DLG.MsgBox(
-                "Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
-                'ATTENZIONE!')
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text="Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.")
+            # ~DLG.MsgBox(
+                # ~"Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
+                # ~'ATTENZIONE!')
             return
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByName('C23').merge(flag)
@@ -8916,7 +8951,9 @@ def trova_ricorrenze():
     lista_ricorrenze = ricorrenze()
     LeenoUtils.setGlobalVar('lista_ricorrenze', lista_ricorrenze)
     if len(lista_ricorrenze) == 0:
-        DLG.MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
+        # ~DLG.MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
+        Dialogs.Info(Title = 'Informazione',
+        Text="Non ci sono voci di prezzo ricorrenti.")
         return
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
@@ -9105,7 +9142,10 @@ def MENU_filtro_descrizione():
     lRow = SheetUtils.sStrColtoList(descrizione, 2, oSheet, y)
     if len(lRow) == 0:
         progress.hide()
-        DLG.MsgBox('''Testo non trovato.''', 'ATTENZIONE!')
+        # ~DLG.MsgBox('''Testo non trovato.''', 'ATTENZIONE!')
+        Dialogs.Exclamation (Title = 'ATTENZIONE!',
+        Text="Testo non trovato.")
+
         return
     el_y = list()
     for y in lRow:

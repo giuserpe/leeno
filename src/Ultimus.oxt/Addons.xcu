@@ -328,7 +328,7 @@
               <value>%origin%/icons/image21B</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
+              <value>Elimina codici doppi in Elenco Prezzi</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

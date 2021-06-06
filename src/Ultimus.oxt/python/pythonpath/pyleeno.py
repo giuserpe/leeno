@@ -261,10 +261,10 @@ def creaComputo(arg=1):
     if arg == 1:
         Dialogs.Exclamation(Title = 'ATTENZIONE!',
         Text='''
- Prima di procedere è consigliabile
-       dare un nome al file.
+Prima di procedere è consigliabile
+        dare un nome al file.
   Lavorando su un file senza nome
-potresti avere dei malfunzionamenti.
+potresti avere dei malfunzionamenti.\n
 ''')
         # ~DLG.MsgBox(
             # ~"Prima di procedere è consigliabile salvare il lavoro.\n"

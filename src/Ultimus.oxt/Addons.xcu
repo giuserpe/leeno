@@ -1731,7 +1731,7 @@
                   <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36</value>
+                  <value>%origin%/icons/image36b</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Duplica il foglio attivo...</value>
@@ -1745,7 +1745,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_leeno_conf</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.set_area_stampa</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image36</value>
@@ -1765,7 +1765,7 @@
                   <value>vnd.sun.star.script:UltimusFree2.Finale.Pulisci_Tabella_Tutta?language=Basic&amp;location=application</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36</value>
+                  <value>%origin%/icons/image36b</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Sbianca il foglio (nasconde i colori)</value>

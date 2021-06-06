@@ -939,25 +939,6 @@
               </node>
             </node>
           </node>
-          <!--
-               <node oor:name="m02" oor:op="replace">
-               <prop oor:name="Context" oor:type="xs:string">
-               <value>com.sun.star.sheet.SpreadsheetDocument</value>
-               </prop>
-               <prop oor:name="URL" oor:type="xs:string">
-               <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Ripristina_controlli_con_nuovaFinestra?language=Basic&amp;location=application</value>
-               </prop>
-               <prop oor:name="ImageIdentifier" oor:type="xs:string">
-               <value>%origin%/icons/image13</value>
-               </prop>
-               <prop oor:name="Title" oor:type="xs:string">
-               <value>Ripristina Controlli (REFRESH)</value>
-               </prop>
-               <prop oor:name="Target" oor:type="xs:string">
-               <value>_self</value>
-               </prop>
-               </node>
-          -->
           <node oor:name="m03" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -985,25 +966,6 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m2U07" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/image35</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>Duplica il foglio attivo > in DCC (Doc Contab. Corrente)</value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U07.2" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1880,6 +1842,7 @@
               </node>
             </node>
           </node>
+<!--
           <node oor:name="m32" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1897,6 +1860,7 @@
               <value>_self</value>
             </prop>
           </node>
+-->
           <node oor:name="m40" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>

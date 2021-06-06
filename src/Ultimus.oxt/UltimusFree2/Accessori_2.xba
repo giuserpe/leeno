@@ -15,19 +15,6 @@
 
 &apos;Option Explicit
 
-
-sub SwitchDesign &apos;Bozza_on_off 101221 &apos; questo è lo switc
-&apos; 	SwitchDesignMode() &apos; basta questa riga
-&apos;	ThisComponent.ApplyFormDesignMode = False &apos;True
-ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 1)
-&apos;exit sub
-	 If isDesignModeOn() Then
-	&apos; 		ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 1)
-	 	else
-	 &apos;		ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 0)
-	 end if
-end sub
-
 Sub ToggleToolbarVisible(oDoc, sURL, prepinac)
  Dim oLayout
  oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -53,61 +40,6 @@ Sub ToggleToolbarVisible(oDoc, sURL, prepinac)
 End Sub
 
 
-
-Sub Bozza_ON &apos;101221
- If NOT isDesignModeOn() Then
-	 SwitchDesignMode()
- 	ThisComponent.ApplyFormDesignMode = True
- end if
-End Sub
-
-sub Bozza_OFF &apos;(quindi esegue) 101221
- If isDesignModeOn() Then
-	 SwitchDesignMode()
-	 ThisComponent.ApplyFormDesignMode = True
- End If
-end sub
-
-Function isDesignModeOn() As Boolean
- Dim oFrame &apos; Current frame
- Dim oDisp &apos; The created dispatcher
- Dim oParser &apos; URL Transformer to parse the URL.
- Dim oStatusListener &apos; The status listener that is created
- Dim sListenerName &apos; The type of listener that is created
- Dim oUrl as New com.sun.star.util.URL
-
- rem Location 3 is used to prevent the state from being
- rem recorded more than once. Probably not really required.
- repository(3, True)
-
- rem Parse the URL as required
- rem and then save it in the registry at location 0.
- oUrl.Complete = &quot;.uno:SwitchControlDesignMode&quot;
- oParser = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
- oParser.parseStrict(oUrl)
- repository(0, oUrl)
-
- rem See if the current Frame supports this UNO command
- rem then save the dispatch in the registry.
- oFrame = ThisComponent.getCurrentController().getFrame()
- oDisp = oFrame.queryDispatch(oUrl,&quot;&quot;,0)
- repository(1, oDisp)
-
- rem Create the status listener and save a reference to it in the repository
- If (Not IsNull(oDisp)) Then
- sListenerName = &quot;com.sun.star.frame.XStatusListener&quot;
- oStatusListener = CreateUnoListener(&quot;Status_&quot;, sListenerName)
- repository(2, oStatusListener)
- oDisp.addStatusListener(oStatusListener, oURL)
- isDesignModeOn = repository(4)
- Else
- isDesignModeOn = False
- End If
-End Function
-
-rem The definition of the listener requires this, but we do not use this.
-Function Status_disposing(oEvt)
-End Function
 
 rem This is called whtn the status changes. In other words, when
 rem the design mode is toggled and when the listener is first created.
@@ -148,20 +80,6 @@ Function repository(n As Integer, Optional x)
  repository = oObj(n)
 End Function
 
-
-Sub sproteggi_sheet_corrente
-
-	oSheet = ThisComponent.currentController.activeSheet
-&apos; oSheet.protect(&quot;&quot;)
-&apos; oSheet.unprotect(&quot;&quot;)
- ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
-&apos;Dim myProtection As New com.sun.star.util.CellProtection
-&apos;ocell = mysheet.getCellByPosition(0,0)
-&apos;myProtection.IsLocked=false
-&apos;oCell.CellProtection=myProtection
-&apos;oSheet.protect()
-
-End Sub
 
 Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;
 &apos; credo in tutto il doc... ____ Alt K _______

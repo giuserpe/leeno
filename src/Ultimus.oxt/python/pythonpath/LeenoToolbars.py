@@ -4,6 +4,8 @@ Gestione delle toolbars di LeenO
 '''
 from com.sun.star.awt import Point
 
+import os
+import sys
 import LeenoUtils
 from LeenoConfig import Config
 
@@ -25,6 +27,14 @@ def Vedi(arg=None):
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
     '''
     oDoc = LeenoUtils.getDocument()
+
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        var = 'HOME'
+    else:
+        var = 'HOMEPATH'
+    if 'giuserpe' in os.getenv(var):
+        On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 1)
+
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
@@ -34,7 +44,6 @@ def Vedi(arg=None):
         else:
             # toolbar contestualizzate
             AllOff()
-        #  oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         Ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name
@@ -48,8 +57,12 @@ def Vedi(arg=None):
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
         elif nSheet == 'CONTABILITA':
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
-            # ~ On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
+            On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+            #accende la toolbar delle categorie solo sulla postazione di giuserpe
+            if 'giuserpe' in os.getenv(var):
+                On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+
     except Exception:
         pass
     #~PL.fissa()

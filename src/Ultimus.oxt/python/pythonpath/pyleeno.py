@@ -261,9 +261,9 @@ def creaComputo(arg=1):
     if arg == 1:
         Dialogs.Exclamation(Title = 'ATTENZIONE!',
         Text='''
-Prima di procedere è consigliabile
-        dare un nome al file.
-  Lavorando su un file senza nome
+Prima di procedere è
+meglio dare un nome al file.
+Lavorando su un file senza nome
 potresti avere dei malfunzionamenti.\n
 ''')
         # ~DLG.MsgBox(
@@ -803,9 +803,7 @@ def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany o eric6'''
     basic_LeenO('file_gest.avvia_IDE')
     oDoc = LeenoUtils.getDocument()
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    oLayout.showElement(
-        "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
     try:
         if oDoc.getSheets().getByName('S1').getCellByPosition(
                 7, 338).String == '':
@@ -7231,6 +7229,7 @@ def autoexec_off():
     oDoc = LeenoUtils.getDocument()
     Toolbars.AllOff()
     LeenoEvents.pulisci()
+    Toolbars.On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 0)
     for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA',
                'Analisi di Prezzo'):
         try:
@@ -7307,17 +7306,6 @@ def autoexec():
         oGSheetSettings.MoveDirection = 1
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(True)
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        var = 'HOME'
-    else:
-        var = 'HOMEPATH'
-    if 'giuserpe' in os.getenv(var):
-        oLayout.showElement(
-            "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-    else:
-        oLayout.hideElement(
-            "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
     #  If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -7898,7 +7886,7 @@ def DlgMain():
     '''
     Visualizza il menù principale dialog_fil
     '''
-
+    LeenoEvents.assegna()
     oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -8233,9 +8221,6 @@ def make_pack(bar=0):
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
-#        oLayout = oDoc.CurrentController.getFrame().LayoutManager
-        # ~oLayout.hideElement(
-            # ~"private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'

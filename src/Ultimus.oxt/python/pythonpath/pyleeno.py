@@ -2606,6 +2606,7 @@ Cancello le voci di misurazione?
     #  else:
     GotoSheet('VARIANTE')
     ScriviNomeDocumentoPrincipale()
+    Menu_adattaAltezzaRiga()
     LeenoEvents.assegna()
 
 

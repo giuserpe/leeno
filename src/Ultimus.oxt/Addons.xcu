@@ -1499,40 +1499,6 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m17" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Accessori.Copia_Righe_Inserisci_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image39</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>COPIA un range di righe in nuova posizione</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
-          <node oor:name="m18" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Accessori.Sposta_Righe_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image38</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>SPOSTA un range di righe in nuova posizione</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
           <node oor:name="m19" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />

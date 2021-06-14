@@ -7886,7 +7886,6 @@ def DlgMain():
     '''
     Visualizza il menù principale dialog_fil
     '''
-    LeenoEvents.assegna()
     oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -7967,6 +7966,7 @@ def DlgMain():
     oDlgMain.getControl('CheckBox1').State = int(
         cfg.read('Generale', 'dialogo'))
     #  _gotoCella(x, y)
+    LeenoEvents.assegna()
     oDlgMain.execute()
     sString = oDlgMain.getControl("Label_DDC").Text
     if oDlgMain.getControl('CheckBox1').State == 1:

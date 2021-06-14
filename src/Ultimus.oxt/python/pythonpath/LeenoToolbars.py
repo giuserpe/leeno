@@ -34,6 +34,8 @@ def Vedi(arg=None):
         var = 'HOMEPATH'
     if 'giuserpe' in os.getenv(var):
         On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 1)
+    else:
+        On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 0)
 
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager

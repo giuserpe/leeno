@@ -60,10 +60,11 @@ def Vedi(arg=None):
         elif nSheet == 'CONTABILITA':
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
-            On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
             #accende la toolbar delle categorie solo sulla postazione di giuserpe
             if 'giuserpe' in os.getenv(var):
                 On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+            else:
+                On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 0)
 
     except Exception:
         pass

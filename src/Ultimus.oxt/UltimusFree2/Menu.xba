@@ -19,17 +19,19 @@ rem ######################################################################
 Sub _nuove_icone
 &apos;https://icons8.com/icon/set/tools/all
 &apos;https://openclipart.org/search/?query=dannya&amp;page=1
-	sURL = LeenO_path +&quot;/icons/leeno.png&quot;
-	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
+&apos;	print LeenO_path
+	LeenO_path = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt&quot;
+	sURL = LeenO_path +&quot;/icons/leeno.svg&quot;
+	sName = Replace_G(sURL, &quot;.svg&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
-	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	Filecopy sURL, sNewURL
 	sNewURL= sName + &quot;_26.bmp&quot;
 	Filecopy sURL, sNewURL 
 	sNewURL= sName + &quot;_16h.bmp&quot;
 	Filecopy sURL, sNewURL
 	sNewURL= sName + &quot;_16.bmp&quot;
 	Filecopy sURL, sNewURL
-	kill (sURL)
+&apos;	kill (sURL)
 End Sub
 
 rem ######################################################################

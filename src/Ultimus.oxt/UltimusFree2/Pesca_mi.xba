@@ -35,10 +35,6 @@ Sub Ricicla_Misure
 	End If
 End Sub
 
-Sub ANNULLALA
-	sMemoPesca = &quot;&quot;
-End Sub
-
 function cerca_partenza
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 

@@ -137,44 +137,9 @@ oSheets = odoc.Sheets
 	sRangeDest = &quot;COMPUTO.B&quot;+ (lrow+1 ) &apos;
 	
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
-
- &apos; oCell = oSheet.getCellByPosition( 0 , lrow)
- 
-&apos;	lrow = oRangeVC.RangeAddress.EndRow -1
-&apos;&apos;	lrowE = lrow
-&apos;oCell = oSheet.getCellByPosition( 1 , lrow )
- &apos;	 ThisComponent.CurrentController.Select(oCell)	
-&apos;print &quot;appena copiato&quot;
-&apos;	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$AI$48&quot;
-&apos;	sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+2 )
-&apos;	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
-	&apos; ok! Sistemata anche la riga sommano
-	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
-
- &apos; oCell = oSheet.getCellByPosition( 1 , lrow-1)
- &apos; xA =oCell.String	
- &apos; ThisComponent.CurrentController.Select(oCell)
- 
-&apos;	Do while xA = &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
-&apos; 		sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+1 )
- &apos;	 TargetCell = oSheetN+&quot;.A&quot;+ (lrow+1 )
-&apos; 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$AI$47&quot;	 
-&apos; 		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
-&apos; 		lrow=lrow-1
-&apos; 	 oCell = oSheet.getCellByPosition( 1 , lrow)
- 	 &apos; ThisComponent.CurrentController.Select(oCell)
- &apos;	 Print&quot; copiato&quot;
-&apos; 	 xA =oCell.String	 
-&apos;	loop
-	
-	&apos;oCell = oSheet.getCellByPosition( 1 , lrowE+3)
 	
 	 Riformatta_Voce_Computo_3_MOD = lEndRow
-&apos;	 oCell = oSheet.getCellByPosition( 1 , lEndRow)
-&apos;	 ThisComponent.CurrentController.Select(oCell)
-&apos;	 print 
 
-&apos; controllare anche le somme???	
 End function
 
 

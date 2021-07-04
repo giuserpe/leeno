@@ -3377,9 +3377,9 @@ def XPWE_out(elaborato, out_file):
                     # quando vedi_voce guarda ad un valore negativo
                 if oSheet.getCellByPosition(4, m).Value < 0:
                     test = True
-                if oSheet.getCellByPosition(11, m).Value != 0:
-                    Quantita.text = '-' + oSheet.getCellByPosition(11,
-                                                                   m).String
+                if elaborato == 'CONTABILITA':
+                    if oSheet.getCellByPosition(11, m).Value != 0:
+                        Quantita.text = '-' + str(oSheet.getCellByPosition(11, m).Value)
                 # #########################
                 Flags = SubElement(RGItem, 'Flags')
                 if '*** VOCE AZZERATA ***' in Descrizione.text:

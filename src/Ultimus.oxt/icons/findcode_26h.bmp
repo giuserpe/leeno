@@ -56,23 +56,22 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g1098"
-       transform="matrix(1.7011031,0,0,1,-5.8402329,0.94411178)">
+       id="g892">
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.548207;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 3.5300632,2.4434227 h 4.8"
+         style="fill:none;stroke:#919191;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 0.16476855,3.3875345 H 8.3300634"
          id="path875" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 3.5300632,4.0663627 h 4.8"
+         style="fill:none;stroke:#919191;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 0.16476855,5.0104745 H 8.3300634"
          id="path879" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 3.5300632,5.6165579 h 4.8"
+         style="fill:none;stroke:#919191;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 0.16476855,6.5606697 H 8.3300634"
          id="path881" />
       <path
-         style="fill:none;stroke:#000000;stroke-width:0.548207;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 3.5300632,0.91303335 h 4.8"
+         style="fill:none;stroke:#919191;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 0.16476855,1.8571451 H 8.3300634"
          id="path1092" />
     </g>
     <circle

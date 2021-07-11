@@ -27,7 +27,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.5517865"
-     inkscape:cx="55.404736"
+     inkscape:cx="55.557366"
      inkscape:cy="16.255108"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -79,16 +79,16 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#919191;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.1263595,0.95710088 H 8.3110702"
        id="path10604" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#919191;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 2.1559303,4.2975829 H 8.3253479"
        id="path10606"
        sodipodi:nodetypes="cc" />
     <rect
-       style="fill:#ffcc00;fill-opacity:1;stroke:#000000;stroke-width:0.125981;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.125981;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="3.9619803"
        height="1.5650178"

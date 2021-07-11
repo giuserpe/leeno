@@ -1683,7 +1683,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/fileprint</value>
+              <value>%origin%/icons/print_ok</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>STAMPA...</value>

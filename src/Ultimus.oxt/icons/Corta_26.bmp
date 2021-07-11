@@ -26,20 +26,39 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
-     inkscape:cy="16"
+     inkscape:zoom="22.627418"
+     inkscape:cx="9.9878828"
+     inkscape:cy="17.412504"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-width="1680"
+     inkscape:window-height="980"
+     inkscape:window-x="1902"
+     inkscape:window-y="17"
      inkscape:window-maximized="0"
-     inkscape:pagecheckerboard="0" />
+     inkscape:pagecheckerboard="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="4.2094951,4.350716"
+       orientation="1,0"
+       id="guide830" />
+    <sodipodi:guide
+       position="0.19988758,3.3267003"
+       orientation="1,0"
+       id="guide831" />
+    <sodipodi:guide
+       position="8.3096121,1.7847105"
+       orientation="1,0"
+       id="guide833" />
+    <sodipodi:guide
+       position="-2.4639322,4.1837241"
+       orientation="0,-1"
+       id="guide1271" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -75,8 +94,9 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 23.733605,5.8110216 -1.534808,-2.6583651 -1.534808,-2.65836499 3.069615,-9e-8 3.069616,-8e-8 -1.534808,2.65836516 z"
-       transform="matrix(0,-0.26458333,-0.26458333,0,8.4975478,10.482061)"
-       inkscape:transform-center-x="0.23445303" />
+       transform="matrix(0.13287572,0.22879768,0.22879768,-0.13287572,0.53490522,-4.0938184)"
+       inkscape:transform-center-x="0.0011961533"
+       inkscape:transform-center-y="0.23341633" />
     <path
        sodipodi:type="star"
        style="fill:#000000;stroke:#000000;stroke-width:0.566929;stroke-linecap:square;paint-order:fill markers stroke"
@@ -92,27 +112,29 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 23.733605,5.8110216 -1.534808,-2.6583651 -1.534808,-2.65836499 3.069615,-9e-8 3.069616,-8e-8 -1.534808,2.65836516 z"
-       transform="matrix(0,-0.26458333,0.26458333,0,-0.01151894,10.519687)"
-       inkscape:transform-center-x="-0.23445307" />
-    <g
-       id="g1109"
-       transform="translate(0,0.67194347)">
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1.737692,2.8771687 h 5"
-         id="path875" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1.9158993,4.2050187 h 4.47012"
-         id="path879" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1.737692,5.6041536 h 5"
-         id="path881" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1.737692,1.4895564 h 5"
-         id="path1103" />
-    </g>
+       transform="matrix(0.13287572,0.22879768,-0.22879768,0.13287572,1.5768454,1.7668878)"
+       inkscape:transform-center-x="-0.0011959481"
+       inkscape:transform-center-y="-0.23341644" />
+    <rect
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect4331"
+       width="8.1330004"
+       height="0.45284429"
+       x="0.19988757"
+       y="2.4782429" />
+    <rect
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5279"
+       width="8.132761"
+       height="0.45284429"
+       x="0.19988757"
+       y="4.065743" />
+    <rect
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect5281"
+       width="8.132761"
+       height="0.45284429"
+       x="0.19988757"
+       y="5.6532431" />
   </g>
 </svg>

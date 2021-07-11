@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="compo_16.svg"
+   sodipodi:docname="compo.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/compo_16.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
@@ -28,7 +28,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="18.53125"
      inkscape:cx="16.026981"
-     inkscape:cy="16"
+     inkscape:cy="15.892074"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      inkscape:document-rotation="0"
@@ -36,8 +36,8 @@
      units="px"
      inkscape:window-width="1440"
      inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-x="1923"
+     inkscape:window-y="97"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="0" />
   <metadata
@@ -60,39 +60,39 @@
      id="layer2"
      inkscape:label="segni">
     <rect
-       style="fill:#fffffe;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
-       width="8.132761"
+       width="8.1330004"
        height="0.45284429"
        x="0.14501795"
        y="0.68694663" />
     <rect
-       style="fill:#fffffe;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5279"
        width="8.132761"
        height="0.45284429"
        x="0.14501795"
        y="2.2744465" />
     <rect
-       style="fill:#fffffe;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5281"
        width="8.132761"
        height="0.45284429"
        x="0.14501795"
        y="3.8619466" />
     <rect
-       style="fill:#fffffe;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5283"
        width="8.132761"
        height="0.45284429"
        x="0.14501795"
        y="5.4494467" />
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.0961748;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.138698;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5285"
-       width="8.1038256"
-       height="0.44533166"
-       x="0.14452751"
-       y="7.0407033" />
+       width="8.0613012"
+       height="0.93108249"
+       x="0.16578926"
+       y="7.0619655" />
   </g>
 </svg>

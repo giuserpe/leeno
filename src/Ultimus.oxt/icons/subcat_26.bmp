@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="subcat_26.svg"
+   sodipodi:docname="subcat.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/subcat_26.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
@@ -26,20 +26,43 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
-     inkscape:cy="16"
+     inkscape:zoom="6.5517865"
+     inkscape:cx="55.404736"
+     inkscape:cy="16.255108"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="1671"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0" />
+     inkscape:pagecheckerboard="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="4.2690275,10.080045"
+       orientation="1,0"
+       id="guide825" />
+    <sodipodi:guide
+       position="2.1559303,10.037212"
+       orientation="1,0"
+       id="guide827" />
+    <sodipodi:guide
+       position="0.1263595,7.509566"
+       orientation="1,0"
+       id="guide829" />
+    <sodipodi:guide
+       position="-0.271276,4.1690838"
+       orientation="0,-1"
+       id="guide828" />
+    <sodipodi:guide
+       position="0.1263595,0.90519129"
+       orientation="0,-1"
+       id="guide1119" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -60,12 +83,16 @@
        d="M 0.1263595,0.95710088 H 8.3110702"
        id="path10604" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.47627;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 1.1337521,4.17574 H 8.3110702"
-       id="path10606" />
-    <path
-       style="fill:none;stroke:#ffc800;stroke-width:1.35552;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 2.2598537,7.5614754 H 8.3110702"
-       id="path24868" />
+       style="fill:none;stroke:#000000;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 2.1559303,4.2975829 H 8.3253479"
+       id="path10606"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#ffcc00;fill-opacity:1;stroke:#000000;stroke-width:0.125981;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect4331"
+       width="3.9619803"
+       height="1.5650178"
+       x="4.2690277"
+       y="6.7489934" />
   </g>
 </svg>

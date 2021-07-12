@@ -519,13 +519,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_voci_azzerate</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nasconde_voci_azzerate</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/elimina_azzerate</value>
+            <value>%origin%/icons/strutt_voci_zero</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Elimina le voci di computo azzerate</value>
+            <value>Nascondi le voci azzerate</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -536,13 +536,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nasconde_voci_azzerate</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_voci_azzerate</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/strutt_voci_zero</value>
+            <value>%origin%/icons/elimina_azzerate</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Nascondi le voci azzerate</value>
+            <value>Elimina le voci di computo azzerate</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

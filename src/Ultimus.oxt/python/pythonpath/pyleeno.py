@@ -5927,8 +5927,8 @@ def rigenera_parziali (arg=False):
         else:
             if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
                 parziale_core(oSheet, i)
-                oDoc.enableAutomaticCalculation(True)
                 break
+    oDoc.enableAutomaticCalculation(True)
     progress.hide()
     return
 

@@ -887,7 +887,6 @@ def Ins_Categorie(n):
     1 = Categoria
     2 = SubCategoria
     '''
-    DisableAutoCalc()
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
@@ -930,7 +929,7 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -975,12 +974,13 @@ def MENU_Rinumera_TUTTI_Capitoli2():
 
 def Rinumera_TUTTI_Capitoli2(oSheet):
     # sistemo gli idcat voce per voce
-    DisableAutoCalc()
+    oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet)
 
     # ricalcola i totali di categorie e subcategorie
     Tutti_Subtotali(oSheet)
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 def Tutti_Subtotali(oSheet):
@@ -2559,7 +2559,7 @@ def scelta_viste():
             dettaglio_misure(0)
             dettaglio_misure(1)
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     # MsgBox('Operazione eseguita con successo!','')
 
 
@@ -2617,10 +2617,10 @@ def genera_sommario():
     '''
     Genera i sommari in Elenco Prezzi
     '''
-    DisableAutoCalc()
     struttura_off()
 
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     lrow = SheetUtils.getUsedArea(oSheet).EndRow
     SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
@@ -2687,7 +2687,7 @@ def genera_sommario():
     formule = tuple(formule)
     oRange.setFormulaArray(formule)
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     progress.hide()
 
@@ -2709,8 +2709,7 @@ def riordina_ElencoPrezzi(oDoc):
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
     #chiudi_dialoghi()
-    #DisableAutoCalc()
-
+    #oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
@@ -2735,7 +2734,7 @@ def riordina_ElencoPrezzi(oDoc):
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     SheetUtils.simpleSortColumn(oRange, 0, True)
 
-    #EnableAutoCalc()
+    #oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -2751,7 +2750,7 @@ def EliminaVociDoppieElencoPrezzi():
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    DisableAutoCalc()
+    oDoc.enableAutomaticCalculation(False)
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
@@ -2819,7 +2818,7 @@ def EliminaVociDoppieElencoPrezzi():
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         tante_analisi_in_ep()
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.ZoomValue = zoom
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     riordina_ElencoPrezzi(oDoc)
@@ -2850,8 +2849,8 @@ def XPWE_out(elaborato, out_file):
     progress.setValue(0)
     progress.show()
 
-    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
     numera_voci(1)
@@ -3446,7 +3445,7 @@ Verifica che il file di destinazione non sia già in uso!''')
             # ~'Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!',
             # ~'E R R O R E !')
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -3848,7 +3847,8 @@ def MENU_analisi_in_ElencoPrezzi():
         oDoc.enableAutomaticCalculation(True)  # sblocco il calcolo automatico
         _gotoCella(1, 3)
     except Exception:
-        oDoc.enableAutomaticCalculation(True)
+        pass
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -3857,9 +3857,9 @@ def tante_analisi_in_ep():
     Trasferisce le analisi all'Elenco Prezzi.
     '''
     chiudi_dialoghi()
-    DisableAutoCalc()
 
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
@@ -3926,7 +3926,7 @@ def tante_analisi_in_ep():
     oSheet.getCellRangeByPosition(13, 3, 13, 3 + len(lista_analisi) -
                                   1).CellStyle = 'EP statistiche_Contab_q'
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     GotoSheet('Elenco Prezzi')
     #  MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 
@@ -3986,10 +3986,10 @@ def MENU_azzera_voce():
     '''
     Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
-    DisableAutoCalc()
+    oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
 
     try:
-        oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             try:
@@ -4084,7 +4084,7 @@ def MENU_azzera_voce():
     except Exception:
         pass
     _gotoCella(0, fine)
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -4321,8 +4321,8 @@ def MENU_elimina_righe():
     '''
     Elimina le righe selezionate anche se non contigue.
     '''
-    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     if oSheet.Name == 'Elenco Prezzi':
@@ -4380,7 +4380,7 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
     if rigen == True:
         rigenera_parziali(False)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 ########################################################################
 def copia_riga_computo(lrow):
@@ -5350,23 +5350,8 @@ def numera_voci(bit=1):  #
 
 
 ########################################################################
-def DisableAutoCalc():
-    '''
-    Disabilita il refresh per accelerare le procedure
-    '''
-    oDoc = LeenoUtils.getDocument()
-    # blocco il calcolo automatico
-    oDoc.enableAutomaticCalculation(False)
 
 
-def EnableAutoCalc():
-    '''
-    Riabilita il refresh
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(True)
-
-########################################################################
 def richiesta_offerta():
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
@@ -5512,7 +5497,7 @@ def ins_voce_elenco():
     Inserisce una nuova riga voce in Elenco Prezzi
     '''
     oDoc = LeenoUtils.getDocument()
-    DisableAutoCalc()
+    oDoc.enableAutomaticCalculation(False)
 
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     _gotoCella(0, 3)
@@ -5549,8 +5534,7 @@ def ins_voce_elenco():
         '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";"',
         titoloInput='Scegli...',
         msgInput='Unità di misura')
-
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -5746,9 +5730,9 @@ def rigenera_tutte(arg=None, ):
     '''
     Ripristina le formule in tutto il foglio
     '''
-    DisableAutoCalc()
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
 
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
@@ -5781,7 +5765,7 @@ def rigenera_tutte(arg=None, ):
     numera_voci()
     fissa()
     progress.hide()
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.ZoomValue = zoom
 
 
@@ -5914,20 +5898,13 @@ def rigenera_parziali (arg=False):
     n = 0
     progress.setValue(n)
     progress.show()
-    test = sopra
     if lrow == True:
         sopra = lrow 
     for i in range(sopra, sotto):
         n += 1
         progress.setValue(n)
-        if test < lrow +1:
-            test += 1
-            if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
-                parziale_core(oSheet, i)
-        else:
-            if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
-                parziale_core(oSheet, i)
-                break
+        if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
+            parziale_core(oSheet, i)
     oDoc.enableAutomaticCalculation(True)
     progress.hide()
     return
@@ -5938,8 +5915,8 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
-    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 #    lrow = LeggiPosizioneCorrente()[1]
 
@@ -5952,7 +5929,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
         ins_voce_contab()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 # nuova_voce_contab  ##################################################
 def ins_voce_contab(lrow=0, arg=1, cod=None):
@@ -6095,9 +6072,9 @@ def inizializza_elenco():
     Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
     '''
     chiudi_dialoghi()
-    DisableAutoCalc()
 
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
 
     zoom = oDoc.CurrentController.ZoomValue
@@ -6189,7 +6166,7 @@ def inizializza_elenco():
     #  oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = zoom
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     #  MsgBox('Rigenerazione del foglio eseguita!','')
 
 
@@ -6966,8 +6943,8 @@ def filtra_codice(voce=None):
     Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
-    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -7053,7 +7030,7 @@ def filtra_codice(voce=None):
         struttura_off()
         progress.hide()
         Dialogs.Info(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     progress.hide()
 
 ########################################################################
@@ -7318,7 +7295,7 @@ def autoexec():
     adegua_tmpl()  # esegue degli aggiustamenti del template
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
     #  vedi = conf.read(path_conf, 'Generale', 'visualizza')
@@ -7466,9 +7443,9 @@ def adegua_tmpl():
     - dal 216 aggiorna le formule in CONTABILITA
     - dal 217 aggiorna le formule in COMPUTO
     '''
-    DisableAutoCalc()
 
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
     # cambiare stile http://bit.ly/2cDcCJI
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
@@ -7633,7 +7610,7 @@ alla versione di LeenO installata?''') == 0:
                     sistema_stili()
                     lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
                     lrow += 1
-                # ~rigenera_tutte() affido la rigenerazione delle formule al menu Viste
+                rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
                 # 214 aggiorna stili di cella per ogni colonna
                 test = SheetUtils.getUsedArea(oSheet).EndRow + 1
                 for y in range(0, test):
@@ -7762,11 +7739,12 @@ alla versione di LeenO installata?''') == 0:
         GotoSheet('COMPUTO')
         progress.hide()
         Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
-    EnableAutoCalc()
-    
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
+
+
 def XPWE_export_run():
     '''
     Visualizza il menù export/import XPWE
@@ -9016,7 +8994,7 @@ def trova_np():
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    DisableAutoCalc()
+    oDoc.enableAutomaticCalculation(False)
 
     struttura_off()
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -9031,7 +9009,7 @@ def trova_np():
             oSheet.group(oCellRangeAddr, 1)
             oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
 
-    EnableAutoCalc()
+    oDoc.enableAutomaticCalculation(True)
 
 
 def debug_syspath():
@@ -9260,7 +9238,8 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
-    catalogo_stili_cella()
+    rigenera_parziali(False)
+    # ~catalogo_stili_cella()
     return
     LeenoAnalysis.MENU_impagina_analisi()
     # ~set_area_stampa()

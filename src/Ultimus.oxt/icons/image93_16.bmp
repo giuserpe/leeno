@@ -7,7 +7,7 @@
    id="svg8"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    sodipodi:docname="image93.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/image93_16.png"
+   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part-agg-26.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -26,27 +26,20 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="16"
-     inkscape:cx="30.3125"
-     inkscape:cy="12.84375"
+     inkscape:zoom="6.9053397"
+     inkscape:cx="-1.8826011"
+     inkscape:cy="17.305448"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1051"
-     inkscape:window-x="1671"
-     inkscape:window-y="-9"
-     inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
-     showguides="true"
-     inkscape:guide-bbox="true">
-    <sodipodi:guide
-       position="4.2498698,11.263395"
-       orientation="1,0"
-       id="guide828" />
-  </sodipodi:namedview>
+     inkscape:window-width="1440"
+     inkscape:window-height="843"
+     inkscape:window-x="1923"
+     inkscape:window-y="83"
+     inkscape:window-maximized="0"
+     inkscape:pagecheckerboard="0" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -62,31 +55,32 @@
      inkscape:label="Livello 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <g
-       id="g3629">
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 0.14,4.7060559 h 8.2"
-         id="path875" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 0.14,6.293556 h 8.2"
-         id="path943" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 0.14,7.8810561 h 8.2"
-         id="path945" />
-    </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:6.10904px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.152726"
-       x="1.6923395"
-       y="3.9866958"
-       id="text1700"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.94967px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none"
+       x="1.7910712"
+       y="4.932229"
+       id="text1039"
+       transform="scale(1.0295701,0.9712792)"
+       inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part_det_26.png"
+       inkscape:export-xdpi="104"
+       inkscape:export-ydpi="104"><tspan
          sodipodi:role="line"
-         id="tspan1698"
-         style="stroke-width:0.152726"
-         x="1.6923395"
-         y="3.9866958">+</tspan></text>
+         id="tspan1037"
+         x="1.7910712"
+         y="4.932229"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.14190979,4.8557775 H 8.3552974"
+       id="path875" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.14190979,6.4432776 H 8.3552974"
+       id="path1184" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.14190979,8.0307777 H 8.3552974"
+       id="path1186" />
   </g>
 </svg>

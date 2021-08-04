@@ -6,8 +6,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="cestino_16.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/cestino_16.bmp.png"
+   sodipodi:docname="cestino.svg"
+   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part_det_26.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -26,18 +26,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="16.026981"
-     inkscape:cy="16"
+     inkscape:zoom="13.810679"
+     inkscape:cx="14.988401"
+     inkscape:cy="21.541301"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
      inkscape:window-width="1440"
-     inkscape:window-height="843"
+     inkscape:window-height="875"
      inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="0" />
   <metadata
@@ -55,21 +55,29 @@
      inkscape:label="Livello 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.99043px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1.13251;stroke-miterlimit:4;stroke-dasharray:none"
+       x="1.2937562"
+       y="6.0713344"
+       id="text1039"
+       transform="scale(1.3827178,0.72321338)"><tspan
+         sodipodi:role="line"
+         id="tspan1037"
+         x="1.2937562"
+         y="6.0713344"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.7152px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ff0000;fill-opacity:1;stroke-width:1.13251;stroke-miterlimit:4;stroke-dasharray:none">-</tspan></text>
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 0.14,5.0600564 H 8.36"
-       id="path879" />
+       style="fill:#ff0000;stroke:#ff0000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.14190979,4.8557775 H 8.3552974"
+       id="path875" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 0.14,6.567935 H 8.36"
-       id="path881" />
+       style="fill:#ff0000;stroke:#ff0000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.13536135,6.4432776 H 8.348749"
+       id="path1182" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 0.14,1.9997885 H 8.36"
-       id="path825" />
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 0.14,3.6167358 H 8.36"
-       id="path827" />
+       style="fill:#ff0000;stroke:#ff0000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 0.14190979,8.0307777 H 8.3552974"
+       id="path1186" />
   </g>
 </svg>

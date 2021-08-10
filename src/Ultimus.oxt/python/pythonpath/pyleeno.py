@@ -597,7 +597,7 @@ di partenza deve essere contigua.''')
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             GotoSheet('Elenco Prezzi')
-            _gotoCella(0, 4)
+            _gotoCella(0, 3)
             paste_clip(insCells=1)
             # EliminaVociDoppieElencoPrezzi()
         if nSheetDCC in ('Elenco Prezzi'):

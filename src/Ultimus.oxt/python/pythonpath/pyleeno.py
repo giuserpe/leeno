@@ -536,7 +536,7 @@ di partenza deve essere contigua.''')
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 100, ER))
 
-        oSheet.getCellRangeByPosition(0, SR, 100, ER).CellBackColor = 15757935
+        oSheet.getCellRangeByPosition(45, SR, 45, ER).CellBackColor = 15757935
 
         lista = list()
         for el in range(SR, ER + 1):
@@ -7029,7 +7029,8 @@ def filtra_codice(voce=None):
     except:
         struttura_off()
         progress.hide()
-        Dialogs.Info(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
+        GotoSheet("Elenco Prezzi")
+        Dialogs.Exclamation(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
     oDoc.enableAutomaticCalculation(True)
     progress.hide()
 

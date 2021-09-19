@@ -9099,7 +9099,7 @@ def MENU_filtro_descrizione():
     else:
         testo = ''
     descrizione = InputBox(
-        testo, t='Inserisci la descrizione da cercare o OK per conferma.')
+        testo, t='Stringa da cercare o OK per conferma.')
     if descrizione in (None, '', ' '):
         return
     y = 4

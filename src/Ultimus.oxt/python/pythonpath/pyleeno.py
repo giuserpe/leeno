@@ -7898,7 +7898,7 @@ def DlgMain():
         pass
 
     sString = oDlgMain.getControl("Label12")
-    sString.Text = version_code.read()#[:-9]
+    sString.Text = version_code.read()[:-9]
     sString = oDlgMain.getControl("Label_DDC")
     sString.Text = LeenoUtils.getGlobalVar('sUltimus')
 
@@ -8196,7 +8196,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    # ~description_upd() # aggiorna description.xml
+    description_upd() # aggiorna description.xml
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()

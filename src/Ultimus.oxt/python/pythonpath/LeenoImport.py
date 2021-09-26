@@ -263,7 +263,7 @@ def MENU_ImportElencoPrezziXML():
     # aggiunge informazioni nel foglio
     oSheet.getRows().insertByIndex(3, 1)
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+    oSheet.getCellByPosition(1, 4).String = '''ATTENZIONE!
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
@@ -290,28 +290,8 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     ''','ATTENZIONE!')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ########################################################################
+
 def MENU_importa_listino_leeno():
     '''
     @@ DA DOCUMENTARE
@@ -460,7 +440,7 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     DLG.MsgBox('Conversione eseguita con successo!', '')
     PL.autoexec()
 
-
+########################################################################
 
 def MENU_basilicata_2020():
     '''
@@ -488,7 +468,7 @@ def MENU_basilicata_2020():
     oSheet = oDoc.getSheets().getByName('SOTTOVOCI')
     PL.GotoSheet('SOTTOVOCI')
     oSheet.getColumns().removeByIndex(0, 4)
-    PL.join_sheets()
+    SheetUtils.MENU_unisci_fogli()
     oSheet = oDoc.getSheets().getByName('unione_fogli')
     PL.GotoSheet('unione_fogli')
     oSheet.getRows().removeByIndex(0, 1)
@@ -581,6 +561,7 @@ def MENU_Piemonte_2019():
                                            len(elenco) - 1)
     oRange.setDataArray(elenco)
 
+########################################################################
 
 def MENU_fuf():
     '''
@@ -676,3 +657,5 @@ def MENU_fuf():
     PL.ordina_col(3)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+
+########################################################################

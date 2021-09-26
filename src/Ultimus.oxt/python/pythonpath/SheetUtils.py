@@ -11,6 +11,8 @@ from com.sun.star.util import SortField
 import LeenoUtils
 import LeenoSettings
 import DocUtils
+import LeenoDialogs as DLG
+
 from datetime import date
 
 '''
@@ -534,3 +536,31 @@ def visualizza_PageBreak(arg=True):
 
 # ###############################################################
 
+def MENU_unisci_fogli():
+    '''
+    unisci fogli
+    serve per unire tanti fogli in un unico foglio
+    '''
+    oDoc = LeenoUtils.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    if not oDoc.getSheets().hasByName('unione_fogli'):
+        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+        unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
+        unione = oDoc.getSheets().getByName('unione_fogli')
+        for el in lista_fogli:
+            oSheet = oDoc.getSheets().getByName(el)
+            oRangeAddress = oSheet.getCellRangeByPosition(
+                0, 0, (getUsedArea(oSheet).EndColumn),
+                (getUsedArea(oSheet).EndRow)).getRangeAddress()
+            oCellAddress = unione.getCellByPosition(
+                0,
+                getUsedArea(unione).EndRow + 1).getCellAddress()
+            oSheet.copyRange(oCellAddress, oRangeAddress)
+        DLG.MsgBox('Unione dei fogli eseguita.', 'Avviso')
+    else:
+        unione = oDoc.getSheets().getByName('unione_fogli')
+        DLG.MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.', 'Avviso!')
+    oDoc.CurrentController.setActiveSheet(unione)
+
+
+# ###############################################################

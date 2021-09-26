@@ -1299,35 +1299,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
                 oSheet.getCellByPosition(31, lrow).Value = 0
 
 ########################################################################
-
-
-def MENU_unisci_fogli():
-    '''
-    unisci fogli
-    serve per unire tanti fogli in un unico foglio
-    '''
-    oDoc = LeenoUtils.getDocument()
-    lista_fogli = oDoc.Sheets.ElementNames
-    if not oDoc.getSheets().hasByName('unione_fogli'):
-        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-        unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
-        unione = oDoc.getSheets().getByName('unione_fogli')
-        for el in lista_fogli:
-            oSheet = oDoc.getSheets().getByName(el)
-            oRangeAddress = oSheet.getCellRangeByPosition(
-                0, 0, (SheetUtils.getUsedArea(oSheet).EndColumn),
-                (SheetUtils.getUsedArea(oSheet).EndRow)).getRangeAddress()
-            oCellAddress = unione.getCellByPosition(
-                0,
-                SheetUtils.getUsedArea(unione).EndRow + 1).getCellAddress()
-            oSheet.copyRange(oCellAddress, oRangeAddress)
-        DLG.MsgBox('Unione dei fogli eseguita.', 'Avviso')
-    else:
-        unione = oDoc.getSheets().getByName('unione_fogli')
-        DLG.MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.', 'Avviso!')
-    oDoc.CurrentController.setActiveSheet(unione)
-
-
+# MENU_unisci_fogli moved to SheetUtils.py 
 ########################################################################
 
 
@@ -9225,6 +9197,401 @@ def calendario():
     except:
         pass
     return
+
+########################################################################
+import LeenoContab
+import itertools
+import operator
+import functools
+import LeenoImport as LI
+# ~from xml.etree.ElementTree import ElementTree, ParseError
+from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+
+
+# ~from xml.etree.ElementTree import ElementTree, ParseError
+from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+def MENU_debug():
+    LI.MENU_basilicata_2020()
+    return
+    rigenera_parziali(False)
+    # ~catalogo_stili_cella()
+    return
+    LeenoAnalysis.MENU_impagina_analisi()
+    # ~set_area_stampa()
+    # ~MENU_sistema_pagine()
+    return
+    # ~oS = oDoc.getSheets().getByName('dcf')
+    # ~lst = []
+    # ~for i in range(1, 17514):
+        # ~lst.append(oS.getCellByPosition(0, i).String)
+
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lr = LeggiPosizioneCorrente()[1]
+    row = LeenoSheetUtils.prossimaVoce(oSheet, lr, 1)
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    # ~lr = oDoc.CurrentSelection.CellAddress.Row
+    for i in reversed (range(1, lr)):
+        # ~if oSheet.getCellByPosition(7, i).String == "CAM":
+            # ~oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String + ".CAM"
+
+        try:
+            lst = oSheet.getCellByPosition(0, i).String.split('.')
+            if len (lst) == 3:
+                if len(lst[2]) < 3:
+                    oSheet.getCellByPosition(0, i).String = lst[0] + '.' + lst[1] + '.0' + lst[2]# + '.0' + lst[3]# + '.' + lst[4]
+        except:
+            pass
+        # ~if oSheet.getCellByPosition(0, i).String in lst:
+        
+
+        # ~if oSheet.getCellByPosition(1, i).Type.value != 'EMPTY':
+            # ~oSheet.getCellByPosition(8, i).String = "CAM"
+
+        # ~ if oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' or \
+         # ~ oSheet.getCellByPosition(2, i).String == 'Descrizione estesa':
+        # ~ if oSheet.getCellByPosition(5, i).Type.value != 'EMPTY':
+            # ~ oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(5, i).Value * oSheet.getCellByPosition(7, i).Value 
+
+        # ~ if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i+1).String:
+            # ~ _gotoCella(0, i)
+            # ~ return
+        # ~ else:
+            # ~_gotoCella(0, i)
+            # ~return
+            # ~DLG.chi(oSheet.getCellByPosition(1, i).String.split('.'))
+            # ~oSheet.getRows().removeByIndex(i, 1)
+
+        # ~else:
+            # ~DLG.chi('ihio')
+    return
+            # ~newl.append('<version value="' + new + '" />')
+    Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+    # ~of = open(code_file, 'w')
+    newl= []
+    new = (
+        'LeenO-' +
+        str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
+        str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
+        LeenoUtils.getGlobalVar('Lsubv').split('.')[0] + '.' +
+        Ldev + '-TESTING-' +
+        tempo[:-6]
+        )
+    f = open(desc_file, 'r')
+
+    for el in f.readlines():
+        if '<version value=' in el:
+            newl.append('<version value="' + new + '" />')
+        else:
+            newl.append(el)
+    str1 = ''
+    (str1.join(newl))
+    of = open(desc_file, 'w')
+    of.write(str1)
+    of.close()
+
+    return
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~DLG.chi(PU.var2string(oSheet))
+    oCellRangeAddr = uno.createUnoStruct(
+        'com.sun.star.table.CellRangeAddress')
+    # ~ oCellRangeAddr.Sheet = iSheet
+
+    for el in range(2, SheetUtils.getUsedArea(oSheet).EndRow + 1):
+        if 'concedente' not in oSheet.getCellByPosition(1, el).String or \
+        oSheet.getCellByPosition(1, el).Type.value == 'EMPTY':
+            oCellRangeAddr.StartColumn = 1
+            oCellRangeAddr.EndColumn = 1
+            oCellRangeAddr.StartRow = el
+            oCellRangeAddr.EndRow = el
+            oSheet.group(oCellRangeAddr, 1)
+    return
+    oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~DLG.chi(oSheet.getCellRangeByName('B123').Rows.IsStartOfNewPage)
+    # ~return
+    
+    LeenoContab.GeneraAttiContabili(oDoc)
+    # ~LeenoContab.GeneraRegistro(oDoc)
+    # ~LeenoContab.GeneraSAL(oDoc)
+    return
+    # ~m=[["aaa", "bbb", "ccc", 12],
+         # ~["aaa", "bbb", "ccc", 33],
+         # ~["aaa", "bbb", "ccc", 51],
+         # ~["abb", "ddd", "eee", 15],
+         # ~["abb", "ddd", "eee", 40]]
+    m=[["aaa", "bbb", "ccc", 12, "eee", 54],
+        ["aaa", "bbb", "ccc", 33, "eee", 45],
+        ["aaa", "bbb", "ccc", 51, "eee", 12],
+        ["abb", "ddd", "eee", 15, "ggg", 45],
+        ["abb", "ddd", "eee", 40, "ggg", 45]]
+    r=list()
+    b=list()
+    # ~DLG.chi(itertools.groupby(sorted(m)))
+    for k, g in itertools.groupby(sorted(m), operator.itemgetter(0, 1)): 
+        s=sum(float(t[3]) for t in g)
+        k = list(k)
+        k.append(s)
+        r.append(k)
+    DLG.chi(r)
+    # ~for k, g in itertools.groupby(sorted(m), operator.itemgetter(0, 1)): 
+        # ~s=sum(float(t[5]) for t in g)
+        # ~el = (str(t[5]) for t in g)
+        # ~DLG.chi(el)
+
+        # ~k = list(k)
+        # ~k.append(s)
+        # ~r.append(k)
+    # ~ DLG.chi(itertools)
+    
+    return
+    '''
+    PREVENTIVI VETERINARIO SATURNO
+    Sostituisce hiperlink alla stringa nelle colonne B, se questa è un
+    indirizzo di file o cartella
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    for el in range(2, SheetUtils.getUsedArea(oSheet).EndRow + 1):
+        try:
+            # ~ for x in range(0, SheetUtils.getUsedArea(oSheet).EndColumn + 1):
+
+            for x in (8, 11):
+                    stringa = '=HYPERLINK("' + oSheet.getCellByPosition(
+                        x, el).String +'";"' + oSheet.getCellByPosition(x - 2, el).String + '"'
+                    oSheet.getCellByPosition(x - 2, el).Formula = stringa
+        except Exception:
+            pass
+    return
+    somma()
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+    el = 4
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
+    progress.setLimits(el, lrow)
+    progress.show()
+#    while el < lrow:
+#        progress.setValue(el)
+#        el += 1
+#        test = oSheet.getCellByPosition(0, el).String.split('.')
+#        if len (test) == 3:
+#            mask = oSheet.getCellByPosition(1, el).String
+#        if len (test) == 4:
+#            daug = oSheet.getCellByPosition(1, el).String
+#            oSheet.getCellByPosition(1, el).String = daug.split(mask)[-1]
+#    # ~progress.hide()
+#    el = 4
+    while el < lrow:
+        progress.setValue(el)
+        el += 1
+        test = oSheet.getCellByPosition(0, el).String.split('.')
+        if len (test) == 2:
+            mask = oSheet.getCellByPosition(1, el).String
+        if len (test) ==3:
+            daug = oSheet.getCellByPosition(1, el).String
+            oSheet.getCellByPosition(1, el).String = daug.split(mask)[-1]
+    progress.hide()
+    for el in reversed(range (4,  lrow)):
+        for x in (1,  2,  4):
+            if oSheet.getCellByPosition(x, el).Type.value == 'EMPTY':
+                oSheet.getRows().removeByIndex(x, 1)
+
+    # ~m=[["aaa", "bbb", "ccc", 12],
+         # ~["aaa", "bbb", "ccc", 33],
+         # ~["aaa", "bbb", "ccc", 51],
+         # ~["abb", "ddd", "eee", 15],
+         # ~["abb", "ddd", "eee", 40]]
+    # ~r=list()
+    # ~for k, g in itertools.groupby(sorted(m), operator.itemgetter(0,1,2)): 
+        # ~s=sum(float(t[3]) for t in g)
+        # ~k = list(k)
+        # ~k.append(s)
+        # ~r.append(k)
+    # ~DLG.chi(r)
+    # ~return
+
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~i = LeggiPosizioneCorrente()[1]
+    # ~i = LeenoSheetUtils.prossimaVoce(oSheet, i)
+    # ~_gotoCella(0, i)
+    # ~return
+    # ~'''
+    # ~0    1    2     3     4     5     6   7       8       9       10
+    # ~num, art, data, desc, Nlib, Plib, um, quantP, quantN, prezzo, importo, sic, mdo, flag, nSal
+    # ~'''
+
+    # ~lrow = LeggiPosizioneCorrente()[1]
+
+    # ~voce = LeenoComputo.datiVoceComputo(oSheet, lrow)
+
+    # ~DLG.chi(voce)
+    # ~return
+    # ~LeenoComputo.datiVoceComputo()
+    
+    # ~LeenoContab.GeneraAttiContabili()
+    # ~DLG.chi(oSheet.getCellByPosition(1, lrow).Rows.IsStartOfNewPage)
+    # ~return
+    oDoc = LeenoUtils.getDocument()
+    LeenoContab.GeneraRegistro(oDoc)
+    # ~LeenoContab.GeneraSAL(oDoc)
+    return
+
+    LeenoSheetUtils.SbiancaCellePrintArea()
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet.getCellByPosition(1, 11).CellBackColor = 16777215 #sbianca
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    row = LeggiPosizioneCorrente()[1]
+    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+    _gotoCella(0, row)
+    return
+    rigenera_voce(LeggiPosizioneCorrente()[1])
+    rigenera_parziali(False)
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
+    _gotoCella(0, lrow)
+    return
+
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 3, 100, 156))
+
+    oSheet.getCellRangeByPosition(0, 3, 100, 156).CellBackColor = 15757935
+    return
+    
+    ###
+    '''
+    risposte dei test di psicoattitudinali.com
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName('Foglio1')
+    col = oSheet.getCellRangeByName('E1').String
+    col = SheetUtils.uFindString(col, oSheet)[0]
+    if col == 0:
+        tot = '70'
+    if col == 1:
+        tot = '80'
+    if col == 2:
+        tot = '50'
+    if col == 3:
+        tot = '10'
+
+    SheetUtils.getLastUsedRow(oSheet)
+    # ~cat = ('LINGUISTICI', 'MATEMATICI', 'DEDUTTIVI', 'GENERICI')
+
+
+    for x in range (1, 100):
+        if oSheet.getCellByPosition(col, x).Type.value != 'EMPTY':
+            ans = oSheet.getCellByPosition(col, x).String
+            DLG.MsgBox('Test n.' + ans.split('.')[0] + ' di ' + tot + ' \n\n' +
+            'Risposta = ' + ans.split('.')[1], oSheet.getCellByPosition(col, 0).String)
+        else:
+            DLG.MsgBox('Test Concluso.', 'Avviso')
+            return
+    return
+    '''
+    Ripulisce l'elaborato dalle righe vuote
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    last = SheetUtils.getLastUsedRow(oSheet) +1
+    for i in range(lrow, last):
+    # ~while lrow < last:
+        if oSheet.getCellByPosition(2, i).CellStyle == 'comp 1-a' and \
+        oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(3, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(5, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(7, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(8, i).Type.value == 'EMPTY':
+            # ~_gotoCella(2, i)
+            oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
+            MENU_elimina_righe()
+            # ~return
+    return
+    ###
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    for i in range(1, 15):
+        DLG.chi(oSheet.getCellByPosition(0, i).String.split('.'))
+        _gotoCella(0, i)
+
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3 and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
+            _gotoCella(0, i)
+            figlia = oSheet.getCellByPosition(1, i).String
+            DLG.chi(oSheet.getCellByPosition(0, i).String.split('.'))
+            oSheet.getCellByPosition(1, i).String = madre + '\n- ' + figlia
+
+
+    for i in reversed (range(1, lr)):
+        if oSheet.getCellByPosition(0, i).String.split('.')[-1] == '0' and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+            oSheet.getRows().removeByIndex(i, 1)
+
+    return
+    sistema_cose()
+    return
+# ~def split_chunks(l, n):
+    """
+       Splits list l into n chunks with approximately equals sum of values
+       see  http://stackoverflow.com/questions/6855394/splitting-list-in-chunks-of-balanced-weight
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lr = SheetUtils.getLastUsedRow() + 1
+    l = list()
+    d = list()
+    for i in range(1, lr):
+        l.append (oSheet.getCellByPosition(1, i).Value)
+
+        a = oSheet.getCellByPosition(1, i).Value
+        b = oSheet.getCellByPosition(0, i).AbsoluteName
+        d.append ([a, b])
+
+    n = 6
+    result = [[] for i in range(n)]
+    sums   = {i:0 for i in range(n)}
+    c = 0
+    for e in l:
+        for i in sums:
+            if c == sums[i]:
+                result[i].append(e)
+                break
+        sums[i] += e
+        c = min(sums.values())
+    c = 5
+    for el in result:
+        n = 1
+        for i in el:
+            oSheet.getCellByPosition(c, n).Value = i
+            m = 0
+            for x in d:
+                if x[0] == i:
+                    formula = x[1]
+                    d.pop(m)
+                    break
+                m +=1
+            oSheet.getCellByPosition(c+1, n).Formula = '=' + formula
+            n +=1
+        c +=2
+    return result
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

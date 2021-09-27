@@ -557,7 +557,7 @@ di partenza deve essere contigua.''')
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
-            lrow = LeggiPosizioneCorrente()[1]
+            lrow = LeggiPosizioneCorrente()[1] 
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
                 lrow = LeggiPosizioneCorrente()[1] + 1
             elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
@@ -7288,6 +7288,15 @@ def computo_terra_terra():
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    # raggruppo le colonne
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 46
+    oCellRangeAddr.EndColumn = 1023
+    oSheet.group(oCellRangeAddr, 0)
+    
     oSheet.getCellRangeByPosition(33, 0, 1023, 0).Columns.IsVisible = False
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 

@@ -362,7 +362,7 @@
             <value>%origin%/icons/invia_voce_ep</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Invia le voci di Elenco Prezzi selezionate al DCC</value>
+            <value>Invia le voci di Elenco Prezzi selezionate al DP</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -586,7 +586,7 @@
             <value>%origin%/icons/invia_voce_ep</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Invia le voci di Elenco Prezzi selezionate al DCC</value>
+            <value>Invia le voci di Elenco Prezzi selezionate al DP</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

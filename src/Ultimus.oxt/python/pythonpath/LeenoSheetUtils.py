@@ -489,6 +489,8 @@ def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
     '''
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
+    if not sTesto:
+        sTesto ='senza_titolo'
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
         # se oltre la riga rossa
         lrow -= 2
@@ -530,6 +532,9 @@ def inserCapitolo(oSheet, lrow, sTesto='Categoria'):
     '''
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
+    if not sTesto:
+        sTesto ='senza_titolo'
+
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
         # se oltre la riga rossa
         lrow -= 2
@@ -570,6 +575,8 @@ def inserSottoCapitolo(oSheet, lrow, sTesto):
     '''
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
+    if not sTesto:
+        sTesto ='senza_titolo'
 
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
         # se oltre la riga rossa

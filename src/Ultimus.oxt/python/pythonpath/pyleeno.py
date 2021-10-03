@@ -9222,16 +9222,11 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
     oDoc = LeenoUtils.getDocument()
-    
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    DLG.mri(oSheet.getCellByPosition(2, 1))
-
-    return
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
-    
     for el in reversed(range (4,  lr)):
 
-        if oSheet.getCellByPosition(2, el).String == '--':
+        if oSheet.getCellByPosition(2, el).String == 'senza_titolo':
             oSheet.getRows().removeByIndex(el, 1)
 
     return

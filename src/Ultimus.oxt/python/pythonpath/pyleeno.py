@@ -832,7 +832,8 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-        subprocess.Popen('geany ' + dest + '/pyleeno.py',
+        # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
+        subprocess.Popen('eric ' + dest + '/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -5962,8 +5963,8 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
-    if stile == 'comp Int_colonna_R_prima':
-        lrow += 1
+    # ~ if stile == 'comp Int_colonna_R_prima':
+        # ~ lrow += 1
 
     oSheetto = oDoc.getSheets().getByName('S5')
     oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
@@ -9221,6 +9222,12 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
+    LeenoContab.GeneraAttiContabili()
+    # ~oDoc = LeenoUtils.getDocument()
+
+    # ~LeenoContab.GeneraLibretto(oDoc)
+    return
+    
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1

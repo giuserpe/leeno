@@ -117,8 +117,8 @@ def insertVoceContabilita(oSheet, lrow):
     oSheet.group(oCellRangeAddr, 1)
     ########################################################################
 
-    if oDoc.NamedRanges.hasByName('#Lib#' + str(nSal)):
-        if lrow - 1 == oSheet.getCellRangeByName('#Lib#' + str(nSal)).getRangeAddress().EndRow:
+    if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
+        if lrow - 1 == oSheet.getCellRangeByName('_Lib_' + str(nSal)).getRangeAddress().EndRow:
             nSal += 1
 
     oSheet.getCellByPosition(23, sopra + 1).Value = nSal
@@ -150,10 +150,10 @@ def svuotaContabilita(oDoc):
     Ricrea il foglio di contabilità partendo da zero.
     '''
     for n in range(1, 20):
-        if oDoc.NamedRanges.hasByName('#Lib#' + str(n)):
-            oDoc.NamedRanges.removeByName('#Lib#' + str(n))
-            oDoc.NamedRanges.removeByName('#SAL#' + str(n))
-            oDoc.NamedRanges.removeByName('#Reg#' + str(n))
+        if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
+            oDoc.NamedRanges.removeByName('_Lib_' + str(n))
+            oDoc.NamedRanges.removeByName('_SAL_' + str(n))
+            oDoc.NamedRanges.removeByName('_Reg_' + str(n))
     for el in ('Registro', 'SAL', 'CONTABILITA'):
         if oDoc.Sheets.hasByName(el):
             oDoc.Sheets.removeByName(el)
@@ -248,7 +248,7 @@ def svuotaContabilita(oDoc):
 
 def generaContabilita(oDoc):
     '''
-    Ritorna il foglio di contabilità, se presente
+    Mostra il foglio di contabilità, se presente
     Altrimenti lo genera
     '''
     if oDoc.Sheets.hasByName('S1'):
@@ -336,13 +336,13 @@ def struttura_CONTAB():
     oRanges = oDoc.NamedRanges
     
     if oSheet.Name == 'CONTABILITA':
-        pref = "#Lib#"
+        pref = "_Lib_"
         y = 3
     elif oSheet.Name == 'Registro':
-        pref = "#Reg#"
+        pref = "_Reg_"
         y = 1
     elif oSheet.Name == 'SAL':
-        pref = "#SAL#"
+        pref = "_SAL_"
         y = 1
 
     for i in range(1, 50):
@@ -384,7 +384,7 @@ def GeneraLibretto(oDoc):
     oRanges = oDoc.NamedRanges
 
     # ~try:
-        # ~oRanges.removeByName("#Lib#1")
+        # ~oRanges.removeByName("_Lib_1")
     # ~except:
         # ~pass
 
@@ -392,7 +392,7 @@ def GeneraLibretto(oDoc):
     #trovo il numero del nuovo sal
     nSal = 0
     for i in reversed(range(1, 50)):
-        if oRanges.hasByName("#Lib#" + str(i)) == True:
+        if oRanges.hasByName("_Lib_" + str(i)) == True:
             nSal = i +1
             break
         else:
@@ -414,11 +414,11 @@ def GeneraLibretto(oDoc):
                     'sono già registrate.')
         return
 
-    nomearea="#Lib#" + str(nSal)
+    nomearea="_Lib_" + str(nSal)
 
     #  Recupero la prima riga non registrata
 
-    daVoce = PL.InputBox(str(daVoce), "Registra voci Libretto da n.")
+    daVoce = PL.InputBox(str(daVoce), "Registra Libretto, da voce n.")
     if len(daVoce) ==0:
         return
 
@@ -434,7 +434,7 @@ def GeneraLibretto(oDoc):
         0, 3, 0, SheetUtils.getUsedArea(oSheet).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
 
-    aVoce = PL.InputBox(str(aVoce), "A voce n.:")
+    aVoce = PL.InputBox(str(aVoce), "Registra Libretto, a voce n.")
     # ~aVoce = str(int(daVoce) + 1)
     if len(aVoce) == 0:
         return
@@ -499,7 +499,12 @@ def GeneraLibretto(oDoc):
 
     progress.setValue(2)
     area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
-    LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area , nomearea)
+    # ~LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area, nomearea)
+    # ~DLG.chi(nomearea)
+
+    SheetUtils.NominaArea(oDoc, "CONTABILITA", area, nomearea)
+
+
 
     oSheet.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
     #applico gli stili corretti ad alcuni dati della firma
@@ -507,7 +512,7 @@ def GeneraLibretto(oDoc):
 
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
-    #range del #Lib#
+    #range del _Lib_
     daRiga = oNamedRange.StartRow
     aRiga = oNamedRange.EndRow
     daColonna = oNamedRange.StartColumn
@@ -536,7 +541,7 @@ def GeneraLibretto(oDoc):
     oSheet.setPrintTitleRows(True)
     
     oSheet.PageStyle = "Page_Style_Libretto_Misure2" 
-    
+
     progress.setValue(3)
 
     # sbianco l'area di stampa
@@ -614,7 +619,7 @@ def GeneraLibretto(oDoc):
     oSheet.getRows().insertByIndex(daRiga, 1)
     oSheet.getCellRangeByPosition (0, daRiga, 36, daRiga).CellStyle = "uuuuu"
 
-    #range del #Lib#
+    #range del _Lib_
     oSheet.getCellByPosition(2,  daRiga).String = (
         "segue Libretto delle Misure n." + str(nSal) +
         " - " + str(daVoce) + "÷" + str(aVoce)
@@ -645,9 +650,12 @@ def GeneraLibretto(oDoc):
     progress.hide()
 
 #  Protezione_area ("CONTABILITA",nomearea)
-#  Struttura_Contab ("#Lib#")
+#  Struttura_Contab ("_Lib_")
 #  Genera_REGISTRO
     struttura_CONTAB()
+    # ~for el in (nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo):
+        # ~DLG.chi(el)
+    
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo
 
 
@@ -734,9 +742,9 @@ def GeneraRegistro(oDoc):
         # recupera il registro precedente
         PL.GotoSheet('Registro')
         oSheet= oDoc.Sheets.getByName("Registro")
-        # ~DLG.chi("#Reg#" + str(nSal - 1))
+        # ~DLG.chi("_Reg_" + str(nSal - 1))
         oRanges = oDoc.NamedRanges
-        oPrevRange = oRanges.getByName("#Reg#" + str(nSal - 1)).ReferredCells.RangeAddress
+        oPrevRange = oRanges.getByName("_Reg_" + str(nSal - 1)).ReferredCells.RangeAddress
 
         fRow = oPrevRange.StartRow
         lRow = oPrevRange.EndRow
@@ -810,13 +818,13 @@ def GeneraRegistro(oDoc):
 
 # set area del REGISTRO
     area="$A$" + str(insRow) + ":$J$" + str(fineFirme + 1)
-    nomearea = "#Reg#" + str(nSal)
+    nomearea = "_Reg_" + str(nSal)
     LeenoBasicBridge.rifa_nomearea(oDoc, "Registro", area , nomearea)
 
     oRanges = oDoc.NamedRanges
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
-    #range del #Reg#
+    #range del _Reg_
     # ~daRiga = oNamedRange.StartRow
     # ~aRiga = oNamedRange.EndRow
     # ~daColonna = oNamedRange.StartColumn
@@ -918,9 +926,9 @@ def GeneraRegistro(oDoc):
         # recupera il registro precedente
         PL.GotoSheet('SAL')
         oSheet= oDoc.Sheets.getByName("SAL")
-        # ~DLG.chi("#SAL#" + str(nSal - 1))
+        # ~DLG.chi("_SAL_" + str(nSal - 1))
         oRanges = oDoc.NamedRanges
-        oPrevRange = oRanges.getByName("#SAL#" + str(nSal - 1)).ReferredCells.RangeAddress
+        oPrevRange = oRanges.getByName("_SAL_" + str(nSal - 1)).ReferredCells.RangeAddress
 
         fRow = oPrevRange.StartRow
         lRow = oPrevRange.EndRow
@@ -1096,7 +1104,7 @@ def GeneraRegistro(oDoc):
 
 # set area di stampa del SAL
     area="$A$" + str(insRow + 2) + ":$F$" + str(fineFirme + 1)
-    nomearea = "#SAL#" + str(nSal)
+    nomearea = "_SAL_" + str(nSal)
     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area , nomearea)
 
     oRanges = oDoc.NamedRanges

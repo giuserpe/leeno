@@ -9222,7 +9222,10 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
-    LeenoContab.GeneraAttiContabili()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    LeenoSheetUtils.inserisciRigaRossa(oSheet)
+
     # ~oDoc = LeenoUtils.getDocument()
 
     # ~LeenoContab.GeneraLibretto(oDoc)

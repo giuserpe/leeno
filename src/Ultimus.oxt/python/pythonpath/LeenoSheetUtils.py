@@ -170,7 +170,7 @@ def rRow(oSheet):
             return n
 
 def cercaUltimaVoce(oSheet):
-    nRow = SheetUtils.getLastUsedRow(oSheet)
+    nRow = SheetUtils.getLastUsedRow(oSheet) +1
     if nRow == 0:
         return 0
     for n in reversed(range(0, nRow)):

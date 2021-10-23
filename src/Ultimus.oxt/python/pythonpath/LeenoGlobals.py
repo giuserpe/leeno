@@ -4,7 +4,7 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
     LeenoUtils.initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
         'Lminor': 21,       # NUOVE FUNZIONALITA'
-        'Lsubv': "1",       # CORREZIONE BUGS
+        'Lsubv': "1.dev",       # CORREZIONE BUGS
 
         'noVoce': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta',
                    'comp Int_colonna', 'Ultimus_centro_bordi_lati',

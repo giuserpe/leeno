@@ -8179,7 +8179,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    # ~description_upd() # aggiorna description.xml
+    description_upd() # aggiorna description.xml
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()

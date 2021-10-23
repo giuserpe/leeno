@@ -9222,10 +9222,19 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
-    autoexec_off()
-    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    row = LeggiPosizioneCorrente()[1]
+
+    
+    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+
+
+    # ~rigenera_voce(row)
+    _gotoCella(2, row)
+
+    return
+    oDoc = LeenoUtils.getDocument()
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
     # ~oDoc = LeenoUtils.getDocument()

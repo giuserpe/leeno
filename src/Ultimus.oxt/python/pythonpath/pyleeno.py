@@ -222,11 +222,11 @@ def MENU_leeno_conf():
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
 
     if oDlg_config.getControl('TextField4').getText() != '10000':
-        cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
+        cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
     oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
 
     if oDlg_config.getControl('TextField12').getText() != '10000':
-        cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
+        cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
     oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
@@ -1889,15 +1889,15 @@ def voce_breve():
             return
         else:
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
-                cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
+                cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H335').Value = int(cfg.read('Contabilità', 'cont_inizio_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H335').Value = int(cfg.read('Contabilita', 'cont_inizio_voci_abbreviate'))
             if oSheet.getCellRangeByName('S1.H336').Value < 10000:
-                cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
+                cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilità', 'cont_fine_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilita', 'cont_fine_voci_abbreviate'))
     Menu_adattaAltezzaRiga()
 
 
@@ -2491,14 +2491,14 @@ def scelta_viste():
         # ~if oSheet.getCellRangeByName('S1.H328').Value == 1:
             # ~oDialog1.getControl('CheckBox7').State = 1
         sString = oDialog1.getControl('TextField13')
-        if cfg.read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
+        if cfg.read('Contabilita', 'idxsal') == '&273.Dlg_config.TextField13.Text':
             sString.Text = '20'
         else:
-            sString.Text = cfg.read('Contabilità', 'idxsal')
+            sString.Text = cfg.read('Contabilita', 'idxsal')
             if sString.Text == '':
                 sString.Text = '20'
         sString = oDialog1.getControl('ComboBox3')
-        sString.Text = cfg.read('Contabilità', 'ricicla_da')
+        sString.Text = cfg.read('Contabilita', 'ricicla_da')
 
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
@@ -2511,18 +2511,18 @@ def scelta_viste():
 
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField3').getText() != '10000':
-            cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
+            cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value = float(oDialog1.getControl('TextField3').getText())
 
         if oDialog1.getControl('TextField2').getText() != '10000':
-            cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
+            cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
 
-        cfg.write('Contabilità', 'idxsal', oDialog1.getControl('TextField13').getText())
+        cfg.write('Contabilita', 'idxsal', oDialog1.getControl('TextField13').getText())
         if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
-            cfg.write('Contabilità', 'ricicla_da', 'COMPUTO')
+            cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
         else:
-            cfg.write('Contabilità', 'ricicla_da', 'VARIANTE')
+            cfg.write('Contabilita', 'ricicla_da', 'VARIANTE')
 
         if oDialog1.getControl('Dettaglio').State == 0:
             cfg.write('Generale', 'dettaglio', '0')
@@ -4726,7 +4726,7 @@ def MENU_ricicla_misure():
             return
         ins_voce_contab(arg=0)
         partenza = cerca_partenza()
-        GotoSheet(cfg.read('Contabilità', 'ricicla_da'))
+        GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -9227,10 +9227,10 @@ def MENU_debug():
     row = LeggiPosizioneCorrente()[1]
 
     
-    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+    # ~row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
 
 
-    # ~rigenera_voce(row)
+    rigenera_voce(row)
     _gotoCella(2, row)
 
     return

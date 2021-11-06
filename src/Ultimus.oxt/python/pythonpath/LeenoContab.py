@@ -363,6 +363,8 @@ def struttura_CONTAB():
                         # ~Title = 'Info',
                         # ~Text='''In questo Libretto delle Misure
 # ~non ci sono misure registrate.''')
+                if oSheet.Name == 'CONTABILITA':
+                    PL.struttura_ComputoM()
                 pass
             return
 

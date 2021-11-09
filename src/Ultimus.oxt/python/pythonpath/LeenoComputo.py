@@ -31,10 +31,10 @@ def datiVoceComputo (oSheet, lrow):
     REG = []
     SAL = []
     if oSheet.Name in ('CONTABILITA'):
-        quantN = ''
+        quantN = 1
         if quantP < 0:
             quantN = quantP
-            quantP = ''
+            quantP = 1
         data     = oSheet.getCellByPosition(1,  i+2).String
         um       = oSheet.getCellByPosition(9,  i+1).String
         Nlib     = int(oSheet.getCellByPosition(19, i+1).Value)

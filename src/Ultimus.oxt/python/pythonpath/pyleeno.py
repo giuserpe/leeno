@@ -4584,14 +4584,16 @@ def cerca_in_elenco():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE',
-                       'Analisi di Prezzo'):
+    if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Registro',
+                       'Analisi di Prezzo', 'SAL'):
         if oSheet.Name == 'Analisi di Prezzo':
             if oSheet.getCellByPosition(
                     0, lrow).CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
                 codice_da_cercare = oSheet.getCellByPosition(0, lrow).String
             else:
                 return
+        elif oSheet.Name in ('Registro','SAL'):
+            codice_da_cercare =oSheet.getCellByPosition(0, lrow).String.split('\n')[1]
         else:
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
             sopra = sStRange.RangeAddress.StartRow

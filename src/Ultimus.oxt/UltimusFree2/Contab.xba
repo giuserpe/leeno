@@ -23,15 +23,15 @@ chiudi_dialoghi
 	oRanges = ThisComponent.NamedRanges
 GoTo salta: &apos;solo per debug
 	for i = 1 to 100 &apos; determina il numero del libretto
-		if 	oRanges.hasByName(&quot;#Lib#&quot; + i) then
-			oRanges.removeByName(&quot;#Lib#&quot; + i)
+		if 	oRanges.hasByName(&quot;_Lib_&quot; + i) then
+			oRanges.removeByName(&quot;_Lib_&quot; + i)
 			else
 			exit for
 		end if
 	Next
 	for i = 1 to 100 &apos; determina il numero del registro
-		if 	oRanges.hasByName(&quot;#Reg#&quot; + i) then
-			oRanges.removeByName(&quot;#Reg#&quot; + i)
+		if 	oRanges.hasByName(&quot;_Reg_&quot; + i) then
+			oRanges.removeByName(&quot;_Reg_&quot; + i)
 			else
 			exit for
 		end if
@@ -67,14 +67,14 @@ fcol = idxCol rem prima colonna
 	&apos;goto main:
 	&apos;on error goto fine
 
-	IF not oRanges.hasByName(&quot;#Lib#1&quot;) Then &apos;recupero il numero di registro da produrre
+	IF not oRanges.hasByName(&quot;_Lib_1&quot;) Then &apos;recupero il numero di registro da produrre
 		msgbox (&quot;Nel Libretto non è presente nessuna misura registrata!&quot;, 48 + 1, &quot;AVVISO!&quot;)
 		Exit Sub
 &apos;		nSal=1
 		else
 		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
+			IF oRanges.hasByName(&quot;_Lib_&quot; &amp; nSal) THEN
 				exit do
 			end if
 		nSal=nSal-1
@@ -118,7 +118,7 @@ rem larghezza colonne
 		InsRow = fRow+1 &apos;prima riga inserimento in Registro
 	Case &gt;1
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
-	oNamedRange=oRanges.getByName(&quot;#Reg#&quot; &amp; nSal-1).referredCells
+	oNamedRange=oRanges.getByName(&quot;_Reg_&quot; &amp; nSal-1).referredCells
 		With oNamedRange.RangeAddress
 			fRow = .StartRow
 			lRow = .EndRow
@@ -135,9 +135,9 @@ fissa (0,idxrow+1)
 	ThisComponent.CurrentController.Select(oSheet)&apos;.getCellRangeByPosition(0,0,0,0))
 rem ----------------------------------------------------------------------
 rem Recupero i dati dal libretto
-&apos;	oNamedRange=oRanges.getByName(&quot;#Lib#1&quot;).referredCells &apos; dal primo libretto
+&apos;	oNamedRange=oRanges.getByName(&quot;_Lib_1&quot;).referredCells &apos; dal primo libretto
 &apos;	dariga=oNamedRange.RangeAddress.StartRow
-	oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos; all&apos;ultimo libretto
+	oNamedRange=oRanges.getByName(&quot;_Lib_&quot; &amp; nSal).referredCells&apos; all&apos;ultimo libretto
 	dariga=oNamedRange.RangeAddress.StartRow	
 	ariga=oNamedRange.RangeAddress.EndRow
 &apos;Print dariga
@@ -394,7 +394,7 @@ rem ----------------------------------------------------------------------
 rem set area del REGISTRO
 ncol=ColumnNameOf(fcol+9)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
-	nomearea = &quot;#Reg#&quot; &amp; nSal
+	nomearea = &quot;_Reg_&quot; &amp; nSal
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Registro&quot;, area , nomearea)
 rem set area di stampa
 		oNamedRange=oRanges.getByName(nomearea).referredCells
@@ -525,7 +525,7 @@ rem ci metto un po&apos; di informazioni
 	oSheetReg.getCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
 	oSheetReg.getCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
-&apos;Struttura_contab (&quot;#Reg#&quot;)
+&apos;Struttura_contab (&quot;_Reg_&quot;)
 &apos;Struttura
 rem ----------------------------------------------------------------------
 Ripristina_statusLine 
@@ -534,7 +534,7 @@ initSal:
 &apos;Annulla_atto_contabile(&quot;SAL&quot;)
 &apos;Exit sub
 		Barra_Apri_Chiudi_5(&quot;                         Sto elaborando Stato di Avanzamento Lavori...&quot;, 75)
-	If oRanges.hasByName(&quot;#SAL#&quot; &amp; nSal) Then
+	If oRanges.hasByName(&quot;_SAL_&quot; &amp; nSal) Then
 		msgbox 	&quot;SAL n.&quot; &amp; nSal &amp; &quot; già emesso.&quot;,48, &quot;AVVISO!&quot;
 		Exit Sub
 	End If 
@@ -583,7 +583,7 @@ rem larghezza colonne SAL
 		frow = getLastUsedRow(oSheetSAL)&apos;+1 &apos; trovo il primo rigo vuoto
 		Case &gt;1
 			oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;) &apos; SETTA COME CORRENTE
-			oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal-1).referredCells
+			oNamedRange=oRanges.getByName(&quot;_SAL_&quot; &amp; nSal-1).referredCells
 			With oNamedRange.RangeAddress
 				fRow = .StartRow
 				lRow = .EndRow
@@ -652,9 +652,9 @@ rem ----------------------------------------------------------------------
 rem set area del SAL
 ncol=ColumnNameOf(fcol+5)
 	area=&quot;$A$&quot; &amp; precRowSAL+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;SAL&quot;, area , &quot;#SAL#&quot; &amp; nSal)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;SAL&quot;, area , &quot;_SAL_&quot; &amp; nSal)
 rem set area di stampa SAL
-		oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
+		oNamedRange=oRanges.getByName(&quot;_SAL_&quot; &amp; nSal).referredCells
 		With oNamedRange.RangeAddress
 			daRiga = .StartRow
 			aRiga = .EndRow
@@ -794,7 +794,7 @@ rem ----------------------------------------------------------------------
 firme (InsRow+17)
 
 
-	seleziona_area(&quot;#SAL#&quot; &amp; nSal)
+	seleziona_area(&quot;_SAL_&quot; &amp; nSal)
 &apos;Raggruppa_righe
 &apos;MOSTRA_righe (&quot;off&quot;)
 	oSheetSal.getCellByPosition(fcol+1, InsRow+27).setstring(&quot;====================&quot;)
@@ -820,7 +820,7 @@ rem trovo l&apos;ultimo effettivo numero di pagina del sal
 rem ----------------------------------------------------------------------
 
 rem inserisco la prima riga del documento
-	oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
+	oNamedRange=oRanges.getByName(&quot;_SAL_&quot; &amp; nSal).referredCells
 &apos;	oNamedRange=oRanges.getByName(nomearea).referredCells
 	ins = oNamedRange.RangeAddress.StartRow
 	insRows (ins, 1) &apos;insertByIndex non funziona
@@ -837,7 +837,7 @@ rem ci metto un po&apos; di informazioni
 	oSheetSal.getCellByPosition(fcol+5, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol, ins))
 rem ----------------------------------------------------------------------
-&apos;Struttura_Contab (&quot;#SAL#&quot;)
+&apos;Struttura_Contab (&quot;_SAL_&quot;)
 end Sub &apos;genera_registro
 rem ######################################################################
 
@@ -1000,7 +1000,7 @@ oSheetCont.Unprotect &quot;&quot;
 chiudi_dialoghi
 	oRanges = ThisComponent.NamedRanges
 	nSal=idxSAL &apos;variabile impostata nel modulo _variabili
-	prefix = &quot;#Lib#&quot;
+	prefix = &quot;_Lib_&quot;
 	Do while nSal &gt; 0
 		IF oRanges.hasByName(prefix &amp; nSal) THEN
 			exit do
@@ -1047,13 +1047,13 @@ procedi:
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	select Case oSheet.Name
 		Case &quot;CONTABILITA&quot;
-			prefix = &quot;#Lib#&quot;
+			prefix = &quot;_Lib_&quot;
 			doc = &quot;Libretto&quot;
 		Case &quot;Registro&quot;
-			prefix = &quot;#Reg#&quot;
+			prefix = &quot;_Reg_&quot;
 			doc = &quot;Registro&quot;
 		Case = &quot;SAL&quot;
-			prefix = &quot;#SAL#&quot;
+			prefix = &quot;_SAL_&quot;
 			doc = &quot;Stato di Avanzamento&quot;
 		Case Else
 			doc = &quot;documento contabile&quot;
@@ -1224,12 +1224,12 @@ rem MI SPOSTO SUL FOGLIO GIUSTO
 	oRanges = ThisComponent.NamedRanges
 rem ----------------------------------------------------------------------
 rem Recupero il nome del SAL da registrare
-	IF not oRanges.hasByName(&quot;#Lib#1&quot;) Then
+	IF not oRanges.hasByName(&quot;_Lib_1&quot;) Then
 		nSal=1
 		else
 		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) Then
+			IF oRanges.hasByName(&quot;_Lib_&quot; &amp; nSal) Then
 		&apos;			nSal=nSal-1
 				exit do
 			end if
@@ -1241,8 +1241,8 @@ rem Recupero il nome del SAL da registrare
 rem ----------------------------------------------------------------------
 rem Recupero la prima riga non registrata
 	If nSal &gt; 1 Then
-&apos;	xray oRanges.getByName(&quot;#Lib#&quot; &amp; nSal-1)
-		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal-1).referredCells&apos;.RangeAddress
+&apos;	xray oRanges.getByName(&quot;_Lib_&quot; &amp; nSal-1)
+		oNamedRange=oRanges.getByName(&quot;_Lib_&quot; &amp; nSal-1).referredCells&apos;.RangeAddress
 		With oNamedRange.RangeAddress
 			fRow = .StartRow
 			lRow = .EndRow
@@ -1298,7 +1298,7 @@ Dim oCellRange as object
 togli_salti_pagina
 Visualizza_PageBreak
 
-	nomearea=&quot;#Lib#&quot;+nsal
+	nomearea=&quot;_Lib_&quot;+nsal
 rem annota importo parziale SAL
 &apos;Print ultimariga &amp; &quot; - &quot; &amp; &quot;SAL n.&quot; &amp; nSal
 	oSheetCont.getCellByPosition(25, ultimariga-1).string = &quot;SAL n.&quot; &amp; nSal
@@ -1309,13 +1309,13 @@ rem immetti le firme
 firme (ultimariga+1)&apos; riga di inserimento
 	fineFirme = ultimariga+10 rem 10 è un numero deciso nella sub FIRME
 &apos;	Print finefirme
-rem definisci il range del #Lib#
+rem definisci il range del _Lib_
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
 &apos;Print area 
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;, area , nomearea)
 	
 	oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
-	oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells
+	oNamedRange=oRanges.getByName(&quot;_Lib_&quot; &amp; nSal).referredCells
 &apos;	ThisComponent.CurrentController.Select(oNamedRange)
 rem ----------------------------------------------------------------------
 	With oNamedRange.RangeAddress
@@ -1373,7 +1373,7 @@ ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;copy_clip&quot;)
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	End If
 rem ----------------------------------------------------------------------
-rem definisci il range del #Lib#
+rem definisci il range del _Lib_
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;, area , nomearea)
 	
@@ -1508,7 +1508,7 @@ Next
 ThisComponent.CurrentController().freezeAtPosition(0,idxRow+1)
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
 Protezione_area (&quot;CONTABILITA&quot;,nomearea)
-&apos;Struttura_Contab (&quot;#Lib#&quot;)
+&apos;Struttura_Contab (&quot;_Lib_&quot;)
 RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
 	Genera_REGISTRO
 end Sub
@@ -1534,7 +1534,7 @@ sub seleziona_area (nome_area As string) &apos;da registratore macro
 	rem ----------------------------------------------------------------------
 	dim args1(0) as new com.sun.star.beans.PropertyValue
 	args1(0).Name = &quot;ToPoint&quot;
-	args1(0).Value = nome_area&apos;&quot;#Lib#1&quot;
+	args1(0).Value = nome_area&apos;&quot;_Lib_1&quot;
 	
 	dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args1())
 	

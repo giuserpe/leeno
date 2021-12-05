@@ -138,16 +138,16 @@ chiudi_dialoghi
 	lLastUrow = getLastUsedRow(oSheet)
 rem ----------------------------------------------------------------------
 rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
-	IF oRanges.hasByName(&quot;#Lib#1&quot;) THEN
+	IF oRanges.hasByName(&quot;_Lib_1&quot;) THEN
 		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
+			IF oRanges.hasByName(&quot;_Lib_&quot; &amp; nSal) THEN
 		&apos;			nSal=nSal-1
 				exit do
 			end if
 		nSal=nSal-1
 		Loop
-		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
+		oNamedRange=oRanges.getByName(&quot;_Lib_&quot; &amp; nSal).referredCells&apos;.RangeAddress
 		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
 

@@ -280,32 +280,46 @@ def leggiApprossimazioni(dati):
     res = {}
 
     partiUguali = PweDGConfigNumeri.find('PartiUguali')
-    if partiUguali:
+    try:
         res['PartiUguali'] = int(partiUguali.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     larghezza = PweDGConfigNumeri.find('Larghezza')
-    if larghezza:
+    try:
         res['Larghezza'] = int(larghezza.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     lunghezza = PweDGConfigNumeri.find('Lunghezza')
-    if lunghezza:
+    try:
         res['Lunghezza'] = int(lunghezza.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     hPeso = PweDGConfigNumeri.find('HPeso')
-    if hPeso:
+    try:
         res['HPeso'] = int(hPeso.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     quantita = PweDGConfigNumeri.find('Quantita')
-    if quantita:
+    try:
         res['Quantita'] = int(quantita.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     prezzi = PweDGConfigNumeri.find('Prezzi')
-    if prezzi:
+    try:
         res['Prezzi'] = int(prezzi.text.split('.')[-1].split('|')[0])
+    except:
+        pass
 
     prezziTotale = PweDGConfigNumeri.find('PrezziTotale')
-    if prezziTotale:
+    try:
         res['PrezziTotale'] = int(prezziTotale.text.split('.')[-1].split('|')[0])
+    except:
+        pass
     '''
     Divisa = PweDGConfigNumeri.find('Divisa').text
     ConversioniIN = PweDGConfigNumeri.find('ConversioniIN').text

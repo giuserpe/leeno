@@ -312,6 +312,9 @@ def invia_voce_interno():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+
     elenco = seleziona()
     codici = []
     for el in elenco:
@@ -345,6 +348,7 @@ la posizione di destinazione.''')
         else:
             LeenoComputo.ins_voce_computo(cod=el)
         lrow = SheetUtils.getLastUsedRow(oSheet)
+    oDoc.CurrentController.ZoomValue = zoom
     return
 
 def MENU_invia_voce():

@@ -23,7 +23,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const Lmajor= 3			&apos;INCOMPATIBILITA&apos;
 Public Const Lminor= 21			&apos;NUOVE FUNZIONALITA&apos;
-Public Const Lsubv= &quot;1&quot;		&apos;CORREZIONE BUGS
+Public Const Lsubv= &quot;2&quot;		&apos;CORREZIONE BUGS
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;

@@ -86,11 +86,11 @@ class Config(Borg):
             #  ('Computo', 'voci_senza_numerazione', '0'),
             ('Computo', 'inizio_voci_abbreviate', '100'),
             ('Computo', 'fine_voci_abbreviate', '120'),
-            ('Contabilità', 'cont_inizio_voci_abbreviate', '100'),
-            ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
-            ('Contabilità', 'abilitaconfigparser', '0'),
-            ('Contabilità', 'idxsal', '20'),
-            ('Contabilità', 'ricicla_da', 'COMPUTO'),
+            ('Contabilita', 'cont_inizio_voci_abbreviate', '100'),
+            ('Contabilita', 'cont_fine_voci_abbreviate', '120'),
+            ('Contabilita', 'abilitaconfigparser', '0'),
+            ('Contabilita', 'idxsal', '20'),
+            ('Contabilita', 'ricicla_da', 'COMPUTO'),
 
             ('Importazione', 'ordina_computo', '1'),
 

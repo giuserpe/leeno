@@ -42,7 +42,7 @@ Function SE_contabilita
 		se_contabilita = 1
 	EndIf
 rem ----------------------------------------------------------------------
-&apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di #Lib#1
+&apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di _Lib_1
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,327).value = 1 Then
 		test = msgbox  (&quot;#1 Risulta presente il foglio CONTABILITA.&quot; &amp; CHR$(10)_
 			&amp; &quot;Se si sta lavorando sulla contabilità, il computo dovrebbe essere chiuso e completato!&quot;&amp; CHR$(10) &amp; CHR$(10)_

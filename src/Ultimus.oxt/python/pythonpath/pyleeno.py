@@ -8183,7 +8183,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    # ~description_upd() # aggiorna description.xml - da disattivare prima del rilascio
+    description_upd() # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -9220,6 +9220,9 @@ import operator
 import functools
 import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+
+def MENU_debug():
+    LeenoConfig.reset()
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

@@ -135,7 +135,10 @@ class Config(Borg):
         '''
         load configuration data from disk
         '''
-        self._parser.read(self._path)
+        try:
+            self._parser.read(self._path)
+        except Exception:
+            os.remove(self._path)
 
     def _store(self):
         '''
@@ -205,13 +208,3 @@ class Config(Borg):
                     continue
             self._parser.set(section, key, val)
         self._store()
-
-def reset():
-    '''
-    remove configuration data from disk
-    '''
-    if sys.platform == 'win32':
-        path = os.getenv("APPDATA") + '/.config/leeno/leeno.conf'
-    else:
-        path = os.getenv("HOME") + '/.config/leeno/leeno.conf'
-    os.remove(path)

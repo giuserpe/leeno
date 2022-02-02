@@ -1323,8 +1323,8 @@ def MENU_XPWE_import():
     #return
 
     # elimina doppioni nell'elenco prezzi
-    progress.setText("Eliminazione voci doppie elenco prezzi")
-    PL.EliminaVociDoppieElencoPrezzi()
+    # ~progress.setText("Eliminazione voci doppie elenco prezzi")
+    # ~PL.EliminaVociDoppieElencoPrezzi()
 
     # se non ci sono misurazioni di computo, finisce qui
     if len(listaMisure) == 0:

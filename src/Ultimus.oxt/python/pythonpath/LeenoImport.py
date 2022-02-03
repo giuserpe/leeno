@@ -190,7 +190,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
         item += step
 
-    oSheet.getRows().removeByIndex(3, 1)
+    # ~oSheet.getRows().removeByIndex(3, 1)
 
     return True
 
@@ -264,9 +264,12 @@ def MENU_ImportElencoPrezziXML():
     progress.hide()
 
     # aggiunge informazioni nel foglio
-    oSheet.getRows().insertByIndex(3, 1)
+    # ~oSheet.getRows().insertByIndex(3, 1)
+    oSheet.getCellByPosition(11, 3).String = ''
+    oSheet.getCellByPosition(12, 3).String = ''
+    oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 4).String = '''ATTENZIONE!
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.

@@ -8586,6 +8586,27 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
 ########################################################################
 
 
+def DelPrintArea ():
+    '''
+    cancella area di stampa
+    '''
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+        'com.sun.star.frame.DispatchHelper', ctx)
+
+    GotoSheet('COMPUTO')
+
+    oProp = PropertyValue()
+    properties = (oProp, )
+    dispatchHelper.executeDispatch(oFrame, '.uno:DeletePrintArea', '', 0,
+                                   properties)
+
+
+########################################################################
+
+
 def set_area_stampa():
     ''' Imposta area di stampa il relazione all'elaborato da produrre'''
     oDoc = LeenoUtils.getDocument()
@@ -9222,7 +9243,11 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    LeenoConfig.reset()
+    DelPrintArea()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~DLG.mri(oSheet)
+    return
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

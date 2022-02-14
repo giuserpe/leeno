@@ -24,22 +24,22 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 rem metto in ordine secondo la stampa
 	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;) &apos;questa serve a conservare l&apos;area di stampa dell&apos;ultima sheet utile
 	oSheet.IsVisible = True
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;DelPrintArea&quot;)
 	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
 rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
+		p = 0
 
-			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).getCellByPosition(0,0))
-&apos;	Print  
-		&apos;	rimuovi_area_di_stampa
-			oSh.IsVisible = False
+		&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).getCellByPosition(0,0))
+		&apos;	oSh.IsVisible = False
 		Else
 
 			Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
-			If 	oSh.Name = oActiveSheet Then 
+			If 	oSh.Name = oActiveSheet Then
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
-				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
+				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 				unSelect &apos;unselect ranges 
 			Else
 			End If

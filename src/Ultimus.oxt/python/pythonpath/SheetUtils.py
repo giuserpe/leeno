@@ -512,6 +512,28 @@ def NominaArea(oDoc, sSheet, sRange, sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName, sPath, oCellAddress, 0)
 
+
+# ###############################################################
+
+
+def FixNamedArea():
+    '''
+    Corregge i nomi di range dati che contengono '#' sostituendo con '_'
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oRange = oDoc.NamedRanges
+    tNamedArea = oRange.ElementNames
+    for el in tNamedArea:
+        if '#' in el:
+            aName = oRange.getByName(el).ReferredCells.AbsoluteName
+            sSheet = aName.split('.')[0][1:]
+            sRange = aName.split('.')[1]
+            sName = el.replace('#', '_')
+            NominaArea(oDoc, sSheet, sRange, sName)
+            oDoc.NamedRanges.removeByName(el)
+    return
+
+
 # ###############################################################
 
 

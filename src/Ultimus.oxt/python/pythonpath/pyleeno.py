@@ -156,12 +156,12 @@ def MENU_leeno_conf():
     sString = oDlg_config.getControl('TextField4')
     sString.Text = oSheet.getCellRangeByName(
         'S1.H335').String  # cont_inizio_voci_abbreviate
-    if oDoc.NamedRanges.hasByName("#Lib#1"):
+    if oDoc.NamedRanges.hasByName("_Lib_1"):
         sString.setEnable(False)
     sString = oDlg_config.getControl('TextField12')
     sString.Text = oSheet.getCellRangeByName(
         'S1.H336').String  # cont_fine_voci_abbreviate
-    if oDoc.NamedRanges.hasByName("#Lib#1"):
+    if oDoc.NamedRanges.hasByName("_Lib_1"):
         sString.setEnable(False)
 
     if cfg.read('Generale', 'torna_a_ep') == '1':
@@ -857,7 +857,7 @@ def avvia_IDE():
                          # ~uno.fileUrlToSystemPath(LeenO_path()),
                          # ~shell=True,
                          # ~stdout=subprocess.PIPE)
-        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
+        subprocess.Popen('"C:/Program Files/Geany/bin/geany.exe" ' +
                          dest +
                          '/python/pythonpath/pyleeno.py',
                          shell=True,
@@ -1883,7 +1883,7 @@ def voce_breve():
 
     elif oSheet.Name == 'CONTABILITA':
         oSheet = oDoc.getSheets().getByName('S1')
-        if oDoc.NamedRanges.hasByName("#Lib#1"):
+        if oDoc.NamedRanges.hasByName("_Lib_1"):
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text='''Risulta già registrato un SAL, quindi
     NON E' POSSIBILE PROCEDERE.''')
@@ -3485,7 +3485,7 @@ def MENU_firme_in_calce(lrowF=None):
             return
         nSal = 1
         for i in reversed(range(2, 50)):
-            if oDoc.NamedRanges.hasByName("#Lib#" + str(i)):
+            if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
                 nSal = i
                 break
         oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
@@ -4669,7 +4669,7 @@ def pesca_cod():
         ###
 ###
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        if oDoc.NamedRanges.hasByName("#Lib#1"):
+        if oDoc.NamedRanges.hasByName("_Lib_1"):
             if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
                 if DLG.DlgSiNo(
                         "Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",
@@ -5978,7 +5978,7 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
     # ~oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
     _gotoCella(1, lrow + 1)
 
-    #  if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
+    #  if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('_Lib_'+str(nSal)).getRangeAddress())):
     #  chi('appartiene')
     #  else:
     #  chi('nooooo')
@@ -6018,9 +6018,9 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
     oSheet.group(oCellRangeAddr, 1)
 ########################################################################
 
-    if oDoc.NamedRanges.hasByName('#Lib#' + str(nSal)):
+    if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
         if lrow - 1 == oSheet.getCellRangeByName(
-                '#Lib#' + str(nSal)).getRangeAddress().EndRow:
+                '_Lib_' + str(nSal)).getRangeAddress().EndRow:
             nSal += 1
 
     oSheet.getCellByPosition(23, sopra + 1).Value = nSal
@@ -7238,6 +7238,7 @@ def autoexec():
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
+    SheetUtils.FixNamedArea()
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
     bak0()
@@ -8498,7 +8499,7 @@ def descrizione_in_una_colonna(flag=False):
                                         'Comp-Bianche in mezzo Descr'):
                 oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
     if oDoc.getSheets().hasByName('CONTABILITA'):
-        if oDoc.NamedRanges.hasByName("#Lib#1"):
+        if oDoc.NamedRanges.hasByName("_Lib_1"):
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text="Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.")
             # ~DLG.MsgBox(
@@ -8590,18 +8591,17 @@ def DelPrintArea ():
     '''
     cancella area di stampa
     '''
-    ctx = LeenoUtils.getComponentContext()
-    desktop = LeenoUtils.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-        'com.sun.star.frame.DispatchHelper', ctx)
-
-    GotoSheet('COMPUTO')
-
-    oProp = PropertyValue()
-    properties = (oProp, )
-    dispatchHelper.executeDispatch(oFrame, '.uno:DeletePrintArea', '', 0,
-                                   properties)
+    oDoc = LeenoUtils.getDocument()
+    nome = oDoc.CurrentController.ActiveSheet.Name
+    lista_fogli = oDoc.Sheets.ElementNames
+    for el in lista_fogli:
+        if el not in (nome, 'cP_Cop'):
+            oSheet = oDoc.getSheets().getByName(el)
+            iSheet = oSheet.RangeAddress.Sheet
+            oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            oStampa.Sheet = iSheet
+            oSheet.setPrintAreas(())
+    return
 
 
 ########################################################################
@@ -8632,7 +8632,7 @@ def set_area_stampa():
             EC = 6
         if oSheet.Name == 'CONTABILITA':
             EC = 15
-            if oDoc.NamedRanges.hasByName('#Lib#1'):
+            if oDoc.NamedRanges.hasByName('_Lib_1'):
                 return
     if oSheet.Name in ('Analisi di Prezzo'):
         EC = 7
@@ -9235,7 +9235,6 @@ def calendario():
     return
 
 ########################################################################
-import LeenoContab
 import itertools
 import operator
 import functools
@@ -9243,10 +9242,7 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    DelPrintArea()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    # ~DLG.mri(oSheet)
+
     return
 
 ########################################################################

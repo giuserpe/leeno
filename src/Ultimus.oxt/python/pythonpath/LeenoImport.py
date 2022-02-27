@@ -328,7 +328,11 @@ def importa_listino_leeno_run():
     #  viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
-    test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
+    try:
+        test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
+    except:
+        test = 5
+    fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     assembla = DLG.DlgSiNo(
         '''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -432,17 +436,8 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
     oDialogo_attesa.endExecute()
-    procedo = DLG.DlgSiNo(
-        '''Vuoi mettere in ordine la visualizzazione del prezzario?
 
-Le righe senza prezzo avranno una tonalità di sfondo
-diversa dalle altre e potranno essere facilmente nascoste.
-
-Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
-    if procedo == 2:
-        DLG.attesa().start()  # mostra il dialogo
-        #  struttura_Elenco()
-        oDialogo_attesa.endExecute()
+    PL.struttura_Elenco()
     DLG.MsgBox('Conversione eseguita con successo!', '')
     PL.autoexec()
 

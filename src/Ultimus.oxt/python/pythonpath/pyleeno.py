@@ -6491,7 +6491,10 @@ def colora_vecchio_elenco():
     col1 = 16777072
     col2 = 16777120
     col3 = 16777168
-    inizio = SheetUtils.uFindStringCol('COMPLETO', 4, oSheet) + 1
+    try:
+        inizio = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
+    except:
+        inizio = 5
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     for el in range(inizio, fine):
         if len(oSheet.getCellByPosition(2, el).String.split('.')) == 1:
@@ -9242,9 +9245,17 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-
+    colora_vecchio_elenco()
     return
-
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    for el in reversed(range (1, lr)):
+        if oSheet.getCellByPosition(2, el).String == '' and \
+            oSheet.getCellByPosition(4, el).String == '' and \
+            oSheet.getCellByPosition(7, el).String == '':
+            oSheet.getRows().removeByIndex(el, 1)
+    return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

@@ -644,13 +644,13 @@ di partenza deve essere contigua.''')
     # ~if DLG.DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
         # ~EliminaVociDoppieElencoPrezzi()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
     oSheet = oDoc.getSheets().getByName(nSheetDCC)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 ########################################################################
@@ -9245,7 +9245,7 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    colora_vecchio_elenco()
+    sistema_cose()
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

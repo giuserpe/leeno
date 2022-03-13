@@ -312,8 +312,8 @@ def invia_voce_interno():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
+    # ~zoom = oDoc.CurrentController.ZoomValue
+    # ~oDoc.CurrentController.ZoomValue = 400
 
     elenco = seleziona()
     codici = []
@@ -348,7 +348,7 @@ la posizione di destinazione.''')
         else:
             LeenoComputo.ins_voce_computo(cod=el)
         lrow = SheetUtils.getLastUsedRow(oSheet)
-    oDoc.CurrentController.ZoomValue = zoom
+    # ~oDoc.CurrentController.ZoomValue = zoom
     return
 
 def MENU_invia_voce():
@@ -367,6 +367,7 @@ def MENU_invia_voce():
     if fpartenza == LeenoUtils.getGlobalVar('sUltimus'):
         if nSheet == 'Elenco Prezzi':
             invia_voce_interno()
+            return
         else:
             Dialogs.Exclamation(Title='ATTENZIONE!',
                 Text="Questo file coincide con il Documento Principale (DP).")
@@ -498,6 +499,12 @@ def MENU_invia_voce():
             GotoSheet(nome)
             dccSheet = ddcDoc.getSheets().getByName(nome)
             lrow = LeggiPosizioneCorrente()[1]
+
+            DLG.chi(dccSheet.getCellByPosition(0, lrow).CellStyle)
+            stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+            if dccSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+                lrow += 1
+
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna'):
                 LeenoComputo.insertVoceComputoGrezza(dccSheet, lrow + 1)
                 # @@ PROVVISORIO !!!
@@ -519,7 +526,6 @@ def MENU_invia_voce():
                 return
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        # sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         LeenoUtils.setGlobalVar('cod', codice_voce(lrow))
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -561,7 +567,7 @@ di partenza deve essere contigua.''')
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
-            lrow = LeggiPosizioneCorrente()[1] 
+            lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
                 lrow = LeggiPosizioneCorrente()[1] + 1
             elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
@@ -8444,8 +8450,9 @@ def sistema_cose():
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
         if oDoc.getCurrentSelection().Type.value == 'TEXT':
             testo = oDoc.getCurrentSelection().String.replace(
-                '\t', ' ').replace('\n', ' ').replace('Ã¨', 'è').replace(
-                    'Â°', '°').replace('Ã', 'à').replace(' $', '')
+                '\t', ' ').replace('Ã¨', 'è').replace(
+                'Â°', '°').replace('Ã', 'à').replace(
+                ' $', '').replace('\n\n\n', '\n').replace('\n\n', '\n')#.replace('\n', ' ')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
             oDoc.getCurrentSelection().String = testo.strip().strip().strip()
@@ -9245,16 +9252,18 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    sistema_cose()
-    return
+    # ~sistema_cose()
+    # ~return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
     for el in reversed(range (1, lr)):
-        if oSheet.getCellByPosition(2, el).String == '' and \
-            oSheet.getCellByPosition(4, el).String == '' and \
-            oSheet.getCellByPosition(7, el).String == '':
+        if oSheet.getCellByPosition(2, el).CellStyle == 'comp 1-a' and \
+            oSheet.getCellByPosition(2, el).String == '' and \
+            oSheet.getCellByPosition(9, el).String == '':
             oSheet.getRows().removeByIndex(el, 1)
+        elif oSheet.getCellByPosition(2, el).Type.value == 'TEXT':
+            oSheet.getCellByPosition(2, el).String = '- ' + oSheet.getCellByPosition(2, el).String
     return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
@@ -9263,6 +9272,7 @@ def MENU_debug():
 ########################################################################
 # ... here is the python script code
 # this must be added to every script file(the
+
 # name org.openoffice.script.DummyImplementationForPythonScripts should be changed to something
 # different(must be unique within an office installation !)
 # --- faked component, dummy to allow registration with unopkg, no functionality expected

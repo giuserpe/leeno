@@ -500,10 +500,9 @@ def MENU_invia_voce():
             dccSheet = ddcDoc.getSheets().getByName(nome)
             lrow = LeggiPosizioneCorrente()[1]
 
-            DLG.chi(dccSheet.getCellByPosition(0, lrow).CellStyle)
-            stili_cat = LeenoUtils.getGlobalVar('stili_cat')
-            if dccSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-                lrow += 1
+            # ~if dccSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+                # ~DLG.chi(dccSheet.getCellByPosition(0, lrow).CellStyle)
+                # ~lrow += 1
 
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna'):
                 LeenoComputo.insertVoceComputoGrezza(dccSheet, lrow + 1)
@@ -512,7 +511,7 @@ def MENU_invia_voce():
                 numera_voci(1)
                 lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(
-                    0, lrow).CellStyle in (stili_computo + ('comp Int_colonna', )):
+                 0, lrow).CellStyle in (stili_cat + stili_computo + ('comp Int_colonna', )):
                 if codice_voce(lrow) in ('', 'Cod. Art.?'):
                     codice_voce(lrow, LeenoUtils.getGlobalVar('cod'))
                 else:
@@ -9252,8 +9251,8 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    # ~sistema_cose()
-    # ~return
+    sistema_cose()
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1

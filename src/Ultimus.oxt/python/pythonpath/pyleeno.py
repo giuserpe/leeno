@@ -2691,32 +2691,26 @@ def riordina_ElencoPrezzi(oDoc):
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
     #chiudi_dialoghi()
-    #oDoc.enableAutomaticCalculation(False)
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
-    test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet))
-    try:
-        oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    except:
-        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
-        oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) +1)
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRangeAddress.StartRow + 1
-    if SR != 3:
-        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     SC = 0 #oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow + 1
-    ER = oRangeAddress.EndRow
+    ER = oRangeAddress.EndRow -1
     if SR == ER:
         return
 
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     SheetUtils.simpleSortColumn(oRange, 0, True)
 
-    #oDoc.enableAutomaticCalculation(True)
+    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################

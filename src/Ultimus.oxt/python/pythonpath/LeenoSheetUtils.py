@@ -266,7 +266,7 @@ def selezionaVoce(oSheet, lrow):
 
 # ###############################################################
 
-def prossimaVoce(oSheet, lrow, n=1):
+def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
     '''
     oSheet { obect }
     lrow { double }   : riga di riferimento
@@ -296,8 +296,9 @@ def prossimaVoce(oSheet, lrow, n=1):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    # ~while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-        # ~lrow += 1
+    if saltaCat == True:
+        while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+            lrow += 1
     while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
         lrow += 1
     return lrow
@@ -430,7 +431,27 @@ def inserisciRigaRossa(oSheet):
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
 # ###############################################################
+from com.sun.star.beans import PropertyValue
 
+def setAdatta():
+    # ~da sistemare
+    '''
+    altezza   { integer } : altezza
+    fissa il valore dell'altezza ottimale
+    '''
+    # oDoc = LeenoUtils.getDocument()
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+        'com.sun.star.frame.DispatchHelper', ctx)
+    oProp = PropertyValue()
+    oProp.Name = 'aExtraHeight'
+    oProp.Value = 10
+    properties = (oProp, )
+    dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0,
+                                   properties)
 
 def adattaAltezzaRiga(oSheet):
     '''

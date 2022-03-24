@@ -5590,6 +5590,14 @@ def rigenera_voce(lrow=None):
         for n in range (sopra + 2, sotto):
 #            k += 1
 #            progress.setValue(k)
+
+            # elimina i collegamenti esterni
+            if oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a' or \
+                oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
+                "'" in oSheet.getCellByPosition(2, n).Formula:
+                ff = oSheet.getCellByPosition(2, n).Formula.split("'")
+                oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
+
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -5674,6 +5682,14 @@ def rigenera_voce(lrow=None):
         for n in range (sopra + 2, sotto - 1):
 #            k += 1
 #            progress.setValue(k)
+
+            # elimina i collegamenti esterni
+            if oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a' or \
+                oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
+                "'" in oSheet.getCellByPosition(2, n).Formula:
+                ff = oSheet.getCellByPosition(2, n).Formula.split("'")
+                oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
+
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -9247,10 +9263,13 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 def MENU_debug():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = LeggiPosizioneCorrente()[1]
-    lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    for el in reversed(range (1, lr)):
+        if oSheet.getCellByPosition(2, el).CellStyle == 'comp 1-a' and \
+            "'" in oSheet.getCellByPosition(2, el).Formula:
+            ff = oSheet.getCellByPosition(2, el).Formula.split("'")
+            oSheet.getCellByPosition(2, el).Formula = ff[0] + ff[-1][1:]
 
-    _gotoCella(lrow)
     return
     # ~LeenoSheetUtils.setAdatta()
     # ~sistema_cose()

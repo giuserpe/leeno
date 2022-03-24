@@ -163,7 +163,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = dati['titolo']
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellByPosition(1, 1).String = dati['titolo']
+    oSheet.getCellByPosition(1, 0).String = dati['titolo']
     oSheet.getRows().insertByIndex(4, numItems)
 
     # riga e colonna di partenza del blocco da riempire

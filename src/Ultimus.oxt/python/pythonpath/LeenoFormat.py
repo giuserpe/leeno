@@ -43,5 +43,4 @@ def setCellStyleDecimalPlaces(nome_stile, n):
     new = list()
     for el in stringa:
         new.append(el.split(',')[0] + ',' + '0' * n)
-    #  oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1))
     oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(';'.join(new))

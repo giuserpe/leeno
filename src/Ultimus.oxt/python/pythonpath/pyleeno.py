@@ -5726,14 +5726,14 @@ def rigenera_tutte(arg=None, ):
     if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         try:
             oSheet = oDoc.Sheets.getByName(nome)
-            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
+            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1, True)
             oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
                 progress.setValue(row)
                 rigenera_voce(row)
                 # ~sistema_stili(row)
-                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1, True)
         except Exception:
             pass
     rigenera_parziali(True)
@@ -9245,10 +9245,24 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    sistema_cose()
-    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+
+    _gotoCella(lrow)
+    return
+    # ~LeenoSheetUtils.setAdatta()
+    # ~sistema_cose()
+    # ~return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    usedArea = SheetUtils.getUsedArea(oSheet)
+    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = False
+    oSheet.getCellRangeByPosition(0, 0, 1023, 1048575).Rows.OptimalHeight = False
+    oSheet.getCellRangeByPosition(0, 0, 1023, 1048575).Rows.Height = 1576
+    DLG.mri(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows)
+    return
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
     for el in reversed(range (1, lr)):
         if oSheet.getCellByPosition(2, el).CellStyle == 'comp 1-a' and \

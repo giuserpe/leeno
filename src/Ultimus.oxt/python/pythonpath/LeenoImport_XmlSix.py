@@ -291,9 +291,12 @@ def parseXML(data, defaultTitle):
     superCatList = {}
     if len(gruppi) > 0:
         for codice, articolo in artList.items():
-            splitCodice = codice.split('.')
-            codiceCat = splitCodice[0] + '.' + splitCodice[1]
-            codiceSuperCat = splitCodice[0]
+            try:
+                splitCodice = codice.split('.')
+                codiceCat = splitCodice[0] + '.' + splitCodice[1]
+                codiceSuperCat = splitCodice[0]
+            except:
+                pass
             gruppo = articolo['gruppo']
             if gruppo is None or gruppo == '':
                 continue

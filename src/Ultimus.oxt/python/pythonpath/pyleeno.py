@@ -5596,7 +5596,8 @@ def rigenera_voce(lrow=None):
                 oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
                 "'" in oSheet.getCellByPosition(2, n).Formula:
                 ff = oSheet.getCellByPosition(2, n).Formula.split("'")
-                oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
+                if len(ff) > 1:
+                    oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
 
             rosso = 0
             for x in range (5, 8):
@@ -5688,7 +5689,8 @@ def rigenera_voce(lrow=None):
                 oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
                 "'" in oSheet.getCellByPosition(2, n).Formula:
                 ff = oSheet.getCellByPosition(2, n).Formula.split("'")
-                oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
+                if len(ff) > 1:
+                    oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
 
             rosso = 0
             for x in range (5, 8):
@@ -9261,6 +9263,8 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
+    rigenera_voce()
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1

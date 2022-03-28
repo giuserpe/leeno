@@ -4007,8 +4007,9 @@ def MENU_azzera_voce():
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
-                if oSheet.getCellByPosition(
-                        2, fine - 1).String == '*** VOCE AZZERATA ***':
+                # ~if oSheet.getCellByPosition(
+                        # ~2, fine - 1).String == '*** VOCE AZZERATA ***':
+                if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
                     # elimino il colore di sfondo
                     if oSheet.Name == 'CONTABILITA':
                         oSheet.getCellRangeByPosition(
@@ -4083,8 +4084,9 @@ def MENU_elimina_voci_azzerate():
             for lrow in reversed(range(0, ER)):
                 n += 1
                 progress.setValue(n)
-                if oSheet.getCellByPosition(
-                        2, lrow).String == '*** VOCE AZZERATA ***':
+                # ~if oSheet.getCellByPosition(
+                        # ~2, lrow).String == '*** VOCE AZZERATA ***':
+                if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, lrow).String:
                     # ~elimina_voce(lrow=lrow, msg=0)
                     LeenoSheetUtils.eliminaVoce(oSheet, lrow)
 
@@ -4130,11 +4132,9 @@ def MENU_nasconde_voci_azzerate():
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            oSheet.clearOutline()
             ER = SheetUtils.getUsedArea(oSheet).EndRow
             for lrow in reversed(range(0, ER)):
-                if oSheet.getCellByPosition(
-                        2, lrow).String == '*** VOCE AZZERATA ***':
+                if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, lrow).String:
                     raggruppa_righe_voce(lrow, 1)
     except Exception:
         return
@@ -9263,7 +9263,12 @@ import LeenoImport as LI
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    rigenera_voce()
+    MENU_nasconde_voci_azzerate()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~lrow = LeggiPosizioneCorrente()[1]
+
+    # ~raggruppa_righe_voce(lrow, 1)
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

@@ -619,7 +619,7 @@ def MENU_fuf():
     oDoc.CurrentController.ShowGrid = True
     oSheet.getCellRangeByName('A1:F1').CellStyle = 'Accent 3'
     return
-    PL.copy_clip()
+    PL.comando('Copy')
 
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()

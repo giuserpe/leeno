@@ -298,7 +298,7 @@ def paste_clip(arg=None, insCells=0):
 
 def copy_clip():
     callAlert()
-    PL.copy_clip()
+    PL.comando('Copy')
 
 
 def ins_voce_elenco():

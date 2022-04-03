@@ -255,7 +255,8 @@ Sub listino_venezia_2014 &apos;Giuseppe Vizziello 2014
 &apos; http://www.comune.venezia.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/73822
 &apos; accorpa le celle di descrizione in senso verticale
 	oSheet=ThisComponent.currentController.activeSheet 
-	i = getLastUsedRow(oSheet)
+&apos;	i = getLastUsedRow(oSheet)
+	i =23343
 	Do While i &gt; 0
 		if oSheet.getCellByPosition(0, i).string = &quot;&quot; and _
 			oSheet.getCellByPosition(1, i).string &lt;&gt; &quot;&quot; and _

@@ -24,21 +24,4 @@ rem dispatcher.executeDispatch(document, &quot;.uno:Undo&quot;, &quot;&quot;, 0,
 
 
 end sub
-
-
-sub m000
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:ClearArrowDependents&quot;, &quot;&quot;, 0, Array())
-
-
-end sub
 </script:module>

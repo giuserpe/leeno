@@ -473,7 +473,7 @@ def MENU_invia_voce():
                     selezione.append(rangen)
                 voci.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(voci)
-        copy_clip()
+        comando('Copy')
         oDoc.CurrentController.select(
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -561,7 +561,7 @@ di partenza deve essere contigua.''')
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
             return
         if nSheetDCC in ('COMPUTO', 'VARIANTE'):
-            copy_clip()
+            comando('Copy')
             # arrivo
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
@@ -600,7 +600,7 @@ di partenza deve essere contigua.''')
 
             ranges.addRangeAddresses(selezione, True)
             oDoc.CurrentController.select(ranges)
-            copy_clip()
+            comando('Copy')
             #
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
@@ -630,7 +630,7 @@ di partenza deve essere contigua.''')
         ranges.addRangeAddresses(selezione_analisi, True)
         oDoc.CurrentController.select(ranges)
 
-        copy_clip()
+        comando('Copy')
 
         _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
         ddcDoc = LeenoUtils.getDocument()
@@ -2399,7 +2399,7 @@ def scelta_viste():
 
             oDoc.CurrentController.select(oSheet.getCellRangeByName('AA2'))
             #  oDoc.CurrentController.select(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
-            copy_clip()
+            comando('Copy')
             oDoc.CurrentController.select(
                 oSheet.getCellRangeByPosition(26, 3, 26, ER))
             paste_format()
@@ -4007,9 +4007,7 @@ def MENU_azzera_voce():
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
-                # ~if oSheet.getCellByPosition(
-                        # ~2, fine - 1).String == '*** VOCE AZZERATA ***':
-                if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
+t                 if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
                     # elimino il colore di sfondo
                     if oSheet.Name == 'CONTABILITA':
                         oSheet.getCellRangeByPosition(
@@ -4031,13 +4029,11 @@ def MENU_azzera_voce():
                                 inizio + 1) + ':J' + str(
                                     fine) + ')-SUBTOTAL(9;L' + str(
                                         inizio + 1) + ':L' + str(fine) + ')'
-                        inverti_segno()
-                        # ~oSheet.getCellByPosition(9, fine).Formula = '=-SUM(J' + str(inizio+1) + ':J' + str(fine) + ')'
-                        # ~oSheet.getCellByPosition(11, fine).Formula = '=-SUM(L' + str(inizio+1) + ':L' + str(fine) + ')'
                     else:
                         oSheet.getCellByPosition(
-                            5, fine).Formula = '=-SUBTOTAL(9;J' + str(
+                            5, fine).Formula = '=SUBTOTAL(9;J' + str(
                                 inizio + 1) + ':J' + str(fine) + ')'
+                    inverti_segno()
                     # cambio il colore di sfondo
                     oDoc.CurrentController.select(sStRange)
                     raggruppa_righe_voce(lrow, 1)
@@ -5070,6 +5066,7 @@ def comando(cmd):
     'ShowDependents'        = Mostra le celle dipendenti
     'ClearArrowDependents'  = elimina frecce celle dipendenti
     'Undo'                  = Annulla ultimo comando
+    'CalculateHard'         = Ricalcolo incondizionato
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -5107,15 +5104,9 @@ def delete(arg):
 
 
 ########################################################################
-def copy_clip():
-    #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    ctx = LeenoUtils.getComponentContext()
-    desktop = LeenoUtils.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
+# ~def copy_clip():
+    # ~comando('Copy')
+    # ~return
 
 
 ########################################################################
@@ -5760,6 +5751,7 @@ def rigenera_tutte(arg=None, ):
     fissa()
     progress.hide()
     oDoc.enableAutomaticCalculation(True)
+    comando("CalculateHard")
     oDoc.CurrentController.ZoomValue = zoom
 
 
@@ -8360,7 +8352,7 @@ def ctrl_d():
     except Exception:
         return
     oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
-    copy_clip()
+    comando('Copy')
     oDoc.CurrentController.select(oCell)
     paste_clip(insCell=0)
     oDoc.CurrentController.select(
@@ -8375,12 +8367,7 @@ def MENU_taglia_x():
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    ctx = LeenoUtils.getComponentContext()
-    desktop = LeenoUtils.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
+    comando('Copy')
 
     try:
         sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
@@ -9072,7 +9059,7 @@ def elimina_voci_doppie():
 
     oSheet.getCellByPosition(30, 3).Formula = '=IF(A4=A3;1;0)'
     oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
-    copy_clip()
+    comando('Copy')
     oDoc.CurrentController.select(
         oSheet.getCellRangeByPosition(30, 3, 30, fine))
     paste_clip(insCells=1)
@@ -9111,10 +9098,8 @@ def MENU_filtro_descrizione():
     Raggruppa e nasconde tutte le voci di misura in cui non compare
     la stringa cercata.
     '''
-    struttura_off()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
 
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -9130,6 +9115,10 @@ def MENU_filtro_descrizione():
         testo, t='Inserisci la descrizione da cercare o OK per conferma.')
     if descrizione in (None, '', ' '):
         return
+
+    struttura_off()
+    oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
+
     y = 4
     progress = Dialogs.Progress(Title='Applicazione filtro in corso...', Text="Lettura dati")
     progress.setLimits(0, fine)

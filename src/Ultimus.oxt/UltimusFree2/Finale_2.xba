@@ -292,14 +292,14 @@ SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
 			oSh.PrintAreas() = Array()
 		End If
 	Next
-xray mSheetAreas()
+&apos; xray mSheetAreas()
  &apos;parametri di esportazione
 	Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 	mStoreOpts(0).Name = &quot;Overwrite&quot;
 	mStoreOpts(0).Value = True
 	mStoreOpts(1).Name = &quot;FilterName&quot;
 	mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
-&apos;	sUrl = &quot;file:///W:/test.pdf&quot;
+	sUrl = &quot;file:///W:/test.pdf&quot;
 	oDoc.storeToURL(sUrl, mStoreOpts())
 
 &apos;	For Each mShArea In mSheetAreas()

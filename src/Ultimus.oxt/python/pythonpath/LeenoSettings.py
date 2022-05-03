@@ -198,11 +198,57 @@ def PrintSettingsDialog():
     posW, dummy = Dialogs.getTextBox("SinistraXX")
 
     return Dialogs.Dialog(Title='Impostazioni stampa / PDF',  Horz=False, CanClose=True,  Items=[
-        Dialogs.HSizer(Items=[
-            Dialogs.VSizer(Items=[
+        Dialogs.VSizer(Items=[
+            Dialogs.FixedText(Text='Intestazione:'),
                 Dialogs.Spacer(),
+
+            Dialogs.HSizer(Items=[
+                    Dialogs.HSizer(Items=[
+                        Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
+                        Dialogs.ComboBox(Id="intSx", List=_DOCSTRINGS),
+                    ]),
+                    Dialogs.Spacer(),
+                    Dialogs.HSizer(Items=[
+                        Dialogs.FixedText(Text='Centro', FixedWidth=posW),
+                        Dialogs.ComboBox(Id="intCenter", List=_DOCSTRINGS),
+                    ]),
+                    Dialogs.Spacer(),
+                    Dialogs.HSizer(Items=[
+                        Dialogs.FixedText(Text='Destra', FixedWidth=posW),
+                        Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS),
+                    ]),
+            ]),
+            
+            Dialogs.Spacer(MinSize = 50),
+            Dialogs.HSizer(Items=[
+                # ~Dialogs.Spacer(),
                 Dialogs.ImageControl(Image='Icons-Big/printersettings.png', MinWidth=imgW),
+                # ~Dialogs.Spacer(),
+            ]),
+            Dialogs.Spacer(MinSize = 50),
+            
+                Dialogs.FixedText(Text='Piè di pagina:'),
                 Dialogs.Spacer(),
+            Dialogs.HSizer(Items=[
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
+                    Dialogs.ComboBox(Id="ppSx", List=_DOCSTRINGS),
+                ]),
+                Dialogs.Spacer(MinSize = 50),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
+                    Dialogs.ComboBox(Id="ppCenter", List=_DOCSTRINGS),
+                ]),
+                Dialogs.Spacer(MinSize = 50),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
+                    Dialogs.ComboBox(Id="ppDx", List=_DOCSTRINGS),
+                ]),
+            ]),
+        ]),
+        Dialogs.Spacer(),
+        Dialogs.Spacer(),
+        Dialogs.HSizer(Items=[
             ]),
             Dialogs.Spacer(),
             Dialogs.VSizer(Items=[
@@ -214,40 +260,8 @@ def PrintSettingsDialog():
                 Dialogs.Spacer(),
                 Dialogs.ListBox(Id='copertina'),
                 Dialogs.Spacer(),
-                Dialogs.FixedText(Text='Intestazione'),
                 Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="intSx", List=_DOCSTRINGS),
-                ]),
                 Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="intCenter", List=_DOCSTRINGS),
-                ]),
-                Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS),
-                ]),
-                Dialogs.Spacer(),
-                Dialogs.FixedText(Text='Piè di pagina'),
-                Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppSx", List=_DOCSTRINGS),
-                ]),
-                Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppCenter", List=_DOCSTRINGS),
-                ]),
-                Dialogs.Spacer(),
-                Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppDx", List=_DOCSTRINGS),
-                ]),
-            ]),
         ]),
         Dialogs.Spacer(),
         Dialogs.Spacer(),

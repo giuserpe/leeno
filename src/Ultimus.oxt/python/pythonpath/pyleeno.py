@@ -841,8 +841,8 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-        # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
-        subprocess.Popen('eric ' + dest + '/pyleeno.py',
+        subprocess.Popen('geany ' + dest + '/pyleeno.py',
+        # ~ subprocess.Popen('eric ' + dest + '/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -4007,7 +4007,7 @@ def MENU_azzera_voce():
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
-t                 if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
+                if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
                     # elimino il colore di sfondo
                     if oSheet.Name == 'CONTABILITA':
                         oSheet.getCellRangeByPosition(
@@ -8046,18 +8046,17 @@ def bak0():
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
+    dir_bak = uno.fileUrlToSystemPath(dir_bak)
     # filename = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '-'
     if len(orig) == 0:
         return
-    if not os.path.exists(uno.fileUrlToSystemPath(dir_bak)):
-        os.makedirs(uno.fileUrlToSystemPath(dir_bak))
+    if not os.path.exists(dir_bak):
+        os.makedirs(dir_bak)
     orig = uno.fileUrlToSystemPath(orig)
     dest = uno.fileUrlToSystemPath(dest)
-    if os.path.exists(uno.fileUrlToSystemPath(dir_bak) + dest):
-        shutil.copyfile(
-            uno.fileUrlToSystemPath(dir_bak) + dest,
-            uno.fileUrlToSystemPath(dir_bak) + dest + '.old')
-    shutil.copyfile(orig, uno.fileUrlToSystemPath(dir_bak) + dest)
+    if os.path.exists(dir_bak + dest):
+        shutil.copyfile(dir_bak + dest, dir_bak + dest + '.old')
+    shutil.copyfile(orig, dir_bak + dest)
 
 
 ########################################################################
@@ -9249,10 +9248,12 @@ import itertools
 import operator
 import functools
 import LeenoImport as LI
-from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
 def MENU_debug():
-    MENU_nasconde_voci_azzerate()
+    import LeenoPdf
+    LeenoPdf.MENU_Pdf()
+    # ~sistema_cose()
+    # ~MENU_nasconde_voci_azzerate()
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~lrow = LeggiPosizioneCorrente()[1]
@@ -9289,6 +9290,291 @@ def MENU_debug():
         elif oSheet.getCellByPosition(2, el).Type.value == 'TEXT':
             oSheet.getCellByPosition(2, el).String = '- ' + oSheet.getCellByPosition(2, el).String
     return
+
+def MENU_debug():
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheets = oDoc.Sheets.ElementNames
+    set_area_stampa()
+    orig = oDoc.getURL()
+
+    dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.pdf'
+    orig = uno.fileUrlToSystemPath(orig)
+    dir_bak = os.path.dirname(oDoc.getURL())
+    # ~DelPrintArea()
+    oDoc.storeToURL(dir_bak + '/' + dest, list())
+
+    # ~DLG.chi(dir_bak)
+    return
+
+
+def MENU_debug():
+    '''
+
+    '''
+    DelPrintArea()
+    oDoc = LeenoUtils.getDocument()
+    # ~oProp = []
+    # ~oProp0 = PropertyValue()
+    # ~oProp0.Name = 'Overwrite'
+    # ~oProp0.Value = True
+    # ~oProp1 = PropertyValue()
+    # ~oProp1.Name = 'FilterName'
+    # ~oProp1.Value = 'calc_pdf_Export'
+    # ~oProp.append(oProp0)
+    # ~oProp.append(oProp1)
+    # ~properties = tuple(oProp)
+    # ~sUrl = "file:///W:/test.pdf"
+    # ~oDoc.storeToURL(sUrl, properties)
+
+    # ~'crea proprietà e valori in filterData, che verranno passati a filterProps
+    filterData = []
+    filterData0 = PropertyValue()
+    filterData0.Name = "Selection"
+    filterData0.Value = oDoc.CurrentController.ActiveSheet
+    filterData1 = PropertyValue()
+    filterData1.Name = "IsAddStream"
+    filterData1.Value = True
+    filterData.append(filterData0)
+    filterData.append(filterData1)
+
+    # ~'crea proprietà e valori in filterProps, che verranno passati alla funzione di esportazione storeToURL
+    filterProps = []
+    filterProps0 = PropertyValue()
+    filterProps0.Name = "FilterName"
+    filterProps0.Value = "calc_pdf_Export"
+    filterProps1 = PropertyValue()
+    filterProps1.Name = "FilterData"
+    filterProps1.Value = tuple(filterData)
+    filterProps.append(filterProps0)
+    filterProps.append(filterProps1)
+    
+    properties = tuple(filterProps)
+
+    sUrl = "file:///W:/test.pdf"
+    oDoc.storeToURL(sUrl, properties)
+
+def PdfDlg():
+    # dimensione verticale dei checkbox == dimensione bottoni
+    #dummy, hItems = Dialogs.getButtonSize('', Icon="Icons-24x24/settings.png")
+    nWidth, hItems = Dialogs.getEditBox('aa')
+
+    # dimensione dell'icona col PDF
+    imgW = Dialogs.getBigIconSize()[0] * 2
+    
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheets = list(oDoc.getSheets().getElementNames())
+
+
+    return Dialogs.Dialog(Title='Esportazione PDFPDFPDFPDFPDF',  Horz=False, CanClose=True,  Items=[
+        Dialogs.HSizer(Items=[
+            Dialogs.VSizer(Items=[
+                Dialogs.Spacer(),
+                Dialogs.ImageControl(Image='Icons-Big/pdf.png', MinWidth=imgW / 10),
+                Dialogs.Spacer(),
+            ]),
+            # ~Dialogs.VSizer(Items=[
+                # ~Dialogs.FixedText(Text='Elenco_prova'),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.Edit(Id='npElencoPrezzi', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.Edit(Id='npComputoMetrico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.Edit(Id='npCostiManodopera', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.Edit(Id='npQuadroEconomico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+            # ~]),
+            Dialogs.Spacer(),
+            Dialogs.VSizer(Items=[
+                Dialogs.FixedText(Text='Oggetto'),
+                Dialogs.Spacer(),
+                Dialogs.ListBox(List=oSheets, FixedHeight=hItems * 10, FixedWidth=nWidth * 6),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.CheckBox(Id="cbElencoPrezzi", Label="Elenco prezzi", FixedHeight=hItems),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.CheckBox(Id="cbComputoMetrico", Label="Computo metrico", FixedHeight=hItems),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.CheckBox(Id="cbCostiManodopera", Label="Costi manodopera", FixedHeight=hItems),
+                # ~Dialogs.Spacer(),
+                # ~Dialogs.CheckBox(Id="cbQuadroEconomico", Label="Quadro economico", FixedHeight=hItems),
+            ]),
+            Dialogs.Spacer(),
+        ]),
+        Dialogs.Spacer(),
+        Dialogs.Spacer(),
+        Dialogs.FixedText(Text='Cartella di destinazione:'),
+        Dialogs.Spacer(),
+        Dialogs.PathControl(Id="pathEdit"),
+        Dialogs.Spacer(),
+        Dialogs.HSizer(Items=[
+            Dialogs.Spacer(),
+            Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
+            Dialogs.Spacer(),
+            Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
+            Dialogs.Spacer()
+        ])
+    ])
+    
+def MENU_debug():
+    sistema_cose()
+    return
+    import LeenoImport
+    
+    LeenoImport.MENU_Piemonte_2019()
+    return
+    import Dialogs
+    import LeenoPdf
+    
+    oDoc = LeenoUtils.getDocument()
+    es = LeenoPdf.loadExportSettings(oDoc)
+
+    dlg = PdfDlg()
+    dlg.setData(es)
+
+    # se premuto "annulla" non fa nulla
+    if dlg.run() < 0:
+        return
+
+    es = dlg.getData(_EXPORTSETTINGSITEMS)
+    storeExportSettings(oDoc, es)
+
+    # estrae la path
+    # ~destFolder = dlg['pathEdit'].getPath()
+    destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
+    
+    # ~import LeenoDialogs as DLG
+    # ~DLG.chi(destFolder)
+    # ~return
+
+    # controlla se selezionato elenco prezzi
+    if dlg['cbElencoPrezzi'].getState():
+        PdfElencoPrezzi(destFolder, es['npElencoPrezzi'])
+
+    # controlla se selezionato computo metrico
+    if dlg['cbComputoMetrico'].getState():
+        PdfComputoMetrico(destFolder, es['npComputoMetrico'])
+    return
+
+    oDoc = LeenoUtils.getDocument()
+
+    oSheets = list(oDoc.getSheets().getElementNames())
+    # ~DLG.chi(oSheets)
+    # ~DLG.chi(oSheets)
+    # ~nWidth, hItems = Dialogs.getEditBox('g')
+
+    # ~Dialogs.FolderSelect()
+    # ~Dialogs.ListBox(Id=None, List=oSheets, Current=None)
+    # ~nWidth, hItems = Dialogs.getEditBox('aa')
+    Dialogs.ListBox.setList(self, oSheets)
+    return
+    
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    rigenera_voce(lrow)
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+
+    # ~dispatchHelper.executeDispatch(oFrame, '.uno:DataSort', '', 0, properties)
+
+    # ~For Each oSh In oSheets
+        # ~If oSh.Name <> "cP_Cop" and oSh.Name <> oActiveSheet Then ' and oSh.Name <> "copyright_LeenO" Then
+        # ~p = 0
+
+        # ~'    ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).getCellByPosition(0,0))
+        # ~'    oSh.IsVisible = False
+        # ~Else
+
+            # ~Set_Area_Stampa_N("NO_messaggio")
+            # ~If     oSh.Name = oActiveSheet Then
+                # ~ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
+                # ~if msgbox (CHR$(10) &"Preferisci nascondere i colori?",36, "") = 6 Then ScriptPy("LeenoSheetUtils.py","SbiancaCellePrintArea")
+                # ~unSelect 'unselect ranges 
+            # ~Else
+            # ~End If
+        # ~End If
+    # ~Next
+# ~'parametri di esportazione
+    # ~dim dispatcher as Object
+    # ~dim document as Object
+    # ~document   = ThisComponent.CurrentController.Frame
+    # ~dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")
+
+    
+    # ~rem ----------------------------------------------------------------------
+    # ~dim args1(2) as new com.sun.star.beans.PropertyValue
+    # ~args1(0).Name = "URL"
+    # ~args1(0).Value = sFile '"file:///C:/test.pdf"
+    # ~args1(1).Name = "FilterName"
+    # ~args1(1).Value = "calc_pdf_Export"
+    # ~args1(2).Name = "FilterData"
+    # ~args1(2).Value = Array(Array("UseLosslessCompression",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("Quality",0,90,com.sun.star.beans.PropertyState.DIRECT_VALUE), _ 
+                            # ~Array("ReduceImageResolution",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _ 
+                            # ~Array("MaxImageResolution",0,300,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("UseTaggedPDF",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("SelectPdfVersion",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ExportNotes",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ExportBookmarks",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("OpenBookmarkLevels",0,-1,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("UseTransitionEffects",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("IsSkipEmptyPages",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("IsAddStream",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("EmbedStandardFonts",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("FormsType",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ExportFormFields",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("AllowDuplicateFieldNames",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("HideViewerToolbar",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("HideViewerMenubar",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("HideViewerWindowControls",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ResizeWindowToInitialPage",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("CenterWindow",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("OpenInFullScreenMode",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("DisplayPDFDocumentTitle",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("InitialView",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("Magnification",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("Zoom",0,100,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("PageLayout",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("FirstPageOnLeft",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("InitialPage",0,1,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("Printing",0,2,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("Changes",0,4,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("EnableCopyingOfContent",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("EnableTextAccessForAccessibilityTools",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ExportLinksRelativeFsys",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("PDFViewSelection",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ConvertOOoTargetToPDFTarget",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("ExportBookmarksToPDFDestination",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("_OkButtonString",0,"",com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("EncryptFile",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("PreparedPasswords",0,,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("RestrictPermissions",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("PreparedPermissionPassword",0,Array(),com.sun.star.beans.PropertyState.DIRECT_VALUE), _
+                            # ~Array("",0,,com.sun.star.beans.PropertyState.DIRECT_VALUE) _
+                        # ~)
+    
+    # ~dispatcher.executeDispatch(document, ".uno:ExportToPDF", "", 0, args1())
+    
+# ~'For Each oSh In oSheets
+# ~'     oSh.IsVisible = True
+# ~'Next
+    # ~ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh)+100,getLastUsedRow(oSh)+100))
+# ~'    SBIANCA_ANNULLA
+    # ~unSelect 'unselect ranges
+    
+# ~'    Rimetti_in_ordine_tab
+    # ~oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
+    # ~oSheet.IsVisible = True
+    # ~ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
+    
+    # ~if msgbox (CHR$(10) &"Il documento PDF è stato esportato come " & sFile & CHR$(10)& CHR$(10)_
+                # ~& " Vuoi aprire il PDF? "& CHR$(10)& CHR$(10)_
+                # ~& "" ,36, "") = 6 Then
+        # ~createUnoService("com.sun.star.system.SystemShellExecute").execute(sFile,"", 0)
+    # ~EndIf
+# ~End Sub
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

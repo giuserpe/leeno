@@ -5719,6 +5719,9 @@ def rigenera_tutte(arg=None, ):
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
 
+    riordina_ElencoPrezzi(oDoc)
+
+
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
 

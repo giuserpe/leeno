@@ -1699,7 +1699,7 @@ class ListBox(DialogItem):
         MUST be redefined on each visible control
         '''
         return {
-            'Dropdown': True,
+            'Dropdown': True, # lista a cascata
             'Border': 2,
         }
 
@@ -1709,7 +1709,7 @@ class ListBox(DialogItem):
         (needed, for example, for droplists...)
         '''
         oControl.DropDownLineCount = 10
-        oControl.MultipleMode = False
+        oControl.MultipleMode = False # selezione multipla
         self.setList(self._list)
 
     def _presetWidgets(self):

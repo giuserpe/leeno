@@ -496,8 +496,9 @@ def MENU_basilicata_2020():
 ########################################################################
 
 
-def MENU_Piemonte_2019():
+def MENU_Piemonte():
     '''
+    *** da applicare dopo aver unito i file in un unico ODS con Sub _accoda_files_in_unico ***
     Adatta la struttura del prezzario rilasciato dalla regione Piemonte
     partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note
     Il risultato ottenuto va inserito in Elenco Prezzi.

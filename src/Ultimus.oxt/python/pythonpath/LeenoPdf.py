@@ -194,6 +194,7 @@ def PdfElencoPrezzi(destFolder, nTavola):
     # purtropp non c'è alcun modo di determinare in anticipo il numero di pagine, indi
     # dobbiamo creare il PDF, usare una funzione per contarle, e ricrearlo di nuovo
     # meraviglie di LibreOffice...
+    return
     nPages = LeenoUtils.countPdfPages(destPath)
     docSubst['[PAGINE]'] = nPages
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
@@ -243,7 +244,12 @@ def MENU_Pdf():
     storeExportSettings(oDoc, es)
 
     # estrae la path
-    destFolder = dlg['pathEdit'].getPath()
+    # ~destFolder = dlg['pathEdit'].getPath()
+    destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
+    
+    # ~import LeenoDialogs as DLG
+    # ~DLG.chi(destFolder)
+    # ~return
 
     # controlla se selezionato elenco prezzi
     if dlg['cbElencoPrezzi'].getState():

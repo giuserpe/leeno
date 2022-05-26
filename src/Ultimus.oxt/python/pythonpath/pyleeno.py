@@ -8452,9 +8452,12 @@ def sistema_cose():
             testo = oDoc.getCurrentSelection().String.replace(
                 '\t', ' ').replace('Ã¨', 'è').replace(
                 'Â°', '°').replace('Ã', 'à').replace(
-                ' $', '').replace('\n\n\n', '\n').replace('\n\n', '\n')#.replace('\n', ' ')
+                ' $', '')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
+            while '\n\n' in testo:
+                testo = testo.replace('\n\n', '\n')
+            # ~testo = " ".join(testo.split()) # elimina tutti i capoverso
             oDoc.getCurrentSelection().String = testo.strip().strip().strip()
 
 
@@ -9422,6 +9425,12 @@ def PdfDlg():
     
 def MENU_debug():
     sistema_cose()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~testo = oSheet.getCellByPosition(0, 0).String
+    # ~txt = " ".join(testo.split())
+    # ~oSheet.getCellByPosition(0, 1).String = txt
+    # ~DLG.chi(txt)
     return
     import LeenoImport
     

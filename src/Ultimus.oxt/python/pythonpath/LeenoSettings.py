@@ -29,8 +29,12 @@ _PRINTSETTINGSITEMS = (
     'ppDx',
 )
 
+oDoc = LeenoUtils.getDocument()
 _DOCSTRINGS = (
     '[COMMITTENTE]',
+    
+    "\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String,
+
     '[DATA]',
     '[DATA_REVISIONE]',
     '[DATI_COMMITTENTE]',
@@ -204,45 +208,46 @@ def PrintSettingsDialog():
 
             Dialogs.HSizer(Items=[
                     Dialogs.HSizer(Items=[
-                        Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
-                        Dialogs.ComboBox(Id="intSx", List=_DOCSTRINGS),
+                        Dialogs.FixedText(Text='Sinistra: '),
+                        Dialogs.ComboBox(Id="intSx", List=_DOCSTRINGS, FixedHeight=1),
                     ]),
                     Dialogs.Spacer(),
                     Dialogs.HSizer(Items=[
-                        Dialogs.FixedText(Text='Centro', FixedWidth=posW),
-                        Dialogs.ComboBox(Id="intCenter", List=_DOCSTRINGS),
+                        Dialogs.FixedText(Text='Centro: '),
+                        Dialogs.ComboBox(Id="intCenter", List=_DOCSTRINGS, FixedHeight=1),
                     ]),
                     Dialogs.Spacer(),
                     Dialogs.HSizer(Items=[
-                        Dialogs.FixedText(Text='Destra', FixedWidth=posW),
-                        Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS),
+                        Dialogs.FixedText(Text='Destra: '),
+                        Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS, FixedHeight=1),
                     ]),
             ]),
             
-            Dialogs.Spacer(MinSize = 50),
+            Dialogs.Spacer(MinSize = 10),
             Dialogs.HSizer(Items=[
                 # ~Dialogs.Spacer(),
-                Dialogs.ImageControl(Image='Icons-Big/printersettings.png', MinWidth=imgW),
+                Dialogs.ImageControl(Image='Icons-Big/preview.png', MinWidth=imgW * 1.5),
                 # ~Dialogs.Spacer(),
             ]),
-            Dialogs.Spacer(MinSize = 50),
+            Dialogs.Spacer(MinSize = 10),
             
                 Dialogs.FixedText(Text='Piè di pagina:'),
                 Dialogs.Spacer(),
             Dialogs.HSizer(Items=[
                 Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppSx", List=_DOCSTRINGS),
+                    # ~Dialogs.FixedText(Text='Sinistra: ', FixedWidth=posW),
+                    Dialogs.FixedText(Text='Sinistra: '),
+                    Dialogs.ComboBox(Id="ppSx", List=_DOCSTRINGS, FixedHeight=1),
                 ]),
-                Dialogs.Spacer(MinSize = 50),
+                Dialogs.Spacer(MinSize = 20),
                 Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppCenter", List=_DOCSTRINGS),
+                    Dialogs.FixedText(Text='Centro: '),
+                    Dialogs.ComboBox(Id="ppCenter", List=_DOCSTRINGS, FixedHeight=1),
                 ]),
-                Dialogs.Spacer(MinSize = 50),
+                Dialogs.Spacer(MinSize = 20),
                 Dialogs.HSizer(Items=[
-                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
-                    Dialogs.ComboBox(Id="ppDx", List=_DOCSTRINGS),
+                    Dialogs.FixedText(Text='Destra: '),
+                    Dialogs.ComboBox(Id="ppDx", List=_DOCSTRINGS, FixedHeight=1),
                 ]),
             ]),
         ]),
@@ -251,17 +256,15 @@ def PrintSettingsDialog():
         Dialogs.HSizer(Items=[
             ]),
             Dialogs.Spacer(),
-            Dialogs.VSizer(Items=[
-                Dialogs.FixedText(Text='Documento con le copertine', FixedWidth=fieldW),
-                Dialogs.Spacer(),
+            Dialogs.HSizer(Items=[
+                Dialogs.FixedText(Text='Documento con le copertine: '), #FixedWidth=fieldW),
+                # ~Dialogs.Spacer(),
                 Dialogs.FileControl(Id="fileCopertine", Types='*.ods'),
                 Dialogs.Spacer(),
-                Dialogs.FixedText(Text='Selezionare copertina in uso'),
-                Dialogs.Spacer(),
+                Dialogs.FixedText(Text= ' ' * 28 + 'Selezionare copertina in uso: '),
+                # ~Dialogs.Spacer(),
                 Dialogs.ListBox(Id='copertina'),
-                Dialogs.Spacer(),
-                Dialogs.Spacer(),
-                Dialogs.Spacer(),
+                Dialogs.Spacer(MinSize = 3),
         ]),
         Dialogs.Spacer(),
         Dialogs.Spacer(),

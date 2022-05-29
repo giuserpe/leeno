@@ -8643,6 +8643,7 @@ def set_area_stampa():
         oSheet.setPrintTitleRows(True)
         if oSheet.Name == 'Elenco Prezzi':
             EC = 6
+            ER -= 1
         if oSheet.Name == 'CONTABILITA':
             EC = 15
             if oDoc.NamedRanges.hasByName('_Lib_1'):
@@ -8669,7 +8670,7 @@ def set_area_stampa():
 def MENU_sistema_pagine():
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
-    e propone un'anteprima
+    e propone un'anteprima di stampa
     '''
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
@@ -8769,6 +8770,11 @@ Procedo cambiando i colori?''') == 1:
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
             oAktPage.BottomBorder = bordo
+
+            bordo = oAktPage.RightBorder
+            bordo.LineWidth = 0
+            bordo.OuterLineWidth = 0
+            oAktPage.RightBorder = bordo
 
             bordo = oAktPage.LeftBorder
             bordo.LineWidth = 0
@@ -9256,8 +9262,8 @@ import functools
 import LeenoImport as LI
 
 def MENU_debug():
-    import LeenoPdf
-    LeenoPdf.MENU_Pdf()
+    # ~import LeenoPdf
+    # ~LeenoPdf.MENU_Pdf()
     # ~sistema_cose()
     # ~MENU_nasconde_voci_azzerate()
     # ~oDoc = LeenoUtils.getDocument()
@@ -9396,7 +9402,7 @@ def PdfDlg():
             Dialogs.VSizer(Items=[
                 Dialogs.FixedText(Text='Oggetto'),
                 Dialogs.Spacer(),
-                Dialogs.ListBox(List=oSheets, FixedHeight=hItems * 10, FixedWidth=nWidth * 6),
+                Dialogs.ListBox(List=oSheets, FixedHeight=hItems * 1, FixedWidth=nWidth * 6),
                 # ~Dialogs.Spacer(),
                 # ~Dialogs.CheckBox(Id="cbElencoPrezzi", Label="Elenco prezzi", FixedHeight=hItems),
                 # ~Dialogs.Spacer(),
@@ -9424,25 +9430,28 @@ def PdfDlg():
     ])
     
 def MENU_debug():
-    sistema_cose()
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~testo = oSheet.getCellByPosition(0, 0).String
     # ~txt = " ".join(testo.split())
     # ~oSheet.getCellByPosition(0, 1).String = txt
     # ~DLG.chi(txt)
-    return
-    import LeenoImport
-    
-    LeenoImport.MENU_Piemonte_2019()
-    return
     import Dialogs
+    # ~import LeenoSettings
+    # ~LeenoSettings.MENU_PrintSettings()
+    return
     import LeenoPdf
+    # ~LeenoPdf.MENU_Pdf()
+    # ~return
     
     oDoc = LeenoUtils.getDocument()
     es = LeenoPdf.loadExportSettings(oDoc)
+    
+    # ~DLG.chi(es)
+    # ~return
 
-    dlg = PdfDlg()
+    # ~dlg = PdfDlg()
+    dlg = LeenoPdf.PdfDialog()
     dlg.setData(es)
 
     # se premuto "annulla" non fa nulla

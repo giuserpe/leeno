@@ -7865,6 +7865,79 @@ def ScriviNomeDocumentoPrincipale():
         except Exception:
             pass
 
+######################################################################## 
+
+def ods2pdf(oDoc, sFile):
+    '''
+    Genera il PDF del file ODS partendo dalle aree di stampa impostate.
+    oDoc    { object } : documento da esportare.
+    sFile   { string } : nome del file di destinazione.
+    '''
+    ctx = LeenoUtils.getComponentContext() 
+    desktop = LeenoUtils.getDesktop() 
+    oFrame = desktop.getCurrentFrame() 
+    oProp = [] 
+    oProp0 = PropertyValue() 
+    oProp0.Name = "URL" 
+    oProp0.Value = sFile # "file:///C:/TMP/000.pdf" 
+    oProp1 = PropertyValue() 
+    oProp1.Name = "FilterName" 
+    oProp1.Value = "calc_pdf_Export" 
+    oProp2 = PropertyValue() 
+    oProp2.Name = "FilterData" 
+    oProp2.Value = () 
+    oProp.append(oProp0) 
+    oProp.append(oProp1) 
+    oProp.append(oProp2) 
+    properties = tuple(oProp) 
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx) 
+    dispatchHelper.executeDispatch(oFrame, '.uno:ExportToPDF', '', 0, properties) 
+    return 
+
+########################################################################
+
+def DlgPDF():
+    oDoc = LeenoUtils.getDocument()
+    psm = LeenoUtils.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlgPDF = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.DlgPDF?language=Basic&location=application"
+    )
+
+    sUrl = LeenO_path() + '/python/pythonpath/Icons-Big/preview.png'
+    oDlgPDF.getModel().ImageControl1.ImageURL = sUrl
+    
+    oSheet = oDoc.getSheets().getByName('S2')
+
+    progetto    = oSheet.getCellRangeByName('$S2.C3').String
+    localit     = oSheet.getCellRangeByName('$S2.C4').String
+    data_prg    = oSheet.getCellRangeByName('$S2.C5').String
+    committente = oSheet.getCellRangeByName('$S2.C6').String
+    sponsor     = oSheet.getCellRangeByName('$S2.C7').String
+    rup         = oSheet.getCellRangeByName('$S2.C12').String
+    progettista = oSheet.getCellRangeByName('$S2.C13').String
+    dl          = oSheet.getCellRangeByName('$S2.C16').String
+    formulas = {
+        'progetto'    : '[PROGETTO]',
+        'localit'     : '[LOCALITÀ]',
+        'data_prg'    : '[DATA_PROGETTO]',
+        'committente' : '[COMMITTENTE-STAZIONE APPALTANTE]',
+        'sponsor'     : '[FINANZIATORE]',
+        'rup'         : '[RESPONSABILE_PROCEDIMENTO]',
+        'progettista' : '[PROGETTISTA]',
+        'dl'          : '[DIRETTORE_LAVORI]',
+    }
+    # ~DLG.chi(list(formulas.values()))
+    # ~return
+
+    lista = list(formulas.values())
+
+    # ~oDlgPDF.getControl("ComboBox1").Text = "Prova"
+    oDlgPDF.getControl("ComboBox1").addItems(lista, 1)
+
+    oDlgPDF.execute()
+
+
 def DlgMain():
     '''
     Visualizza il menù principale dialog_fil
@@ -7889,6 +7962,7 @@ def DlgMain():
     oDlgMain.Title = 'Menù Principale (Ctrl+0)'
 
     sUrl = LeenO_path() + '/icons/Immagine.png'
+
     oDlgMain.getModel().ImageControl1.ImageURL = sUrl
 
     sString = oDlgMain.getControl("CommandButton13")
@@ -8602,7 +8676,8 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
 
 def DelPrintArea ():
     '''
-    cancella area di stampa
+    Cancella area di stampa di tutti i fogli ad esclusione di quello
+    corrente del foglio cP_Cop
     '''
     oDoc = LeenoUtils.getDocument()
     nome = oDoc.CurrentController.ActiveSheet.Name
@@ -9430,15 +9505,21 @@ def PdfDlg():
     ])
     
 def MENU_debug():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    
+    # ~DlgPDF()
+    # ~return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    DLG.chi(len(oSheet.RowPageBreaks))
+    return
     # ~testo = oSheet.getCellByPosition(0, 0).String
     # ~txt = " ".join(testo.split())
     # ~oSheet.getCellByPosition(0, 1).String = txt
     # ~DLG.chi(txt)
     import Dialogs
-    # ~import LeenoSettings
-    # ~LeenoSettings.MENU_PrintSettings()
+    import LeenoSettings
+    LeenoSettings.MENU_PrintSettings()
+    # ~LeenoSettings.MENU_JobSettings()
     return
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()
@@ -9525,77 +9606,19 @@ def MENU_debug():
 
     
     # ~rem ----------------------------------------------------------------------
-    # ~dim args1(2) as new com.sun.star.beans.PropertyValue
-    # ~args1(0).Name = "URL"
-    # ~args1(0).Value = sFile '"file:///C:/test.pdf"
-    # ~args1(1).Name = "FilterName"
-    # ~args1(1).Value = "calc_pdf_Export"
-    # ~args1(2).Name = "FilterData"
-    # ~args1(2).Value = Array(Array("UseLosslessCompression",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("Quality",0,90,com.sun.star.beans.PropertyState.DIRECT_VALUE), _ 
-                            # ~Array("ReduceImageResolution",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _ 
-                            # ~Array("MaxImageResolution",0,300,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("UseTaggedPDF",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("SelectPdfVersion",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ExportNotes",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ExportBookmarks",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("OpenBookmarkLevels",0,-1,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("UseTransitionEffects",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("IsSkipEmptyPages",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("IsAddStream",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("EmbedStandardFonts",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("FormsType",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ExportFormFields",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("AllowDuplicateFieldNames",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("HideViewerToolbar",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("HideViewerMenubar",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("HideViewerWindowControls",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ResizeWindowToInitialPage",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("CenterWindow",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("OpenInFullScreenMode",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("DisplayPDFDocumentTitle",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("InitialView",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("Magnification",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("Zoom",0,100,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("PageLayout",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("FirstPageOnLeft",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("InitialPage",0,1,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("Printing",0,2,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("Changes",0,4,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("EnableCopyingOfContent",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("EnableTextAccessForAccessibilityTools",0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ExportLinksRelativeFsys",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("PDFViewSelection",0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ConvertOOoTargetToPDFTarget",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("ExportBookmarksToPDFDestination",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("_OkButtonString",0,"",com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("EncryptFile",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("PreparedPasswords",0,,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("RestrictPermissions",0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("PreparedPermissionPassword",0,Array(),com.sun.star.beans.PropertyState.DIRECT_VALUE), _
-                            # ~Array("",0,,com.sun.star.beans.PropertyState.DIRECT_VALUE) _
-                        # ~)
-    
-    # ~dispatcher.executeDispatch(document, ".uno:ExportToPDF", "", 0, args1())
-    
-# ~'For Each oSh In oSheets
-# ~'     oSh.IsVisible = True
-# ~'Next
-    # ~ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh)+100,getLastUsedRow(oSh)+100))
-# ~'    SBIANCA_ANNULLA
-    # ~unSelect 'unselect ranges
-    
-# ~'    Rimetti_in_ordine_tab
-    # ~oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
-    # ~oSheet.IsVisible = True
-    # ~ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
-    
-    # ~if msgbox (CHR$(10) &"Il documento PDF è stato esportato come " & sFile & CHR$(10)& CHR$(10)_
-                # ~& " Vuoi aprire il PDF? "& CHR$(10)& CHR$(10)_
-                # ~& "" ,36, "") = 6 Then
-        # ~createUnoService("com.sun.star.system.SystemShellExecute").execute(sFile,"", 0)
-    # ~EndIf
-# ~End Sub
+def MENU_debug():
+    DelPrintArea()
+    set_area_stampa()
+    tempo = ''.join(''.join(''.join(
+        str(datetime.now()).split('.')[0].split(' ')).split('-')).split(
+            ':'))[:12]
+    oDoc = LeenoUtils.getDocument()
+    orig = oDoc.getURL()
+    dest = orig.split('.')[0] + '-' + tempo + '.pdf'
+    ods2pdf(oDoc, dest)
+    # ~DLG.chi(dest)
+    # ~rem ----------------------------------------------------------------------
+   
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

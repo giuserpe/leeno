@@ -189,13 +189,9 @@ def PdfElencoPrezzi(destFolder, nTavola):
         '[NUMERO_DOCUMENTO]': str(nTavola),
     }
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
-    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
+    nPages = len(ep.RowPageBreaks) - 1
 
-    # purtropp non c'è alcun modo di determinare in anticipo il numero di pagine, indi
-    # dobbiamo creare il PDF, usare una funzione per contarle, e ricrearlo di nuovo
-    # meraviglie di LibreOffice...
-    return
-    nPages = LeenoUtils.countPdfPages(destPath)
+    # ~nPages = LeenoUtils.countPdfPages(destPath)
     docSubst['[PAGINE]'] = nPages
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
 
@@ -211,19 +207,16 @@ def PdfComputoMetrico(destFolder, nTavola):
     if nDoc != '' and nDoc is not None:
         baseName = nDoc + '-'
     destPath = os.path.join(destFolder, baseName + 'ComputoMetrico.pdf')
-    print(f"Export to '{destPath}' file")
+    # ~print(f"Export to '{destPath}' file")
     selection = [ep, ]
     docSubst = {
         '[OGGETTO]':'Computo Metrico',
         '[NUMERO_DOCUMENTO]': str(nTavola),
     }
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
-    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
 
-    # purtropp non c'è alcun modo di determinare in anticipo il numero di pagine, indi
-    # dobbiamo creare il PDF, usare una funzione per contarle, e ricrearlo di nuovo
-    # meraviglie di LibreOffice...
-    nPages = LeenoUtils.countPdfPages(destPath)
+    nPages = len(ep.RowPageBreaks) - 1
+    # ~nPages = LeenoUtils.countPdfPages(destPath)
     docSubst['[PAGINE]'] = nPages
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
 
@@ -244,8 +237,8 @@ def MENU_Pdf():
     storeExportSettings(oDoc, es)
 
     # estrae la path
-    # ~destFolder = dlg['pathEdit'].getPath()
-    destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
+    destFolder = dlg['pathEdit'].getPath()
+    # ~destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
     
     # ~import LeenoDialogs as DLG
     # ~DLG.chi(destFolder)

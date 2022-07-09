@@ -243,6 +243,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
+    LeenoUtils.DisableDocumentRefresh(oDoc)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -283,6 +284,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     # salva il file col nome del file di origine
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
+    LeenoUtils.EnableDocumentRefresh(oDoc)
     DLG.MsgBox('''
 Importazione eseguita con successo!
 

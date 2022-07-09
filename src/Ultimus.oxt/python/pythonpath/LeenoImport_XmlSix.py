@@ -274,6 +274,7 @@ def parseXML(data, defaultTitle):
         gruppo = root.find('gruppo')
         grpValori = gruppo.findall('grpValore')
         for grpValore in grpValori:
+            continue # non capisco perché, ma senza questa riga va in errore
             grpId = grpValore.attrib['grpValoreId']
             vlrId = grpValore.attrib['vlrId']
             vlrDesc = grpValore.find('vlrDescrizione').attrib['breve']

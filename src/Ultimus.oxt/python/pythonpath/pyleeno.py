@@ -7029,8 +7029,8 @@ def filtra_codice(voce=None):
 ########################################################################
 
 def MENU_struttura_on():
-
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -7041,6 +7041,7 @@ def MENU_struttura_on():
         struttura_Analisi()
     elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
         LeenoContab.struttura_CONTAB()
+    LeenoUtils.EnableDocumentRefresh(oDoc)
 
 def struttura_ComputoM():
     '''
@@ -9606,7 +9607,7 @@ def MENU_debug():
 
     
     # ~rem ----------------------------------------------------------------------
-def MENU_debug():
+def stampa_PDF():
     DelPrintArea()
     set_area_stampa()
     tempo = ''.join(''.join(''.join(
@@ -9618,7 +9619,50 @@ def MENU_debug():
     ods2pdf(oDoc, dest)
     # ~DLG.chi(dest)
     # ~rem ----------------------------------------------------------------------
-   
+import LeenoUtils
+
+def MENU_debug():
+    sistema_cose()
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    fine = SheetUtils.getLastUsedRow(oSheet) +1
+
+    for el in range(lrow, fine):
+        if oSheet.getCellByPosition(0, el).String == "":
+            _gotoCella (0, el + 1)
+            return
+
+    return
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DisableDocumentRefresh(oDoc)
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = SheetUtils.getLastUsedRow(oSheet) +1
+    # ~lrow = LeggiPosizioneCorrente()[1]
+    madre = ''
+    for el in range(0, lrow):
+        if len(oSheet.getCellByPosition(0, el).String.split('.')) <= 2:
+            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String
+        if len(oSheet.getCellByPosition(0, el).String.split('.')) == 3:
+            madre = oSheet.getCellByPosition(2, el).String
+            oSheet.getCellByPosition(1, el).String = madre
+        if len(oSheet.getCellByPosition(0, el).String.split('.')) == 4:
+            oSheet.getCellByPosition(1, el).String = madre + '\n- ' + oSheet.getCellByPosition(2, el).String
+    return
+    for el in reversed(range(0, lrow)):
+        if oSheet.getCellByPosition(3, el).String in oSheet.getCellByPosition(2, el).String:
+            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String
+        else:
+            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String +" "+ oSheet.getCellByPosition(3, el).String
+        # ~_gotoCella (1, el)
+        # ~return
+        # ~desc = oSheet.getCellByPosition(0, el).String.split('.')
+        # ~if len(desc) > 1:
+            # ~madre = (desc[0]) + '.' + (desc[1]) + '.'
+        # ~else:
+            # ~oSheet.getCellByPosition(1, el).String = madre + oSheet.getCellByPosition(2, el).String
+    LeenoUtils.EnableDocumentRefresh(oDoc)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

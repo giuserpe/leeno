@@ -899,7 +899,8 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -939,7 +940,8 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.EnableDocumentRefresh(oDoc)
 
 
 ########################################################################
@@ -9622,17 +9624,25 @@ def stampa_PDF():
 import LeenoUtils
 
 def MENU_debug():
-    sistema_cose()
+    LeenoSheetUtils.elimina_righe_vuote()
+    # ~sistema_cose()
+    LI.MENU_emilia_romagna()
     return
     oDoc = LeenoUtils.getDocument()
+    # ~LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     fine = SheetUtils.getLastUsedRow(oSheet) +1
 
-    for el in range(lrow, fine):
-        if oSheet.getCellByPosition(0, el).String == "":
-            _gotoCella (0, el + 1)
-            return
+    for y in reversed(range(0, fine)):
+        if oSheet.getCellByPosition(0, y).String == "" and \
+        oSheet.getCellByPosition(1, y).String == "" and \
+        oSheet.getCellByPosition(2, y).String == "" and \
+        oSheet.getCellByPosition(3, y).String == "" :
+            _gotoCella(0, y)
+            oSheet.getRows().removeByIndex(y, 1)
+   
+    # ~LeenoUtils.EnableDocumentRefresh(oDoc)
 
     return
     oDoc = LeenoUtils.getDocument()

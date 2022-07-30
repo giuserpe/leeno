@@ -132,7 +132,7 @@ Sub _accoda_files_in_unico
 	Dim DocName as object, DocUlr as string, dummy()
 	Doc = ThisComponent
 	Sheet = Doc.Sheets(0) 
-	sPath =&quot;W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/2022/&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
+	sPath =&quot;W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/2022_luglio/&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
 	sFileName = Dir(sPath &amp; &quot;*.ods&quot;, 0)
 &apos;	Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
 	Do While (sFileName &lt;&gt; &quot;&quot;)

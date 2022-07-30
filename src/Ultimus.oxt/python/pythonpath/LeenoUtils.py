@@ -113,6 +113,7 @@ def DisableDocumentRefresh(oDoc):
     '''
     Disabilita il refresh per accelerare le procedure
     '''
+    oDoc.enableAutomaticCalculation(False)
     oDoc.lockControllers()
     oDoc.addActionLock()
 
@@ -121,6 +122,7 @@ def EnableDocumentRefresh(oDoc):
     '''
     Riabilita il refresh
     '''
+    oDoc.enableAutomaticCalculation(True)
     oDoc.removeActionLock()
     oDoc.unlockControllers()
 

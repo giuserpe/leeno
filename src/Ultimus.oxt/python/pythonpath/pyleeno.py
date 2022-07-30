@@ -899,7 +899,6 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
-    # ~oDoc.enableAutomaticCalculation(False)
     LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
@@ -940,7 +939,6 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    # ~oDoc.enableAutomaticCalculation(True)
     LeenoUtils.EnableDocumentRefresh(oDoc)
 
 
@@ -1233,7 +1231,7 @@ def SubSum_Cap(lrow):
 def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
     '''
     lrow    { double } : id della riga di inserimento
-    sincronizza il categoria e sottocategorie
+    sincronizza categoria e sottocategorie
     '''
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1447,56 +1445,56 @@ def Filtra_computo(nSheet, nCol, sString):
 ########################################################################
 
 
-def Filtra_Computo_Cap():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    nSheet = oSheet.getCellByPosition(7, 8).String
-    sString = oSheet.getCellByPosition(7, 10).String
-    Filtra_computo(nSheet, 31, sString)
+# ~def Filtra_Computo_Cap():
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~nSheet = oSheet.getCellByPosition(7, 8).String
+    # ~sString = oSheet.getCellByPosition(7, 10).String
+    # ~Filtra_computo(nSheet, 31, sString)
 
 
 ########################################################################
 
 
-def Filtra_Computo_SottCap():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    nSheet = oSheet.getCellByPosition(7, 8).String
-    sString = oSheet.getCellByPosition(7, 12).String
-    Filtra_computo(nSheet, 32, sString)
+# ~def Filtra_Computo_SottCap():
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~nSheet = oSheet.getCellByPosition(7, 8).String
+    # ~sString = oSheet.getCellByPosition(7, 12).String
+    # ~Filtra_computo(nSheet, 32, sString)
 
 
 ########################################################################
 
 
-def Filtra_Computo_A():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    nSheet = oSheet.getCellByPosition(7, 8).String
-    sString = oSheet.getCellByPosition(7, 14).String
-    Filtra_computo(nSheet, 33, sString)
+# ~def Filtra_Computo_A():
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~nSheet = oSheet.getCellByPosition(7, 8).String
+    # ~sString = oSheet.getCellByPosition(7, 14).String
+    # ~Filtra_computo(nSheet, 33, sString)
 
 
 ########################################################################
 
 
-def Filtra_Computo_B():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    nSheet = oSheet.getCellByPosition(7, 8).String
-    sString = oSheet.getCellByPosition(7, 16).String
-    Filtra_computo(nSheet, 34, sString)
+# ~def Filtra_Computo_B():
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~nSheet = oSheet.getCellByPosition(7, 8).String
+    # ~sString = oSheet.getCellByPosition(7, 16).String
+    # ~Filtra_computo(nSheet, 34, sString)
 
 
 ########################################################################
 
 
-def Filtra_Computo_C():  # filtra in base al codice di prezzo
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    nSheet = oSheet.getCellByPosition(7, 8).String
-    sString = oSheet.getCellByPosition(7, 20).String
-    Filtra_computo(nSheet, 1, sString)
+# ~def Filtra_Computo_C():  # filtra in base al codice di prezzo
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~nSheet = oSheet.getCellByPosition(7, 8).String
+    # ~sString = oSheet.getCellByPosition(7, 20).String
+    # ~Filtra_computo(nSheet, 1, sString)
 
 
 ########################################################################
@@ -5106,12 +5104,6 @@ def delete(arg):
 
 
 ########################################################################
-# ~def copy_clip():
-    # ~comando('Copy')
-    # ~return
-
-
-########################################################################
 def paste_clip(arg=None, insCells=0):
     oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -5866,7 +5858,8 @@ def rigenera_parziali (arg=False):
     Rigenera i parziali di tutte le voci
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
@@ -5896,7 +5889,8 @@ def rigenera_parziali (arg=False):
         progress.setValue(n)
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
             parziale_core(oSheet, i)
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.EnableDocumentRefresh(oDoc)
     progress.hide()
     return
 
@@ -9624,55 +9618,50 @@ def stampa_PDF():
 import LeenoUtils
 
 def MENU_debug():
-    LeenoSheetUtils.elimina_righe_vuote()
+    import LeenoPdf
+    # ~LeenoPdf.MENU_Pdf()
+    oDoc = LeenoUtils.getDocument()
+
+    dlg = LeenoPdf.PdfDialog()
+
+    return
+
+    # ~LeenoSheetUtils.elimina_righe_vuote()
     # ~sistema_cose()
-    LI.MENU_emilia_romagna()
-    return
-    oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DisableDocumentRefresh(oDoc)
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = LeggiPosizioneCorrente()[1]
-    fine = SheetUtils.getLastUsedRow(oSheet) +1
+    # ~LI.MENU_emilia_romagna()
+    # ~return
 
-    for y in reversed(range(0, fine)):
-        if oSheet.getCellByPosition(0, y).String == "" and \
-        oSheet.getCellByPosition(1, y).String == "" and \
-        oSheet.getCellByPosition(2, y).String == "" and \
-        oSheet.getCellByPosition(3, y).String == "" :
-            _gotoCella(0, y)
-            oSheet.getRows().removeByIndex(y, 1)
-   
-    # ~LeenoUtils.EnableDocumentRefresh(oDoc)
+# ~'ACCODA PIù FILE DI CALC IN UNO SOLO
+	# ~Dim DocName as object, DocUlr as string, dummy()
+	# ~Doc = ThisComponent
+	# ~Sheet = Doc.Sheets(0) 
+	# ~sPath ="W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/2022_luglio/"  ' cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
+	# ~sFileName = Dir(sPath & "*.ods", 0)
+# ~'	Barra_Apri_Chiudi_5(".......................Sto lavorando su "& sFileName, 0)
+	# ~Do While (sFileName <> "")
+		# ~c = Sheet.createCursor
+		# ~c.gotoEndOfUsedArea(false)
+		# ~LastRow = c.RangeAddress.EndRow + 1
+		# ~DocUrl = ConvertToURL(sPath & sFileName)
+# ~'on error goto errore
+		# ~DocName = StarDesktop.loadComponentFromURL (DocUrl, "_blank",0, Dummy() )
+		# ~Sheet1 = DocName.Sheets(0) ' questo indica l'index del foglio da copiare
+		# ~c = Sheet1.createCursor
+		# ~c.gotoEndOfUsedArea(false)
+		# ~LastRow1 = c.RangeAddress.EndRow
+	# ~'	oStart=uFindString("ATTENZIONE!", Sheet1)
+	# ~'	Srow=oStart.RangeAddress.EndRow+1
+	# ~Srow = 2
+		# ~Range = Sheet1.getCellRangeByPosition(0, Srow,  12, LastRow1).getDataArray '(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
+		# ~DocName.dispose
+		# ~dRange  = Sheet.getCellRangeByPosition(0, LastRow, 12, LastRow1 + LastRow-Srow)
+		# ~dRange.setDataArray(Range)
+		# ~sFileName = Dir()
+	# ~Loop
+	# ~print "fatto!"
+	# ~errore:
+# ~End Sub
 
-    return
-    oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DisableDocumentRefresh(oDoc)
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = SheetUtils.getLastUsedRow(oSheet) +1
-    # ~lrow = LeggiPosizioneCorrente()[1]
-    madre = ''
-    for el in range(0, lrow):
-        if len(oSheet.getCellByPosition(0, el).String.split('.')) <= 2:
-            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String
-        if len(oSheet.getCellByPosition(0, el).String.split('.')) == 3:
-            madre = oSheet.getCellByPosition(2, el).String
-            oSheet.getCellByPosition(1, el).String = madre
-        if len(oSheet.getCellByPosition(0, el).String.split('.')) == 4:
-            oSheet.getCellByPosition(1, el).String = madre + '\n- ' + oSheet.getCellByPosition(2, el).String
-    return
-    for el in reversed(range(0, lrow)):
-        if oSheet.getCellByPosition(3, el).String in oSheet.getCellByPosition(2, el).String:
-            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String
-        else:
-            oSheet.getCellByPosition(1, el).String = oSheet.getCellByPosition(2, el).String +" "+ oSheet.getCellByPosition(3, el).String
-        # ~_gotoCella (1, el)
-        # ~return
-        # ~desc = oSheet.getCellByPosition(0, el).String.split('.')
-        # ~if len(desc) > 1:
-            # ~madre = (desc[0]) + '.' + (desc[1]) + '.'
-        # ~else:
-            # ~oSheet.getCellByPosition(1, el).String = madre + oSheet.getCellByPosition(2, el).String
-    LeenoUtils.EnableDocumentRefresh(oDoc)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

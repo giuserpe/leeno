@@ -306,29 +306,29 @@ def ins_voce_elenco():
     PL.ins_voce_elenco()
 
 
-def Filtra_Computo_Cap():
-    callAlert()
-    PL.Filtra_Computo_Cap()
+# ~def Filtra_Computo_Cap():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_Cap()
 
 
-def Filtra_Computo_SottCap():
-    callAlert()
-    PL.Filtra_Computo_SottCap()
+# ~def Filtra_Computo_SottCap():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_SottCap()
 
 
-def Filtra_Computo_A():
-    callAlert()
-    PL.Filtra_Computo_A()
+# ~def Filtra_Computo_A():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_A()
 
 
-def Filtra_Computo_B():
-    callAlert()
-    PL.Filtra_Computo_B()
+# ~def Filtra_Computo_B():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_B()
 
 
-def Filtra_Computo_C():
-    callAlert()
-    PL.Filtra_Computo_C()
+# ~def Filtra_Computo_C():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_C()
 
 
 def EliminaVociDoppieElencoPrezzi():

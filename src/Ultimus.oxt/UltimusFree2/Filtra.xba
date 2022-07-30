@@ -13,26 +13,6 @@
 &apos;_______________________________________________________________________________________
 
 &apos;##########################################################################
-Sub Filtra_Computo_Cap &apos; filtra sulla colonna del Tag C e copia le voci di computo 
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Filtra_Computo_Cap&quot;)
-End Sub
-&apos;##########################################################################
-Sub Filtra_Computo_SottCap &apos; filtra sulla colonna del Tag SottCap e copia le voci di computo 
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Filtra_Computo_SottCap&quot;)
-End Sub
-&apos;##########################################################################
-Sub Filtra_Computo_A &apos; filtra sulla colonna del Tag A e copia le voci di computo 
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Filtra_Computo_A&quot;)
-End Sub
-&apos;##########################################################################
-Sub Filtra_Computo_B &apos; filtra sulla colonna del Tag B e copia le voci di computo 
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Filtra_Computo_B&quot;)
-End Sub
-&apos;##########################################################################
-Sub Filtra_Computo_C &apos; filtra sulla colonna del Tag B e copia le voci di computo 
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Filtra_Computo_C&quot;)
-End Sub
-&apos;##########################################################################
 &apos; cerca e sostituisce una substringa all&apos;interno di una stringa
 &apos; usata sopratutto dai filtri tag per eliminare gli spazi che facevano confusione...
 &apos;copiata pari pari da Guida alla programmazione in BASIC in StarOffice 8

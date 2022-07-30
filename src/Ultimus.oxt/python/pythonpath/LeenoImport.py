@@ -445,7 +445,36 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
 
 ########################################################################
 
-def MENU_basilicata_2020():
+def MENU_emilia_romagna():
+    '''
+    Adatta la struttura del prezzario rilasciato dalla regione Emilia Romagna
+    
+    *** IMPRATICABILE: IL FILE DI ORIGINE È PARECCHIO DISORDINATO ***
+    
+    Il risultato ottenuto va inserito in Elenco Prezzi.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DisableDocumentRefresh(oDoc)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
+    for i in range(0, fine):
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3 and \
+                oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
+            if oSheet.getCellByPosition(1, i).String != '':
+                oSheet.getCellByPosition(1, i).String = (
+                    madre +
+                    "\n- " +
+                    oSheet.getCellByPosition(1, i).String)
+            else:
+                oSheet.getCellByPosition(1, i).String = madre
+            oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
+    LeenoUtils.EnableDocumentRefresh(oDoc)
+
+########################################################################
+
+def MENU_basilicata():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Basilicata
     partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
@@ -506,6 +535,7 @@ def MENU_Piemonte():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DisableDocumentRefresh(oDoc)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
@@ -564,6 +594,7 @@ def MENU_Piemonte():
                                            len(elenco[0]) - 1,
                                            len(elenco) - 1)
     oRange.setDataArray(elenco)
+    LeenoUtils.EnableDocumentRefresh(oDoc)
 
 ########################################################################
 

@@ -711,15 +711,15 @@ def invertiUnSegno(oSheet, lrow):
 
 # ###############################################################
 
-def numeraVoci(oSheet, lrow, all):
+def numeraVoci(oSheet, lrow, tutte):
     '''
-    all { boolean }  : True  rinumera tutto
+    tutte { boolean }  : True  rinumera tutto
                        False rinumera dalla voce corrente in giù
     '''
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1
 
-    if not all:
+    if not tutte:
         for x in reversed(range(0, lrow)):
             if(
                oSheet.getCellByPosition(1, x).CellStyle in ('comp Art-EP', 'comp Art-EP_R') and
@@ -737,3 +737,22 @@ def numeraVoci(oSheet, lrow, all):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
                 n = n + 1
+
+
+# ###############################################################
+
+def elimina_righe_vuote():
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DisableDocumentRefresh(oDoc)
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
+    lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
+    for y in reversed(range(0, lrow)):
+        test = False
+        for x in (range(0, lCol +1)):
+            if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
+                test = True
+                break
+            if test == False and x  == lCol :
+                oSheet.getRows().removeByIndex(y, 1)
+    LeenoUtils.EnableDocumentRefresh(oDoc)

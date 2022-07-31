@@ -1295,7 +1295,7 @@ def MENU_XPWE_import():
     progress.show()
 
     # disattiva l'output a video
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
 
     # compila i dati generali per l'analisi
     progress.setText("Compilazione dati generali di analisi")
@@ -1338,7 +1338,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        LeenoUtils.EnableDocumentRefresh(oDoc)
+        LeenoUtils.DocumentRefresh(True)
         return
 
     # compila il computo
@@ -1346,7 +1346,7 @@ def MENU_XPWE_import():
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     # riattiva l'output a video
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")

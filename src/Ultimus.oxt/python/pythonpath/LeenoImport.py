@@ -243,7 +243,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -284,7 +284,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     # salva il file col nome del file di origine
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
     DLG.MsgBox('''
 Importazione eseguita con successo!
 
@@ -454,7 +454,7 @@ def MENU_emilia_romagna():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
@@ -470,7 +470,7 @@ def MENU_emilia_romagna():
             else:
                 oSheet.getCellByPosition(1, i).String = madre
             oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -535,7 +535,7 @@ def MENU_Piemonte():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
@@ -594,7 +594,7 @@ def MENU_Piemonte():
                                            len(elenco[0]) - 1,
                                            len(elenco) - 1)
     oRange.setDataArray(elenco)
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 

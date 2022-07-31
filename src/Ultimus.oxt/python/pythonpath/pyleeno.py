@@ -899,7 +899,7 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -939,7 +939,7 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -4862,11 +4862,12 @@ def dettaglio_misura_rigo():
                        0 cancella i dettagli
     '''
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
-    if ' >(' in oSheet.getCellByPosition(2, lrow).String:
+    if ' ►' in oSheet.getCellByPosition(2, lrow).String:
         oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(
-            2, lrow).String.split(' >(')[0]
+            2, lrow).String.split(' ►')[0]
     if oSheet.getCellByPosition(2, lrow).CellStyle in (
             'comp 1-a'
     ) and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2,
@@ -4880,7 +4881,6 @@ def dettaglio_misura_rigo():
 
         if stringa == '':
             for el in range(5, 9):
-                # test = '>('
                 if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                     if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
                         try:
@@ -4904,11 +4904,12 @@ def dettaglio_misura_rigo():
                 stringa = stringa[1:-1]
             else:
                 stringa = stringa[0:-1]
-            stringa = ' >(' + stringa + ')'
+            stringa = ' ►' + stringa # + ')'
             if oSheet.getCellByPosition(2, lrow).Type.value != 'FORMULA':
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String + stringa.replace('.', ',')
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -4949,7 +4950,6 @@ def dettaglio_misure(bit):
                         stringa = None
                 if stringa == '':
                     for el in range(5, 9):
-                        # test = '>('
                         if oSheet.getCellByPosition(
                                 el, lrow).Type.value == 'FORMULA':
                             if '$' not in oSheet.getCellByPosition(
@@ -4976,7 +4976,7 @@ def dettaglio_misure(bit):
                         stringa = stringa[1:-1]
                     else:
                         stringa = stringa[0:-1]
-                    stringa = ' >(' + stringa + ')'
+                    stringa = ' ►' + stringa #+ ')'
                     if oSheet.getCellByPosition(2,
                                                 lrow).Type.value != 'FORMULA':
                         oSheet.getCellByPosition(
@@ -4985,10 +4985,10 @@ def dettaglio_misure(bit):
     else:
         for lrow in range(0, ER):
             progress.setValue(lrow)
-            if ' >(' in oSheet.getCellByPosition(2, lrow).String:
+            if ' ►' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
-                        2, lrow).String.split(' >(')[0]
+                        2, lrow).String.split(' ►')[0]
 
     oDoc.CurrentController.ZoomValue = zoom
     progress.hide()
@@ -5859,7 +5859,7 @@ def rigenera_parziali (arg=False):
     '''
     oDoc = LeenoUtils.getDocument()
     # ~oDoc.enableAutomaticCalculation(False)
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
@@ -5890,7 +5890,7 @@ def rigenera_parziali (arg=False):
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
             parziale_core(oSheet, i)
     # ~oDoc.enableAutomaticCalculation(True)
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
     progress.hide()
     return
 
@@ -7026,7 +7026,7 @@ def filtra_codice(voce=None):
 
 def MENU_struttura_on():
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -7037,7 +7037,7 @@ def MENU_struttura_on():
         struttura_Analisi()
     elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
         LeenoContab.struttura_CONTAB()
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
 def struttura_ComputoM():
     '''
@@ -7274,7 +7274,7 @@ def autoexec():
     else:
         oGSheetSettings.MoveDirection = 1
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(False)
     #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
     #  If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -7284,9 +7284,17 @@ def autoexec():
     oDoc.RegularExpressions = False
     oDoc.CalcAsShown = True  # precisione come mostrato
     adegua_tmpl()  # esegue degli aggiustamenti del template
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO'):
+        try:
+            GotoSheet(nome)
+            subst_str(' >', ' ►')
+        except Exception:
+            pass
+    GotoSheet(oSheet.Name)
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
     #  vedi = conf.read(path_conf, 'Generale', 'visualizza')
@@ -8629,15 +8637,15 @@ Associato a Ctrl+Shift+C'''
 
 
 ########################################################################
-def subst_str():
+def subst_str(cerca, sostituisce):
     '''
     Sostituisce stringhe di testi nel foglio corrente
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ReplaceDescriptor = oSheet.createReplaceDescriptor()
-    ReplaceDescriptor.SearchString = "str1"
-    ReplaceDescriptor.ReplaceString = "str2"
+    ReplaceDescriptor.SearchString = cerca
+    ReplaceDescriptor.ReplaceString = sostituisce
     oSheet.replaceAll(ReplaceDescriptor)
 
 
@@ -9618,6 +9626,8 @@ def stampa_PDF():
 import LeenoUtils
 
 def MENU_debug():
+    subst_str()
+    return
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()
     oDoc = LeenoUtils.getDocument()

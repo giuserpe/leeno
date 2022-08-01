@@ -2035,6 +2035,7 @@ def scelta_viste():
     '''
     #  refresh(0)
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
@@ -2541,7 +2542,8 @@ def scelta_viste():
             dettaglio_misure(0)
             dettaglio_misure(1)
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
+    # ~oDoc.enableAutomaticCalculation(True)
     # MsgBox('Operazione eseguita con successo!','')
 
 
@@ -7288,7 +7290,7 @@ def autoexec():
     for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO'):
         try:
             GotoSheet(nome)
-            subst_str(' >', ' ►')
+            subst_str(' >(', ' ►(')
         except Exception:
             pass
     GotoSheet(oSheet.Name)
@@ -7316,15 +7318,16 @@ def computo_terra_terra():
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     # raggruppo le colonne
+    ncol = oSheet.getColumns().getCount()
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
     oCellRangeAddr.StartColumn = 46
-    oCellRangeAddr.EndColumn = 1023
+    oCellRangeAddr.EndColumn = ncol
     oSheet.ungroup(oCellRangeAddr, 0)
     oSheet.group(oCellRangeAddr, 0)
     
-    oSheet.getCellRangeByPosition(33, 0, 1023, 0).Columns.IsVisible = False
+    oSheet.getCellRangeByPosition(33, 0, ncol -1, 0).Columns.IsVisible = False
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
@@ -9626,11 +9629,14 @@ def stampa_PDF():
 import LeenoUtils
 
 def MENU_debug():
-    subst_str()
+    # ~computo_terra_terra()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    DLG.mri(oSheet.getColumns().getCount())
     return
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()
-    oDoc = LeenoUtils.getDocument()
 
     dlg = LeenoPdf.PdfDialog()
 

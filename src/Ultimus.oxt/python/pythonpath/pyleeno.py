@@ -2081,7 +2081,7 @@ def scelta_viste():
         #  oDialog1.getControl('CBMdo').State = True
 
         if oDialog1.getControl('OBTerra').State:
-            computo_terra_terra()
+            vista_terra_terra()
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBMat').State = 0
@@ -2489,7 +2489,6 @@ def scelta_viste():
             oDialog1.getControl('vista_pre').State = 1
         else:
             oDialog1.getControl('vista_sem').State = 1
-
         sString = oDialog1.getControl('TextField3')
         sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
             'H335').Value  # cont_inizio_voci_abbreviate
@@ -2518,6 +2517,7 @@ def scelta_viste():
             LeenoSheetUtils.setLarghezzaColonne(oSheet)
         if oDialog1.getControl('vista_sem').State:
             LeenoSheetUtils.setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFTFTFFFFFFFFFFFFFFFFFFFFF')
+        # ~vista_terra_terra()
 
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField3').getText() != '10000':
@@ -7310,11 +7310,13 @@ def autoexec():
 
 #
 ########################################################################
-def computo_terra_terra():
+def vista_terra_terra():
     '''
     Settaggio base di configurazione colonne in COMPUTO e VARIANTE
     '''
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
+
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     # raggruppo le colonne
@@ -7322,13 +7324,18 @@ def computo_terra_terra():
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = 46
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        col = 46
+    elif oSheet.Name == 'CONTABILITA':
+        col = 39
+    oCellRangeAddr.StartColumn = col
     oCellRangeAddr.EndColumn = ncol
     oSheet.ungroup(oCellRangeAddr, 0)
     oSheet.group(oCellRangeAddr, 0)
     
-    oSheet.getCellRangeByPosition(33, 0, ncol -1, 0).Columns.IsVisible = False
+    oSheet.getCellRangeByPosition(col, 0, ncol -1, 0).Columns.IsVisible = False
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -9629,11 +9636,11 @@ def stampa_PDF():
 import LeenoUtils
 
 def MENU_debug():
-    # ~computo_terra_terra()
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    vista_terra_terra()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
-    DLG.mri(oSheet.getColumns().getCount())
+    # ~DLG.mri(oSheet.getColumns().getCount())
     return
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()

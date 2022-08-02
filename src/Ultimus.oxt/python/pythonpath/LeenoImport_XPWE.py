@@ -1169,7 +1169,7 @@ def MENU_XPWE_import():
     Importazione dati dal formato XPWE
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DocumentReewfresh(False)
     isLeenoDoc = LeenoUtils.isLeenoDocument()
     if isLeenoDoc == False:
         PL.creaComputo(0)
@@ -1338,7 +1338,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        LeenoUtils.DocumentRefresh(True)
+        LeenoUtils.DocumentReewfresh(True)
         return
 
     # compila il computo
@@ -1354,7 +1354,8 @@ def MENU_XPWE_import():
     progress.setText("Fine")
     progress.hide()
     oDoc.CurrentController.ZoomValue = zoom
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentReewfresh(True)
+    
     oSheet = oDoc.getSheets().getByName(elaborato)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

@@ -298,7 +298,7 @@ def partita(testo):
     Aggiunge/detrae rigo di PARTITA PROVVISORIA
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
     x = PL.LeggiPosizioneCorrente()[1]
@@ -331,7 +331,7 @@ def struttura_CONTAB():
     Visualizza in modalità struttura i documenti contabili
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     PL.struttura_off()
     oRanges = oDoc.NamedRanges
     
@@ -379,7 +379,7 @@ def GeneraLibretto(oDoc):
     # ~oDoc = LeenoUtils.getDocument()
     #  DLG.mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
     #  return
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA':
         return
     PL.numera_voci()
@@ -1135,7 +1135,7 @@ def GeneraAttiContabili():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
     if Dialogs.YesNoDialog(Title='Avviso',

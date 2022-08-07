@@ -13,7 +13,7 @@ def datiVoceComputo (oSheet, lrow):
     '''
 
     # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
     # ~lrow = PL.LeggiPosizioneCorrente()[1]
 
     sStRange = circoscriveVoceComputo(oSheet, lrow)

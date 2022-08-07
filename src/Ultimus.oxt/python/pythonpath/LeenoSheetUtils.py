@@ -54,7 +54,7 @@ def SbiancaCellePrintArea():
     area 
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     
     oPrintArea = oSheet.getPrintAreas()
 
@@ -326,7 +326,7 @@ def elimina_voce(lrow=None, msg=1):
                      0 esegui senza conferma
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
 
     if oSheet.Name == 'Elenco Prezzi':
         Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
@@ -440,7 +440,7 @@ def setAdatta():
     fissa il valore dell'altezza ottimale
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -744,7 +744,7 @@ def numeraVoci(oSheet, lrow, tutte):
 def elimina_righe_vuote():
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
     for y in reversed(range(0, lrow)):

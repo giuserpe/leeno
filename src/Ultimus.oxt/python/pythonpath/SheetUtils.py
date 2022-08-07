@@ -543,7 +543,7 @@ def visualizza_PageBreak(arg=True):
     arg       { boolean }
     '''
     # oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    #  oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()

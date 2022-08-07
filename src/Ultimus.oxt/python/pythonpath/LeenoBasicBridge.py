@@ -339,7 +339,7 @@ def EliminaVociDoppieElencoPrezzi():
 def Tutti_Subtotali():
     callAlert()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     PL.Tutti_Subtotali(oSheet)
 
 
@@ -444,7 +444,7 @@ def Duplica_Sheet_new_doc_No_Cons():
     pezza per Sub Duplica_Sheet_new_doc_No_Cons
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     end = SheetUtils.getLastUsedRow(oSheet)
     for el in range(2, end):
         if oSheet.getCellByPosition(9, el).CellStyle == 'comp sotto Euro Originale':

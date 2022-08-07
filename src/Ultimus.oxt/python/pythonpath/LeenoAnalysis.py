@@ -123,7 +123,7 @@ def copiaRigaAnalisi(oSheet, lrow):
 def MENU_impagina_analisi():
     PL.set_area_stampa()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'Analisi di Prezzo':
         return
     lr = SheetUtils.getLastUsedRow(oSheet) + 1

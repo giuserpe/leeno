@@ -5490,7 +5490,7 @@ def ins_voce_elenco():
     oCell = oSheet.getCellByPosition(2, 3)
     valida_cella(
         oCell,
-        '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";"',
+        '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";""',
         titoloInput='Scegli...',
         msgInput='Unità di misura')
     oDoc.enableAutomaticCalculation(True)
@@ -7916,7 +7916,6 @@ def DlgPDF():
     oDlgPDF = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgPDF?language=Basic&location=application"
     )
-
     sUrl = LeenO_path() + '/python/pythonpath/Icons-Big/preview.png'
     oDlgPDF.getModel().ImageControl1.ImageURL = sUrl
     
@@ -7975,7 +7974,6 @@ def DlgMain():
     oDlgMain.Title = 'Menù Principale (Ctrl+0)'
 
     sUrl = LeenO_path() + '/icons/Immagine.png'
-
     oDlgMain.getModel().ImageControl1.ImageURL = sUrl
 
     sString = oDlgMain.getControl("CommandButton13")
@@ -8136,7 +8134,10 @@ def bak0():
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-    dir_bak = uno.fileUrlToSystemPath(dir_bak)
+    try:
+        dir_bak = uno.fileUrlToSystemPath(dir_bak)
+    except:
+        pass
     # filename = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '-'
     if len(orig) == 0:
         return
@@ -9638,14 +9639,21 @@ def stampa_PDF():
     # ~DLG.chi(dest)
     # ~rem ----------------------------------------------------------------------
 import LeenoUtils
+import LeenoEvents
+
 
 def MENU_debug():
-    sistema_cose()
+    LeenoEvents.pulisci()
+    LeenoEvents.assegna()
+
+    return
+    # ~sistema_cose()
     # ~vista_terra_terra()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
 
     # ~DLG.mri(oSheet.getColumns().getCount())
+    DLG.mri(oSheet)
     return
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()

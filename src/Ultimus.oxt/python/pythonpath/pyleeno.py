@@ -9536,7 +9536,6 @@ def MENU_debug():
     # ~txt = " ".join(testo.split())
     # ~oSheet.getCellByPosition(0, 1).String = txt
     # ~DLG.chi(txt)
-    import Dialogs
     import LeenoSettings
     LeenoSettings.MENU_PrintSettings()
     # ~LeenoSettings.MENU_JobSettings()
@@ -9643,8 +9642,8 @@ import LeenoEvents
 
 
 def MENU_debug():
-    LeenoEvents.pulisci()
-    LeenoEvents.assegna()
+    DLG.chi(loVersion())
+    # ~LeenoEvents.assegna()
 
     return
     # ~sistema_cose()

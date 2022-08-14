@@ -44,7 +44,17 @@ if ENABLE_DEBUG == 1:
     pass
 
 
-
+def loVersion():
+    '''
+    Legge il numero di versione di LibreOffice.
+    '''
+    aConfigProvider = uno.getComponentContext().ServiceManager.createInstance("com.sun.star.configuration.ConfigurationProvider")
+    arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+    arg.Name = "nodepath"
+    arg.Value = '/org.openoffice.Setup/Product'
+    return aConfigProvider.createInstanceWithArguments(
+        "com.sun.star.configuration.ConfigurationAccess",
+        (arg, )).ooSetupVersionAboutBox
 
 def fixPythonPath():
     '''
@@ -134,12 +144,27 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         except Exception as e:
             # msg = traceback.format_exc()
+
+# Aggiungo info generiche su SO, LO e LeenO
+            pir = uno.getComponentContext().getValueByName(
+                '/singletons/com.sun.star.deployment.PackageInformationProvider')
+            expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
+            if os.altsep:
+                code_file = uno.fileUrlToSystemPath(expath + os.altsep +
+                                                    'leeno_version_code')
+            else:
+                code_file = uno.fileUrlToSystemPath(expath + os.sep +
+                                                    'leeno_version_code')
+            f = open(code_file, 'r')
+            msg = "OS: " + sys.platform + ' - LibreOffice-' + loVersion() +' - '+ f.readline() + "\n\n"
+#
+
             print("sys.exc_info:", sys.exc_info())
             sysinfo = sys.exc_info()
             exceptionClass = sysinfo[0].__name__
-            msg = str(sysinfo[1])
+            msg += str(sysinfo[1])
             if msg == '-1' or msg == '':
-                msg = str(sysinfo[0])
+                msg += str(sysinfo[0])
             if msg != '':
                 msg += '\n\n'
             tb = sysinfo[2]

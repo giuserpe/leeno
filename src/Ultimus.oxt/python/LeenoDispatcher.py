@@ -156,7 +156,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
                 code_file = uno.fileUrlToSystemPath(expath + os.sep +
                                                     'leeno_version_code')
             f = open(code_file, 'r')
-            msg = "OS: " + sys.platform + ' - LibreOffice-' + loVersion() +' - '+ f.readline() + "\n\n"
+            msg = "OS: " + sys.platform + ' / LibreOffice-' + loVersion() +' / '+ f.readline() + "\n\n"
 #
 
             print("sys.exc_info:", sys.exc_info())

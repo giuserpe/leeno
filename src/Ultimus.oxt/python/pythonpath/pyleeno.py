@@ -8537,7 +8537,7 @@ def sistema_cose():
     except TypeError:
         el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
     for y in el_y:
-        for el in range(y[0], y[1] + 1):
+        for el in reversed(range(y[0], y[1] + 1)):
             lista_y.append(el)
     for y in lista_y:
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
@@ -9642,11 +9642,27 @@ import LeenoEvents
 
 
 def MENU_debug():
-    DLG.chi(loVersion())
+    sistema_cose()
+    return
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
+    lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
+    for y in reversed(range(1, lrow)):
+        if oSheet.getCellByPosition(1, y).String ==  "CAM":
+            oSheet.getCellByPosition(2, y).String = "CAM - " + oSheet.getCellByPosition(2, y).String
+            # ~oSheet.getRows().removeByIndex(y, 1)
+
+    LeenoUtils.DocumentRefresh(True)
+
+
+    # ~ LeenoSheetUtils.elimina_righe_vuote()
+    # ~SheetUtils.MENU_unisci_fogli()
+    # ~DLG.chi(loVersion())
     # ~LeenoEvents.assegna()
 
     return
-    # ~sistema_cose()
     # ~vista_terra_terra()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -9660,7 +9676,6 @@ def MENU_debug():
     dlg = LeenoPdf.PdfDialog()
 
     return
-
     # ~LeenoSheetUtils.elimina_righe_vuote()
     # ~sistema_cose()
     # ~LI.MENU_emilia_romagna()

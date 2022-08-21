@@ -190,6 +190,7 @@ def parseXML(data, defaultTitle):
         descs = product.findall('prdDescrizione')
         textBreve = ""
         textEstesa = ""
+        madre = ""
         for desc in descs:
             descAttr = desc.attrib
             try:
@@ -197,10 +198,25 @@ def parseXML(data, defaultTitle):
             except KeyError:
                 descLingua = None
             if lingua is None or descLingua is None or lingua == descLingua:
+
+                if 'breve' in descAttr and 'estesa' in descAttr:
+                    if descAttr['estesa'] == descAttr['breve']:
+                        textBreve = descAttr['breve'] + '\n'
+                    else:
+                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa']
+
                 if 'breve' in descAttr:
                     textBreve = textBreve + descAttr['breve'] + '\n'
                 if 'estesa' in descAttr:
                     textEstesa = textEstesa + descAttr['estesa'] + '\n'
+                    madre = textEstesa
+
+                if 'breve' in descAttr and not 'estesa' in descAttr:
+                    if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                        textEstesa = madre + descAttr['breve'] + '\n'
+                    else:
+                        textEstesa = madre + '- ' + descAttr['breve'] + '\n'
+
         if textBreve != "":
             textBreve = textBreve[: -len('\n')]
         if textEstesa != "":

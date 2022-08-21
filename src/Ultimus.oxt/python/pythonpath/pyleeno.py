@@ -9642,7 +9642,8 @@ import LeenoEvents
 
 
 def MENU_debug():
-    sistema_cose()
+    DLG.chi('123456'[0:2])
+    # ~sistema_cose()
     return
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)

@@ -200,22 +200,22 @@ def parseXML(data, defaultTitle):
             if lingua is None or descLingua is None or lingua == descLingua:
 
                 if 'breve' in descAttr and 'estesa' in descAttr:
-                    if descAttr['estesa'] == descAttr['breve']:
+                    if descAttr['breve'] in descAttr['estesa']:
                         textBreve = descAttr['breve'] + '\n'
                     else:
-                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa']
-
-                if 'breve' in descAttr:
-                    textBreve = textBreve + descAttr['breve'] + '\n'
-                if 'estesa' in descAttr:
-                    textEstesa = textEstesa + descAttr['estesa'] + '\n'
-                    madre = textEstesa
+                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa'] + '\n'
+                        madre = textEstesa[: -len('\n')]
+                    if descAttr['breve'] == descAttr['estesa']:
+                        textEstesa = madre + descAttr['breve'] + '\n'
 
                 if 'breve' in descAttr and not 'estesa' in descAttr:
                     if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                         textEstesa = madre + descAttr['breve'] + '\n'
                     else:
                         textEstesa = madre + '- ' + descAttr['breve'] + '\n'
+
+        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
+        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
 
         if textBreve != "":
             textBreve = textBreve[: -len('\n')]

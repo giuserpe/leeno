@@ -66,6 +66,7 @@ def findXmlParser(xmlText):
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
+        # ~'autore="Regione Liguria"': LeenoImport_XmlToscana.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -274,8 +275,23 @@ def MENU_ImportElencoPrezziXML():
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+
+L'OPERAZIONE POTREBBE RICHIEDERE DEL TEMPO E
+LibreOffice POTREBBE SEMBRARE BLOCCATO!
+
+Vuoi procedere comunque?''') == 0:
+        pass
+    else:
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SR = oRange.StartRow + 1
+        ER = oRange.EndRow
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        PL.sistema_cose()
+
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('F2').String = 'prezzi'
@@ -285,18 +301,18 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
-    DLG.MsgBox('''
-Importazione eseguita con successo!
 
+    Dialogs.Info(
+        Title = "Importazione eseguita con successo!",
+        Text = '''
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
-
-    ''','ATTENZIONE!')
-
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+        )
 
 ########################################################################
 

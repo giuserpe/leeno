@@ -969,7 +969,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_join_sheets</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?SheetUtils.MENU_unisci_fogli</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Unisci tutti i fogli del documento</value>

@@ -4668,6 +4668,10 @@ def pesca_cod():
                         "Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",
                         'ATTENZIONE!') == 3:
                     return
+                if Dialogs.YesNoDialog(Title='ATTENZIONE!',
+                Text="Risulta già registrato un SAL."
+                    "Vuoi procedere comunque?") == 0:
+                    return
                 else:
                     LeenoUtils.setGlobalVar('sblocca_computo', 1)
         partenza = cerca_partenza()
@@ -6436,16 +6440,16 @@ def struttura_Elenco():
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
     chiudi_dialoghi()
-    if DLG.DlgSiNo(
-            '''Adesso puoi dare ai titoli di capitolo e sottocapitolo
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Adesso puoi dare ai titoli di capitolo e sottocapitolo
 una tonalità di colore che ne facilita la leggibilità, ma
 il risultato finale dipende dalla struttura dei codici di voce.
 
-QUESTA OPERAZIONE RICHIEDE DEL TEMPO E
+L'OPERAZIONE POTREBBE RICHIEDERE DEL TEMPO E
 LibreOffice POTREBBE SEMBRARE BLOCCATO!
 
-Vuoi procedere con la creazione della struttura dei capitoli?''',
-            'Avviso') == 3:
+Vuoi procedere comunque?''') == 0:
         return
 
     oDoc = LeenoUtils.getDocument()
@@ -6518,14 +6522,15 @@ def MENU_importa_stili():
     Importa tutti gli stili da un documento di riferimento. Se non è
     selezionato, il file di riferimento è il template di leenO.
     '''
-    if DLG.DlgSiNo(
-            '''Questa operazione sovrascriverà gli stili
+
+    if Dialogs.YesNoDialog(Title='Importa Stili in blocco?',
+    Text='''Questa operazione sovrascriverà gli stili
 del documento attivo, se già presenti!
 
 Se non scegli un file di riferimento, saranno
 importati gli stili di default di LeenO.
 
-Vuoi continuare?''', 'Importa Stili in blocco?') == 3:
+Vuoi continuare?''') == 0:
         return
     filename = Dialogs.FileSelect('Scegli il file di riferimento...', '*.ods')
     if filename is None:
@@ -9642,10 +9647,17 @@ import LeenoEvents
 
 
 def MENU_debug():
-    DLG.chi('123456'[0:2])
+
     # ~sistema_cose()
     return
     oDoc = LeenoUtils.getDocument()
+    oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRange.StartRow + 1
+    ER = oRange.EndRow
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+    return
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1

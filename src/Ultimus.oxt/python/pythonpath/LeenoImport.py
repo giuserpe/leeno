@@ -21,6 +21,7 @@ import LeenoImport_XmlSix
 import LeenoImport_XmlToscana
 import LeenoImport_XmlSardegna
 import LeenoImport_XmlLiguria
+import LeenoImport_XmlVeneto
 
 
 def fixParagraphSize(txt):
@@ -45,7 +46,7 @@ def fixParagraphSize(txt):
 def stripXMLNamespaces(data):
     '''
     prende una stringa contenente un file XML
-    elimina i namespaces dai dato
+    elimina i namespaces dai dati
     e ritorna il root dell' XML
     '''
     it = ET.iterparse(StringIO(data))
@@ -68,6 +69,7 @@ def findXmlParser(xmlText):
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
+        'rks=': LeenoImport_XmlVeneto.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...

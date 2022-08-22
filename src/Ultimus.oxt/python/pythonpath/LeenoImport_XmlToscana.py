@@ -60,12 +60,14 @@ def parseXML(data, defaultTitle=None):
     anno = dettaglio.attrib['anno']
     area = dettaglio.attrib['area']
 
-    # copyright = intestazione.find('copyright')
-    # ccType = copyright.attrib['tipo']
-    # ccDesc = copyright.attrib['descrizione']
+    copyright = intestazione.find('copyright')
+    ccType = copyright.attrib['tipo']
+    ccDesc = copyright.attrib['descrizione']
 
     # crea il titolo dell' EP
-    titolo = "Elenco prezzi - " + autore + " - " + area + " - anno " + anno
+    # ~titolo = "Elenco prezzi - " + autore + " - " + area + " - anno " + anno
+    titolo = "Elenco prezzi - " + area + " - anno " + anno + "\n"\
+    + "Copyright: " + ccType + " - " + ccDesc
 
     contenuto = root.find('Contenuto')
     articoli = contenuto.findall('Articolo')
@@ -164,83 +166,3 @@ def parseXML(data, defaultTitle=None):
         'categorie': catList,
         'articoli' : artList
     }
-
-
-def MENU_XML_toscana_import():
-    '''
-    Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
-    del template COMPUTO.
-    '''
-    filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
-    if filename is None:
-        return
-
-    # legge il file XML in una stringa
-    with open(filename, 'r') as file:
-      data = file.read()
-
-    # lo analizza eliminando i namespaces
-    # (che qui rompono solo le scatole...)
-    it = ET.iterparse(StringIO(data))
-    for _, el in it:
-        # strip namespaces
-        _, _, el.tag = el.tag.rpartition('}')
-    root = it.root
-
-    try:
-        dati = parseXML(root)
-
-    except Exception:
-        Dialogs.Exclamation(
-           Title="Errore nel file XML",
-           Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-        return
-
-    # il parser può gestirsi l'errore direttamente, nel qual caso
-    # ritorna None ed occorre uscire
-    if dati is None:
-        return
-
-    # creo nuovo file di computo
-    oDoc = PL.creaComputo(0)
-
-    # visualizza la progressbar
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
-    progress.show()
-
-    # compila l'elenco prezzi
-    LeenoImport.compilaElencoPrezzi(oDoc, dati, progress)
-
-    # si posiziona sul foglio di computo appena caricato
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oDoc.CurrentController.setActiveSheet(oSheet)
-
-    # messaggio di ok
-    # ~Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
-
-    # nasconde la progressbar
-    progress.hide()
-
-########################################################################
-
-def ns_ins(filename):
-    '''
-    Se assente, inserisce il namespace nel file XML.
-    '''
-    f = codecs.open(filename, 'r', 'utf-8')
-    out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
-    of = codecs.open(out_file, 'w', 'utf-8')
-
-    for row in f:
-        nrow = row.replace(
-            '<PRT:Prezzario>',
-            '<PRT:Prezzario xmlns="http://www.regione.toscana.it/Prezzario" xmlns:PRT="http://www.regione.toscana.it/Prezzario/Prezzario.xsd">'
-        )
-        of.write(nrow)
-    f.close()
-    of.close()
-    shutil.move(out_file, filename)
-
-########################################################################

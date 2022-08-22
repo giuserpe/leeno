@@ -9645,9 +9645,10 @@ def stampa_PDF():
 import LeenoUtils
 import LeenoEvents
 
+import LeenoImport
 
 def MENU_debug():
-
+    LeenoImport.MENU_ImportElencoPrezziXML()
     # ~sistema_cose()
     return
     oDoc = LeenoUtils.getDocument()

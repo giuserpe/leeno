@@ -20,6 +20,7 @@ import Dialogs
 import LeenoImport_XmlSix
 import LeenoImport_XmlToscana
 import LeenoImport_XmlSardegna
+import LeenoImport_XmlLiguria
 
 
 def fixParagraphSize(txt):
@@ -66,7 +67,7 @@ def findXmlParser(xmlText):
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
-        # ~'autore="Regione Liguria"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...

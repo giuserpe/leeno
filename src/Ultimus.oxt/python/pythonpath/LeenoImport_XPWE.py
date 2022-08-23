@@ -1169,7 +1169,7 @@ def MENU_XPWE_import():
     Importazione dati dal formato XPWE
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentReewfresh(False)
+    LeenoUtils.DocumentRefresh(False)
     isLeenoDoc = LeenoUtils.isLeenoDocument()
     if isLeenoDoc == False:
         PL.creaComputo(0)

@@ -45,7 +45,7 @@ def parseXML(data, defaultTitle=None):
     root = LeenoImport.stripXMLNamespaces(data)
 
     # ~desc = root.items()[1][1]
-    titolo = root.get('desc') + ' - ' + root.get('ver')
+    titolo = root.get('desc') #+ ' - ' + root.get('ver')
     # ~articoli = contenuto.findall('Articolo')
 
     # ~desc = settore.attrib['desc']
@@ -88,6 +88,7 @@ def parseXML(data, defaultTitle=None):
                     prezzi = paragrafo.findall('prezzi')
                     for el in prezzi[0]:
                         art = el.text
+                        if voce == None: voce = ''
                         if voce in art:
                             desc = art
                         else:
@@ -106,8 +107,10 @@ def parseXML(data, defaultTitle=None):
                         um = el.attrib['umi']
                         prezzo = float(el.attrib['val'])
                         if mdo == '':
-                            mdo = float(el.attrib['man']) / 100
-                        
+                            try:
+                                mdo = float(el.attrib['man']) / 100
+                            except:
+                                pass
                         # ~oneriSic = float(el.attrib['sicurezza'])
 
                         # compone l'articolo e lo mette in lista

@@ -147,10 +147,12 @@ def compilaElencoPrezzi(oDoc, dati, progress):
         itemData = item[1]
         prezzo = itemData['prezzo']
         mdo = itemData['mdo']
+        if mdo == 0:
+            mdo = ''
         if isinstance(prezzo, str) or isinstance(mdo, str):
             mdoVal = ''
-        else:
-            mdoVal = prezzo * mdo
+        # ~else:
+            # ~mdoVal = prezzo * mdo
         artArray.append((
             itemData['codice'],
             itemData['desc'],

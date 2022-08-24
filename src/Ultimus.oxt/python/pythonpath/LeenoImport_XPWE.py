@@ -1338,7 +1338,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        LeenoUtils.DocumentReewfresh(True)
+        LeenoUtils.DocumentRefresh(True)
         return
 
     # compila il computo
@@ -1354,7 +1354,7 @@ def MENU_XPWE_import():
     progress.setText("Fine")
     progress.hide()
     oDoc.CurrentController.ZoomValue = zoom
-    LeenoUtils.DocumentReewfresh(True)
+    LeenoUtils.DocumentRefresh(True)
     
     oSheet = oDoc.getSheets().getByName(elaborato)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)

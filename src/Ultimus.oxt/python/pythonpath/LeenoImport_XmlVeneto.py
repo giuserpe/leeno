@@ -95,8 +95,9 @@ def parseXML(data, defaultTitle=None):
                             desc = voce + '\n- ' + art
 
                         # un po' di pulizia nel testo
-                        desc = desc.replace('\t', ' ').replace('Ã¨', 'è').replace(
-                        'Â°', '°').replace('Ã', 'à').replace(' $', '')
+                        desc = desc.replace('\t', ' ').replace('Ã¨', 'è'
+                        ).replace('Â°', '°').replace('Ã', 'à').replace(
+                        ' $', '').replace('#13;', ' ').replace('\n \n', '\n')
                         while '  ' in desc:
                             desc = desc.replace('  ', ' ')
                         while '\n\n' in desc:

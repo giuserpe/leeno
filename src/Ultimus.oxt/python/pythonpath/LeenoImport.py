@@ -495,6 +495,35 @@ def MENU_emilia_romagna():
 
 ########################################################################
 
+def MENU_umbria():
+    '''
+    Adatta la struttura del prezzario rilasciato dalla regione Umbria
+    
+    Il risultato ottenuto va inserito in Elenco Prezzi.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
+    madre = ''
+    for i in range(0, fine):
+        oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String
+        if oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        if oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            voce = madre +"\n- " + oSheet.getCellByPosition(1, i).String
+            oSheet.getCellByPosition(1, i).String = voce
+            try:
+                oSheet.getCellByPosition(3, i).Value = float(oSheet.getCellByPosition(3, i).String)
+            except:
+                pass
+            # ~else:
+                # ~oSheet.getCellByPosition(1, i).String = madre
+            # ~oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
+    LeenoUtils.DocumentRefresh(True)
+
+########################################################################
+
 def MENU_basilicata():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Basilicata

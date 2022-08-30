@@ -569,15 +569,21 @@ def MENU_unisci_fogli():
         sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
         unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
         unione = oDoc.getSheets().getByName('unione_fogli')
+        test = True
         for el in lista_fogli:
+            if test == False:
+                start = 0
+            else:
+                start = 1
             oSheet = oDoc.getSheets().getByName(el)
             oRangeAddress = oSheet.getCellRangeByPosition(
-                0, 0, (getUsedArea(oSheet).EndColumn),
+                0, start, (getUsedArea(oSheet).EndColumn),
                 (getUsedArea(oSheet).EndRow)).getRangeAddress()
             oCellAddress = unione.getCellByPosition(
                 0,
                 getUsedArea(unione).EndRow + 1).getCellAddress()
             oSheet.copyRange(oCellAddress, oRangeAddress)
+            test = True
         DLG.MsgBox('Unione dei fogli eseguita.', 'Avviso')
     else:
         unione = oDoc.getSheets().getByName('unione_fogli')

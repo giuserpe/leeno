@@ -9225,6 +9225,8 @@ def MENU_filtro_descrizione():
     descrizione = InputBox(
         testo, t='Inserisci la descrizione da cercare o OK per conferma.')
     if descrizione in (None, '', ' '):
+        struttura_off()
+        oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
         return
 
     struttura_off()
@@ -9648,6 +9650,9 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
+    # ~SheetUtils.MENU_unisci_fogli()
+    # ~LeenoImport.MENU_umbria()
+    return
     # ~LeenoImport.MENU_ImportElencoPrezziXML()
     sistema_cose()
     LeenoUtils.DocumentRefresh(True)

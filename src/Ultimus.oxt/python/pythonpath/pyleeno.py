@@ -9650,11 +9650,8 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
-    # ~SheetUtils.MENU_unisci_fogli()
-    # ~LeenoImport.MENU_umbria()
-    return
-    # ~LeenoImport.MENU_ImportElencoPrezziXML()
-    sistema_cose()
+    LeenoImport.MENU_ImportElencoPrezziXML()
+    # ~sistema_cose()
     LeenoUtils.DocumentRefresh(True)
     return
     oDoc = LeenoUtils.getDocument()

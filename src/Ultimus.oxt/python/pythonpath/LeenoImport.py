@@ -22,6 +22,7 @@ import LeenoImport_XmlToscana
 import LeenoImport_XmlSardegna
 import LeenoImport_XmlLiguria
 import LeenoImport_XmlVeneto
+import LeenoImport_XmlBasilicata
 
 
 def fixParagraphSize(txt):
@@ -70,6 +71,7 @@ def findXmlParser(xmlText):
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
+        '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -299,8 +301,7 @@ Vuoi procedere comunque?''') == 0:
 
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
-    oSheet.getCellRangeByName('F2').String = 'prezzi'
-    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(SheetUtils.getLastUsedRow(oSheet)+1) +')'
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
     dest = filename[0:-4]+ '.ods'
     # salva il file col nome del file di origine
     PL.salva_come(dest)
@@ -522,57 +523,6 @@ def MENU_umbria():
             # ~oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
     LeenoUtils.DocumentRefresh(True)
 
-########################################################################
-
-def MENU_basilicata():
-    '''
-    Adatta la struttura del prezzario rilasciato dalla regione Basilicata
-    partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
-    Il risultato ottenuto va inserito in Elenco Prezzi.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    for el in ('CAPITOLI', 'CATEGORIE', 'VOCI'):
-        oSheet = oDoc.getSheets().getByName(el)
-        oSheet.getRows().removeByIndex(0, 1)
-    oSheet = oDoc.getSheets().getByName('CATEGORIE')
-    PL.GotoSheet('CATEGORIE')
-    fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    for i in range(0, fine):
-        oSheet.getCellByPosition(1, i).String = (
-            oSheet.getCellByPosition(0, i).String +
-            "." +
-            oSheet.getCellByPosition(1, i).String)
-
-    oSheet.getColumns().removeByIndex(0, 1)
-    oSheet = oDoc.getSheets().getByName('VOCI')
-    PL.GotoSheet('VOCI')
-    oSheet.getColumns().removeByIndex(0, 3)
-    oSheet = oDoc.getSheets().getByName('SOTTOVOCI')
-    PL.GotoSheet('SOTTOVOCI')
-    oSheet.getColumns().removeByIndex(0, 4)
-    SheetUtils.MENU_unisci_fogli()
-    oSheet = oDoc.getSheets().getByName('unione_fogli')
-    PL.GotoSheet('unione_fogli')
-    oSheet.getRows().removeByIndex(0, 1)
-    PL.ordina_col(1)
-    fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    for i in range(0, fine):
-        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
-            madre = oSheet.getCellByPosition(1, i).String
-        elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
-            if oSheet.getCellByPosition(1, i).String != '':
-                oSheet.getCellByPosition(1, i).String = (
-                    madre +
-                    "\n- " +
-                    oSheet.getCellByPosition(1, i).String)
-            else:
-                oSheet.getCellByPosition(1, i).String = madre
-            oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    for i in reversed(range(0, fine)):
-        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
-            oSheet.getRows().removeByIndex(i, 1)
-    oSheet.getRows().removeByIndex(0, 1)
-    oSheet.getColumns().insertByIndex(3, 1)
 
 ########################################################################
 

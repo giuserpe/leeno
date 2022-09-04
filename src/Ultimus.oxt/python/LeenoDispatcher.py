@@ -145,7 +145,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
         except Exception as e:
             # msg = traceback.format_exc()
 
-# Aggiungo info generiche su SO, LO e LeenO
+# Aggiunge info generiche su SO, LO e LeenO
             pir = uno.getComponentContext().getValueByName(
                 '/singletons/com.sun.star.deployment.PackageInformationProvider')
             expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')

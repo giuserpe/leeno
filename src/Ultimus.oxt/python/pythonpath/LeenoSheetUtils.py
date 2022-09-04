@@ -84,8 +84,8 @@ def setLarghezzaColonne(oSheet):
     regola la larghezza delle colonne a seconda della sheet
     '''
     if oSheet.Name == 'Analisi di Prezzo':
-        for col, width in {'A':2100, 'B':12000, 'C':1600, 'D':2000, 'E':3400, 'F':3400,
-                           'G':2700, 'H':2700, 'I':2000, 'J':2000, 'K':2000}.items():
+        for col, width in {'A':1600, 'B':11000, 'C':1500, 'D':1500, 'E':1500, 'F':1500,
+                           'G':1500, 'H':2000, 'I':1900, 'J':1900, 'K':1900}.items():
             oSheet.Columns[col].Width = width
         SheetUtils.freezeRowCol(oSheet, 0, 2)
 

@@ -6119,11 +6119,11 @@ def inizializza_elenco():
     oSheet.getCellRangeByName('I1:J1').Columns.IsVisible = False
 
     y = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1
-    oSheet.getCellRangeByName('N2').Formula = '=SUBTOTAL(9;N3:N' + str(y) + ')'
-    oSheet.getCellRangeByName('R2').Formula = '=SUBTOTAL(9;R3:R' + str(y) + ')'
-    oSheet.getCellRangeByName('V2').Formula = '=SUBTOTAL(9;V3:V' + str(y) + ')'
-    oSheet.getCellRangeByName('Y2').Formula = '=SUBTOTAL(9;Y3:Y' + str(y) + ')'
-    oSheet.getCellRangeByName('Z2').Formula = '=SUBTOTAL(9;Z3:Z' + str(y) + ')'
+    oSheet.getCellRangeByName('N2').Formula = '=SUBTOTAL(9;N:N)'
+    oSheet.getCellRangeByName('R2').Formula = '=SUBTOTAL(9;R:R)'
+    oSheet.getCellRangeByName('V2').Formula = '=SUBTOTAL(9;V:V)'
+    oSheet.getCellRangeByName('Y2').Formula = '=SUBTOTAL(9;Y:Y)'
+    oSheet.getCellRangeByName('Z2').Formula = '=SUBTOTAL(9;Z:Z)'
     #   riga di totale importo COMPUTO
     y -= 1
     oSheet.getCellByPosition(12, y).String = 'TOTALE'
@@ -8650,7 +8650,9 @@ Associato a Ctrl+Shift+C'''
     lrow = LeggiPosizioneCorrente()[1]
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
-            oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
+            larg = oSheet.getCellByPosition(x, lrow).Columns.Width
+            oSheet.getCellByPosition(x, lrow).Value = larg
+            # ~oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'
         elif oSheet.getCellByPosition(x, lrow).Formula == '=CELL("col")-1':
             oSheet.getCellByPosition(x, lrow).String = ''
@@ -8796,7 +8798,8 @@ Procedo cambiando i colori?''') == 1:
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
     committente = "\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
-    luogo = '\nLocalità: ' + oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
+    luogo = '\n' + oSheet.Name
+    # ~luogo = '\nLocalità: ' + oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
 
     # try:
     #    oSheet = oDoc.CurrentController.ActiveSheet
@@ -8822,7 +8825,8 @@ Procedo cambiando i colori?''') == 1:
         'COMPUTO': 'PageStyle_COMPUTO_A4',
         'VARIANTE': 'PageStyle_COMPUTO_A4',
         'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
-        'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
+        # ~'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
+        'Analisi di Prezzo': 'PageStyle_COMPUTO_A4',
         'CONTABILITA': 'Page_Style_Libretto_Misure2',
         'Registro': 'PageStyle_REGISTRO_A4',
         'SAL': 'PageStyle_REGISTRO_A4',
@@ -8847,6 +8851,19 @@ Procedo cambiando i colori?''') == 1:
         # ~chi((n , oAktPage.DisplayName))
         oAktPage.HeaderIsOn = True
         oAktPage.FooterIsOn = True
+        
+        oAktPage.TopMargin = 1500
+        oAktPage.BottomMargin = 800
+        oAktPage.LeftMargin = 1500
+        oAktPage.RightMargin = 1000
+        
+        oAktPage.FooterLeftMargin = 0
+        oAktPage.FooterRightMargin = 0
+        oAktPage.HeaderLeftMargin = 0
+        oAktPage.HeaderRightMargin = 0
+
+        oAktPage.HeaderBodyDistance = 0
+        oAktPage.FooterBodyDistance = 0
 
         if oAktPage.DisplayName == 'Page_Style_COPERTINE':
             oAktPage.HeaderIsOn = False
@@ -8860,6 +8877,8 @@ Procedo cambiando i colori?''') == 1:
                                     'PageStyle_COMPUTO_A4',
                                     'PageStyle_Elenco Prezzi'):
             htxt = 8.0 / 100 * oAktPage.PageScale
+            if oSheet.Name == 'Analisi di Prezzo':
+                htxt = 9.0 / 100 * oAktPage.PageScale
             # if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
             #     htxt = 10.0
             bordo = oAktPage.TopBorder
@@ -9650,9 +9669,17 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
-    LeenoImport.MENU_ImportElencoPrezziXML()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    return
+    
+    oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(True)
+    oDoc.removeActionLock()
+    oDoc.unlockControllers()
+    # ~LeenoImport.MENU_ImportElencoPrezziXML()
     # ~sistema_cose()
-    LeenoUtils.DocumentRefresh(True)
     return
     oDoc = LeenoUtils.getDocument()
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress

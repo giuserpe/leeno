@@ -107,6 +107,7 @@ def isLeenoDocument():
 
 
 def DocumentRefresh(boo):
+    return
     oDoc = getDocument()
     if boo == True:
         oDoc.enableAutomaticCalculation(True)
@@ -117,6 +118,9 @@ def DocumentRefresh(boo):
         oDoc.enableAutomaticCalculation(False)
         oDoc.lockControllers()
         oDoc.addActionLock()
+    # ~oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.removeActionLock()
+    # ~oDoc.unlockControllers()
 
 
 def getGlobalVar(name):

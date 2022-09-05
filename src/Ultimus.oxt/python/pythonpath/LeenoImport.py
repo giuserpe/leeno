@@ -251,7 +251,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -306,7 +306,7 @@ Vuoi procedere comunque?''') == 0:
     # salva il file col nome del file di origine
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
@@ -476,7 +476,7 @@ def MENU_emilia_romagna():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
@@ -492,7 +492,7 @@ def MENU_emilia_romagna():
             else:
                 oSheet.getCellByPosition(1, i).String = madre
             oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -503,7 +503,7 @@ def MENU_umbria():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     madre = ''
@@ -521,7 +521,7 @@ def MENU_umbria():
             # ~else:
                 # ~oSheet.getCellByPosition(1, i).String = madre
             # ~oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -535,7 +535,7 @@ def MENU_Piemonte():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
@@ -594,7 +594,7 @@ def MENU_Piemonte():
                                            len(elenco[0]) - 1,
                                            len(elenco) - 1)
     oRange.setDataArray(elenco)
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 

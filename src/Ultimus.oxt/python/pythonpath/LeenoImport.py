@@ -251,7 +251,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -306,7 +306,7 @@ Vuoi procedere comunque?''') == 0:
     # salva il file col nome del file di origine
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
@@ -476,7 +476,7 @@ def MENU_emilia_romagna():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
@@ -492,7 +492,7 @@ def MENU_emilia_romagna():
             else:
                 oSheet.getCellByPosition(1, i).String = madre
             oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -503,26 +503,31 @@ def MENU_umbria():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.Columns.insertByIndex(4, 1)
+    oSheet.getCellByPosition(4, 0).String = 'Incidenza MdO\n%'
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    madre = ''
-    for i in range(0, fine):
+    for i in range(1, fine):
         oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String
-        if oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 1 and \
+        len(oSheet.getCellByPosition(0, i).String.split('.')) == 2:
+            pass
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3 and \
+        oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            mdo = oSheet.getCellByPosition(5, i).Value
+            prz = oSheet.getCellByPosition(3, i).Value
+            oSheet.getCellByPosition(4, i).Value = mdo / prz
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
+        oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
             madre = oSheet.getCellByPosition(1, i).String
-        if oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
-            voce = madre +"\n- " + oSheet.getCellByPosition(1, i).String
-            oSheet.getCellByPosition(1, i).String = voce
-            try:
-                oSheet.getCellByPosition(3, i).Value = float(oSheet.getCellByPosition(3, i).String)
-            except:
-                pass
-            # ~else:
-                # ~oSheet.getCellByPosition(1, i).String = madre
-            # ~oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
-    # ~LeenoUtils.DocumentRefresh(True)
-
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
+        oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            oSheet.getCellByPosition(1, i).String = madre +"\n- " + oSheet.getCellByPosition(1, i).String
+            mdo = oSheet.getCellByPosition(5, i).Value
+            prz = oSheet.getCellByPosition(3, i).Value
+            oSheet.getCellByPosition(4, i).Value = mdo / prz
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -535,7 +540,7 @@ def MENU_Piemonte():
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
@@ -594,7 +599,7 @@ def MENU_Piemonte():
                                            len(elenco[0]) - 1,
                                            len(elenco) - 1)
     oRange.setDataArray(elenco)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 

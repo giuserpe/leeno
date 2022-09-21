@@ -1169,7 +1169,7 @@ def MENU_XPWE_import():
     Importazione dati dal formato XPWE
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     isLeenoDoc = LeenoUtils.isLeenoDocument()
     if isLeenoDoc == False:
         PL.creaComputo(0)
@@ -1295,7 +1295,7 @@ def MENU_XPWE_import():
     progress.show()
 
     # disattiva l'output a video
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     # compila i dati generali per l'analisi
     progress.setText("Compilazione dati generali di analisi")
@@ -1338,7 +1338,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        # ~LeenoUtils.DocumentRefresh(True)
+        LeenoUtils.DocumentRefresh(True)
         return
 
     # compila il computo
@@ -1346,7 +1346,7 @@ def MENU_XPWE_import():
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     # riattiva l'output a video
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
@@ -1354,7 +1354,7 @@ def MENU_XPWE_import():
     progress.setText("Fine")
     progress.hide()
     oDoc.CurrentController.ZoomValue = zoom
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     
     oSheet = oDoc.getSheets().getByName(elaborato)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)

@@ -742,7 +742,7 @@ def numeraVoci(oSheet, lrow, tutte):
 
 def elimina_righe_vuote():
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
@@ -754,4 +754,4 @@ def elimina_righe_vuote():
                 break
             if test == False and x  == lCol :
                 oSheet.getRows().removeByIndex(y, 1)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)

@@ -898,7 +898,7 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -938,7 +938,7 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -2033,7 +2033,7 @@ def scelta_viste():
     Genera i raffronti tra COMPUTO e VARIANTE e CONTABILITA'
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
@@ -2540,7 +2540,7 @@ def scelta_viste():
             dettaglio_misure(0)
             dettaglio_misure(1)
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     # ~oDoc.enableAutomaticCalculation(True)
     # MsgBox('Operazione eseguita con successo!','')
 
@@ -3963,7 +3963,7 @@ def MENU_azzera_voce():
     Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -4057,7 +4057,7 @@ def MENU_azzera_voce():
     except Exception:
         pass
     _gotoCella(0, fine)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -4864,7 +4864,7 @@ def dettaglio_misura_rigo():
                        0 cancella i dettagli
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
     if ' ►' in oSheet.getCellByPosition(2, lrow).String:
@@ -4911,7 +4911,7 @@ def dettaglio_misura_rigo():
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String + stringa.replace('.', ',')
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -5861,7 +5861,7 @@ def rigenera_parziali (arg=False):
     '''
     oDoc = LeenoUtils.getDocument()
     # ~oDoc.enableAutomaticCalculation(False)
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
@@ -5892,7 +5892,7 @@ def rigenera_parziali (arg=False):
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
             parziale_core(oSheet, i)
     # ~oDoc.enableAutomaticCalculation(True)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     progress.hide()
     return
 
@@ -6555,7 +6555,7 @@ def MENU_parziale():
     '''
     Inserisce una riga con l'indicazione della somma parziale.
     '''
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
@@ -6565,7 +6565,7 @@ def MENU_parziale():
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         parziale_core(oSheet, lrow)
         rigenera_parziali(False)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ###
@@ -7031,7 +7031,7 @@ def filtra_codice(voce=None):
 
 def MENU_struttura_on():
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -7042,7 +7042,7 @@ def MENU_struttura_on():
         struttura_Analisi()
     elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
         LeenoContab.struttura_CONTAB()
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 def struttura_ComputoM():
     '''
@@ -7279,7 +7279,7 @@ def autoexec():
     else:
         oGSheetSettings.MoveDirection = 1
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
     #  If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -7299,7 +7299,7 @@ def autoexec():
     GotoSheet(oSheet.Name)
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
     #  vedi = conf.read(path_conf, 'Generale', 'visualizza')
@@ -7318,7 +7318,7 @@ def vista_terra_terra():
     Settaggio base di configurazione colonne in COMPUTO e VARIANTE
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -7338,7 +7338,7 @@ def vista_terra_terra():
     
     oSheet.getCellRangeByPosition(col, 0, ncol -1, 0).Columns.IsVisible = False
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -7431,7 +7431,7 @@ def inizializza():
     else:
         oSheet.getCellRangeByName('H328').Value = 0
 
-# inizializza la lista di scelta per in elenco Prezzi
+# inizializza la lista di scelta in elenco Prezzi
     oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C2')
     valida_cella(oCell,
                  '"<DIALOGO>";"COMPUTO";"VARIANTE";"CONTABILITA"',
@@ -7443,6 +7443,17 @@ def inizializza():
     oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
     oCell.String = "Applica Filtro a:"
     oCell.CellStyle = 'EP-aS'
+# inizializza la lista di scelta per la copertona cP_Cop
+    oCell = oDoc.getSheets().getByName('cP_Cop').getCellRangeByName('B19')
+    # ~if oCell.String == '';
+    valida_cella(oCell,
+                 '"ANALISI DI PREZZO";"ELENCO PREZZI";"ELENCO PREZZI E COSTI ELEMENTARI";\
+                 "COMPUTO METRICO";"PERIZIA DI VARIANTE";"LIBRETTO DELLE MISURE";"REGISTRO DI CONTABILITÀ";\
+                 "S.A.L. A TUTTO IL"',
+                 titoloInput='Scegli...',
+                 msgInput='Titolo della copertina...',
+                 err=False)
+    # ~oCell.String = ""
     # Indica qual è il Documento Principale
     ScriviNomeDocumentoPrincipale()
     # ~nascondi_sheets()
@@ -8524,7 +8535,7 @@ def sistema_cose():
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
 
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = LeggiPosizioneCorrente()[0]
@@ -8533,7 +8544,6 @@ def sistema_cose():
     except AttributeError:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
     el_y = list()
-    # el_x = list()
     lista_y = list()
     try:
         len(oRangeAddress)
@@ -8555,9 +8565,8 @@ def sistema_cose():
                 testo = testo.replace('  ', ' ')
             while '\n\n' in testo:
                 testo = testo.replace('\n\n', '\n')
-            # ~testo = " ".join(testo.split()) # elimina tutti i capoverso
             oDoc.getCurrentSelection().String = testo.strip().strip().strip()
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     oDoc.CurrentController.ZoomValue = zoom
 
 
@@ -9671,17 +9680,13 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    # ~return
-    # ~# REFRESH
+    sistema_cose()
+    return
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(True)
-    oDoc.removeActionLock()
     oDoc.unlockControllers()
-    # ~LeenoImport.MENU_ImportElencoPrezziXML()
-    # ~sistema_cose()
+    oDoc.calculateAll()
+    oDoc.removeActionLock()
     return
     oDoc = LeenoUtils.getDocument()
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -9691,7 +9696,7 @@ def MENU_debug():
 
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
     return
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
@@ -9700,7 +9705,7 @@ def MENU_debug():
             oSheet.getCellByPosition(2, y).String = "CAM - " + oSheet.getCellByPosition(2, y).String
             # ~oSheet.getRows().removeByIndex(y, 1)
 
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
     # ~ LeenoSheetUtils.elimina_righe_vuote()

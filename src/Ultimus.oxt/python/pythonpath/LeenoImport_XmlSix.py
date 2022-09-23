@@ -201,18 +201,19 @@ def parseXML(data, defaultTitle):
 
                 if 'breve' in descAttr and 'estesa' in descAttr:
                     if descAttr['breve'] in descAttr['estesa']:
-                        textBreve = descAttr['breve'] + '\n'
+                        textBreve = descAttr['estesa'] + '\n'
                     else:
-                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa'] + '\n'
+                        textEstesa = descAttr['estesa'] + '\n- ' + descAttr['breve'] + '\n'
                         madre = textEstesa[: -len('\n')]
+ 
                     if descAttr['breve'] == descAttr['estesa']:
-                        textEstesa = madre + descAttr['breve'] + '\n'
+                        textEstesa = madre +  descAttr['breve'] + '\n'
 
                 if 'breve' in descAttr and not 'estesa' in descAttr:
                     if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                         textEstesa = madre + descAttr['breve'] + '\n'
                     else:
-                        textEstesa = madre + '- ' + descAttr['breve'] + '\n'
+                        textEstesa = madre + descAttr['breve'] + '\n'
 
         textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
         textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
@@ -242,8 +243,8 @@ def parseXML(data, defaultTitle):
             baseCodice = codice
 
         if not base and codice.startswith(baseCodice):
-            textBreve = baseTextBreve + textBreve
-            textEstesa = baseTextEstesa + textEstesa
+            textBreve = baseTextBreve +'- '+ textBreve
+            textEstesa = baseTextEstesa +'- '+ textEstesa
 
         # utilizza solo la descrizione lunga per LeenO
         if len(textBreve) > len(textEstesa):
@@ -255,7 +256,7 @@ def parseXML(data, defaultTitle):
             madre = desc
         if len(codice.split('.')) > 4:
             if madre not in desc:
-                desc = madre + '\n' + desc
+                desc = madre + desc
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
@@ -268,15 +269,17 @@ def parseXML(data, defaultTitle):
             grpId = ""
 
         # compone l'articolo e lo mette in lista
-        artList[codice] = {
-            'codice': codice,
-            'desc': desc,
-            'um': um,
-            'prezzo': prezzo,
-            'mdo': mdo,
-            'sicurezza': oneriSic,
-            'gruppo': grpId
-        }
+        # esclude dall'elenco le voci senza prezzo
+        if len(codice.split('.')) > 2 and prezzo != '':
+            artList[codice] = {
+                'codice': codice,
+                'desc': desc,
+                'um': um,
+                'prezzo': prezzo,
+                'mdo': mdo,
+                'sicurezza': oneriSic,
+                'gruppo': grpId
+            }
 
     # in alcuni casi sono presenti i gruppi, che poi sono le nostre
     # supercategorie e categorie

@@ -144,6 +144,20 @@ def insertVoceContabilita(oSheet, lrow):
 # ###############################################################
 
 
+def Menu_svuotaContabilita():
+    oDoc = LeenoUtils.getDocument()
+    messaggio= """
+Questa operazione svuoterà il foglio CONTABILITA e cancellerà
+tutti gli elaborati contabili generati fino a questo momento.
+
+OPERAZIONE NON REVERSIBILE!
+
+VUOI PROCEDERE UGUALMENTE?"""
+    if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+        Text= messaggio) == 1:
+        svuotaContabilita(oDoc)
+
+
 def svuotaContabilita(oDoc):
     '''
     svuota_contabilita
@@ -159,6 +173,7 @@ def svuotaContabilita(oDoc):
             oDoc.Sheets.removeByName(el)
 
     oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+    PL.GotoSheet('CONTABILITA')
     oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
     SheetUtils.setTabColor(oSheet, 16757935)
@@ -237,7 +252,7 @@ def svuotaContabilita(oDoc):
     # riga rossa
     oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
     oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
-
+    PL._gotoCella(2, 2)
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
     return oSheet

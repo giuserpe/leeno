@@ -184,4 +184,8 @@ Sub Vedi
 	ScriptPy(&quot;LeenoToolbars&quot;,&quot;Vedi&quot;)
 End Sub
 rem ######################################################################
+Sub svuotaContabilita
+	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
+End Sub
+rem ######################################################################
 </script:module>

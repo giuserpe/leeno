@@ -4736,6 +4736,7 @@ def MENU_ricicla_misure():
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8,
                                              sotto).getRangeAddress()
+        oSheet.getCellByPosition(2, sopra - 1).CellBackColor = 16775620
         partenza = LeenoUtils.getGlobalVar('partenza')
         if partenza is None:
             return
@@ -4750,6 +4751,7 @@ def MENU_ricicla_misure():
 
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
+        oDest.getCellByPosition(2, partenza[1]).CellBackColor = 16775620
         rigenera_voce(partenza[1])
         # ~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
@@ -9680,6 +9682,13 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    lrow = LeggiPosizioneCorrente()[1]
+
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    DLG.chi(oSheet.getCellRangeByName("AT42").CellBackColor) 
+    return
     sistema_cose()
     return
     oDoc = LeenoUtils.getDocument()

@@ -107,22 +107,22 @@ def isLeenoDocument():
 
 
 def DocumentRefresh(boo):
-    return
     oDoc = getDocument()
     if boo == True:
         oDoc.enableAutomaticCalculation(True)
         oDoc.CurrentController.ZoomValue = 100
-
-        # ~oDoc.removeActionLock()
-        # ~oDoc.unlockControllers()
         oDoc.calculateAll()
+
+        oDoc.removeActionLock()
+        oDoc.unlockControllers()
 
 
     elif boo == False:
         oDoc.enableAutomaticCalculation(False)
         oDoc.CurrentController.ZoomValue = 400
-        # ~oDoc.addActionLock()
-        # ~oDoc.lockControllers()
+
+        oDoc.addActionLock()
+        oDoc.lockControllers()
 
 
 def getGlobalVar(name):

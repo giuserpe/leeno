@@ -3430,6 +3430,10 @@ def MENU_firme_in_calce(lrowF=None):
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
+
+    # ~datarif = datetime.now()
+    
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet_S2 = oDoc.getSheets().getByName('S2')
@@ -3599,7 +3603,7 @@ def MENU_firme_in_calce(lrowF=None):
         riga_corrente += 1
 
     # attiva la progressbar
-        progress = Dialogs.Progress(Title='Esecuzione in corso...', Text="Cancellazione voci azzerate")
+        progress = Dialogs.Progress(Title='Esecuzione in corso...', Text="Composizione del riepilogo strutturale.")
         i = 0
         progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
         progress.setValue(i)
@@ -3749,6 +3753,9 @@ def MENU_firme_in_calce(lrowF=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         #  oSheet.getCellByPosition(lrowF,0).Rows.IsManualPageBreak = True
+    LeenoUtils.DocumentRefresh(True)
+    # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+
 
 ########################################################################
 
@@ -4497,6 +4504,7 @@ def Copia_riga_Ent(arg=None):
     Aggiunge riga di misurazione
     '''
     # ~datarif = datetime.now()
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
@@ -4511,7 +4519,8 @@ def Copia_riga_Ent(arg=None):
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
-    # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+    LeenoUtils.DocumentRefresh(True)
+    # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
 
 ########################################################################
@@ -6939,7 +6948,9 @@ def filtra_codice(voce=None):
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DocumentRefresh(False)
+
     oSheet = oDoc.CurrentController.ActiveSheet
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -7026,7 +7037,8 @@ def filtra_codice(voce=None):
         progress.hide()
         GotoSheet("Elenco Prezzi")
         Dialogs.Exclamation(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
     progress.hide()
 
 ########################################################################
@@ -9682,7 +9694,11 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
+    # ~LeenoUtils.DocumentRefresh(True)
     oDoc = LeenoUtils.getDocument()
+    # ~
+    DLG.chi(oDoc.isAutomaticCalculationEnabled())
+    return
     lrow = LeggiPosizioneCorrente()[1]
 
     oSheet = oDoc.CurrentController.ActiveSheet

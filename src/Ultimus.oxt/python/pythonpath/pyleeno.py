@@ -18,6 +18,11 @@
 # documentazione ufficiale: https://api.libreoffice.org/
 # import pydevd
 
+    # funzioni per misurare la velocità dalle macro
+    # ~datarif = datetime.now()
+    # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+
+
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 
@@ -2818,7 +2823,7 @@ def XPWE_out(elaborato, out_file):
 
     il nome file risulterà out_file-elaborato.xpwe
     '''
-
+    LeenoUtils.DocumentRefresh(False)
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Esportazione di ' + elaborato + ' in corso...', Text="Lettura dati")
     progress.setLimits(0, 7)
@@ -3421,7 +3426,7 @@ Verifica che il file di destinazione non sia già in uso!''')
             # ~'Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!',
             # ~'E R R O R E !')
 
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -3431,8 +3436,6 @@ def MENU_firme_in_calce(lrowF=None):
     ed i dati necessari alle firme
     '''
 
-    # ~datarif = datetime.now()
-    
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3468,7 +3471,7 @@ def MENU_firme_in_calce(lrowF=None):
     if oSheet.Name in ("Registro", "SAL"):
         if lrowF == None:
             lrowF = SheetUtils.getLastUsedRow(oSheet)
-        # ~DLG.chi(lrowF)
+
         oSheet.getRows().insertByIndex(lrowF, 13)
         riga_corrente = lrowF + 1
         oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
@@ -3546,7 +3549,6 @@ def MENU_firme_in_calce(lrowF=None):
             1, riga_corrente + 6
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
 
-    # ~if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'CompuM_NoP'):
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
@@ -3567,10 +3569,7 @@ def MENU_firme_in_calce(lrowF=None):
             ae = 30
             ss = 41
             col = 'S'
-            # ~if oSheet.Name == 'CONTABILITA':
-                # ~ii = 13
-                # ~vv = 15
-                # ~col = 'P'
+
         else:
             ii = 8
             vv = 9
@@ -3754,7 +3753,6 @@ def MENU_firme_in_calce(lrowF=None):
 
         #  oSheet.getCellByPosition(lrowF,0).Rows.IsManualPageBreak = True
     LeenoUtils.DocumentRefresh(True)
-    # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
 
 ########################################################################
@@ -4289,7 +4287,9 @@ def seleziona_voce(lrow=None):
 
 
 def MENU_elimina_voce():
+    LeenoUtils.DocumentRefresh(False)
     LeenoSheetUtils.elimina_voce()
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -4503,7 +4503,6 @@ def Copia_riga_Ent(arg=None):
     '''
     Aggiunge riga di misurazione
     '''
-    # ~datarif = datetime.now()
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -4520,7 +4519,6 @@ def Copia_riga_Ent(arg=None):
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
     LeenoUtils.DocumentRefresh(True)
-    # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
 
 ########################################################################
@@ -5914,7 +5912,8 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DocumentRefresh(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
 #    lrow = LeggiPosizioneCorrente()[1]
 
@@ -5927,7 +5926,8 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
         ins_voce_contab()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
+    # ~oDoc.enableAutomaticCalculation(True)
 
 # nuova_voce_contab  ##################################################
 def ins_voce_contab(lrow=0, arg=1, cod=None):
@@ -7212,6 +7212,7 @@ def autoexec_off():
     '''
     @@ DA DOCUMENTARE
     '''
+    LeenoUtils.DocumentRefresh(False)
     Toolbars.Switch(True)
     oDoc = LeenoUtils.getDocument()
     Toolbars.AllOff()
@@ -7227,7 +7228,7 @@ def autoexec_off():
             oSheet.getCellRangeByName("A1").String = ''
         except Exception:
             pass
-
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 class trun(threading.Thread):
@@ -7237,11 +7238,9 @@ class trun(threading.Thread):
 
     def run(self):
         while True:
-            # ~datarif = datetime.now()
             minuti = 60 * int(cfg.read('Generale', 'pausa_backup'))
             time.sleep(minuti)
             bak()
-            # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 
 
 def autorun():
@@ -9253,6 +9252,7 @@ def MENU_filtro_descrizione():
     Raggruppa e nasconde tutte le voci di misura in cui non compare
     la stringa cercata.
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -9319,6 +9319,7 @@ def MENU_filtro_descrizione():
         i += 2
     _gotoCella(2, lRow[0])
     progress.hide()
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 # sardegna_2019 moved to LeenoImport.py
@@ -9694,7 +9695,8 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
+    return
     oDoc = LeenoUtils.getDocument()
     # ~
     DLG.chi(oDoc.isAutomaticCalculationEnabled())

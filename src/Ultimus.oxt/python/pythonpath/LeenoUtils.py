@@ -110,18 +110,18 @@ def DocumentRefresh(boo):
     oDoc = getDocument()
     if boo == True:
         oDoc.enableAutomaticCalculation(True)
-        oDoc.CurrentController.ZoomValue = 100
+        # ~oDoc.CurrentController.ZoomValue = 100
+        oDoc.unlockControllers()
         oDoc.calculateAll()
 
-        oDoc.removeActionLock()
-        oDoc.unlockControllers()
+        # ~oDoc.removeActionLock()
 
 
     elif boo == False:
         oDoc.enableAutomaticCalculation(False)
-        oDoc.CurrentController.ZoomValue = 400
+        # ~oDoc.CurrentController.ZoomValue = 400
 
-        oDoc.addActionLock()
+        # ~oDoc.addActionLock()
         oDoc.lockControllers()
 
 

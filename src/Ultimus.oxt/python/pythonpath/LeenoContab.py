@@ -163,6 +163,7 @@ def svuotaContabilita(oDoc):
     svuota_contabilita
     Ricrea il foglio di contabilità partendo da zero.
     '''
+    LeenoUtils.DocumentRefresh(False)
     for n in range(1, 20):
         if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
             oDoc.NamedRanges.removeByName('_Lib_' + str(n))
@@ -254,6 +255,7 @@ def svuotaContabilita(oDoc):
     oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
     PL._gotoCella(2, 2)
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    LeenoUtils.DocumentRefresh(True)
 
     return oSheet
 
@@ -696,13 +698,6 @@ def GeneraRegistro(oDoc):
     progress.show()
     progress.setValue(1)
 
-    # ~zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~Annulla_atto_contabile("Registro")
-    # ~lista = GeneraLibretto(oDoc)
-    # ~DLG.chi(lista)
-    # ~return
     try:
         nSal, daVoce, aVoce, primariga, ultimariga, datiSAL, sic, mdo = GeneraLibretto(oDoc)
     except:
@@ -1149,6 +1144,7 @@ def GeneraAttiContabili():
     '''
     @@ DA DOCUMENTARE
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
@@ -1168,6 +1164,7 @@ def GeneraAttiContabili():
     Dialogs.Info(Title = 'Voci registrate!',
         Text="La generazione degli allegati contabili è stata completata.\n"
             "Grazie per l'attesa.")
+    LeenoUtils.DocumentRefresh(False)
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

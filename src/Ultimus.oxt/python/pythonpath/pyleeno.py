@@ -18,7 +18,7 @@
 # documentazione ufficiale: https://api.libreoffice.org/
 # import pydevd
 
-    # funzioni per misurare la velocità dalle macro
+    # funzioni per misurare la velocità delle macro
     # ~datarif = datetime.now()
     # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
@@ -314,11 +314,9 @@ def invia_voce_interno():
     Invia le voci di Elenco Prezzi verso uno degli altri elaborati.
     Richiede comunque la scelta del DP
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
-    # ~zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
 
     elenco = seleziona()
     codici = []
@@ -353,7 +351,7 @@ la posizione di destinazione.''')
         else:
             LeenoComputo.ins_voce_computo(cod=el)
         lrow = SheetUtils.getLastUsedRow(oSheet)
-    # ~oDoc.CurrentController.ZoomValue = zoom
+    LeenoUtils.DocumentRefresh(True)
     return
 
 def MENU_invia_voce():
@@ -901,7 +899,6 @@ def Ins_Categorie(n):
     1 = Categoria
     2 = SubCategoria
     '''
-    # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -927,8 +924,7 @@ def Ins_Categorie(n):
     sString = InputBox('', sTesto)
     if sString is None or sString == '':
         return
-    # ~zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
+
     if n == 0:
         LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, sString)
     elif n == 1:
@@ -938,11 +934,9 @@ def Ins_Categorie(n):
 
     _gotoCella(2, lrow)
     Rinumera_TUTTI_Capitoli2(oSheet)
-    # ~oDoc.CurrentController.ZoomValue = zoom
     oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
-    # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -1921,8 +1915,8 @@ def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
     '''
+    LeenoUtils.DocumentRefresh(False)
     chiudi_dialoghi()
-
 
     if Dialogs.YesNoDialog(Title='AVVISO!',
     Text='''Questo comando ripulisce l'Elenco Prezzi
@@ -1935,9 +1929,6 @@ Vuoi procedere comunque?''') == 0:
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
-
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
@@ -2001,7 +1992,7 @@ Vuoi procedere comunque?''') == 0:
     oDoc.enableAutomaticCalculation(True)
     progress.hide()
     _gotoCella(0, 3)
-    oDoc.CurrentController.ZoomValue = zoom
+    LeenoUtils.DocumentRefresh(True)
     Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
 
 
@@ -2731,9 +2722,7 @@ def EliminaVociDoppieElencoPrezzi():
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    oDoc.enableAutomaticCalculation(False)
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
+    LeenoUtils.DocumentRefresh(False)
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         lista_tariffe_analisi = list()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
@@ -2800,9 +2789,10 @@ def EliminaVociDoppieElencoPrezzi():
         tante_analisi_in_ep()
 
     oDoc.enableAutomaticCalculation(True)
-    oDoc.CurrentController.ZoomValue = zoom
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     riordina_ElencoPrezzi(oDoc)
+    LeenoUtils.DocumentRefresh(True)
+
     if len(set(lista_tar)) != len(set(lista_come_array)):
         Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text='''Ci sono ancora 2 o più voci che hanno
@@ -4708,8 +4698,9 @@ def MENU_ricicla_misure():
     In CONTABILITA consente l'inserimento di nuove voci di misurazione
     partendo da voci già inserite in COMPUTO o VARIANTE.
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == 'CONTABILITA':
         try:
@@ -4762,7 +4753,9 @@ def MENU_ricicla_misure():
         rigenera_voce(partenza[1])
         # ~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
+
 
 def MENU_inverti_segno():
     inverti_segno()
@@ -4931,6 +4924,7 @@ def dettaglio_misure(bit):
     bit { integer }  : 1 inserisce i dettagli
                        0 cancella i dettagli
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -4938,9 +4932,6 @@ def dettaglio_misure(bit):
         return
     ER = SheetUtils.getUsedArea(oSheet).EndRow
 
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
-    # attiva la progressbar
     progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
     progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
     progress.setValue(0)
@@ -5001,8 +4992,8 @@ def dettaglio_misure(bit):
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String.split(' ►')[0]
 
-    oDoc.CurrentController.ZoomValue = zoom
     progress.hide()
+    LeenoUtils.DocumentRefresh(True)
     return
 
 
@@ -5720,15 +5711,13 @@ def rigenera_tutte(arg=None, ):
     '''
     Ripristina le formule in tutto il foglio
     '''
+
+    LeenoUtils.DocumentRefresh(False)
+
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
 
     riordina_ElencoPrezzi(oDoc)
-
-
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
 
     oSheet = oDoc.CurrentController.ActiveSheet
     nome = oSheet.Name
@@ -5758,9 +5747,8 @@ def rigenera_tutte(arg=None, ):
     numera_voci()
     fissa()
     progress.hide()
-    oDoc.enableAutomaticCalculation(True)
-    comando("CalculateHard")
-    oDoc.CurrentController.ZoomValue = zoom
+    # ~comando("CalculateHard")
+    LeenoUtils.DocumentRefresh(False)
 
 
 ########################################################################
@@ -6069,14 +6057,12 @@ def inizializza_elenco():
     '''
     Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
     '''
+    LeenoUtils.DocumentRefresh(False)
     chiudi_dialoghi()
 
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
 
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
     #  oDialogo_attesa = dlg_attesa()
     #  attesa().start() #mostra il dialogo
 
@@ -6162,9 +6148,8 @@ def inizializza_elenco():
     oSheet.getCellRangeByPosition(3, 3, 250, y + 10).clearContents(HARDATTR)
     #  riga_rossa()
     #  oDialogo_attesa.endExecute()
-    oDoc.CurrentController.ZoomValue = zoom
 
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
     #  MsgBox('Rigenerazione del foglio eseguita!','')
 
 
@@ -6370,9 +6355,8 @@ def struct_colore(level):
     Mette in vista struttura secondo il colore
     level { integer } : specifica il livello di categoria
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -6439,7 +6423,7 @@ def struct_colore(level):
         oSheet.group(oCellRangeAddr, 1)
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
-    oDoc.CurrentController.ZoomValue = zoom
+    LeenoUtils.DocumentRefresh(True)
     progress.hide()
     return
 
@@ -6502,10 +6486,9 @@ def colora_vecchio_elenco():
     '''
     @@ DA DOCUMENTARE
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
     #  giallo(16777072,16777120,16777168)
     #  verde(9502608,13696976,15794160)
     #  viola(12632319,13684991,15790335)
@@ -6524,7 +6507,7 @@ def colora_vecchio_elenco():
             oSheet.getCellByPosition(2, el).CellBackColor = col2
         if len(oSheet.getCellByPosition(2, el).String.split('.')) == 3:
             oSheet.getCellByPosition(2, el).CellBackColor = col3
-    oDoc.CurrentController.ZoomValue = zoom
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -6533,6 +6516,7 @@ def MENU_importa_stili():
     Importa tutti gli stili da un documento di riferimento. Se non è
     selezionato, il file di riferimento è il template di leenO.
     '''
+    LeenoUtils.DocumentRefresh(False)
 
     if Dialogs.YesNoDialog(Title='Importa Stili in blocco?',
     Text='''Questa operazione sovrascriverà gli stili
@@ -6550,15 +6534,14 @@ Vuoi continuare?''') == 0:
     else:
         filename = uno.systemPathToFileUrl(filename)
     oDoc = LeenoUtils.getDocument()
+    nome = oDoc.CurrentController.ActiveSheet.Name
     oDoc.getStyleFamilies().loadStylesFromURL(filename, list())
     for el in oDoc.Sheets.ElementNames:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
         oSheet = oDoc.getSheets().getByName(el)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    try:
-        GotoSheet('Elenco Prezzi')
-    except Exception:
-        pass
+    GotoSheet(nome)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -7265,6 +7248,7 @@ def autoexec():
     '''
     questa è richiamata da creaComputo()
     '''
+    LeenoUtils.DocumentRefresh(False)
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
@@ -7292,7 +7276,6 @@ def autoexec():
     else:
         oGSheetSettings.MoveDirection = 1
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
     #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
     #  If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -7489,7 +7472,7 @@ def adegua_tmpl():
     - dal 216 aggiorna le formule in CONTABILITA
     - dal 217 aggiorna le formule in COMPUTO
     '''
-
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
     # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
@@ -7511,8 +7494,6 @@ alla versione di LeenO installata?''') == 0:
         sproteggi_sheet_TUTTE()
         if oDoc.getSheets().hasByName('S4'):
             oDoc.Sheets.removeByName('S4')
-        zoom = oDoc.CurrentController.ZoomValue
-        oDoc.CurrentController.ZoomValue = 400
         # attiva la progressbar
         progress = Dialogs.Progress(Title='Adeguamento del lavoro in corso...',
                                     Text="Lettura dati")
@@ -7768,7 +7749,6 @@ alla versione di LeenO installata?''') == 0:
                 oDoc.getSheets().getByName(el))
             oSheet = oDoc.getSheets().getByName(el)
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-        oDoc.CurrentController.ZoomValue = zoom
 #        oDialogo_attesa.endExecute()  # chiude il dialogo
         progress.setValue(8)
         mostra_fogli_principali()
@@ -7785,8 +7765,7 @@ alla versione di LeenO installata?''') == 0:
         GotoSheet('COMPUTO')
         progress.hide()
         Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
-    oDoc.enableAutomaticCalculation(True)
-
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -7983,7 +7962,9 @@ def DlgMain():
     '''
     Visualizza il menù principale dialog_fil
     '''
+
     oDoc = LeenoUtils.getDocument()
+    oDoc.unlockControllers()
     psm = LeenoUtils.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
     if not oDoc.getSheets().hasByName('S2'):
@@ -8134,8 +8115,7 @@ def hide_error(lErrori, icol):
     Visualizza o nascondi una toolbar
     '''
     oDoc = LeenoUtils.getDocument()
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     #  oSheet.clearOutline()
     n = 3
@@ -8150,8 +8130,7 @@ def hide_error(lErrori, icol):
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr, 1)
                 oSheet.getCellByPosition(0, i).Rows.IsVisible = False
-    oDoc.CurrentController.ZoomValue = zoom
-
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 def bak0():
@@ -8304,6 +8283,7 @@ def make_pack(bar=0):
     Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-x.xx.x.xxx-TESTING-yyyymmdd.oxt
     in una directory precisa (da parametrizzare...)
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     try:
         if oDoc.getSheets().getByName('S1').getCellByPosition(
@@ -8362,6 +8342,7 @@ def make_pack(bar=0):
                              stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
+    LeenoUtils.DocumentRefresh(False)
     # ~shutil.copyfile(nomeZip2, nomeZip)
 
 
@@ -8544,11 +8525,9 @@ def sistema_cose():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = LeenoUtils.getDocument()
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
-
     LeenoUtils.DocumentRefresh(False)
+    oDoc = LeenoUtils.getDocument()
+
 
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = LeggiPosizioneCorrente()[0]
@@ -8580,7 +8559,6 @@ def sistema_cose():
                 testo = testo.replace('\n\n', '\n')
             oDoc.getCurrentSelection().String = testo.strip().strip().strip()
     LeenoUtils.DocumentRefresh(True)
-    oDoc.CurrentController.ZoomValue = zoom
 
 
 ########
@@ -9695,11 +9673,12 @@ import LeenoEvents
 import LeenoImport
 
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
-    return
+    # ~LeenoUtils.DocumentRefresh(True)
+    # ~return
     oDoc = LeenoUtils.getDocument()
     # ~
-    DLG.chi(oDoc.isAutomaticCalculationEnabled())
+    # ~DLG.chi(oDoc.isAutomaticCalculationEnabled())
+    DLG.mri(oDoc)
     return
     lrow = LeggiPosizioneCorrente()[1]
 

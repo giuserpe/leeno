@@ -1231,9 +1231,6 @@ def MENU_XPWE_import():
     root = tree.getroot()
     logging.debug(list(root))
 
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
-
     # attiva la progressbar
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
     progress.setLimits(0, 6)
@@ -1353,9 +1350,8 @@ def MENU_XPWE_import():
 
     progress.setText("Fine")
     progress.hide()
-    oDoc.CurrentController.ZoomValue = zoom
-    LeenoUtils.DocumentRefresh(True)
     
     oSheet = oDoc.getSheets().getByName(elaborato)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

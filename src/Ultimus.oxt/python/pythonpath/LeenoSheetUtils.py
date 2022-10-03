@@ -715,6 +715,7 @@ def numeraVoci(oSheet, lrow, tutte):
     tutte { boolean }  : True  rinumera tutto
                        False rinumera dalla voce corrente in giù
     '''
+    LeenoUtils.DocumentRefresh(False)
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1
 
@@ -736,6 +737,7 @@ def numeraVoci(oSheet, lrow, tutte):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
                 n = n + 1
+    LeenoUtils.DocumentRefresh(True)
 
 
 # ###############################################################

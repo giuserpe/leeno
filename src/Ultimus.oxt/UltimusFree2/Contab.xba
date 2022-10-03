@@ -995,6 +995,7 @@ Sub azzera_atti
 End Sub
 rem ######################################################################
 Sub annulla_tutti_gli_atti
+ScriptPy(&quot;LeenoUtils&quot;, &quot;DocumentRefresh&quot;, False)
 	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
 oSheetCont.Unprotect &quot;&quot;
 chiudi_dialoghi
@@ -1031,6 +1032,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	cancella_dati
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;))
 	unSelect &apos;unselect ranges
+ScriptPy(&quot;LeenoUtils&quot;, &quot;DocumentRefresh&quot;, True)
 fine:
 End Sub
 rem ######################################################################

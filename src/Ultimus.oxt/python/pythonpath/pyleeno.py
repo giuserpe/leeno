@@ -657,7 +657,7 @@ di partenza deve essere contigua.''')
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
     oSheet = oDoc.getSheets().getByName(nSheetDCC)
-    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 ########################################################################
@@ -2687,7 +2687,6 @@ def riordina_ElencoPrezzi(oDoc):
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
     #chiudi_dialoghi()
-    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
@@ -2705,8 +2704,6 @@ def riordina_ElencoPrezzi(oDoc):
 
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     SheetUtils.simpleSortColumn(oRange, 0, True)
-
-    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -4725,7 +4722,13 @@ def MENU_ricicla_misure():
             return
         ins_voce_contab(arg=0)
         partenza = cerca_partenza()
-        GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
+        try:
+            GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
+        except:
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text=' Stai cercando di riciclare le misure dal foglio ' + \
+            cfg.read('Contabilita', 'ricicla_da'))
+        LeenoUtils.DocumentRefresh(True)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -4754,7 +4757,7 @@ def MENU_ricicla_misure():
         # ~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
     # ~oDoc.enableAutomaticCalculation(True)
-    LeenoUtils.DocumentRefresh(True)
+        LeenoUtils.DocumentRefresh(True)
 
 
 def MENU_inverti_segno():
@@ -4986,7 +4989,8 @@ def dettaglio_misure(bit):
                                 2, lrow).String + stringa.replace('.', ',')
     else:
         for lrow in range(0, ER):
-            progress.setValue(lrow)
+            progress.hide()
+            # ~progress.setValue(lrow)
             if ' ►' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
@@ -5857,7 +5861,6 @@ def rigenera_parziali (arg=False):
     Rigenera i parziali di tutte le voci
     '''
     oDoc = LeenoUtils.getDocument()
-    # ~oDoc.enableAutomaticCalculation(False)
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     
@@ -5987,11 +5990,12 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
     # ~oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
     _gotoCella(1, lrow + 1)
 
-    #  if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('_Lib_'+str(nSal)).getRangeAddress())):
-    #  chi('appartiene')
-    #  else:
-    #  chi('nooooo')
-    #  return
+    # ~nSal = 1
+    # ~if oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('_Lib_'+str(nSal)).getRangeAddress()):
+        # ~DLG.chi('appartiene')
+    # ~else:
+        # ~DLG.chi('nooooo')
+    # ~return
 
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
@@ -8651,8 +8655,8 @@ Associato a Ctrl+Shift+C'''
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             larg = oSheet.getCellByPosition(x, lrow).Columns.Width
-            oSheet.getCellByPosition(x, lrow).Value = larg
-            # ~oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
+            # ~oSheet.getCellByPosition(x, lrow).Value = larg
+            oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'
         elif oSheet.getCellByPosition(x, lrow).Formula == '=CELL("col")-1':
             oSheet.getCellByPosition(x, lrow).String = ''
@@ -9669,30 +9673,31 @@ def stampa_PDF():
     # ~rem ----------------------------------------------------------------------
 import LeenoUtils
 import LeenoEvents
+import LeenoContab
 
 import LeenoImport
+from com.sun.star.sheet.GeneralFunction import MAX
+
 
 def MENU_debug():
-    # ~LeenoUtils.DocumentRefresh(True)
-    # ~return
+
     oDoc = LeenoUtils.getDocument()
-    # ~
-    # ~DLG.chi(oDoc.isAutomaticCalculationEnabled())
-    DLG.mri(oDoc)
+    LeenoContab.GeneraLibretto(oDoc)
     return
-    lrow = LeggiPosizioneCorrente()[1]
 
     oSheet = oDoc.CurrentController.ActiveSheet
+    oColumn = oSheet.getColumns().getByIndex(23)
+    DLG.chi(int(oColumn.computeFunction(MAX)))
+        # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
+
+    return
+    lrow = LeggiPosizioneCorrente()[1]
 
     DLG.chi(oSheet.getCellRangeByName("A1").CellBackColor) 
     return
     sistema_cose()
     return
-    oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(True)
-    oDoc.unlockControllers()
-    oDoc.calculateAll()
-    oDoc.removeActionLock()
+
     return
     oDoc = LeenoUtils.getDocument()
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress

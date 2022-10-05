@@ -11,6 +11,7 @@ import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import Dialogs
+import LeenoDialogs as DLG
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -458,6 +459,10 @@ def adattaAltezzaRiga(oSheet):
     imposta l'altezza ottimale delle celle
     usata in PL.Menu_adattaAltezzaRiga()
     '''
+
+    # qui il refresh manda in freeze
+    # ~LeenoUtils.DocumentRefresh(False)
+
     oDoc = LeenoUtils.getDocument()
     # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
     if not oDoc.getSheets().hasByName('S1'):
@@ -742,18 +747,43 @@ def numeraVoci(oSheet, lrow, tutte):
 
 # ###############################################################
 
-def elimina_righe_vuote():
+def MENU_elimina_righe_vuote():
+    '''elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
-    lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        Dialogs.Exclamation(Title='Avviso!', Text='''È possibile usare questo comando solo nelle
+tabelle COMPUTO, VARIANTE o CONTABILITA.''')
+        return
+    if Dialogs.YesNoDialog(Title='ATTENZIONE!',
+    Text="Stai per eliminare tutte le righe vuote dell'elabotato " + oSheet.Name +
+        ".\nVuoi procedere?") == 0:
+        return
+    else:
+        pass
+    lrow_c = PL.LeggiPosizioneCorrente()[1]
+    if oSheet.Name == 'CONTABILITA':
+        sString = 'T O T A L E'
+    else:
+        sString = 'TOTALI COMPUTO'
+    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    progress = Dialogs.Progress(Title='Ricerca delle righe vuote da eliminare in corso...', Text="Lettura dati")
+    progress.setLimits(0, lrow)
+    progress.setValue(0)
+    progress.show()
     for y in reversed(range(0, lrow)):
+        progress.setValue(y)
         test = False
-        for x in (range(0, lCol +1)):
-            if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
-                test = True
-                break
-            if test == False and x  == lCol :
-                oSheet.getRows().removeByIndex(y, 1)
+        for x in (range(0, 8 +1)):
+            if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
+                    test = True
+                    break
+                if test == False and x  == 8 :
+                    oSheet.getRows().removeByIndex(y, 1)
+    progress.hide()
     LeenoUtils.DocumentRefresh(True)
+    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    PL._gotoCella(1, 4)
+    Dialogs.Info(Title='Ricerca conclusa', Text='Eliminate ' + str(lrow - lrow_) + ' righe vuote.')

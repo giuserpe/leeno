@@ -14,6 +14,8 @@ import LeenoBasicBridge
 import uno
 import itertools
 import operator
+import LeenoConfig
+cfg = LeenoConfig.Config()
 
 
 def sbloccaContabilita(oSheet, lrow):
@@ -410,7 +412,8 @@ def GeneraLibretto(oDoc):
     # ~return
     #trovo il numero del nuovo sal
     nSal = 0
-    for i in reversed(range(1, 50)):
+    idxsal = int(cfg.read('Contabilita', 'idxsal'))
+    for i in reversed(range(1, idxsal)):
         if oRanges.hasByName("_Lib_" + str(i)) == True:
             nSal = i +1
             break
@@ -418,6 +421,12 @@ def GeneraLibretto(oDoc):
             nSal = 1
             daVoce = 1
             old_nPage = 1
+    # ~oColumn = oSheet.getColumns().getByName('X')
+    # ~nSal = 1 + int(oColumn.computeFunction(MAX))
+    if nSal == 1:
+        Dialogs.Info(Title = 'Info',
+        Text="Se in CONTABILITA è presente una suddivisione in\n"
+            "categorie questa operazione non ne terrà conto.")
     libretti = SheetUtils.sStrColtoList('segue Libretto delle Misure n.', 2, oSheet, start=2)
     try:
         daVoce = int(oSheet.getCellByPosition(2, libretti[-1]
@@ -466,7 +475,6 @@ def GeneraLibretto(oDoc):
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     ultimariga = sStRange.RangeAddress.EndRow
-
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Libretto delle Misure")
     progress.setLimits(1, 6)
@@ -485,7 +493,8 @@ def GeneraLibretto(oDoc):
         '''
         datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1]
         SAL.append(datiSAL)
-        i= LeenoSheetUtils.prossimaVoce(oSheet, i)
+        i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
+        # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)
     sic = []
     mdo = []
     for el in SAL:
@@ -674,7 +683,6 @@ def GeneraLibretto(oDoc):
     struttura_CONTAB()
     # ~for el in (nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo):
         # ~DLG.chi(el)
-    
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo
 
 
@@ -703,6 +711,7 @@ def GeneraRegistro(oDoc):
     except:
         return
         progress.hide()
+
     progress.setValue(2)
 
     # Recupero i dati per il Registro
@@ -716,8 +725,8 @@ def GeneraRegistro(oDoc):
         '''
         reg = LeenoComputo.datiVoceComputo(oSheet, i)[0]
         REG.append(reg)
-        i= LeenoSheetUtils.prossimaVoce(oSheet, i)
-
+        # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)
+        i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
     try:
         oDoc.getSheets().insertNewByName('Registro',5)
         PL.GotoSheet('Registro')

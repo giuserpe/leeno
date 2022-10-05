@@ -548,6 +548,25 @@
             <value>_self</value>
           </prop>
         </node>
+        
+        <node oor:name="Ca26" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.MENU_elimina_righe_vuote</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/elimina_vuote</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Elimina le righe vuote</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+
         <node oor:name="Ca45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />

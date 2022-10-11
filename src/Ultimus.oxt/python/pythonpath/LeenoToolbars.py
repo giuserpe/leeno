@@ -33,7 +33,7 @@ def Vedi(arg=None):
     else:
         var = 'HOMEPATH'
     try:
-        if 'giuserpe' in os.getenv(var):
+        if 'giuserpe' in os.getlogin():
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 1)
         else:
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 0)
@@ -63,7 +63,7 @@ def Vedi(arg=None):
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
             #accende la toolbar delle categorie solo sulla postazione di giuserpe
-            if 'giuserpe' in os.getenv(var):
+            if 'giuserpe' in os.getlogin():
                 On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
             else:
                 On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 0)

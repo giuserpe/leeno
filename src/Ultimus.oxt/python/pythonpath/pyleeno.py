@@ -266,10 +266,8 @@ def creaComputo(arg=1):
     if arg == 1:
         Dialogs.Exclamation(Title = 'ATTENZIONE!',
         Text='''
-Prima di procedere è
-meglio dare un nome al file.
-Lavorando su un file senza nome
-potresti avere dei malfunzionamenti.\n
+Prima di procedere è meglio dare un nome al file.
+Lavorando su un file senza nome potresti avere dei malfunzionamenti.
 ''')
         # ~DLG.MsgBox(
             # ~"Prima di procedere è consigliabile salvare il lavoro.\n"
@@ -2818,7 +2816,7 @@ def XPWE_out(elaborato, out_file):
     progress.show()
 
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
     numera_voci(1)
@@ -3026,13 +3024,102 @@ def XPWE_out(elaborato, out_file):
     Aliquote = SubElement(PweDGConfigNumeri, 'Aliquote')
     Aliquote.text = '7.3|0'
 
-    #  Elenco Prezzi
+#  Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     PweElencoPrezzi = SubElement(PweMisurazioni, 'PweElencoPrezzi')
     diz_ep = dict()
     lista_AP = list()
     progress.setValue(4)
+    listaspcap = list()
+    listacap = list()
+    listasbcap = list()
+    #  giallo(16777072,16777120,16777168)
     for n in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
+        
+      #  SuperCapitoli
+        if oSheet.getCellByPosition(0, n).CellBackColor == 16777072 and \
+        oSheet.getCellByPosition(0, n).String != '000':
+            cod = oSheet.getCellByPosition(0, n).String
+            desc = oSheet.getCellByPosition(1, n).String
+            if desc not in listaspcap:
+                listaspcap.append(desc)
+                IDSpCap = str(listaspcap.index(desc) + 1)
+
+                PweDGSuperCapitoli = SubElement(PweDGCapitoliCategorie,'PweDGSuperCapitoli')
+                DGSuperCapitoliItem = SubElement(PweDGSuperCapitoli,
+                                                  'DGSuperCapitoliItem')
+                DesSintetica = SubElement(DGSuperCapitoliItem, 'DesSintetica')
+
+                DesEstesa = SubElement(DGSuperCapitoliItem, 'DesEstesa')
+                DataInit = SubElement(DGSuperCapitoliItem, 'DataInit')
+                Durata = SubElement(DGSuperCapitoliItem, 'Durata')
+                # CodFase = SubElement(DGSuperCapitoliItem, 'CodFase')
+                Percentuale = SubElement(DGSuperCapitoliItem, 'Percentuale')
+                Codice = SubElement(DGSuperCapitoliItem, 'Codice')
+
+                DGSuperCapitoliItem.set('ID', IDSpCap)
+                DesSintetica.text = desc
+                Codice.text = cod
+                DataInit.text = '' #oggi()
+                Durata.text = '0'
+                Percentuale.text = '0'
+
+      #  Capitoli
+        if oSheet.getCellByPosition(0, n).CellBackColor == 16777120:
+            cod = oSheet.getCellByPosition(0, n).String
+            desc = oSheet.getCellByPosition(1, n).String
+            if desc not in listacap:
+                listacap.append(desc)
+                IDCap = str(listacap.index(desc) + 1)
+
+                PweDGCapitoli = SubElement(PweDGCapitoliCategorie,'PweDGCapitoli')
+                DGCapitoliItem = SubElement(PweDGCapitoli,
+                                                  'DGCapitoliItem')
+                DesSintetica = SubElement(DGCapitoliItem, 'DesSintetica')
+
+                DesEstesa = SubElement(DGCapitoliItem, 'DesEstesa')
+                DataInit = SubElement(DGCapitoliItem, 'DataInit')
+                Durata = SubElement(DGCapitoliItem, 'Durata')
+                # CodFase = SubElement(DGCapitoliItem, 'CodFase')
+                Percentuale = SubElement(DGCapitoliItem, 'Percentuale')
+                Codice = SubElement(DGCapitoliItem, 'Codice')
+
+                DGCapitoliItem.set('ID', IDCap)
+                DesSintetica.text = desc
+                Codice.text = cod
+                DataInit.text = '' #oggi()
+                Durata.text = '0'
+                Percentuale.text = '0'
+
+      #  SubCapitoli
+        if oSheet.getCellByPosition(0, n).CellBackColor == 16777168:
+            cod = oSheet.getCellByPosition(0, n).String
+            desc = oSheet.getCellByPosition(1, n).String
+            if desc not in listasbcap:
+                listasbcap.append(desc)
+                IDSbCap = str(listasbcap.index(desc) + 1)
+
+                PweDGSubCapitoli = SubElement(PweDGCapitoliCategorie,'PweDGSubCapitoli')
+                DGSubCapitoliItem = SubElement(PweDGSubCapitoli,
+                                                  'DGSubCapitoliItem')
+                DesSintetica = SubElement(DGSubCapitoliItem, 'DesSintetica')
+
+                DesEstesa = SubElement(DGSubCapitoliItem, 'DesEstesa')
+                DataInit = SubElement(DGSubCapitoliItem, 'DataInit')
+                Durata = SubElement(DGSubCapitoliItem, 'Durata')
+                # CodFase = SubElement(DGSubCapitoliItem, 'CodFase')
+                Percentuale = SubElement(DGSubCapitoliItem, 'Percentuale')
+                Codice = SubElement(DGSubCapitoliItem, 'Codice')
+
+                DGSubCapitoliItem.set('ID', IDSbCap)
+                DesSintetica.text = desc
+                Codice.text = cod
+                DataInit.text = '' #oggi()
+                Durata.text = '0'
+                Percentuale.text = '0'
+
+      
+    #voci di prezzo
         if(oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and
            oSheet.getCellByPosition(2, n).Type.value == 'FORMULA'):
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
@@ -3075,12 +3162,20 @@ def XPWE_out(elaborato, out_file):
             Prezzo4.text = '0'
             Prezzo5 = SubElement(EPItem, 'Prezzo5')
             Prezzo5.text = '0'
-            IDSpCap = SubElement(EPItem, 'IDSpCap')
-            IDSpCap.text = '0'
-            IDCap = SubElement(EPItem, 'IDCap')
-            IDCap.text = '0'
-            IDSbCap = SubElement(EPItem, 'IDSbCap')
-            IDSbCap.text = '0'
+
+            try:
+                SubElement(EPItem, 'IDSpCap').text = IDSpCap
+            except:
+                SubElement(EPItem, 'IDSpCap').text = '0'
+            try:
+                SubElement(EPItem, 'IDCap').text = IDCap
+            except:
+                SubElement(EPItem, 'IDCap').text = '0'
+            try:
+                SubElement(EPItem, 'IDSbCap').text = IDSbCap
+            except:
+                SubElement(EPItem, 'IDSbCap').text = '0'
+
             Flags = SubElement(EPItem, 'Flags')
             if oSheet.getCellByPosition(8, n).String == '(AP)':
                 Flags.text = '131072'
@@ -3404,6 +3499,7 @@ def XPWE_out(elaborato, out_file):
     try:
         of = codecs.open(out_file, 'w', 'utf-8')
         of.write(riga)
+        of.close()
         # ~MsgBox('Esportazione in formato XPWE eseguita con successo\nsul file ' + out_file + '!','Avviso.')
     except Exception:
         Dialogs.Exclamation(Title = 'E R R O R E !',
@@ -3422,7 +3518,6 @@ def MENU_firme_in_calce(lrowF=None):
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
-
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3434,7 +3529,6 @@ def MENU_firme_in_calce(lrowF=None):
         datafirme="Data,"
     else:
         datafirme = datafirme + ", "
-
     if oSheet.Name == "CONTABILITA":
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
@@ -3451,6 +3545,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(2 , riga_corrente + 6).Formula = (
             "Il Direttore dei Lavori\n(" + oSheet_S2.getCellByPosition(
                 2, 15).String + ")")
+        comando('CalculateHard')
 # ~rem CONSOLIDA LA DATA
         oRange = oSheet.getCellRangeByPosition (2, riga_corrente, 40, riga_corrente)
         aSaveData = oRange.getDataArray()
@@ -3462,6 +3557,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getRows().insertByIndex(lrowF, 13)
         riga_corrente = lrowF + 1
         oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
+        comando('CalculateHard')
         oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
@@ -3483,6 +3579,8 @@ def MENU_firme_in_calce(lrowF=None):
                 break
         oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
         '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+        comando('CalculateHard')
+
         oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
 
         aSaveData = oRange.getDataArray()
@@ -3523,6 +3621,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(
             1, riga_corrente +
             3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
+        comando('CalculateHard')
         #  consolido il risultato
         oRange = oSheet.getCellByPosition(1, riga_corrente + 3)
         # flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
@@ -3717,6 +3816,7 @@ def MENU_firme_in_calce(lrowF=None):
         #  consolido il risultato
         oRange = oSheet.getCellByPosition(2, riga_corrente + 3)
         # flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
+        comando('CalculateHard')
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
 
@@ -6806,10 +6906,9 @@ def ssUltimus():
     except NameError:
         pass
     if len(oDoc.getURL()) == 0:
-        DLG.MsgBox(
-            '''Prima di procedere, devi salvare il lavoro!
-Provvedi subito a dare un nome al file di computo...''',
-            'Dai un nome al file...')
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text='''Prima di procedere, devi salvare il lavoro!
+Provvedi subito a dare un nome al file.''')
         salva_come()
         autoexec()
     try:
@@ -7491,8 +7590,9 @@ def adegua_tmpl():
         if Dialogs.YesNoDialog(Title='Informazione',
         Text= '''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?''') == 0:
-            Dialogs.Info(Title = 'Avviso!',
-                         Text='''Non avendo effettuato l'adeguamento del file alla versione di LeenO installata, potresti avere dei malfunzionamenti!''')
+            Dialogs.Exclamation(Title = 'Avviso!',
+                         Text='''Non avendo effettuato l'adeguamento del file alla versione
+di LeenO installata, potresti avere dei malfunzionamenti!''')
 
             return
         sproteggi_sheet_TUTTE()
@@ -8711,15 +8811,13 @@ def DelPrintArea ():
     Cancella area di stampa di tutti i fogli ad esclusione di quello
     corrente del foglio cP_Cop
     '''
+    LeenoUtils.DocumentRefresh(True)
     oDoc = LeenoUtils.getDocument()
     nome = oDoc.CurrentController.ActiveSheet.Name
     lista_fogli = oDoc.Sheets.ElementNames
     for el in lista_fogli:
         if el not in (nome, 'cP_Cop'):
             oSheet = oDoc.getSheets().getByName(el)
-            iSheet = oSheet.RangeAddress.Sheet
-            oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            oStampa.Sheet = iSheet
             oSheet.setPrintAreas(())
     return
 
@@ -8738,7 +8836,7 @@ def set_area_stampa():
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oTitles.Sheet = iSheet
 
-    if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA'):
+    if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA', 'Registro', 'SAL'):
 
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
         SR = 2
@@ -8826,6 +8924,30 @@ Procedo cambiando i colori?''') == 1:
     # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
     # ~return
     # cancella stili di pagina #######################################
+
+    # crea solo gli stili che servono
+    # il ciclo for per questa operazione non va, quindi procedo per passi singoli
+    # ~try:
+        # ~oTablePageStyles.insertByName('Page_Style_COPERTINE', oPgStyle)
+    # ~except:
+        # ~pass
+    # ~try:
+        # ~oTablePageStyles.insertByName('PageStyle_COMPUTO_A4', oPgStyle)
+    # ~except:
+        # ~pass
+    # ~try:
+        # ~oTablePageStyles.insertByName('PageStyle_Elenco Prezzi', oPgStyle)
+    # ~except:
+        # ~pass
+    # ~try:
+        # ~oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
+    # ~except:
+        # ~pass
+    # ~try:
+        # ~oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
+    # ~except:
+        # ~pass
+
     stili = {
         'cP_Cop': 'Page_Style_COPERTINE',
         'COMPUTO': 'PageStyle_COMPUTO_A4',
@@ -8837,6 +8959,11 @@ Procedo cambiando i colori?''') == 1:
         'Registro': 'PageStyle_REGISTRO_A4',
         'SAL': 'PageStyle_REGISTRO_A4',
     }
+
+    
+    oStyleFam = oDoc.StyleFamilies
+    oTablePageStyles = oStyleFam.getByName("PageStyles")
+    oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
     for el in stili.keys():
         try:
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
@@ -9181,6 +9308,7 @@ def elimina_voci_doppie():
     '''
     @@ DA DOCUMENTARE
     '''
+    LeenoUtils.DocumentRefresh(False)
     # elimina voci doppie hard - grezza e lenta, ma efficace
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -9208,6 +9336,7 @@ def elimina_voci_doppie():
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
     _gotoCella(0, 3)
     progress.hide()
+    LeenoUtils.DocumentRefresh(False)
 
 
 ########################################################################
@@ -9680,12 +9809,33 @@ from com.sun.star.sheet.GeneralFunction import MAX
 
 
 def MENU_debug():
-
     oDoc = LeenoUtils.getDocument()
-    LeenoContab.GeneraLibretto(oDoc)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    DLG.chi(oSheet.getCellByPosition(0, 3).CellBackColor)
+    return
+    oDoc = LeenoUtils.getDocument()
+    oStyleFam = oDoc.StyleFamilies
+    oTablePageStyles = oStyleFam.getByName("PageStyles")
+    oCpyStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
+    # ~oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oCpyStyle)
+    stili = ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA', 'Registro', 'SAL')
+    for el in stili:
+        try:
+            oTablePageStyles.insertByName(el, oCpyStyle)
+        except:
+            pass
+    return
+    oDoc = LeenoUtils.getDocument()
+    DLG.mri(oDoc.StyleFamilies.getByName('PageStyles')[1])
+    return
+    stili = oDoc.StyleFamilies.getByName('PageStyles').getElementNames()
+    oDoc.getStyleFamilies().loadStylesFromURL(filename, list())
+
+    DLG.chi(stili)
+
     return
 
-    oSheet = oDoc.CurrentController.ActiveSheet
+    
     oColumn = oSheet.getColumns().getByIndex(23)
     DLG.chi(int(oColumn.computeFunction(MAX)))
         # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)

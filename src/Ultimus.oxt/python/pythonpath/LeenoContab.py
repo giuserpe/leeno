@@ -423,10 +423,6 @@ def GeneraLibretto(oDoc):
             old_nPage = 1
     # ~oColumn = oSheet.getColumns().getByName('X')
     # ~nSal = 1 + int(oColumn.computeFunction(MAX))
-    if nSal == 1:
-        Dialogs.Info(Title = 'Info',
-        Text="Se in CONTABILITA è presente una suddivisione in\n"
-            "categorie questa operazione non ne terrà conto.")
     libretti = SheetUtils.sStrColtoList('segue Libretto delle Misure n.', 2, oSheet, start=2)
     try:
         daVoce = int(oSheet.getCellByPosition(2, libretti[-1]
@@ -700,19 +696,17 @@ def GeneraRegistro(oDoc):
     struttura delle relative voci registrate nel Libretto delle Misure.
     '''
 
-    progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Registro di Contabilità")
-    progress.setLimits(1, 8)
-    progress.setValue(0)
-    progress.show()
-    progress.setValue(1)
 
     try:
         nSal, daVoce, aVoce, primariga, ultimariga, datiSAL, sic, mdo = GeneraLibretto(oDoc)
     except:
         return
-        progress.hide()
 
-    progress.setValue(2)
+    progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Registro di Contabilità")
+    progress.setLimits(1, 5)
+    progress.setValue(0)
+    progress.show()
+    progress.setValue(1)
 
     # Recupero i dati per il Registro
     oSheet = oDoc.Sheets.getByName("CONTABILITA")
@@ -775,7 +769,7 @@ def GeneraRegistro(oDoc):
         # ~oCell = oSheet.getCellRangeByPosition(0,fRow,11,lRow)
         # ~oCell.Rows.IsVisible=False
 
-    progress.setValue(3)
+    progress.setValue(2)
 
     oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
 
@@ -835,7 +829,7 @@ def GeneraRegistro(oDoc):
     PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
 
-    progress.setValue(5)
+    progress.setValue(3)
 
 # set area del REGISTRO
     area="$A$" + str(insRow) + ":$J$" + str(fineFirme + 1)
@@ -887,7 +881,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(1, lastRow + 6).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(1, lastRow + 16).CellStyle = "Ultimus_destra"
 
-    progress.setValue(6)
+    progress.setValue(4)
 
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     for i in range(0, 50):
@@ -908,7 +902,7 @@ def GeneraRegistro(oDoc):
 
     struttura_CONTAB()
 
-    progress.setValue(6)
+    progress.setValue(5)
     progress.hide()
 
 # ~def GeneraSAL (oDoc):
@@ -1170,9 +1164,8 @@ def GeneraAttiContabili():
     GeneraRegistro(oDoc)
     PL.GotoSheet('CONTABILITA')
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
-    Dialogs.Info(Title = 'Voci registrate!',
-        Text="La generazione degli allegati contabili è stata completata.\n"
-            "Grazie per l'attesa.")
+    # ~Dialogs.Info(Title = 'Voci registrate!',
+        # ~Text="La generazione degli allegati contabili è stata completata.")
     LeenoUtils.DocumentRefresh(False)
 
 

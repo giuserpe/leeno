@@ -653,7 +653,7 @@ end sub
 
 &apos;copia che andava... + -
 
-
+Global oAktPage as object
 SUB Copy_PageStyle
 
 oSheet = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)

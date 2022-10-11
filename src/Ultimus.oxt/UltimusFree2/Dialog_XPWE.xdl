@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_XPWE" dlg:left="175" dlg:top="145" dlg:width="132" dlg:height="96" dlg:help-text="&amp;543.Dialog_XPWE.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;544.Dialog_XPWE.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_XPWE" dlg:left="175" dlg:top="131" dlg:width="134" dlg:height="111" dlg:help-text="&amp;543.Dialog_XPWE.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;544.Dialog_XPWE.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="98" dlg:top="74" dlg:width="25" dlg:height="15" dlg:help-text="&amp;563.Dialog_XPWE.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;564.Dialog_XPWE.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="98" dlg:top="89" dlg:width="25" dlg:height="15" dlg:help-text="&amp;563.Dialog_XPWE.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;564.Dialog_XPWE.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="66" dlg:top="74" dlg:width="25" dlg:height="15" dlg:help-text="&amp;565.Dialog_XPWE.CommandButton2.HelpText" dlg:default="true" dlg:value="Annulla" dlg:button-type="cancel" dlg:multiline="true"/>
-  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl2" dlg:tab-index="2" dlg:left="9" dlg:top="6" dlg:width="115" dlg:height="60" dlg:help-text="&amp;569.Dialog_XPWE.FrameControl2.HelpText">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="66" dlg:top="89" dlg:width="25" dlg:height="15" dlg:help-text="&amp;565.Dialog_XPWE.CommandButton2.HelpText" dlg:default="true" dlg:value="Annulla" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl2" dlg:tab-index="2" dlg:left="9" dlg:top="6" dlg:width="115" dlg:height="76" dlg:help-text="&amp;569.Dialog_XPWE.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;570.Dialog_XPWE.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:id="COMPUTO" dlg:tab-index="3" dlg:left="15" dlg:top="20" dlg:width="104" dlg:height="10" dlg:help-text="&amp;579.Dialog_XPWE.COMPUTO.HelpText" dlg:value="&amp;580.Dialog_XPWE.COMPUTO.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:id="VARIANTE" dlg:tab-index="4" dlg:left="15" dlg:top="35" dlg:width="104" dlg:height="10" dlg:help-text="&amp;581.Dialog_XPWE.VARIANTE.HelpText" dlg:value="&amp;582.Dialog_XPWE.VARIANTE.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:id="CONTABILITA" dlg:tab-index="5" dlg:left="15" dlg:top="50" dlg:width="104" dlg:height="10" dlg:help-text="&amp;583.Dialog_XPWE.CONTABILITA.HelpText" dlg:value="&amp;584.Dialog_XPWE.CONTABILITA.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:text dlg:id="Label1" dlg:tab-index="6" dlg:left="-1" dlg:top="-73" dlg:width="30" dlg:height="10" dlg:help-text="&amp;592.Dialog_XPWE.Label1.HelpText" dlg:value="&amp;593.Dialog_XPWE.Label1.Label"/>
-  <dlg:textfield dlg:id="TextField1" dlg:tab-index="7" dlg:left="29" dlg:top="-75" dlg:width="201" dlg:height="13" dlg:help-text="&amp;594.Dialog_XPWE.TextField1.HelpText" dlg:value="&amp;595.Dialog_XPWE.TextField1.Text"/>
-  <dlg:button dlg:id="CommandButton3" dlg:tab-index="8" dlg:left="229" dlg:top="-75" dlg:width="28" dlg:height="13" dlg:help-text="&amp;596.Dialog_XPWE.CommandButton3.HelpText" dlg:value="&amp;597.Dialog_XPWE.CommandButton3.Label">
+  <dlg:checkbox dlg:id="COMPUTO" dlg:tab-index="3" dlg:left="15" dlg:top="35" dlg:width="104" dlg:height="10" dlg:help-text="&amp;579.Dialog_XPWE.COMPUTO.HelpText" dlg:value="&amp;580.Dialog_XPWE.COMPUTO.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="VARIANTE" dlg:tab-index="4" dlg:left="15" dlg:top="50" dlg:width="104" dlg:height="10" dlg:help-text="&amp;581.Dialog_XPWE.VARIANTE.HelpText" dlg:value="&amp;582.Dialog_XPWE.VARIANTE.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="CONTABILITA" dlg:tab-index="5" dlg:left="15" dlg:top="65" dlg:width="104" dlg:height="10" dlg:help-text="&amp;583.Dialog_XPWE.CONTABILITA.HelpText" dlg:value="&amp;584.Dialog_XPWE.CONTABILITA.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="6" dlg:left="-1" dlg:top="-59" dlg:width="30" dlg:height="10" dlg:help-text="&amp;592.Dialog_XPWE.Label1.HelpText" dlg:value="&amp;593.Dialog_XPWE.Label1.Label"/>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="7" dlg:left="29" dlg:top="-61" dlg:width="201" dlg:height="13" dlg:help-text="&amp;594.Dialog_XPWE.TextField1.HelpText" dlg:value="&amp;595.Dialog_XPWE.TextField1.Text"/>
+  <dlg:button dlg:id="CommandButton3" dlg:tab-index="8" dlg:left="229" dlg:top="-61" dlg:width="28" dlg:height="13" dlg:help-text="&amp;596.Dialog_XPWE.CommandButton3.HelpText" dlg:value="&amp;597.Dialog_XPWE.CommandButton3.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$filedia_xwpe?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:filecontrol dlg:id="FileControl1" dlg:tab-index="9" dlg:left="37" dlg:top="-50" dlg:width="157" dlg:height="13" dlg:help-text="&amp;600.Dialog_XPWE.FileControl1.HelpText"/>
+  <dlg:filecontrol dlg:id="FileControl1" dlg:tab-index="9" dlg:left="37" dlg:top="-36" dlg:width="157" dlg:height="13" dlg:help-text="&amp;600.Dialog_XPWE.FileControl1.HelpText"/>
+  <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="10" dlg:left="15" dlg:top="21" dlg:width="106" dlg:height="10" dlg:help-text="&amp;924.Dialog_XPWE.CheckBox1.HelpText" dlg:value="&amp;925.Dialog_XPWE.CheckBox1.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="11" dlg:left="37" dlg:top="161" dlg:width="2" dlg:height="0" dlg:help-text="&amp;926.Dialog_XPWE.CheckBox2.HelpText" dlg:value="&amp;927.Dialog_XPWE.CheckBox2.Label" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

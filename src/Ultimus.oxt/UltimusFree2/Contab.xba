@@ -1110,6 +1110,7 @@ rem oppure ripulisco le colonne molto terra terra così:
 rem ----------------------------------------------------------------------
 					oSheet.rows.removeByIndex (daVoce-1, 1) &apos;elimino riga di informazione
 					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,aVoce-1))
+ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;DelPrintSheetArea&quot;)
 elimina_firme
 rem ----------------------------------------------------------------------
 rem setta area precedente

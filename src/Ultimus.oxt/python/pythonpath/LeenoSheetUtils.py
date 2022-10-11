@@ -64,6 +64,18 @@ def SbiancaCellePrintArea():
         ).CellBackColor = 16777215 #sbianca
     return
 
+########################################################################
+
+def DelPrintSheetArea ():
+    '''
+    Cancella area di stampa del foglio corrente
+    '''
+    LeenoUtils.DocumentRefresh(True)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.setPrintAreas(())
+    return
+
 # ###############################################################
 
 def setVisibilitaColonne(oSheet, sValori):
@@ -768,7 +780,7 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     else:
         sString = 'TOTALI COMPUTO'
     lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
-    progress = Dialogs.Progress(Title='Ricerca delle righe vuote da eliminare in corso...', Text="Lettura dati")
+    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
     progress.setLimits(0, lrow)
     progress.setValue(0)
     progress.show()

@@ -215,8 +215,8 @@ def parseXML(data, defaultTitle):
                     else:
                         textEstesa = madre + descAttr['breve'] + '\n'
 
-        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
-        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','')
+        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
+        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
 
         if textBreve != "":
             textBreve = textBreve[: -len('\n')]

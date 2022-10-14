@@ -1955,7 +1955,7 @@ LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 Vuoi procedere comunque?''') == 0:
         return
     oDoc = LeenoUtils.getDocument()
-    # ~oDoc.enableAutomaticCalculation(False)
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -2017,10 +2017,10 @@ Vuoi procedere comunque?''') == 0:
             oSheet.Rows.removeByIndex(n, 1)
 
     progress.setValue(5)
-    # ~oDoc.enableAutomaticCalculation(True)
+    oDoc.enableAutomaticCalculation(True)
     progress.hide()
     _gotoCella(0, 3)
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
 
 
@@ -9341,7 +9341,6 @@ def elimina_voci_doppie():
     '''
     @@ DA DOCUMENTARE
     '''
-    LeenoUtils.DocumentRefresh(False)
     # elimina voci doppie hard - grezza e lenta, ma efficace
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -9369,7 +9368,6 @@ def elimina_voci_doppie():
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
     _gotoCella(0, 3)
     progress.hide()
-    LeenoUtils.DocumentRefresh(False)
 
 
 ########################################################################

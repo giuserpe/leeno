@@ -1909,6 +1909,36 @@ def voce_breve():
 ########################################################################
 
 
+def MENU_suffisso_codice():
+    '''
+    Aggiunge suffisso al Codice Articolo
+    '''
+    testo = ''
+    suffisso = InputBox(
+        testo, t='Inserisci il suffisso per il Codice Articolo (es: "BAS22/1_").')
+    if suffisso in (None, '', ' '):
+        return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Operazione in corso...', Text="Progressione")
+    n = 0
+    progress.setLimits(n, lrow)
+    progress.show()
+    progress.setValue(0)
+    for y in range(0, lrow):
+        if oSheet.getCellByPosition(0, y).CellStyle == "EP-aS" and \
+        oSheet.getCellByPosition(0, y).String != "000":
+            oSheet.getCellByPosition(0, y).String = suffisso + oSheet.getCellByPosition(0, y).String
+        progress.setValue(y)
+    progress.hide()
+
+
+########################################################################
+
+
 def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
@@ -1925,7 +1955,7 @@ LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 Vuoi procedere comunque?''') == 0:
         return
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -1987,10 +2017,10 @@ Vuoi procedere comunque?''') == 0:
             oSheet.Rows.removeByIndex(n, 1)
 
     progress.setValue(5)
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
     progress.hide()
     _gotoCella(0, 3)
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
     Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
 
 
@@ -3409,9 +3439,9 @@ def XPWE_out(elaborato, out_file):
                 IDSbCat.text = '0'
             # #########################
             PweVCMisure = SubElement(VCItem, 'PweVCMisure')
+            x = 2
             for m in range(sopra + 2, sotto):
                 RGItem = SubElement(PweVCMisure, 'RGItem')
-                x = 2
                 RGItem.set('ID', str(x))
                 x += 1
                 # #########################
@@ -3468,16 +3498,17 @@ def XPWE_out(elaborato, out_file):
                             Descrizione.text.split('- vedi voce n.')[1].split(
                                 ' ')[0]) + 1)
                     Flags.text = '32768'
+                    Descrizione.text = ''
                     #  PartiUguali.text =''
-                    if '-' in Quantita.text or oSheet.getCellByPosition(
-                            11, m).Value != 0:
-                        Flags.text = '32769'
-                        # quando vedi_voce guarda ad un valore negativo
-                        try:
-                            if test:
-                                Flags.text = '32768'
-                        except:
-                            pass
+                    if oSheet.getCellByPosition(4, m).Value < 0 and \
+                        oSheet.getCellByPosition(11, m).Value != 0:
+                            Flags.text = '32768'
+                    if oSheet.getCellByPosition(4, m).Value > 0 and \
+                        oSheet.getCellByPosition(11, m).Value != 0:
+                            Flags.text = '32769'
+                    if oSheet.getCellByPosition(4, m).Value > 0 and \
+                        oSheet.getCellByPosition(10, m).Value != 0:
+                            Flags.text = '32768'
             n = sotto + 1
     # #########################
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
@@ -3922,12 +3953,12 @@ def MENU_analisi_in_ElencoPrezzi():
 ########################################################################
 def tante_analisi_in_ep():
     '''
-    Trasferisce le analisi all'Elenco Prezzi.
+    Invia le analisi all'Elenco Prezzi.
     '''
     chiudi_dialoghi()
 
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
@@ -3947,7 +3978,8 @@ def tante_analisi_in_ep():
                 "=$'Analisi di Prezzo'.K" + str(n + 1),
                 "=$'Analisi di Prezzo'.G" + str(n + 1),
                 "=$'Analisi di Prezzo'.I" + str(n + 1),
-                "=$'Analisi di Prezzo'.J" + str(n + 1),
+                # ~"=$'Analisi di Prezzo'.J" + str(n + 1),
+                "",
                 "=$'Analisi di Prezzo'.A" + str(n + 1),
                 "(AP)",
                 '',
@@ -3994,7 +4026,7 @@ def tante_analisi_in_ep():
     oSheet.getCellRangeByPosition(13, 3, 13, 3 + len(lista_analisi) -
                                   1).CellStyle = 'EP statistiche_Contab_q'
 
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(True)
     GotoSheet('Elenco Prezzi')
     #  MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 
@@ -4395,7 +4427,7 @@ def MENU_elimina_righe():
 devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
         return
 
-    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
         return
 
     try:
@@ -4417,6 +4449,7 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
     rigen = False
     for y in reversed(lista_y):
         if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
+                                                            'An-lavoraz-Cod-sx',
                                                             'comp 1-a',
                                                             'comp 1-a ROSSO',
                                                             'comp sotto centro',
@@ -9809,9 +9842,28 @@ from com.sun.star.sheet.GeneralFunction import MAX
 
 
 def MENU_debug():
+    testo = ''
+    suffisso = InputBox(
+        testo, t='Inserisci il suffisso per il Codice Articolo (es: "BAS22/1_").')
+    if suffisso in (None, '', ' '):
+        return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    DLG.chi(oSheet.getCellByPosition(0, 3).CellBackColor)
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Operazione in corso...', Text="Progressione")
+    n = 0
+    progress.setLimits(n, lrow)
+    progress.show()
+    progress.setValue(0)
+    for y in range(0, lrow):
+        if oSheet.getCellByPosition(0, y).CellStyle == "EP-aS" and \
+        oSheet.getCellByPosition(0, y).String != "000":
+            oSheet.getCellByPosition(0, y).String = suffisso + oSheet.getCellByPosition(0, y).String
+        progress.setValue(y)
+    progress.hide()
+    # ~DLG.chi(oSheet.getCellByPosition(0, 3).CellBackColor)
     return
     oDoc = LeenoUtils.getDocument()
     oStyleFam = oDoc.StyleFamilies

@@ -188,4 +188,8 @@ Sub svuotaContabilita
 	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_suffisso_codice
+	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_suffisso_codice&quot;)
+End Sub
+
 </script:module>

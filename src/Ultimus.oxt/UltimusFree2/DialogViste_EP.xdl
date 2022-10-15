@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="6" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="206" dlg:height="166" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="5" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="206" dlg:height="166" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:font-height="11" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="5" dlg:font-height="11" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton26" dlg:tab-index="1" dlg:left="110" dlg:top="30" dlg:width="90" dlg:height="12" dlg:help-text="&amp;113.DialogViste_EP.CommandButton26.HelpText" dlg:value="&amp;114.DialogViste_EP.CommandButton26.Label" dlg:multiline="true">
@@ -49,7 +48,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="17" dlg:left="110" dlg:top="106" dlg:width="90" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="Trova i Nuovi Prezzi">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_np?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton8" dlg:tab-index="18" dlg:left="110" dlg:top="124" dlg:width="90" dlg:height="12" dlg:help-text="&amp;928.DialogViste_EP.CommandButton8.HelpText" dlg:value="&amp;929.DialogViste_EP.CommandButton8.Label" dlg:valign="center">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="18" dlg:left="110" dlg:top="124" dlg:width="90" dlg:height="12" dlg:help-text="&amp;928.DialogViste_EP.CommandButton8.HelpText" dlg:value="&amp;929.DialogViste_EP.CommandButton8.Label" dlg:valign="center">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_suffisso_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

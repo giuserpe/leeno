@@ -908,6 +908,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
         # siccome viene inserita una voce PRIMA di iniziare la compilazione
         # occorre eliminare l'ultima voce che risulta vuota
         LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        PL.tante_analisi_in_ep()
 
 
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):

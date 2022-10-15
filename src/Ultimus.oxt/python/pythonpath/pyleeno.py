@@ -3165,9 +3165,9 @@ def XPWE_out(elaborato, out_file):
             diz_ep[oSheet.getCellByPosition(0, n).String] = id_tar
             Articolo = SubElement(EPItem, 'Articolo')
             Articolo.text = ''
+            DesRidotta = SubElement(EPItem, 'DesRidotta')
             DesEstesa = SubElement(EPItem, 'DesEstesa')
             DesEstesa.text = oSheet.getCellByPosition(1, n).String
-            DesRidotta = SubElement(EPItem, 'DesRidotta')
             if len(DesEstesa.text) > 120:
                 DesRidotta.text = DesEstesa.text[:
                                                  60] + ' ... ' + DesEstesa.text[
@@ -3259,9 +3259,9 @@ def XPWE_out(elaborato, out_file):
                 diz_ep[oSheet.getCellByPosition(0, m).String] = id_tar
                 Articolo = SubElement(EPItem, 'Articolo')
                 Articolo.text = ''
+                DesRidotta = SubElement(EPItem, 'DesRidotta')
                 DesEstesa = SubElement(EPItem, 'DesEstesa')
                 DesEstesa.text = oSheet.getCellByPosition(1, m).String
-                DesRidotta = SubElement(EPItem, 'DesRidotta')
                 if len(DesEstesa.text) > 120:
                     DesRidotta.text = DesEstesa.text[:
                                                      60] + ' ... ' + DesEstesa.text[
@@ -3379,137 +3379,140 @@ def XPWE_out(elaborato, out_file):
             except Exception:
                 pass
 
-    # COMPUTO/VARIANTE/CONTABILITA
-    oSheet = oDoc.getSheets().getByName(elaborato)
-    PweVociComputo = SubElement(PweMisurazioni, 'PweVociComputo')
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    Rinumera_TUTTI_Capitoli2(oSheet)
-    nVCItem = 2
-    progress.setValue(6)
-    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet)):
-        progress.setValue(n)
-        if oSheet.getCellByPosition(0,
-                                    n).CellStyle in ('Comp Start Attributo',
-                                                     'Comp Start Attributo_R'):
-            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
-            sStRange.RangeAddress
-            sopra = sStRange.RangeAddress.StartRow
-            sotto = sStRange.RangeAddress.EndRow
-            if elaborato == 'CONTABILITA':
-                sotto -= 1
-            VCItem = SubElement(PweVociComputo, 'VCItem')
-            VCItem.set('ID', str(nVCItem))
-            nVCItem += 1
-
-            IDEP = SubElement(VCItem, 'IDEP')
-            IDEP.text = diz_ep.get(
-                oSheet.getCellByPosition(1, sopra + 1).String)
-            ##########################
-            Quantita = SubElement(VCItem, 'Quantita')
-            Quantita.text = oSheet.getCellByPosition(9, sotto).String
-            ##########################
-            DataMis = SubElement(VCItem, 'DataMis')
-            if elaborato == 'CONTABILITA':
-                DataMis.text = oSheet.getCellByPosition(1, sopra + 2).String
-            else:
-                DataMis.text = oggi()  # 26/12/1952'#'28/09/2013'###
-            vFlags = SubElement(VCItem, 'Flags')
-            vFlags.text = '0'
-            ##########################
-            IDSpCat = SubElement(VCItem, 'IDSpCat')
-            IDSpCat.text = str(oSheet.getCellByPosition(31, sotto).String)
-            if elaborato == 'CONTABILITA':
-                IDSpCat.text = str(oSheet.getCellByPosition(31, sotto + 1).String)
-            if IDSpCat.text == '':
-                IDSpCat.text = '0'
-            # #########################
-            IDCat = SubElement(VCItem, 'IDCat')
-            IDCat.text = str(oSheet.getCellByPosition(32, sotto).String)
-            if elaborato == 'CONTABILITA':
-                IDCat.text = str(oSheet.getCellByPosition(32, sotto + 1).String)
-            if IDCat.text == '':
-                IDCat.text = '0'
-            # #########################
-            IDSbCat = SubElement(VCItem, 'IDSbCat')
-            IDSbCat.text = str(oSheet.getCellByPosition(33, sotto).String)
-            if elaborato == 'CONTABILITA':
-                IDSbCat.text = str(oSheet.getCellByPosition(33, sotto + 1).String)
-            if IDSbCat.text == '':
-                IDSbCat.text = '0'
-            # #########################
-            PweVCMisure = SubElement(VCItem, 'PweVCMisure')
-            x = 2
-            for m in range(sopra + 2, sotto):
-                RGItem = SubElement(PweVCMisure, 'RGItem')
-                RGItem.set('ID', str(x))
-                x += 1
-                # #########################
-                IDVV = SubElement(RGItem, 'IDVV')
-                IDVV.text = '-2'
-                ##########################
-                Descrizione = SubElement(RGItem, 'Descrizione')
-                Descrizione.text = oSheet.getCellByPosition(2, m).String
-                # #########################
-                PartiUguali = SubElement(RGItem, 'PartiUguali')
-                PartiUguali.text = valuta_cella(oSheet.getCellByPosition(5, m))
-                # #########################
-                Lunghezza = SubElement(RGItem, 'Lunghezza')
-                Lunghezza.text = valuta_cella(oSheet.getCellByPosition(6, m))
-                # #########################
-                Larghezza = SubElement(RGItem, 'Larghezza')
-                Larghezza.text = valuta_cella(oSheet.getCellByPosition(7, m))
-                # #########################
-                HPeso = SubElement(RGItem, 'HPeso')
-                HPeso.text = valuta_cella(oSheet.getCellByPosition(8, m))
-                # #########################
-                Quantita = SubElement(RGItem, 'Quantita')
-                Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
-                # se negativa in CONTABILITA:
-                    # quando vedi_voce guarda ad un valore negativo
-                if oSheet.getCellByPosition(4, m).Value < 0:
-                    test = True
+    if elaborato == 'Elenco_Prezzi':
+        pass
+    else:
+        # COMPUTO/VARIANTE/CONTABILITA
+        oSheet = oDoc.getSheets().getByName(elaborato)
+        PweVociComputo = SubElement(PweMisurazioni, 'PweVociComputo')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        Rinumera_TUTTI_Capitoli2(oSheet)
+        nVCItem = 2
+        progress.setValue(6)
+        progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet)):
+            progress.setValue(n)
+            if oSheet.getCellByPosition(0,
+                                        n).CellStyle in ('Comp Start Attributo',
+                                                         'Comp Start Attributo_R'):
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+                sStRange.RangeAddress
+                sopra = sStRange.RangeAddress.StartRow
+                sotto = sStRange.RangeAddress.EndRow
                 if elaborato == 'CONTABILITA':
-                    if oSheet.getCellByPosition(11, m).Value != 0:
-                        Quantita.text = '-' + str(oSheet.getCellByPosition(11, m).Value)
-                # #########################
-                Flags = SubElement(RGItem, 'Flags')
-                if '*** VOCE AZZERATA ***' in Descrizione.text:
-                    PartiUguali.text = str(
-                        abs(float(valuta_cella(oSheet.getCellByPosition(5,
-                                                                        m)))))
-                    Flags.text = '1'
-                elif '-' in Quantita.text or oSheet.getCellByPosition(
-                        11, m).Value != 0:
-                    Flags.text = '1'
-                elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
-                    Flags.text = '2'
-                    HPeso.text = ''
-                elif 'PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
-                    Flags.text = '16'
+                    sotto -= 1
+                VCItem = SubElement(PweVociComputo, 'VCItem')
+                VCItem.set('ID', str(nVCItem))
+                nVCItem += 1
+
+                IDEP = SubElement(VCItem, 'IDEP')
+                IDEP.text = diz_ep.get(
+                    oSheet.getCellByPosition(1, sopra + 1).String)
+                ##########################
+                Quantita = SubElement(VCItem, 'Quantita')
+                Quantita.text = oSheet.getCellByPosition(9, sotto).String
+                ##########################
+                DataMis = SubElement(VCItem, 'DataMis')
+                if elaborato == 'CONTABILITA':
+                    DataMis.text = oSheet.getCellByPosition(1, sopra + 2).String
                 else:
-                    Flags.text = '0'
+                    DataMis.text = oggi()  # 26/12/1952'#'28/09/2013'###
+                vFlags = SubElement(VCItem, 'Flags')
+                vFlags.text = '0'
+                ##########################
+                IDSpCat = SubElement(VCItem, 'IDSpCat')
+                IDSpCat.text = str(oSheet.getCellByPosition(31, sotto).String)
+                if elaborato == 'CONTABILITA':
+                    IDSpCat.text = str(oSheet.getCellByPosition(31, sotto + 1).String)
+                if IDSpCat.text == '':
+                    IDSpCat.text = '0'
                 # #########################
-                if 'DETRAE LA PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
-                    Flags.text = '32'
-                if '- vedi voce n.' in Descrizione.text:
-                    IDVV.text = str(
-                        int(
-                            Descrizione.text.split('- vedi voce n.')[1].split(
-                                ' ')[0]) + 1)
-                    Flags.text = '32768'
-                    Descrizione.text = ''
-                    #  PartiUguali.text =''
-                    if oSheet.getCellByPosition(4, m).Value < 0 and \
-                        oSheet.getCellByPosition(11, m).Value != 0:
-                            Flags.text = '32768'
-                    if oSheet.getCellByPosition(4, m).Value > 0 and \
-                        oSheet.getCellByPosition(11, m).Value != 0:
-                            Flags.text = '32769'
-                    if oSheet.getCellByPosition(4, m).Value > 0 and \
-                        oSheet.getCellByPosition(10, m).Value != 0:
-                            Flags.text = '32768'
-            n = sotto + 1
+                IDCat = SubElement(VCItem, 'IDCat')
+                IDCat.text = str(oSheet.getCellByPosition(32, sotto).String)
+                if elaborato == 'CONTABILITA':
+                    IDCat.text = str(oSheet.getCellByPosition(32, sotto + 1).String)
+                if IDCat.text == '':
+                    IDCat.text = '0'
+                # #########################
+                IDSbCat = SubElement(VCItem, 'IDSbCat')
+                IDSbCat.text = str(oSheet.getCellByPosition(33, sotto).String)
+                if elaborato == 'CONTABILITA':
+                    IDSbCat.text = str(oSheet.getCellByPosition(33, sotto + 1).String)
+                if IDSbCat.text == '':
+                    IDSbCat.text = '0'
+                # #########################
+                PweVCMisure = SubElement(VCItem, 'PweVCMisure')
+                x = 2
+                for m in range(sopra + 2, sotto):
+                    RGItem = SubElement(PweVCMisure, 'RGItem')
+                    RGItem.set('ID', str(x))
+                    x += 1
+                    # #########################
+                    IDVV = SubElement(RGItem, 'IDVV')
+                    IDVV.text = '-2'
+                    ##########################
+                    Descrizione = SubElement(RGItem, 'Descrizione')
+                    Descrizione.text = oSheet.getCellByPosition(2, m).String
+                    # #########################
+                    PartiUguali = SubElement(RGItem, 'PartiUguali')
+                    PartiUguali.text = valuta_cella(oSheet.getCellByPosition(5, m))
+                    # #########################
+                    Lunghezza = SubElement(RGItem, 'Lunghezza')
+                    Lunghezza.text = valuta_cella(oSheet.getCellByPosition(6, m))
+                    # #########################
+                    Larghezza = SubElement(RGItem, 'Larghezza')
+                    Larghezza.text = valuta_cella(oSheet.getCellByPosition(7, m))
+                    # #########################
+                    HPeso = SubElement(RGItem, 'HPeso')
+                    HPeso.text = valuta_cella(oSheet.getCellByPosition(8, m))
+                    # #########################
+                    Quantita = SubElement(RGItem, 'Quantita')
+                    Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
+                    # se negativa in CONTABILITA:
+                        # quando vedi_voce guarda ad un valore negativo
+                    if oSheet.getCellByPosition(4, m).Value < 0:
+                        test = True
+                    if elaborato == 'CONTABILITA':
+                        if oSheet.getCellByPosition(11, m).Value != 0:
+                            Quantita.text = '-' + str(oSheet.getCellByPosition(11, m).Value)
+                    # #########################
+                    Flags = SubElement(RGItem, 'Flags')
+                    if '*** VOCE AZZERATA ***' in Descrizione.text:
+                        PartiUguali.text = str(
+                            abs(float(valuta_cella(oSheet.getCellByPosition(5,
+                                                                            m)))))
+                        Flags.text = '1'
+                    elif '-' in Quantita.text or oSheet.getCellByPosition(
+                            11, m).Value != 0:
+                        Flags.text = '1'
+                    elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
+                        Flags.text = '2'
+                        HPeso.text = ''
+                    elif 'PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
+                        Flags.text = '16'
+                    else:
+                        Flags.text = '0'
+                    # #########################
+                    if 'DETRAE LA PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
+                        Flags.text = '32'
+                    if '- vedi voce n.' in Descrizione.text:
+                        IDVV.text = str(
+                            int(
+                                Descrizione.text.split('- vedi voce n.')[1].split(
+                                    ' ')[0]) + 1)
+                        Flags.text = '32768'
+                        Descrizione.text = ''
+                        #  PartiUguali.text =''
+                        if oSheet.getCellByPosition(4, m).Value < 0 and \
+                            oSheet.getCellByPosition(11, m).Value != 0:
+                                Flags.text = '32768'
+                        if oSheet.getCellByPosition(4, m).Value > 0 and \
+                            oSheet.getCellByPosition(11, m).Value != 0:
+                                Flags.text = '32769'
+                        if oSheet.getCellByPosition(4, m).Value > 0 and \
+                            oSheet.getCellByPosition(10, m).Value != 0:
+                                Flags.text = '32768'
+                n = sotto + 1
     # #########################
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -7921,7 +7924,7 @@ def XPWE_export_run():
     )
     oSheet = oDoc.CurrentController.ActiveSheet
     # oDialog1Model = Dialog_XPWE.Model
-    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+    for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi"):
         try:
             importo = oDoc.getSheets().getByName(el).getCellRangeByName(
                 'A2').String
@@ -7950,7 +7953,7 @@ def XPWE_export_run():
     # ~except Exception:
     # ~pass
     if Dialog_XPWE.execute() == 1:
-        for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+        for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi"):
             if Dialog_XPWE.getControl(el).State == 1:
                 lista.append(el)
     out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)

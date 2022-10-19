@@ -8375,7 +8375,6 @@ class version_code:
         return new
 
 def description_upd():
-    return
     '''
     Aggiorna il valore di versione del file description.xml
     '''

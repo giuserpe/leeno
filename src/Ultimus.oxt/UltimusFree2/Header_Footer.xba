@@ -567,7 +567,7 @@ rem ----------------------------------------------------------------------
 
 rem uscendo da S2 vengono aggiornati tutti gli stili esistenti
 SUB set_header_auto
-	Barra_Apri_Chiudi_5(&quot;                  Aggiorno intestazioni e pié di pagina&quot;, 80)
+rem	Barra_Apri_Chiudi_5(&quot;                  Aggiorno intestazioni e pié di pagina&quot;, 80)
 	Set_HF_turbo (&quot;no messaggio&quot;)
 	Barra_chiudi_sempre_4
 end sub

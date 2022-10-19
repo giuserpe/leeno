@@ -298,7 +298,7 @@ def paste_clip(arg=None, insCells=0):
 
 def copy_clip():
     callAlert()
-    PL.copy_clip()
+    PL.comando('Copy')
 
 
 def ins_voce_elenco():
@@ -306,29 +306,29 @@ def ins_voce_elenco():
     PL.ins_voce_elenco()
 
 
-def Filtra_Computo_Cap():
-    callAlert()
-    PL.Filtra_Computo_Cap()
+# ~def Filtra_Computo_Cap():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_Cap()
 
 
-def Filtra_Computo_SottCap():
-    callAlert()
-    PL.Filtra_Computo_SottCap()
+# ~def Filtra_Computo_SottCap():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_SottCap()
 
 
-def Filtra_Computo_A():
-    callAlert()
-    PL.Filtra_Computo_A()
+# ~def Filtra_Computo_A():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_A()
 
 
-def Filtra_Computo_B():
-    callAlert()
-    PL.Filtra_Computo_B()
+# ~def Filtra_Computo_B():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_B()
 
 
-def Filtra_Computo_C():
-    callAlert()
-    PL.Filtra_Computo_C()
+# ~def Filtra_Computo_C():
+    # ~callAlert()
+    # ~PL.Filtra_Computo_C()
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -339,7 +339,7 @@ def EliminaVociDoppieElencoPrezzi():
 def Tutti_Subtotali():
     callAlert()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     PL.Tutti_Subtotali(oSheet)
 
 
@@ -444,7 +444,7 @@ def Duplica_Sheet_new_doc_No_Cons():
     pezza per Sub Duplica_Sheet_new_doc_No_Cons
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     end = SheetUtils.getLastUsedRow(oSheet)
     for el in range(2, end):
         if oSheet.getCellByPosition(9, el).CellStyle == 'comp sotto Euro Originale':

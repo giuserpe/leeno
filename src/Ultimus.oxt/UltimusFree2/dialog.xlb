@@ -15,4 +15,5 @@
  <library:element library:name="DlgLista"/>
  <library:element library:name="Dialog_XPWE"/>
  <library:element library:name="DlgDonazioni"/>
+ <library:element library:name="DlgPDF"/>
 </library:library>

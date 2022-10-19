@@ -190,6 +190,7 @@ def parseXML(data, defaultTitle):
         descs = product.findall('prdDescrizione')
         textBreve = ""
         textEstesa = ""
+        madre = ""
         for desc in descs:
             descAttr = desc.attrib
             try:
@@ -197,10 +198,26 @@ def parseXML(data, defaultTitle):
             except KeyError:
                 descLingua = None
             if lingua is None or descLingua is None or lingua == descLingua:
-                if 'breve' in descAttr:
-                    textBreve = textBreve + descAttr['breve'] + '\n'
-                if 'estesa' in descAttr:
-                    textEstesa = textEstesa + descAttr['estesa'] + '\n'
+
+                if 'breve' in descAttr and 'estesa' in descAttr:
+                    if descAttr['breve'] in descAttr['estesa']:
+                        textBreve = descAttr['estesa'] + '\n'
+                    else:
+                        textEstesa = descAttr['estesa'] + '\n- ' + descAttr['breve'] + '\n'
+                        madre = textEstesa[: -len('\n')]
+ 
+                    if descAttr['breve'] == descAttr['estesa']:
+                        textEstesa = madre +  descAttr['breve'] + '\n'
+
+                if 'breve' in descAttr and not 'estesa' in descAttr:
+                    if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                        textEstesa = madre + descAttr['breve'] + '\n'
+                    else:
+                        textEstesa = madre + descAttr['breve'] + '\n'
+
+        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
+        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
+
         if textBreve != "":
             textBreve = textBreve[: -len('\n')]
         if textEstesa != "":
@@ -226,8 +243,8 @@ def parseXML(data, defaultTitle):
             baseCodice = codice
 
         if not base and codice.startswith(baseCodice):
-            textBreve = baseTextBreve + textBreve
-            textEstesa = baseTextEstesa + textEstesa
+            textBreve = baseTextBreve +'- '+ textBreve
+            textEstesa = baseTextEstesa +'- '+ textEstesa
 
         # utilizza solo la descrizione lunga per LeenO
         if len(textBreve) > len(textEstesa):
@@ -239,7 +256,7 @@ def parseXML(data, defaultTitle):
             madre = desc
         if len(codice.split('.')) > 4:
             if madre not in desc:
-                desc = madre + '\n' + desc
+                desc = madre + desc
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
@@ -252,15 +269,17 @@ def parseXML(data, defaultTitle):
             grpId = ""
 
         # compone l'articolo e lo mette in lista
-        artList[codice] = {
-            'codice': codice,
-            'desc': desc,
-            'um': um,
-            'prezzo': prezzo,
-            'mdo': mdo,
-            'sicurezza': oneriSic,
-            'gruppo': grpId
-        }
+        # esclude dall'elenco le voci senza prezzo
+        if len(codice.split('.')) > 2 and prezzo != '':
+            artList[codice] = {
+                'codice': codice,
+                'desc': desc,
+                'um': um,
+                'prezzo': prezzo,
+                'mdo': mdo,
+                'sicurezza': oneriSic,
+                'gruppo': grpId
+            }
 
     # in alcuni casi sono presenti i gruppi, che poi sono le nostre
     # supercategorie e categorie
@@ -274,6 +293,7 @@ def parseXML(data, defaultTitle):
         gruppo = root.find('gruppo')
         grpValori = gruppo.findall('grpValore')
         for grpValore in grpValori:
+            continue # non capisco perché, ma senza questa riga va in errore
             grpId = grpValore.attrib['grpValoreId']
             vlrId = grpValore.attrib['vlrId']
             vlrDesc = grpValore.find('vlrDescrizione').attrib['breve']
@@ -291,9 +311,12 @@ def parseXML(data, defaultTitle):
     superCatList = {}
     if len(gruppi) > 0:
         for codice, articolo in artList.items():
-            splitCodice = codice.split('.')
-            codiceCat = splitCodice[0] + '.' + splitCodice[1]
-            codiceSuperCat = splitCodice[0]
+            try:
+                splitCodice = codice.split('.')
+                codiceCat = splitCodice[0] + '.' + splitCodice[1]
+                codiceSuperCat = splitCodice[0]
+            except:
+                pass
             gruppo = articolo['gruppo']
             if gruppo is None or gruppo == '':
                 continue

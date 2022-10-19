@@ -135,7 +135,10 @@ class Config(Borg):
         '''
         load configuration data from disk
         '''
-        self._parser.read(self._path)
+        try:
+            self._parser.read(self._path)
+        except Exception:
+            os.remove(self._path)
 
     def _store(self):
         '''

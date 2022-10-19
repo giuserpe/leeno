@@ -14,6 +14,8 @@ import LeenoBasicBridge
 import uno
 import itertools
 import operator
+import LeenoConfig
+cfg = LeenoConfig.Config()
 
 
 def sbloccaContabilita(oSheet, lrow):
@@ -144,11 +146,26 @@ def insertVoceContabilita(oSheet, lrow):
 # ###############################################################
 
 
+def Menu_svuotaContabilita():
+    oDoc = LeenoUtils.getDocument()
+    messaggio= """
+Questa operazione svuoterà il foglio CONTABILITA e cancellerà
+tutti gli elaborati contabili generati fino a questo momento.
+
+OPERAZIONE NON REVERSIBILE!
+
+VUOI PROCEDERE UGUALMENTE?"""
+    if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+        Text= messaggio) == 1:
+        svuotaContabilita(oDoc)
+
+
 def svuotaContabilita(oDoc):
     '''
     svuota_contabilita
     Ricrea il foglio di contabilità partendo da zero.
     '''
+    LeenoUtils.DocumentRefresh(False)
     for n in range(1, 20):
         if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
             oDoc.NamedRanges.removeByName('_Lib_' + str(n))
@@ -159,6 +176,7 @@ def svuotaContabilita(oDoc):
             oDoc.Sheets.removeByName(el)
 
     oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+    PL.GotoSheet('CONTABILITA')
     oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
     SheetUtils.setTabColor(oSheet, 16757935)
@@ -237,8 +255,9 @@ def svuotaContabilita(oDoc):
     # riga rossa
     oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
     oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
-
+    PL._gotoCella(2, 2)
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    LeenoUtils.DocumentRefresh(True)
 
     return oSheet
 
@@ -298,7 +317,7 @@ def partita(testo):
     Aggiunge/detrae rigo di PARTITA PROVVISORIA
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
     x = PL.LeggiPosizioneCorrente()[1]
@@ -331,7 +350,7 @@ def struttura_CONTAB():
     Visualizza in modalità struttura i documenti contabili
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     PL.struttura_off()
     oRanges = oDoc.NamedRanges
     
@@ -379,7 +398,7 @@ def GeneraLibretto(oDoc):
     # ~oDoc = LeenoUtils.getDocument()
     #  DLG.mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
     #  return
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA':
         return
     PL.numera_voci()
@@ -393,7 +412,8 @@ def GeneraLibretto(oDoc):
     # ~return
     #trovo il numero del nuovo sal
     nSal = 0
-    for i in reversed(range(1, 50)):
+    idxsal = int(cfg.read('Contabilita', 'idxsal'))
+    for i in reversed(range(1, idxsal)):
         if oRanges.hasByName("_Lib_" + str(i)) == True:
             nSal = i +1
             break
@@ -401,6 +421,8 @@ def GeneraLibretto(oDoc):
             nSal = 1
             daVoce = 1
             old_nPage = 1
+    # ~oColumn = oSheet.getColumns().getByName('X')
+    # ~nSal = 1 + int(oColumn.computeFunction(MAX))
     libretti = SheetUtils.sStrColtoList('segue Libretto delle Misure n.', 2, oSheet, start=2)
     try:
         daVoce = int(oSheet.getCellByPosition(2, libretti[-1]
@@ -449,7 +471,6 @@ def GeneraLibretto(oDoc):
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     ultimariga = sStRange.RangeAddress.EndRow
-
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Libretto delle Misure")
     progress.setLimits(1, 6)
@@ -468,7 +489,8 @@ def GeneraLibretto(oDoc):
         '''
         datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1]
         SAL.append(datiSAL)
-        i= LeenoSheetUtils.prossimaVoce(oSheet, i)
+        i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
+        # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)
     sic = []
     mdo = []
     for el in SAL:
@@ -657,7 +679,6 @@ def GeneraLibretto(oDoc):
     struttura_CONTAB()
     # ~for el in (nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo):
         # ~DLG.chi(el)
-    
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo
 
 
@@ -675,25 +696,17 @@ def GeneraRegistro(oDoc):
     struttura delle relative voci registrate nel Libretto delle Misure.
     '''
 
-    progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Registro di Contabilità")
-    progress.setLimits(1, 8)
-    progress.setValue(0)
-    progress.show()
-    progress.setValue(1)
 
-    # ~zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~Annulla_atto_contabile("Registro")
-    # ~lista = GeneraLibretto(oDoc)
-    # ~DLG.chi(lista)
-    # ~return
     try:
         nSal, daVoce, aVoce, primariga, ultimariga, datiSAL, sic, mdo = GeneraLibretto(oDoc)
     except:
         return
-        progress.hide()
-    progress.setValue(2)
+
+    progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Registro di Contabilità")
+    progress.setLimits(1, 5)
+    progress.setValue(0)
+    progress.show()
+    progress.setValue(1)
 
     # Recupero i dati per il Registro
     oSheet = oDoc.Sheets.getByName("CONTABILITA")
@@ -706,8 +719,8 @@ def GeneraRegistro(oDoc):
         '''
         reg = LeenoComputo.datiVoceComputo(oSheet, i)[0]
         REG.append(reg)
-        i= LeenoSheetUtils.prossimaVoce(oSheet, i)
-
+        # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)
+        i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
     try:
         oDoc.getSheets().insertNewByName('Registro',5)
         PL.GotoSheet('Registro')
@@ -756,7 +769,7 @@ def GeneraRegistro(oDoc):
         # ~oCell = oSheet.getCellRangeByPosition(0,fRow,11,lRow)
         # ~oCell.Rows.IsVisible=False
 
-    progress.setValue(3)
+    progress.setValue(2)
 
     oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
 
@@ -816,7 +829,7 @@ def GeneraRegistro(oDoc):
     PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
 
-    progress.setValue(5)
+    progress.setValue(3)
 
 # set area del REGISTRO
     area="$A$" + str(insRow) + ":$J$" + str(fineFirme + 1)
@@ -868,7 +881,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(1, lastRow + 6).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(1, lastRow + 16).CellStyle = "Ultimus_destra"
 
-    progress.setValue(6)
+    progress.setValue(4)
 
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     for i in range(0, 50):
@@ -889,7 +902,7 @@ def GeneraRegistro(oDoc):
 
     struttura_CONTAB()
 
-    progress.setValue(6)
+    progress.setValue(5)
     progress.hide()
 
 # ~def GeneraSAL (oDoc):
@@ -1134,8 +1147,9 @@ def GeneraAttiContabili():
     '''
     @@ DA DOCUMENTARE
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
     if Dialogs.YesNoDialog(Title='Avviso',
@@ -1150,9 +1164,9 @@ def GeneraAttiContabili():
     GeneraRegistro(oDoc)
     PL.GotoSheet('CONTABILITA')
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
-    Dialogs.Info(Title = 'Voci registrate!',
-        Text="La generazione degli allegati contabili è stata completata.\n"
-            "Grazie per l'attesa.")
+    # ~Dialogs.Info(Title = 'Voci registrate!',
+        # ~Text="La generazione degli allegati contabili è stata completata.")
+    LeenoUtils.DocumentRefresh(False)
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

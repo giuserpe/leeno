@@ -143,6 +143,7 @@ rem fine filtri
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione breve
+
 	oCell = thisComponent.getCurrentSelection() &apos;oCell.string
 	
 	Select case ThisComponent.currentController.activeSheet.Name
@@ -162,7 +163,7 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 	unSelect &apos;unselect ranges 
 end sub
 &apos;#########################################################################
-sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descrizioni per visualizzare più righe/voci							
+sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descrizioni per visualizzare più righe/voci
 	oSheet = ThisComponent.currentController.activeSheet		
 		 	Barra_chiudi_sempre_4	
 			Barra_Apri_Chiudi_5(&quot;..Solo un attimo... Pazienta... &quot;, 30)

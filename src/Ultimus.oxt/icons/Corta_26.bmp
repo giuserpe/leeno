@@ -5,7 +5,7 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    sodipodi:docname="Corta.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/Corta_16.png"
    inkscape:export-xdpi="104"
@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627418"
-     inkscape:cx="9.9878828"
-     inkscape:cy="17.412504"
+     inkscape:zoom="11.313709"
+     inkscape:cx="16.617009"
+     inkscape:cy="22.008698"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      inkscape:document-rotation="0"
@@ -79,62 +79,17 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="segni">
-    <path
-       sodipodi:type="star"
-       style="fill:#000000;stroke:#000000;stroke-width:0.566929;stroke-linecap:square;paint-order:fill markers stroke"
-       id="path856"
-       inkscape:flatsided="false"
-       sodipodi:sides="3"
-       sodipodi:cx="23.733604"
-       sodipodi:cy="2.2665348"
-       sodipodi:r1="3.5444868"
-       sodipodi:r2="1.7722434"
-       sodipodi:arg1="1.5707963"
-       sodipodi:arg2="2.6179939"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 23.733605,5.8110216 -1.534808,-2.6583651 -1.534808,-2.65836499 3.069615,-9e-8 3.069616,-8e-8 -1.534808,2.65836516 z"
-       transform="matrix(0.13287572,0.22879768,0.22879768,-0.13287572,0.53490522,-4.0938184)"
-       inkscape:transform-center-x="0.0011961533"
-       inkscape:transform-center-y="0.23341633" />
-    <path
-       sodipodi:type="star"
-       style="fill:#000000;stroke:#000000;stroke-width:0.566929;stroke-linecap:square;paint-order:fill markers stroke"
-       id="path938"
-       inkscape:flatsided="false"
-       sodipodi:sides="3"
-       sodipodi:cx="23.733604"
-       sodipodi:cy="2.2665348"
-       sodipodi:r1="3.5444868"
-       sodipodi:r2="1.7722434"
-       sodipodi:arg1="1.5707963"
-       sodipodi:arg2="2.6179939"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 23.733605,5.8110216 -1.534808,-2.6583651 -1.534808,-2.65836499 3.069615,-9e-8 3.069616,-8e-8 -1.534808,2.65836516 z"
-       transform="matrix(0.13287572,0.22879768,-0.22879768,0.13287572,1.5768454,1.7668878)"
-       inkscape:transform-center-x="-0.0011959481"
-       inkscape:transform-center-y="-0.23341644" />
-    <rect
-       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect4331"
-       width="8.1330004"
-       height="0.45284429"
-       x="0.19988757"
-       y="2.4782429" />
-    <rect
-       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5279"
-       width="8.132761"
-       height="0.45284429"
-       x="0.19988757"
-       y="4.065743" />
-    <rect
-       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.0971557;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5281"
-       width="8.132761"
-       height="0.45284429"
-       x="0.19988757"
-       y="5.6532431" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.19868px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.179968px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-0.13106298"
+       y="6.0526257"
+       id="text2484"
+       transform="scale(0.99105164,1.0090292)"><tspan
+         sodipodi:role="line"
+         id="tspan2482"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:7.19868px;font-family:'Liberation Sans Narrow';-inkscape-font-specification:'Liberation Sans Narrow, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.179968px"
+         x="-0.13106298"
+         y="6.0526257">[...]</tspan></text>
   </g>
 </svg>

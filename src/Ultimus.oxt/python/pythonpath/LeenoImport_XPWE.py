@@ -908,6 +908,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
         # siccome viene inserita una voce PRIMA di iniziare la compilazione
         # occorre eliminare l'ultima voce che risulta vuota
         LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        PL.tante_analisi_in_ep()
 
 
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):
@@ -1169,7 +1170,7 @@ def MENU_XPWE_import():
     Importazione dati dal formato XPWE
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    LeenoUtils.DocumentRefresh(False)
     isLeenoDoc = LeenoUtils.isLeenoDocument()
     if isLeenoDoc == False:
         PL.creaComputo(0)
@@ -1230,9 +1231,6 @@ def MENU_XPWE_import():
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
-
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
 
     # attiva la progressbar
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
@@ -1295,7 +1293,7 @@ def MENU_XPWE_import():
     progress.show()
 
     # disattiva l'output a video
-    LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(False)
 
     # compila i dati generali per l'analisi
     progress.setText("Compilazione dati generali di analisi")
@@ -1323,8 +1321,8 @@ def MENU_XPWE_import():
     #return
 
     # elimina doppioni nell'elenco prezzi
-    progress.setText("Eliminazione voci doppie elenco prezzi")
-    PL.EliminaVociDoppieElencoPrezzi()
+    # ~progress.setText("Eliminazione voci doppie elenco prezzi")
+    # ~PL.EliminaVociDoppieElencoPrezzi()
 
     # se non ci sono misurazioni di computo, finisce qui
     if len(listaMisure) == 0:
@@ -1338,7 +1336,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        LeenoUtils.EnableDocumentRefresh(oDoc)
+        LeenoUtils.DocumentRefresh(True)
         return
 
     # compila il computo
@@ -1346,15 +1344,15 @@ def MENU_XPWE_import():
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     # riattiva l'output a video
-    LeenoUtils.EnableDocumentRefresh(oDoc)
+    LeenoUtils.DocumentRefresh(True)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
 
     progress.setText("Fine")
     progress.hide()
-    oDoc.CurrentController.ZoomValue = zoom
-    oDoc.enableAutomaticCalculation(True)
+    
     oSheet = oDoc.getSheets().getByName(elaborato)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

@@ -134,6 +134,12 @@
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application</value>
           </prop>
         </node>
+        <!--CTRL-SHIFT-DEL-->
+        <node oor:name="DELETE_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_righe</value>
+          </prop>
+        </node>
         <!--CTRL-SHIFT-A-->
         <node oor:name="A_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

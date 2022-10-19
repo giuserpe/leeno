@@ -400,7 +400,7 @@ def getLastUsedColumn(oSheet):
 
 # ###############################################################
 
-def uFindStringCol(sString, nCol, oSheet, start=2, equal=0):
+def uFindStringCol(sString, nCol, oSheet, start=2, equal=0, up=False):
     '''
     sString { string }  : stringa da cercare
     nCol    { integer } : indice di colonna
@@ -416,8 +416,14 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0):
     oCursor = oSheet.createCursorByRange(oCell)
     oCursor.gotoEndOfUsedArea(True)
     aAddress = oCursor.RangeAddress
-    for nRow in range(start, aAddress.EndRow + 1):
-        if sString in oSheet.getCellByPosition(nCol, nRow).String:
+
+    righe = range(start, aAddress.EndRow + 1)
+    if up==True:
+        righe = reversed (righe)
+    for nRow in righe:
+        if equal == 1 and oSheet.getCellByPosition(nCol, nRow).String == sString:
+            return nRow
+        if equal == 0 and sString in oSheet.getCellByPosition(nCol, nRow).String:
             return nRow
 
 def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
@@ -441,7 +447,7 @@ def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
             ricorrenze.append(nRow)
     return ricorrenze
 
-def uFindString(sString, oSheet):
+def uFindString(sString, oSheet, up=False):
     '''
     sString { string }  : stringa da cercare
     oSheet  { object }  :
@@ -454,7 +460,11 @@ def uFindString(sString, oSheet):
     oCursor = oSheet.createCursorByRange(oCell)
     oCursor.gotoEndOfUsedArea(True)
     aAddress = oCursor.RangeAddress
-    for nRow in range(0, aAddress.EndRow + 1):
+    righe = range (0, aAddress.EndRow + 1)
+    if up==True:
+        righe = reversed (righe)
+        
+    for nRow in righe:
         for nCol in range(0, aAddress.EndColumn + 1):
             # ritocco di +Daniele Zambelli:
             if sString in oSheet.getCellByPosition(nCol, nRow).String:
@@ -512,6 +522,28 @@ def NominaArea(oDoc, sSheet, sRange, sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName, sPath, oCellAddress, 0)
 
+
+# ###############################################################
+
+
+def FixNamedArea():
+    '''
+    Corregge i nomi di range dati che contengono '#' sostituendo con '_'
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oRange = oDoc.NamedRanges
+    tNamedArea = oRange.ElementNames
+    for el in tNamedArea:
+        if '#' in el:
+            aName = oRange.getByName(el).ReferredCells.AbsoluteName
+            sSheet = aName.split('.')[0][1:]
+            sRange = aName.split('.')[1]
+            sName = el.replace('#', '_')
+            NominaArea(oDoc, sSheet, sRange, sName)
+            oDoc.NamedRanges.removeByName(el)
+    return
+
+
 # ###############################################################
 
 
@@ -521,7 +553,7 @@ def visualizza_PageBreak(arg=True):
     arg       { boolean }
     '''
     # oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    #  oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -547,15 +579,21 @@ def MENU_unisci_fogli():
         sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
         unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
         unione = oDoc.getSheets().getByName('unione_fogli')
+        test = True
         for el in lista_fogli:
+            if test == False:
+                start = 0
+            else:
+                start = 1
             oSheet = oDoc.getSheets().getByName(el)
             oRangeAddress = oSheet.getCellRangeByPosition(
-                0, 0, (getUsedArea(oSheet).EndColumn),
+                0, start, (getUsedArea(oSheet).EndColumn),
                 (getUsedArea(oSheet).EndRow)).getRangeAddress()
             oCellAddress = unione.getCellByPosition(
                 0,
                 getUsedArea(unione).EndRow + 1).getCellAddress()
             oSheet.copyRange(oCellAddress, oRangeAddress)
+            test = True
         DLG.MsgBox('Unione dei fogli eseguita.', 'Avviso')
     else:
         unione = oDoc.getSheets().getByName('unione_fogli')

@@ -95,11 +95,6 @@ def createUnoService(serv):
     return getComponentContext().getServiceManager().createInstance(serv)
 
 
-def MRI(target):
-    ctx = getComponentContext()
-    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
-    mri.inspect(target)
-
 def isLeenoDocument():
     '''
     check if current document is a LeenO document
@@ -109,20 +104,20 @@ def isLeenoDocument():
     except Exception:
         return False
 
-def DisableDocumentRefresh(oDoc):
-    '''
-    Disabilita il refresh per accelerare le procedure
-    '''
-    oDoc.lockControllers()
-    oDoc.addActionLock()
 
 
-def EnableDocumentRefresh(oDoc):
-    '''
-    Riabilita il refresh
-    '''
-    oDoc.removeActionLock()
-    oDoc.unlockControllers()
+def DocumentRefresh(boo):
+    oDoc = getDocument()
+    if boo == True:
+        oDoc.enableAutomaticCalculation(True)
+        oDoc.unlockControllers()
+        oDoc.calculateAll()
+        # ~oDoc.removeActionLock()
+
+    elif boo == False:
+        oDoc.enableAutomaticCalculation(False)
+        oDoc.lockControllers()
+        # ~oDoc.addActionLock()    
 
 
 def getGlobalVar(name):

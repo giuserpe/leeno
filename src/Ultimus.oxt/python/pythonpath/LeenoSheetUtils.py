@@ -7,11 +7,11 @@ from com.sun.star.sheet.CellFlags import HARDATTR, EDITATTR, FORMATTED
 
 import pyleeno as PL
 import LeenoUtils
-import LeenoSheetUtils
 import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import Dialogs
+import LeenoDialogs as DLG
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -54,7 +54,7 @@ def SbiancaCellePrintArea():
     area 
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
     
     oPrintArea = oSheet.getPrintAreas()
 
@@ -62,6 +62,18 @@ def SbiancaCellePrintArea():
         oPrintArea[0].StartColumn, oPrintArea[0].StartRow,
         oPrintArea[0].EndColumn, oPrintArea[0].EndRow
         ).CellBackColor = 16777215 #sbianca
+    return
+
+########################################################################
+
+def DelPrintSheetArea ():
+    '''
+    Cancella area di stampa del foglio corrente
+    '''
+    LeenoUtils.DocumentRefresh(True)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.setPrintAreas(())
     return
 
 # ###############################################################
@@ -85,8 +97,8 @@ def setLarghezzaColonne(oSheet):
     regola la larghezza delle colonne a seconda della sheet
     '''
     if oSheet.Name == 'Analisi di Prezzo':
-        for col, width in {'A':2100, 'B':12000, 'C':1600, 'D':2000, 'E':3400, 'F':3400,
-                           'G':2700, 'H':2700, 'I':2000, 'J':2000, 'K':2000}.items():
+        for col, width in {'A':1600, 'B':11000, 'C':1500, 'D':1500, 'E':1500, 'F':1500,
+                           'G':1500, 'H':2000, 'I':1900, 'J':1900, 'K':1900}.items():
             oSheet.Columns[col].Width = width
         SheetUtils.freezeRowCol(oSheet, 0, 2)
 
@@ -266,7 +278,7 @@ def selezionaVoce(oSheet, lrow):
 
 # ###############################################################
 
-def prossimaVoce(oSheet, lrow, n=1):
+def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
     '''
     oSheet { obect }
     lrow { double }   : riga di riferimento
@@ -296,8 +308,9 @@ def prossimaVoce(oSheet, lrow, n=1):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-        lrow += 1
+    if saltaCat == True:
+        while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+            lrow += 1
     while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
         lrow += 1
     return lrow
@@ -325,7 +338,7 @@ def elimina_voce(lrow=None, msg=1):
                      0 esegui senza conferma
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.CurrentController.ActiveSheet
 
     if oSheet.Name == 'Elenco Prezzi':
         Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
@@ -430,7 +443,27 @@ def inserisciRigaRossa(oSheet):
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
 # ###############################################################
+from com.sun.star.beans import PropertyValue
 
+def setAdatta():
+    # ~da sistemare
+    '''
+    altezza   { integer } : altezza
+    fissa il valore dell'altezza ottimale
+    '''
+    # oDoc = LeenoUtils.getDocument()
+    # oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+        'com.sun.star.frame.DispatchHelper', ctx)
+    oProp = PropertyValue()
+    oProp.Name = 'aExtraHeight'
+    oProp.Value = 10
+    properties = (oProp, )
+    dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0,
+                                   properties)
 
 def adattaAltezzaRiga(oSheet):
     '''
@@ -438,6 +471,10 @@ def adattaAltezzaRiga(oSheet):
     imposta l'altezza ottimale delle celle
     usata in PL.Menu_adattaAltezzaRiga()
     '''
+
+    # qui il refresh manda in freeze
+    # ~LeenoUtils.DocumentRefresh(False)
+
     oDoc = LeenoUtils.getDocument()
     # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
     if not oDoc.getSheets().hasByName('S1'):
@@ -690,15 +727,16 @@ def invertiUnSegno(oSheet, lrow):
 
 # ###############################################################
 
-def numeraVoci(oSheet, lrow, all):
+def numeraVoci(oSheet, lrow, tutte):
     '''
-    all { boolean }  : True  rinumera tutto
+    tutte { boolean }  : True  rinumera tutto
                        False rinumera dalla voce corrente in giù
     '''
+    LeenoUtils.DocumentRefresh(False)
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1
 
-    if not all:
+    if not tutte:
         for x in reversed(range(0, lrow)):
             if(
                oSheet.getCellByPosition(1, x).CellStyle in ('comp Art-EP', 'comp Art-EP_R') and
@@ -716,3 +754,48 @@ def numeraVoci(oSheet, lrow, all):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
                 n = n + 1
+    LeenoUtils.DocumentRefresh(True)
+
+
+# ###############################################################
+
+def MENU_elimina_righe_vuote():
+    '''elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        Dialogs.Exclamation(Title='Avviso!', Text='''È possibile usare questo comando solo nelle
+tabelle COMPUTO, VARIANTE o CONTABILITA.''')
+        return
+    if Dialogs.YesNoDialog(Title='ATTENZIONE!',
+    Text="Stai per eliminare tutte le righe vuote dell'elabotato " + oSheet.Name +
+        ".\nVuoi procedere?") == 0:
+        return
+    else:
+        pass
+    lrow_c = PL.LeggiPosizioneCorrente()[1]
+    if oSheet.Name == 'CONTABILITA':
+        sString = 'T O T A L E'
+    else:
+        sString = 'TOTALI COMPUTO'
+    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
+    progress.setLimits(0, lrow)
+    progress.setValue(0)
+    progress.show()
+    for y in reversed(range(0, lrow)):
+        progress.setValue(y)
+        test = False
+        for x in (range(0, 8 +1)):
+            if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
+                    test = True
+                    break
+                if test == False and x  == 8 :
+                    oSheet.getRows().removeByIndex(y, 1)
+    progress.hide()
+    LeenoUtils.DocumentRefresh(True)
+    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    PL._gotoCella(1, 4)
+    Dialogs.Info(Title='Ricerca conclusa', Text='Eliminate ' + str(lrow - lrow_) + ' righe vuote.')

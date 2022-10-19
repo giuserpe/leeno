@@ -95,20 +95,28 @@ def assegna():
     # ~OnCalculate
     oDoc = LeenoUtils.getDocument()
 
-    macro_SHEET ("Elenco Prezzi", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+    '''sotto Linux l'assegnazione delle macro agli eventi deve passare attraverso Basic, quindi:'''
+
+    # ~ macro_SHEET ("Elenco Prezzi", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+    macro_SHEET ("Elenco Prezzi", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        # ~ macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_SHEET ("Analisi di Prezzo", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
-    macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+    # ~ macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+    macro_SHEET ("COMPUTO", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
     if oDoc.getSheets().hasByName("VARIANTE"):
-        macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        # ~ macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_SHEET ("VARIANTE", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
     if oDoc.getSheets().hasByName("CONTABILITA"):
-        macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        # ~ macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
     macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
-    macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
+    # ~ macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
+    macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
     # ~OnStartApp
     # ~OnCloseApp
     # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")

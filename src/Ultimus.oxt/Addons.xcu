@@ -61,7 +61,7 @@
             <value>%origin%/icons/adattaH</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Adatta altezza righe selezionate</value>
+            <value>Adatta altezza righe</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

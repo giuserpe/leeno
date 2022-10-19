@@ -8215,7 +8215,7 @@ def DlgMain():
                 oSheet.getCellRangeByName(
                     "A1:AT1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
-                    d[el]).String = 'DP:'
+                    d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
 
         except Exception:
             pass

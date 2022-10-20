@@ -5888,7 +5888,7 @@ def rigenera_tutte(arg=None, ):
     fissa()
     progress.hide()
     # ~comando("CalculateHard")
-    LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################

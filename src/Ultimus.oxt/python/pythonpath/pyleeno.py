@@ -1943,7 +1943,8 @@ def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
     '''
-    LeenoUtils.DocumentRefresh(False)
+    # qui il refresh lasci ail foglio in freeze
+    # ~LeenoUtils.DocumentRefresh(False)
     chiudi_dialoghi()
 
     if Dialogs.YesNoDialog(Title='AVVISO!',
@@ -2017,10 +2018,9 @@ Vuoi procedere comunque?''') == 0:
             oSheet.Rows.removeByIndex(n, 1)
 
     progress.setValue(5)
-    oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
     progress.hide()
     _gotoCella(0, 3)
-    LeenoUtils.DocumentRefresh(True)
     Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
 
 
@@ -2563,8 +2563,8 @@ def scelta_viste():
             cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
+        LeenoUtils.DocumentRefresh(True)
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    LeenoUtils.DocumentRefresh(True)
     # ~oDoc.enableAutomaticCalculation(True)
     # MsgBox('Operazione eseguita con successo!','')
 
@@ -3240,7 +3240,7 @@ def XPWE_out(elaborato, out_file):
                 IncATTR.text = ''
             else:
                 IncATTR.text = str(oSheet.getCellByPosition(7, n).Value * 100)
-
+    LeenoUtils.DocumentRefresh(True)
     # Analisi di prezzo
     progress.setValue(5)
     if len(lista_AP) != 0:
@@ -3378,7 +3378,7 @@ def XPWE_out(elaborato, out_file):
                 k += 1
             except Exception:
                 pass
-
+        LeenoUtils.DocumentRefresh(True)
     if elaborato == 'Elenco_Prezzi':
         pass
     else:
@@ -3513,6 +3513,7 @@ def XPWE_out(elaborato, out_file):
                             oSheet.getCellByPosition(10, m).Value != 0:
                                 Flags.text = '32768'
                 n = sotto + 1
+        LeenoUtils.DocumentRefresh(True)
     # #########################
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -3542,9 +3543,6 @@ Verifica che il file di destinazione non sia già in uso!''')
         # ~DLG.MsgBox(
             # ~'Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!',
             # ~'E R R O R E !')
-
-    LeenoUtils.DocumentRefresh(True)
-
 
 ########################################################################
 def MENU_firme_in_calce(lrowF=None):
@@ -7611,9 +7609,9 @@ def adegua_tmpl():
     - dal 216 aggiorna le formule in CONTABILITA
     - dal 217 aggiorna le formule in COMPUTO
     '''
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
+    # ~oDoc.enableAutomaticCalculation(False)
     # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
     # cambiare stile http://bit.ly/2cDcCJI
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
@@ -8102,7 +8100,7 @@ def DlgMain():
     '''
     Visualizza il menù principale dialog_fil
     '''
-
+    LeenoUtils.DocumentRefresh(True)
     oDoc = LeenoUtils.getDocument()
     oDoc.unlockControllers()
     psm = LeenoUtils.getComponentContext().ServiceManager
@@ -8219,6 +8217,7 @@ def DlgMain():
 
         except Exception:
             pass
+    LeenoUtils.DocumentRefresh(True)
     return
 
 
@@ -9511,6 +9510,12 @@ def stampa_PDF():
     ods2pdf(oDoc, dest)
     # ~DLG.chi(dest)
     # ~rem ----------------------------------------------------------------------
+
+########################################################################
+def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+    return
+
 
 
 ########################################################################

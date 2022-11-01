@@ -780,6 +780,8 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     else:
         sString = 'TOTALI COMPUTO'
     lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    if lrow == None:
+        lrow = SheetUtils.getLastUsedRow(oSheet)
     progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
     progress.setLimits(0, lrow)
     progress.setValue(0)
@@ -797,5 +799,7 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     progress.hide()
     LeenoUtils.DocumentRefresh(True)
     lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    if lrow_ == None:
+        lrow_ = SheetUtils.getLastUsedRow(oSheet)
     PL._gotoCella(1, 4)
     Dialogs.Info(Title='Ricerca conclusa', Text='Eliminate ' + str(lrow - lrow_) + ' righe vuote.')

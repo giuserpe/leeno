@@ -886,7 +886,7 @@ class VSizer(Sizer):
         self._width = maxW
 
     def _adjustLayout(self):
-        u"""
+        """
         based on requested size and (previously calculated) minimum size
         layout contained items
         WARNING : we need a PREVIOUS call to calcMinSize and  _equalizeElements ¯on widget three

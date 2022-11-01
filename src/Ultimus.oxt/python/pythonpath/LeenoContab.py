@@ -386,6 +386,7 @@ def struttura_CONTAB():
                     PL.struttura_ComputoM()
                 pass
             return
+    LeenoUtils.DocumentRefresh(True)
 
 def GeneraLibretto(oDoc):
     '''
@@ -1162,11 +1163,11 @@ def GeneraAttiContabili():
     # ~except:
         # ~return
     GeneraRegistro(oDoc)
+    LeenoUtils.DocumentRefresh(True)
     PL.GotoSheet('CONTABILITA')
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     # ~Dialogs.Info(Title = 'Voci registrate!',
         # ~Text="La generazione degli allegati contabili è stata completata.")
-    LeenoUtils.DocumentRefresh(False)
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

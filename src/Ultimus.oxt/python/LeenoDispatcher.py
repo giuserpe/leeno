@@ -86,6 +86,18 @@ def reloadLeenoModules():
         # reload the module
         importlib.reload(module)
 
+def DocumentRefresh(boo):
+    oDoc = getDocument()
+    if boo == True:
+        oDoc.enableAutomaticCalculation(True)
+        oDoc.unlockControllers()
+        oDoc.calculateAll()
+        # ~oDoc.removeActionLock()
+
+    elif boo == False:
+        oDoc.enableAutomaticCalculation(False)
+        oDoc.lockControllers()
+        # ~oDoc.addActionLock() 
 
 class Dispatcher(unohelper.Base, XJobExecutor):
     '''
@@ -144,7 +156,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         except Exception as e:
             # msg = traceback.format_exc()
-
+            DocumentRefresh(True) # abilita il refresh
 # Aggiunge info generiche su SO, LO e LeenO
             pir = uno.getComponentContext().getValueByName(
                 '/singletons/com.sun.star.deployment.PackageInformationProvider')
@@ -184,7 +196,10 @@ class Dispatcher(unohelper.Base, XJobExecutor):
                 line = str(bkInfo.lineno)
                 file = os.path.split(bkInfo.filename)[1]
                 msg += f"File:{file}, Line:{line}, Function:{function}\n"
-            msg += "\n\n"
+            msg += "\n"
+            # messaggi di errore solo per me
+            if 'giuserpe' in os.getlogin():
+                msg += '------------------------------\n' + traceback.format_exc()
 
             Dialogs.Exclamation(Title="Errore interno", Text=msg)
 

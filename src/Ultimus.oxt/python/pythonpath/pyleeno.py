@@ -1683,8 +1683,8 @@ def sproteggi_sheet_TUTTE():
 
 def setPreview(arg=0):
     '''
-    colore   { integer } : id colore
-    attribuisce al foglio corrente un colore a scelta
+    arg   { bit } : acceso/spento
+    attiva il preview
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
@@ -1943,8 +1943,8 @@ def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
     '''
-    # qui il refresh lasci ail foglio in freeze
-    # ~LeenoUtils.DocumentRefresh(False)
+    # qui il refresh lascia il foglio in freeze
+    LeenoUtils.DocumentRefresh(False)
     chiudi_dialoghi()
 
     if Dialogs.YesNoDialog(Title='AVVISO!',
@@ -2503,7 +2503,7 @@ def scelta_viste():
         sString.Text = oS1.getCellRangeByName(
             'S1.H326').Value * 100  # maggiorazione
 
-    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+    elif oSheet.Name in ('CONTABILITA'):
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
@@ -2528,12 +2528,28 @@ def scelta_viste():
             sString.Text = cfg.read('Contabilita', 'idxsal')
             if sString.Text == '':
                 sString.Text = '20'
+        
+        oRanges = oDoc.NamedRanges
+
+        listaSal = []
+        for i in range(1, 100):
+            if oRanges.hasByName("_Lib_" + str(i)) == True:
+                nSal = i
+                listaSal.append(str(nSal))
+            else:
+                uSal = i -1
+                break
+        nSal = False
+        oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
+
         sString = oDialog1.getControl('ComboBox3')
         sString.Text = cfg.read('Contabilita', 'ricicla_da')
 
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         oDialog1.execute()
+
+        LeenoUtils.DocumentRefresh(False)
 
         if oDialog1.getControl('vista_pre').State:
             LeenoSheetUtils.setLarghezzaColonne(oSheet)
@@ -2563,6 +2579,44 @@ def scelta_viste():
             cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
+        try:
+            float(oDialog1.getControl('ComboBox1').getText())
+            nSal = oDialog1.getControl('ComboBox1').getText()
+        except:
+            pass
+        d = [
+            ('CONTABILITA', '_Lib_', 11),
+            ('Registro', '_Reg_', 9),
+            ('SAL', '_SAL_', 5)
+        ]
+        if uSal != False:
+            SheetUtils.visualizza_PageBreak()
+            for sal in range(1, uSal+1):
+                for el in d:
+                    nomearea = el[1] + str(sal)
+                    oSheet = oDoc.Sheets.getByName(el[0])
+                    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+
+                    #range 
+                    daRiga = oNamedRange.StartRow
+                    aRiga = oNamedRange.EndRow
+                    daColonna = oNamedRange.StartColumn
+                    aColonna = oNamedRange.EndColumn
+
+                    oNamedRange.EndColumn = el[2]
+
+                    if str(sal) == nSal:
+                        oSheet.setPrintAreas((oNamedRange,))
+                        oSheet.setPrintTitleRows(True)
+                        GotoSheet(oSheet.Name)
+                        oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
+
+                        oDoc.CurrentController.setFirstVisibleRow(daRiga - 1)
+                    else:
+                        oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
+        GotoSheet('CONTABILITA')
+        if nSal == False:
+            SheetUtils.visualizza_PageBreak(False)
         LeenoUtils.DocumentRefresh(True)
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     # ~oDoc.enableAutomaticCalculation(True)
@@ -5061,6 +5115,7 @@ def dettaglio_misure(bit):
     bit { integer }  : 1 inserisce i dettagli
                        0 cancella i dettagli
     '''
+    # qui il refresh lascia il foglio in freeze
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     try:
@@ -5123,15 +5178,14 @@ def dettaglio_misure(bit):
                                 2, lrow).String + stringa.replace('.', ',')
     else:
         for lrow in range(0, ER):
-            progress.hide()
-            # ~progress.setValue(lrow)
+            progress.setValue(lrow)
             if ' ►' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String.split(' ►')[0]
 
-    progress.hide()
     LeenoUtils.DocumentRefresh(True)
+    progress.hide()
     return
 
 
@@ -8975,6 +9029,7 @@ Procedo cambiando i colori?''') == 1:
     oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
     for el in stili.keys():
         try:
+            oTablePageStyles.insertByName(stili[el], oPgStyle)
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except Exception:
             pass
@@ -9221,7 +9276,7 @@ def trova_np():
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    oDoc.enableAutomaticCalculation(False)
+    oDoc.enableAutomaticCalculation(True)
 
     struttura_off()
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -9235,8 +9290,6 @@ def trova_np():
             oCellRangeAddr.EndRow = el
             oSheet.group(oCellRangeAddr, 1)
             oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
-
-    oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -9254,7 +9307,6 @@ def elimina_voci_doppie():
     progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
     progress.setLimits(0, fine)
     progress.setValue(0)
-    progress.show()
 
     oSheet.getCellByPosition(30, 3).Formula = '=IF(A4=A3;1;0)'
     oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
@@ -9263,12 +9315,25 @@ def elimina_voci_doppie():
         oSheet.getCellRangeByPosition(30, 3, 30, fine))
     paste_clip(insCells=1)
 
+    for i in range(0, fine):
+        if oSheet.getCellByPosition(30, i).Value == 1:
+            if Dialogs.YesNoDialog(Title='AVVISO!',
+            Text='''In questo Elenco Prezzi sono presenti più voci aventi lo stesso codice.
+Continuando, verranno eliminate.
+
+Vuoi procedere comunque?''') == 0:
+                oSheet.getCellRangeByName('AE:AE').clearContents(FORMULA)
+                return
+            else:
+                break
+    progress.show()
+
     for i in reversed(range(0, fine)):
         progress.setValue(i)
         if oSheet.getCellByPosition(30, i).Value == 1:
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
-    oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
+    oSheet.getCellRangeByName('AE:AE').clearContents(FORMULA)
     _gotoCella(0, 3)
     progress.hide()
 
@@ -9513,7 +9578,55 @@ def stampa_PDF():
 
 ########################################################################
 def MENU_debug():
+    # ~lista = ('1', '2', '3')
+    # ~oDialog1.getControl('ComboBox1').addItems(lista, 1)
+    oDoc = LeenoUtils.getDocument() 
+
+    oRanges = oDoc.NamedRanges
+
+    lista = []
+    for i in range(1, 100):
+        if oRanges.hasByName("_Lib_" + str(i)) == True:
+            nSal = i
+            lista.append(str(nSal))
+        else:
+            break
+    DLG.chi(lista)
+    return
     LeenoUtils.DocumentRefresh(True)
+    oDoc = LeenoUtils.getDocument() 
+    oStyleFam = oDoc.StyleFamilies
+    oTablePageStyles = oStyleFam.getByName("PageStyles")
+    oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
+
+    # ~for el in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
+    # ~'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
+    # ~'PageStyle_Elenco Prezzi'):
+        # ~try:
+            # ~oTablePageStyles.insertByName(el, oPgStyle)
+        # ~except:
+            # ~pass
+    try:
+        oTablePageStyles.insertByName('Page_Style_COPERTINE', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_COMPUTO_A4', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_Elenco Prezzi', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
+    except:
+        pass
+
     return
 
 

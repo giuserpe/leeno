@@ -87,12 +87,18 @@ def reloadLeenoModules():
         importlib.reload(module)
 
 def DocumentRefresh(boo):
-    oDoc = getDocument()
+    ctx = uno.getComponentContext()
+    desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    try:
+        desktop.getCurrentFrame().activate()
+    except Exception:
+        pass
+    oDoc = desktop.getCurrentComponent()
     if boo == True:
         oDoc.enableAutomaticCalculation(True)
         oDoc.unlockControllers()
         oDoc.calculateAll()
-        # ~oDoc.removeActionLock()
+        oDoc.resetActionLocks()
 
     elif boo == False:
         oDoc.enableAutomaticCalculation(False)

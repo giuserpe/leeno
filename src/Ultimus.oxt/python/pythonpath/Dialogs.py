@@ -2615,6 +2615,7 @@ class Progress:
         self._dlg.show()
 
     def hide(self):
+        LeenoUtils.DocumentRefresh(True)
         self._dlg.hide()
 
     def showing(self):

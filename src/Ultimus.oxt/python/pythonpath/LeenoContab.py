@@ -166,7 +166,8 @@ def svuotaContabilita(oDoc):
     Ricrea il foglio di contabilità partendo da zero.
     '''
     LeenoUtils.DocumentRefresh(False)
-    for n in range(1, 20):
+    idxsal = int(cfg.read('Contabilita', 'idxsal'))
+    for n in range(1, idxsal):
         if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
             oDoc.NamedRanges.removeByName('_Lib_' + str(n))
             oDoc.NamedRanges.removeByName('_SAL_' + str(n))

@@ -387,7 +387,7 @@ def struttura_CONTAB():
                     PL.struttura_ComputoM()
                 pass
             return
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
 def GeneraLibretto(oDoc):
     '''

@@ -116,10 +116,6 @@ Sub ssUltimus
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;ssUltimus&quot;)
 End Sub
 rem ######################################################################
-Sub voce_breve
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;voce_breve&quot;)
-End Sub
-rem ######################################################################
 Sub tante_analisi_in_ep
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;tante_analisi_in_ep&quot;)
 End Sub
@@ -135,10 +131,6 @@ rem ######################################################################
 Sub riordina_ElencoPrezzi
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;riordina_ElencoPrezzi&quot;)
 End Sub
-rem ######################################################################
-&apos;Sub struttura_Elenco
-&apos;	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;struttura_Elenco&quot;)
-&apos;End Sub
 rem ######################################################################
 Sub cancella_voci_non_usate
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)

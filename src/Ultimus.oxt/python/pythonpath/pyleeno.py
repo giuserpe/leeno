@@ -1854,6 +1854,21 @@ def Menu_adattaAltezzaRiga():
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
+########################################################################
+
+def MENU_voce_breve():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name in ('Analisi di Prezzo'):
+        voce_breve_an()
+    if oSheet.Name in ('Elenco Prezzi'):
+        voce_breve_ep()
+    elif oSheet.Name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+        voce_breve()
+
+########################################################################
+
 def voce_breve():
     '''
     Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
@@ -2027,6 +2042,28 @@ Vuoi procedere comunque?''') == 0:
 ########################################################################
 
 
+def voce_breve_an():
+    '''
+    Ottimizza l'altezza delle celle di Analisi di Prezzo o visualizza solo
+    tre righe della descrizione.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ER = SheetUtils.getLastUsedRow(oSheet)
+
+    if not oSheet.getCellRangeByName('B3').Rows.OptimalHeight:
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    else:
+        hriga = oSheet.getCellRangeByName(
+        'B3').CharHeight * 65 * 2 + 100  # visualizza tre righe
+
+        for el in range (0, ER):
+            if oSheet.getCellByPosition(1, el).CellStyle == 'An-1-descr_':
+                oSheet.getCellByPosition(1, el).Rows.Height = hriga
+
+########################################################################
+
+
 def voce_breve_ep():
     '''
     Ottimizza l'altezza delle celle di Elenco Prezzi o visualizza solo
@@ -2087,6 +2124,11 @@ def scelta_viste():
         sString = oDialog1.getControl('TextField11')
         sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
             'H338').Value  # fine_voci_abbreviate
+            
+        # ~DLG.mri(oDialog1.getControl('CommandButton7'))
+        
+        if oSheet.Name == 'VARIANTE':
+            oDialog1.getControl('CommandButton7').setEnable(0)            
 
         oDialog1.execute()
 
@@ -2179,8 +2221,6 @@ def scelta_viste():
             oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible:
             oDialog1.getControl('CBMdo').State = 1
-        if not oSheet.getCellByPosition(1, 3).Rows.OptimalHeight:
-            oDialog1.getControl('CBDesc').State = 1
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible:
             oDialog1.getControl('CBOrig').State = 1
         if oDialog1.execute() == 1:
@@ -2195,12 +2235,6 @@ def scelta_viste():
             else:
                 oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
                 oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
-
-            if oDialog1.getControl("CBDesc").State == 1:  # descrizione
-                oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
-                oSheet.getCellByPosition(1, 3).Rows.OptimalHeight
-                voce_breve_ep()
-            #  elif oDialog1.getControl("CBDesc").State == 0: LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
             if oDialog1.getControl("CBOrig").State == 0:  # origine
                 oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
@@ -2444,9 +2478,6 @@ def scelta_viste():
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application"
         )
-        # oDialog1Model = oDialog1.Model
-        if not oSheet.getCellByPosition(1, 2).Rows.OptimalHeight:
-            oDialog1.getControl("CBDesc").State = 1  # descrizione breve
 
         oS1 = oDoc.getSheets().getByName('S1')
         sString = oDialog1.getControl('TextField5')
@@ -2469,11 +2500,6 @@ def scelta_viste():
             'S1.H326').Value * 100  # maggiorazione
 
         oDialog1.execute()  # mostra il dialogo
-
-        if(oSheet.getCellByPosition(1, 2).Rows.OptimalHeight and
-           oDialog1.getControl("CBDesc").State == 1):  # descrizione breve
-            basic_LeenO('Strutture.Tronca_Altezza_Analisi')
-        #  elif oDialog1.getControl("CBDesc").State == 0: LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
         #  sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
         oS1.getCellRangeByName('S1.H319').Value = float(
@@ -2595,8 +2621,11 @@ def scelta_viste():
                 for el in d:
                     nomearea = el[1] + str(sal)
                     oSheet = oDoc.Sheets.getByName(el[0])
-                    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
-
+                    try:
+                        "se la contabilità è vuota, il range non c'è"
+                        oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress 
+                    except:
+                        break
                     #range 
                     daRiga = oNamedRange.StartRow
                     aRiga = oNamedRange.EndRow
@@ -2611,16 +2640,14 @@ def scelta_viste():
                         GotoSheet(oSheet.Name)
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
 
-                        oDoc.CurrentController.setFirstVisibleRow(daRiga - 1)
+                        oDoc.CurrentController.setFirstVisibleRow(1)
+                        _gotoCella(0, daRiga -1)
                     else:
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
         GotoSheet('CONTABILITA')
         if nSal == False:
             SheetUtils.visualizza_PageBreak(False)
-        LeenoUtils.DocumentRefresh(True)
-    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    # ~oDoc.enableAutomaticCalculation(True)
-    # MsgBox('Operazione eseguita con successo!','')
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -2816,9 +2843,14 @@ def EliminaVociDoppieElencoPrezzi():
 
     try:
         lista_tariffe_analisi
-        for i in reversed(range(SR, ER)):
-            if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
-                oSheet.getRows().removeByIndex(i, 1)
+
+        [oSheet.getRows().removeByIndex(i, 1)
+        for i in reversed(range(SR, ER))
+        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi]
+        
+        # ~for i in reversed(range(SR, ER)):
+            # ~if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+                # ~oSheet.getRows().removeByIndex(i, 1)
     except Exception:
         pass
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -5063,9 +5095,10 @@ def dettaglio_misura_rigo():
     if ' ►' in oSheet.getCellByPosition(2, lrow).String:
         oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(
             2, lrow).String.split(' ►')[0]
-    if oSheet.getCellByPosition(2, lrow).CellStyle in (
-            'comp 1-a'
-    ) and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2,
+    # ~if oSheet.getCellByPosition(2, lrow).CellStyle in (
+            # ~'comp 1-a'
+    if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle and \
+    "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2,
                                                                   lrow).String:
         for el in range(5, 9):
             if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
@@ -5132,9 +5165,8 @@ def dettaglio_misure(bit):
     if bit == 1:
         for lrow in range(0, ER):
             progress.setValue(lrow)
-            if oSheet.getCellByPosition(2, lrow).CellStyle in (
-                    'comp 1-a'
-            ) and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(
+            if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle and \
+            "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(
                     2, lrow).String:
                 for el in range(5, 9):
                     if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
@@ -7486,6 +7518,31 @@ def autoexec():
     GotoSheet(oSheet.Name)
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
+    
+    d = {
+        'COMPUTO': 'F1',
+        'VARIANTE': 'F1',
+        'Elenco Prezzi': 'A1',
+        'CONTABILITA': 'F1',
+        'Analisi di Prezzo': 'A1'
+    }
+    for el in d.keys():
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+                oSheet.getCellRangeByName(
+                    "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP: Questo documento'
+            else:
+                oSheet.getCellRangeByName(
+                    "A1:AT1").clearContents(HARDATTR)
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
+
+        except Exception:
+            pass
+    
     LeenoUtils.DocumentRefresh(True)
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
@@ -9577,7 +9634,40 @@ def stampa_PDF():
     # ~rem ----------------------------------------------------------------------
 
 ########################################################################
+# ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument() 
+    oSheet = oDoc.CurrentController.ActiveSheet
+    usedArea = SheetUtils.getUsedArea(oSheet)
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow))
+    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+
+
+
+
+    # ~oDoc.CurrentController.select(usedArea)
+    # ~LeenoUtils.DocumentRefresh(True)
+    return
+
+    oDoc = LeenoUtils.getDocument() 
+    for el in range (0,100):
+        oDoc.IsAdjustHeightEnabled = True
+    DLG.chi(oDoc.IsAdjustHeightEnabled)
+    # ~LeenoUtils.DocumentRefresh(True)
+
+    return
+    odoc = LeenoUtils.createUnoService(
+        "com.sun.star.sheet.SpreadsheetDocument")
+    odoc.IsAdjustHeightEnabled = True
+
+    LeenoUtils.DocumentRefresh(True)
+
+
+    # ~DLG.mri(oDoc)
+
+    # ~oDoc.IsAdjustHeightEnabled
+
+    return
     # ~lista = ('1', '2', '3')
     # ~oDialog1.getControl('ComboBox1').addItems(lista, 1)
     oDoc = LeenoUtils.getDocument() 

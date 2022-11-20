@@ -13,6 +13,7 @@ from os.path import isfile, join
 import unohelper
 from com.sun.star.task import XJobExecutor
 import Dialogs
+import LeenoUtils
 
 import uno
 import traceback
@@ -86,24 +87,6 @@ def reloadLeenoModules():
         # reload the module
         importlib.reload(module)
 
-def DocumentRefresh(boo):
-    ctx = uno.getComponentContext()
-    desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-    try:
-        desktop.getCurrentFrame().activate()
-    except Exception:
-        pass
-    oDoc = desktop.getCurrentComponent()
-    if boo == True:
-        oDoc.enableAutomaticCalculation(True)
-        oDoc.unlockControllers()
-        oDoc.calculateAll()
-        oDoc.resetActionLocks()
-
-    elif boo == False:
-        oDoc.enableAutomaticCalculation(False)
-        oDoc.lockControllers()
-        # ~oDoc.addActionLock() 
 
 class Dispatcher(unohelper.Base, XJobExecutor):
     '''
@@ -162,7 +145,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         except Exception as e:
             # msg = traceback.format_exc()
-            DocumentRefresh(True) # abilita il refresh
+            LeenoUtils.DocumentRefresh(True) # abilita il refresh
 # Aggiunge info generiche su SO, LO e LeenO
             pir = uno.getComponentContext().getValueByName(
                 '/singletons/com.sun.star.deployment.PackageInformationProvider')

@@ -2819,8 +2819,11 @@ def riordina_ElencoPrezzi(oDoc):
 
 
 def MENU_doppioni():
-    # ~EliminaVociDoppieElencoPrezzi()
-    elimina_voci_doppie()
+    LeenoUtils.DocumentRefresh(False)
+    EliminaVociDoppieElencoPrezzi()
+    # ~elimina_voci_doppie()
+    LeenoUtils.DocumentRefresh(True)
+
 
 
 def EliminaVociDoppieElencoPrezzi():

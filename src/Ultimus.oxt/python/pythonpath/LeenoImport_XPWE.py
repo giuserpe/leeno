@@ -914,6 +914,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):
     ''' compila il computo '''
 
+    LeenoUtils.DocumentRefresh(False)
     # crea / attiva l'elaborato del tipo scelto
     if elaborato == 'VARIANTE':
         if oDoc.getSheets().hasByName('VARIANTE'):
@@ -1162,7 +1163,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
-
+    # ~LeenoUtils.DocumentRefresh(True)
     PL.fissa()
 
 def MENU_XPWE_import():
@@ -1343,16 +1344,15 @@ def MENU_XPWE_import():
     progress.setText(f'Compilazione {elaborato}')
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
-    # riattiva l'output a video
-    LeenoUtils.DocumentRefresh(True)
+    oSheet = oDoc.getSheets().getByName(elaborato)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
 
     progress.setText("Fine")
     progress.hide()
-    
-    oSheet = oDoc.getSheets().getByName(elaborato)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
+    # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

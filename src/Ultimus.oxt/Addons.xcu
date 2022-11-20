@@ -72,13 +72,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/Corta</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Vista Corta (abbreviata) ON/OFF</value>
+            <value>Voce breve ON/OFF</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

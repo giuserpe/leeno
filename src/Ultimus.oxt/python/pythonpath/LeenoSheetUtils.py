@@ -482,7 +482,9 @@ def adattaAltezzaRiga(oSheet):
 
     usedArea = SheetUtils.getUsedArea(oSheet)
     oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
-
+    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    return
     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
     # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
     if float(PL.loVersion()[:5].replace('.', '')) >= 642:
@@ -732,7 +734,7 @@ def numeraVoci(oSheet, lrow, tutte):
     tutte { boolean }  : True  rinumera tutto
                        False rinumera dalla voce corrente in giù
     '''
-    LeenoUtils.DocumentRefresh(False)
+    #qui il refresh è inutile
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1
 
@@ -754,7 +756,6 @@ def numeraVoci(oSheet, lrow, tutte):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
                 n = n + 1
-    LeenoUtils.DocumentRefresh(True)
 
 
 # ###############################################################

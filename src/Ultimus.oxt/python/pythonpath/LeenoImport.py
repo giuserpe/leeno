@@ -210,6 +210,8 @@ def MENU_ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
     '''
+    LeenoUtils.DocumentRefresh(False)
+
     filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
     if filename is None:
         return
@@ -254,7 +256,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(

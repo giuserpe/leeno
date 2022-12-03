@@ -21,7 +21,5 @@ dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0,
 
 rem ----------------------------------------------------------------------
 rem dispatcher.executeDispatch(document, &quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-
-
 end sub
 </script:module>

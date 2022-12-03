@@ -988,6 +988,7 @@ Sub azzera_atti
 		&amp; &quot;Ti sarà chiesta conferma ad ogni passo.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Sei sicuro di volerlo fare?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)
 	If testa = 7 Then GoTo fine:
+	chiudi_dialoghi
 	For i = 0 To 100
 		annulla_tutti_gli_atti
 	Next
@@ -995,10 +996,11 @@ Sub azzera_atti
 End Sub
 rem ######################################################################
 Sub annulla_tutti_gli_atti
+chiudi_dialoghi
 ScriptPy(&quot;LeenoUtils&quot;, &quot;DocumentRefresh&quot;, False)
 	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
 oSheetCont.Unprotect &quot;&quot;
-chiudi_dialoghi
+
 	oRanges = ThisComponent.NamedRanges
 	nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 	prefix = &quot;_Lib_&quot;
@@ -1046,6 +1048,7 @@ Function Annulla_atto_contabile (oNomeSheet As String, Optional msg As Integer)&
 		Exit Function
 	End If
 procedi:
+chiudi_dialoghi
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	select Case oSheet.Name
 		Case &quot;CONTABILITA&quot;

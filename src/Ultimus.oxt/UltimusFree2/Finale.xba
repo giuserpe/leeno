@@ -1283,7 +1283,7 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
  						IF ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,316).string &lt;= 2 then
 						&apos; se &quot;livello difficoltà&quot; è diverso niubbi
 	 						if sParla = &quot;Parla&quot; then
-		 						msgbox &quot;I colori sono stati solo nascosti daL colore bianco.&quot; &amp; CHR$(10)_
+		 						msgbox &quot;I colori sono stati solo nascosti dal bianco.&quot; &amp; CHR$(10)_
  								&amp; &quot;Per ripristinare i colori applica a tutta la tabella: Menu Formato &gt; Formattazione Predefinita&quot;
  							end if		
  						end if

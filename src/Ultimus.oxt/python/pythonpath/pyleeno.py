@@ -137,7 +137,7 @@ def MENU_leeno_conf():
 
     #  if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
 
-    sString = oDlg_config.getControl('TextField1')
+    sString = oDlg_config.getControl('ComboBox6')
     sString.Text = cfg.read('Generale', 'altezza_celle')
 
     #  sString = oDlg_config.getControl("ComboBox1")
@@ -207,7 +207,7 @@ def MENU_leeno_conf():
     else:
         cfg.write('Generale', 'movedirection', '1')
         oGSheetSettings.MoveDirection = 1
-    cfg.write('Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
+    cfg.write('Generale', 'altezza_celle', oDlg_config.getControl('ComboBox6').getText())
 
     cfg.write('Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
     cfg.write('Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
@@ -656,6 +656,9 @@ di partenza deve essere contigua.''')
         _gotoCella(2, lrow + 1)
     oSheet = oDoc.getSheets().getByName(nSheetDCC)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # torno su partenza
+    if cfg.read('Generale', 'torna_a_ep') == '1':
+        _gotoDoc(fpartenza)
 
 
 ########################################################################
@@ -2054,8 +2057,9 @@ def voce_breve_an():
     if not oSheet.getCellRangeByName('B3').Rows.OptimalHeight:
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     else:
-        hriga = oSheet.getCellRangeByName(
-        'B3').CharHeight * 65 * 2 + 100  # visualizza tre righe
+        nr = cfg.read('Generale', 'altezza_celle')
+        hriga = 100 + oSheet.getCellRangeByName(
+        'B3').CharHeight * 65 / 3 * 2 * float(nr)   # <<< visualizza tre righe
 
         for el in range (0, ER):
             if oSheet.getCellByPosition(1, el).CellStyle == 'An-1-descr_':
@@ -2079,8 +2083,9 @@ def voce_breve_ep():
     if not oSheet.getCellByPosition(1, 3).Rows.OptimalHeight:
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     else:
-        hriga = oSheet.getCellRangeByName(
-            'B4').CharHeight * 65 * 2 + 100  # visualizza tre righe
+        nr = cfg.read('Generale', 'altezza_celle')
+        hriga = 100 + oSheet.getCellRangeByName(
+            'B4').CharHeight * 65 / 3 * 2 * float(nr) # <<< visualizza tre righe
         oSheet.getCellRangeByPosition(0, SR, 0, ER).Rows.Height = hriga
 
 
@@ -2548,13 +2553,7 @@ def scelta_viste():
         # ~if oSheet.getCellRangeByName('S1.H328').Value == 1:
             # ~oDialog1.getControl('CheckBox7').State = 1
         sString = oDialog1.getControl('TextField13')
-        if cfg.read('Contabilita', 'idxsal') == '&273.Dlg_config.TextField13.Text':
-            sString.Text = '20'
-        else:
-            sString.Text = cfg.read('Contabilita', 'idxsal')
-            if sString.Text == '':
-                sString.Text = '20'
-        
+
         oRanges = oDoc.NamedRanges
 
         listaSal = []
@@ -2567,6 +2566,13 @@ def scelta_viste():
                 break
         nSal = False
         oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
+        if len(listaSal) != 0:
+            oDialog1.getControl('CommandButton24').Label = "Elimina atti SAL n. " + str(len(listaSal))
+        else:
+            oDialog1.getControl('CommandButton24').Enable = False
+            oDialog1.getControl('CommandButton25').Enable = False
+            oDialog1.getControl('CommandButton27').Enable = False
+
 
         sString = oDialog1.getControl('ComboBox3')
         sString.Text = cfg.read('Contabilita', 'ricicla_da')
@@ -2592,7 +2598,6 @@ def scelta_viste():
             cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
 
-        cfg.write('Contabilita', 'idxsal', oDialog1.getControl('TextField13').getText())
         if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
             cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
         else:
@@ -7547,16 +7552,11 @@ def autoexec():
             pass
     
     LeenoUtils.DocumentRefresh(True)
-    #  if len(oDoc.getURL()) != 0:
-    # scegli cosa visualizzare all'avvio:
-    #  vedi = conf.read(path_conf, 'Generale', 'visualizza')
-    #  if vedi == 'Menù Principale':
-    #  DlgMain()
-    #  elif vedi == 'Dati Generali':
-    #  vai_a_variabili()
-    #  elif vedi in('Elenco Prezzi', 'COMPUTO'):
-    #  GotoSheet(vedi)
-
+    if len(oDoc.getURL()) != 0:
+        # scegli cosa visualizzare all'avvio:
+        vedi = cfg.read('Generale', 'dialogo')
+        if vedi == '1':
+                DlgMain()
 
 #
 ########################################################################
@@ -8821,6 +8821,7 @@ def descrizione_in_una_colonna(flag=False):
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
     '''
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('S5')
     oSheet.getCellRangeByName('C9:I9').merge(flag)
@@ -8859,6 +8860,7 @@ def descrizione_in_una_colonna(flag=False):
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByName('C23:I23').merge(flag)
         oSheet.getCellRangeByName('C24:I24').merge(flag)
+    LeenoUtils.DocumentRefresh(True)
     return
 
 
@@ -9441,6 +9443,7 @@ def MENU_filtro_descrizione():
     if descrizione in (None, '', ' '):
         struttura_off()
         oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
+        LeenoUtils.DocumentRefresh(True)
         return
 
     struttura_off()
@@ -9639,7 +9642,15 @@ def stampa_PDF():
 ########################################################################
 # ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+
+    return
     oDoc = LeenoUtils.getDocument() 
+    ctx = LeenoUtils.getComponentContext()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+
+    DLG.mri(oDoc)
+    return
     oSheet = oDoc.CurrentController.ActiveSheet
     usedArea = SheetUtils.getUsedArea(oSheet)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow))
@@ -9663,7 +9674,6 @@ def MENU_debug():
         "com.sun.star.sheet.SpreadsheetDocument")
     odoc.IsAdjustHeightEnabled = True
 
-    LeenoUtils.DocumentRefresh(True)
 
 
     # ~DLG.mri(oDoc)

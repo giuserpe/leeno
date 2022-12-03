@@ -471,7 +471,7 @@ def adattaAltezzaRiga(oSheet):
     imposta l'altezza ottimale delle celle
     usata in PL.Menu_adattaAltezzaRiga()
     '''
-
+    LeenoUtils.DocumentRefresh(True)
     # qui il refresh manda in freeze
     # ~LeenoUtils.DocumentRefresh(False)
 

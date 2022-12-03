@@ -356,13 +356,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.invia_voce?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_invia_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/invia_voce_ep</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Invia le voci di Elenco Prezzi selezionate al DP</value>
+            <value>Invia voci al DP</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -586,7 +586,7 @@
             <value>%origin%/icons/invia_voce_ep</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Invia le voci di Elenco Prezzi selezionate al DP</value>
+            <value>Invia voci al DP</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -1103,7 +1103,7 @@
                   <value>%origin%/icons/rinum_cap</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Rinumera Cat, Sottocat - fa i subTotali e Totali Generali</value>
+                  <value>Rinumera Categorie</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1205,7 +1205,7 @@
                   <value>%origin%/icons/sf_Ver</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>APP- Crea Copia del Computo Metrico (con o) Senza Prezzi</value>
+                  <value>Computo senza prezzi</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1222,7 +1222,7 @@
                   <value>%origin%/icons/sf_Ver</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>APP-Converte In Lettere i numeri selezionati (selezione verticale)</value>
+                  <value>Numeri in lettere</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1791,25 +1791,6 @@
               </node>
             </node>
           </node>
-<!--
-          <node oor:name="m32" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Accessori_2.SwitchDesign?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image22</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Modo Bozza On / Off</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
--->
           <node oor:name="m40" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1857,9 +1838,6 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-<!--
-              <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
--->
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.dlg_donazioni</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">

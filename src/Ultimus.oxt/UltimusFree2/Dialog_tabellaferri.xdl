@@ -10,10 +10,10 @@
   <dlg:combobox dlg:style-id="0" dlg:id="ComboBox1" dlg:tab-index="1" dlg:left="10" dlg:top="10" dlg:width="150" dlg:height="10" dlg:help-text="&amp;24.Dialog_tabellaferri.ComboBox1.HelpText" dlg:value="&amp;25.Dialog_tabellaferri.ComboBox1.Text" dlg:hide-inactive-selection="false" dlg:spin="true" dlg:linecount="20">
    <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:UltimusFree2.Menu.RiempiListBox?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:combobox>
-  <dlg:menulist dlg:style-id="1" dlg:id="ListBox1" dlg:tab-index="2" dlg:left="10" dlg:top="22" dlg:width="150" dlg:height="80" dlg:help-text="&amp;26.Dialog_tabellaferri.ListBox1.HelpText"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="134" dlg:top="110" dlg:width="25" dlg:height="15" dlg:help-text="&amp;27.Dialog_tabellaferri.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;28.Dialog_tabellaferri.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:menulist dlg:style-id="1" dlg:id="ListBox1" dlg:tab-index="2" dlg:left="10" dlg:top="22" dlg:width="150" dlg:height="89" dlg:help-text="&amp;26.Dialog_tabellaferri.ListBox1.HelpText"/>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="136" dlg:top="115" dlg:width="25" dlg:height="15" dlg:help-text="&amp;27.Dialog_tabellaferri.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;28.Dialog_tabellaferri.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="103" dlg:top="110" dlg:width="25" dlg:height="15" dlg:help-text="&amp;29.Dialog_tabellaferri.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;30.Dialog_tabellaferri.CommandButton3.Label" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="105" dlg:top="115" dlg:width="25" dlg:height="15" dlg:help-text="&amp;29.Dialog_tabellaferri.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;30.Dialog_tabellaferri.CommandButton3.Label" dlg:button-type="cancel" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -8550,7 +8550,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    description_upd() # aggiorna description.xml - da disattivare prima del rilascio
+    # ~description_upd() # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -9640,100 +9640,6 @@ def stampa_PDF():
     ods2pdf(oDoc, dest)
     # ~DLG.chi(dest)
     # ~rem ----------------------------------------------------------------------
-
-########################################################################
-# ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
-def MENU_debug():
-    Menu_adattaAltezzaRiga()
-    # ~LeenoSheetUtils.setAdatta()
-    return
-    oDoc = LeenoUtils.getDocument() 
-    ctx = LeenoUtils.getComponentContext()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-
-    DLG.mri(oDoc)
-    return
-    oSheet = oDoc.CurrentController.ActiveSheet
-    usedArea = SheetUtils.getUsedArea(oSheet)
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow))
-    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
-
-
-
-
-    # ~oDoc.CurrentController.select(usedArea)
-    # ~LeenoUtils.DocumentRefresh(True)
-    return
-
-    oDoc = LeenoUtils.getDocument() 
-    for el in range (0,100):
-        oDoc.IsAdjustHeightEnabled = True
-    DLG.chi(oDoc.IsAdjustHeightEnabled)
-    # ~LeenoUtils.DocumentRefresh(True)
-
-    return
-    odoc = LeenoUtils.createUnoService(
-        "com.sun.star.sheet.SpreadsheetDocument")
-    odoc.IsAdjustHeightEnabled = True
-
-
-
-    # ~DLG.mri(oDoc)
-
-    # ~oDoc.IsAdjustHeightEnabled
-
-    return
-    # ~lista = ('1', '2', '3')
-    # ~oDialog1.getControl('ComboBox1').addItems(lista, 1)
-    oDoc = LeenoUtils.getDocument() 
-
-    oRanges = oDoc.NamedRanges
-
-    lista = []
-    for i in range(1, 100):
-        if oRanges.hasByName("_Lib_" + str(i)) == True:
-            nSal = i
-            lista.append(str(nSal))
-        else:
-            break
-    DLG.chi(lista)
-    return
-    LeenoUtils.DocumentRefresh(True)
-    oDoc = LeenoUtils.getDocument() 
-    oStyleFam = oDoc.StyleFamilies
-    oTablePageStyles = oStyleFam.getByName("PageStyles")
-    oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
-
-    # ~for el in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
-    # ~'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
-    # ~'PageStyle_Elenco Prezzi'):
-        # ~try:
-            # ~oTablePageStyles.insertByName(el, oPgStyle)
-        # ~except:
-            # ~pass
-    try:
-        oTablePageStyles.insertByName('Page_Style_COPERTINE', oPgStyle)
-    except:
-        pass
-    try:
-        oTablePageStyles.insertByName('PageStyle_COMPUTO_A4', oPgStyle)
-    except:
-        pass
-    try:
-        oTablePageStyles.insertByName('PageStyle_Elenco Prezzi', oPgStyle)
-    except:
-        pass
-    try:
-        oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
-    except:
-        pass
-    try:
-        oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
-    except:
-        pass
-
-    return
-
 
 
 ########################################################################

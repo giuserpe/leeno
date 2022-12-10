@@ -2650,8 +2650,10 @@ def scelta_viste():
                     else:
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
         GotoSheet('CONTABILITA')
-        if nSal == False:
-            SheetUtils.visualizza_PageBreak(False)
+        # ~if nSal == False:
+            # ~SheetUtils.visualizza_PageBreak(False)
+        # ~else:
+            # ~SheetUtils.visualizza_PageBreak(True)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -9642,8 +9644,8 @@ def stampa_PDF():
 ########################################################################
 # ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
-
+    Menu_adattaAltezzaRiga()
+    # ~LeenoSheetUtils.setAdatta()
     return
     oDoc = LeenoUtils.getDocument() 
     ctx = LeenoUtils.getComponentContext()

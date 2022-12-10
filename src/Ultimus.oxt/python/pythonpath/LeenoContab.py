@@ -166,7 +166,7 @@ def svuotaContabilita(oDoc):
     Ricrea il foglio di contabilità partendo da zero.
     '''
     LeenoUtils.DocumentRefresh(False)
-    for n in range(1, 20):
+    for n in range(1, 100):
         if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
             oDoc.NamedRanges.removeByName('_Lib_' + str(n))
             oDoc.NamedRanges.removeByName('_SAL_' + str(n))
@@ -183,35 +183,35 @@ def svuotaContabilita(oDoc):
     oSheet.getCellRangeByName('C1').String = 'CONTABILITA'
     oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
     oSheet.getCellRangeByName('C1').CellBackColor = 16757935
-    oSheet.getCellByPosition(0, 2).String = 'N.'
-    oSheet.getCellByPosition(1, 2).String = 'Articolo\nData'
-    oSheet.getCellByPosition(2, 2).String = 'LAVORAZIONI\nO PROVVISTE'
-    oSheet.getCellByPosition(5, 2).String = 'P.U.\nCoeff.'
-    oSheet.getCellByPosition(6, 2).String = 'Lung.'
-    oSheet.getCellByPosition(7, 2).String = 'Larg.'
-    oSheet.getCellByPosition(8, 2).String = 'Alt.\nPeso'
-    oSheet.getCellByPosition(9, 2).String = 'Quantità\nPositive'
-    oSheet.getCellByPosition(11, 2).String = 'Quantità\nNegative'
-    oSheet.getCellByPosition(13, 2).String = 'Prezzo\nunitario'
-    oSheet.getCellByPosition(15, 2).String = 'Importi'
-    oSheet.getCellByPosition(16, 2).String = 'Incidenza\nsul totale'
-    oSheet.getCellByPosition(17, 2).String = 'Sicurezza\ninclusa'
-    oSheet.getCellByPosition(18, 2).String = 'importo totale\nsenza errori'
-    oSheet.getCellByPosition(19, 2).String = 'Lib.\nN.'
-    oSheet.getCellByPosition(20, 2).String = 'Lib.\nP.'
-    oSheet.getCellByPosition(22, 2).String = 'flag'
-    oSheet.getCellByPosition(23, 2).String = 'SAL\nN.'
-    oSheet.getCellByPosition(25, 2).String = 'Importi\nSAL parziali'
-    oSheet.getCellByPosition(27, 2).String = 'Sicurezza\nunitaria'
-    oSheet.getCellByPosition(28, 2).String = 'Materiali\ne Noli €'
-    oSheet.getCellByPosition(29, 2).String = 'Incidenza\nMdO %'
-    oSheet.getCellByPosition(30, 2).String = 'Importo\nMdO'
-    oSheet.getCellByPosition(31, 2).String = 'Super Cat'
-    oSheet.getCellByPosition(32, 2).String = 'Cat'
-    oSheet.getCellByPosition(33, 2).String = 'Sub Cat'
+    oSheet.getCellRangeByName('A3').String = 'N.'
+    oSheet.getCellRangeByName('B3').String = 'Articolo\nData'
+    oSheet.getCellRangeByName('C3').String = 'LAVORAZIONI\nO PROVVISTE'
+    oSheet.getCellRangeByName('F3').String = 'P.U.\nCoeff.'
+    oSheet.getCellRangeByName('G3').String = 'Lung.'
+    oSheet.getCellRangeByName('H3').String = 'Larg.'
+    oSheet.getCellRangeByName('I3').String = 'Alt.\nPeso'
+    oSheet.getCellRangeByName('J3').String = 'Quantità\nPositive'
+    oSheet.getCellRangeByName('L3').String = 'Quantità\nNegative'
+    oSheet.getCellRangeByName('N3').String = 'Prezzo\nunitario'
+    oSheet.getCellRangeByName('P3').String = 'Importi'
+    oSheet.getCellRangeByName('Q3').String = 'Incidenza\nsul totale'
+    oSheet.getCellRangeByName('R3').String = 'Sicurezza\ninclusa'
+    oSheet.getCellRangeByName('S3').String = 'importo totale\nsenza errori'
+    oSheet.getCellRangeByName('T3').String = 'Lib.\nN.'
+    oSheet.getCellRangeByName('U3').String = 'Lib.\nP.'
+    oSheet.getCellRangeByName('W3').String = 'flag'
+    oSheet.getCellRangeByName('X3').String = 'SAL\nN.'
+    oSheet.getCellRangeByName('Z3').String = 'Importi\nSAL parziali'
+    oSheet.getCellRangeByName('AB3').String = 'Sicurezza\nunitaria'
+    oSheet.getCellRangeByName('AC3').String = 'Materiali\ne Noli €'
+    oSheet.getCellRangeByName('AD3').String = 'Incidenza\nMdO %'
+    oSheet.getCellRangeByName('AE3').String = 'Importo\nMdO'
+    oSheet.getCellRangeByName('AF3').String = 'Super Cat'
+    oSheet.getCellRangeByName('AG3').String = 'Cat'
+    oSheet.getCellRangeByName('AH3').String = 'Sub Cat'
     #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
     #  oSheet.getCellByPosition(35,2).String = 'tag C'
-    oSheet.getCellByPosition(36, 2).String = 'Importi\nsenza errori'
+    oSheet.getCellRangeByName('AK3').String = 'Importi\nsenza errori'
     oSheet.getCellByPosition(0, 2).Rows.Height = 800
     #  colore colonne riga di intestazione
     oSheet.getCellRangeByPosition(0, 2, 36, 2).CellStyle = 'comp Int_colonna_R'
@@ -220,15 +220,14 @@ def svuotaContabilita(oDoc):
     oSheet.getCellRangeByPosition(0, 0, 0, 3).Rows.OptimalHeight = True
     #  riga di controllo importo
     oSheet.getCellRangeByPosition(0, 1, 36, 1).CellStyle = 'comp In testa'
-    oSheet.getCellByPosition(2, 1).String = 'QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellRangeByName('C2').String = 'QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
-    oSheet.getCellByPosition(13, 1).String = 'TOTALE:'
-    oSheet.getCellByPosition(20, 1).String = 'SAL SUCCESSIVO:'
+    oSheet.getCellRangeByName('N2').String = 'TOTALE:'
+    oSheet.getCellRangeByName('U2').String = 'SAL SUCCESSIVO:'
 
-    oSheet.getCellByPosition(25, 1).Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
+    oSheet.getCellRangeByName('Z2').Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
 
-    oSheet.getCellByPosition(15,
-                             1).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
+    oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
     oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
     oSheet.getCellByPosition(
         17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
@@ -236,7 +235,7 @@ def svuotaContabilita(oDoc):
     oSheet.getCellByPosition(
         28, 1).Formula = '=SUBTOTAL(9;AC3:AC4)'  # importo materiali
     oSheet.getCellByPosition(29,
-                             1).Formula = '=AE2/Z2'  # Incidenza manodopera %
+                             1).Formula = '=AE2/Z2/100'  # Incidenza manodopera %
     oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
     oSheet.getCellByPosition(
         30, 1).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
@@ -386,6 +385,7 @@ def struttura_CONTAB():
                     PL.struttura_ComputoM()
                 pass
             return
+    # ~LeenoUtils.DocumentRefresh(True)
 
 def GeneraLibretto(oDoc):
     '''
@@ -412,8 +412,7 @@ def GeneraLibretto(oDoc):
     # ~return
     #trovo il numero del nuovo sal
     nSal = 0
-    idxsal = int(cfg.read('Contabilita', 'idxsal'))
-    for i in reversed(range(1, idxsal)):
+    for i in reversed(range(1, 100)):
         if oRanges.hasByName("_Lib_" + str(i)) == True:
             nSal = i +1
             break
@@ -1147,6 +1146,8 @@ def GeneraAttiContabili():
     '''
     @@ DA DOCUMENTARE
     '''
+    PL.chiudi_dialoghi()
+
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1162,11 +1163,11 @@ def GeneraAttiContabili():
     # ~except:
         # ~return
     GeneraRegistro(oDoc)
+    LeenoUtils.DocumentRefresh(True)
     PL.GotoSheet('CONTABILITA')
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     # ~Dialogs.Info(Title = 'Voci registrate!',
         # ~Text="La generazione degli allegati contabili è stata completata.")
-    LeenoUtils.DocumentRefresh(False)
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

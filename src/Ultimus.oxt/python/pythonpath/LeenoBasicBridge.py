@@ -142,7 +142,7 @@ def voce_breve():
     voce_breve
     '''
     callAlert()
-    PL.voce_breve()
+    PL.Menu_voce_breve()
 
 
 def tante_analisi_in_ep():

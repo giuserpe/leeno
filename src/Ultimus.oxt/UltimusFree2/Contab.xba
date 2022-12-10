@@ -988,6 +988,7 @@ Sub azzera_atti
 		&amp; &quot;Ti sarà chiesta conferma ad ogni passo.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Sei sicuro di volerlo fare?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)
 	If testa = 7 Then GoTo fine:
+	chiudi_dialoghi
 	For i = 0 To 100
 		annulla_tutti_gli_atti
 	Next
@@ -995,10 +996,11 @@ Sub azzera_atti
 End Sub
 rem ######################################################################
 Sub annulla_tutti_gli_atti
+chiudi_dialoghi
 ScriptPy(&quot;LeenoUtils&quot;, &quot;DocumentRefresh&quot;, False)
 	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
 oSheetCont.Unprotect &quot;&quot;
-chiudi_dialoghi
+
 	oRanges = ThisComponent.NamedRanges
 	nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 	prefix = &quot;_Lib_&quot;
@@ -1046,6 +1048,7 @@ Function Annulla_atto_contabile (oNomeSheet As String, Optional msg As Integer)&
 		Exit Function
 	End If
 procedi:
+chiudi_dialoghi
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	select Case oSheet.Name
 		Case &quot;CONTABILITA&quot;
@@ -1270,7 +1273,7 @@ rem recuperno l&apos;ultimo numero di pagina usato (serve in caso di libretto un
 rem ----------------------------------------------------------------------
 rem PRIMA RIGA
  	daVoce = InputBox (&quot;Da voce n.:&quot;, &quot;REGISTRA&quot;, daVoce)
- 	odaVoce=uFindString_1(daVoce, oSheetCont, 0)
+ 	oaVoce=	ScriptPy(&quot;SheetUtils.py&quot;,&quot;uFindString&quot;, daVoce, oSheetCont)
 	With odaVoce.RangeAddress
 		lrow =.StartRow
 	End With
@@ -1287,7 +1290,8 @@ Dim oCellRange as object
 &apos;end sub
 
  	aVoce = InputBox (&quot;A voce n.:&quot;, &quot;REGISTRA&quot;, aVoce)
- 	oaVoce=uFindString_1(aVoce, oSheetCont, 0)
+&apos; 	oaVoce=uFindString_1(aVoce, oSheetCont, 0)
+ 	oaVoce=	ScriptPy(&quot;SheetUtils.py&quot;,&quot;uFindString&quot;, aVoce, oSheetCont)
 	lrow =oaVoce.RangeAddress.StartRow &apos; posizione ultima voce
 	sStRange = Circoscrive_Voce_Computo_Att (lrow)
 	ultimariga =sStRange.RangeAddress.EndRow &apos;ultima riga dell&apos;ultima voce

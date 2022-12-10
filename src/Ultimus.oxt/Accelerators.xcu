@@ -30,35 +30,45 @@
           </prop>
         </node>
         <!--CTRL-1-->
+<!--
         <node oor:name="1_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_ElencoPrezzi</value>
           </prop>
         </node>
+-->
         <!--CTRL-2-->
+<!--
         <node oor:name="2_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
         <!--CTRL-3-->
+<!--
         <node oor:name="3_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Computo</value>
           </prop>
         </node>
+-->
         <!--CTRL-4-->
+<!--
         <node oor:name="4_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_M1</value>
           </prop>
         </node>
+-->
         <!--CTRL-5-->
+<!--
         <node oor:name="5_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
         <!--CTRL-6-->
         <node oor:name="6_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -188,7 +198,6 @@
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
           </prop>
         </node>
-        
         <!--CTRL-SHIFT-H-->
         <node oor:name="H_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command" oor:op="fuse">
@@ -262,7 +271,6 @@
           </prop>
         </node>
         <!--SHIFT-ALT-H-->
-
         <!--ALT-0-->
         <!--
              <node oor:name="0_MOD2" oor:op="replace">

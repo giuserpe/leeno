@@ -208,15 +208,26 @@ def parseXML(data, defaultTitle):
  
                     if descAttr['breve'] == descAttr['estesa']:
                         textEstesa = madre +  descAttr['breve'] + '\n'
+                try:
+                    if 'breve' in descAttr and not 'estesa' in descAttr:
+                        if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                            textEstesa = madre + descAttr['breve'] + '\n'
+                        else:
+                            textEstesa = madre + descAttr['breve'] + '\n'
+                except:
+                    pass
 
-                if 'breve' in descAttr and not 'estesa' in descAttr:
-                    if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-                        textEstesa = madre + descAttr['breve'] + '\n'
-                    else:
-                        textEstesa = madre + descAttr['breve'] + '\n'
+        while '  ' in textBreve:
+            textBreve = textBreve.replace('  ', ' ')
+        while '\n\n' in textBreve:
+            textBreve = textBreve.replace('\n\n', '\n')
+        while '  ' in textEstesa:
+            textEstesa = textEstesa.replace('  ', ' ')
+        while '\n\n' in textEstesa:
+            textEstesa = textEstesa.replace('\n\n', '\n')
 
-        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
-        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'")
+        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','')
+        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','')
 
         if textBreve != "":
             textBreve = textBreve[: -len('\n')]

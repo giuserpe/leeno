@@ -210,6 +210,8 @@ def MENU_ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
     '''
+    LeenoUtils.DocumentRefresh(False)
+
     filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
     if filename is None:
         return
@@ -254,7 +256,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -498,13 +500,14 @@ def MENU_emilia_romagna():
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
-
 def MENU_umbria():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Umbria
     
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
+    # ~SheetUtils.MENU_unisci_fogli()
+    PL.GotoSheet("unione_fogli")
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -533,6 +536,24 @@ def MENU_umbria():
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
+
+
+def MENU_ValdAosta():
+    '''Non va: spesso il file di origine non è ordinato'''
+    oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.Columns.insertByIndex(3, 1)
+    primo_nome = oSheet.Name
+    oSheet.Name = 'COMPUTO'
+    LeenoSheetUtils.MENU_elimina_righe_vuote()
+    oSheet.Name = oSheet.Name
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
+    for i in range(0, fine):
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 2:
+            madre = oSheet.getCellByPosition(1, i).String
+        elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
+            oSheet.getCellByPosition(1, i).String = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
 
 
 def MENU_Piemonte():

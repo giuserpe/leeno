@@ -107,17 +107,24 @@ def isLeenoDocument():
 
 
 def DocumentRefresh(boo):
+    '''
+    Abilita / disabilita il refresh per accelerare le procedure
+    '''
     oDoc = getDocument()
+    # l'ordine che segue non va cambiato!!!
     if boo == True:
+        oDoc.IsAdjustHeightEnabled = True
         oDoc.enableAutomaticCalculation(True)
+        oDoc.removeActionLock()
+        oDoc.resetActionLocks()
         oDoc.unlockControllers()
         oDoc.calculateAll()
-        # ~oDoc.removeActionLock()
 
     elif boo == False:
+        oDoc.IsAdjustHeightEnabled = False
         oDoc.enableAutomaticCalculation(False)
-        oDoc.lockControllers()
-        # ~oDoc.addActionLock()    
+        oDoc.lockControllers #disattiva l'eco a schermo
+        oDoc.addActionLock()
 
 
 def getGlobalVar(name):

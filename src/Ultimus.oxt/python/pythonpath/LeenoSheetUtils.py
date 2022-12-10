@@ -471,7 +471,7 @@ def adattaAltezzaRiga(oSheet):
     imposta l'altezza ottimale delle celle
     usata in PL.Menu_adattaAltezzaRiga()
     '''
-
+    LeenoUtils.DocumentRefresh(True)
     # qui il refresh manda in freeze
     # ~LeenoUtils.DocumentRefresh(False)
 
@@ -482,7 +482,9 @@ def adattaAltezzaRiga(oSheet):
 
     usedArea = SheetUtils.getUsedArea(oSheet)
     oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
-
+    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    return
     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
     # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
     if float(PL.loVersion()[:5].replace('.', '')) >= 642:
@@ -732,7 +734,7 @@ def numeraVoci(oSheet, lrow, tutte):
     tutte { boolean }  : True  rinumera tutto
                        False rinumera dalla voce corrente in giù
     '''
-    LeenoUtils.DocumentRefresh(False)
+    #qui il refresh è inutile
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1
 
@@ -754,7 +756,6 @@ def numeraVoci(oSheet, lrow, tutte):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
                 n = n + 1
-    LeenoUtils.DocumentRefresh(True)
 
 
 # ###############################################################
@@ -780,6 +781,8 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     else:
         sString = 'TOTALI COMPUTO'
     lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    if lrow == None:
+        lrow = SheetUtils.getLastUsedRow(oSheet)
     progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
     progress.setLimits(0, lrow)
     progress.setValue(0)
@@ -797,5 +800,7 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     progress.hide()
     LeenoUtils.DocumentRefresh(True)
     lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
+    if lrow_ == None:
+        lrow_ = SheetUtils.getLastUsedRow(oSheet)
     PL._gotoCella(1, 4)
     Dialogs.Info(Title='Ricerca conclusa', Text='Eliminate ' + str(lrow - lrow_) + ' righe vuote.')

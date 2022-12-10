@@ -20,8 +20,9 @@ Sub _nuove_icone
 &apos;https://icons8.com/icon/set/tools/all
 &apos;https://openclipart.org/search/?query=dannya&amp;page=1
 &apos;	print LeenO_path
-	LeenO_path = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt&quot;
-	sURL = LeenO_path +&quot;/icons/image37.svg&quot;
+&apos;	LeenO_path = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt&quot;
+&apos;	sURL = LeenO_path +&quot;/icons/parz.svg&quot;
+	sURL = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/svg/parz.svg&quot;
 	sName = Replace_G(sURL, &quot;.svg&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
 	Filecopy sURL, sNewURL

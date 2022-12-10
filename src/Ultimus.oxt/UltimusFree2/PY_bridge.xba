@@ -15,27 +15,6 @@
 
 Dim oDialogViste_N as Object
 
-SUB chiudi_dialoghi &apos; chiude tutte le dialog
-	if Not isNull (oDialogViste_N) then oDialogViste_N.endExecute() 
-Exit Sub 
-			&apos; modificare qui se si aggiungono delle dialog
-	if Not isNull (oDialogViste_A) then
-		oDialogViste_A.endExecute()
-		else
-		print &quot;prova&quot;
-    endif
-&apos;	if Not isNull (oDialogViste_EP) then oDialogViste_EP.endExecute() 
-&apos;	if Not isNull (oDialogViste_AN) then oDialogViste_AN.endExecute() 
-&apos;	if Not isNull (oDialogViste_N) then oDialogViste_N.endExecute() 
-	
-&apos;	if Not isNull (oDialogScenari_A) then oDialogScenari_A.endExecute()
-&apos;	if Not isNull (oDialogScenari_EP) then oDialogScenari_EP.endExecute() 
-&apos;	if Not isNull (oDialogScenari_AN) then oDialogScenari_AN.endExecute() 
-&apos;	if Not isNull (oDialogScenari_2) then oDialogScenari_2.endExecute()
-&apos;	if Not isNull (oDlgMain) then CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain).endExecute()
-END SUB
-
-
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
 
 	&apos; questa funzione sfrutta il servizio dispatcher di LeenO per eseguire da basic
@@ -116,10 +95,6 @@ Sub ssUltimus
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;ssUltimus&quot;)
 End Sub
 rem ######################################################################
-Sub voce_breve
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;voce_breve&quot;)
-End Sub
-rem ######################################################################
 Sub tante_analisi_in_ep
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;tante_analisi_in_ep&quot;)
 End Sub
@@ -135,10 +110,6 @@ rem ######################################################################
 Sub riordina_ElencoPrezzi
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;riordina_ElencoPrezzi&quot;)
 End Sub
-rem ######################################################################
-&apos;Sub struttura_Elenco
-&apos;	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;struttura_Elenco&quot;)
-&apos;End Sub
 rem ######################################################################
 Sub cancella_voci_non_usate
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)
@@ -172,9 +143,9 @@ Sub donazioni
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;donazioni&quot;)
 End Sub
 rem ######################################################################
-Sub invia_voce
-	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_invia_voce&quot;)
-End Sub
+&apos;Sub invia_voce
+&apos;	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_invia_voce&quot;)
+&apos;End Sub
 rem ######################################################################
 Sub GeneraAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)
@@ -190,6 +161,10 @@ End Sub
 rem ######################################################################
 Sub MENU_suffisso_codice
 	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_suffisso_codice&quot;)
+End Sub
+rem ######################################################################
+Sub chiudi_dialoghi
+	ScriptPy(&quot;pyleeno&quot;,&quot;chiudi_dialoghi&quot;)
 End Sub
 
 </script:module>

@@ -24,17 +24,17 @@ def datiVoceComputo (oSheet, lrow):
     num      = oSheet.getCellByPosition(0,  i+1).String
     art      = oSheet.getCellByPosition(1,  i+1).String 
     desc     = oSheet.getCellByPosition(2,  i+1).String
-    quantP    = oSheet.getCellByPosition(9,    f).Value
+    quantP   = oSheet.getCellByPosition(9,    f).Value
     mdo      = oSheet.getCellByPosition(30,   f).Value
-    sic      = oSheet.getCellByPosition(17,    f).Value
+    sic      = oSheet.getCellByPosition(17,   f).Value
     voce = []
     REG = []
     SAL = []
     if oSheet.Name in ('CONTABILITA'):
-        quantN = 1
+        quantN = ''
         if quantP < 0:
             quantN = quantP
-            quantP = 1
+            quantP = ''
         data     = oSheet.getCellByPosition(1,  i+2).String
         um       = oSheet.getCellByPosition(9,  i+1).String
         Nlib     = int(oSheet.getCellByPosition(19, i+1).Value)
@@ -48,7 +48,7 @@ def datiVoceComputo (oSheet, lrow):
 
         REG = ((num + '\n' + art + '\n' + data), desc, Nlib, Plib, um, quantP,
             quantN, prezzo, importo)#, sic, mdo, flag, nSal)
-        if quantP != 0:
+        if quantP != '':
             quant = quantP
         else:
             quant = quantN

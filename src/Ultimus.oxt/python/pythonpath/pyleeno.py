@@ -2565,7 +2565,12 @@ def scelta_viste():
                 uSal = i -1
                 break
         nSal = False
+        # Mostra SAL n.
         oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
+        try:
+            oDialog1.getControl('ComboBox1').Text = listaSal[-1]
+        except:
+            pass
         if len(listaSal) != 0:
             oDialog1.getControl('CommandButton24').Label = "Elimina atti SAL n. " + str(len(listaSal))
         else:
@@ -2573,7 +2578,7 @@ def scelta_viste():
             oDialog1.getControl('CommandButton25').Enable = False
             oDialog1.getControl('CommandButton27').Enable = False
 
-
+        #Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
         sString.Text = cfg.read('Contabilita', 'ricicla_da')
 
@@ -8206,7 +8211,6 @@ def DlgPDF():
 
     lista = list(formulas.values())
 
-    # ~oDlgPDF.getControl("ComboBox1").Text = "Prova"
     oDlgPDF.getControl("ComboBox1").addItems(lista, 1)
 
     oDlgPDF.execute()
@@ -8845,9 +8849,6 @@ def descrizione_in_una_colonna(flag=False):
         if oDoc.NamedRanges.hasByName("_Lib_1"):
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text="Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.")
-            # ~DLG.MsgBox(
-                # ~"Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
-                # ~'ATTENZIONE!')
             return
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByName('C23').merge(flag)
@@ -9642,6 +9643,100 @@ def stampa_PDF():
     # ~rem ----------------------------------------------------------------------
 
 
+########################################################################
+# ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
+def MENU_debug():
+    LeenoContab.annulla_atti_contabili()
+    return
+    Menu_adattaAltezzaRiga()
+    # ~LeenoSheetUtils.setAdatta()
+    return
+    oDoc = LeenoUtils.getDocument() 
+    ctx = LeenoUtils.getComponentContext()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+
+    DLG.mri(oDoc)
+    return
+    oSheet = oDoc.CurrentController.ActiveSheet
+    usedArea = SheetUtils.getUsedArea(oSheet)
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow))
+    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+
+
+
+
+    # ~oDoc.CurrentController.select(usedArea)
+    # ~LeenoUtils.DocumentRefresh(True)
+    return
+
+    oDoc = LeenoUtils.getDocument() 
+    for el in range (0,100):
+        oDoc.IsAdjustHeightEnabled = True
+    DLG.chi(oDoc.IsAdjustHeightEnabled)
+    # ~LeenoUtils.DocumentRefresh(True)
+
+    return
+    odoc = LeenoUtils.createUnoService(
+        "com.sun.star.sheet.SpreadsheetDocument")
+    odoc.IsAdjustHeightEnabled = True
+
+
+
+    # ~DLG.mri(oDoc)
+
+    # ~oDoc.IsAdjustHeightEnabled
+
+    return
+    # ~lista = ('1', '2', '3')
+    # ~oDialog1.getControl('ComboBox1').addItems(lista, 1)
+    oDoc = LeenoUtils.getDocument() 
+
+    oRanges = oDoc.NamedRanges
+
+    lista = []
+    for i in range(1, 100):
+        if oRanges.hasByName("_Lib_" + str(i)) == True:
+            nSal = i
+            lista.append(str(nSal))
+        else:
+            break
+    DLG.chi(lista)
+    return
+    LeenoUtils.DocumentRefresh(True)
+    oDoc = LeenoUtils.getDocument() 
+    oStyleFam = oDoc.StyleFamilies
+    oTablePageStyles = oStyleFam.getByName("PageStyles")
+    oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
+
+    # ~for el in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
+    # ~'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
+    # ~'PageStyle_Elenco Prezzi'):
+        # ~try:
+            # ~oTablePageStyles.insertByName(el, oPgStyle)
+        # ~except:
+            # ~pass
+    try:
+        oTablePageStyles.insertByName('Page_Style_COPERTINE', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_COMPUTO_A4', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_Elenco Prezzi', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
+    except:
+        pass
+    try:
+        oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
+    except:
+        pass
+
+    return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # ~g_exportedScripts = donazioni

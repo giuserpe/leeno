@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:officeooo="http://openoffice.org/2009/office" office:version="1.3" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:creation-date>2009-04-16T11:32:02.64</meta:creation-date><meta:editing-duration>P1DT16H12M29S</meta:editing-duration><meta:editing-cycles>240</meta:editing-cycles><meta:generator>LibreOffice/7.4.2.3$Windows_X86_64 LibreOffice_project/382eef1f22670f7f4118c8c2dd222ec7ad009daf</meta:generator><dc:date>2022-12-10T13:26:29.221000000</dc:date><meta:document-statistic meta:table-count="0" meta:image-count="2" meta:object-count="0" meta:page-count="4" meta:paragraph-count="92" meta:word-count="469" meta:character-count="3592" meta:non-whitespace-character-count="3281"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
+ <office:meta><meta:creation-date>2009-04-16T11:32:02.640000000</meta:creation-date><meta:editing-duration>P1DT16H53M51S</meta:editing-duration><meta:editing-cycles>243</meta:editing-cycles><meta:generator>LibreOffice/7.4.2.3$Windows_X86_64 LibreOffice_project/382eef1f22670f7f4118c8c2dd222ec7ad009daf</meta:generator><dc:date>2022-12-10T17:05:28.938000000</dc:date><meta:document-statistic meta:table-count="0" meta:image-count="2" meta:object-count="0" meta:page-count="4" meta:paragraph-count="92" meta:word-count="469" meta:character-count="3592" meta:non-whitespace-character-count="3281"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="long">69991</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="long">95250</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
    <config:config-item config:name="ViewAreaWidth" config:type="long">26248</config:config-item>
-   <config:config-item config:name="ViewAreaHeight" config:type="long">13778</config:config-item>
+   <config:config-item config:name="ViewAreaHeight" config:type="long">14466</config:config-item>
    <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
    <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="long">11250</config:config-item>
-     <config:config-item config:name="ViewTop" config:type="long">81693</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="long">3699</config:config-item>
+     <config:config-item config:name="ViewTop" config:type="long">2131</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="long">69991</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="long">95250</config:config-item>
      <config:config-item config:name="VisibleRight" config:type="long">26247</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="long">83767</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="long">109714</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -96,7 +96,7 @@
    <config:config-item config:name="UnxForceZeroExtLeading" config:type="boolean">false</config:config-item>
    <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
    <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">true</config:config-item>
-   <config:config-item config:name="Rsid" config:type="int">29225665</config:config-item>
+   <config:config-item config:name="Rsid" config:type="int">36764876</config:config-item>
    <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">true</config:config-item>
    <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
    <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
@@ -174,7 +174,7 @@
   <draw:hatch draw:name="hatch" draw:style="single" draw:color="#3465a4" draw:distance="0.02cm" draw:rotation="0"/>
   <style:default-style style:family="graphic">
    <style:graphic-properties svg:stroke-color="#000000" draw:fill-color="#99ccff" fo:wrap-option="no-wrap" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:start-line-spacing-horizontal="0.283cm" draw:start-line-spacing-vertical="0.283cm" draw:end-line-spacing-horizontal="0.283cm" draw:end-line-spacing-vertical="0.283cm" style:flow-with-text="false"/>
-   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
+   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" style:font-independent-line-spacing="false">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" loext:color-lum-mod="100%" loext:color-lum-off="0%" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="en" fo:country="US" style:letter-kerning="true" style:font-name-asian="Andale Sans UI" style:font-size-asian="12pt" style:language-asian="en" style:country-asian="US" style:font-name-complex="Tahoma1" style:font-size-complex="12pt" style:language-complex="en" style:country-complex="US"/>
@@ -366,578 +366,359 @@
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page" fo:background-color="#bbe33d"/>
    <style:text-properties officeooo:rsid="0109af44" officeooo:paragraph-rsid="0109af44" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="010990ec" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="018ae96d" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="016c51c8" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="010990ec" officeooo:paragraph-rsid="010990ec" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="00122372" officeooo:paragraph-rsid="00741d8d" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
+  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#2a6099" loext:opacity="100%" officeooo:paragraph-rsid="01a932ed" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:color="#2a6099" loext:opacity="100%" officeooo:paragraph-rsid="008a353f"/>
-  </style:style>
-  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:color="#2a6099" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" officeooo:paragraph-rsid="008a353f" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:color="#2a6099" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" officeooo:paragraph-rsid="01a5d5e9" fo:background-color="transparent" style:font-name-asian="Liberation Mono" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-name-complex="Liberation Mono" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0007e006" officeooo:paragraph-rsid="012ffa15" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0007e006" officeooo:paragraph-rsid="0007e006" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0007e006" officeooo:paragraph-rsid="0175c56c" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000afdac" officeooo:paragraph-rsid="00357fd3" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000afdac" officeooo:paragraph-rsid="015017ab" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="001582fb" officeooo:paragraph-rsid="0059f47a" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0058868b" officeooo:paragraph-rsid="0058868b" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0059febf" officeooo:paragraph-rsid="0059febf" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="00c2f0aa" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="0059f47a" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="018d86ad" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="018ae96d" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="001b73e1" officeooo:paragraph-rsid="015017ab" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0008b692" officeooo:paragraph-rsid="0008b692" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000b8aea" officeooo:paragraph-rsid="000bc665" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00690e03" officeooo:paragraph-rsid="00690e03" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P38" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000bc665" officeooo:paragraph-rsid="000bc665" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P39" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00155b5b" officeooo:paragraph-rsid="00155b5b" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P40" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000cde6c" officeooo:paragraph-rsid="000cde6c" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P41" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:padding-left="0cm" fo:padding-right="0cm" fo:padding-top="0cm" fo:padding-bottom="0.074cm" fo:border-left="none" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.06pt solid #000000" style:join-border="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="0059febf" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P42" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P43" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="0007e006" officeooo:paragraph-rsid="00173334" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P44" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P45" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="01bbf006" officeooo:paragraph-rsid="01bbf006" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P46" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:line-height="100%" style:writing-mode="page"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="006baa90" officeooo:paragraph-rsid="006baa90" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P47" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="00122372" officeooo:paragraph-rsid="010d93d4" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P48" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="00122372" officeooo:paragraph-rsid="012ffa15" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P49" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="0109af44" officeooo:paragraph-rsid="0109af44" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P50" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:padding="0.074cm" fo:border-left="none" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.06pt solid #000000" style:join-border="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="001e2fd4" officeooo:paragraph-rsid="00255756" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P51" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:line-height="100%" style:writing-mode="page"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="00299eb8" officeooo:paragraph-rsid="00299eb8" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P52" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="01266163" fo:background-color="#ffff00" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P53" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="00c2f0aa" fo:background-color="#ffff00" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
-  </style:style>
-  <style:style style:name="P54" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00122372" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
-  </style:style>
-  <style:style style:name="P55" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="014fd185" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P56" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="solid" draw:fill-color="#bbe33d" draw:opacity="80%"/>
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:break-before="page" fo:background-color="#bbe33d"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="0109af44" officeooo:paragraph-rsid="0109af44" fo:background-color="transparent" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P57" style:family="paragraph" style:parent-style-name="Standard" style:master-page-name="">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" style:page-number="auto"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P58" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="01266163" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P59" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0190974e" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P60" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0175c56c" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P61" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0157dfcd" fo:background-color="transparent"/>
-  </style:style>
-  <style:style style:name="P62" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="9pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P63" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="9pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P64" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="solid" style:text-line-through-type="single" style:font-name="Lucida Console" fo:font-size="9pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" officeooo:paragraph-rsid="008a36cb" fo:background-color="transparent" style:font-size-asian="9pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="18pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P65" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P66" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P67" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00157034" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P68" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P69" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01af8aa0" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P70" style:family="paragraph" style:parent-style-name="Standard">
-   <loext:graphic-properties draw:fill="none"/>
-   <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent"/>
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="017bc5ff" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P71" style:family="paragraph" style:parent-style-name="Standard">
-   <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
-   <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P72" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="017bc5ff" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P73" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P74" style:family="paragraph" style:parent-style-name="Standard">
-   <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
-   <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P75" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01b0724a" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P76" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01af8aa0" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P77" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" officeooo:paragraph-rsid="008a353f" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P78" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" officeooo:paragraph-rsid="003dfdd4" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P79" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="003dfdd4" officeooo:paragraph-rsid="003dfdd4" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="14pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="P80" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="00357fd3" officeooo:paragraph-rsid="00357fd3" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P81" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Standard">
    <loext:graphic-properties draw:fill="solid" draw:fill-color="#bbe33d" draw:opacity="80%"/>
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:background-color="#bbe33d">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties fo:color="#ffffff" loext:opacity="100%" fo:font-size="40pt" officeooo:rsid="0109af44" officeooo:paragraph-rsid="012d7846" fo:background-color="transparent" style:font-size-asian="40pt" style:font-size-complex="40pt"/>
   </style:style>
-  <style:style style:name="P82" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="01266163"/>
-  </style:style>
-  <style:style style:name="P83" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="014b5e29"/>
-  </style:style>
-  <style:style style:name="P84" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:rsid="00122372" officeooo:paragraph-rsid="014ec253"/>
-  </style:style>
-  <style:style style:name="P85" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="00c2f0aa"/>
-  </style:style>
-  <style:style style:name="P86" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:font-weight="bold" officeooo:rsid="002043b4" officeooo:paragraph-rsid="0020b53c" fo:background-color="transparent" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="P87" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties fo:font-style="normal" officeooo:rsid="019a4f69" officeooo:paragraph-rsid="019a4f69" fo:background-color="transparent" style:font-style-asian="normal" style:font-style-complex="normal"/>
-  </style:style>
-  <style:style style:name="P88" style:family="paragraph" style:parent-style-name="Standard">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="00549c0a"/>
-  </style:style>
-  <style:style style:name="P89" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L8">
+  <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L8">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#2a6099" loext:opacity="100%" officeooo:paragraph-rsid="008a353f"/>
   </style:style>
-  <style:style style:name="P90" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L8">
+  <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L8">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#2a6099" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" officeooo:paragraph-rsid="008a353f" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P91" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="01266163"/>
   </style:style>
-  <style:style style:name="P92" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1" style:master-page-name="">
+  <style:style style:name="P38" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1" style:master-page-name="">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" style:page-number="auto"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P93" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P39" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="01266163" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P94" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P40" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0190974e" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P95" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P41" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0175c56c" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P96" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P42" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" officeooo:paragraph-rsid="0157dfcd" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P97" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P43" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0007e006" officeooo:paragraph-rsid="0175c56c" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P98" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P44" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0058868b" officeooo:paragraph-rsid="0058868b" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P99" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P45" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0059febf" officeooo:paragraph-rsid="0059febf" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P100" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P46" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="00c2f0aa" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P101" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P47" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P102" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P48" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P103" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P49" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="0059f47a" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P104" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P50" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="018d86ad" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P105" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P51" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00122372" officeooo:paragraph-rsid="018ae96d" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P106" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P52" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="001b73e1" officeooo:paragraph-rsid="015017ab" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P107" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P53" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000afdac" officeooo:paragraph-rsid="015017ab" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P108" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P54" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0008b692" officeooo:paragraph-rsid="0008b692" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P109" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P55" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000b8aea" officeooo:paragraph-rsid="000bc665" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P110" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P56" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00690e03" officeooo:paragraph-rsid="00690e03" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P111" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P57" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000bc665" officeooo:paragraph-rsid="000bc665" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P112" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P58" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00155b5b" officeooo:paragraph-rsid="00155b5b" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P113" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P59" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="000cde6c" officeooo:paragraph-rsid="000cde6c" fo:background-color="transparent" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P114" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P60" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="01266163" fo:background-color="#ffff00" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P115" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P61" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:paragraph-rsid="00c2f0aa" fo:background-color="#ffff00" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="P116" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P62" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P117" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L4">
+  <style:style style:name="P63" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L4">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="0007e006" officeooo:paragraph-rsid="00173334" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P118" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L4">
+  <style:style style:name="P64" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L4">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="01bbf006" officeooo:paragraph-rsid="01bbf006" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P119" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P65" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="001582fb" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P120" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P66" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:line-height="100%" style:writing-mode="page"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="006baa90" officeooo:paragraph-rsid="006baa90" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P121" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P67" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false" fo:line-height="100%" style:writing-mode="page"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="00299eb8" officeooo:paragraph-rsid="00299eb8" fo:background-color="transparent" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P122" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P68" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00122372" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="P123" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P69" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="014fd185" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P124" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P70" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="9pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P125" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P71" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="9pt" fo:font-weight="normal" officeooo:rsid="01682376" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P126" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P72" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00157034" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P127" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P73" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01af8aa0" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P128" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P74" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P129" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P75" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="01682376" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P130" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P76" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <loext:graphic-properties draw:fill="none"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#c9211e" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="017bc5ff" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P131" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P77" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="017bc5ff" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P132" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P78" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <loext:graphic-properties draw:fill="none" draw:fill-gradient-name="gradient" draw:fill-hatch-name="hatch"/>
    <style:paragraph-properties fo:margin-left="0.499cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="-0.499cm" style:auto-text-indent="false" fo:background-color="transparent" fo:padding="0.049cm" fo:border="0.06pt solid #000000"/>
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#127622" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" officeooo:paragraph-rsid="017bc5ff" fo:background-color="transparent" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P133" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
-   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties officeooo:paragraph-rsid="014b5e29"/>
-  </style:style>
-  <style:style style:name="P134" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P79" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="01bdf2c1"/>
   </style:style>
-  <style:style style:name="P135" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P80" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+   <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
+   <style:text-properties officeooo:paragraph-rsid="014b5e29"/>
+  </style:style>
+  <style:style style:name="P81" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="00122372" officeooo:paragraph-rsid="014ec253"/>
   </style:style>
-  <style:style style:name="P136" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
+  <style:style style:name="P82" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="010990ec" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P137" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L5">
+  <style:style style:name="P83" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L5">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="018ae96d" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P138" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P84" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="016c51c8" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P139" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P85" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P140" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P86" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="010990ec" officeooo:paragraph-rsid="010990ec" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P141" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P87" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:rsid="00122372" officeooo:paragraph-rsid="00741d8d" fo:background-color="transparent"/>
   </style:style>
-  <style:style style:name="P142" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P88" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="00c2f0aa"/>
   </style:style>
-  <style:style style:name="P143" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
+  <style:style style:name="P89" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L3">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:font-weight="bold" officeooo:rsid="002043b4" officeooo:paragraph-rsid="0020b53c" fo:background-color="transparent" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="P144" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
+  <style:style style:name="P90" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:font-style="normal" officeooo:rsid="019a4f69" officeooo:paragraph-rsid="019a4f69" fo:background-color="transparent" style:font-style-asian="normal" style:font-style-complex="normal"/>
   </style:style>
-  <style:style style:name="P145" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P91" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties officeooo:paragraph-rsid="00549c0a"/>
   </style:style>
-  <style:style style:name="P146" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
+  <style:style style:name="P92" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L6">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="003dfdd4" officeooo:paragraph-rsid="003dfdd4" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="14pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P147" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L7">
+  <style:style style:name="P93" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L7">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="003dfdd4" officeooo:paragraph-rsid="003dfdd4" fo:background-color="transparent" style:font-size-asian="14pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="14pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="P148" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L8">
+  <style:style style:name="P94" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L8">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
    <style:text-properties fo:color="#2a6099" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" officeooo:paragraph-rsid="01a5d5e9" fo:background-color="transparent" style:font-name-asian="Liberation Mono" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-name-complex="Liberation Mono" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
@@ -1077,159 +858,153 @@
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0097a853" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T46" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0150712f" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01be19e4" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T47" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01a4269b" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-  </style:style>
-  <style:style style:name="T48" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00a88c51" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="T49" style:family="text">
+  <style:style style:name="T48" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="T50" style:family="text">
+  <style:style style:name="T49" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="T51" style:family="text">
+  <style:style style:name="T50" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
-  <style:style style:name="T52" style:family="text">
+  <style:style style:name="T51" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00c53645" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T53" style:family="text">
+  <style:style style:name="T52" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T54" style:family="text">
+  <style:style style:name="T53" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T55" style:family="text">
+  <style:style style:name="T54" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T56" style:family="text">
+  <style:style style:name="T55" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00549c0a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="T57" style:family="text">
+  <style:style style:name="T56" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="T58" style:family="text">
+  <style:style style:name="T57" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="002430e8" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="T59" style:family="text">
+  <style:style style:name="T58" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0023f64b" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
-  <style:style style:name="T60" style:family="text">
+  <style:style style:name="T59" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="0039d5c8" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T61" style:family="text">
+  <style:style style:name="T60" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="012d4290" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T62" style:family="text">
+  <style:style style:name="T61" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="014214f3" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T63" style:family="text">
+  <style:style style:name="T62" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T64" style:family="text">
+  <style:style style:name="T63" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01a932ed" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T65" style:family="text">
+  <style:style style:name="T64" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T66" style:family="text">
+  <style:style style:name="T65" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T67" style:family="text">
+  <style:style style:name="T66" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="00122372" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T68" style:family="text">
+  <style:style style:name="T67" style:family="text">
    <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="010d93d4" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T69" style:family="text">
+  <style:style style:name="T68" style:family="text">
    <style:text-properties officeooo:rsid="004adf87"/>
   </style:style>
-  <style:style style:name="T70" style:family="text">
+  <style:style style:name="T69" style:family="text">
    <style:text-properties officeooo:rsid="007a2ac7"/>
   </style:style>
-  <style:style style:name="T71" style:family="text">
+  <style:style style:name="T70" style:family="text">
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T72" style:family="text">
+  <style:style style:name="T71" style:family="text">
    <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T73" style:family="text">
+  <style:style style:name="T72" style:family="text">
    <style:text-properties fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="T74" style:family="text">
+  <style:style style:name="T73" style:family="text">
    <style:text-properties fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T75" style:family="text">
+  <style:style style:name="T74" style:family="text">
    <style:text-properties fo:language="zxx" fo:country="none" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="T76" style:family="text">
-   <style:text-properties fo:language="zxx" fo:country="none" fo:font-weight="normal" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
-  </style:style>
-  <style:style style:name="T77" style:family="text">
+  <style:style style:name="T75" style:family="text">
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console1" fo:font-size="9pt" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T78" style:family="text">
+  <style:style style:name="T76" style:family="text">
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console1" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T79" style:family="text">
+  <style:style style:name="T77" style:family="text">
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console1" fo:font-size="9pt" style:font-size-asian="9pt"/>
   </style:style>
-  <style:style style:name="T80" style:family="text">
+  <style:style style:name="T78" style:family="text">
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T81" style:family="text">
+  <style:style style:name="T79" style:family="text">
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console1" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T82" style:family="text">
+  <style:style style:name="T80" style:family="text">
    <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="T83" style:family="text">
+  <style:style style:name="T81" style:family="text">
    <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00c53645" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
-  <style:style style:name="T84" style:family="text">
+  <style:style style:name="T82" style:family="text">
    <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T85" style:family="text">
+  <style:style style:name="T83" style:family="text">
    <style:text-properties style:font-name="Liberation Serif1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01266163" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
-  <style:style style:name="T86" style:family="text">
+  <style:style style:name="T84" style:family="text">
    <style:text-properties officeooo:rsid="00173334"/>
   </style:style>
-  <style:style style:name="T87" style:family="text">
+  <style:style style:name="T85" style:family="text">
    <style:text-properties fo:background-color="transparent" loext:char-shading-value="0"/>
   </style:style>
-  <style:style style:name="T88" style:family="text">
+  <style:style style:name="T86" style:family="text">
    <style:text-properties style:font-name="Lucida Console1"/>
   </style:style>
-  <style:style style:name="T89" style:family="text">
+  <style:style style:name="T87" style:family="text">
    <style:text-properties style:font-name="Lucida Console1" fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
   </style:style>
-  <style:style style:name="T90" style:family="text">
+  <style:style style:name="T88" style:family="text">
    <style:text-properties officeooo:rsid="017bc5ff"/>
   </style:style>
-  <style:style style:name="T91" style:family="text">
+  <style:style style:name="T89" style:family="text">
    <style:text-properties officeooo:rsid="01682376"/>
   </style:style>
-  <style:style style:name="T92" style:family="text">
+  <style:style style:name="T90" style:family="text">
    <style:text-properties officeooo:rsid="01a2bdd3"/>
   </style:style>
-  <style:style style:name="T93" style:family="text">
+  <style:style style:name="T91" style:family="text">
    <style:text-properties officeooo:rsid="01a4269b"/>
   </style:style>
-  <style:style style:name="T94" style:family="text">
+  <style:style style:name="T92" style:family="text">
    <style:text-properties officeooo:rsid="01732522"/>
   </style:style>
-  <style:style style:name="T95" style:family="text">
+  <style:style style:name="T93" style:family="text">
    <style:text-properties officeooo:rsid="019cd7f6"/>
   </style:style>
-  <style:style style:name="T96" style:family="text">
+  <style:style style:name="T94" style:family="text">
    <style:text-properties officeooo:rsid="001845c5"/>
   </style:style>
-  <style:style style:name="T97" style:family="text">
+  <style:style style:name="T95" style:family="text">
    <style:text-properties officeooo:rsid="01b1d94b"/>
   </style:style>
   <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Graphics">
@@ -1678,12 +1453,12 @@
    </text:sequence-decls>
    <text:p text:style-name="P4"/>
    <text:p text:style-name="P5"/>
-   <text:p text:style-name="P47"/>
-   <text:p text:style-name="P47"/>
-   <text:p text:style-name="P47"/>
-   <text:p text:style-name="P47"/>
-   <text:p text:style-name="P47"/>
-   <text:p text:style-name="P48"><draw:frame draw:style-name="fr1" draw:name="Image2" text:anchor-type="as-char" svg:width="5.027cm" svg:height="5.027cm" draw:z-index="1"><draw:image draw:mime-type="image/png">
+   <text:p text:style-name="P17"/>
+   <text:p text:style-name="P17"/>
+   <text:p text:style-name="P17"/>
+   <text:p text:style-name="P17"/>
+   <text:p text:style-name="P17"/>
+   <text:p text:style-name="P18"><draw:frame draw:style-name="fr1" draw:name="Image2" text:anchor-type="as-char" svg:width="5.027cm" svg:height="5.027cm" draw:z-index="1"><draw:image draw:mime-type="image/png">
       <office:binary-data>iVBORw0KGgoAAAANSUhEUgAAAKgAAACoCAMAAABDlVWGAAAACXBIWXMAADJlAAAyZQGyxZIq
        AAADAFBMVEWq1ACo0QCr1QCu2gCv2gBccgBjfABddABHcEyp0wB6mACq1ABwiwCiygCs1gCu
        2QCp0gCLrgCt1wCr1QBedQFddAGv2wBfdgJccwCt2ABXbwBUbQCs1gCq0wBRagBSawCq1ACe
@@ -1818,289 +1593,289 @@
      </draw:image>
     </draw:frame></text:p>
    <text:p text:style-name="P6"/>
-   <text:p text:style-name="P81"><text:span text:style-name="T62">C</text:span><text:span text:style-name="T60">heck list </text:span><text:span text:style-name="T61">Sviluppo e Rilasci</text:span></text:p>
+   <text:p text:style-name="P34"><text:span text:style-name="T61">C</text:span><text:span text:style-name="T59">heck list </text:span><text:span text:style-name="T60">Sviluppo e Rilasci</text:span></text:p>
    <text:p text:style-name="P8"/>
-   <text:p text:style-name="P9"><text:span text:style-name="T67">P</text:span><text:span text:style-name="T66">er svi</text:span><text:span text:style-name="T68">l</text:span><text:span text:style-name="T66">u</text:span><text:span text:style-name="T68">pp</text:span><text:span text:style-name="T66">are:</text:span></text:p>
+   <text:p text:style-name="P9"><text:span text:style-name="T66">P</text:span><text:span text:style-name="T65">er svi</text:span><text:span text:style-name="T67">l</text:span><text:span text:style-name="T65">u</text:span><text:span text:style-name="T67">pp</text:span><text:span text:style-name="T65">are:</text:span></text:p>
    <text:p text:style-name="P2"/>
-   <text:list xml:id="list631138199" text:style-name="L1">
+   <text:list xml:id="list4173089773" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P92"><text:span text:style-name="T73">Cancellare </text:span><text:span text:style-name="T74">python/pythonpath/__pycache__</text:span>.</text:p>
+     <text:p text:style-name="P38"><text:span text:style-name="T72">Cancellare </text:span><text:span text:style-name="T73">python/pythonpath/__pycache__</text:span>.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P93"><text:span text:style-name="T73">Cancellare </text:span><text:span text:style-name="T85">MANUALE_LeenO.pdf</text:span>.</text:p>
+     <text:p text:style-name="P39"><text:span text:style-name="T72">Cancellare </text:span><text:span text:style-name="T83">MANUALE_LeenO.pdf</text:span>.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P96">creare/attivare il branch &quot;dev&quot;: </text:p>
+     <text:p text:style-name="P42">creare/attivare il branch &quot;dev&quot;: </text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P96"><text:span text:style-name="T77">$ git</text:span><text:span text:style-name="T78"> checkout dev</text:span></text:p>
+       <text:p text:style-name="P42"><text:span text:style-name="T75">$ git</text:span><text:span text:style-name="T76"> checkout dev</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P97"><text:span text:style-name="T86">Aggiornamento del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T86">:</text:span></text:p>
+     <text:p text:style-name="P43"><text:span text:style-name="T84">Aggiornamento del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T84">:</text:span></text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P91"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lmajor</text:span></text:span><text:span text:style-name="T21"> INCOMPATIBILITA&apos;</text:span></text:p>
+       <text:p text:style-name="P37"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lmajor</text:span></text:span><text:span text:style-name="T21"> INCOMPATIBILITA&apos;</text:span></text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P91"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lminor</text:span></text:span><text:span text:style-name="T21"> NUOVE FUNZIONALITA&apos;</text:span></text:p>
+       <text:p text:style-name="P37"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lminor</text:span></text:span><text:span text:style-name="T21"> NUOVE FUNZIONALITA&apos;</text:span></text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P114"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T23">Lsubv</text:span></text:span><text:span text:style-name="T24"> CORREZIONE BUGS</text:span></text:p>
+       <text:p text:style-name="P60"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T23">Lsubv</text:span></text:span><text:span text:style-name="T24"> CORREZIONE BUGS</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P94"><text:span text:style-name="T27">in </text:span><text:span text:style-name="T25">make_pack()</text:span></text:p>
+     <text:p text:style-name="P40"><text:span text:style-name="T27">in </text:span><text:span text:style-name="T25">make_pack()</text:span></text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P95"><text:span text:style-name="T27">attivare </text:span><text:span text:style-name="T25">description_upd()</text:span><text:span text:style-name="T28"> </text:span><text:span text:style-name="T27">e </text:span><text:span text:style-name="T28">p</text:span><text:span text:style-name="T29">acchettizzare con </text:span><text:span text:style-name="T30">CTRL-SHIFT-G</text:span></text:p>
+       <text:p text:style-name="P41"><text:span text:style-name="T27">attivare </text:span><text:span text:style-name="T25">description_upd()</text:span><text:span text:style-name="T28"> </text:span><text:span text:style-name="T27">e </text:span><text:span text:style-name="T28">p</text:span><text:span text:style-name="T29">acchettizzare con </text:span><text:span text:style-name="T30">CTRL-SHIFT-G</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P49"/>
-   <text:list xml:id="list132630129234546" text:continue-numbering="true" text:style-name="L1">
+   <text:p text:style-name="P19"/>
+   <text:list xml:id="list170531842909024" text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P116"><text:span text:style-name="T79">$ git clone </text:span><text:a xlink:type="simple" xlink:href="https://gitlab.com/giuserpe/leeno" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://gitlab.com/giuserpe/leeno</text:a></text:p>
+     <text:p text:style-name="P62"><text:span text:style-name="T77">$ git clone </text:span><text:a xlink:type="simple" xlink:href="https://gitlab.com/giuserpe/leeno" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://gitlab.com/giuserpe/leeno</text:a></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P124">$ cd leeno</text:p>
+     <text:p text:style-name="P70">$ cd leeno</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P124">$ git branch -a</text:p>
+     <text:p text:style-name="P70">$ git branch -a</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P124">$ git checkout <text:span text:style-name="T92">dev</text:span></text:p>
+     <text:p text:style-name="P70">$ git checkout <text:span text:style-name="T90">dev</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P125">$ python src2bin.py</text:p>
-    </text:list-item>
-   </text:list>
-   <text:p text:style-name="P62"/>
-   <text:list xml:id="list132630731315491" text:continue-numbering="true" text:style-name="L1">
-    <text:list-item>
-     <text:p text:style-name="P125"><text:span text:style-name="T31">rinomainare il pacchetto in </text:span><text:span text:style-name="T32">LeenO.oxt</text:span></text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P126">installare il pacchetto</text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P127">$ python src2bin.py</text:p>
+     <text:p text:style-name="P71">$ python src2bin.py</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P65"/>
-   <text:p text:style-name="P69">WINDOWS SYSTEM</text:p>
-   <text:p text:style-name="P68"/>
-   <text:list xml:id="list132631327891798" text:continue-numbering="true" text:style-name="L1">
+   <text:p text:style-name="P22"/>
+   <text:list xml:id="list170531870936762" text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P128"><text:span text:style-name="T88">WIN-KEY &quot;cmd&quot; </text:span><text:span text:style-name="T89">esegui come amministratore</text:span></text:p>
+     <text:p text:style-name="P71"><text:span text:style-name="T31">rinomainare il pacchetto in </text:span><text:span text:style-name="T32">LeenO.oxt</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P129"><text:span text:style-name="T97">cd</text:span> %<text:span text:style-name="T90">appdata%</text:span>\LibreOffice\4\user\uno_packages\cache\uno_packages\lu12045ntrh.tmp_</text:p>
+     <text:p text:style-name="P72">installare il pacchetto</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P129">mv LeenO.oxt LeenO.oxt.old</text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P129">mklink /D LeenO.oxt W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt</text:p>
-     <text:p text:style-name="P130"/>
+     <text:p text:style-name="P73">$ python src2bin.py</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P76">LINUX SYSTEM</text:p>
-   <text:p text:style-name="P72"/>
-   <text:list xml:id="list132630440174761" text:continue-numbering="true" text:style-name="L1">
+   <text:p text:style-name="P24"/>
+   <text:p text:style-name="P26">WINDOWS SYSTEM</text:p>
+   <text:p text:style-name="P25"/>
+   <text:list xml:id="list170531250186783" text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P131"><text:span text:style-name="T97">cd</text:span> $HOME/.config/libreoffice/4/user/uno_packages/cache/uno_packages/<text:span text:style-name="T91">lu12045ntrh.tmp_</text:span></text:p>
+     <text:p text:style-name="P74"><text:span text:style-name="T86">WIN-KEY &quot;cmd&quot; </text:span><text:span text:style-name="T87">esegui come amministratore</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P132">mv LeenO.oxt LeenO.oxt.old</text:p>
+     <text:p text:style-name="P75"><text:span text:style-name="T95">cd</text:span> %<text:span text:style-name="T88">appdata%</text:span>\LibreOffice\4\user\uno_packages\cache\uno_packages\lu12045ntrh.tmp_</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P132">ln -s /media/giuserpe/PRIVATO/LeenO/_SRC/leeno/src/Ultimus.oxt LeenO.oxt</text:p>
+     <text:p text:style-name="P75">mv LeenO.oxt LeenO.oxt.old</text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P75">mklink /D LeenO.oxt W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt</text:p>
+     <text:p text:style-name="P76"/>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P73"/>
-   <text:p text:style-name="P3"><text:span text:style-name="Source_20_Text"><text:span text:style-name="T26">git config --global core.autocrlf false</text:span></text:span><text:span text:style-name="T75"> per rispettare i fine riga esistenti</text:span></text:p>
-   <text:p text:style-name="P75"/>
-   <text:p text:style-name="P56">Per pubblicare:</text:p>
+   <text:p text:style-name="P30">LINUX SYSTEM</text:p>
+   <text:p text:style-name="P27"/>
+   <text:list xml:id="list170530409239641" text:continue-numbering="true" text:style-name="L1">
+    <text:list-item>
+     <text:p text:style-name="P77"><text:span text:style-name="T95">cd</text:span> $HOME/.config/libreoffice/4/user/uno_packages/cache/uno_packages/<text:span text:style-name="T89">lu12045ntrh.tmp_</text:span></text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P78">mv LeenO.oxt LeenO.oxt.old</text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P78">ln -s /media/giuserpe/PRIVATO/LeenO/_SRC/leeno/src/Ultimus.oxt LeenO.oxt</text:p>
+    </text:list-item>
+   </text:list>
+   <text:p text:style-name="P28"/>
+   <text:p text:style-name="P3"><text:span text:style-name="Source_20_Text"><text:span text:style-name="T26">git config --global core.autocrlf false</text:span></text:span><text:span text:style-name="T74"> per rispettare i fine riga esistenti</text:span></text:p>
+   <text:p text:style-name="P29"/>
+   <text:p text:style-name="P21">Per pubblicare:</text:p>
    <text:p text:style-name="P6"/>
-   <text:list xml:id="list3656906737" text:style-name="L2">
+   <text:list xml:id="list2492367774" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P135"><text:span text:style-name="T43">CANCELLARE leeno.conf</text:span><text:span text:style-name="T34"> e </text:span><text:span text:style-name="T33">reinstallare l&apos;</text:span><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T36">OXT</text:span></text:span><text:span text:style-name="T33"> per verifica informazioni</text:span></text:p>
+     <text:p text:style-name="P81"><text:span text:style-name="T43">CANCELLARE leeno.conf</text:span><text:span text:style-name="T34"> e </text:span><text:span text:style-name="T33">reinstallare l&apos;</text:span><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T36">OXT</text:span></text:span><text:span text:style-name="T33"> per verifica informazioni</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list xml:id="list132630297664749" text:continue-list="list132630440174761" text:style-name="L1">
+   <text:list xml:id="list170530111422359" text:continue-list="list170530409239641" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P136"><text:span text:style-name="T48">ricavo il log di tutto l&apos;archivio:</text:span> <text:span text:style-name="T71">git log --pretty=format:&quot;&gt; %B&quot; &gt; /</text:span><text:span text:style-name="T72">home/giuserpe/</text:span><text:span text:style-name="T71">log</text:span></text:p>
+     <text:p text:style-name="P82"><text:span text:style-name="T47">ricavo il log di tutto l&apos;archivio:</text:span> <text:span text:style-name="T70">git log --pretty=format:&quot;&gt; %B&quot; &gt; /</text:span><text:span text:style-name="T71">home/giuserpe/</text:span><text:span text:style-name="T70">log</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P98">Aggiungere le note di versione al manuale.</text:p>
+     <text:p text:style-name="P44">Aggiungere le note di versione al manuale.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P99">Scrivere l&apos;articolo di presentazione</text:p>
-    </text:list-item>
-   </text:list>
-   <text:p text:style-name="P20">Aggiornamento <text:span text:style-name="T86">del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T86">:</text:span></text:p>
-   <text:list xml:id="list3877246600" text:style-name="L3">
-    <text:list-item>
-     <text:p text:style-name="P142"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lmajor</text:span></text:span><text:span text:style-name="T21"> INCOMPATIBILITA&apos;</text:span></text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P142"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lminor</text:span></text:span><text:span text:style-name="T21"> NUOVE FUNZIONALITA&apos;</text:span></text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P115"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T23">Lsubv</text:span></text:span><text:span text:style-name="T24"> CORREZIONE BUGS</text:span></text:p>
-    </text:list-item>
-    <text:list-item>
-     <text:p text:style-name="P100"><text:span text:style-name="T18">(influisc</text:span><text:span text:style-name="T19">ono</text:span><text:span text:style-name="T18"> su </text:span><text:span text:style-name="T15">su_apertura_doc</text:span><text:span text:style-name="T20"> e su </text:span><text:span text:style-name="T15">aggiorniamoli</text:span><text:span text:style-name="T18">)</text:span></text:p>
+     <text:p text:style-name="P45">Scrivere l&apos;articolo di presentazione</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P41"/>
-   <text:p text:style-name="P43">Aggiornamento di un template <text:span text:style-name="T9">(.ODS)</text:span>:</text:p>
+   <text:p text:style-name="P11">Aggiornamento <text:span text:style-name="T84">del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T84">:</text:span></text:p>
+   <text:list xml:id="list3037699264" text:style-name="L3">
+    <text:list-item>
+     <text:p text:style-name="P88"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lmajor</text:span></text:span><text:span text:style-name="T21"> INCOMPATIBILITA&apos;</text:span></text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P88"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T22">Lminor</text:span></text:span><text:span text:style-name="T21"> NUOVE FUNZIONALITA&apos;</text:span></text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P61"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T23">Lsubv</text:span></text:span><text:span text:style-name="T24"> CORREZIONE BUGS</text:span></text:p>
+    </text:list-item>
+    <text:list-item>
+     <text:p text:style-name="P46"><text:span text:style-name="T18">(influisc</text:span><text:span text:style-name="T19">ono</text:span><text:span text:style-name="T18"> su </text:span><text:span text:style-name="T15">su_apertura_doc</text:span><text:span text:style-name="T20"> e su </text:span><text:span text:style-name="T15">aggiorniamoli</text:span><text:span text:style-name="T18">)</text:span></text:p>
+    </text:list-item>
+   </text:list>
+   <text:p text:style-name="P15"/>
+   <text:p text:style-name="P16">Aggiornamento di un template <text:span text:style-name="T9">(.ODS)</text:span>:</text:p>
    <text:list text:style-name="L4">
     <text:list-item>
-     <text:p text:style-name="P117">cancellare eventuali fogli extra usati per fare prove</text:p>
+     <text:p text:style-name="P63">cancellare eventuali fogli extra usati per fare prove</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P118">controllare il contenuto del foglio <text:span text:style-name="T1">S1</text:span></text:p>
+     <text:p text:style-name="P64">controllare il contenuto del foglio <text:span text:style-name="T1">S1</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list xml:id="list132631310880950" text:continue-list="list3877246600" text:style-name="L3">
+   <text:list xml:id="list170530710560794" text:continue-list="list3037699264" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P102">cambiare le <text:span text:style-name="T1">proprietà</text:span> del <text:span text:style-name="T1">.ODS </text:span><text:span text:style-name="T14">(es. numero di versione)</text:span></text:p>
+     <text:p text:style-name="P48">cambiare le <text:span text:style-name="T1">proprietà</text:span> del <text:span text:style-name="T1">.ODS </text:span><text:span text:style-name="T14">(es. numero di versione)</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P119">impostare Visualizza&gt;Normale, Evidenzia valori&gt;OFF (valori)</text:p>
+     <text:p text:style-name="P65">impostare Visualizza&gt;Normale, Evidenzia valori&gt;OFF (valori)</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P101"><text:span text:style-name="T12">controllare </text:span><text:span text:style-name="T11">esistenza e correttezza </text:span><text:span text:style-name="T12">macro su </text:span><text:span text:style-name="T2">Personalizza&gt;Eventi</text:span></text:p>
+     <text:p text:style-name="P47"><text:span text:style-name="T12">controllare </text:span><text:span text:style-name="T11">esistenza e correttezza </text:span><text:span text:style-name="T12">macro su </text:span><text:span text:style-name="T2">Personalizza&gt;Eventi</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P143"><text:span text:style-name="T57">cancellare anagrafica generale </text:span><text:span text:style-name="T58">e</text:span><text:span text:style-name="T57"> </text:span><text:span text:style-name="T59">situazione contabile</text:span></text:p>
+     <text:p text:style-name="P89"><text:span text:style-name="T56">cancellare anagrafica generale </text:span><text:span text:style-name="T57">e</text:span><text:span text:style-name="T56"> </text:span><text:span text:style-name="T58">situazione contabile</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P121"><text:span text:style-name="T10">aggiorna</text:span><text:span text:style-name="T13">r</text:span><text:span text:style-name="T10">e </text:span>def adegua_tmpl<text:span text:style-name="T10"> al numero del template</text:span></text:p>
+     <text:p text:style-name="P67"><text:span text:style-name="T10">aggiorna</text:span><text:span text:style-name="T13">r</text:span><text:span text:style-name="T10">e </text:span>def adegua_tmpl<text:span text:style-name="T10"> al numero del template</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P120">sostituire il manuale in PDF</text:p>
+     <text:p text:style-name="P66">sostituire il manuale in PDF</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P50"/>
-   <text:p text:style-name="P25">Aggiornamento file del pacchetto</text:p>
+   <text:p text:style-name="P20"/>
+   <text:p text:style-name="P14">Aggiornamento file del pacchetto</text:p>
    <text:list text:style-name="L5">
     <text:list-item>
-     <text:p text:style-name="P137"><text:span text:style-name="T49">disattivare </text:span><text:span text:style-name="T81">description_upd()</text:span><text:span text:style-name="T52"> </text:span><text:span text:style-name="T73">in</text:span><text:span text:style-name="T53"> </text:span><text:span text:style-name="T81">make_pack()</text:span></text:p>
+     <text:p text:style-name="P83"><text:span text:style-name="T48">disattivare </text:span><text:span text:style-name="T79">description_upd()</text:span><text:span text:style-name="T51"> </text:span><text:span text:style-name="T72">in</text:span><text:span text:style-name="T52"> </text:span><text:span text:style-name="T79">make_pack()</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list xml:id="list132631713139500" text:continue-list="list3656906737" text:style-name="L2">
+   <text:list xml:id="list170531078160067" text:continue-list="list2492367774" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P103">cambiare versione in <text:span text:style-name="T1">\description.xml</text:span></text:p>
+     <text:p text:style-name="P49">cambiare versione in <text:span text:style-name="T1">\description.xml</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P104"><text:span text:style-name="T10">cambiare versione in </text:span><text:span text:style-name="T1">\leeno_version_code</text:span></text:p>
+     <text:p text:style-name="P50"><text:span text:style-name="T10">cambiare versione in </text:span><text:span text:style-name="T1">\leeno_version_code</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P105">cambiare le info in <text:span text:style-name="T1">\pkg-desc\description.txt</text:span></text:p>
+     <text:p text:style-name="P51">cambiare le info in <text:span text:style-name="T1">\pkg-desc\description.txt</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P122">cancellare il <text:span text:style-name="T1">def MENU_debug</text:span></text:p>
+     <text:p text:style-name="P68">cancellare il <text:span text:style-name="T1">def MENU_debug</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P138"><text:span text:style-name="T83">p</text:span><text:span text:style-name="T82">acchettizzare con </text:span><text:span text:style-name="T84">CTRL-SHIFT-G</text:span></text:p>
+     <text:p text:style-name="P84"><text:span text:style-name="T81">p</text:span><text:span text:style-name="T80">acchettizzare con </text:span><text:span text:style-name="T82">CTRL-SHIFT-G</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P140"><text:span text:style-name="T73">aggiungere il </text:span><text:span text:style-name="T74">MANUALE_LeenO.pdf</text:span><text:span text:style-name="T73"> al pacchetto </text:span><text:span text:style-name="T74">OXT</text:span></text:p>
+     <text:p text:style-name="P86"><text:span text:style-name="T72">aggiungere il </text:span><text:span text:style-name="T73">MANUALE_LeenO.pdf</text:span><text:span text:style-name="T72"> al pacchetto </text:span><text:span text:style-name="T73">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P139"><text:span text:style-name="T73">cancellare la dir </text:span><text:span text:style-name="T74">/python/pythonpath/__pycache__/</text:span><text:span text:style-name="T73"> dal pacchetto </text:span><text:span text:style-name="T74">OXT</text:span></text:p>
+     <text:p text:style-name="P85"><text:span text:style-name="T72">cancellare la dir </text:span><text:span text:style-name="T73">/python/pythonpath/__pycache__/</text:span><text:span text:style-name="T72"> dal pacchetto </text:span><text:span text:style-name="T73">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P134"><text:span text:style-name="T50">controllare</text:span><text:span text:style-name="T51"> versione in </text:span><text:span text:style-name="T54">\leeno_version_code</text:span><text:span text:style-name="T73"> nel pacchetto </text:span><text:span text:style-name="T55">OXT</text:span></text:p>
+     <text:p text:style-name="P79"><text:span text:style-name="T49">controllare</text:span><text:span text:style-name="T50"> versione in </text:span><text:span text:style-name="T53">\leeno_version_code</text:span><text:span text:style-name="T72"> nel pacchetto </text:span><text:span text:style-name="T54">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P144"><text:span text:style-name="T35">rinominare il pacchetto come </text:span><text:span text:style-name="T37">LeenO-x.xx.x</text:span></text:p>
+     <text:p text:style-name="P90"><text:span text:style-name="T35">rinominare il pacchetto come </text:span><text:span text:style-name="T37">LeenO-x.xx.x</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P141"><text:span text:style-name="T38">copiare il pacchetto </text:span><text:span text:style-name="T40">OXT</text:span><text:span text:style-name="T38"> ed il file di </text:span><text:span text:style-name="T40">esempio</text:span><text:span text:style-name="T38"> in </text:span><text:span text:style-name="T40">INCUBATRICE</text:span></text:p>
+     <text:p text:style-name="P87"><text:span text:style-name="T38">copiare il pacchetto </text:span><text:span text:style-name="T40">OXT</text:span><text:span text:style-name="T38"> ed il file di </text:span><text:span text:style-name="T40">esempio</text:span><text:span text:style-name="T38"> in </text:span><text:span text:style-name="T40">INCUBATRICE</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P123">copiare i<text:span text:style-name="T94">l</text:span> pacchetto sul sito <text:span text:style-name="T95">e </text:span><text:span text:style-name="T96">sistemare le categorie di file con </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T6">https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser</text:span></text:a><text:span text:style-name="T7">\</text:span><text:span text:style-name="T6"> </text:span><text:span text:style-name="T96">trasferendo da </text:span><text:span text:style-name="T6">LeenO</text:span><text:span text:style-name="T96"> ad </text:span><text:span text:style-name="T6">Archivio</text:span><text:span text:style-name="T96"> la vecchia versione</text:span></text:p>
+     <text:p text:style-name="P69">copiare i<text:span text:style-name="T92">l</text:span> pacchetto sul sito <text:span text:style-name="T93">e </text:span><text:span text:style-name="T94">sistemare le categorie di file con </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T6">https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser</text:span></text:a><text:span text:style-name="T7">\</text:span><text:span text:style-name="T6"> </text:span><text:span text:style-name="T94">trasferendo da </text:span><text:span text:style-name="T6">LeenO</text:span><text:span text:style-name="T94"> ad </text:span><text:span text:style-name="T6">Archivio</text:span><text:span text:style-name="T94"> la vecchia versione</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P133"><text:span text:style-name="T39">cambiare versione in </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/LeenO.update.xml" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T42">https://leeno.org/LeenO.update.xml</text:span></text:a></text:p>
+     <text:p text:style-name="P80"><text:span text:style-name="T39">cambiare versione in </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/LeenO.update.xml" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T42">https://leeno.org/LeenO.update.xml</text:span></text:a></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P106"><text:span text:style-name="T10">fare il </text:span><text:span text:style-name="T1">Sincronizza Filebase:</text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T1">https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1</text:span></text:a><text:span text:style-name="T1"> </text:span></text:p>
+     <text:p text:style-name="P52"><text:span text:style-name="T10">fare il </text:span><text:span text:style-name="T1">Sincronizza Filebase:</text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T1">https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1</text:span></text:a><text:span text:style-name="T1"> </text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P107"><text:span text:style-name="T16">correggere la versione sotto </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/about-leeno/leeno/download/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T17">https://leeno.org/about-leeno/leeno/download/</text:span></text:a></text:p>
-    </text:list-item>
-   </text:list>
-   <text:p text:style-name="P21">Pubblicazione</text:p>
-   <text:list xml:id="list3451827722" text:style-name="L6">
-    <text:list-item>
-     <text:p text:style-name="P108">fare il commit <text:span text:style-name="T70">di tutti gli aggiornamenti</text:span></text:p>
+     <text:p text:style-name="P53"><text:span text:style-name="T16">correggere la versione sotto </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/about-leeno/leeno/download/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T17">https://leeno.org/about-leeno/leeno/download/</text:span></text:a></text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P77">git push</text:p>
-   <text:list xml:id="list132631092960036" text:continue-numbering="true" text:style-name="L6">
+   <text:p text:style-name="P12">Pubblicazione</text:p>
+   <text:list xml:id="list2629049857" text:style-name="L6">
     <text:list-item>
-     <text:p text:style-name="P146"><text:soft-page-break/>attivare il branch &quot;master&quot;</text:p>
+     <text:p text:style-name="P54">fare il commit <text:span text:style-name="T69">di tutti gli aggiornamenti</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P78">git checkout master</text:p>
+   <text:p text:style-name="P31">git push</text:p>
+   <text:list xml:id="list170530909062101" text:continue-numbering="true" text:style-name="L6">
+    <text:list-item>
+     <text:p text:style-name="P92"><text:soft-page-break/>attivare il branch &quot;master&quot;</text:p>
+    </text:list-item>
+   </text:list>
+   <text:p text:style-name="P32">git checkout master</text:p>
    <text:list text:style-name="L7">
     <text:list-item>
-     <text:p text:style-name="P147">fondere il branc dev</text:p>
+     <text:p text:style-name="P93">fondere il branc dev</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P78">git merge dev</text:p>
-   <text:p text:style-name="P23">taggare il commit:</text:p>
-   <text:p text:style-name="P7"><text:span text:style-name="T41">git tag -s v</text:span><text:span text:style-name="T44">3.</text:span><text:span text:style-name="T45">2</text:span><text:span text:style-name="T46">1.</text:span><text:span text:style-name="T47">2</text:span><text:span text:style-name="T41"> -m &apos;Release LeenO versione </text:span><text:span text:style-name="T44">3.</text:span><text:span text:style-name="T45">2</text:span><text:span text:style-name="T46">1.</text:span><text:span text:style-name="T47">2</text:span><text:span text:style-name="T41">&apos;</text:span></text:p>
-   <text:p text:style-name="P80">git push origin <text:span text:style-name="T69">--</text:span>tags</text:p>
-   <text:p text:style-name="P77">git push</text:p>
-   <text:p text:style-name="P16"><text:span text:style-name="T64">push verso github</text:span><text:span text:style-name="T65"> :</text:span></text:p>
+   <text:p text:style-name="P32">git merge dev</text:p>
+   <text:p text:style-name="P13">taggare il commit:</text:p>
+   <text:p text:style-name="P7"><text:span text:style-name="T41">git tag -s v</text:span><text:span text:style-name="T44">3.</text:span><text:span text:style-name="T45">2</text:span><text:span text:style-name="T46">3.0</text:span><text:span text:style-name="T41"> -m &apos;Release LeenO versione </text:span><text:span text:style-name="T44">3.</text:span><text:span text:style-name="T45">2</text:span><text:span text:style-name="T46">3.0</text:span><text:span text:style-name="T41">&apos;</text:span></text:p>
+   <text:p text:style-name="P33">git push origin <text:span text:style-name="T68">--</text:span>tags</text:p>
+   <text:p text:style-name="P31">git push</text:p>
+   <text:p text:style-name="P10"><text:span text:style-name="T63">push verso github</text:span><text:span text:style-name="T64"> :</text:span></text:p>
    <text:list text:style-name="L8">
     <text:list-item>
-     <text:p text:style-name="P89"><text:span text:style-name="T63">git remote </text:span><text:span text:style-name="T87"># </text:span><text:a xlink:type="simple" xlink:href="https://git-scm.com/docs/git-remote" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T87">https://git-scm.com/docs/git-remote</text:span></text:a><text:span text:style-name="T87"> </text:span></text:p>
+     <text:p text:style-name="P35"><text:span text:style-name="T62">git remote </text:span><text:span text:style-name="T85"># </text:span><text:a xlink:type="simple" xlink:href="https://git-scm.com/docs/git-remote" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T85">https://git-scm.com/docs/git-remote</text:span></text:a><text:span text:style-name="T85"> </text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P90">git branch -r</text:p>
+     <text:p text:style-name="P36">git branch -r</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P90">git remote add <text:span text:style-name="T93">GH </text:span>https://github.com/giuserpe/leeno</text:p>
+     <text:p text:style-name="P36">git remote add <text:span text:style-name="T91">GH </text:span>https://github.com/giuserpe/leeno</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P148">git push GH</text:p>
+     <text:p text:style-name="P94">git push GH</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P64">git clone https://gitlab.com/giuserpe/leeno -b dev</text:p>
-   <text:p text:style-name="P1"><text:a xlink:type="simple" xlink:href="https://rogerdudler.github.io/git-guide/index.it.html" office:target-frame-name="_blank" xlink:show="new" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T80">https://rogerdudler.github.io/git-guide/index.it.html</text:span></text:a></text:p>
-   <text:list xml:id="list132630586643664" text:continue-list="list132631092960036" text:style-name="L6">
+   <text:p text:style-name="P23">git clone https://gitlab.com/giuserpe/leeno -b dev</text:p>
+   <text:p text:style-name="P1"><text:a xlink:type="simple" xlink:href="https://rogerdudler.github.io/git-guide/index.it.html" office:target-frame-name="_blank" xlink:show="new" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T78">https://rogerdudler.github.io/git-guide/index.it.html</text:span></text:a></text:p>
+   <text:list xml:id="list170531872751299" text:continue-list="list170530909062101" text:style-name="L6">
     <text:list-item>
-     <text:p text:style-name="P109">pubblicare su:</text:p>
+     <text:p text:style-name="P55">pubblicare su:</text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P110">DOXYGEN <text:a xlink:type="simple" xlink:href="https://leeno.org/doxyLeenO/html/namespacepyleeno.html" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://leeno.org/doxyLeenO/html/namespacepyleeno.html</text:a> </text:p>
+       <text:p text:style-name="P56">DOXYGEN <text:a xlink:type="simple" xlink:href="https://leeno.org/doxyLeenO/html/namespacepyleeno.html" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://leeno.org/doxyLeenO/html/namespacepyleeno.html</text:a> </text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P109">Linkedin</text:p>
+       <text:p text:style-name="P55">Linkedin</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P111">openikos</text:p>
+       <text:p text:style-name="P57">openikos</text:p>
       </text:list-item>
       <text:list-item>
-       <text:p text:style-name="P112">twitter</text:p>
+       <text:p text:style-name="P58">twitter</text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P113">New<text:span text:style-name="T8">s</text:span>letter</text:p>
+     <text:p text:style-name="P59">New<text:span text:style-name="T8">s</text:span>letter</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P145"><text:span text:style-name="T56"><draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="2.422cm" svg:height="0.633cm" draw:z-index="0"><draw:image draw:mime-type="image/png">
+     <text:p text:style-name="P91"><text:span text:style-name="T55"><draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="2.422cm" svg:height="0.633cm" draw:z-index="0"><draw:image draw:mime-type="image/png">
          <office:binary-data>iVBORw0KGgoAAAANSUhEUgAAAs0AAAC7CAYAAACeq6N0AABbNUlEQVR4nO2dBXgUVxeGD+4Q
           PHhwdyvu7i1SpLSFYsWhuLtbi5TiUihe3B0KBCcJEAgQnAQNTrB/v8u/2yTN7tzZndnZJOft
           s09ZmL17k52d+e6553wnpvuyGJ+JYRiGYRiGYRirxDR6AgzDMAzDMAzj6rBoZhiGYRiGYRgF
@@ -2537,7 +2312,7 @@
           o8D/AAAt6MBDEvBEAAAAAElFTkSuQmCC
          </office:binary-data>
         </draw:image>
-       </draw:frame></text:span><text:span text:style-name="T87"><text:s/></text:span><text:a xlink:type="simple" xlink:href="https://extensions.libreoffice.org/extensions/leeno-2" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T87">https://extensions.libreoffice.org/extensions/leeno-2</text:span></text:a><text:span text:style-name="T87"> </text:span></text:p>
+       </draw:frame></text:span><text:span text:style-name="T85"><text:s/></text:span><text:a xlink:type="simple" xlink:href="https://extensions.libreoffice.org/extensions/leeno-2" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T85">https://extensions.libreoffice.org/extensions/leeno-2</text:span></text:a><text:span text:style-name="T85"> </text:span></text:p>
     </text:list-item>
    </text:list>
   </office:text>

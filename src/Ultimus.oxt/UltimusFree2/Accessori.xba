@@ -17,20 +17,6 @@
 
 Global sMS_error
 
-
-Function Constrolla_se_M1
-	oSheets = ThisComponent.getSheets()
-	aSheetNames = oSheets.getElementNames()
-	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-		cSheetName2 = aSheetNames( i ) &apos; get string from array 
-		If cSheetName2 = &quot;M1&quot; Then
-			Constrolla_se_M1 = true
-			Exit Function 
-			EndIf
-		Next
-		Constrolla_se_M1 = false
-	end Function 
-	
 	
 Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
 	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;)

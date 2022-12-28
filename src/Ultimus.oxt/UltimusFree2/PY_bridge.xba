@@ -151,6 +151,10 @@ Sub GeneraAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_AnnullaAttiContabili
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaAttiContabili&quot;)
+End Sub
+rem ######################################################################
 Sub Vedi
 	ScriptPy(&quot;LeenoToolbars&quot;,&quot;Vedi&quot;)
 End Sub

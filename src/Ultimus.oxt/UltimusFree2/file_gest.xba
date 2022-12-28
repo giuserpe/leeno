@@ -1,68 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="file_gest" script:language="StarBasic">rem ***** BASIC *****
-&apos;_______________________________________________________________________________________ 		
-&apos; LeenO - Computo Metrico
-&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
-&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
-&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
-&apos; per l&apos;ottimizzazione del codice.
-&apos;_______________________________________________________________________________________
-rem module per la gestione dei files
-
-Sub New_FILE (filepath As string)
-  Dim oDoc
-  Dim sPath$
-  Dim a(0) As New com.sun.star.beans.PropertyValue
-rem ----------------------------------------------------------------------
-	Dim pip As Object, extensionLocation As String
-rem ----------------------------------------------------------------------
-REM vedi in &quot;_variabili&quot;
-&apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; 
-	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-rem ----------------------------------------------------------------------
-	a(0).Name = &quot;AsTemplate&quot;
-	a(0).Value = true
-	sPath$ = extensionLocation &amp; filepath
-	oDoc = StarDesktop.LoadComponentFromUrl(sPath$, &quot;_blank&quot; , 0, a())
-End Sub
-rem ----------------------------------------------------------------------
-Sub New_LeenO_to (flag As String, sNewURL$ As string)
-  Dim oDoc
-rem ----------------------------------------------------------------------
-	Dim pip As Object, extensionLocation As String
-rem ----------------------------------------------------------------------
-REM vedi in &quot;_variabili&quot;
-&apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; 
-	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-rem ----------------------------------------------------------------------
-	Select Case flag
-		Case &quot;listino&quot;
-		sURL$ = extensionLocation &amp; &quot;/template/leeno/Listino_LeenO.ots&quot;
-		Case &quot;computo&quot;
-		sURL$ = extensionLocation &amp; &quot;/template/leeno/Computo_LeenO.ots&quot;
-	End Select
-	Filecopy sURL$, sNewURL$ &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
-End Sub
- 
-&apos;#########################################################################
-Sub avvia_IDE
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="file_gest" script:language="StarBasic">Sub avvia_IDE
 	print &quot;OK per Python - Annulla per Basic&quot;
 End Sub
-rem ----------------------------------------------------------------------
-rem l&apos;estensione va installata solo per l&apos;utente corrente
-sub make_LOportable
-	Dim appLocation As string, nomeZip As String 
-	appLocation = ConvertToUrl (&quot;W:\programmi\LibreOfficePortablePrevious&quot;)
-	nomeZip = ConvertToUrl (&quot;x:\LibreOfficePortablePrevious_4.2.6-secfix_LeenO-&quot; &amp; Lmajor &amp; &quot;.&quot; &amp; Lminor &amp; &quot;.&quot; &amp; Lsubv &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;)
-	zipfolder(appLocation,nomeZip)
-end Sub
-
-
-
 </script:module>

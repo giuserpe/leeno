@@ -375,12 +375,13 @@ Stai per eliminare la voce selezionata.
             Text= messaggio) == 1:
             try:
                 undo
-                comando ('Undo')
+                PL.comando ('Undo')
             except: 
                 pass
             oSheet.getRows().removeByIndex(SR, ER - SR + 1)
             PL._gotoCella(0, SR+1)
         else:
+            PL.comando ('Undo')
             oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
                 0, SR, 250, ER))
             return
@@ -477,11 +478,12 @@ def adattaAltezzaRiga(oSheet):
 
     oDoc = LeenoUtils.getDocument()
     # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
-    if not oDoc.getSheets().hasByName('S1'):
-        return
+    # ~if not oDoc.getSheets().hasByName('S1'):
+        # ~return
 
     usedArea = SheetUtils.getUsedArea(oSheet)
-    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    oSheet.Rows.OptimalHeight = True
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     return

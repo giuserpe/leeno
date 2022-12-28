@@ -14,6 +14,7 @@ import pyleeno as PL
 import LeenoDialogs as DLG
 
 import SheetUtils
+import LeenoSheetUtils
 
 import Dialogs
 
@@ -115,6 +116,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
     # inserisce supercategorie e categorie nella lista
     # articoli, creando quindi un blocco unico
+    LeenoUtils.DocumentRefresh(False)
     artList = dati['articoli']
     superCatList = dati['superCategorie']
     catList = dati['categorie']
@@ -201,8 +203,6 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
         item += step
 
-    # ~oSheet.getRows().removeByIndex(3, 1)
-
     return True
 
 
@@ -210,7 +210,7 @@ def MENU_ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
     '''
-    LeenoUtils.DocumentRefresh(False)
+    # ~LeenoUtils.DocumentRefresh(False)
 
     filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
     if filename is None:
@@ -256,7 +256,7 @@ def MENU_ImportElencoPrezziXML():
 
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
     progress = Dialogs.Progress(
@@ -292,8 +292,8 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     if Dialogs.YesNoDialog(Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
-L'OPERAZIONE POTREBBE RICHIEDERE DEL TEMPO E
-LibreOffice POTREBBE SEMBRARE BLOCCATO!
+L'operazione potrebbe richiedere del tempo e
+libreoffice potrebbe sembrare bloccato!
 
 Vuoi procedere comunque?''') == 0:
         pass
@@ -303,7 +303,9 @@ Vuoi procedere comunque?''') == 0:
         ER = oRange.EndRow
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
         PL.sistema_cose()
-
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
@@ -312,7 +314,7 @@ Vuoi procedere comunque?''') == 0:
     PL.salva_come(dest)
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
-
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
         Text = '''
@@ -355,7 +357,7 @@ def importa_listino_leeno_run():
     #  giallo(16777072,16777120,16777168)
     #  verde(9502608,13696976,15794160)
     #  viola(12632319,13684991,15790335)
-    lista_articoli = list()
+    lista_articoli = []
     nome = oSheet.getCellByPosition(2, 0).String
     try:
         test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
@@ -567,7 +569,7 @@ def MENU_Piemonte():
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    elenco = list()
+    elenco = []
     for i in range(0, fine):
         if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
             cod = oSheet.getCellByPosition(1, i).String
@@ -633,12 +635,12 @@ def MENU_fuf():
     E' solo una cortesia per un amico.
     '''
     filename = Dialogs.FileSelect('Scegli il file DAT da importare', '*.dat')
-    riga = list()
+    riga = []
     try:
         f = open(filename, 'r')
     except TypeError:
         return
-    ordini = list()
+    ordini = []
     riga = ('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna',
             'Conto lavoro', 'Prezzo(€)')
     ordini.append(riga)

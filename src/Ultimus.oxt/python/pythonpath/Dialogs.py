@@ -2631,6 +2631,8 @@ class Progress:
         self._progress.setValue(val)
         if self._text is not None and self._textWidget is not None:
             minVal, maxVal = self.getLimits()
+            if maxVal - minVal ==0:
+                maxVal = +1
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             txt = self._text + ' (' + percent + ')'
             self._textWidget.setText(txt)

@@ -508,10 +508,10 @@ def MENU_umbria():
     
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
-    # ~SheetUtils.MENU_unisci_fogli()
+    LeenoUtils.DocumentRefresh(False)
+    SheetUtils.MENU_unisci_fogli()
     PL.GotoSheet("unione_fogli")
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.Columns.insertByIndex(4, 1)
     oSheet.getCellByPosition(4, 0).String = 'Incidenza MdO\n%'

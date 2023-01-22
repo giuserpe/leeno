@@ -535,6 +535,21 @@ def MENU_umbria():
             mdo = oSheet.getCellByPosition(5, i).Value
             prz = oSheet.getCellByPosition(3, i).Value
             oSheet.getCellByPosition(4, i).Value = mdo / prz
+#> codice di Lorenzo Vagnarelli
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 5 and \
+        oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 5 and \
+        oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            oSheet.getCellByPosition(1, i).String = madre +"\n- " + oSheet.getCellByPosition(1, i).String
+            mdo = oSheet.getCellByPosition(5, i).Value
+            prz = oSheet.getCellByPosition(3, i).Value
+            oSheet.getCellByPosition(4, i).Value = mdo / prz
+#< codice di Lorenzo Vagnarelli
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, 0, 1, fine))
+    PL.sistema_cose()
+    oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################

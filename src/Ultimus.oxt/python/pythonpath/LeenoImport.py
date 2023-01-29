@@ -740,3 +740,137 @@ def MENU_fuf():
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
 
 ########################################################################
+
+def MENU_FVG():
+    '''
+    Importa Prezzario Friuli Venezia Giulia secondo schema tabellare
+    rilasciato a gennaio 2023
+    '''
+    oDoc = LeenoUtils.getDocument()
+    filename = uno.fileUrlToSystemPath(oDoc.getURL())
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = SheetUtils.getLastUsedRow(oSheet)
+    
+    oDoc.CurrentController.select(
+        oSheet.getCellRangeByPosition(2, 3, 2, fine))
+    PL.sistema_cose()
+    artList = {}
+        # ~artList[codice] = {
+            # ~'codice': codice,
+            # ~'desc': desc,
+            # ~'um': um,
+            # ~'prezzo': prezzo,
+            # ~'mdo': mdo,          #%
+            # ~'sicurezza': oneriSic
+        # ~}
+    superCatList = {}
+    catList = {}
+    titolo = oSheet.getCellRangeByName('A1').String
+    for i in range(3, fine):
+        codice = oSheet.getCellByPosition(0, i).String
+        desc = oSheet.getCellByPosition(1, i).String
+        if oSheet.getCellByPosition(2, i).Type.value == 'TEXT':
+            madre = oSheet.getCellByPosition(2, i).String
+        um = ''
+        prezzo = ''
+        mdo = ''
+        oneriSic = ''
+        if oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            desc = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
+        if oSheet.getCellByPosition(2, i).Type.value == 'TEXT' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            madre = oSheet.getCellByPosition(2, i).String
+            desc = oSheet.getCellByPosition(1, i).String + '\n' + madre
+
+        if oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            um = oSheet.getCellByPosition(5, i).String
+            prezzo = oSheet.getCellByPosition(6, i).Value
+            mdo = oSheet.getCellByPosition(8, i).Value / 100
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic
+        }
+    dati = {
+        'titolo': titolo,
+        'superCategorie': superCatList,
+        'categorie': catList,
+        'articoli' : artList
+        }
+    # creo nuovo file di computo
+    oDoc = PL.creaComputo(0)
+    LeenoUtils.DocumentRefresh(False)
+    dest = '.'.join(filename.split('.')[0:-1]) + '.ods'
+    # salva il file col nome del file di origine
+    PL.salva_come(dest)
+
+    # visualizza la progressbar
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+    progress.show()
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+
+    # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # nasconde la progressbar
+    progress.hide()
+
+    # aggiunge informazioni nel foglio
+    # ~oSheet.getRows().insertByIndex(3, 1)
+    oSheet.getCellByPosition(11, 3).String = ''
+    oSheet.getCellByPosition(12, 3).String = ''
+    oSheet.getCellByPosition(13, 3).String = ''
+    oSheet.getCellByPosition(0, 3).String = '000'
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+
+L'operazione potrebbe richiedere del tempo e
+libreoffice potrebbe sembrare bloccato!
+
+Vuoi procedere comunque?''') == 0:
+        pass
+    else:
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SR = oRange.StartRow + 1
+        ER = oRange.EndRow
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        PL.sistema_cose()
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
+    # evidenzia e struttura i capitoli
+    PL.struttura_Elenco()
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
+    PL._gotoCella(0, 3)
+    LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Info(
+        Title = "Importazione eseguita con successo!",
+        Text = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+        )    
+    return

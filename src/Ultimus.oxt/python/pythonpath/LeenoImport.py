@@ -24,6 +24,7 @@ import LeenoImport_XmlSardegna
 import LeenoImport_XmlLiguria
 import LeenoImport_XmlVeneto
 import LeenoImport_XmlBasilicata
+import LeenoImport_XmlLombardia
 
 
 def fixParagraphSize(txt):
@@ -73,6 +74,7 @@ def findXmlParser(xmlText):
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
+        '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...

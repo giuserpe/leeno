@@ -233,13 +233,15 @@ def MENU_ImportElencoPrezziXML():
     if xmlParser is None:
         Dialogs.Exclamation(
             Title = "File sconosciuto",
-            Text = "Il file fornito sembra di tipo sconosciuto.\n\n"
-                   "Puoi riprovare cambiandone l'estensione in .XPWE quindi\n"
-                   "utilizzando la relativa voce di menù per l'importazione.\n\n"
+            Text = "Il file fornito sembra di tipo sconosciuto,\n"
+                   "ma sarà tentata una importazione dal formato XPWE.\n\n" 
+
                    "In caso di nuovo errore, puoi inviare una copia del file\n"
                    "allo staff di LeenO affinchè il suo formato possa essere\n"
                    "importato dalla prossima versione del programma.\n\n"
         )
+        import LeenoImport_XPWE as LXPWE
+        LXPWE.MENU_XPWE_import(filename)
         return
 
     #try:

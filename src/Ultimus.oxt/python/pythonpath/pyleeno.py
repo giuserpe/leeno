@@ -8785,7 +8785,10 @@ def sistema_cose():
             testo = oSheet.getCellByPosition(lcol, y).String.replace(
                 '\t', ' ').replace('Ã¨', 'è').replace(
                 'Â°', '°').replace('Ã', 'à').replace(
-                ' $', '')
+                ' $', '').replace('Ó', 'à').replace(
+                'Þ', 'é').replace('&#x13;','').replace(
+                '&#xD;&#xA;','').replace('&#xA;','').replace(
+                '&apos;',"'").replace('&#x3;&#x1;','')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
             while '\n\n' in testo:
@@ -9387,6 +9390,7 @@ def MENU_hl():
     oSheet = oDoc.CurrentController.ActiveSheet
     for el in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow +1)):
         try:
+            # ~if ':' or '\\' or '//' in oSheet.getCellByPosition(1, el).String:
             if oSheet.getCellByPosition(1, el).String[1] == ':' or \
             oSheet.getCellByPosition(1, el).String[0:1] == '\\':
                 stringa = '=HYPERLINK("' + oSheet.getCellByPosition(
@@ -9699,7 +9703,47 @@ def inputbox(message, title="", default="", x=None, y=None):
 ########################################################################
 # ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
 import LeenoImport
+def BARRA(sTitre = 'TITOLO', vMax = 100):
+
+    # ~sTitre ='titolo'
+    # ~vMax = 100
+    # ~' Création du modèle
+    oDlgModele = LeenoUtils.createUnoService( "com.sun.star.awt.UnoControlDialogModel")
+
+    # ~' Où mettre le dialogue
+    oDlgModele.PositionX = 100
+    oDlgModele.PositionY = 100
+    oDlgModele.Width = 105
+    oDlgModele.Height = 20
+    oDlgModele.Title = sTitre
+
+    # ~' Création du contrôle barre de progression
+    oBarre = oDlgModele.createInstance( "com.sun.star.awt.UnoControlProgressBarModel" )
+    # ~' Où mettre la barre
+    oBarre.PositionX = 0
+    oBarre.PositionY = 0
+    oBarre.Width = 105
+    oBarre.Height = 20
+    oBarre.ProgressValueMin = 0
+    oBarre.ProgressValueMax = vMax
+    # ~' Mettre la barre dans le modèle
+    oDlgModele.insertByName("bar", oBarre )
+
+    # ~' Création du dialogue sur la base du modèle
+    oWait = LeenoUtils.createUnoService( "com.sun.star.awt.UnoControlDialog")
+    oWait.setModel( oDlgModele )
+    BARRA = oWait
+
 def MENU_debug():
+    sistema_cose()
+    return
+    for el in range(0, 1000):
+        BARRA(vMax = el)
+    return
+    
+    
+    
+    
     oDoc = LeenoUtils.getDocument()
 
     oDoc.getText().getEnd().setString("Hello!")
@@ -9811,9 +9855,6 @@ def MENU_debug():
     usedArea = SheetUtils.getUsedArea(oSheet)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow))
     oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
-
-
-
 
     # ~oDoc.CurrentController.select(usedArea)
     # ~LeenoUtils.DocumentRefresh(True)

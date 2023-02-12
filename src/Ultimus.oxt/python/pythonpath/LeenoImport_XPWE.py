@@ -1356,6 +1356,10 @@ def MENU_XPWE_import(filename = None):
     progress.setText("Fine")
     progress.hide()
 
+    # salva il file col nome del file di origine
+    dest = filename[0:-4]+ '.ods'
+    PL.salva_come(dest)
+
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

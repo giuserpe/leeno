@@ -212,7 +212,7 @@ def MENU_ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
     '''
-    # ~LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(False)
 
     filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
     if filename is None:
@@ -242,47 +242,56 @@ def MENU_ImportElencoPrezziXML():
         )
         import LeenoImport_XPWE as LXPWE
         LXPWE.MENU_XPWE_import(filename)
-        return
+        # ~return
+    
+    else:
 
-    #try:
-    dati = xmlParser(data, defaultTitle)
+        #try:
+        dati = xmlParser(data, defaultTitle)
 
-    #except Exception:
-    #    Dialogs.Exclamation(
-    #       Title="Errore nel file XML",
-    #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-    #    return
+        #except Exception:
+        #    Dialogs.Exclamation(
+        #       Title="Errore nel file XML",
+        #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+        #    return
 
-    # il parser può gestirsi l'errore direttamente, nel qual caso
-    # ritorna None ed occorre uscire
-    if dati is None:
-        return
+        # il parser può gestirsi l'errore direttamente, nel qual caso
+        # ritorna None ed occorre uscire
+        if dati is None:
+            return
 
-    # creo nuovo file di computo
-    oDoc = PL.creaComputo(0)
-    LeenoUtils.DocumentRefresh(False)
+        # creo nuovo file di computo
+        oDoc = PL.creaComputo(0)
+        PL.GotoSheet("Elenco Prezzi")
+        LeenoUtils.DocumentRefresh(False)
 
-    # visualizza la progressbar
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
-    progress.show()
+        # visualizza la progressbar
+        progress = Dialogs.Progress(
+            Title="Importazione prezzario",
+            Text="Compilazione prezzario in corso")
+        progress.show()
 
-    # compila l'elenco prezzi
-    compilaElencoPrezzi(oDoc, dati, progress)
+        # compila l'elenco prezzi
+        compilaElencoPrezzi(oDoc, dati, progress)
 
-    # si posiziona sul foglio di computo appena caricato
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oDoc.CurrentController.setActiveSheet(oSheet)
+        # si posiziona sul foglio di computo appena caricato
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(oSheet)
 
-    # messaggio di ok
-    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+        # messaggio di ok
+        Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
 
-    # nasconde la progressbar
-    progress.hide()
+        # nasconde la progressbar
+        progress.hide()
+
+    try:
+        oSheet
+    except:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oSheet.getRows().insertByIndex(3, 1)
 
     # aggiunge informazioni nel foglio
-    # ~oSheet.getRows().insertByIndex(3, 1)
     oSheet.getCellByPosition(11, 3).String = ''
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''

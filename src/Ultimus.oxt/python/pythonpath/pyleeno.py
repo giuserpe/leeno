@@ -1979,7 +1979,7 @@ Vuoi procedere comunque?''') == 0:
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
-    ER = oRange.EndRow + 1
+    ER = oRange.EndRow
     lista_prezzi = []
     for n in range(SR, ER):
         lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
@@ -2163,11 +2163,30 @@ def scelta_viste():
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
+
+            lrow = 4
+            n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            while lrow < n:
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+                lrow += 1
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+                sotto = sStRange.RangeAddress.EndRow
+                oSheet.getCellByPosition(2, sotto).Formula = oSheet.getCellByPosition(8, sotto).Formula
+
         else:
             oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = True
+
+            lrow = 4
+            n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            while lrow < n:
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+                lrow += 1
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+                sotto = sStRange.RangeAddress.EndRow
+                oSheet.getCellByPosition(2, sotto).String = ''
 
         if oDialog1.getControl('CBMdo').State:  # manodopera
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
@@ -6607,11 +6626,11 @@ def struct_colore(level):
         colore = col0
         myrange = (col1, col2, col3, col4, col0)
 
-        for n in (3, 7):
-            oCellRangeAddr.StartColumn = n
-            oCellRangeAddr.EndColumn = n
-            oSheet.group(oCellRangeAddr, 0)
-            oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible = False
+        # ~for n in (3, 7):
+            # ~oCellRangeAddr.StartColumn = n
+            # ~oCellRangeAddr.EndColumn = n
+            # ~oSheet.group(oCellRangeAddr, 0)
+            # ~oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible = False
     test = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
@@ -6997,7 +7016,8 @@ def MENU_converti_stringhe():
                         y, x).String = oSheet.getCellByPosition(y, x).String
             except Exception:
                 pass
-    return
+    return LeenoUtils.DocumentRefresh(True)
+
 
 
 ########################################################################
@@ -9735,18 +9755,15 @@ def BARRA(sTitre = 'TITOLO', vMax = 100):
     BARRA = oWait
 
 def MENU_debug():
-    sistema_cose()
-    return
-    for el in range(0, 1000):
-        BARRA(vMax = el)
-    return
-    
-    
-    
-    
     oDoc = LeenoUtils.getDocument()
 
-    oDoc.getText().getEnd().setString("Hello!")
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByName('C15:I15').merge(True)
+    oSheet.getCellRangeByName('C15').Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B7;elenco_prezzi;3;FALSE());"]")'
+    # ~oSheet.getCellRangeByName('C15:I15').merge(False)
+    # ~oSheet.getCellRangeByName('I15').Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B7;elenco_prezzi;3;FALSE());"]")'
+    # ~oSheet.getCellRangeByName('C15').String = ''
+
     return
     hh = inputbox(message='opopo', title="hgfs", default="hhhhhhhhh")
     DLG.chi(hh)

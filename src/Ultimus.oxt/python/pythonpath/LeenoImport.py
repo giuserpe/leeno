@@ -242,8 +242,7 @@ def MENU_ImportElencoPrezziXML():
         )
         import LeenoImport_XPWE as LXPWE
         LXPWE.MENU_XPWE_import(filename)
-        # ~return
-    
+
     else:
 
         #try:
@@ -262,6 +261,7 @@ def MENU_ImportElencoPrezziXML():
 
         # creo nuovo file di computo
         oDoc = PL.creaComputo(0)
+
         PL.GotoSheet("Elenco Prezzi")
         LeenoUtils.DocumentRefresh(False)
 
@@ -277,6 +277,12 @@ def MENU_ImportElencoPrezziXML():
         # si posiziona sul foglio di computo appena caricato
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         oDoc.CurrentController.setActiveSheet(oSheet)
+
+        dest = os.path.split(filename)[0] + '\\' + '_'.join(oSheet.getCellRangeByName('B1').String.split('\n')[0].split(' ')) + '.ods'
+        dest = ''.join(dest.split('-_'))
+        # ~dest = filename[0:-4]+ '.ods'
+        # salva il file col nome del titolo
+        PL.salva_come(dest)
 
         # messaggio di ok
         Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
@@ -322,9 +328,7 @@ Vuoi procedere comunque?''') == 0:
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
-    dest = filename[0:-4]+ '.ods'
-    # salva il file col nome del file di origine
-    PL.salva_come(dest)
+
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)

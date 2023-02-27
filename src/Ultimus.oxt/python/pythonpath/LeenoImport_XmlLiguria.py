@@ -119,6 +119,8 @@ def parseXML(data, defaultTitle=None):
             prezzo = float(prezzo)
         mdo = float(articolo.find('mo').text) / 100
         oneriSic = float(articolo.find('sicurezza').text)
+        if oneriSic == 0:
+            oneriSic = ''
 
         # compone l'articolo e lo mette in lista
         artList[codice] = {

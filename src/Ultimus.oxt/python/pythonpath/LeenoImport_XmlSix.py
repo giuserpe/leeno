@@ -176,7 +176,7 @@ def parseXML(data, defaultTitle):
         try:
             for el in product.findall('prdQuotazione'):
                 if el.attrib['listaQuotazioneId'] == listaQuotazioneId:
-                    prezzo = el.attrib['valore']
+                    prezzo = float(el.attrib['valore'])
         except:
             try:
                 prezzo = float(product.find('prdQuotazione').attrib['valore'])
@@ -196,7 +196,7 @@ def parseXML(data, defaultTitle):
 
         # oneri sicurezza
         try:
-            oneriSic = float(attr['onereSicurezza'])
+            oneriSic = float(attr['onereSicurezza']) * prezzo / 100
         except Exception:
             oneriSic = ""
         if oneriSic == 0:

@@ -65,6 +65,8 @@ import Dialogs
 # from com.sun.star.lang import Locale
 from com.sun.star.beans import PropertyValue
 # from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
+from com.sun.star.table.CellHoriJustify import RIGHT
+from com.sun.star.awt.FontSlant import ITALIC, NONE
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
@@ -2158,35 +2160,30 @@ def scelta_viste():
             oDialog1.getControl('CBFig').State = 0
             oDialog1.getControl('CBMis').State = 1
 
+        lrow = 4
+        n = SheetUtils.getLastUsedRow(oSheet)
         if oDialog1.getControl("CBMis").State == 0:  # misure
             oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
-
-            lrow = 4
-            n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            while lrow < n:
-                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
-                lrow += 1
-                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-                sotto = sStRange.RangeAddress.EndRow
-                oSheet.getCellByPosition(2, sotto).Formula = oSheet.getCellByPosition(8, sotto).Formula
-
+            #copia la formula dell'UM nella colonna C
+            for el in range(4, n):
+                if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
+                    oSheet.getCellByPosition(2, el).Formula = oSheet.getCellByPosition(8, el).Formula
+                    oDoc.StyleFamilies.getByName("CellStyles").getByName(
+                            'comp sotto centro').HoriJustify = RIGHT
+                    oDoc.StyleFamilies.getByName("CellStyles").getByName(
+                            'comp sotto centro').CharPosture = NONE
         else:
             oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = True
-
-            lrow = 4
-            n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            while lrow < n:
-                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
-                lrow += 1
-                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-                sotto = sStRange.RangeAddress.EndRow
-                oSheet.getCellByPosition(2, sotto).String = ''
+            #cancella la formula dell'UM nella colonna C
+            for el in range(4, n):
+                if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
+                    oSheet.getCellByPosition(2, el).Formula = ''
 
         if oDialog1.getControl('CBMdo').State:  # manodopera
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
@@ -6767,12 +6764,40 @@ Vuoi continuare?''') == 0:
     else:
         filename = uno.systemPathToFileUrl(filename)
     oDoc = LeenoUtils.getDocument()
+    #conserva il formato numerico di tutte le celle
+    stili_celle = {}
+    elencoStili = oDoc.StyleFamilies[0].ElementNames
+    for el in (elencoStili):
+        try:
+            num = oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat
+            stili_celle[el] = oDoc.getNumberFormats().getByKey(num).FormatString
+        except:
+            pass
+
     nome = oDoc.CurrentController.ActiveSheet.Name
     oDoc.getStyleFamilies().loadStylesFromURL(filename, [])
     for el in oDoc.Sheets.ElementNames:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
         oSheet = oDoc.getSheets().getByName(el)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    #ripristina il formato numerico di alcune celle
+    for el in (
+    'comp sotto Euro Originale', 'Livello-0-scritta mini val',
+               'Livello-1-scritta mini val', 'livello2 scritta mini',
+               'Comp TOTALI', 'Ultimus_totali_1', 'Ultimus_bordo',
+               'ULTIMUS_3', 'Ultimus_Bordo_sotto',
+               'Comp-Variante num sotto', 'An-valuta-dx', 'An-1v-dx',
+               'An-lavoraz-generica', 'An-lavoraz-Utili-num sin',
+               'comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG', 'comp 1-a peso',
+               'Comp-Variante num sotto', 'An-lavoraz-input', 'Blu',
+               'comp sotto Unitario', 'An-lavoraz-generica',
+               ):
+        try:
+            oDoc.StyleFamilies.getByName("CellStyles").getByName(
+                el).NumberFormat = LeenoFormat.getNumFormat(stili_celle[el]) 
+        except:
+            pass
+
     GotoSheet(nome)
     LeenoUtils.DocumentRefresh(True)
 
@@ -9853,10 +9878,6 @@ def MENU_debug():
                     oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
     GotoSheet('CONTABILITA')
 
-    return
-
-    mio = {}
-    DLG.chi(mio)
     return
 
     Menu_adattaAltezzaRiga()

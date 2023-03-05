@@ -174,6 +174,17 @@ def ins_voce_computo(cod=None):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    
+    # se le colonne di misura sono nascoste, vengono viasulizzate
+    if oSheet.getColumns().getByIndex(5).Columns.IsVisible == False:
+        lrow = 4
+        n = SheetUtils.getLastUsedRow(oSheet)
+        for el in range(4, n):
+            if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
+                oSheet.getCellByPosition(2, el).Formula = ''
+        for el in range (5, 9):
+            oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
+    
     noVoce = LeenoUtils.getGlobalVar('noVoce')
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
@@ -193,7 +204,7 @@ def ins_voce_computo(cod=None):
     # @@ PROVVISORIO !!!
     PL._gotoCella(1, lrow + 1)
 
-    #PL.numera_voci(0)
+    # ~PL.numera_voci(0)
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()

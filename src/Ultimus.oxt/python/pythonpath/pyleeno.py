@@ -2163,10 +2163,8 @@ def scelta_viste():
         lrow = 4
         n = SheetUtils.getLastUsedRow(oSheet)
         if oDialog1.getControl("CBMis").State == 0:  # misure
-            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
+            for el in range (5, 9):
+                oSheet.getColumns().getByIndex(el).Columns.IsVisible = False
             #copia la formula dell'UM nella colonna C
             for el in range(4, n):
                 if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
@@ -2176,10 +2174,8 @@ def scelta_viste():
                     oDoc.StyleFamilies.getByName("CellStyles").getByName(
                             'comp sotto centro').CharPosture = NONE
         else:
-            oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(8).Columns.IsVisible = True
+            for el in range (5, 9):
+                oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
             #cancella la formula dell'UM nella colonna C
             for el in range(4, n):
                 if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
@@ -4719,6 +4715,16 @@ def Copia_riga_Ent(arg=None):
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    # se le colonne di misura sono nascoste, vengono viasulizzate
+    if oSheet.getColumns().getByIndex(5).Columns.IsVisible == False:
+        lrow = 4
+        n = SheetUtils.getLastUsedRow(oSheet)
+        for el in range(4, n):
+            if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
+                oSheet.getCellByPosition(2, el).Formula = ''
+        for el in range (5, 8):
+            oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
+
     lrow = LeggiPosizioneCorrente()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in ('COMPUTO', 'VARIANTE'):
@@ -5500,7 +5506,9 @@ def MENU_numera_voci():
     '''
     Comando di menu per numera_voci()
     '''
-    numera_voci(1)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.numeraVoci(oSheet, 4, True)
 
 
 def numera_voci(bit=1):  #

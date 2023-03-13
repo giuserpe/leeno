@@ -785,7 +785,7 @@ tabelle COMPUTO, VARIANTE o CONTABILITA.''')
     lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
     if lrow == None:
         lrow = SheetUtils.getLastUsedRow(oSheet)
-    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
+    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Rimane il")
     progress.setLimits(0, lrow)
     progress.setValue(0)
     progress.show()

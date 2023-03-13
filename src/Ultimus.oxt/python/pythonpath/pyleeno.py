@@ -9790,6 +9790,19 @@ def BARRA(sTitre = 'TITOLO', vMax = 100):
 def MENU_debug():
     oDoc = LeenoUtils.getDocument()
 
+    lrow = LeggiPosizioneCorrente()[1]
+
+    oSheet = oDoc.CurrentController.ActiveSheet
+    celle = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+    oDoc.CurrentController.select(celle)
+    
+    return
+    # ~LeenoImport.MENU_ValdAosta()
+    LeenoSheetUtils.MENU_elimina_righe_vuote()
+
+    return
+    oDoc = LeenoUtils.getDocument()
+
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByName('C15:I15').merge(True)
     oSheet.getCellRangeByName('C15').Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B7;elenco_prezzi;3;FALSE());"]")'

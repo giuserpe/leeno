@@ -76,6 +76,10 @@ def circoscriveVoceComputo(oSheet, lrow):
 
     #  lrow = LeggiPosizioneCorrente()[1]
     #  if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
+
+    while oSheet.getCellByPosition(0, lrow).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
+        lrow +=1
+
     if oSheet.getCellByPosition(0, lrow).CellStyle in (
        'comp progress', 'comp 10 s',
        'Comp Start Attributo', 'Comp End Attributo',

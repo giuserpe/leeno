@@ -9436,19 +9436,20 @@ Vuoi procedere comunque?''') == 0:
 ########################################################################
 def MENU_hl():
     '''
-    Sostituisce hiperlink alla stringa nella colonna B, se questa è un
-    indirizzo di file o cartella ctrl-shift-h
+    Sostituisce hiperlink alla stringa nella colonna in cui è la cella
+    selezionata, se questa è un indirizzo di file o cartella ctrl-shift-h
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    lcol = LeggiPosizioneCorrente()[0]
     for el in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow +1)):
         try:
-            # ~if ':' or '\\' or '//' in oSheet.getCellByPosition(1, el).String:
-            if oSheet.getCellByPosition(1, el).String[1] == ':' or \
-            oSheet.getCellByPosition(1, el).String[0:1] == '\\':
+            # ~if ':' or '\\' or '//' in oSheet.getCellByPosition(lcol, el).String:
+            if oSheet.getCellByPosition(lcol, el).String[1] == ':' or \
+            oSheet.getCellByPosition(lcol, el).String[0:1] == '\\':
                 stringa = '=HYPERLINK("' + oSheet.getCellByPosition(
-                    1, el).String + '";">>>")'
-                oSheet.getCellByPosition(1, el).Formula = stringa
+                    lcol, el).String + '";">>>")'
+                oSheet.getCellByPosition(lcol, el).Formula = stringa
         except Exception:
             pass
 

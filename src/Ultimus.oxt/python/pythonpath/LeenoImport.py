@@ -69,7 +69,6 @@ def findXmlParser(xmlText):
 
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
-        # ~'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,

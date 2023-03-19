@@ -589,75 +589,156 @@ def MENU_ValdAosta():
         elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
             oSheet.getCellByPosition(1, i).String = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
 
+########################################################################
 
 def MENU_Piemonte():
-    '''
-    *** da applicare dopo aver unito i file in un unico ODS con Sub _accoda_files_in_unico ***
-    Adatta la struttura del prezzario rilasciato dalla regione Piemonte
-    partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note
-    Il risultato ottenuto va inserito in Elenco Prezzi.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    elenco = []
-    for i in range(0, fine):
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = oSheet.getCellByPosition(2, i).String.replace('\n\n', '\n')
-            um = ''
-            eur = ''
-            mdol = ''
-            mdo = ''
-            if oSheet.getCellByPosition(7, i).String != '':
-                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
-            elenco.append((cod, des, um, '', eur, mdo, mdol))
 
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 3:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = oSheet.getCellByPosition(2, i).String.replace(' \n\n', '')
-            madre = des
-            um = ''
-            eur = ''
-            mdol = ''
-            mdo = ''
-            if oSheet.getCellByPosition(7, i).String != '':
-                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
-            # ~elenco.append ((cod, des, um, '', eur, mdo, mdol))
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 4:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = madre
-            if oSheet.getCellByPosition(2, i).String != '...':
-                des = madre + '\n- ' + oSheet.getCellByPosition(2, i).String.replace('\n\n', '')
+    Dialogs.Info(
+        Title = "Importazione Prezzario Regione Piemonte",
+        Text = '''
+NOTA: Questo processo di importazione richiede la selezione di un file
+        del set, in formato XLS, così come scaricato dal sito istituzionale
+        della Regione Piemonte e posto in un'unica cartella del disco.
+
+'''
+# ~https://www.regione.piemonte.it/web/temi/protezione-civile-difesa-suolo-opere-pubbliche/opere-pubbliche
+
+        )
+    import glob
+    import DocUtils
+
+    artList = {}
+    superCatList = {}
+    catList = {}
+
+    filename = Dialogs.FileSelect('Scegli un file del set da importare...', '*.xls')
+    if filename in ('Cancel', '', None):
+        return
+    dest = os.path.dirname(filename).split('.')[0].split('/')
+    directory = os.path.dirname(filename).split('.')[0].replace('\\', '/') + '/'
+    files = glob.glob(directory + '*.xls')
+
+    progress = Dialogs.Progress(Title='Caricamento dei dati in corso...', Text="Progressione")
+    n = 0
+    progress.setLimits(n, len(files))
+    progress.show()
+    progress.setValue(0)
+
+    for el in files:
+        oDoc = DocUtils.loadDocument(el, Hidden=True)
+        oSheet = oDoc.getSheets().getByIndex(0)
+        lrow = SheetUtils.getLastUsedRow(oSheet) + 1
+
+        for i in range(2, lrow):
+            codice = oSheet.getCellByPosition(1, i).String
+            desc = oSheet.getCellByPosition(2, i).String
             um = oSheet.getCellByPosition(3, i).String
-            eur = ''
-            if oSheet.getCellByPosition(4, i).Value != 0:
-                eur = oSheet.getCellByPosition(4, i).Value
-            mdol = ''
-            if oSheet.getCellByPosition(5, i).Value != 0:
-                mdol = oSheet.getCellByPosition(5, i).Value
-            mdo = ''
-            if oSheet.getCellByPosition(6, i).Value != 0:
-                mdo = oSheet.getCellByPosition(6, i).Value
-            # ~note= oSheet.getCellByPosition(7, i).String
-            elenco.append((cod, des, um, '', eur, mdo, mdol))
+            prezzo = oSheet.getCellByPosition(4, i).Value
+            if prezzo == 0:
+                prezzo = ''
+            mdo = oSheet.getCellByPosition(6, i).Value
+            if mdo == 0:
+                mdo = ''
+            artList[codice] = {
+                'codice': codice,
+                'desc': desc,
+                'um': um,
+                'prezzo': prezzo,
+                'mdo': mdo,
+                'sicurezza': ''
+            }
+        n += 1
+        progress.setValue(n)
+    progress.hide()
 
-    try:
-        oDoc.getSheets().insertNewByName('nuova_tabella', 2)
-    except Exception:
+    titolo = 'Piemonte ' + oSheet.getCellRangeByName('A1').String.split('\n')[0]
+    dati = {
+        'titolo': titolo,
+        'superCategorie': superCatList,
+        'categorie': catList,
+        'articoli' : artList
+    }
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if(len(oDoc.getURL()) == 0 and
+       SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
+       SheetUtils.getUsedArea(oSheet).EndRow == 0):
+        oDoc.close(True)
+
+    # creo nuovo file di computo
+    oDoc = PL.creaComputo(0)
+    PL.GotoSheet("Elenco Prezzi")
+    LeenoUtils.DocumentRefresh(False)
+
+    # visualizza la progressbar
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+    progress.show()
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+        # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # nasconde la progressbar
+    progress.hide()
+    # aggiunge informazioni nel foglio
+    oSheet.getCellByPosition(11, 3).String = ''
+    oSheet.getCellByPosition(12, 3).String = ''
+    oSheet.getCellByPosition(13, 3).String = ''
+    oSheet.getCellByPosition(0, 3).String = '000'
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+
+L'operazione potrebbe richiedere del tempo e
+libreoffice potrebbe sembrare bloccato!
+
+Vuoi procedere comunque?''') == 0:
         pass
+    else:
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SR = oRange.StartRow + 1
+        ER = oRange.EndRow
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        PL.sistema_cose()
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
 
-    PL.GotoSheet('nuova_tabella')
-    oSheet = oDoc.getSheets().getByName('nuova_tabella')
-    elenco = tuple(elenco)
-    oRange = oSheet.getCellRangeByPosition(0,
-                                           0,
-                                           # l'indice parte da 0
-                                           len(elenco[0]) - 1,
-                                           len(elenco) - 1)
-    oRange.setDataArray(elenco)
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
+    PL._gotoCella(0, 3)
+
+    # salva il file
+    PL.salva_come(directory + titolo.replace(' ', '_') + '.ods')
+    # evidenzia e struttura i capitoli
+    PL.struttura_Elenco()
+
     LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Info(
+        Title = "Importazione eseguita con successo!",
+        Text = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+        )
+    return
 
 ########################################################################
 

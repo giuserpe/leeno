@@ -312,7 +312,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
-libreoffice potrebbe sembrare bloccato!
+LibreOffice potrebbe sembrare bloccato!
 
 Vuoi procedere comunque?''') == 0:
         pass
@@ -639,6 +639,12 @@ NOTA: Questo processo di importazione richiede la selezione di un file
             mdo = oSheet.getCellByPosition(6, i).Value
             if mdo == 0:
                 mdo = ''
+
+            if len(codice.split('.')) == 3 and prezzo == '':
+                madre = desc
+            elif len(codice.split('.')) == 4:
+                desc = madre + '\n- ' + desc
+
             artList[codice] = {
                 'codice': codice,
                 'desc': desc,
@@ -679,7 +685,7 @@ NOTA: Questo processo di importazione richiede la selezione di un file
 
     # compila l'elenco prezzi
     compilaElencoPrezzi(oDoc, dati, progress)
-        # si posiziona sul foglio di computo appena caricato
+    # si posiziona sul foglio di computo appena caricato
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oDoc.CurrentController.setActiveSheet(oSheet)
 
@@ -703,7 +709,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
-libreoffice potrebbe sembrare bloccato!
+LibreOffice potrebbe sembrare bloccato!
 
 Vuoi procedere comunque?''') == 0:
         pass
@@ -941,7 +947,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
-libreoffice potrebbe sembrare bloccato!
+LibreOffice potrebbe sembrare bloccato!
 
 Vuoi procedere comunque?''') == 0:
         pass

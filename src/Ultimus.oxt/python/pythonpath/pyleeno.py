@@ -9792,7 +9792,19 @@ def BARRA(sTitre = 'TITOLO', vMax = 100):
     BARRA = oWait
 
 def MENU_debug():
-    LeenoImport.MENU_Piemonte()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = SheetUtils.getLastUsedRow(oSheet) +1
+    for i in range(4, 10):
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3 and \
+        oSheet.getCellByPosition(4, i).Value == 0:
+            madre = oSheet.getCellByPosition(1, i).String
+            DLG.chi(madre)
+        elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
+            DLG.chi(madre + '\n- ' + oSheet.getCellByPosition(1, i).String)
+            oSheet.getCellByPosition(1, i).String = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
+    
+    # ~LeenoImport.MENU_Piemonte()
     return
     oDoc = LeenoUtils.getDocument()
 

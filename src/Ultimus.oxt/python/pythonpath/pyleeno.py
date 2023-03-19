@@ -53,6 +53,8 @@ import LeenoDialogs as DLG
 import PersistUtils as PU
 import LeenoEvents
 import LeenoBasicBridge
+import DocUtils
+
 
 import LeenoConfig
 cfg = LeenoConfig.Config()
@@ -5305,6 +5307,7 @@ def comando(cmd):
     'ClearArrowDependents'  = elimina frecce celle dipendenti
     'Undo'                  = Annulla ultimo comando
     'CalculateHard'         = Ricalcolo incondizionato
+    'Save'                  = Salva il file
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -9789,18 +9792,7 @@ def BARRA(sTitre = 'TITOLO', vMax = 100):
     BARRA = oWait
 
 def MENU_debug():
-    oDoc = LeenoUtils.getDocument()
-
-    lrow = LeggiPosizioneCorrente()[1]
-
-    oSheet = oDoc.CurrentController.ActiveSheet
-    celle = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    oDoc.CurrentController.select(celle)
-    
-    return
-    # ~LeenoImport.MENU_ValdAosta()
-    LeenoSheetUtils.MENU_elimina_righe_vuote()
-
+    LeenoImport.MENU_Piemonte()
     return
     oDoc = LeenoUtils.getDocument()
 

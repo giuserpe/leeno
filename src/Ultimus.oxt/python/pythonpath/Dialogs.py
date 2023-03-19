@@ -2462,6 +2462,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     estensioni = {'*.*': 'Tutti i file(*.*)',
                   '*.odt': 'Writer(*.odt)',
                   '*.ods': 'Calc(*.ods)',
+                  '*.xls': 'Excel(*.xls)',
                   '*.odb': 'Base(*.odb)',
                   '*.odg': 'Draw(*.odg)',
                   '*.odp': 'Impress(*.odp)',

@@ -167,8 +167,16 @@ Sub MENU_suffisso_codice
 	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_suffisso_codice&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_tabella_compila
+	ScriptPy(&quot;pyleeno&quot;,&quot;tabella_compila&quot;)
+End Sub
+rem ######################################################################
 Sub chiudi_dialoghi
 	ScriptPy(&quot;pyleeno&quot;,&quot;chiudi_dialoghi&quot;)
 End Sub
 
+rem ######################################################################
+Sub avvia_IDE
+	print &quot;OK per Python - Annulla per Basic&quot;
+End Sub
 </script:module>

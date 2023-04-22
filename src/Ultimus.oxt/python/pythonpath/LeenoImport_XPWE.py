@@ -1348,16 +1348,16 @@ def MENU_XPWE_import(filename = None):
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     oSheet = oDoc.getSheets().getByName(elaborato)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
 
     progress.setText("Fine")
     progress.hide()
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     # salva il file col nome del file di origine
-    dest = filename[0:-4]+ '.ods'
+    dest = filename[0:-5]+ '.ods'
     PL.salva_come(dest)
 
     # riattiva l'output a video

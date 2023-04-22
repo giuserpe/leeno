@@ -132,7 +132,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('I').Columns.Width = 1300
         oSheet.getColumns().getByName('J').Columns.Width = 1700
         oSheet.getColumns().getByName('L').Columns.Width = 1700
-        oSheet.getColumns().getByName('S').Columns.Width = 1700
+        oSheet.getColumns().getByName('S').Columns.Width = 1950
         oSheet.getColumns().getByName('AC').Columns.Width = 1700
         oSheet.getColumns().getByName('AD').Columns.Width = 1700
         oSheet.getColumns().getByName('AE').Columns.Width = 1700

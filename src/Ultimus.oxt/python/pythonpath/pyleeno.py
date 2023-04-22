@@ -6697,20 +6697,16 @@ def struct_colore(level):
         x += 1
         progress.setValue(x)
         if oSheet.getCellByPosition(0, n).CellBackColor == colore:
-            # ~oSheet.getCellByPosition(0, n).Rows.Height = hriga
             sopra = n + 1
             for n in range(sopra + 1, test):
                 if oSheet.getCellByPosition(0, n).CellBackColor in myrange:
                     sotto = n - 1
                     lista.append((sopra, sotto))
                     break
-    # ~DLG.chi(len(lista))
     for el in lista:
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]
         oSheet.group(oCellRangeAddr, 1)
-        # ~oSheet.getCellRangeByPosition(0, el[0], 0,
-                                      # ~el[1]).Rows.IsVisible = False
     progress.hide()
     return
 
@@ -6738,7 +6734,6 @@ Vuoi procedere comunque?''') == 0:
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    # ~oSheet.clearOutline()
 
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -6747,7 +6742,6 @@ Vuoi procedere comunque?''') == 0:
         oCellRangeAddr.StartColumn = n
         oCellRangeAddr.EndColumn = n
         oSheet.group(oCellRangeAddr, 0)
-        # ~oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible = False
 
     for i in reversed(range(0, 3)):
         struct_colore(i) # attribuisce i colori
@@ -7394,8 +7388,6 @@ def struttura_ComputoM():
         progress.setValue(n)
         struct(n)
     progress.hide()
-
-    # ~LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 def struttura_Analisi():

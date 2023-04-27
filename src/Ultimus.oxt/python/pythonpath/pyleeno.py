@@ -9987,6 +9987,8 @@ def tabella_ok():
 
     
 def MENU_debug():
+    minuti()
+    return
     
     # ~oDoc = LeenoUtils.getDocument()
     # ~DLG.mri(oDoc.getCurrentSelection().getRangeAddresses())
@@ -10216,6 +10218,10 @@ def MENU_debug():
         pass
 
     return
+
+
+
+
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = donazioni

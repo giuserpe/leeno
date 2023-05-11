@@ -1157,6 +1157,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+<!--
               <node oor:name="m2U15" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1174,6 +1175,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U16" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1191,6 +1194,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U17" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1208,6 +1213,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
               <node oor:name="m2U18" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

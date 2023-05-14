@@ -9985,9 +9985,11 @@ def tabella_compila():
 def tabella_ok():
     tabella_dati.ok()
 
-    
+
+import LeenoGiornale    
 def MENU_debug():
-    minuti()
+    LeenoGiornale.nuovo_giorno()
+
     return
     
     # ~oDoc = LeenoUtils.getDocument()

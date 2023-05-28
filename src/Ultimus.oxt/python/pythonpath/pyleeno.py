@@ -335,6 +335,7 @@ def invia_voce_interno():
     elif dest == 'COMPUTO':
         GotoSheet(dest)
     else:
+        LeenoUtils.DocumentRefresh(True)
         Dialogs.Exclamation(Title='AVVISO!',
     Text='''Per procedere devi prima scegliere,
 dalla cella "C2", l'elaborato a cui
@@ -1936,23 +1937,39 @@ def MENU_suffisso_codice():
     '''
     Aggiunge prefisso al Codice Articolo
     '''
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Questo comando aggiunge un suffisso a scelta ai SOLI codici di prezzo selezionati,
+oppure a tutti se non ne sono stati selezionati.  
+
+Procedo?''') == 1:
+        pass
+    else:
+        return
+
+    LeenoUtils.DocumentRefresh(False)
+
     testo = ''
     suffisso = InputBox(
         testo, t='Inserisci il prefisso per il Codice Articolo (es: "BAS22/1_").')
     if suffisso in (None, '', ' '):
         return
     oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~lrow = SheetUtils.getLastUsedRow(oSheet)
-    stili = {'Elenco Prezzi': (0, 'EP-aS'),
+    stili = {
+    'Elenco Prezzi': (0, 'EP-aS'),
     'COMPUTO': (1, 'comp Art-EP_R'),
     'VARIANTE': (1, 'comp Art-EP_R'),
     'CONTABILITA': (1, 'comp Art-EP_R'),
-    'Analisi di Prezzo': (0, 'An-lavoraz-Cod-sx')}
+    'Analisi di Prezzo': (0, 'An-lavoraz-Cod-sx'),
+    'Analisi di Prezzo': (0, 'An-1_sigla')
+    }
 
     #cattura l'elenco voci selezionate
     lsubst = list()
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name in ('Elenco Prezzi', 'Analisi di Prezzo'):
+        pass
+    else:
+        return
     try:
         selezioni = oDoc.getCurrentSelection().getRangeAddresses()
         for el in selezioni:
@@ -1976,28 +1993,21 @@ def MENU_suffisso_codice():
         for y in range(0, lrow):
             lista.append(oSheet.getCellByPosition(0, y).String)
 
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title='Operazione in corso...', Text="Progressione")
     for el in ('Elenco Prezzi', 'COMPUTO', 'VARIANTE', 'CONTABILITA', 'Analisi di Prezzo'):
-        # ~GotoSheet(el)
         try:
             oSheet = oDoc.getSheets().getByName(el)
             lrow = SheetUtils.getLastUsedRow(oSheet)
             x = stili[el][0]
             stile = stili[el][1]
-            progress.setLimits(0, lrow)
-            progress.show()
-            progress.setValue(0)
             for y in range(0, lrow):
                 codice = oSheet.getCellByPosition(x, y).String
                 if codice in lista:
                     if oSheet.getCellByPosition(x, y).CellStyle ==  stile and \
                     oSheet.getCellByPosition(x, y).String != "000":
                         oSheet.getCellByPosition(x, y).String = suffisso + codice
-                    progress.setValue(y)
         except:
             pass
-        progress.hide()
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -9088,7 +9098,7 @@ def set_area_stampa():
             if oDoc.NamedRanges.hasByName('_Lib_1'):
                 return
     if oSheet.Name in ('Analisi di Prezzo'):
-        EC = 7
+        EC = 6
         SR = 1
         ER -= 1
         oSheet.setPrintTitleRows(False)
@@ -9900,37 +9910,38 @@ def celle_colorate(flag = False):
     
 class tabelle_dati:
     
-    def __init__ (self):
-        """ Class initialiser """
-        pass
-    try:
-        oDoc.dispose()
-    except:
-        pass
+    # ~def __init__ (self):
+        # ~""" Class initialiser """
+        # ~pass
+    # ~try:
+        # ~oDoc.dispose()
+    # ~except:
+        # ~pass
 
-    filename = uno.fileUrlToSystemPath(LeenO_path()) + '/data/tabelle.ods'
-    oDoc = DocUtils.loadDocument(filename, Hidden=True)
+    # ~filename = uno.fileUrlToSystemPath(LeenO_path()) + '/data/tabelle.ods'
+    # ~oDoc = DocUtils.loadDocument(filename, Hidden=True)
 
-    tabelle = {'Tondo per c.a.': 'tondo_ca',
-        'Reti elettrosaldate' : 'reti_els',
-        'Pesi specifici' : 'pesi_specifici',
-        'Categorie' : 'categorie'
-        }
+    # ~tabelle = {'Tondo per c.a.': 'tondo_ca',
+        # ~'Reti elettrosaldate' : 'reti_els',
+        # ~'Pesi specifici' : 'pesi_specifici',
+        # ~'Categorie' : 'categorie'
+        # ~}
 
-    fogli = oDoc.getSheets().getElementNames()
+    # ~fogli = oDoc.getSheets().getElementNames()
     
-    psm = LeenoUtils.getComponentContext().ServiceManager
-    dp = psm.createInstance('com.sun.star.awt.DialogProvider')
+    # ~psm = LeenoUtils.getComponentContext().ServiceManager
+    # ~dp = psm.createInstance('com.sun.star.awt.DialogProvider')
 
-    oDlg = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.Dialog_tabelle?language=Basic&location=application"
-    )
-    combobox = oDlg.getControl('ComboBox1')
-    sString = combobox
-    sString.Text = fogli[0]
-    listbox = oDlg.getControl('ListBox1')
+    # ~oDlg = dp.createDialog(
+        # ~"vnd.sun.star.script:UltimusFree2.Dialog_tabelle?language=Basic&location=application"
+    # ~)
+    # ~combobox = oDlg.getControl('ComboBox1')
+    # ~sString = combobox
+    # ~sString.Text = fogli[0]
+    # ~listbox = oDlg.getControl('ListBox1')
 
     def init():
+        return
         combobox = tabelle_dati.combobox
         listbox = tabelle_dati.listbox
 
@@ -9952,7 +9963,7 @@ class tabelle_dati:
         return
 
     def compila():
-        # ~return
+        return
         combobox = tabelle_dati.combobox
         listbox = tabelle_dati.listbox
         listbox.removeItems(0, len(listbox.Items))
@@ -9973,21 +9984,26 @@ class tabelle_dati:
         tabelle_dati.oDlg.execute()
         return
     def ok():
+        return
         tabelle_dati.oDlg.endExecute()
         tabelle_dati.oDlg.dispose()
         tabelle_dati.oDoc.dispose()
         return
     pass
 
-def tabella_compila():
-    tabelle_dati.compila()
+# ~def tabella_compila():
+    # ~tabelle_dati.compila()
     
-def tabella_ok():
-    tabella_dati.ok()
+# ~def tabella_ok():
+    # ~tabella_dati.ok()
 
 
 import LeenoGiornale    
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+
+    # ~MENU_suffisso_codice()
+    return
     LeenoGiornale.nuovo_giorno()
 
     return
@@ -10000,7 +10016,6 @@ def MENU_debug():
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.CurrentController.ActiveSheet
     # ~LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    LeenoUtils.DocumentRefresh(True)
     # ~sistema_cose()
     return
     

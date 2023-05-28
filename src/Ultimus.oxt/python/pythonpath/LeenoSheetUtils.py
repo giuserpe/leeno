@@ -152,19 +152,19 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('K').Columns.Width = 100
         oSheet.getColumns().getByName('L').Columns.Width = 1600
         oSheet.getColumns().getByName('M').Columns.Width = 1600
-        oSheet.getColumns().getByName('N').Columns.Width = 1600
+        oSheet.getColumns().getByName('N').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('O').Columns.Width = 100
         oSheet.getColumns().getByName('P').Columns.Width = 1600
         oSheet.getColumns().getByName('Q').Columns.Width = 1600
-        oSheet.getColumns().getByName('R').Columns.Width = 1600
+        oSheet.getColumns().getByName('R').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('S').Columns.Width = 100
         oSheet.getColumns().getByName('T').Columns.Width = 1600
         oSheet.getColumns().getByName('U').Columns.Width = 1600
-        oSheet.getColumns().getByName('V').Columns.Width = 1600
+        oSheet.getColumns().getByName('V').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('W').Columns.Width = 100
         oSheet.getColumns().getByName('X').Columns.Width = 1600
-        oSheet.getColumns().getByName('Y').Columns.Width = 1600
-        oSheet.getColumns().getByName('Z').Columns.Width = 1600
+        oSheet.getColumns().getByName('Y').Columns.OptimalWidth = True
+        oSheet.getColumns().getByName('Z').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         SheetUtils.freezeRowCol(oSheet, 0, 3)
     adattaAltezzaRiga(oSheet)

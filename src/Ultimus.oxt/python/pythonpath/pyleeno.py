@@ -1933,12 +1933,14 @@ def voce_breve():
 ########################################################################
 
 
-def MENU_suffisso_codice():
+def MENU_prefisso_codice():
     '''
     Aggiunge prefisso al Codice Articolo
     '''
+
+    chiudi_dialoghi()
     if Dialogs.YesNoDialog(Title='AVVISO!',
-    Text='''Questo comando aggiunge un suffisso a scelta ai SOLI codici di prezzo selezionati,
+    Text='''Questo comando aggiunge un prefisso a scelta ai SOLI codici di prezzo selezionati,
 oppure a tutti se non ne sono stati selezionati.  
 
 Procedo?''') == 1:
@@ -1949,9 +1951,9 @@ Procedo?''') == 1:
     LeenoUtils.DocumentRefresh(False)
 
     testo = ''
-    suffisso = InputBox(
+    prefisso = InputBox(
         testo, t='Inserisci il prefisso per il Codice Articolo (es: "BAS22/1_").')
-    if suffisso in (None, '', ' '):
+    if prefisso in (None, '', ' '):
         return
     oDoc = LeenoUtils.getDocument()
     stili = {
@@ -2004,7 +2006,7 @@ Procedo?''') == 1:
                 if codice in lista:
                     if oSheet.getCellByPosition(x, y).CellStyle ==  stile and \
                     oSheet.getCellByPosition(x, y).String != "000":
-                        oSheet.getCellByPosition(x, y).String = suffisso + codice
+                        oSheet.getCellByPosition(x, y).String = prefisso + codice
         except:
             pass
     LeenoUtils.DocumentRefresh(True)
@@ -9907,102 +9909,13 @@ def celle_colorate(flag = False):
             if somma >0:
                 oSheet.getCellByPosition(x+1, y).Value = somma
     return
-    
-class tabelle_dati:
-    
-    # ~def __init__ (self):
-        # ~""" Class initialiser """
-        # ~pass
-    # ~try:
-        # ~oDoc.dispose()
-    # ~except:
-        # ~pass
-
-    # ~filename = uno.fileUrlToSystemPath(LeenO_path()) + '/data/tabelle.ods'
-    # ~oDoc = DocUtils.loadDocument(filename, Hidden=True)
-
-    # ~tabelle = {'Tondo per c.a.': 'tondo_ca',
-        # ~'Reti elettrosaldate' : 'reti_els',
-        # ~'Pesi specifici' : 'pesi_specifici',
-        # ~'Categorie' : 'categorie'
-        # ~}
-
-    # ~fogli = oDoc.getSheets().getElementNames()
-    
-    # ~psm = LeenoUtils.getComponentContext().ServiceManager
-    # ~dp = psm.createInstance('com.sun.star.awt.DialogProvider')
-
-    # ~oDlg = dp.createDialog(
-        # ~"vnd.sun.star.script:UltimusFree2.Dialog_tabelle?language=Basic&location=application"
-    # ~)
-    # ~combobox = oDlg.getControl('ComboBox1')
-    # ~sString = combobox
-    # ~sString.Text = fogli[0]
-    # ~listbox = oDlg.getControl('ListBox1')
-
-    def init():
-        return
-        combobox = tabelle_dati.combobox
-        listbox = tabelle_dati.listbox
-
-        combobox.addItems(tabelle_dati.fogli, 0)
-        nome = combobox.Text
-
-        oSheet = tabelle_dati.oDoc.Sheets.getByName(nome)
-        Dati = oSheet.getCellRangeByName(tabelle_dati.tabelle[nome]).DataArray
-        lista = []
-        for el in Dati:
-            lista.append(list(el)[0])
-        listbox.addItems(lista, 0)
-        # ~tabelle_dati.oDlg.execute()
-        # ~try:
-            # ~tabelle_dati.oDlg.endExecute()
-        # ~except:
-            # ~pass
-        # ~DLG.chi(combobox.Text)
-        return
-
-    def compila():
-        return
-        combobox = tabelle_dati.combobox
-        listbox = tabelle_dati.listbox
-        listbox.removeItems(0, len(listbox.Items))
-        
-        nome = combobox.Text
-        # ~DLG.mri(combobox)
-        # ~return
-        
-        oSheet = tabelle_dati.oDoc.Sheets.getByName(nome)
-        Dati = oSheet.getCellRangeByName(tabelle_dati.tabelle[nome]).DataArray
-
-        lista = []
-        for el in Dati:
-            lista.append(list(el)[0])
-
-        listbox.addItems(lista, 0)
-        tabelle_dati.oDlg.endExecute()
-        tabelle_dati.oDlg.execute()
-        return
-    def ok():
-        return
-        tabelle_dati.oDlg.endExecute()
-        tabelle_dati.oDlg.dispose()
-        tabelle_dati.oDoc.dispose()
-        return
-    pass
-
-# ~def tabella_compila():
-    # ~tabelle_dati.compila()
-    
-# ~def tabella_ok():
-    # ~tabella_dati.ok()
 
 
 import LeenoGiornale    
 def MENU_debug():
     LeenoUtils.DocumentRefresh(True)
 
-    # ~MENU_suffisso_codice()
+    # ~MENU_prefisso_codice()
     return
     LeenoGiornale.nuovo_giorno()
 

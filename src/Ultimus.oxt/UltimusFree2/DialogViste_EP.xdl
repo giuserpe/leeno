@@ -49,7 +49,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_np?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="18" dlg:left="108" dlg:top="125" dlg:width="90" dlg:height="12" dlg:help-text="&amp;928.DialogViste_EP.CommandButton8.HelpText" dlg:value="&amp;929.DialogViste_EP.CommandButton8.Label" dlg:valign="center">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_suffisso_codice?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_prefisso_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

@@ -2463,6 +2463,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
                   '*.odt': 'Writer(*.odt)',
                   '*.ods': 'Calc(*.ods)',
                   '*.xls': 'Excel(*.xls)',
+                  '*.xlsx': 'Excel(*.xlsx)',
                   '*.odb': 'Base(*.odb)',
                   '*.odg': 'Draw(*.odg)',
                   '*.odp': 'Impress(*.odp)',

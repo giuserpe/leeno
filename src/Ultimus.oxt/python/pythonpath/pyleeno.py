@@ -273,11 +273,6 @@ def creaComputo(arg=1):
 Prima di procedere è meglio dare un nome al file.
 Lavorando su un file senza nome potresti avere dei malfunzionamenti.
 ''')
-        # ~DLG.MsgBox(
-            # ~"Prima di procedere è consigliabile salvare il lavoro.\n"
-            # ~"Provvedi subito a dare un nome al file di computo...",
-            # ~"Dai un nome al file...")
-        salva_come()
         DlgMain()
     return document
 
@@ -660,8 +655,11 @@ di partenza deve essere contigua.''')
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
-    oSheet = oDoc.getSheets().getByName(nSheetDCC)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    try:
+        oSheet = oDoc.getSheets().getByName(nSheetDCC)
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    except:
+        pass
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
@@ -8929,7 +8927,7 @@ def sistema_cose():
                 ' $', '').replace('Ó', 'à').replace(
                 'Þ', 'é').replace('&#x13;','').replace(
                 '&#xD;&#xA;','').replace('&#xA;','').replace(
-                '&apos;',"'").replace('&#x3;&#x1;','')
+                '&apos;',"'").replace('&#x3;&#x1;','').replace('\n \n','\n')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
             while '\n\n' in testo:
@@ -9913,7 +9911,9 @@ def celle_colorate(flag = False):
 
 import LeenoGiornale    
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoImport.MENU_FVG()
+    # ~LeenoUtils.DocumentRefresh(True)
+    sistema_cose()
 
     # ~MENU_prefisso_codice()
     return
@@ -9929,7 +9929,6 @@ def MENU_debug():
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.CurrentController.ActiveSheet
     # ~LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    # ~sistema_cose()
     return
     
     oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()

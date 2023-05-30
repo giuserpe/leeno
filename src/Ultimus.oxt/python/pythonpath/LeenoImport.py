@@ -17,6 +17,7 @@ import SheetUtils
 import LeenoSheetUtils
 
 import Dialogs
+import DocUtils
 
 import LeenoImport_XmlSix
 import LeenoImport_XmlToscana
@@ -850,8 +851,19 @@ def MENU_FVG():
     Importa Prezzario Friuli Venezia Giulia secondo schema tabellare
     rilasciato a gennaio 2023
     '''
-    oDoc = LeenoUtils.getDocument()
-    filename = uno.fileUrlToSystemPath(oDoc.getURL())
+    filename = Dialogs.FileSelect('Scegli il Prezzario Friuli Venezia Giulia da importare...', '*.xlsx')
+    if filename in ('Cancel', '', None):
+        return
+
+
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+
+    oDoc = DocUtils.loadDocument(filename, Hidden=True)
+    progress.show()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet)
     
@@ -906,17 +918,21 @@ def MENU_FVG():
         'articoli' : artList
         }
     # creo nuovo file di computo
-    oDoc = PL.creaComputo(0)
-    LeenoUtils.DocumentRefresh(False)
-    dest = '.'.join(filename.split('.')[0:-1]) + '.ods'
-    # salva il file col nome del file di origine
-    PL.salva_come(dest)
+    # ~oDoc = PL.creaComputo(0)
+    orig = oDoc.getURL()
+    dest0 = orig[0:-5] + '.ods'
 
-    # visualizza la progressbar
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
+    orig = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ots')
+    dest = uno.fileUrlToSystemPath(dest0)
+
+    PL.shutil.copyfile(orig, dest)
+    PL._gotoDoc(dest)  # vado sul nuovo file
+
+    progress.hide()
+    oDoc = LeenoUtils.getDocument()
     progress.show()
+    
+    LeenoUtils.DocumentRefresh(False)
 
     # compila l'elenco prezzi
     compilaElencoPrezzi(oDoc, dati, progress)
@@ -925,11 +941,10 @@ def MENU_FVG():
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oDoc.CurrentController.setActiveSheet(oSheet)
 
+    progress.hide()
+
     # messaggio di ok
     Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
-
-    # nasconde la progressbar
-    progress.hide()
 
     # aggiunge informazioni nel foglio
     # ~oSheet.getRows().insertByIndex(3, 1)
@@ -976,5 +991,5 @@ ATTENZIONE:
 
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
         sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
-        )    
+        )
     return

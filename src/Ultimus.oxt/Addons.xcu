@@ -909,7 +909,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_ImportElencoPrezziXML</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzari in formato XML</value>
+                  <value>Importa prezzario da formato XML</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -923,7 +923,21 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_Piemonte</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci prezzario da set XLS Regione Piemonte</value>
+                  <value>Importa prezzario da set XLS Regione Piemonte</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="IE021" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_FVG</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa prezzario da XLSX Regione Friuli Venezia Giulia</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

@@ -4795,6 +4795,8 @@ def Copia_riga_Ent(arg=None):
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
+    elif nome_sheet == 'Elenco Prezzi':
+        MENU_nuova_voce_scelta()
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -9910,13 +9912,12 @@ def celle_colorate(flag = False):
 
 
 import LeenoGiornale    
-def MENU_debug():
+def MENU_debug(arg = None):
     # ~LeenoImport.MENU_FVG()
     # ~LeenoUtils.DocumentRefresh(True)
-    sistema_cose()
+    # ~sistema_cose()
 
     # ~MENU_prefisso_codice()
-    return
     LeenoGiornale.nuovo_giorno()
 
     return
@@ -10112,7 +10113,7 @@ def MENU_debug():
     # ~lista = ('1', '2', '3')
     # ~oDialog1.getControl('ComboBox1').addItems(lista, 1)
 
-    LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.Documentg_exportedScriptsRefresh(True)
     oDoc = LeenoUtils.getDocument() 
     oStyleFam = oDoc.StyleFamilies
     oTablePageStyles = oStyleFam.getByName("PageStyles")
@@ -10140,7 +10141,7 @@ def MENU_debug():
     try:
         oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
     except:
-        pass
+        passg_exportedScripts
     try:
         oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
     except:
@@ -10153,7 +10154,7 @@ def MENU_debug():
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = donazioni
+g_exportedScripts = (MENU_debug, )
 ########################################################################
 ########################################################################
 # ... here is the python script code

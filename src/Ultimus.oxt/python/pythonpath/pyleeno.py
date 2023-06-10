@@ -22,7 +22,7 @@
     # ~datarif = datetime.now()
     # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
-
+from scriptforge import CreateScriptService
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 
@@ -1603,8 +1603,7 @@ def ordina_col(ncol):
     ncol   { integer } : id colonna
     ordina i dati secondo la colonna con id ncol
     '''
-    # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1683,6 +1682,74 @@ def sproteggi_sheet_TUTTE():
         oDoc.Sheets.moveByName("S5", 10)
     if oDoc.Sheets.hasByName("copyright_LeenO"):
         oDoc.Sheets.moveByName("copyright_LeenO", oDoc.Sheets.Count)
+
+
+########################################################################
+
+def setPageStyle():
+    '''
+    Attribuisce ad ogni foglio il suo specifico stile di pagina
+    '''
+    stili = {
+        'cP_Cop': 'Page_Style_COPERTINE',
+        'COMPUTO': 'PageStyle_COMPUTO_A4',
+        'VARIANTE': 'PageStyle_COMPUTO_A4',
+        'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
+        # ~'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
+        'Analisi di Prezzo': 'PageStyle_COMPUTO_A4',
+        'CONTABILITA': 'Page_Style_Libretto_Misure2',
+        'Registro': 'PageStyle_REGISTRO_A4',
+        'SAL': 'PageStyle_REGISTRO_A4',
+    }
+
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+
+    oDoc = LeenoUtils.getDocument()
+    nSheet = oDoc.CurrentController.ActiveSheet.Name
+
+    for el in (stili.keys()):
+        try:
+            GotoSheet(el)
+
+            oProp = []
+
+            oProp0 = PropertyValue()
+            oProp0.Name = "Template"
+            oProp0.Value = stili[el]
+            oProp.append(oProp0)
+
+            oProp1 = PropertyValue()
+            oProp1.Name =  "Family"
+            oProp1.Value = 8
+            oProp.append(oProp1)
+
+            properties = tuple(oProp)
+
+            dispatchHelper.executeDispatch(oFrame, ".uno:StyleApply", "", 0, properties)
+        except:
+            pass
+
+    GotoSheet(nSheet)
+
+    # cancella stili di pagina #######################################
+    # ~stili_pagina = []
+    # ~fine = oDoc.StyleFamilies.getByName('PageStyles').Count
+    # ~for n in range(0, fine):
+    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
+    # ~stili_pagina.append(oAktPage.DisplayName)
+    # ~for el in stili_pagina:
+    # ~if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
+    # 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
+    # 'PageStyle_Elenco Prezzi'):
+    # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
+    # ~return
+    # cancella stili di pagina #######################################
+
+
+    return
 
 
 ########################################################################
@@ -1790,8 +1857,6 @@ def salva_come(nomefile=None):
     nomefile   { string } : nome del file di destinazione
     Se presente l'argomento nomefile, salva il file corrente in nomefile.
     '''
-    # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -3806,7 +3871,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellRangeByPosition(1, riga_corrente + 3, 1,
                                       riga_corrente + 3).CellStyle = 'ULTIMUS'
         oSheet.getCellByPosition(1,
-                                 riga_corrente + 5).Formula = 'Il Progettista'
+                                 riga_corrente + 5).Formula = 'Il Tecnico'
         oSheet.getCellByPosition(
             1, riga_corrente + 6
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
@@ -3997,7 +4062,7 @@ def MENU_firme_in_calce(lrowF=None):
         oRange.setDataArray(aSaveData)
 
         oSheet.getCellByPosition(2,
-                                 riga_corrente + 5).Formula = 'Il Progettista'
+                                 riga_corrente + 5).Formula = 'Il Tecnico'
         oSheet.getCellByPosition(
             2, riga_corrente + 6
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
@@ -9104,6 +9169,11 @@ def set_area_stampa():
         SR = 1
         ER -= 1
         oSheet.setPrintTitleRows(False)
+    if oSheet.Name in ('cP_Cop'):
+        EC = 7
+        SR = 0
+        ER -= 1
+        oSheet.setPrintTitleRows(False)
 # imposta area di stampa
     oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oStampa.Sheet = iSheet
@@ -9112,7 +9182,9 @@ def set_area_stampa():
     oStampa.EndColumn = EC
     oStampa.EndRow = ER
     oSheet.setPrintAreas((oStampa,))
-    return
+    
+    setPageStyle()
+
 
 
 ########################################################################
@@ -9136,7 +9208,7 @@ Le formattazioni dirette impostate durante il lavoro andranno perse.
 Per ripristinare i colori, tipici dei fogli di LeenO, basterà selezionare
 le celle ed usare "CTRL+M".
 
-Procedo cambiando i colori?''') == 1:
+Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         LeenoSheetUtils.SbiancaCellePrintArea()
 
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -9147,75 +9219,13 @@ Procedo cambiando i colori?''') == 1:
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
     committente = "\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
     luogo = '\n' + oSheet.Name
+    if oSheet.Name == 'COMPUTO':
+        luogo = '\nComputo Metrico Estimativo'
     if oSheet.Name == 'COMPUTO' and oSheet.getColumns().getByName("AD").Columns.IsVisible == True:
+        
         luogo = luogo + ' - Incidenza MdO'
     # ~luogo = '\nLocalità: ' + oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
 
-    # try:
-    #    oSheet = oDoc.CurrentController.ActiveSheet
-    # except Exception:
-    #    pass
-    #  su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
-
-    # cancella stili di pagina #######################################
-    # ~stili_pagina = []
-    # ~fine = oDoc.StyleFamilies.getByName('PageStyles').Count
-    # ~for n in range(0, fine):
-    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-    # ~stili_pagina.append(oAktPage.DisplayName)
-    # ~for el in stili_pagina:
-    # ~if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
-    # 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
-    # 'PageStyle_Elenco Prezzi'):
-    # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
-    # ~return
-    # cancella stili di pagina #######################################
-
-    # crea solo gli stili che servono
-    # il ciclo for per questa operazione non va, quindi procedo per passi singoli
-    # ~try:
-        # ~oTablePageStyles.insertByName('Page_Style_COPERTINE', oPgStyle)
-    # ~except:
-        # ~pass
-    # ~try:
-        # ~oTablePageStyles.insertByName('PageStyle_COMPUTO_A4', oPgStyle)
-    # ~except:
-        # ~pass
-    # ~try:
-        # ~oTablePageStyles.insertByName('PageStyle_Elenco Prezzi', oPgStyle)
-    # ~except:
-        # ~pass
-    # ~try:
-        # ~oTablePageStyles.insertByName('Page_Style_Libretto_Misure2', oPgStyle)
-    # ~except:
-        # ~pass
-    # ~try:
-        # ~oTablePageStyles.insertByName('PageStyle_REGISTRO_A4', oPgStyle)
-    # ~except:
-        # ~pass
-
-    stili = {
-        'cP_Cop': 'Page_Style_COPERTINE',
-        'COMPUTO': 'PageStyle_COMPUTO_A4',
-        'VARIANTE': 'PageStyle_COMPUTO_A4',
-        'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
-        # ~'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
-        'Analisi di Prezzo': 'PageStyle_COMPUTO_A4',
-        'CONTABILITA': 'Page_Style_Libretto_Misure2',
-        'Registro': 'PageStyle_REGISTRO_A4',
-        'SAL': 'PageStyle_REGISTRO_A4',
-    }
-
-    
-    oStyleFam = oDoc.StyleFamilies
-    oTablePageStyles = oStyleFam.getByName("PageStyles")
-    oPgStyle = oDoc.createInstance("com.sun.star.style.PageStyle")
-    for el in stili.keys():
-        try:
-            oTablePageStyles.insertByName(stili[el], oPgStyle)
-            oDoc.getSheets().getByName(el).PageStyle = stili[el]
-        except Exception:
-            pass
     ###
     #  oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
     #  DLG.mri(oAktPage)
@@ -9911,32 +9921,12 @@ def celle_colorate(flag = False):
     return
 
 
-import LeenoGiornale    
-def MENU_debug(arg = None):
-    # ~LeenoImport.MENU_FVG()
-    # ~LeenoUtils.DocumentRefresh(True)
-    # ~sistema_cose()
-
-    # ~MENU_prefisso_codice()
-    LeenoGiornale.nuovo_giorno()
-
-    return
-    
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~DLG.mri(oDoc.getCurrentSelection().getRangeAddresses())
-    # ~tabelle_dati.init()
-    # ~tabella_compila()
-    # ~return
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    return
-    
-    oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-    
 
 
-    
+import LeenoGiornale
+import LeenoTabelle
+def MENU_debug():
+    resetAttributes()
     return
     
     lrow = SheetUtils.getLastUsedRow(oSheet) +1
@@ -10154,7 +10144,7 @@ def MENU_debug(arg = None):
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = (MENU_debug, )
+# g_exportedScripts = (MENU_debug, )
 ########################################################################
 ########################################################################
 # ... here is the python script code

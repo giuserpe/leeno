@@ -167,9 +167,13 @@ Sub MENU_prefisso_codice
 	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_prefisso_codice&quot;)
 End Sub
 rem ######################################################################
-&apos;Sub MENU_tabella_compila
-&apos;	ScriptPy(&quot;pyleeno&quot;,&quot;tabella_compila&quot;)
-&apos;End Sub
+Sub MENU_tabella_compila
+	ScriptPy(&quot;LeenoTabelle&quot;,&quot;tabella_compila&quot;)
+End Sub
+rem ######################################################################
+Sub MENU_tabella_ok
+	ScriptPy(&quot;LeenoTabelle&quot;,&quot;tabella_ok&quot;)
+End Sub
 rem ######################################################################
 Sub chiudi_dialoghi
 	ScriptPy(&quot;pyleeno&quot;,&quot;chiudi_dialoghi&quot;)

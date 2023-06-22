@@ -38,6 +38,7 @@ Sub Sposta_Voce_Computo_Att &apos; &apos; sposta una Voce di Computo in nuova po
 
 	StartRow = getRigaIniziale(SelectedRange)
 	If StartRow &lt;2 Then StartRow = 2
+	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;Livello-0-scritta&quot; Then StartRowM =StartRow +1
 	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;Livello-1-scritta&quot; Then StartRowM =StartRow +1
 	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;livello2 valuta&quot; Then StartRowM =StartRow +1
 	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;comp Int_colonna&quot; Then StartRowM =StartRow +1

@@ -41,6 +41,22 @@ import LeenoUtils
 import pyleeno as PL
 import SheetUtils
 ########################################################################
+
+
+def creaGiornale():
+    desktop = LeenoUtils.getDesktop()
+    opz = PropertyValue()
+    opz.Name = 'AsTemplate'
+    opz.Value = True
+    document = desktop.loadComponentFromURL(
+        PL.LeenO_path() + '/template/leeno/Giornale_Lavori.ots', "_blank", 0,
+        (opz, ))
+    return document
+    
+    
+########################################################################
+
+
 def nuovo_giorno():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('GIORNALE')
@@ -102,3 +118,15 @@ def nuovo_giorno():
         # ~oSheet.group(oCellRangeAddr, 1)
     oDoc.CurrentController.setFirstVisibleRow(0)
     
+    
+def MENU_nuovo_giorno():
+    '''
+    Apre un nuovo giornale lavori o inserisce nuovo giorno
+    '''
+    oDoc = LeenoUtils.getDocument()
+    if oDoc.getSheets().hasByName('GIORNALE_BIANCO'):
+        PL.GotoSheet('GIORNALE')
+    else:
+        creaGiornale()
+    nuovo_giorno()
+    return

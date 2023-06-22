@@ -47,6 +47,7 @@ import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
 import LeenoComputo
+import LeenoGiornale
 import LeenoContab
 import LeenoAnalysis
 import LeenoDialogs as DLG
@@ -1443,61 +1444,6 @@ def Filtra_computo(nSheet, nCol, sString):
     oDoc.CurrentController.select(oSheet.getCellByPosition(0, 3))
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-
-
-########################################################################
-
-
-# ~def Filtra_Computo_Cap():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~nSheet = oSheet.getCellByPosition(7, 8).String
-    # ~sString = oSheet.getCellByPosition(7, 10).String
-    # ~Filtra_computo(nSheet, 31, sString)
-
-
-########################################################################
-
-
-# ~def Filtra_Computo_SottCap():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~nSheet = oSheet.getCellByPosition(7, 8).String
-    # ~sString = oSheet.getCellByPosition(7, 12).String
-    # ~Filtra_computo(nSheet, 32, sString)
-
-
-########################################################################
-
-
-# ~def Filtra_Computo_A():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~nSheet = oSheet.getCellByPosition(7, 8).String
-    # ~sString = oSheet.getCellByPosition(7, 14).String
-    # ~Filtra_computo(nSheet, 33, sString)
-
-
-########################################################################
-
-
-# ~def Filtra_Computo_B():
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~nSheet = oSheet.getCellByPosition(7, 8).String
-    # ~sString = oSheet.getCellByPosition(7, 16).String
-    # ~Filtra_computo(nSheet, 34, sString)
-
-
-########################################################################
-
-
-# ~def Filtra_Computo_C():  # filtra in base al codice di prezzo
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~nSheet = oSheet.getCellByPosition(7, 8).String
-    # ~sString = oSheet.getCellByPosition(7, 20).String
-    # ~Filtra_computo(nSheet, 1, sString)
 
 
 ########################################################################
@@ -2923,14 +2869,28 @@ def riordina_ElencoPrezzi(oDoc):
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+
     SR = oRangeAddress.StartRow + 1
     SC = 0 #oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
-    SR = oRangeAddress.StartRow + 1
     ER = oRangeAddress.EndRow -1
+
     if SR == ER:
         return
+    try:
+        ER = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) -1
+        oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
+        SheetUtils.simpleSortColumn(oRange, 0, True)
 
+        SR = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) +1
+        SC = 0 #oRangeAddress.StartColumn
+        EC = oRangeAddress.EndColumn
+        ER = oRangeAddress.EndRow -1
+        oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
+        SheetUtils.simpleSortColumn(oRange, 0, True)
+    except:
+        pass
+    
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     SheetUtils.simpleSortColumn(oRange, 0, True)
 
@@ -4390,7 +4350,7 @@ def MENU_azzera_voce():
         # ~numera_voci(1)
     except Exception:
         pass
-    _gotoCella(0, fine)
+    _gotoCella(1, fine +3)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -4816,8 +4776,8 @@ def copia_riga_analisi(lrow):
                                                      1).getRangeAddress()
             oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
             oSheet.copyRange(oCellAddress, oRangeAddress)
-        oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
-    _gotoCella(1, lrow)
+        # ~oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
+    _gotoCella(0, lrow)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         pesca_cod()
 
@@ -4995,9 +4955,19 @@ def pesca_cod():
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
     if oSheet.Name in ('Analisi di Prezzo'):
+        test = oSheet.getCellByPosition(0, lrow).String
         partenza = cerca_partenza()
         cerca_in_elenco()
         GotoSheet('Elenco Prezzi')
+        try:
+            if test == '':
+                oSheet = oDoc.CurrentController.ActiveSheet
+                y = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) + 1
+                _gotoCella(0, y)
+            return
+        except:
+            pass
+
 ###
 
     if oSheet.Name in ('CONTABILITA'):
@@ -6280,6 +6250,9 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
         ins_voce_contab()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
+    elif oDoc.getSheets().hasByName('GIORNALE_BIANCO'):
+        LeenoGiornale.MENU_nuovo_giorno()
+
     LeenoUtils.DocumentRefresh(True)
     # ~oDoc.enableAutomaticCalculation(True)
 
@@ -6491,17 +6464,17 @@ def inizializza_elenco():
     #   riga di totale importo COMPUTO
     y -= 1
     oSheet.getCellByPosition(12, y).String = 'TOTALE'
-    oSheet.getCellByPosition(13, y).Formula = '=SUBTOTAL(9;N3:N' + str(y) + ')'
+    oSheet.getCellByPosition(13, y).Formula = '=SUBTOTAL(9;N:N)'
     #  riga di totale importo CONTABILITA'
     oSheet.getCellByPosition(16, y).String = 'TOTALE'
-    oSheet.getCellByPosition(17, y).Formula = '=SUBTOTAL(9;R3:R' + str(y) + ')'
+    oSheet.getCellByPosition(17, y).Formula = '=SUBTOTAL(9;R:R)'
     #  rem    riga di totale importo VARIANTE
     oSheet.getCellByPosition(20, y).String = 'TOTALE'
-    oSheet.getCellByPosition(21, y).Formula = '=SUBTOTAL(9;V3:V' + str(y) + ')'
+    oSheet.getCellByPosition(21, y).Formula = '=SUBTOTAL(9;V:V)'
     #  rem    riga di totale importo PARALLELO
     oSheet.getCellByPosition(23, y).String = 'TOTALE'
-    oSheet.getCellByPosition(24, y).Formula = '=SUBTOTAL(9;Y3:Y' + str(y) + ')'
-    oSheet.getCellByPosition(25, y).Formula = '=SUBTOTAL(9;Z3:Z' + str(y) + ')'
+    oSheet.getCellByPosition(24, y).Formula = '=SUBTOTAL(9;Y:Y)'
+    oSheet.getCellByPosition(25, y).Formula = '=SUBTOTAL(9;Z:Z)'
     oSheet.getCellRangeByPosition(10, y, 26,
                                   y).CellStyle = 'EP statistiche_Contab'
 
@@ -6557,26 +6530,23 @@ def inizializza_computo():
 
     oSheet.getCellByPosition(2, 1).String = 'QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellByPosition(
-        17, 1).Formula = '=SUBTOTAL(9;R3:R' + str(lRowE + 1) + ')'  # sicurezza
+        17, 1).Formula = '=SUBTOTAL(9;R:R)'  # sicurezza
     oSheet.getCellByPosition(
         18,
-        1).Formula = '=SUBTOTAL(9;S3:S' + str(lRowE + 1) + ')'  # importo lavori
+        1).Formula = '=SUBTOTAL(9;S:S)'  # importo lavori
     oSheet.getCellByPosition(0, 1).Formula = '=AK2'
 
     oSheet.getCellByPosition(
         28,
-        1).Formula = '=SUBTOTAL(9;AC3:AC' + str(lRowE +
-                                                1) + ')'  # importo materiali
+        1).Formula = '=SUBTOTAL(9;AC:AC)'  # importo materiali
 
     oSheet.getCellByPosition(29,
                              1).Formula = '=AE2/S2'  # Incidenza manodopera %
     oSheet.getCellByPosition(29, 1).CellStyle = "Comp TOTALI %"
     oSheet.getCellByPosition(
         30,
-        1).Formula = '=SUBTOTAL(9;AE3:AE' + str(lRowE +
-                                                1) + ')'  # importo manodopera
-    oSheet.getCellByPosition(36, 1).Formula = '=SUBTOTAL(9;AK3:AK' + str(
-        lRowE + 1) + ')'  # totale computo sole voci senza errori
+        1).Formula = '=SUBTOTAL(9;AE:AE)'  # importo manodopera
+    oSheet.getCellByPosition(36, 1).Formula = '=SUBTOTAL(9;AK:AK)'  # totale computo sole voci senza errori
 
     oSheet.getCellRangeByPosition(0, 1, 43, 1).CellStyle = "comp In testa"
     oSheet.getCellRangeByPosition(0, 0, 43, 2).merge(False)
@@ -6625,17 +6595,23 @@ def inizializza_computo():
     oSheet.getCellByPosition(2, lRowE).String = "TOTALI COMPUTO"
     oSheet.getCellByPosition(
         17,
-        lRowE).Formula = "=SUBTOTAL(9;R3:R" + str(lRowE +
-                                                  1) + ")"  # importo sicurezza
+        lRowE).Formula = "=SUBTOTAL(9;R:R)"  # importo sicurezza
+
+        # ~lRowE).Formula = "=SUBTOTAL(9;R3:R" + str(lRowE +
+                                                  # ~1) + ")"  # importo sicurezza
     oSheet.getCellByPosition(
-        18, lRowE).Formula = "=SUBTOTAL(9;S3:S" + str(lRowE +
-                                                      1) + ")"  # importo lavori
+        18, lRowE).Formula = "=SUBTOTAL(9;S:S)"  # importo lavori
+        # ~18, lRowE).Formula = "=SUBTOTAL(9;S3:S" + str(lRowE +
+                                                      # ~1) + ")"  # importo lavori
+                                                      
     oSheet.getCellByPosition(29, lRowE).Formula = "=AE" + str(
         lRowE + 1) + "/S" + str(lRowE + 1) + ""  # Incidenza manodopera %
-    oSheet.getCellByPosition(30, lRowE).Formula = "=SUBTOTAL(9;AE3:AE" + str(
-        lRowE + 1) + ")"  # importo manodopera
-    oSheet.getCellByPosition(36, lRowE).Formula = "=SUBTOTAL(9;AK3:AK" + str(
-        lRowE + 1) + ")"  # totale computo sole voci senza errori
+    oSheet.getCellByPosition(30, lRowE).Formula = "=SUBTOTAL(9;AE:AE)"  # importo manodopera
+    # ~oSheet.getCellByPosition(30, lRowE).Formula = "=SUBTOTAL(9;AE3:AE" + str(
+        # ~lRowE + 1) + ")"  # importo manodopera
+    oSheet.getCellByPosition(36, lRowE).Formula = "=SUBTOTAL(9;AK:Ak)"  # totale computo sole voci senza errori
+    # ~oSheet.getCellByPosition(36, lRowE).Formula = "=SUBTOTAL(9;AK3:AK" + str(
+        # ~lRowE + 1) + ")"  # totale computo sole voci senza errori
     oSheet.getCellRangeByPosition(0, lRowE, 36,
                                   lRowE).CellStyle = "Comp TOTALI"
     oSheet.getCellByPosition(24, lRowE).CellStyle = "Comp TOTALI %"
@@ -7411,6 +7387,17 @@ def filtra_codice(voce=None):
         oSheet.group(oCellRangeAddr, 1)
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
+
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 29
+    oCellRangeAddr.EndColumn = 30
+    oSheet.group(oCellRangeAddr, 0)
+    oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
+
+
+
     try:
         _gotoCella(0, qui)
     except:
@@ -8989,7 +8976,7 @@ def sistema_cose():
     for y in lista_y:
         if oSheet.getCellByPosition(lcol, y).Type.value == 'TEXT':
             testo = oSheet.getCellByPosition(lcol, y).String.replace(
-                '\t', ' ').replace('Ã¨', 'è').replace(
+                '\t', ' ').replace('Ã¨', 'è').replace('','').replace(
                 'Â°', '°').replace('Ã', 'à').replace(
                 ' $', '').replace('Ó', 'à').replace(
                 'Þ', 'é').replace('&#x13;','').replace(
@@ -9066,8 +9053,8 @@ Associato a Ctrl+Shift+C'''
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             larg = oSheet.getCellByPosition(x, lrow).Columns.Width
-            # ~oSheet.getCellByPosition(x, lrow).Value = larg
-            oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
+            oSheet.getCellByPosition(x, lrow).Value = larg
+            # ~oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'
         elif oSheet.getCellByPosition(x, lrow).Formula == '=CELL("col")-1':
             oSheet.getCellByPosition(x, lrow).String = ''
@@ -9681,7 +9668,9 @@ def somma():
 ########################################################################
 
 def calendario():
-    #calendario
+    '''
+    Mostra un calendario da cui selezionare la data che mette nella cella
+    '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     x = LeggiPosizioneCorrente()[0]
@@ -9690,9 +9679,13 @@ def calendario():
     lst = str(testo).split('-')
     try:
         testo = lst[2] + '/' + lst[1] + '/' + lst[0]
-        oSheet.getCellByPosition(x, y).String = testo
+        oSheet.getCellByPosition(x, y).Formula = '=DATEVALUE("' + testo + '")'
+        setFormatoNumeri(36)
     except:
         pass
+    comando('Copy')
+    paste_clip(arg=None, insCells=0, pastevalue=True)
+    
     return
 
 
@@ -9923,10 +9916,14 @@ def celle_colorate(flag = False):
 
 
 
-import LeenoGiornale
 import LeenoTabelle
 def MENU_debug():
-    resetAttributes()
+    # ~inizializza_elenco()
+    calendario()
+    # ~sistema_cose()
+    # ~oDoc = LeenoUtils.getDocument()
+
+    # ~riordina_ElencoPrezzi(oDoc)
     return
     
     lrow = SheetUtils.getLastUsedRow(oSheet) +1

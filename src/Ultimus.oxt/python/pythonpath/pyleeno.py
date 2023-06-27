@@ -9186,7 +9186,11 @@ def MENU_sistema_pagine():
     if not oDoc.getSheets().hasByName('M1'):
         return
 
-    set_area_stampa()
+    # se il preview è già attivo, ferma tutto
+    try:
+        set_area_stampa()
+    except:
+        return
 
     if Dialogs.YesNoDialog(Title='AVVISO!',
     Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
@@ -9208,6 +9212,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
     luogo = '\n' + oSheet.Name
     if oSheet.Name == 'COMPUTO':
         luogo = '\nComputo Metrico Estimativo'
+    elif oSheet.Name == 'VARIANTE':
+        luogo = '\nPerizia di Variante'
+
     if oSheet.Name == 'COMPUTO' and oSheet.getColumns().getByName("AD").Columns.IsVisible == True:
         
         luogo = luogo + ' - Incidenza MdO'
@@ -9341,6 +9348,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
                                                        'Elenco Prezzi'):
             _gotoCella(0, 3)
         if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):
+            LeenoAnalysis.MENU_impagina_analisi()
             _gotoCella(0, 2)
         setPreview(1)
     except Exception:
@@ -9350,8 +9358,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         # bordo.LineWidth = 0
         # bordo.OuterLineWidth = 0
         # oAktPage.RightBorder = bordo
-    LeenoAnalysis.MENU_impagina_analisi()
-    last = SheetUtils.getUsedArea(oSheet).EndRow
+    # ~last = SheetUtils.getUsedArea(oSheet).EndRow
+
     # ~oSheet.getCellRangeByPosition(1, 0, 41, last).Rows.OptimalHeight = True
     return
 

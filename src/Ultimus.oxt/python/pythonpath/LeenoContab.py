@@ -37,7 +37,7 @@ def sbloccaContabilita(oSheet, lrow):
            Text= "Lavorando in questo punto del foglio,\n"
                  "comprometterai la validità degli atti contabili già emessi.\n\n"
                  "Vuoi procedere?\n\n"
-                 "SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!"
+                 "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
         )
         if res == 1:
             LeenoUtils.setGlobalVar('sblocca_computo', 1)

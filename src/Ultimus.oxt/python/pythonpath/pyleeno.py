@@ -362,6 +362,7 @@ def MENU_invia_voce():
     oSheet = oDoc.CurrentController.ActiveSheet
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
 
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -513,7 +514,7 @@ def MENU_invia_voce():
                 numera_voci(1)
                 lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(
-                 0, lrow).CellStyle in (stili_cat + stili_computo + ('comp Int_colonna', )):
+                 0, lrow).CellStyle in (stili_cat + stili_computo + stili_contab + ('comp Int_colonna', )):
                 if codice_voce(lrow) in ('', 'Cod. Art.?'):
                     codice_voce(lrow, LeenoUtils.getGlobalVar('cod'))
                 else:
@@ -2024,6 +2025,36 @@ Procedo?''') == 1:
 ########################################################################
 
 
+def nescondi_voci_zero():
+    '''
+    Nasconde le voci il cui valore della colonna corrente è pari a zero.
+    '''
+    LeenoUtils.DocumentRefresh(True)
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lcol = LeggiPosizioneCorrente()[0]
+    
+# nascondo i titoli di categoria
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+
+    ER = SheetUtils.getLastUsedRow(oSheet)
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
+    for i in reversed(range(3, ER)):
+        if oSheet.getCellByPosition(lcol, i).Value == 0:
+            oCellRangeAddr.StartRow = i
+            oCellRangeAddr.EndRow = i
+            oSheet.ungroup(oCellRangeAddr, 1)
+            oSheet.group(oCellRangeAddr, 1)
+            oSheet.getCellRangeByPosition(lcol, i, lcol, i).Rows.IsVisible = False
+
+
+########################################################################
+
+
 def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
@@ -3025,6 +3056,10 @@ def XPWE_out(elaborato, out_file):
     CopyRight.text = 'Copyright ACCA software S.p.A.'
     TipoDocumento = SubElement(top, 'TipoDocumento')
     TipoDocumento.text = '1'
+    # impostando in TipoDocumento.text a 2, in Primus
+    # si abilitano funzionalità altrimenti indisponibili
+    if elaborato == 'CONTABILITA':
+        TipoDocumento.text = '2'
     TipoFormato = SubElement(top, 'TipoFormato')
     TipoFormato.text = 'XMLPwe'
     Versione = SubElement(top, 'Versione')
@@ -4866,7 +4901,7 @@ comprometterai la validità degli atti contabili già emessi.
 
 Vuoi procedere?
 
-SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""") == 0:
+SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""") == 0:
                     pass
                 else:
                     LeenoUtils.setGlobalVar('sblocca_computo', 1)
@@ -8216,11 +8251,11 @@ def XPWE_export_run():
             importo = oDoc.getSheets().getByName(el).getCellRangeByName(
                 'A2').String
             if el == 'COMPUTO':
-                Dialog_XPWE.getControl(el).Label = 'Computo: €: ' + importo
+                Dialog_XPWE.getControl(el).Label = 'Computo:     ' + importo
             if el == 'VARIANTE':
-                Dialog_XPWE.getControl(el).Label = 'Variante: €: ' + importo
+                Dialog_XPWE.getControl(el).Label = 'Variante:    ' + importo
             if el == 'CONTABILITA':
-                Dialog_XPWE.getControl(el).Label = 'Contabilità: €: ' + importo
+                Dialog_XPWE.getControl(el).Label = 'Contabilità: ' + importo
             Dialog_XPWE.getControl(el).Enable = True
         except Exception:
             Dialog_XPWE.getControl(el).Enable = False
@@ -9311,7 +9346,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             nomefile = oDoc.getURL().replace('%20',' ')
             oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO\n" + os.path.basename(nomefile)
             oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.70
+            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
             oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHLText = oFooter.RightText.Text.Text.CharHeight = htxt
             # ~oHLText = oFooter.RightText.Text.String = '#/##'
@@ -9346,6 +9381,23 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
                                                        'CONTABILITA',
                                                        'Elenco Prezzi'):
+            if oDoc.CurrentController.ActiveSheet.Name == 'CONTABILITA':
+            # nascondo i titoli di categoria
+                iSheet = oSheet.RangeAddress.Sheet
+                oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+                oCellRangeAddr.Sheet = iSheet
+
+                ER = SheetUtils.getLastUsedRow(oSheet)
+                stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
+                for i in reversed(range(3, ER)):
+                    if oSheet.getCellByPosition(0, i).CellStyle in stili_cat:
+                        oCellRangeAddr.StartRow = i
+                        oCellRangeAddr.EndRow = i
+                        oSheet.ungroup(oCellRangeAddr, 1)
+                        oSheet.group(oCellRangeAddr, 1)
+                        oSheet.getCellRangeByPosition(0, i, 0, i).Rows.IsVisible = False
+
             _gotoCella(0, 3)
         if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):
             LeenoAnalysis.MENU_impagina_analisi()
@@ -9926,8 +9978,13 @@ def celle_colorate(flag = False):
 
 import LeenoTabelle
 def MENU_debug():
+
+
+    # ~stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
+    # ~DLG.chi(stili_cat)
     # ~inizializza_elenco()
-    calendario()
+    # ~calendario()
     # ~sistema_cose()
     # ~oDoc = LeenoUtils.getDocument()
 

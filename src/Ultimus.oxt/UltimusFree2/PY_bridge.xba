@@ -115,6 +115,10 @@ Sub cancella_voci_non_usate
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)
 End Sub
 rem ######################################################################
+Sub nescondi_voci_zero
+	ScriptPy(&quot;pyleeno&quot;,&quot;nescondi_voci_zero&quot;)
+End Sub
+rem ######################################################################
 Sub richiesta_offerta
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;richiesta_offerta&quot;)
 End Sub

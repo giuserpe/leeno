@@ -2025,7 +2025,7 @@ Procedo?''') == 1:
 ########################################################################
 
 
-def nescondi_voci_zero():
+def nascondi_voci_zero():
     '''
     Nasconde le voci il cui valore della colonna corrente è pari a zero.
     '''

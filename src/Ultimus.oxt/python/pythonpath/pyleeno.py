@@ -2688,10 +2688,15 @@ def scelta_viste():
             oDialog1.getControl('CommandButton15').Label = 'Genera atti SAL n. ' + str(len(listaSal)+1)
         else:
             oDialog1.getControl('CommandButton24').Enable = False
+            oDialog1.getControl('CommandButton24').Label = "Nessun SAL da eliminare"
             oDialog1.getControl('CommandButton25').Enable = False
             oDialog1.getControl('CommandButton15').Label = 'Genera atti SAL n. 1'
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
             oDialog1.getControl('CommandButton14').Enable = False
+        
+        if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
+            oDialog1.getControl('CommandButton15').Enable = False
+            oDialog1.getControl('CommandButton15').Label = 'Nessun SAL da generare'
 
         #Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
@@ -9381,22 +9386,25 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
                                                        'CONTABILITA',
                                                        'Elenco Prezzi'):
-            if oDoc.CurrentController.ActiveSheet.Name == 'CONTABILITA':
-            # nascondo i titoli di categoria
-                iSheet = oSheet.RangeAddress.Sheet
-                oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-                oCellRangeAddr.Sheet = iSheet
+            # ~if oDoc.CurrentController.ActiveSheet.Name == 'CONTABILITA':
+            # ~# nascondo i titoli di categoria
+                # ~iSheet = oSheet.RangeAddress.Sheet
+                # ~oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+                # ~oCellRangeAddr.Sheet = iSheet
 
-                ER = SheetUtils.getLastUsedRow(oSheet)
-                stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+                # ~ER = SheetUtils.getLastUsedRow(oSheet)
+                # ~stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
-                for i in reversed(range(3, ER)):
-                    if oSheet.getCellByPosition(0, i).CellStyle in stili_cat:
-                        oCellRangeAddr.StartRow = i
-                        oCellRangeAddr.EndRow = i
-                        oSheet.ungroup(oCellRangeAddr, 1)
-                        oSheet.group(oCellRangeAddr, 1)
-                        oSheet.getCellRangeByPosition(0, i, 0, i).Rows.IsVisible = False
+                # ~for i in reversed(range(3, ER)):
+                    # ~if oSheet.getCellByPosition(0, i).CellStyle in stili_cat:
+                        # ~oCellRangeAddr.StartRow = i
+                        # ~oCellRangeAddr.EndRow = i
+                        # ~oSheet.ungroup(oCellRangeAddr, 1)
+
+                        # ~for el in ['LAVORI A MISURA', 'SICUREZZA']:
+                            # ~if el not in oSheet.getCellByPosition(2, i).String.upper():
+                                # ~oSheet.group(oCellRangeAddr, 1)
+                                # ~oSheet.getCellRangeByPosition(0, i, 0, i).Rows.IsVisible = False
 
             _gotoCella(0, 3)
         if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):

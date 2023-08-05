@@ -616,8 +616,18 @@ def GeneraLibretto(oDoc):
         lrow = int(SheetUtils.uFindStringCol(daVoce, 0, oSheet))
     except TypeError:
         return
+
+    # include nel range del SAL eventuali titoli di categoria
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     primariga = sStRange.RangeAddress.StartRow
+
+    for el in range(1, 10):
+        if oSheet.getCellByPosition(0, primariga - 1).CellStyle in stili_cat:
+            primariga -= 1
+        else:
+            primariga += 1
+            break
 
     #  ULTIMA VOCE
     oCellRange = oSheet.getCellRangeByPosition(
@@ -1230,7 +1240,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(5, lastRow + 9).Formula = "=SUM(F" + str(lastRow + 7) + ":F" + str(lastRow + 9) + ")"
 
     oSheet.getCellByPosition(1, lastRow + 10).Formula = (
-    '''=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")''')
+    '''=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,000");"%")''')
     oSheet.getCellByPosition(5, lastRow + 10).Formula = "=-$F$" + str(lastRow + 10) + "*$S2.$C$78" # RIBASSO
 
     oSheet.getCellByPosition(1, lastRow + 11).String = ("Importo per la Sicurezza")

@@ -1357,8 +1357,9 @@ def MENU_XPWE_import(filename = None):
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     # salva il file col nome del file di origine
-    dest = filename[0:-5]+ '.ods'
-    PL.salva_come(dest)
+    if len(oDoc.getURL()) == 0:
+        dest = filename[0:-5]+ '.ods'
+        PL.salva_come(dest)
 
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)

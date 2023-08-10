@@ -8264,6 +8264,8 @@ def XPWE_export_run():
                 Dialog_XPWE.getControl(el).Label = 'Variante:    ' + importo
             if el == 'CONTABILITA':
                 Dialog_XPWE.getControl(el).Label = 'Contabilità: ' + importo
+            if el == 'ELENCO PREZZI':
+                Dialog_XPWE.getControl(el).Label = 'Elenco Prezzi'
             Dialog_XPWE.getControl(el).Enable = True
         except Exception:
             Dialog_XPWE.getControl(el).Enable = False

@@ -3721,6 +3721,9 @@ def XPWE_out(elaborato, out_file):
                         if oSheet.getCellByPosition(4, m).Value > 0 and \
                             oSheet.getCellByPosition(10, m).Value != 0:
                                 Flags.text = '32768'
+                        if elaborato == 'COMPUTO':
+                            if  oSheet.getCellByPosition(9, m).Value < 0:
+                                Flags.text = '32769'
                 n = sotto + 1
         LeenoUtils.DocumentRefresh(True)
     # #########################
@@ -8462,7 +8465,7 @@ def DlgMain():
         pass
 
     sString = oDlgMain.getControl("Label12")
-    sString.Text = version_code.read()#[:-9]
+    sString.Text = version_code.read()[6:]
     sString = oDlgMain.getControl("Label_DDC")
     sString.Text = LeenoUtils.getGlobalVar('sUltimus')
 
@@ -9093,8 +9096,8 @@ Associato a Ctrl+Shift+C'''
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             larg = oSheet.getCellByPosition(x, lrow).Columns.Width
-            oSheet.getCellByPosition(x, lrow).Value = larg
-            # ~oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
+            # ~oSheet.getCellByPosition(x, lrow).Value = larg
+            oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'
         elif oSheet.getCellByPosition(x, lrow).Formula == '=CELL("col")-1':
             oSheet.getCellByPosition(x, lrow).String = ''
@@ -9986,6 +9989,7 @@ def celle_colorate(flag = False):
 
 import LeenoTabelle
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
 
 
     # ~stili_cat = LeenoUtils.getGlobalVar('stili_cat')

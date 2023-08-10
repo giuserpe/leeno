@@ -663,7 +663,7 @@ def GeneraLibretto(oDoc):
         SAL = (art,  desc, um, quant, prezzo, importo)
         EP = elenco articoli
         '''
-        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1]
+        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #(num, art, desc, um, quant, prezzo, importo, sic, mdo)
         SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
         # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)

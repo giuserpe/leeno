@@ -420,6 +420,10 @@ def inserisciRigaRossa(oSheet):
         oSheet.getCellRangeByPosition(0, lrow, 10, lrow).CellStyle = 'Riga_rossa_Chiudi'
         oSheet.getCellByPosition(1, lrow
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
+        oDoc = LeenoUtils.getDocument()
+        # ~oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
+        SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
+                      '$A$3:$K$' + str(SheetUtils.getUsedArea(oSheet).EndRow), 'analisi')
     elif nome == 'Elenco Prezzi':
         lrow = cercaUltimaVoce(oSheet) + 1
         if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':

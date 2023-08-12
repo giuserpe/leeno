@@ -6722,6 +6722,7 @@ def inizializza_analisi():
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
+    LeenoSheetUtils.inserisciRigaRossa(oSheet)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
@@ -7605,6 +7606,8 @@ def struct(level):
                     sotto = n - Dsotto
                     lista_cat.append((sopra, sotto))
                     break
+    if oSheet.Name == 'Analisi di Prezzo':
+        lista_cat.append((sopra, test))
     for el in lista_cat:
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]

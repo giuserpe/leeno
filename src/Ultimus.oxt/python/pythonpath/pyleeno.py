@@ -3573,17 +3573,17 @@ def XPWE_out(elaborato, out_file):
                         break
 
                 IncSIC = SubElement(EPItem, 'IncSIC')
-                if oSheet.getCellByPosition(10, n).Value == 0.0:
+                if oSheet.getCellByPosition(10, m).Value == 0.0:
                     IncSIC.text = ''
                 else:
-                    IncSIC.text = str(oSheet.getCellByPosition(10, n).Value)
+                    IncSIC.text = str(oSheet.getCellByPosition(10, m).Value)
 
                 IncMDO = SubElement(EPItem, 'IncMDO')
-                if oSheet.getCellByPosition(8, n).Value == 0.0:
+                if oSheet.getCellByPosition(8, m).Value == 0.0:
                     IncMDO.text = ''
                 else:
                     IncMDO.text = str(
-                        oSheet.getCellByPosition(5, n).Value * 100)
+                        oSheet.getCellByPosition(8, m).Value * 100)
                 k += 1
             except Exception:
                 pass
@@ -10000,7 +10000,11 @@ def MENU_debug():
     # ~inizializza_elenco()
     # ~calendario()
     # ~sistema_cose()
-    # ~oDoc = LeenoUtils.getDocument()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    DLG.mri(oSheet.getCellRangeByName("I3"))
+
 
     # ~riordina_ElencoPrezzi(oDoc)
     return

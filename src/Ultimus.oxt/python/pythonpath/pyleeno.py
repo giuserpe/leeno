@@ -3579,6 +3579,8 @@ def XPWE_out(elaborato, out_file):
                     IncSIC.text = str(oSheet.getCellByPosition(10, m).Value)
 
                 IncMDO = SubElement(EPItem, 'IncMDO')
+                # ~oDoc.CurrentController.select(oSheet.getCellByPosition(8, m))
+                # ~DLG.chi(oSheet.getCellByPosition(8, m).AbsoluteName)
                 if oSheet.getCellByPosition(8, m).Value == 0.0:
                     IncMDO.text = ''
                 else:
@@ -6722,7 +6724,6 @@ def inizializza_analisi():
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    LeenoSheetUtils.inserisciRigaRossa(oSheet)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
@@ -7606,8 +7607,6 @@ def struct(level):
                     sotto = n - Dsotto
                     lista_cat.append((sopra, sotto))
                     break
-    if oSheet.Name == 'Analisi di Prezzo':
-        lista_cat.append((sopra, test))
     for el in lista_cat:
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]

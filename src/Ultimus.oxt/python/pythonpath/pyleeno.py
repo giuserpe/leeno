@@ -5097,9 +5097,8 @@ def MENU_ricicla_misure():
         try:
             GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
         except:
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text=' Stai cercando di riciclare le misure dal foglio ' + \
-            cfg.read('Contabilita', 'ricicla_da'))
+            cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
+            GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
         LeenoUtils.DocumentRefresh(True)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]

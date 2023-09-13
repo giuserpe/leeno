@@ -159,6 +159,10 @@ Sub MENU_AnnullaAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaAttiContabili&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_elimina_righe_vuote
+	ScriptPy(&quot;LeenoSheetUtils&quot;,&quot;MENU_elimina_righe_vuote&quot;)
+End Sub
+rem ######################################################################
 Sub Vedi
 	ScriptPy(&quot;LeenoToolbars&quot;,&quot;Vedi&quot;)
 End Sub

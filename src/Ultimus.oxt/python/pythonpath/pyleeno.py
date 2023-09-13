@@ -2060,7 +2060,7 @@ def cancella_voci_non_usate():
     Cancella le voci di prezzo non utilizzate.
     '''
     # qui il refresh lascia il foglio in freeze
-    LeenoUtils.DocumentRefresh(False)
+    LeenoUtils.DocumentRefresh(True)
     chiudi_dialoghi()
 
     if Dialogs.YesNoDialog(Title='AVVISO!',
@@ -2079,33 +2079,42 @@ Vuoi procedere comunque?''') == 0:
     SR = oRange.StartRow + 1
     ER = oRange.EndRow
     lista_prezzi = []
+    # prende l'elenco dal foglio Elenco Prezzi
     for n in range(SR, ER):
         lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
-    lista = []
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
     n = 0
-    progress.setLimits(n, len(lista_prezzi))
     progress.show()
     progress.setValue(1)
+    # prende l'elenco da tutti gli altri fogli
+    if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
+        lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
+    lista = []
     for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
         try:
             oSheet = oDoc.getSheets().getByName(tab)
+            ER = SheetUtils.getLastUsedRow(oSheet)
+            progress.setLimits(0, ER)
+
             if tab == 'Analisi di Prezzo':
-                col = 0
+                stile = 'An-lavoraz-Cod-sx'
+                for n in range(0, ER):
+                    progress.setValue(n)
+                    cell = oSheet.getCellByPosition(0, n)
+                    if cell.CellStyle == stile:
+                        lista.append(cell.String)
             else:
-                col = 1
-            for el in lista_prezzi:
-                n += 1
-                progress.setValue(n)
-                if SheetUtils.uFindStringCol(el, col, oSheet):
-                    lista.append(el)
-        except Exception:
+                stile = 'comp Art-EP_R'
+                for n in range(0, ER):
+                    cell = oSheet.getCellByPosition(1, n)
+                    if cell.CellStyle == stile:
+                        lista.append(cell.String)
+        except:
             pass
     progress.setLimits(0, 5)
     progress.setValue(2)
-    if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
-        lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
+
     da_cancellare = set(lista_prezzi).difference(set(lista))
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -2120,19 +2129,12 @@ Vuoi procedere comunque?''') == 0:
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     progress.setValue(4)
 
-    # ~for el in da_cancellare:
-        # ~oCellRangeAddr.StartRow = el
-        # ~oCellRangeAddr.EndRow = el
-        # ~oSheet.group(oCellRangeAddr, 1)
-        # ~oSheet.getCellRangeByPosition(0, el, 0,
-                                  # ~el).Rows.IsVisible = False
-
     for n in reversed(range(SR, ER)):
-        if oSheet.getCellByPosition(0, n).String in da_cancellare:
-            oSheet.Rows.removeByIndex(n, 1)
-        if(oSheet.getCellByPosition(0, n).String == '' and
-           oSheet.getCellByPosition(1, n).String == '' and
-           oSheet.getCellByPosition(4, n).String == ''):
+        cell_0 = oSheet.getCellByPosition(0, n).String
+        cell_1 = oSheet.getCellByPosition(1, n).String
+        cell_4 = oSheet.getCellByPosition(4, n).String
+
+        if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
             oSheet.Rows.removeByIndex(n, 1)
 
     progress.setValue(5)
@@ -2157,13 +2159,15 @@ def voce_breve_an():
     if not oSheet.getCellRangeByName('B3').Rows.OptimalHeight:
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     else:
-        nr = cfg.read('Generale', 'altezza_celle')
-        hriga = 100 + oSheet.getCellRangeByName(
-        'B3').CharHeight * 65 / 3 * 2 * float(nr)   # <<< visualizza tre righe
+        altezza_base = oSheet.getCellRangeByName('B3').CharHeight * 66 / 3 * 2
+        nr_descrizione = float(cfg.read('Generale', 'altezza_celle'))
 
-        for el in range (0, ER):
+        hriga = 100 + altezza_base * nr_descrizione  # Calcola l'altezza desiderata
+
+        for el in range(0, ER):
             if oSheet.getCellByPosition(1, el).CellStyle == 'An-1-descr_':
                 oSheet.getCellByPosition(1, el).Rows.Height = hriga
+
 
 ########################################################################
 
@@ -2180,13 +2184,17 @@ def voce_breve_ep():
     SR = oRange.StartRow + 1
     ER = oRange.EndRow
 
-    if not oSheet.getCellByPosition(1, 3).Rows.OptimalHeight:
+    cell_1_3 = oSheet.getCellByPosition(1, 3)
+
+    if not cell_1_3.Rows.OptimalHeight:
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     else:
-        nr = cfg.read('Generale', 'altezza_celle')
-        hriga = 100 + oSheet.getCellRangeByName(
-            'B4').CharHeight * 65 / 3 * 2 * float(nr) # <<< visualizza tre righe
+        altezza_base = oSheet.getCellRangeByName('B4').CharHeight * 64 / 3 * 2
+        nr_descrizione = float(cfg.read('Generale', 'altezza_celle'))
+        hriga = 100 + altezza_base * nr_descrizione  # Calcola l'altezza desiderata
+
         oSheet.getCellRangeByPosition(0, SR, 0, ER).Rows.Height = hriga
+
 
 
 ########################################################################
@@ -9032,7 +9040,9 @@ def sistema_cose():
                 testo = testo.replace('  ', ' ')
             while '\n\n' in testo:
                 testo = testo.replace('\n\n', '\n')
-            oSheet.getCellByPosition(lcol, y).String = testo.strip().strip().strip()
+            # ~oSheet.getCellByPosition(lcol, y).String = testo.strip() #.strip().strip()
+            oSheet.getCellByPosition(lcol, y).String = ' '.join(testo.split()) # rimuove tutti i capoversi
+    Menu_adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -9992,19 +10002,19 @@ def celle_colorate(flag = False):
 
 import LeenoTabelle
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
+    # ~LeenoUtils.DocumentRefresh(True)
 
 
-    # ~stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
-    # ~DLG.chi(stili_cat)
+    # ~ DLG.chi(stili_cat)
     # ~inizializza_elenco()
     # ~calendario()
-    # ~sistema_cose()
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    sistema_cose()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
 
-    DLG.mri(oSheet.getCellRangeByName("I3"))
+    # ~DLG.mri(oSheet.getCellRangeByName("I3"))
 
 
     # ~riordina_ElencoPrezzi(oDoc)

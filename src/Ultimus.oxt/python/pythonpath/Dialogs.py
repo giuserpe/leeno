@@ -2470,6 +2470,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
                   '*.odf': 'Math(*.odf)',
                   '*.xpwe': 'Primus(*.xpwe)',
                   '*.xml': 'XML(*.xml)',
+                  '*.svg': 'SVG(*.svg)',
                   '*.dat': 'dat(*.dat)', }
     oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))
@@ -2486,7 +2487,11 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
 
     oFilePicker.Title = titolo
     app = estensioni.get(est)
-    oFilePicker.appendFilter(app, est)
+    try:
+        oFilePicker.appendFilter(app, est)
+    except Exception as e:
+        Exclamation(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
+        return
     if oFilePicker.execute():
         oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
         storeLastPath(oPath)

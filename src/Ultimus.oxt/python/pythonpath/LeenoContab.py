@@ -792,6 +792,7 @@ def GeneraLibretto(oDoc):
 #  inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO
 
     #inserisco i dati
+    LeenoUtils.setGlobalVar('sblocca_computo', 0) #registrando gli atti contabili, bisogna inibire alcune modifiche
     progress.setValue(5)
     for i in range(primariga, fineFirme):
         if oSheet.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
@@ -801,7 +802,6 @@ def GeneraLibretto(oDoc):
             oSheet.getCellByPosition(19, i).Value= nLib     #numero libretto
             oSheet.getCellByPosition(22, i).String =  "#reg"  #flag registrato
             oSheet.getCellByPosition(23, i).Value= nSal     #numero SAL
-
             for nPag in range(0, len(oSheet.RowPageBreaks)):
                 if i < oSheet.RowPageBreaks[nPag].Position:
                     oSheet.getCellByPosition(20, i).Value = nPag   #pagina

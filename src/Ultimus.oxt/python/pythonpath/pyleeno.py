@@ -748,7 +748,7 @@ def oggi():
     '''
     restituisce la data di oggi
     '''
-    return '/'.join(reversed(str(datetime.now()).split(' ')[0].split('-')))
+    return datetime.now().strftime('%d/%m/%Y')
 
 
 ########################################################################
@@ -756,55 +756,41 @@ def oggi():
 
 def MENU_copia_sorgente_per_git():
     '''
-    fa una copia della directory del codice nel repository locale ed apre una shell per la commit
+    Fa una copia della directory del codice nel repository locale ed apre una shell per la commit.
     '''
     oDoc = LeenoUtils.getDocument()
+    src_oxt = ''
 
     try:
-        if oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String == '':
+        if oDoc.getSheets().getByName('S1').getCellByPosition(7, 338).String == '':
             src_oxt = '_LeenO'
         else:
-            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String
+            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7, 338).String
     except Exception:
         pass
 
     make_pack(bar=1)
+
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        if not os.path.exists(dest):
-            try:
-                dest = os.getenv(
-                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
-                os.makedirs(dest)
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
-            except FileExistsError:
-                pass
-
-            comandi = 'cd ' + dest + ' && mate-terminal && gitk &'
-        else:
-            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && mate-terminal && gitk &'
+        os.makedirs(os.path.expanduser(f'~/{src_oxt}/leeno/src/Ultimus.oxt'), exist_ok=True)
+        os.makedirs(os.path.expanduser(f'~/{src_oxt}/leeno/bin/'), exist_ok=True)
+        os.makedirs(os.path.expanduser(f'~/{src_oxt}/_SRC/OXT'), exist_ok=True)
+        comandi = f'cd {dest} && mate-terminal && gitk &'
+        
         if not processo('wish'):
             subprocess.Popen(comandi, shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
-            try:
-                os.makedirs(
-                    os.getenv("HOMEPATH") + '\\' + src_oxt +
-                    '\\leeno\\src\\Ultimus.oxt\\')
-            except FileExistsError:
-                pass
-            dest = os.getenv("HOMEDRIVE") + os.getenv(
-                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+            os.makedirs(os.path.expanduser(f'{os.getenv("HOMEPATH")}/{src_oxt}/leeno/src/Ultimus.oxt/'), exist_ok=True)
+            dest = os.path.expanduser(f'{os.getenv("HOMEDRIVE")}{os.getenv("HOMEPATH")}/{src_oxt}/leeno/src/Ultimus.oxt/')
         else:
-            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
-        subprocess.Popen(
-            'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"',
-            shell=True,
-            stdout=subprocess.PIPE)
+            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+        
+        subprocess.Popen(f'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+
     return
+
 
 
 ########################################################################
@@ -866,11 +852,7 @@ def avvia_IDE():
                 "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
-        # ~subprocess.Popen('explorer.exe ' +
-                        # dest,
-                         # ~uno.fileUrlToSystemPath(LeenO_path()),
-                         # ~shell=True,
-                         # ~stdout=subprocess.PIPE)
+
         subprocess.Popen('"C:/Program Files/Geany/bin/geany.exe" ' +
                          dest +
                          '/python/pythonpath/pyleeno.py',
@@ -1881,7 +1863,7 @@ def MENU_voce_breve():
 
     if oSheet.Name in ('Analisi di Prezzo'):
         voce_breve_an()
-    if oSheet.Name in ('Elenco Prezzi'):
+    elif oSheet.Name in ('Elenco Prezzi'):
         voce_breve_ep()
     elif oSheet.Name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         voce_breve()
@@ -1895,38 +1877,21 @@ def voce_breve():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    # ~oSheet.getCellRangeByPosition(
-        # ~0, 0,
-        # ~SheetUtils.getUsedArea(oSheet).EndColumn,
-        # ~SheetUtils.getUsedArea(oSheet).EndRow).Rows.OptimalHeight = True
-    if not oDoc.getSheets().hasByName('S1'):
-        return
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        oSheet = oDoc.getSheets().getByName('S1')
-        if oSheet.getCellRangeByName('S1.H337').Value < 10000:
-            cfg.write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
-            oSheet.getCellRangeByName('S1.H337').Value = 10000
-        else:
-            oSheet.getCellRangeByName('S1.H337').Value = int(
-                cfg.read('Computo', 'inizio_voci_abbreviate'))
-        if oSheet.getCellRangeByName('S1.H338').Value < 10000:
-            cfg.write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
-            oSheet.getCellRangeByName('S1.H338').Value = 10000
-        else:
-            oSheet.getCellRangeByName('S1.H338').Value = int(cfg.read('Computo', 'fine_voci_abbreviate'))
-
-    elif oSheet.Name == 'CONTABILITA':
-        oSheet = oDoc.getSheets().getByName('S1')
-        if oDoc.NamedRanges.hasByName("_Lib_1"):
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text='''Risulta già registrato un SAL, quindi
-    NON E' POSSIBILE PROCEDERE.''')
-            # ~DLG.MsgBox(
-                # ~"Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",
-                # ~'ATTENZIONE!')
-            return
-        else:
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
+    # Definizione dei fogli di lavoro da modificare
+    # ~nome_foglio = oDoc.CurrentController.ActiveSheet.getName()
+    
+    if oDoc.NamedRanges.hasByName("_Lib_1"):
+        Dialogs.Exclamation(Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
+        fogli_lavoro = ['COMPUTO']
+    else:
+        fogli_lavoro = ['COMPUTO', 'CONTABILITA']
+        oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H335').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H337').Value
+        oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H336').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H338').Value
+    
+    oSheet = oDoc.getSheets().getByName('S1')
+    for nome_foglio in fogli_lavoro:
+        if nome_foglio == 'CONTABILITA':
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
                 cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
@@ -1937,7 +1902,26 @@ def voce_breve():
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
                 oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilita', 'cont_fine_voci_abbreviate'))
-    Menu_adattaAltezzaRiga()
+
+        else:
+            if oSheet.getCellRangeByName('S1.H337').Value < 10000:
+                cfg.write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
+                oSheet.getCellRangeByName('S1.H337').Value = 10000
+            else:
+                oSheet.getCellRangeByName('S1.H337').Value = int(
+                    cfg.read('Computo', 'inizio_voci_abbreviate'))
+            if oSheet.getCellRangeByName('S1.H338').Value < 10000:
+                cfg.write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
+                oSheet.getCellRangeByName('S1.H338').Value = 10000
+            else:
+                oSheet.getCellRangeByName('S1.H338').Value = int(cfg.read('Computo', 'fine_voci_abbreviate'))
+
+    for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi", "Analisi di Prezzo"):
+        try:
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet = oDoc.getSheets().getByName(el))
+        except:
+            pass
+        
 
 
 ########################################################################
@@ -9047,6 +9031,8 @@ def sistema_cose():
 
 
 ########################################################################
+
+
 def descrizione_in_una_colonna(flag=False):
     '''
     Consente di estendere su più colonne o ridurre ad una colonna lo spazio
@@ -9054,43 +9040,38 @@ def descrizione_in_una_colonna(flag=False):
     '''
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet = oDoc.getSheets().getByName('S5')
-    oSheet.getCellRangeByName('C9:I9').merge(flag)
-    oSheet.getCellRangeByName('C10:I10').merge(flag)
-    oSheet = oDoc.getSheets().getByName('COMPUTO')
-    for y in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
-        if oSheet.getCellByPosition(
-                2, y).CellStyle in ('Comp-Bianche sopraS',
-                                    'Comp-Bianche in mezzo Descr'):
-            oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
-    if oDoc.getSheets().hasByName('VARIANTE'):
-        oSheet = oDoc.getSheets().getByName('VARIANTE')
-        for y in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
-            if oSheet.getCellByPosition(
-                    2, y).CellStyle in ('Comp-Bianche sopraS',
-                                        'Comp-Bianche in mezzo Descr'):
-                oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
-    if oDoc.getSheets().hasByName('CONTABILITA'):
-        if oDoc.NamedRanges.hasByName("_Lib_1"):
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text="Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.")
-            return
-        oSheet = oDoc.getSheets().getByName('S5')
-        oSheet.getCellRangeByName('C23').merge(flag)
-        oSheet.getCellRangeByName('C24').merge(flag)
-        oSheet = oDoc.getSheets().getByName('CONTABILITA')
-        for y in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
-            if oSheet.getCellByPosition(
-                    2, y).CellStyle in ('Comp-Bianche sopra_R',
-                                        'Comp-Bianche in mezzo Descr_R'):
-                oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
+
+    # Definizione dei fogli di lavoro da modificare
+    nome_foglio = oDoc.CurrentController.ActiveSheet.getName()
+    
+    if oDoc.NamedRanges.hasByName("_Lib_1"):
+        Dialogs.Exclamation(Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
+        fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE']
     else:
-        oSheet = oDoc.getSheets().getByName('S5')
-        oSheet.getCellRangeByName('C23:I23').merge(flag)
-        oSheet.getCellRangeByName('C24:I24').merge(flag)
+        fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE', 'CONTABILITA']
+
+    for nome_foglio in fogli_lavoro:
+        if oDoc.getSheets().hasByName(nome_foglio):
+            oSheet = oDoc.getSheets().getByName(nome_foglio)
+            inizio_righe = [3]  # Inizia con la riga 3
+
+            if nome_foglio == 'S5' and not oDoc.NamedRanges.hasByName("_Lib_1"):
+                inizio_righe = [3, 9]
+            else:
+                inizio_righe = [3, 9, 23]
+            fine_riga = SheetUtils.getUsedArea(oSheet).EndRow
+
+            for inizio_riga in inizio_righe:
+                for y in range(inizio_riga, fine_riga + 1):
+                    cell_style = oSheet.getCellByPosition(2, y).CellStyle
+                    cell_range = oSheet.getCellRangeByPosition(2, y, 8, y)
+
+                    if cell_style in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr', 'Comp-Bianche sopra_R', 'Comp-Bianche in mezzo Descr_R'):
+                    # ~if cell_style in ('Comp-Bianche in mezzo Descr', 'Comp-Bianche in mezzo Descr_R'):
+                            cell_range.merge(flag)
+
+    adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
-    return
 
 
 ########################################################################
@@ -9963,6 +9944,42 @@ def BARRA(sTitre = 'TITOLO', vMax = 100):
     oWait.setModel( oDlgModele )
     BARRA = oWait
 
+
+########################################################################
+
+
+def nuove_icone():
+    '''Copia le icone SVG nella cartella ../icons/'''
+    # Apre una finestra di dialogo per la selezione del file
+    file_path = ''
+    file_path = Dialogs.FileSelect('Scegli il file SVG...', '*.svg')
+    if file_path in ('Cancel', '', None):
+        return
+
+    if file_path:
+        # Estrai il nome del file senza estensione
+        fname = os.path.splitext(os.path.basename(file_path))[0]
+        if sys.platform == 'linux' or sys.platform == 'darwin':
+            file_name = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fname
+        else:
+            file_name = 'W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fname
+
+        # Crea i nomi dei nuovi file BMP
+        bmp_26h = file_name + "_26h.bmp"
+        bmp_26 = file_name + "_26.bmp"
+        bmp_16h = file_name + "_16h.bmp"
+        bmp_16 = file_name + "_16.bmp"
+
+        # Copia il file SVG selezionato nei nuovi file BMP
+        shutil.copy(file_path, bmp_26h)
+        shutil.copy(file_path, bmp_26)
+        shutil.copy(file_path, bmp_16h)
+        shutil.copy(file_path, bmp_16)
+
+        Dialogs.Info(Title='Info', Text=f"File '{fname}' copiato in ../icons/ con successo!")
+
+    return
+
 def celle_colorate(flag = False):
     "*** DA COPLETARE ***"
     '''
@@ -9997,20 +10014,164 @@ def celle_colorate(flag = False):
                 oSheet.getCellByPosition(x+1, y).Value = somma
     return
 
-
-
-
 import LeenoTabelle
+
+
+########################################################################
+
+import xml.etree.ElementTree as ET
+
+# Funzione per convertire il primo file XML nel formato del secondo file XML
+def convert_to_xpwe(xml_filename):
+    # Leggi il file XML
+    tree = ET.parse(xml_filename)
+    root = tree.getroot()
+
+    # Crea l'albero XML per il secondo formato (XPWE)
+    xpwe_root = ET.Element("PweDocumento")
+
+    # Aggiungi le informazioni generali
+    copy_right = ET.SubElement(xpwe_root, "CopyRight")
+    copy_right.text = "Copyright ACCA software S.p.A."
+    tipo_documento = ET.SubElement(xpwe_root, "TipoDocumento")
+    tipo_documento.text = "1"
+    tipo_formato = ET.SubElement(xpwe_root, "TipoFormato")
+    tipo_formato.text = "XMLPwe"
+    versione = ET.SubElement(xpwe_root, "Versione")
+    source_versione = ET.SubElement(xpwe_root, "SourceVersione")
+    source_versione.text = "3.23.0.dev"
+    source_nome = ET.SubElement(xpwe_root, "SourceNome")
+    source_nome.text = "LeenO.org"
+    file_name_documento = ET.SubElement(xpwe_root, "FileNameDocumento")
+    file_name_documento.text = "W:\\_dwg\\ULTIMUSFREE\\_SRC\\XML.XPWE\\000-COMPUTO.xpwe"
+
+    # Aggiungi i dati generali
+    pwe_dati_generali = ET.SubElement(xpwe_root, "PweDatiGenerali")
+    pwe_dg_progetto = ET.SubElement(pwe_dati_generali, "PweDGProgetto")
+    pwe_dg_dati_generali = ET.SubElement(pwe_dg_progetto, "PweDGDatiGenerali")
+    perc_prezzi = ET.SubElement(pwe_dg_dati_generali, "PercPrezzi")
+    perc_prezzi.text = "0"
+    comune = ET.SubElement(pwe_dg_dati_generali, "Comune")
+    comune.text = "Comune di"
+    oggetto = ET.SubElement(pwe_dg_dati_generali, "Oggetto")
+    oggetto.text = "RISTRUTTURAZIONE CON CAMBIO D'USO IN RESIDENZIALE ...."
+    committente = ET.SubElement(pwe_dg_dati_generali, "Committente")
+    committente.text = "Committente..."
+
+    # Aggiungi i capitoli e categorie
+    pwe_dg_capitoli_categorie = ET.SubElement(pwe_dati_generali, "PweDGCapitoliCategorie")
+    pwe_dg_super_capitoli = ET.SubElement(pwe_dg_capitoli_categorie, "PweDGSuperCapitoli")
+    dg_super_capitoli_item = ET.SubElement(pwe_dg_super_capitoli, "DGSuperCapitoliItem", ID="1")
+    des_sintetica = ET.SubElement(dg_super_capitoli_item, "DesSintetica")
+    des_sintetica.text = "DEMOLIZIONI E RIMOZIONI"
+
+    # Aggiungi le voci di computo
+    pwe_misurazioni = ET.SubElement(xpwe_root, "PweMisurazioni")
+    pwe_elenco_prezzi = ET.SubElement(pwe_misurazioni, "PweElencoPrezzi")
+
+    for prodotto in root.findall(".//prodotto"):
+        ep_item = ET.SubElement(pwe_elenco_prezzi, "EPItem", ID=str(prodotto.get("prodottoId")))
+        tipo_ep = ET.SubElement(ep_item, "TipoEP")
+        tipo_ep.text = "0"
+        tariffa = ET.SubElement(ep_item, "Tariffa")
+        tariffa.text = prodotto.get("prdId")
+        des_ridotta = ET.SubElement(ep_item, "DesRidotta")
+        des_ridotta.text = prodotto.find(".//prdDescrizione").get("breve")
+        des_estesa = ET.SubElement(ep_item, "DesEstesa")
+        des_estesa.text = prodotto.find(".//prdDescrizione").get("estesa")
+        un_misura = ET.SubElement(ep_item, "UnMisura")
+        un_misura.text = prodotto.get("unitaDiMisuraId")
+        prezzo1 = ET.SubElement(ep_item, "Prezzo1")
+        prezzo1.text = prodotto.find(".//prdQuotazione").get("valore")
+        prezzo2 = ET.SubElement(ep_item, "Prezzo2")
+        prezzo3 = ET.SubElement(ep_item, "Prezzo3")
+        prezzo4 = ET.SubElement(ep_item, "Prezzo4")
+        prezzo5 = ET.SubElement(ep_item, "Prezzo5")
+        id_sp_cap = ET.SubElement(ep_item, "IDSpCap")
+        id_sp_cap.text = prodotto.find(".//prdQuotazione").get("listaQuotazioneId")
+        id_cap = ET.SubElement(ep_item, "IDCap")
+        id_sb_cap = ET.SubElement(ep_item, "IDSbCap")
+        flags = ET.SubElement(ep_item, "Flags")
+        data = ET.SubElement(ep_item, "Data")
+
+    # Salva il nuovo XML
+    xpwe_tree = ET.ElementTree(xpwe_root)
+    xpwe_tree.write("converted_" + xml_filename)
+
+# Funzione per convertire il secondo file XML nel formato del primo file XML
+def convert_to_xml(xml_filename):
+    # Leggi il file XML
+    tree = ET.parse(xml_filename)
+    root = tree.getroot()
+
+    # Crea l'albero XML per il primo formato (XML.SIX)
+    xml_six_root = ET.Element("Documento", xmlns="six.xsd")
+
+    # Aggiungi l'intestazione
+    intestazione = ET.SubElement(xml_six_root, "intestazione", lingua="it", separatore=",", separatoreParametri=";", valuta="EUR", versione="1.3.3.20376")
+
+    # Aggiungi il gruppo e i relativi dati
+    gruppo = ET.SubElement(xml_six_root, "gruppo", tipo="Capitolo", gruppoId="1")
+    grp_valore = ET.SubElement(gruppo, "grpValore", grpValoreId="1", vlrId="1")
+    vlr_descrizione = ET.SubElement(grp_valore, "vlrDescrizione", breve="DEMOLIZIONI E RIMOZIONI")
+
+    # Aggiungi il prezzario e i relativi dati
+    prezzario = ET.SubElement(xml_six_root, "prezzario", prezzarioId="1", przId="1", categoriaPrezzario="EPU", arrotondamento="0.01", arrotondamentoImporto="0.01", arrotondamentoPercentuale="0.01")
+
+    unita_di_misura = ET.SubElement(prezzario, "unitaDiMisura", unitaDiMisuraId="m³", udmId="m³", simbolo="m³", decimali="2")
+    udm_descrizione = ET.SubElement(unita_di_misura, "udmDescrizione", breve="m³")
+
+    lista_quotazione = ET.SubElement(prezzario, "listaQuotazione", listaQuotazioneId="0")
+
+    for lista_quotazione_id in ["1", "13", "14", "15", "16", "17"]:
+        lqt = ET.SubElement(prezzario, "listaQuotazione", listaQuotazioneId=lista_quotazione_id)
+        lqt_descrizione = ET.SubElement(lqt, "lqtDescrizione", breve="Prezzo" + lista_quotazione_id)
+
+    prz_descrizione = ET.SubElement(prezzario, "przDescrizione", breve="000")
+    prz_gruppo = ET.SubElement(prezzario, "przGruppo", gruppoId="1")
+
+    # Aggiungi i prodotti e i relativi dati
+    progetto = ET.SubElement(xml_six_root, "progetto", prgId="000")
+    prg_descrizione = ET.SubElement(progetto, "prgDescrizione", breve="000")
+    prg_prezzario = ET.SubElement(progetto, "prgPrezzario", prezzarioId="1")
+    preventivo = ET.SubElement(progetto, "preventivo", preventivoId="4", prezzarioId="1")
+    prv_descrizione = ET.SubElement(preventivo, "prvDescrizione", breve="000")
+
+    prodotti = root.findall(".//EPItem")
+
+    for idx, prodotto in enumerate(prodotti, start=1):
+        prodotto_id = prodotto.get("ID")
+        prodotto_xml = ET.SubElement(preventivo, "prvRilevazione", prvRilevazioneId=str(prodotto_id), progressivo=str(idx), prodottoId=prodotto_id, listaQuotazioneId=prodotto.find("IDSpCap").text)
+
+        for rg_item in prodotto.findall(".//RGItem"):
+            prv_misura = ET.SubElement(prodotto_xml, "prvMisura")
+            prv_commento = ET.SubElement(prv_misura, "prvCommento", estesa=rg_item.find("Descrizione").text)
+            prv_cella_0 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("IDVV").text, posizione="0")
+            prv_cella_1 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("Lunghezza").text, posizione="1")
+            prv_cella_2 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("Larghezza").text, posizione="2")
+            prv_cella_3 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("HPeso").text, posizione="3")
+
+    # Salva il nuovo XML
+    xml_six_tree = ET.ElementTree(xml_six_root)
+    xml_six_tree.write("converted_" + xml_filename)
+
+# Esegui la conversione
+# ~convert_to_xpwe("primo_file.xml")
+# ~convert_to_xml("secondo_file.xml")
+
+
+########################################################################
+
+
 def MENU_debug():
+    descrizione_in_una_colonna()
     # ~LeenoUtils.DocumentRefresh(True)
-
-
     # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     # ~ DLG.chi(stili_cat)
     # ~inizializza_elenco()
     # ~calendario()
-    sistema_cose()
+    # ~sistema_cose()
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.CurrentController.ActiveSheet
 

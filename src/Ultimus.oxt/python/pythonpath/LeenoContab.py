@@ -119,7 +119,7 @@ def insertVoceContabilita(oSheet, lrow):
     oCellRangeAddr.StartRow = lrow + 2
     oCellRangeAddr.EndRow = lrow + 2
     oSheet.group(oCellRangeAddr, 1)
-    ########################################################################
+    ###################################
 
     if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
         if lrow - 1 == oSheet.getCellRangeByName('_Lib_' + str(nSal)).getRangeAddress().EndRow:
@@ -200,7 +200,7 @@ def mostra_sal(uSal):
                     oSheet.setPrintTitleRows(True)
                     PL.GotoSheet(oSheet.Name)
                     oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
-                    # ~oSheet.Rows.OptimalHeight = True
+                    # ~#oSheet.Rows.OptimalHeight = True
 
                     oDoc.CurrentController.setFirstVisibleRow(1)
                     PL._gotoCella(0, daRiga -1)

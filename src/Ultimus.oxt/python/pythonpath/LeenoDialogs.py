@@ -41,15 +41,15 @@ def barra_di_stato(testo='', valore=0):
     oProgressBar.end()
 
 
-def chi(s):  # s = oggetto
+def chi(s):
     '''
     s    { object }  : oggetto da interrogare
-    mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili
+    Mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili.
     '''
     doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
     s1 = str(s) + '\n\n' + str(dir(s).__str__())
-    MessageBox(parentwin, str(s1), str(type(s)), 'infobox')
+    MsgBox(parentwin, s1, str(type(s)), 'infobox')
 
 
 def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
@@ -165,13 +165,13 @@ def ScegliElaborato(titolo):
                 'A2').String
             if el == 'COMPUTO':
                 oDlgXLO.getControl(
-                    "CME_XLO").Label = '~Computo:     € ' + importo
+                    "CME_XLO").Label = '~Computo:     ' + importo
             if el == 'VARIANTE':
                 oDlgXLO.getControl(
-                    "VAR_XLO").Label = '~Variante:    € ' + importo
+                    "VAR_XLO").Label = '~Variante:    ' + importo
             if el == 'CONTABILITA':
                 oDlgXLO.getControl(
-                    "CON_XLO").Label = 'C~ontabilità: € ' + importo
+                    "CON_XLO").Label = 'C~ontabilità: ' + importo
             #  else:
             #  oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
         except Exception:

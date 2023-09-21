@@ -29,8 +29,9 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     try:
         if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
             return
-    except Exception:
-        # file senza nome
+    except Exception as e:
+        # Gestisce l'eccezione in modo appropriato, ad esempio stampando un messaggio di errore
+        Dialogs.Exclamation(Title='Errore!', Text=f"Errore nell'ottenere il percorso del documento principale: {e}.")
         return
 
     d = {

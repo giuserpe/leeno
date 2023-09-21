@@ -303,6 +303,12 @@ def MENU_AnnullaAttiContabili():
 
     if len (listaSal) == 1:
         SheetUtils.visualizza_PageBreak(False)
+
+    if cfg.read('Generale', 'descrizione_in_una_colonna') == '1':
+        PL.descrizione_in_una_colonna(False)
+    else:
+        PL.descrizione_in_una_colonna(True)
+
     try:
         nSal = int(listaSal[-1]) -1
         mostra_sal(nSal)

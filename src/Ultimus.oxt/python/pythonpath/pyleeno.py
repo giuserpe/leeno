@@ -140,13 +140,8 @@ def MENU_leeno_conf():
     else:
         oDlg_config.getControl('CheckBox5').State = 0
 
-    #  if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
-
     sString = oDlg_config.getControl('ComboBox6')
     sString.Text = cfg.read('Generale', 'altezza_celle')
-
-    #  sString = oDlg_config.getControl("ComboBox1")
-    #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
 
     sString = oDlg_config.getControl("ComboBox2")  # spostamento ad INVIO
     if cfg.read('Generale', 'movedirection') == '1':
@@ -201,8 +196,6 @@ def MENU_leeno_conf():
         Toolbars.Switch(False)
     else:
         Toolbars.Switch(True)
-
-    #  conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
 
     ctx = LeenoUtils.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
@@ -1581,36 +1574,28 @@ def MENU_sproteggi_sheet_TUTTE():
     '''
     Sprotegge e riordina tutti fogli del documento.
     '''
-    sproteggi_sheet_TUTTE()
+    sproteggi_e_riordina_fogli()
 
 
-def sproteggi_sheet_TUTTE():
+def sproteggi_e_riordina_fogli():
     '''
-    Sprotegge e riordina tutti fogli del documento.
+    Sprotegge e riordina tutti i fogli del documento.
     '''
+    # Ottieni il documento corrente
     oDoc = LeenoUtils.getDocument()
-    oSheets = oDoc.Sheets.ElementNames
-    for nome in oSheets:
+    
+    # Sproteggi tutti i fogli del documento
+    for nome in oDoc.Sheets.ElementNames:
         oSheet = oDoc.getSheets().getByName(nome)
-        oSheet.unprotect('')
-    # riordino le sheet
-    oDoc.Sheets.moveByName("Elenco Prezzi", 0)
-    if oDoc.Sheets.hasByName("Analisi di Prezzo"):
-        oDoc.Sheets.moveByName("Analisi di Prezzo", 1)
-    oDoc.Sheets.moveByName("COMPUTO", 2)
-    if oDoc.Sheets.hasByName("VARIANTE"):
-        oDoc.Sheets.moveByName("VARIANTE", 3)
-    if oDoc.Sheets.hasByName("CONTABILITA"):
-        oDoc.Sheets.moveByName("CONTABILITA", 4)
-    if oDoc.Sheets.hasByName("M1"):
-        oDoc.Sheets.moveByName("M1", 5)
-    oDoc.Sheets.moveByName("S1", 6)
-    oDoc.Sheets.moveByName("S2", 7)
-    # ~oDoc.Sheets.moveByName("S4", 9)
-    if oDoc.Sheets.hasByName("S5"):
-        oDoc.Sheets.moveByName("S5", 10)
-    if oDoc.Sheets.hasByName("copyright_LeenO"):
-        oDoc.Sheets.moveByName("copyright_LeenO", oDoc.Sheets.Count)
+        oSheet.unprotect('')  # Rimuovi la protezione con una password vuota
+    
+    # Specifica l'ordine desiderato dei fogli
+    ordine_fogli = ["Analisi di Prezzo", "Elenco Prezzi", "COMPUTO", "VARIANTE", "CONTABILITA", "M1", "S1", "S2", "S5", "copyright_LeenO"]
+    
+    # Sposta i fogli nell'ordine specificato
+    for posizione, nome_foglio in enumerate(ordine_fogli):
+        if oDoc.Sheets.hasByName(nome_foglio):
+            oDoc.Sheets.moveByName(nome_foglio, posizione)
 
 
 ########################################################################
@@ -8424,7 +8409,7 @@ def DlgPDF():
 
 def DlgMain():
     '''
-    Visualizza il menù principale dialog_fil
+    Visualizza il menù principale DlgMain
     '''
     LeenoUtils.DocumentRefresh(True)
     oDoc = LeenoUtils.getDocument()
@@ -8502,21 +8487,15 @@ def DlgMain():
             oSheet.getCellByPosition(15, 1).Value)
     except Exception:
         pass
-    #  sString = oDlgMain.getControl("ComboBox1")
-    #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     oDlgMain.getControl('CheckBox1').State = int(
         cfg.read('Generale', 'dialogo'))
-    #  _gotoCella(x, y)
     LeenoEvents.assegna()
     oDlgMain.execute()
     sString = oDlgMain.getControl("Label_DDC").Text
     if oDlgMain.getControl('CheckBox1').State == 1:
         cfg.write('Generale', 'dialogo', '1')
-        #  sString = oDlgMain.getControl("ComboBox1")
-        #  conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     else:
         cfg.write('Generale', 'dialogo', '0')
-        #  conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName(
         'C3').String = oDlgMain.getControl("TextField1").Text
 
@@ -9035,42 +9014,43 @@ def sistema_cose():
 
 def descrizione_in_una_colonna(flag=False):
     '''
-    Consente di estendere su più colonne o ridurre ad una colonna lo spazio
+    Questa funzione consente di estendere su più colonne o ridurre ad una colonna lo spazio
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
+
+    Args:
+        flag (bool, optional): Se True, effettua l'unione delle celle. Se False, annulla l'unione.
+
     '''
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
-
-    # Definizione dei fogli di lavoro da modificare
-    nome_foglio = oDoc.CurrentController.ActiveSheet.getName()
+    
+    fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE', 'CONTABILITA']
     
     if oDoc.NamedRanges.hasByName("_Lib_1"):
         Dialogs.Exclamation(Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
-        fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE']
-    else:
-        fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE', 'CONTABILITA']
+        fogli_lavoro.remove('CONTABILITA')
 
     for nome_foglio in fogli_lavoro:
         if oDoc.getSheets().hasByName(nome_foglio):
             oSheet = oDoc.getSheets().getByName(nome_foglio)
-            inizio_righe = [3]  # Inizia con la riga 3
-
-            if nome_foglio == 'S5' and not oDoc.NamedRanges.hasByName("_Lib_1"):
-                inizio_righe = [3, 9]
-            else:
-                inizio_righe = [3, 9, 23]
+            
+            # Definisci le righe iniziali in base al foglio
+            inizio_righe = [3]
             fine_riga = SheetUtils.getUsedArea(oSheet).EndRow
-
+            if nome_foglio == 'S5':
+                inizio_righe = [3, 9, 23]
+                if oDoc.NamedRanges.hasByName("_Lib_1"):
+                    inizio_righe.remove(23)
+                    fine_riga = 15
             for inizio_riga in inizio_righe:
                 for y in range(inizio_riga, fine_riga + 1):
                     cell_style = oSheet.getCellByPosition(2, y).CellStyle
                     cell_range = oSheet.getCellRangeByPosition(2, y, 8, y)
-
+                    
                     if cell_style in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr', 'Comp-Bianche sopra_R', 'Comp-Bianche in mezzo Descr_R'):
-                    # ~if cell_style in ('Comp-Bianche in mezzo Descr', 'Comp-Bianche in mezzo Descr_R'):
-                            cell_range.merge(flag)
-
-    adattaAltezzaRiga()
+                        cell_range.merge(flag)
+    
+        Menu_adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -10018,150 +9998,6 @@ import LeenoTabelle
 
 
 ########################################################################
-
-import xml.etree.ElementTree as ET
-
-# Funzione per convertire il primo file XML nel formato del secondo file XML
-def convert_to_xpwe(xml_filename):
-    # Leggi il file XML
-    tree = ET.parse(xml_filename)
-    root = tree.getroot()
-
-    # Crea l'albero XML per il secondo formato (XPWE)
-    xpwe_root = ET.Element("PweDocumento")
-
-    # Aggiungi le informazioni generali
-    copy_right = ET.SubElement(xpwe_root, "CopyRight")
-    copy_right.text = "Copyright ACCA software S.p.A."
-    tipo_documento = ET.SubElement(xpwe_root, "TipoDocumento")
-    tipo_documento.text = "1"
-    tipo_formato = ET.SubElement(xpwe_root, "TipoFormato")
-    tipo_formato.text = "XMLPwe"
-    versione = ET.SubElement(xpwe_root, "Versione")
-    source_versione = ET.SubElement(xpwe_root, "SourceVersione")
-    source_versione.text = "3.23.0.dev"
-    source_nome = ET.SubElement(xpwe_root, "SourceNome")
-    source_nome.text = "LeenO.org"
-    file_name_documento = ET.SubElement(xpwe_root, "FileNameDocumento")
-    file_name_documento.text = "W:\\_dwg\\ULTIMUSFREE\\_SRC\\XML.XPWE\\000-COMPUTO.xpwe"
-
-    # Aggiungi i dati generali
-    pwe_dati_generali = ET.SubElement(xpwe_root, "PweDatiGenerali")
-    pwe_dg_progetto = ET.SubElement(pwe_dati_generali, "PweDGProgetto")
-    pwe_dg_dati_generali = ET.SubElement(pwe_dg_progetto, "PweDGDatiGenerali")
-    perc_prezzi = ET.SubElement(pwe_dg_dati_generali, "PercPrezzi")
-    perc_prezzi.text = "0"
-    comune = ET.SubElement(pwe_dg_dati_generali, "Comune")
-    comune.text = "Comune di"
-    oggetto = ET.SubElement(pwe_dg_dati_generali, "Oggetto")
-    oggetto.text = "RISTRUTTURAZIONE CON CAMBIO D'USO IN RESIDENZIALE ...."
-    committente = ET.SubElement(pwe_dg_dati_generali, "Committente")
-    committente.text = "Committente..."
-
-    # Aggiungi i capitoli e categorie
-    pwe_dg_capitoli_categorie = ET.SubElement(pwe_dati_generali, "PweDGCapitoliCategorie")
-    pwe_dg_super_capitoli = ET.SubElement(pwe_dg_capitoli_categorie, "PweDGSuperCapitoli")
-    dg_super_capitoli_item = ET.SubElement(pwe_dg_super_capitoli, "DGSuperCapitoliItem", ID="1")
-    des_sintetica = ET.SubElement(dg_super_capitoli_item, "DesSintetica")
-    des_sintetica.text = "DEMOLIZIONI E RIMOZIONI"
-
-    # Aggiungi le voci di computo
-    pwe_misurazioni = ET.SubElement(xpwe_root, "PweMisurazioni")
-    pwe_elenco_prezzi = ET.SubElement(pwe_misurazioni, "PweElencoPrezzi")
-
-    for prodotto in root.findall(".//prodotto"):
-        ep_item = ET.SubElement(pwe_elenco_prezzi, "EPItem", ID=str(prodotto.get("prodottoId")))
-        tipo_ep = ET.SubElement(ep_item, "TipoEP")
-        tipo_ep.text = "0"
-        tariffa = ET.SubElement(ep_item, "Tariffa")
-        tariffa.text = prodotto.get("prdId")
-        des_ridotta = ET.SubElement(ep_item, "DesRidotta")
-        des_ridotta.text = prodotto.find(".//prdDescrizione").get("breve")
-        des_estesa = ET.SubElement(ep_item, "DesEstesa")
-        des_estesa.text = prodotto.find(".//prdDescrizione").get("estesa")
-        un_misura = ET.SubElement(ep_item, "UnMisura")
-        un_misura.text = prodotto.get("unitaDiMisuraId")
-        prezzo1 = ET.SubElement(ep_item, "Prezzo1")
-        prezzo1.text = prodotto.find(".//prdQuotazione").get("valore")
-        prezzo2 = ET.SubElement(ep_item, "Prezzo2")
-        prezzo3 = ET.SubElement(ep_item, "Prezzo3")
-        prezzo4 = ET.SubElement(ep_item, "Prezzo4")
-        prezzo5 = ET.SubElement(ep_item, "Prezzo5")
-        id_sp_cap = ET.SubElement(ep_item, "IDSpCap")
-        id_sp_cap.text = prodotto.find(".//prdQuotazione").get("listaQuotazioneId")
-        id_cap = ET.SubElement(ep_item, "IDCap")
-        id_sb_cap = ET.SubElement(ep_item, "IDSbCap")
-        flags = ET.SubElement(ep_item, "Flags")
-        data = ET.SubElement(ep_item, "Data")
-
-    # Salva il nuovo XML
-    xpwe_tree = ET.ElementTree(xpwe_root)
-    xpwe_tree.write("converted_" + xml_filename)
-
-# Funzione per convertire il secondo file XML nel formato del primo file XML
-def convert_to_xml(xml_filename):
-    # Leggi il file XML
-    tree = ET.parse(xml_filename)
-    root = tree.getroot()
-
-    # Crea l'albero XML per il primo formato (XML.SIX)
-    xml_six_root = ET.Element("Documento", xmlns="six.xsd")
-
-    # Aggiungi l'intestazione
-    intestazione = ET.SubElement(xml_six_root, "intestazione", lingua="it", separatore=",", separatoreParametri=";", valuta="EUR", versione="1.3.3.20376")
-
-    # Aggiungi il gruppo e i relativi dati
-    gruppo = ET.SubElement(xml_six_root, "gruppo", tipo="Capitolo", gruppoId="1")
-    grp_valore = ET.SubElement(gruppo, "grpValore", grpValoreId="1", vlrId="1")
-    vlr_descrizione = ET.SubElement(grp_valore, "vlrDescrizione", breve="DEMOLIZIONI E RIMOZIONI")
-
-    # Aggiungi il prezzario e i relativi dati
-    prezzario = ET.SubElement(xml_six_root, "prezzario", prezzarioId="1", przId="1", categoriaPrezzario="EPU", arrotondamento="0.01", arrotondamentoImporto="0.01", arrotondamentoPercentuale="0.01")
-
-    unita_di_misura = ET.SubElement(prezzario, "unitaDiMisura", unitaDiMisuraId="m³", udmId="m³", simbolo="m³", decimali="2")
-    udm_descrizione = ET.SubElement(unita_di_misura, "udmDescrizione", breve="m³")
-
-    lista_quotazione = ET.SubElement(prezzario, "listaQuotazione", listaQuotazioneId="0")
-
-    for lista_quotazione_id in ["1", "13", "14", "15", "16", "17"]:
-        lqt = ET.SubElement(prezzario, "listaQuotazione", listaQuotazioneId=lista_quotazione_id)
-        lqt_descrizione = ET.SubElement(lqt, "lqtDescrizione", breve="Prezzo" + lista_quotazione_id)
-
-    prz_descrizione = ET.SubElement(prezzario, "przDescrizione", breve="000")
-    prz_gruppo = ET.SubElement(prezzario, "przGruppo", gruppoId="1")
-
-    # Aggiungi i prodotti e i relativi dati
-    progetto = ET.SubElement(xml_six_root, "progetto", prgId="000")
-    prg_descrizione = ET.SubElement(progetto, "prgDescrizione", breve="000")
-    prg_prezzario = ET.SubElement(progetto, "prgPrezzario", prezzarioId="1")
-    preventivo = ET.SubElement(progetto, "preventivo", preventivoId="4", prezzarioId="1")
-    prv_descrizione = ET.SubElement(preventivo, "prvDescrizione", breve="000")
-
-    prodotti = root.findall(".//EPItem")
-
-    for idx, prodotto in enumerate(prodotti, start=1):
-        prodotto_id = prodotto.get("ID")
-        prodotto_xml = ET.SubElement(preventivo, "prvRilevazione", prvRilevazioneId=str(prodotto_id), progressivo=str(idx), prodottoId=prodotto_id, listaQuotazioneId=prodotto.find("IDSpCap").text)
-
-        for rg_item in prodotto.findall(".//RGItem"):
-            prv_misura = ET.SubElement(prodotto_xml, "prvMisura")
-            prv_commento = ET.SubElement(prv_misura, "prvCommento", estesa=rg_item.find("Descrizione").text)
-            prv_cella_0 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("IDVV").text, posizione="0")
-            prv_cella_1 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("Lunghezza").text, posizione="1")
-            prv_cella_2 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("Larghezza").text, posizione="2")
-            prv_cella_3 = ET.SubElement(prv_misura, "prvCella", testo=rg_item.find("HPeso").text, posizione="3")
-
-    # Salva il nuovo XML
-    xml_six_tree = ET.ElementTree(xml_six_root)
-    xml_six_tree.write("converted_" + xml_filename)
-
-# Esegui la conversione
-# ~convert_to_xpwe("primo_file.xml")
-# ~convert_to_xml("secondo_file.xml")
-
-
-########################################################################
-
 
 def MENU_debug():
     descrizione_in_una_colonna()

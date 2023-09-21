@@ -4667,7 +4667,7 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
             oSheet.getRows().removeByIndex(y, 1)
             if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
-    if rigen == True:
+    if rigen:
         rigenera_parziali(False)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     oDoc.enableAutomaticCalculation(True)
@@ -7820,13 +7820,20 @@ def catalogo_stili_cella():
 
 def elimina_stili_cella():
     '''
-    @@ DA DOCUMENTARE
+    Elimina gli stili di cella non utilizzati.
     '''
     oDoc = LeenoUtils.getDocument()
     stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
-    for el in stili:
-        if not oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse():
-            oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
+    
+    # Crea una lista di stili non utilizzati
+    stili_da_elim = [el for el in stili if not oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse()]
+    
+    # Rimuovi gli stili non utilizzati
+    n = 0
+    for el in stili_da_elim:
+        oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
+        n += 1
+    Dialogs.Exclamation(Title = 'ATTENZIONE!', Text=f'Eliminati {n} stili di cella!')
 
 
 ########################################################################
@@ -8272,8 +8279,8 @@ def XPWE_export_run():
     testo = '\n'
     for el in lista:
         XPWE_out(el, out_file)
-        testo = testo + '● ' + out_file + '-' + el + '.xpwe\n\n'
-    # ~DLG.MsgBox('Esportazione in formato XPWE eseguita con successo su:\n' + testo, 'Avviso.')
+        testo += f'● {out_file}-{elemento}.xpwe\n\n'
+
     Dialogs.Info(Title = 'Avviso.',
     Text='Esportazione in formato XPWE eseguita con successo su:\n' + testo)
 
@@ -9888,42 +9895,6 @@ def inputbox(message, title="", default="", x=None, y=None):
     ret = edit.getModel().Text if dialog.execute() else ""
     dialog.dispose()
     return ret
-########################################################################
-########################################################################
-########################################################################
-# ~https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1sheet_1_1SpreadsheetDocumentSettings.html
-import LeenoImport
-def BARRA(sTitre = 'TITOLO', vMax = 100):
-
-    # ~sTitre ='titolo'
-    # ~vMax = 100
-    # ~' Création du modèle
-    oDlgModele = LeenoUtils.createUnoService( "com.sun.star.awt.UnoControlDialogModel")
-
-    # ~' Où mettre le dialogue
-    oDlgModele.PositionX = 100
-    oDlgModele.PositionY = 100
-    oDlgModele.Width = 105
-    oDlgModele.Height = 20
-    oDlgModele.Title = sTitre
-
-    # ~' Création du contrôle barre de progression
-    oBarre = oDlgModele.createInstance( "com.sun.star.awt.UnoControlProgressBarModel" )
-    # ~' Où mettre la barre
-    oBarre.PositionX = 0
-    oBarre.PositionY = 0
-    oBarre.Width = 105
-    oBarre.Height = 20
-    oBarre.ProgressValueMin = 0
-    oBarre.ProgressValueMax = vMax
-    # ~' Mettre la barre dans le modèle
-    oDlgModele.insertByName("bar", oBarre )
-
-    # ~' Création du dialogue sur la base du modèle
-    oWait = LeenoUtils.createUnoService( "com.sun.star.awt.UnoControlDialog")
-    oWait.setModel( oDlgModele )
-    BARRA = oWait
-
 
 ########################################################################
 
@@ -10000,7 +9971,12 @@ import LeenoTabelle
 ########################################################################
 
 def MENU_debug():
-    descrizione_in_una_colonna()
+    # ~DLG.ScegliElaborato('oioi')
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
+
+    # ~LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
+
     # ~LeenoUtils.DocumentRefresh(True)
     # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
@@ -10008,8 +9984,6 @@ def MENU_debug():
     # ~inizializza_elenco()
     # ~calendario()
     # ~sistema_cose()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
 
     # ~DLG.mri(oSheet.getCellRangeByName("I3"))
 

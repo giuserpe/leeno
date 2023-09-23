@@ -29,8 +29,8 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     try:
         if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
             return
--    except Exception:
--        # file senza nome
+    except Exception:
+        # file senza nome
         return
 
     d = {

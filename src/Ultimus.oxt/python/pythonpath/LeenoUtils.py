@@ -112,15 +112,14 @@ def DocumentRefresh(boo):
     '''
     oDoc = getDocument()
     # l'ordine che segue non va cambiato!!!
-    if boo == True:
+    if boo:
         oDoc.IsAdjustHeightEnabled = True
         oDoc.enableAutomaticCalculation(True)
         oDoc.removeActionLock()
         oDoc.resetActionLocks()
         oDoc.unlockControllers()
         oDoc.calculateAll()
-
-    elif boo == False:
+    else:
         oDoc.IsAdjustHeightEnabled = False
         oDoc.enableAutomaticCalculation(False)
         oDoc.lockControllers #disattiva l'eco a schermo

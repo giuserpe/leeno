@@ -3,8 +3,8 @@ import LeenoUtils
 if LeenoUtils.getGlobalVar('Lmajor') is None:
     LeenoUtils.initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
-        'Lminor': 23,       # NUOVE FUNZIONALITA'
-        'Lsubv': "0.dev",       # CORREZIONE BUGS
+        'Lminor': 24,       # NUOVE FUNZIONALITA'
+        'Lsubv': "0",       # CORREZIONE BUGS
         # ~'Lmajor': 3,        # INCOMPATIBILITA'
         # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
         # ~'Lsubv': "0",       # CORREZIONE BUGS

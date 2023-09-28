@@ -63,14 +63,14 @@ def debug_errore():
 #         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
 #     except AttributeError:
 #         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-#     el_y = list()
+#     el_y = []
 #     try:
 #         len(oRangeAddress)
 #         for el in oRangeAddress:
 #             el_y.append((el.StartRow, el.EndRow))
 #     except TypeError:
 #         el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
-#     lista = list()
+#     lista = []
 #     for y in el_y:
 #         for el in range(y[0], y[1] + 1):
 #             lista.append(el)
@@ -165,7 +165,7 @@ def MENU_debug():
     orig = uno.fileUrlToSystemPath(orig)
     dir_bak = os.path.dirname(oDoc.getURL())
     # ~DelPrintArea()
-    oDoc.storeToURL(dir_bak + '/' + dest, list())
+    oDoc.storeToURL(dir_bak + '/' + dest, [])
 
     # ~DLG.chi(dir_bak)
     return
@@ -365,7 +365,7 @@ def MENU_debug():
     DLG.mri(oDoc.StyleFamilies.getByName('PageStyles')[1])
     return
     stili = oDoc.StyleFamilies.getByName('PageStyles').getElementNames()
-    oDoc.getStyleFamilies().loadStylesFromURL(filename, list())
+    oDoc.getStyleFamilies().loadStylesFromURL(filename, [])
 
     DLG.chi(stili)
 

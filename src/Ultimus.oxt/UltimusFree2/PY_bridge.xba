@@ -115,6 +115,10 @@ Sub cancella_voci_non_usate
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)
 End Sub
 rem ######################################################################
+Sub nascondi_voci_zero
+	ScriptPy(&quot;pyleeno&quot;,&quot;nascondi_voci_zero&quot;)
+End Sub
+rem ######################################################################
 Sub richiesta_offerta
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;richiesta_offerta&quot;)
 End Sub
@@ -151,6 +155,14 @@ Sub GeneraAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_AnnullaAttiContabili
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaAttiContabili&quot;)
+End Sub
+rem ######################################################################
+Sub MENU_elimina_righe_vuote
+	ScriptPy(&quot;LeenoSheetUtils&quot;,&quot;MENU_elimina_righe_vuote&quot;)
+End Sub
+rem ######################################################################
 Sub Vedi
 	ScriptPy(&quot;LeenoToolbars&quot;,&quot;Vedi&quot;)
 End Sub
@@ -159,12 +171,24 @@ Sub svuotaContabilita
 	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
 End Sub
 rem ######################################################################
-Sub MENU_suffisso_codice
-	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_suffisso_codice&quot;)
+Sub MENU_prefisso_codice
+	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_prefisso_codice&quot;)
+End Sub
+rem ######################################################################
+Sub MENU_tabella_compila
+	ScriptPy(&quot;LeenoTabelle&quot;,&quot;tabella_compila&quot;)
+End Sub
+rem ######################################################################
+Sub MENU_tabella_ok
+	ScriptPy(&quot;LeenoTabelle&quot;,&quot;tabella_ok&quot;)
 End Sub
 rem ######################################################################
 Sub chiudi_dialoghi
 	ScriptPy(&quot;pyleeno&quot;,&quot;chiudi_dialoghi&quot;)
 End Sub
 
+rem ######################################################################
+Sub avvia_IDE
+	print &quot;OK per Python - Annulla per Basic&quot;
+End Sub
 </script:module>

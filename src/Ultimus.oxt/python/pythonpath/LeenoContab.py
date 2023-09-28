@@ -1,6 +1,8 @@
 from datetime import date
 from com.sun.star.table import CellRangeAddress
 from com.sun.star.sheet.GeneralFunction import MAX
+from com.sun.star.sheet.CellFlags import \
+    VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
 import LeenoUtils
 import SheetUtils
@@ -35,7 +37,7 @@ def sbloccaContabilita(oSheet, lrow):
            Text= "Lavorando in questo punto del foglio,\n"
                  "comprometterai la validità degli atti contabili già emessi.\n\n"
                  "Vuoi procedere?\n\n"
-                 "SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!"
+                 "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
         )
         if res == 1:
             LeenoUtils.setGlobalVar('sblocca_computo', 1)
@@ -117,7 +119,7 @@ def insertVoceContabilita(oSheet, lrow):
     oCellRangeAddr.StartRow = lrow + 2
     oCellRangeAddr.EndRow = lrow + 2
     oSheet.group(oCellRangeAddr, 1)
-    ########################################################################
+    ###################################
 
     if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
         if lrow - 1 == oSheet.getCellRangeByName('_Lib_' + str(nSal)).getRangeAddress().EndRow:
@@ -142,6 +144,177 @@ def insertVoceContabilita(oSheet, lrow):
             return
         pesca_cod()
     '''
+
+# ###############################################################
+def ultimo_sal():
+    '''
+    restituisce il numero di sal registrati
+    '''
+    oDoc = LeenoUtils.getDocument() 
+    oRanges = oDoc.NamedRanges
+    lista = []
+    [lista.append(str(i))                           #select
+    for i in range(1, 100)                          #from
+    if oRanges.hasByName("_Lib_" + str(i)) == True] #where
+    return lista
+
+
+def mostra_sal(uSal):
+    '''
+    uSal { integer } : numero del sal da annullare
+    Mostro solo gli atti relativi al SAL scelto.
+    '''
+    oDoc = LeenoUtils.getDocument() 
+
+    d = [
+        ('CONTABILITA', '_Lib_', 11),
+        ('Registro', '_Reg_', 9),
+        ('SAL', '_SAL_', 5)
+    ]
+
+    listaSal = ultimo_sal()
+
+    if uSal:
+        SheetUtils.visualizza_PageBreak()
+        for sal in range(1, len(listaSal)+1):
+            for el in d:
+                nomearea = el[1] + str(sal)
+                oSheet = oDoc.Sheets.getByName(el[0])
+
+                oRanges = oDoc.NamedRanges
+                oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress 
+
+                #range 
+                daRiga = oNamedRange.StartRow
+                aRiga = oNamedRange.EndRow
+                daColonna = oNamedRange.StartColumn
+                aColonna = oNamedRange.EndColumn
+
+                oNamedRange.EndColumn = el[2]
+
+                oSheet.ungroup(oNamedRange, 1)
+                oSheet.group(oNamedRange, 1)
+
+                if sal == uSal:
+                    oSheet.setPrintAreas((oNamedRange,))
+                    oSheet.setPrintTitleRows(True)
+                    PL.GotoSheet(oSheet.Name)
+                    oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
+                    # ~#oSheet.Rows.OptimalHeight = True
+
+                    oDoc.CurrentController.setFirstVisibleRow(1)
+                    PL._gotoCella(0, daRiga -1)
+                else:
+                    oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
+    return
+
+def MENU_AnnullaAttiContabili():
+    '''
+    Annulla gli atti dell'ultimo SAL rgistrato.
+    '''
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+    oRanges = oDoc.NamedRanges
+
+    listaSal = ultimo_sal()
+
+    if len (listaSal) == 0:
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text="Nessun SAL registrato da eliminare.")
+        return
+    messaggio = 'Stai per eliminare gli atti del SAL n.' + \
+    listaSal[-1] + '\n\nPosso procedere?'
+    if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+        Text= messaggio) == 1:
+    #elimina libretto
+        # ~PL.GotoSheet('CONTABILITA')
+        oSheet = oDoc.Sheets.getByName('CONTABILITA')
+        nome_area = "_Lib_" + listaSal[-1]
+        oNamedRange = oRanges.getByName(nome_area).ReferredCells.RangeAddress
+        oSheet.ungroup(oNamedRange, 1)
+        #range del _Lib_
+        daRiga = oNamedRange.StartRow
+        aRiga = oNamedRange.EndRow
+        # ripulisce le colonne da VALUE+STRING+FORMULA
+        flags = VALUE+STRING+FORMULA
+        oSheet.getCellRangeByPosition(19, daRiga, 25, aRiga).clearContents(
+        flags)
+        # annulla lo sbiancamento celle
+        flags = HARDATTR
+        oSheet.getCellRangeByPosition(0, 2, 25, aRiga).clearContents(
+        flags)
+        # cancella firme
+        firma = PL.seleziona_voce(aRiga)
+        oSheet.Rows.removeByIndex(firma[0] , firma[1] - firma[0] + 1)
+        # cancella riga gialla
+        oSheet.Rows.removeByIndex(daRiga - 1, 1)
+        oDoc.NamedRanges.removeByName(nome_area)
+        # cancella area di stampa
+        LeenoSheetUtils.DelPrintSheetArea()
+        # importo prossimo sal
+        oSheet.getCellRangeByName('Z2').Formula = (
+        "=$P$2-SUBTOTAL(9;$P$2:$P$" + str(daRiga - 1) + ")"
+        )
+
+        [oDoc.Sheets.removeByName(el)   #select
+        for el in ('Registro', 'SAL')   #from
+        if len (listaSal) == 1]         #where
+
+        if len(listaSal) > 1:
+        #elimina registro
+            # ~PL.GotoSheet('Registro')
+            oSheet = oDoc.Sheets.getByName('Registro')
+            nome_area = "_Reg_" + listaSal[-1]
+            if len (listaSal) == 1:
+                oDoc.Sheets.removeByName('Registro')
+            else:
+                oNamedRange = oRanges.getByName(nome_area).ReferredCells.RangeAddress
+                oSheet.ungroup(oNamedRange, 1)
+                #range del _Rig_
+                daRiga = oNamedRange.StartRow -1
+                aRiga = oNamedRange.EndRow
+                #cancella registro
+                oSheet.Rows.removeByIndex(daRiga, aRiga - daRiga + 1)
+                #cancella area di stampa
+                LeenoSheetUtils.DelPrintSheetArea()
+            oDoc.NamedRanges.removeByName(nome_area)
+
+        #elimina SAL
+            # ~PL.GotoSheet('SAL')
+            oSheet = oDoc.Sheets.getByName('SAL')
+            nome_area = "_SAL_" + listaSal[-1]
+            if len (listaSal) == 1:
+                oDoc.Sheets.removeByName('SAL')
+            else:
+                oNamedRange = oRanges.getByName(nome_area).ReferredCells.RangeAddress
+                oSheet.ungroup(oNamedRange, 1)
+                #range del _Rig_
+                daRiga = oNamedRange.StartRow -1
+                aRiga = oNamedRange.EndRow
+                #cancella registro
+                oSheet.Rows.removeByIndex(daRiga, aRiga - daRiga + 1)
+                #cancella area di stampa
+                LeenoSheetUtils.DelPrintSheetArea()
+            oDoc.NamedRanges.removeByName(nome_area)
+    PL.GotoSheet('CONTABILITA')
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.Rows.OptimalHeight = True
+
+    if len (listaSal) == 1:
+        SheetUtils.visualizza_PageBreak(False)
+
+    if cfg.read('Generale', 'descrizione_in_una_colonna') == '1':
+        PL.descrizione_in_una_colonna(False)
+    else:
+        PL.descrizione_in_una_colonna(True)
+
+    try:
+        nSal = int(listaSal[-1]) -1
+        mostra_sal(nSal)
+    except:
+        return
+
 
 # ###############################################################
 
@@ -227,7 +400,7 @@ def svuotaContabilita(oDoc):
 
     oSheet.getCellRangeByName('Z2').Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
 
-    oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
+    oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
     oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
     oSheet.getCellByPosition(
         17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
@@ -245,7 +418,7 @@ def svuotaContabilita(oDoc):
     # riga del totale
     oSheet.getCellByPosition(2, 3).String = 'T O T A L E'
     oSheet.getCellByPosition(15,
-                             3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
+                             3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
     oSheet.getCellByPosition(
         17, 3).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
     oSheet.getCellByPosition(
@@ -430,12 +603,12 @@ def GeneraLibretto(oDoc):
         daVoce = 1
     oCellRange = oSheet.getCellRangeByPosition(0, 3, 0,
         SheetUtils.getUsedArea(oSheet).EndRow - 2)
-    if daVoce >= int(oCellRange.computeFunction(MAX)):
-        Dialogs.NotifyDialog(Image='Icons-Big/exclamation.png',
-                Title = 'ATTENZIONE!',
-                Text='Tutte le voci di questo Libretto delle Misure\n'
-                    'sono già registrate.')
-        return
+    # ~if daVoce >= int(oCellRange.computeFunction(MAX)):
+        # ~Dialogs.NotifyDialog(Image='Icons-Big/exclamation.png',
+                # ~Title = 'ATTENZIONE!',
+                # ~Text='Tutte le voci di questo Libretto delle Misure\n'
+                    # ~'sono già registrate.')
+        # ~return
 
     nomearea="_Lib_" + str(nSal)
 
@@ -449,8 +622,18 @@ def GeneraLibretto(oDoc):
         lrow = int(SheetUtils.uFindStringCol(daVoce, 0, oSheet))
     except TypeError:
         return
+
+    # include nel range del SAL eventuali titoli di categoria
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     primariga = sStRange.RangeAddress.StartRow
+
+    for el in range(1, 10):
+        if oSheet.getCellByPosition(0, primariga - 1).CellStyle in stili_cat:
+            primariga -= 1
+        else:
+            primariga += 1
+            break
 
     #  ULTIMA VOCE
     oCellRange = oSheet.getCellRangeByPosition(
@@ -486,7 +669,7 @@ def GeneraLibretto(oDoc):
         SAL = (art,  desc, um, quant, prezzo, importo)
         EP = elenco articoli
         '''
-        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1]
+        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #(num, art, desc, um, quant, prezzo, importo, sic, mdo)
         SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
         # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i)
@@ -498,7 +681,7 @@ def GeneraLibretto(oDoc):
     sic = sum(sic)
     mdo = sum(mdo)
 
-    datiSAL=list()
+    datiSAL = []
     for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(0,1,2)):
         quant = sum(float(q[3]) for q in g)
         k = list(k)
@@ -615,6 +798,7 @@ def GeneraLibretto(oDoc):
 #  inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO
 
     #inserisco i dati
+    LeenoUtils.setGlobalVar('sblocca_computo', 0) #registrando gli atti contabili, bisogna inibire alcune modifiche
     progress.setValue(5)
     for i in range(primariga, fineFirme):
         if oSheet.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
@@ -624,7 +808,6 @@ def GeneraLibretto(oDoc):
             oSheet.getCellByPosition(19, i).Value= nLib     #numero libretto
             oSheet.getCellByPosition(22, i).String =  "#reg"  #flag registrato
             oSheet.getCellByPosition(23, i).Value= nSal     #numero SAL
-
             for nPag in range(0, len(oSheet.RowPageBreaks)):
                 if i < oSheet.RowPageBreaks[nPag].Position:
                     oSheet.getCellByPosition(20, i).Value = nPag   #pagina
@@ -662,9 +845,9 @@ def GeneraLibretto(oDoc):
     oSheet.getCellByPosition(25, daRiga).CellStyle = "comp sotto Euro 3_R"
 
     # annoto il sal corrente sulla riga di intestazione
-    oSheet.getCellByPosition(25, 2).Value = nSal
-    oSheet.getCellByPosition(25, 2).CellStyle = "Menu_sfondo _input_grasBig"
-    oSheet.getCellByPosition(25, 1).Formula = (
+    oSheet.getCellRangeByName('Z3').Value = nSal
+    oSheet.getCellRangeByName('Z3').CellStyle = "Menu_sfondo _input_grasBig"
+    oSheet.getCellRangeByName('Z2').Formula = (
         "=$P$2-SUBTOTAL(9;$P$2:$P$" + str(ultimariga + 2) + ")"
         )
 
@@ -676,6 +859,7 @@ def GeneraLibretto(oDoc):
 #  Struttura_Contab ("_Lib_")
 #  Genera_REGISTRO
     struttura_CONTAB()
+
     # ~for el in (nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo):
         # ~DLG.chi(el)
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo
@@ -1062,7 +1246,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(5, lastRow + 9).Formula = "=SUM(F" + str(lastRow + 7) + ":F" + str(lastRow + 9) + ")"
 
     oSheet.getCellByPosition(1, lastRow + 10).Formula = (
-    '''=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")''')
+    '''=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,000");"%")''')
     oSheet.getCellByPosition(5, lastRow + 10).Formula = "=-$F$" + str(lastRow + 10) + "*$S2.$C$78" # RIBASSO
 
     oSheet.getCellByPosition(1, lastRow + 11).String = ("Importo per la Sicurezza")
@@ -1133,7 +1317,7 @@ def GeneraRegistro(oDoc):
     oSheet.setPrintAreas((oNamedRange,))
     oSheet.setPrintTitleRows(True)
 
-    struttura_CONTAB()
+    # ~struttura_CONTAB()
     progress.setValue(8)
     progress.hide()
     # ~ThisComponent.CurrentController.setFirstVisibleRow(daRiga)
@@ -1155,7 +1339,7 @@ def GeneraAttiContabili():
         return
     if Dialogs.YesNoDialog(Title='Avviso',
         Text= 'Prima di procedere è consigliabile salvare il lavoro.\n\n'
-            'Se continui, devi attendere il messaggio di procedura completata.\n'
+            # ~'Se continui, devi attendere il messaggio di procedura completata.\n'
             'Procedo senza salvare?') == 0:
         return
     # ~try:
@@ -1165,6 +1349,12 @@ def GeneraAttiContabili():
     GeneraRegistro(oDoc)
     LeenoUtils.DocumentRefresh(True)
     PL.GotoSheet('CONTABILITA')
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    nSal = ultimo_sal()
+    mostra_sal(nSal)
+    struttura_CONTAB()
+
+    
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     # ~Dialogs.Info(Title = 'Voci registrate!',
         # ~Text="La generazione degli allegati contabili è stata completata.")

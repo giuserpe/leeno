@@ -12,128 +12,18 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-&apos;	BasicLibraries.LoadLibrary( &quot;XrayTool&quot; )
-
-
 rem dà l&apos;indirizzo delle celle in forma umana
 Function Indirizzo_in_forma_leggibile &apos; by Paolo Mantovani
  oActiveCell = ThisComponent.getCurrentSelection()
  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
  oConv.Address = oActiveCell.getCellAddress
-&apos; Print oConv.UserInterfaceRepresentation
- &apos; Print oConv.PersistentRepresentation
+ Print oConv.UserInterfaceRepresentation
+ Print oConv.PersistentRepresentation
  Indirizzo_in_forma_leggibile = oConv.UserInterfaceRepresentation
 End function 
 &apos; malgrado le buone intenzioni aggiorno poco queste note... ma dovrei!
 &apos; pertanto:
 &apos; 101019
 
-&apos; riguardare la procedura di Aggiornamento sulla parte Mac e salvataggi!
-&apos; sistemare la macro cerca_stile_sella
-&apos; verificare se veramente il codice se ne frega della gerarchia degli stili, ma penso varamente di si
-
-
 &apos; le cose da sistemare, sono spesso sono localizzabili cercando la stringa: ||| 
-
-&apos;||| il namedRanges &quot;elenco_prezi_R&quot; serve a qualcosa? ... controllare
-
-&apos;||| per la procedura di adattamento di vecchio template : eliminare il nome di area elenco_prezzi e poi fargli riordinare l&apos;EP
-
-
-
-&apos; Modificata la chiamata di &quot;pesca va e vieni&quot; sotto un solo comando:
-&apos; - Ctrl Ins Ctrl Alt K Ctrl 6 
-&apos; o ancora dal menu top o dall&apos;icona con l&apos;amo.
-&apos; Ricorda di portarlo sulla 4
-
-&apos; Riscritta la macro di nuova voce Analisi
-&apos; Ricorda di portarlo sulla 4
-
-&apos;101020
-&apos;&apos; Accorpate le due formule magiche per le formule nelle celle (ora solo Ctrl 9 sia per
-&apos; scrivere sulla riga corrente che per aggiornare tutto il foglio)
-
-&apos; UF2 080210 ___________________________________
-&apos; Attivata la funzione a &quot;schermo intero&quot; già in apertura attivabile dalle Variabili Generali
-&apos; Come conseguenza è stato disattivato il Controllo conferma dati perchè era una pezza 
-&apos; traballante e npn consentiva di lavorare a &quot;Schermo Intero&quot; (usava il numero delle toolsbar aperte...)
-&apos; non è stato ancora eliminato del tutto... ed è in prova
-&apos; il problema della conferma dei dati inseriti (editing mode) è stato risolto
-&apos; con un semplice select(oCell) ...
-&apos; le Incidenze % della manodopera erano già state risolte nelle versioni precedenti e sembrano
-&apos; funzionare bene
-&apos; Sulle macro &quot;sospette&quot; di obsolescenza è stato aggiunto un print per capire se e quando vengono usate
-
-&apos;oops
-&apos; MEMENTO per Bart
-&apos; Quando si crea un nuovo Template usando la macro:
-&apos; Menu Principale &gt; Manutenzione &gt; Salva un template 
-&apos; Non occorre pastrocchiare le Variabili Generali di sola lettura
-&apos; Ci pensa infatti la macro, ma è necessario avere installata la libreria OXT giusta!
-&apos; il codice la va a leggere chiedendoti solo il numero seriale (progressivo) da usare nel nome file
-&apos; Ovvero la macro va lanciata con su installata la libreria GIUSTA e aggiornata!
-
-
-
-&apos; Cose_Da_Fare_________________________________________________
-&apos; L&apos;Aggiunta componente in CONTABILITA non ha controlli su dove (riprodotto sulla riga 0)
-&apos; l&apos;ho pasticciata e sembra funzionare... ma più che traballina è cervellotica.
-&apos; In ogni caso è una macro completamente da rivedere accorpando le varie chiamate a CNTR_Computo e
-&apos; CNTR_analisi
-
-&apos; Uscita_forzata = &quot;esci&quot;
-&apos; non ricordo di che si tratti
-&apos; sopratutto pare non ci sia nulla che la azzeri 
-&apos; ho cominciato a mettere 
-&apos; Uscita_forzata = &quot;&quot;
-&apos; nelle due sub dei codoco doppi
-
-
-&apos;____________________________________________________________________________________
-
-&apos; 3.3.159
-&apos; aGGIUNTO
-
-&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
- &apos;	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
-&apos;	End If 
-
-&apos;UserInterfaceRepresentation
-
-&apos; questi sono appunti miei che aggiorno man mano che trovo un problema e/o risolvo un problema
-&apos; se avete voglia di metterci mano o darmi dei consigli sono ben accetti, (supporto@leeno.org)
-&apos;altrimenti non fatevi venire mal di testa e ignorate questo modulo...
-
-
-
-&apos; PROBLEMI NOTI!
-&apos; Nelle maacro dove viene attivato il listeners che chiede dove si vuole inserire/spostare,
-&apos; e si annulla l&apos;operazione cliccando sulla crocetta in alto a dx,
-&apos; l&apos;operazione NON viene veramente annullata e il loop continua fino allo scadere del temporizzatore
-&apos; magari mettere il timeout tra le var generali?
-
-&apos;_______________________________________________________________________________
-
-&apos; Lo shortcut CTRL Alt X non sembra attivo nelle mie installazioni di OO sotto Debian
-&apos; (ma la stessa macro assegnata a CTRL Alt Y funzia perfettamente...)
-&apos; Probabilmente dipende dalla sovrapposizione di due installazioni di OO sovrapposte.
-&apos; Se qualcuno ha noie analoghe me lo faccia sapere.... così vediamo se è solo un problema mio
-
-&apos;____________________________________________________________________________
-
-
-&apos;___________________________________________________________________________________________
-&apos; Ripulire il codice dalle righe inutili disattivate e dalle macro inutilizzate.
-&apos; minimizzare le parti di codice che attivano la selezione (e la visualizzazione) su un&apos;area (o cella)
-
-
-&apos;----------------------------------------
-
-&apos;A volte Quando va in autosalvataggio (e c&apos;è unoperazione in corso non conclusa)
-&apos; altera la riga di status... (nel senso che congela la barra di scorrimento sulla riga di status)
-&apos;101020 non è più successo...
-
-
-
-
 </script:module>

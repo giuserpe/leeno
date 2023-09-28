@@ -37,6 +37,7 @@ def parseXML(data, defaultTitle):
 
     prezzario = root.find('prezzario')
     descrizioni = prezzario.findall('przDescrizione')
+    quotazioni = prezzario.findall('listaQuotazione')
     lingue = {}
     lingua = None
     lingueEstese = {'it': 'Italiano', 'de': 'Deutsch', 'en': 'English', 'fr': 'Français', 'es': 'Español'}
@@ -45,6 +46,16 @@ def parseXML(data, defaultTitle):
             lingua = desc.attrib['lingua']
             lExt = lingueEstese.get(lingua, lingua)
             lingue[lExt] = lingua
+            defaultTitle = desc.attrib['breve']
+        try:
+            anno = defaultTitle.split(' ')[1]
+            for quota in quotazioni:
+                lqtId = quota.attrib['lqtId']
+                if lqtId == anno:
+                    listaQuotazioneId = quota.attrib['listaQuotazioneId']
+                    break
+        except:
+            pass
     except KeyError:
         pass
 
@@ -161,10 +172,16 @@ def parseXML(data, defaultTitle):
         # alcune voci non hanno il campo del prezzo essendo
         # voci principali composte da sottovoci
         # le importo comunque, lasciando il valore nullo
+        prezzo = ''
         try:
-            prezzo = float(product.find('prdQuotazione').attrib['valore'])
-        except Exception:
-            prezzo = ""
+            for el in product.findall('prdQuotazione'):
+                if el.attrib['listaQuotazioneId'] == listaQuotazioneId:
+                    prezzo = float(el.attrib['valore'])
+        except:
+            try:
+                prezzo = float(product.find('prdQuotazione').attrib['valore'])
+            except Exception:
+                prezzo = ""
         if prezzo == 0:
             prezzo = ""
 
@@ -179,7 +196,7 @@ def parseXML(data, defaultTitle):
 
         # oneri sicurezza
         try:
-            oneriSic = float(attr['onereSicurezza'])
+            oneriSic = float(attr['onereSicurezza']) * prezzo / 100
         except Exception:
             oneriSic = ""
         if oneriSic == 0:
@@ -203,13 +220,15 @@ def parseXML(data, defaultTitle):
                     if descAttr['breve'] in descAttr['estesa']:
                         textBreve = descAttr['estesa'] + '\n'
                     else:
-                        textEstesa = descAttr['estesa'] + '\n- ' + descAttr['breve'] + '\n'
+                        # ~textEstesa = descAttr['estesa'] + '\n' + descAttr['breve'] + '\n'
+                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa'] + '\n'
                         madre = textEstesa[: -len('\n')]
  
                     if descAttr['breve'] == descAttr['estesa']:
                         textEstesa = madre +  descAttr['breve'] + '\n'
                 try:
                     if 'breve' in descAttr and not 'estesa' in descAttr:
+                        # ~textEstesa = madre + descAttr['breve'] + '\n'
                         if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                             textEstesa = madre + descAttr['breve'] + '\n'
                         else:
@@ -217,22 +236,6 @@ def parseXML(data, defaultTitle):
                 except:
                     pass
 
-        while '  ' in textBreve:
-            textBreve = textBreve.replace('  ', ' ')
-        while '\n\n' in textBreve:
-            textBreve = textBreve.replace('\n\n', '\n')
-        while '  ' in textEstesa:
-            textEstesa = textEstesa.replace('  ', ' ')
-        while '\n\n' in textEstesa:
-            textEstesa = textEstesa.replace('\n\n', '\n')
-
-        textBreve = textBreve.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','')
-        textEstesa = textEstesa.replace('Ó', 'à').replace('Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace('&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','')
-
-        if textBreve != "":
-            textBreve = textBreve[: -len('\n')]
-        if textEstesa != "":
-            textEstesa = textEstesa[: -len('\n')]
 
         # controlla se la voce è una voce 'base' o una specializzazione
         # della voce base. Il campo 'voce' è totalmente inaffidabile, quindi
@@ -254,8 +257,10 @@ def parseXML(data, defaultTitle):
             baseCodice = codice
 
         if not base and codice.startswith(baseCodice):
-            textBreve = baseTextBreve +'- '+ textBreve
-            textEstesa = baseTextEstesa +'- '+ textEstesa
+            # ~textBreve = baseTextBreve +'- '+ textBreve
+            # ~textEstesa = baseTextEstesa +'- '+ textEstesa
+            textBreve = baseTextBreve + textBreve
+            textEstesa = baseTextEstesa + textEstesa
 
         # utilizza solo la descrizione lunga per LeenO
         if len(textBreve) > len(textEstesa):
@@ -266,8 +271,8 @@ def parseXML(data, defaultTitle):
         if len(codice.split('.')) == 4:
             madre = desc
         if len(codice.split('.')) > 4:
-            if madre not in desc:
-                desc = madre + desc
+            # ~if madre not in desc:
+            desc = madre + desc
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
@@ -281,16 +286,16 @@ def parseXML(data, defaultTitle):
 
         # compone l'articolo e lo mette in lista
         # esclude dall'elenco le voci senza prezzo
-        if len(codice.split('.')) > 2 and prezzo != '':
-            artList[codice] = {
-                'codice': codice,
-                'desc': desc,
-                'um': um,
-                'prezzo': prezzo,
-                'mdo': mdo,
-                'sicurezza': oneriSic,
-                'gruppo': grpId
-            }
+        # ~if len(codice.split('.')) > 2 and prezzo != '':
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic,
+            'gruppo': grpId
+        }
 
     # in alcuni casi sono presenti i gruppi, che poi sono le nostre
     # supercategorie e categorie

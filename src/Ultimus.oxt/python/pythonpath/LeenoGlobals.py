@@ -2,12 +2,12 @@ import LeenoUtils
 
 if LeenoUtils.getGlobalVar('Lmajor') is None:
     LeenoUtils.initGlobalVars({
-        # ~'Lmajor': 3,        # INCOMPATIBILITA'
-        # ~'Lminor': 22,       # NUOVE FUNZIONALITA'
-        # ~'Lsubv': "0.dev",       # CORREZIONE BUGS
         'Lmajor': 3,        # INCOMPATIBILITA'
-        'Lminor': 23,       # NUOVE FUNZIONALITA'
+        'Lminor': 24,       # NUOVE FUNZIONALITA'
         'Lsubv': "0",       # CORREZIONE BUGS
+        # ~'Lmajor': 3,        # INCOMPATIBILITA'
+        # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
+        # ~'Lsubv': "0",       # CORREZIONE BUGS
 
         'noVoce': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta',
                    'comp Int_colonna', 'Ultimus_centro_bordi_lati',

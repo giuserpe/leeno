@@ -1166,7 +1166,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # ~LeenoUtils.DocumentRefresh(True)
     PL.fissa()
 
-def MENU_XPWE_import():
+def MENU_XPWE_import(filename = None):
     '''
     Importazione dati dal formato XPWE
     '''
@@ -1210,7 +1210,8 @@ def MENU_XPWE_import():
     if elaborato in ('Elenco', 'CONTABILITA'):
         ordina = False
 
-    filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
+    if filename == None:
+        filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
     if filename in ('Cancel', '', None):
         return
 
@@ -1313,6 +1314,8 @@ def MENU_XPWE_import():
     if elaborato == 'CONTABILITA':
         capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
 
     # Compilo Analisi di prezzo
     progress.setText("Compilazione analisi prezzi")
@@ -1345,13 +1348,18 @@ def MENU_XPWE_import():
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     oSheet = oDoc.getSheets().getByName(elaborato)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
 
     progress.setText("Fine")
     progress.hide()
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
+    # salva il file col nome del file di origine
+    if len(oDoc.getURL()) == 0:
+        dest = filename[0:-5]+ '.ods'
+        PL.salva_come(dest)
 
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)

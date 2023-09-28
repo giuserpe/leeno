@@ -2462,12 +2462,15 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     estensioni = {'*.*': 'Tutti i file(*.*)',
                   '*.odt': 'Writer(*.odt)',
                   '*.ods': 'Calc(*.ods)',
+                  '*.xls': 'Excel(*.xls)',
+                  '*.xlsx': 'Excel(*.xlsx)',
                   '*.odb': 'Base(*.odb)',
                   '*.odg': 'Draw(*.odg)',
                   '*.odp': 'Impress(*.odp)',
                   '*.odf': 'Math(*.odf)',
                   '*.xpwe': 'Primus(*.xpwe)',
                   '*.xml': 'XML(*.xml)',
+                  '*.svg': 'SVG(*.svg)',
                   '*.dat': 'dat(*.dat)', }
     oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))
@@ -2484,7 +2487,11 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
 
     oFilePicker.Title = titolo
     app = estensioni.get(est)
-    oFilePicker.appendFilter(app, est)
+    try:
+        oFilePicker.appendFilter(app, est)
+    except Exception as e:
+        Exclamation(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
+        return
     if oFilePicker.execute():
         oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
         storeLastPath(oPath)
@@ -2631,6 +2638,8 @@ class Progress:
         self._progress.setValue(val)
         if self._text is not None and self._textWidget is not None:
             minVal, maxVal = self.getLimits()
+            if maxVal - minVal ==0:
+                maxVal = +1
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             txt = self._text + ' (' + percent + ')'
             self._textWidget.setText(txt)

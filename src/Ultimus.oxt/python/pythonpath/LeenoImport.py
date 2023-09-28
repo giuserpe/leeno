@@ -14,8 +14,10 @@ import pyleeno as PL
 import LeenoDialogs as DLG
 
 import SheetUtils
+import LeenoSheetUtils
 
 import Dialogs
+import DocUtils
 
 import LeenoImport_XmlSix
 import LeenoImport_XmlToscana
@@ -23,6 +25,7 @@ import LeenoImport_XmlSardegna
 import LeenoImport_XmlLiguria
 import LeenoImport_XmlVeneto
 import LeenoImport_XmlBasilicata
+import LeenoImport_XmlLombardia
 
 
 def fixParagraphSize(txt):
@@ -67,11 +70,12 @@ def findXmlParser(xmlText):
 
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
-        'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
+        'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
+        '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -115,6 +119,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
     # inserisce supercategorie e categorie nella lista
     # articoli, creando quindi un blocco unico
+    LeenoUtils.DocumentRefresh(False)
     artList = dati['articoli']
     superCatList = dati['superCategorie']
     catList = dati['categorie']
@@ -201,8 +206,6 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
         item += step
 
-    # ~oSheet.getRows().removeByIndex(3, 1)
-
     return True
 
 
@@ -231,54 +234,71 @@ def MENU_ImportElencoPrezziXML():
     if xmlParser is None:
         Dialogs.Exclamation(
             Title = "File sconosciuto",
-            Text = "Il file fornito sembra di tipo sconosciuto.\n\n"
-                   "Puoi riprovare cambiandone l'estensione in .XPWE quindi\n"
-                   "utilizzando la relativa voce di menù per l'importazione.\n\n"
+            Text = "Il file fornito sembra di tipo sconosciuto,\n"
+                   "ma sarà tentata una importazione dal formato XPWE.\n\n" 
+
                    "In caso di nuovo errore, puoi inviare una copia del file\n"
                    "allo staff di LeenO affinchè il suo formato possa essere\n"
                    "importato dalla prossima versione del programma.\n\n"
         )
-        return
+        import LeenoImport_XPWE as LXPWE
+        LXPWE.MENU_XPWE_import(filename)
 
-    #try:
-    dati = xmlParser(data, defaultTitle)
+    else:
 
-    #except Exception:
-    #    Dialogs.Exclamation(
-    #       Title="Errore nel file XML",
-    #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-    #    return
+        #try:
+        dati = xmlParser(data, defaultTitle)
 
-    # il parser può gestirsi l'errore direttamente, nel qual caso
-    # ritorna None ed occorre uscire
-    if dati is None:
-        return
+        #except Exception:
+        #    Dialogs.Exclamation(
+        #       Title="Errore nel file XML",
+        #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+        #    return
 
-    # creo nuovo file di computo
-    oDoc = PL.creaComputo(0)
-    # ~LeenoUtils.DocumentRefresh(False)
+        # il parser può gestirsi l'errore direttamente, nel qual caso
+        # ritorna None ed occorre uscire
+        if dati is None:
+            return
 
-    # visualizza la progressbar
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
-    progress.show()
+        # creo nuovo file di computo
+        oDoc = PL.creaComputo(0)
 
-    # compila l'elenco prezzi
-    compilaElencoPrezzi(oDoc, dati, progress)
+        PL.GotoSheet("Elenco Prezzi")
+        LeenoUtils.DocumentRefresh(False)
 
-    # si posiziona sul foglio di computo appena caricato
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oDoc.CurrentController.setActiveSheet(oSheet)
+        # visualizza la progressbar
+        progress = Dialogs.Progress(
+            Title="Importazione prezzario",
+            Text="Compilazione prezzario in corso")
+        progress.show()
 
-    # messaggio di ok
-    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+        # compila l'elenco prezzi
+        compilaElencoPrezzi(oDoc, dati, progress)
 
-    # nasconde la progressbar
-    progress.hide()
+        # si posiziona sul foglio di computo appena caricato
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+
+        dest = os.path.split(filename)[0] + '\\' + '_'.join(oSheet.getCellRangeByName('B1').String.split('\n')[0].split(' ')) + '.ods'
+        dest = ''.join(dest.split('-_'))
+        # ~dest = filename[0:-4]+ '.ods'
+        # salva il file col nome del titolo
+        PL.salva_come(dest)
+
+        # messaggio di ok
+        Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+        # nasconde la progressbar
+        progress.hide()
+
+    try:
+        oSheet
+    except:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oSheet.getRows().insertByIndex(3, 1)
 
     # aggiunge informazioni nel foglio
-    # ~oSheet.getRows().insertByIndex(3, 1)
     oSheet.getCellByPosition(11, 3).String = ''
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
@@ -292,8 +312,8 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     if Dialogs.YesNoDialog(Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
-L'OPERAZIONE POTREBBE RICHIEDERE DEL TEMPO E
-LibreOffice POTREBBE SEMBRARE BLOCCATO!
+L'operazione potrebbe richiedere del tempo e
+LibreOffice potrebbe sembrare bloccato!
 
 Vuoi procedere comunque?''') == 0:
         pass
@@ -303,16 +323,16 @@ Vuoi procedere comunque?''') == 0:
         ER = oRange.EndRow
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
         PL.sistema_cose()
-
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
-    dest = filename[0:-4]+ '.ods'
-    # salva il file col nome del file di origine
-    PL.salva_come(dest)
+
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
-
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
         Text = '''
@@ -355,7 +375,7 @@ def importa_listino_leeno_run():
     #  giallo(16777072,16777120,16777168)
     #  verde(9502608,13696976,15794160)
     #  viola(12632319,13684991,15790335)
-    lista_articoli = list()
+    lista_articoli = []
     nome = oSheet.getCellByPosition(2, 0).String
     try:
         test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
@@ -506,10 +526,10 @@ def MENU_umbria():
     
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
-    # ~SheetUtils.MENU_unisci_fogli()
+    LeenoUtils.DocumentRefresh(False)
+    SheetUtils.MENU_unisci_fogli()
     PL.GotoSheet("unione_fogli")
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.Columns.insertByIndex(4, 1)
     oSheet.getCellByPosition(4, 0).String = 'Incidenza MdO\n%'
@@ -533,6 +553,21 @@ def MENU_umbria():
             mdo = oSheet.getCellByPosition(5, i).Value
             prz = oSheet.getCellByPosition(3, i).Value
             oSheet.getCellByPosition(4, i).Value = mdo / prz
+#> codice di Lorenzo Vagnarelli
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 5 and \
+        oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 5 and \
+        oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
+            oSheet.getCellByPosition(1, i).String = madre +"\n- " + oSheet.getCellByPosition(1, i).String
+            mdo = oSheet.getCellByPosition(5, i).Value
+            prz = oSheet.getCellByPosition(3, i).Value
+            oSheet.getCellByPosition(4, i).Value = mdo / prz
+#< codice di Lorenzo Vagnarelli
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, 0, 1, fine))
+    PL.sistema_cose()
+    oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
@@ -555,75 +590,162 @@ def MENU_ValdAosta():
         elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
             oSheet.getCellByPosition(1, i).String = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
 
+########################################################################
 
 def MENU_Piemonte():
-    '''
-    *** da applicare dopo aver unito i file in un unico ODS con Sub _accoda_files_in_unico ***
-    Adatta la struttura del prezzario rilasciato dalla regione Piemonte
-    partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note
-    Il risultato ottenuto va inserito in Elenco Prezzi.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    fine = SheetUtils.getLastUsedRow(oSheet) + 1
-    elenco = list()
-    for i in range(0, fine):
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = oSheet.getCellByPosition(2, i).String.replace('\n\n', '\n')
-            um = ''
-            eur = ''
-            mdol = ''
-            mdo = ''
-            if oSheet.getCellByPosition(7, i).String != '':
-                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
-            elenco.append((cod, des, um, '', eur, mdo, mdol))
 
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 3:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = oSheet.getCellByPosition(2, i).String.replace(' \n\n', '')
-            madre = des
-            um = ''
-            eur = ''
-            mdol = ''
-            mdo = ''
-            if oSheet.getCellByPosition(7, i).String != '':
-                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
-            # ~elenco.append ((cod, des, um, '', eur, mdo, mdol))
-        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 4:
-            cod = oSheet.getCellByPosition(1, i).String
-            des = madre
-            if oSheet.getCellByPosition(2, i).String != '...':
-                des = madre + '\n- ' + oSheet.getCellByPosition(2, i).String.replace('\n\n', '')
+    Dialogs.Info(
+        Title = "Importazione Prezzario Regione Piemonte",
+        Text = '''
+NOTA: Questo processo di importazione richiede la selezione di un file
+        del set, in formato XLS, così come scaricato dal sito istituzionale
+        della Regione Piemonte e posto in un'unica cartella del disco.
+
+'''
+# ~https://www.regione.piemonte.it/web/temi/protezione-civile-difesa-suolo-opere-pubbliche/opere-pubbliche
+
+        )
+    import glob
+    import DocUtils
+
+    artList = {}
+    superCatList = {}
+    catList = {}
+
+    filename = Dialogs.FileSelect('Scegli un file del set da importare...', '*.xls')
+    if filename in ('Cancel', '', None):
+        return
+    dest = os.path.dirname(filename).split('.')[0].split('/')
+    directory = os.path.dirname(filename).split('.')[0].replace('\\', '/') + '/'
+    files = glob.glob(directory + '*.xls')
+
+    progress = Dialogs.Progress(Title='Caricamento dei dati in corso...', Text="Progressione")
+    n = 0
+    progress.setLimits(n, len(files))
+    progress.show()
+    progress.setValue(0)
+
+    for el in files:
+        oDoc = DocUtils.loadDocument(el, Hidden=True)
+        oSheet = oDoc.getSheets().getByIndex(0)
+        lrow = SheetUtils.getLastUsedRow(oSheet) + 1
+
+        for i in range(2, lrow):
+            codice = oSheet.getCellByPosition(1, i).String
+            desc = oSheet.getCellByPosition(2, i).String
             um = oSheet.getCellByPosition(3, i).String
-            eur = ''
-            if oSheet.getCellByPosition(4, i).Value != 0:
-                eur = oSheet.getCellByPosition(4, i).Value
-            mdol = ''
-            if oSheet.getCellByPosition(5, i).Value != 0:
-                mdol = oSheet.getCellByPosition(5, i).Value
-            mdo = ''
-            if oSheet.getCellByPosition(6, i).Value != 0:
-                mdo = oSheet.getCellByPosition(6, i).Value
-            # ~note= oSheet.getCellByPosition(7, i).String
-            elenco.append((cod, des, um, '', eur, mdo, mdol))
+            prezzo = oSheet.getCellByPosition(4, i).Value
+            if prezzo == 0:
+                prezzo = ''
+            mdo = oSheet.getCellByPosition(6, i).Value
+            if mdo == 0:
+                mdo = ''
 
-    try:
-        oDoc.getSheets().insertNewByName('nuova_tabella', 2)
-    except Exception:
+            if len(codice.split('.')) == 3 and prezzo == '':
+                madre = desc
+            elif len(codice.split('.')) == 4:
+                desc = madre + '\n- ' + desc
+
+            artList[codice] = {
+                'codice': codice,
+                'desc': desc,
+                'um': um,
+                'prezzo': prezzo,
+                'mdo': mdo,
+                'sicurezza': ''
+            }
+        n += 1
+        progress.setValue(n)
+    progress.hide()
+
+    titolo = 'Piemonte ' + oSheet.getCellRangeByName('A1').String.split('\n')[0]
+    dati = {
+        'titolo': titolo,
+        'superCategorie': superCatList,
+        'categorie': catList,
+        'articoli' : artList
+    }
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if(len(oDoc.getURL()) == 0 and
+       SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
+       SheetUtils.getUsedArea(oSheet).EndRow == 0):
+        oDoc.close(True)
+
+    # creo nuovo file di computo
+    oDoc = PL.creaComputo(0)
+    PL.GotoSheet("Elenco Prezzi")
+    LeenoUtils.DocumentRefresh(False)
+
+    # visualizza la progressbar
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+    progress.show()
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+    # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # nasconde la progressbar
+    progress.hide()
+    # aggiunge informazioni nel foglio
+    oSheet.getCellByPosition(11, 3).String = ''
+    oSheet.getCellByPosition(12, 3).String = ''
+    oSheet.getCellByPosition(13, 3).String = ''
+    oSheet.getCellByPosition(0, 3).String = '000'
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+
+L'operazione potrebbe richiedere del tempo e
+LibreOffice potrebbe sembrare bloccato!
+
+Vuoi procedere comunque?''') == 0:
         pass
+    else:
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SR = oRange.StartRow + 1
+        ER = oRange.EndRow
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        PL.sistema_cose()
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
 
-    PL.GotoSheet('nuova_tabella')
-    oSheet = oDoc.getSheets().getByName('nuova_tabella')
-    elenco = tuple(elenco)
-    oRange = oSheet.getCellRangeByPosition(0,
-                                           0,
-                                           # l'indice parte da 0
-                                           len(elenco[0]) - 1,
-                                           len(elenco) - 1)
-    oRange.setDataArray(elenco)
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
+    PL._gotoCella(0, 3)
+
+    # salva il file
+    PL.salva_come(directory + titolo.replace(' ', '_') + '.ods')
+    # evidenzia e struttura i capitoli
+    PL.struttura_Elenco()
+
     LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Info(
+        Title = "Importazione eseguita con successo!",
+        Text = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+        )
+    return
 
 ########################################################################
 
@@ -633,12 +755,12 @@ def MENU_fuf():
     E' solo una cortesia per un amico.
     '''
     filename = Dialogs.FileSelect('Scegli il file DAT da importare', '*.dat')
-    riga = list()
+    riga = []
     try:
         f = open(filename, 'r')
     except TypeError:
         return
-    ordini = list()
+    ordini = []
     riga = ('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna',
             'Conto lavoro', 'Prezzo(€)')
     ordini.append(riga)
@@ -723,3 +845,151 @@ def MENU_fuf():
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
 
 ########################################################################
+
+def MENU_FVG():
+    '''
+    Importa Prezzario Friuli Venezia Giulia secondo schema tabellare
+    rilasciato a gennaio 2023
+    '''
+    filename = Dialogs.FileSelect('Scegli il Prezzario Friuli Venezia Giulia da importare...', '*.xlsx')
+    if filename in ('Cancel', '', None):
+        return
+
+
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+
+    oDoc = DocUtils.loadDocument(filename, Hidden=True)
+    progress.show()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = SheetUtils.getLastUsedRow(oSheet)
+    
+    oDoc.CurrentController.select(
+        oSheet.getCellRangeByPosition(2, 3, 2, fine))
+    PL.sistema_cose()
+    artList = {}
+        # ~artList[codice] = {
+            # ~'codice': codice,
+            # ~'desc': desc,
+            # ~'um': um,
+            # ~'prezzo': prezzo,
+            # ~'mdo': mdo,          #%
+            # ~'sicurezza': oneriSic
+        # ~}
+    superCatList = {}
+    catList = {}
+    titolo = oSheet.getCellRangeByName('A1').String
+    for i in range(3, fine):
+        codice = oSheet.getCellByPosition(0, i).String
+        desc = oSheet.getCellByPosition(1, i).String
+        if oSheet.getCellByPosition(2, i).Type.value == 'TEXT':
+            madre = oSheet.getCellByPosition(2, i).String
+        um = ''
+        prezzo = ''
+        mdo = ''
+        oneriSic = ''
+        if oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            desc = madre + '\n- ' + oSheet.getCellByPosition(1, i).String
+        if oSheet.getCellByPosition(2, i).Type.value == 'TEXT' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            madre = oSheet.getCellByPosition(2, i).String
+            desc = oSheet.getCellByPosition(1, i).String + '\n' + madre
+
+        if oSheet.getCellByPosition(6, i).Type.value == 'VALUE':
+            um = oSheet.getCellByPosition(5, i).String
+            prezzo = oSheet.getCellByPosition(6, i).Value
+            mdo = oSheet.getCellByPosition(8, i).Value / 100
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic
+        }
+    dati = {
+        'titolo': titolo,
+        'superCategorie': superCatList,
+        'categorie': catList,
+        'articoli' : artList
+        }
+    # creo nuovo file di computo
+    # ~oDoc = PL.creaComputo(0)
+    orig = oDoc.getURL()
+    dest0 = orig[0:-5] + '.ods'
+
+    orig = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ots')
+    dest = uno.fileUrlToSystemPath(dest0)
+
+    PL.shutil.copyfile(orig, dest)
+    PL._gotoDoc(dest)  # vado sul nuovo file
+
+    progress.hide()
+    oDoc = LeenoUtils.getDocument()
+    progress.show()
+    
+    LeenoUtils.DocumentRefresh(False)
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+
+    # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    progress.hide()
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # aggiunge informazioni nel foglio
+    # ~oSheet.getRows().insertByIndex(3, 1)
+    oSheet.getCellByPosition(11, 3).String = ''
+    oSheet.getCellByPosition(12, 3).String = ''
+    oSheet.getCellByPosition(13, 3).String = ''
+    oSheet.getCellByPosition(0, 3).String = '000'
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+
+L'operazione potrebbe richiedere del tempo e
+LibreOffice potrebbe sembrare bloccato!
+
+Vuoi procedere comunque?''') == 0:
+        pass
+    else:
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SR = oRange.StartRow + 1
+        ER = oRange.EndRow
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        PL.sistema_cose()
+        oDoc.CurrentController.select(
+            oDoc.createInstance(
+                "com.sun.star.sheet.SheetCellRanges"))  # unselect
+    # evidenzia e struttura i capitoli
+    PL.struttura_Elenco()
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
+    PL._gotoCella(0, 3)
+    LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Info(
+        Title = "Importazione eseguita con successo!",
+        Text = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+        )
+    return

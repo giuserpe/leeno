@@ -1499,7 +1499,7 @@ class PdfFileReader(object):
             NameObject("/CropBox"), NameObject("/Rotate")
             )
         if inherit == None:
-            inherit = dict()
+            inherit = {}
         if pages == None:
             self.flattenedPages = []
             catalog = self.trailer["/Root"].getObject()

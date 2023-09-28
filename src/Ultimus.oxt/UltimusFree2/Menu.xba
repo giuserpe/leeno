@@ -16,26 +16,6 @@ rem ######################################################################
 rem buona parte delle macro in questo modulo sono tratte da
 rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
-Sub _nuove_icone
-&apos;https://icons8.com/icon/set/tools/all
-&apos;https://openclipart.org/search/?query=dannya&amp;page=1
-&apos;	print LeenO_path
-&apos;	LeenO_path = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt&quot;
-&apos;	sURL = LeenO_path +&quot;/icons/parz.svg&quot;
-	sURL = &quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/svg/parz.svg&quot;
-	sName = Replace_G(sURL, &quot;.svg&quot;, &quot;&quot;)
-	sNewURL= sName + &quot;_26h.bmp&quot;
-	Filecopy sURL, sNewURL
-	sNewURL= sName + &quot;_26.bmp&quot;
-	Filecopy sURL, sNewURL 
-	sNewURL= sName + &quot;_16h.bmp&quot;
-	Filecopy sURL, sNewURL
-	sNewURL= sName + &quot;_16.bmp&quot;
-	Filecopy sURL, sNewURL
-&apos;	kill (sURL)
-End Sub
-
-rem ######################################################################
 
 Function IsToolbarVisible(oDoc, sURL) As Boolean
 	Dim oFrame

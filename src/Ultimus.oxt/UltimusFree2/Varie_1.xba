@@ -255,6 +255,34 @@ FUNCTION gina_furbetta &apos; funzione che prende la data, minuti secondi di sis
 	gina_furbetta = sfine
 END FUNCTION
 
+Function Replace_G(Source As String, Search As String, NewPart As String)
+ Dim Result As String
+ Dim StartPos As Long
+ Dim CurrentPos As Long
+ 
+ Result = &quot;&quot;
+ StartPos = 1
+ CurrentPos = 1
+ 
+ If Search = &quot;&quot; Then
+ Result = Source
+ Else 
+ Do While CurrentPos &lt;&gt; 0
+ CurrentPos = InStr(StartPos, Source, Search)
+ If CurrentPos &lt;&gt; 0 Then
+ Result = Result + Mid(Source, StartPos, _
+ CurrentPos - StartPos)
+ Result = Result + NewPart
+ StartPos = CurrentPos + Len(Search)
+ Else
+ Result = Result + Mid(Source, StartPos, Len(Source))
+ End If &apos; Position &lt;&gt; 0
+ Loop 
+ End If 
+ 
+ Replace_G = Result
+End Function
+
 FUNCTION gina_furbetta_2&apos; funzione che prende la data, minuti secondi di sistema e li assembla
 	&apos; per utilizzarli as esempio come suffisso a nome di file o Altro
 	&apos;versione corta (poco leggibile)

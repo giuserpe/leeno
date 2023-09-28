@@ -22,7 +22,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$filedia_xwpe?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:filecontrol dlg:id="FileControl1" dlg:tab-index="9" dlg:left="37" dlg:top="-36" dlg:width="157" dlg:height="13" dlg:help-text="&amp;600.Dialog_XPWE.FileControl1.HelpText"/>
-  <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="11" dlg:left="37" dlg:top="161" dlg:width="2" dlg:height="0" dlg:help-text="&amp;926.Dialog_XPWE.CheckBox2.HelpText" dlg:value="&amp;927.Dialog_XPWE.CheckBox2.Label" dlg:checked="false"/>
-  <dlg:checkbox dlg:id="Elenco Prezzi" dlg:tab-index="10" dlg:left="15" dlg:top="21" dlg:width="106" dlg:height="10" dlg:help-text="&amp;936.Dialog_XPWE.Elenco Prezzi.HelpText" dlg:value="&amp;937.Dialog_XPWE.Elenco Prezzi.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="10" dlg:left="37" dlg:top="161" dlg:width="2" dlg:height="0" dlg:help-text="&amp;926.Dialog_XPWE.CheckBox2.HelpText" dlg:value="&amp;927.Dialog_XPWE.CheckBox2.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:id="Elenco Prezzi" dlg:tab-index="11" dlg:left="15" dlg:top="21" dlg:width="104" dlg:height="10" dlg:help-text="&amp;983.Dialog_XPWE.Elenco Prezzi.HelpText" dlg:value="Elenco Prezzi" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

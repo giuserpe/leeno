@@ -11,28 +11,6 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
-Exit sub
-&apos; creata per lo shortcut
-ThisComponent.enableAutomaticCalculation(true)
-On Error GoTo fine:
- Dim nome_sheet As String 
- 	nome_sheet = thisComponent.currentcontroller.activesheet.Name
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	Select Case thisComponent.currentcontroller.activesheet.Name
-	Case &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
-If se_contabilita = 1 Then Exit Sub
-		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;ins_voce_computo&quot;)
- 	Case &quot;Analisi di Prezzo&quot;
-		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;inizializza_analisi&quot;)
- 	Case &quot;CONTABILITA&quot;
-		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;ins_voce_contab&quot;)
-
- 	Case &quot;Elenco Prezzi&quot;
-		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;ins_voce_elenco&quot;)
-	End Select
-fine:
-End Sub
 
 Function SE_contabilita
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,327).value = 0 Then

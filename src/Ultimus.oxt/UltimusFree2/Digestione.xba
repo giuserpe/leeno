@@ -146,24 +146,4 @@ sub accorpa_stringhe &apos;da eseguire a manina or aggiungendo un pulsante
  msgbox &quot;Ok! Fatto&quot;
 end sub
 
-Sub fai_delle_cose &apos; per pasticciare sui listini
-	oSheet = ThisComponent.currentController.activeSheet
-	lLastUrow = getLastUsedRow(oSheet)
-	&apos;	lLastUrow = 30
-	For i = 2 to lLastUrow
-	
-		if oSheet.getCellByPosition(6, i).string &lt;&gt; &quot;&quot; or _
-			oSheet.getCellByPosition(6, i).value &lt;&gt; 0 then
-			ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 6 , i)) &apos;debug	
-		&apos;	print &quot; &quot;
-			oSheet.getrows.removebyindex(i,	1)
-			i = i-1
-			lLastUrow = lLastUrow -1
-		&apos;	print &quot;fatto&quot;
-		end if
-	Next I 
-	Print &quot;FATTO!!&quot;
-end sub
-
-
 </script:module>

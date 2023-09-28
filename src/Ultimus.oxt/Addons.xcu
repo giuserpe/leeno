@@ -844,6 +844,24 @@
                   <value>_self</value>
                 </prop>
               </node>
+              <node oor:name="N015" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoGiornale.MENU_nuovo_giorno</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image15</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Nuovo Giornale Lavori / nuovo giorno</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              
               <node oor:name="N020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
@@ -909,7 +927,35 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_ImportElencoPrezziXML</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzari in formato XML</value>
+                  <value>Importa prezzario da formato XML</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="IE020" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_Piemonte</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa prezzario da set XLS Regione Piemonte</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="IE021" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_FVG</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa prezzario da XLSX Regione Friuli Venezia Giulia</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1143,6 +1189,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+<!--
               <node oor:name="m2U15" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1160,6 +1207,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U16" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1177,6 +1226,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U17" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1194,6 +1245,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
               <node oor:name="m2U18" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

@@ -132,7 +132,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('I').Columns.Width = 1300
         oSheet.getColumns().getByName('J').Columns.Width = 1700
         oSheet.getColumns().getByName('L').Columns.Width = 1700
-        oSheet.getColumns().getByName('S').Columns.Width = 1700
+        oSheet.getColumns().getByName('S').Columns.Width = 1950
         oSheet.getColumns().getByName('AC').Columns.Width = 1700
         oSheet.getColumns().getByName('AD').Columns.Width = 1700
         oSheet.getColumns().getByName('AE').Columns.Width = 1700
@@ -152,19 +152,19 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('K').Columns.Width = 100
         oSheet.getColumns().getByName('L').Columns.Width = 1600
         oSheet.getColumns().getByName('M').Columns.Width = 1600
-        oSheet.getColumns().getByName('N').Columns.Width = 1600
+        oSheet.getColumns().getByName('N').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('O').Columns.Width = 100
         oSheet.getColumns().getByName('P').Columns.Width = 1600
         oSheet.getColumns().getByName('Q').Columns.Width = 1600
-        oSheet.getColumns().getByName('R').Columns.Width = 1600
+        oSheet.getColumns().getByName('R').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('S').Columns.Width = 100
         oSheet.getColumns().getByName('T').Columns.Width = 1600
         oSheet.getColumns().getByName('U').Columns.Width = 1600
-        oSheet.getColumns().getByName('V').Columns.Width = 1600
+        oSheet.getColumns().getByName('V').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('W').Columns.Width = 100
         oSheet.getColumns().getByName('X').Columns.Width = 1600
-        oSheet.getColumns().getByName('Y').Columns.Width = 1600
-        oSheet.getColumns().getByName('Z').Columns.Width = 1600
+        oSheet.getColumns().getByName('Y').Columns.OptimalWidth = True
+        oSheet.getColumns().getByName('Z').Columns.OptimalWidth = True
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         SheetUtils.freezeRowCol(oSheet, 0, 3)
     adattaAltezzaRiga(oSheet)
@@ -375,12 +375,13 @@ Stai per eliminare la voce selezionata.
             Text= messaggio) == 1:
             try:
                 undo
-                comando ('Undo')
+                PL.comando ('Undo')
             except: 
                 pass
             oSheet.getRows().removeByIndex(SR, ER - SR + 1)
             PL._gotoCella(0, SR+1)
         else:
+            PL.comando ('Undo')
             oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
                 0, SR, 250, ER))
             return
@@ -419,6 +420,10 @@ def inserisciRigaRossa(oSheet):
         oSheet.getCellRangeByPosition(0, lrow, 10, lrow).CellStyle = 'Riga_rossa_Chiudi'
         oSheet.getCellByPosition(1, lrow
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
+        oDoc = LeenoUtils.getDocument()
+        # ~oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
+        SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
+                      '$A$3:$K$' + str(SheetUtils.getUsedArea(oSheet).EndRow), 'analisi')
     elif nome == 'Elenco Prezzi':
         lrow = cercaUltimaVoce(oSheet) + 1
         if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':
@@ -476,15 +481,11 @@ def adattaAltezzaRiga(oSheet):
     # ~LeenoUtils.DocumentRefresh(False)
 
     oDoc = LeenoUtils.getDocument()
-    # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
-    if not oDoc.getSheets().hasByName('S1'):
-        return
-
     usedArea = SheetUtils.getUsedArea(oSheet)
-    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    oSheet.Rows.OptimalHeight = True
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    return
     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
     # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
     if float(PL.loVersion()[:5].replace('.', '')) >= 642:
@@ -496,9 +497,7 @@ def adattaAltezzaRiga(oSheet):
                    'Comp-Bianche in mezzo Descr', 'EP-a',
                    'Ultimus_centro_bordi_lati')
     # NELLE VERSIONI DA 5.4.2 A 6.4.1
-    if(
-       float(PL.loVersion()[:5].replace('.', '')) > 520 or
-       float(PL.loVersion()[:5].replace('.', '')) < 642):
+    if 520 < float(PL.loVersion()[:5].replace('.', '')) < 642:
         for stile_cella in lista_stili:
             try:
                 oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
@@ -511,8 +510,6 @@ def adattaAltezzaRiga(oSheet):
             if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
                 oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
 
-    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
-        oSheet.getCellByPosition(0, 2).Rows.Height = 800
     if oSheet.Name == 'Elenco Prezzi':
         test = usedArea.EndRow + 1
         for y in range(0, test):
@@ -755,52 +752,49 @@ def numeraVoci(oSheet, lrow, tutte):
         for row in range(0, lastRow):
             if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n
-                n = n + 1
+                n += 1
 
 
 # ###############################################################
 
+
 def MENU_elimina_righe_vuote():
-    '''elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
+    '''Elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        Dialogs.Exclamation(Title='Avviso!', Text='''È possibile usare questo comando solo nelle
-tabelle COMPUTO, VARIANTE o CONTABILITA.''')
+    valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
+
+    if oSheet.Name not in valid_sheets:
+        Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
         return
-    if Dialogs.YesNoDialog(Title='ATTENZIONE!',
-    Text="Stai per eliminare tutte le righe vuote dell'elabotato " + oSheet.Name +
-        ".\nVuoi procedere?") == 0:
+
+    confirmation_text = f'Stai per eliminare tutte le righe vuote nell\'elaborato {oSheet.Name}.\nVuoi procedere?'
+    if Dialogs.YesNoDialog(Title='ATTENZIONE!', Text=confirmation_text) == 0:
         return
-    else:
-        pass
+
     lrow_c = PL.LeggiPosizioneCorrente()[1]
-    if oSheet.Name == 'CONTABILITA':
-        sString = 'T O T A L E'
-    else:
-        sString = 'TOTALI COMPUTO'
-    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
-    if lrow == None:
-        lrow = SheetUtils.getLastUsedRow(oSheet)
-    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text="Lettura dati")
+    sString = 'T O T A L E' if oSheet.Name == 'CONTABILITA' else 'TOTALI COMPUTO'
+    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+
+    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text='Rimane il')
     progress.setLimits(0, lrow)
     progress.setValue(0)
     progress.show()
+
     for y in reversed(range(0, lrow)):
         progress.setValue(y)
-        test = False
-        for x in (range(0, 8 +1)):
-            if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
-                    test = True
-                    break
-                if test == False and x  == 8 :
-                    oSheet.getRows().removeByIndex(y, 1)
+        
+        if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
+
+        if not row_has_data:
+            oSheet.getRows().removeByIndex(y, 1)
+
     progress.hide()
     LeenoUtils.DocumentRefresh(True)
-    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True)
-    if lrow_ == None:
-        lrow_ = SheetUtils.getLastUsedRow(oSheet)
+
+    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
     PL._gotoCella(1, 4)
-    Dialogs.Info(Title='Ricerca conclusa', Text='Eliminate ' + str(lrow - lrow_) + ' righe vuote.')
+    Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
+

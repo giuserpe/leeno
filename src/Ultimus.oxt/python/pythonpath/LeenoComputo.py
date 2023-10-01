@@ -220,6 +220,7 @@ def Menu_computoSenzaPrezzi():
     Duplica il COMPUTO/VARIANTE aggiungendo il suffissio '_copia'
     e cancella i prezzi unitari dal nuovo foglio
     '''
+    PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.Name
@@ -235,7 +236,12 @@ def Menu_computoSenzaPrezzi():
         oDoc.Sheets.copyByName(nSheet, nSheet + tag, idSheet)
     nSheet = nSheet + tag
     PL.GotoSheet(nSheet)
+    # ~oSheet.protect('')  # 
+    # ~Dialogs.Info(Title = 'Ricerca conclusa', Text=f'Il foglio {nSheet} è stato protetto, ma senza password.')
+
     oSheet = oDoc.getSheets().getByName(nSheet)
+    PL.setTabColor(10079487)
+
     ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
     
     ultime_voci = set([circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow for lrow in range(6, ultima_voce)])

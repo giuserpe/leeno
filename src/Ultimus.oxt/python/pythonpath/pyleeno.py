@@ -1358,7 +1358,7 @@ def MENU_mostra_tabs_computo():
 ########################################################################
 
 
-def copia_sheet(nSheet, tag):
+def copia_sheet(nSheet, tag="_copia"):
     '''
     nSheet   { string } : nome sheet
     tag      { string } : stringa di tag
@@ -1368,12 +1368,12 @@ def copia_sheet(nSheet, tag):
     # nSheet = 'COMPUTO'
     oSheet = oDoc.getSheets().getByName(nSheet)
     idSheet = oSheet.RangeAddress.Sheet + 1
-    if oDoc.getSheets().hasByName(nSheet + '_' + tag):
-        DLG.MsgBox('La tabella di nome ' + nSheet + '_' + tag + 'è già presente.', 'ATTENZIONE! Impossibile procedere.')
+    if oDoc.getSheets().hasByName(nSheet + tag):
+        DLG.MsgBox(f'La tabella di nome {nSheet} {tag} è già presente.', 'ATTENZIONE! Impossibile procedere.')
         return
     else:
-        oDoc.Sheets.copyByName(nSheet, nSheet + '_' + tag, idSheet)
-        oSheet = oDoc.getSheets().getByName(nSheet + '_' + tag)
+        oDoc.Sheets.copyByName(nSheet, nSheet + tag, idSheet)
+        oSheet = oDoc.getSheets().getByName(nSheet + tag)
         oDoc.CurrentController.setActiveSheet(oSheet)
         # oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 
@@ -1382,6 +1382,7 @@ def copia_sheet(nSheet, tag):
 
 
 def Filtra_computo(nSheet, nCol, sString):
+    # ~"SERVE?"
     '''
     nSheet   { string } : nome Sheet
     ncol     { integer } : colonna di tag
@@ -5672,7 +5673,6 @@ def numera_voci(bit=1):  #
 
 ########################################################################
 
-
 def richiesta_offerta():
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
@@ -5681,36 +5681,45 @@ per la formulazione dell'offerta'''
     GotoSheet('Elenco Prezzi')
     genera_sommario()
     oSheet = oDoc.CurrentController.ActiveSheet
-    try:
-        oDoc.Sheets.copyByName(oSheet.Name, 'Elenco Prezzi', 5)
-    except Exception:
-        pass
-    nSheet = oDoc.getSheets().getByIndex(5).Name
+    idSheet = oSheet.RangeAddress.Sheet + 1
+    if oDoc.getSheets().hasByName('Richiesta offerta'):
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text=f'La tabella di nome Richiesta offerta è già presente.')
+        return
+    else:
+        oDoc.Sheets.copyByName('Elenco Prezzi', 'Richiesta offerta', idSheet)
+    nSheet = 'Richiesta offerta'
     GotoSheet(nSheet)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.Name = 'Richiesta offerta'
     setTabColor(10079487)
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     oRange = oSheet.getCellRangeByPosition(12, 3, 12, fine)
     aSaveData = oRange.getDataArray()
     oRange = oSheet.getCellRangeByPosition(3, 3, 3, fine)
+
     oRange.CellStyle = 'EP statistiche_q'
     oRange.setDataArray(aSaveData)
     oSheet.getCellByPosition(3, 2).String = 'Quantità\na Computo'
     oSheet.getCellByPosition(5, 2).String = 'Prezzo Unitario\nin lettere'
     oSheet.getCellByPosition(6, 2).String = 'Importo'
-    oSheet.Columns.removeByIndex(7, 100)
-    oSheet.getColumns().getByName("D").IsVisible = True
-    oSheet.getColumns().getByName("F").IsVisible = True
-    oSheet.getColumns().getByName("G").IsVisible = True
-    oSheet.getColumns().getByName("A").Columns.Width = 1600
-    oSheet.getColumns().getByName("B").Columns.Width = 8000
-    oSheet.getColumns().getByName("C").Columns.Width = 1200
-    oSheet.getColumns().getByName("D").Columns.Width = 1600
-    oSheet.getColumns().getByName("E").Columns.Width = 1500
-    oSheet.getColumns().getByName("F").Columns.Width = 4000
-    oSheet.getColumns().getByName("G").Columns.Width = 1800
+
+    colonne_visibili = ["D", "F", "G"]
+    larghezze_colonne = {
+        "A": 1600,
+        "B": 8000,
+        "C": 1200,
+        "D": 1600,
+        "E": 1500,
+        "F": 4000,
+        "G": 1800
+    }
+
+    for colonna in colonne_visibili:
+        oSheet.getColumns().getByName(colonna).IsVisible = True
+
+    for colonna, larghezza in larghezze_colonne.items():
+        oSheet.getColumns().getByName(colonna).Columns.Width = larghezza
+
     oDoc.CurrentController.freezeAtPosition(0, 1)
 
     formule = []
@@ -5809,6 +5818,7 @@ per la formulazione dell'offerta'''
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     pagestyle.RightPageHeaderContent = oHContent
     _gotoCella(0, 1)
+    oSheet.Columns.removeByIndex(8, 50)
     return
 
 
@@ -9970,18 +9980,45 @@ import LeenoTabelle
 
 ########################################################################
 
-def MENU_debug():
-    # ~DLG.ScegliElaborato('oioi')
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
+import cProfile
+# ~from com.sun.star.sheet.CellProtection import Locked, FormulaHidden, HideAll, HideFormula
 
+def MENU_debug():
+    
+    # Ottieni il componente del desktop di LibreOffice
+    desktop = LeenoUtils.getDesktop()
+    model = desktop.getCurrentComponent()
+    
+    if not hasattr(model, "Sheets"):
+        return
+    
+    # Ottieni il foglio attivo
+    active_sheet = model.CurrentController.ActiveSheet
+    
+    # Configura le opzioni di protezione
+    protection_flags = Locked | FormulaHidden | HideAll | HideFormula
+    
+    # Applica la protezione al foglio
+    for row in range(0, active_sheet.Rows.getCount()):
+        for col in range(0, active_sheet.Columns.getCount()):
+            cell = active_sheet.getCellByPosition(col, row)
+            cell.Protection = protection_flags
+    return
+    # ~richiesta_offerta()
+    # ~LeenoComputo.Menu_computoSenzaPrezzi()
+ 
+    # ~richiesta_offerta()
+    # ~DLG.ScegliElaborato('oioi')
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.unprotect('')  # 
     # ~LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
-    # ~LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     # ~ DLG.chi(stili_cat)
-    return
+    # ~return
 
 
 

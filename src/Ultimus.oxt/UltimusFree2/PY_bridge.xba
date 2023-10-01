@@ -147,9 +147,9 @@ Sub donazioni
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;donazioni&quot;)
 End Sub
 rem ######################################################################
-&apos;Sub invia_voce
-&apos;	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_invia_voce&quot;)
-&apos;End Sub
+Sub Menu_computoSenzaPrezzi
+	ScriptPy(&quot;LeenoComputo&quot;,&quot;Menu_computoSenzaPrezzi&quot;)
+End Sub
 rem ######################################################################
 Sub GeneraAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)

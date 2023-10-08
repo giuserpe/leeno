@@ -798,3 +798,45 @@ def MENU_elimina_righe_vuote():
     PL._gotoCella(1, 4)
     Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
 
+
+# ###############################################################
+
+
+def MENU_SheetToDoc():
+    '''
+    Copia il foglio corrente in un nuovo documento.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'DocName'
+    oProp0.Value = ''
+    oProp1 = PropertyValue()
+    oProp1.Name = 'Index'
+    oProp1.Value = 32767
+    oProp2 = PropertyValue()
+    oProp2.Name = 'Copy'
+    oProp2.Value = True
+    oProp.append(oProp0)
+    oProp.append(oProp1)
+    oProp.append(oProp2)
+    properties = tuple(oProp)
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper.executeDispatch(oFrame, '.uno:Move', '', 0, properties)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    oDoc = LeenoUtils.getDocument()
+
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if "COMPUTO" in oSheet.Name or "VARIANTE" in oSheet.Name:
+        oDoc.CurrentController.select(oSheet.getCellRangeByName('A1:I1048576'))
+        PL.comando('Copy')
+        #oDoc.CurrentController.select(oCell)
+        PL.paste_clip(arg=None, insCells=0, pastevalue=True)
+        oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselec
+    oDoc.CurrentController.ZoomValue = 100
+    return

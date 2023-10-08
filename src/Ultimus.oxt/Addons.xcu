@@ -1263,6 +1263,22 @@
                   <value>_self</value>
                 </prop>
               </node>
+              
+              <node oor:name="m2U21" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.MENU_SheetToDoc</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Copia Foglio in Nuovo File</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              
             </node>
           </node>
           <node oor:name="m04" oor:op="replace">

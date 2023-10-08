@@ -4063,6 +4063,7 @@ def MENU_firme_in_calce(lrowF=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         #  oSheet.getCellByPosition(lrowF,0).Rows.IsManualPageBreak = True
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -5470,7 +5471,7 @@ def paste_clip(arg=None, insCells=0, pastevalue=False):
     oProp0 = PropertyValue()
     oProp0.Name = 'Flags'
     if pastevalue==True:
-        oProp0.Value = 'SVDT' # Numeri, Testo, Data e ora, Formati
+        oProp0.Value = 'SVTD' # Numeri, Testo, Data e ora, Formati
     else:
         oProp0.Value = 'A'  #Tutto
     oProp1 = PropertyValue()
@@ -9984,6 +9985,22 @@ import cProfile
 # ~from com.sun.star.sheet.CellProtection import Locked, FormulaHidden, HideAll, HideFormula
 
 def MENU_debug():
+    return
+    
+    
+    
+    aConfigProvider = LeenoUtils.createUnoService(
+        "com.sun.star.configuration.ConfigurationProvider")
+    arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+    arg.Name = "nodepath"
+    arg.Value = '/org.openoffice.Setup/Product'
+    return aConfigProvider.createInstanceWithArguments(
+        "com.sun.star.configuration.ConfigurationAccess",
+        (arg, )).ooSetupVersionAboutBox
+    return
+    oDoc = LeenoUtils.getDocument()
+    DLG.mri(oDoc)
+
     
     # Ottieni il componente del desktop di LibreOffice
     desktop = LeenoUtils.getDesktop()

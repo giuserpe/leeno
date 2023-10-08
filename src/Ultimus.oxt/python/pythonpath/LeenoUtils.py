@@ -111,7 +111,7 @@ def DocumentRefresh(boo):
     Abilita / disabilita il refresh per accelerare le procedure
     '''
     oDoc = getDocument()
-    # l'ordine che segue non va cambiato!!!
+    # L'ordine che segue non va cambiato!!!
     if boo:
         oDoc.IsAdjustHeightEnabled = True
         oDoc.enableAutomaticCalculation(True)
@@ -122,7 +122,7 @@ def DocumentRefresh(boo):
     else:
         oDoc.IsAdjustHeightEnabled = False
         oDoc.enableAutomaticCalculation(False)
-        oDoc.lockControllers #disattiva l'eco a schermo
+        oDoc.lockControllers()
         oDoc.addActionLock()
 
 

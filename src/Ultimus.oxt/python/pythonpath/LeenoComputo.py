@@ -248,4 +248,5 @@ def Menu_computoSenzaPrezzi():
 
     for lrow in ultime_voci:
         oSheet.getCellByPosition(11, lrow).String = ''
+        oSheet.getCellByPosition(11, lrow).CellStyle = 'comp 1-a'
     LeenoUtils.DocumentRefresh(True)

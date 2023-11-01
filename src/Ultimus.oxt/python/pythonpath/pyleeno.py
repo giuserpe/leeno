@@ -19,10 +19,11 @@
 # import pydevd
 
     # funzioni per misurare la velocità delle macro
+    # ~from datetime import datetime, date
     # ~datarif = datetime.now()
     # ~DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
-from scriptforge import CreateScriptService
+# ~from scriptforge import CreateScriptService
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 
@@ -53,6 +54,7 @@ import LeenoAnalysis
 import LeenoDialogs as DLG
 import PersistUtils as PU
 import LeenoEvents
+import LeenoExtra
 import LeenoBasicBridge
 import DocUtils
 
@@ -795,7 +797,6 @@ def MENU_avvia_IDE():
     '''
     avvia_IDE()
 
-
 def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany o eric6'''
     basic_LeenO('PY_bridge.avvia_IDE')
@@ -956,7 +957,7 @@ def Inser_Capitolo():
 ########################################################################
 
 
-def MENU_Rinumera_TUTTI_Capitoli2():
+def numera_voci():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     Rinumera_TUTTI_Capitoli2(oSheet)
@@ -1575,10 +1576,10 @@ def MENU_sproteggi_sheet_TUTTE():
     '''
     Sprotegge e riordina tutti fogli del documento.
     '''
-    sproteggi_e_riordina_fogli()
+    sproteggi_sheet_TUTTE()
 
 
-def sproteggi_e_riordina_fogli():
+def sproteggi_sheet_TUTTE():
     '''
     Sprotegge e riordina tutti i fogli del documento.
     '''
@@ -4813,6 +4814,8 @@ def MENU_Copia_riga_Ent():
     @@ DA DOCUMENTARE
     '''
     Copia_riga_Ent()
+    LeenoSheetUtils.adattaAltezzaRiga()
+
 
 
 def Copia_riga_Ent(arg=None):
@@ -5084,6 +5087,9 @@ def MENU_ricicla_misure():
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         sopra = sStRange.RangeAddress.StartRow + 2
         sotto = sStRange.RangeAddress.EndRow - 1
+        
+        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1, True)
+        _gotoCella(2, lrow + 1)
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8,
                                              sotto).getRangeAddress()
@@ -5107,6 +5113,7 @@ def MENU_ricicla_misure():
         # ~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
     # ~oDoc.enableAutomaticCalculation(True)
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
         LeenoUtils.DocumentRefresh(True)
 
 
@@ -5631,6 +5638,7 @@ def MENU_numera_voci():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.numeraVoci(oSheet, 4, True)
+    Rinumera_TUTTI_Capitoli2(oSheet)
 
 
 def numera_voci(bit=1):  #
@@ -7092,6 +7100,7 @@ def MENU_vedi_voce():
     '''
     Inserisce un riferimento a voce precedente sulla riga corrente.
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
@@ -7115,6 +7124,8 @@ def MENU_vedi_voce():
         # focus = oDoc.CurrentController.getFirstVisibleRow
         if to < lrow:
             vedi_voce_xpwe(oSheet, lrow, to)
+    LeenoSheetUtils.adattaAltezzaRiga()
+    LeenoUtils.DocumentRefresh(True)
 
 
 def strall(el, n=3, pos=0):
@@ -7201,6 +7212,7 @@ def ssUltimus():
     Scrive la variabile globale che individua il Documento Principale (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
+    # ~chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
@@ -7218,7 +7230,7 @@ Provvedi subito a dare un nome al file.''')
         LeenoUtils.setGlobalVar('sUltimus', uno.fileUrlToSystemPath(oDoc.getURL()))
     except Exception:
         pass
-    DlgMain()
+    # ~DlgMain()
     return
 
 ########################################################################
@@ -7515,6 +7527,7 @@ def struttura_off():
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 4)
     _gotoCella( x, lrow)
+    LeenoUtils.DocumentRefresh(True)
 
 
 def struct(level):
@@ -8303,6 +8316,10 @@ def chiudi_dialoghi(event=None):
     '''
     try:
         oDialog1.endExecute()
+    except:
+        pass
+    try:
+        oDlgMain.endExecute()
     except:
         pass
     # ~return
@@ -9186,16 +9203,20 @@ def set_area_stampa():
             EC = 15
             if oDoc.NamedRanges.hasByName('_Lib_1'):
                 return
-    if oSheet.Name in ('Analisi di Prezzo'):
+    elif oSheet.Name in ('Analisi di Prezzo'):
         EC = 6
         SR = 1
         ER -= 1
         oSheet.setPrintTitleRows(False)
-    if oSheet.Name in ('cP_Cop'):
+    elif oSheet.Name in ('cP_Cop'):
         EC = 7
         SR = 0
         ER -= 1
         oSheet.setPrintTitleRows(False)
+    else:
+        SR = 0
+        ER = SheetUtils.getLastUsedRow(oSheet)
+        EC = SheetUtils.getLastUsedColumn(oSheet)
 # imposta area di stampa
     oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oStampa.Sheet = iSheet
@@ -9240,6 +9261,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.removeAllManualPageBreaks()
     SheetUtils.visualizza_PageBreak()
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
@@ -9519,7 +9541,7 @@ def trova_np():
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    oDoc.enableAutomaticCalculation(True)
+    # ~oDoc.enableAutomaticCalculation(False)
 
     struttura_off()
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -9528,11 +9550,16 @@ def trova_np():
                 12,
                 el).Value == 0 and oSheet.getCellByPosition(20, el).Value > 0:
             pass
+        elif oSheet.getCellByPosition(
+                12,
+                el).Value == 0 and oSheet.getCellByPosition(16, el).Value > 0:
+            pass
         else:
             oCellRangeAddr.StartRow = el
             oCellRangeAddr.EndRow = el
             oSheet.group(oCellRangeAddr, 1)
             oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
+    # ~oDoc.enableAutomaticCalculation(True)
 
 
 ########################################################################
@@ -9981,23 +10008,57 @@ import LeenoTabelle
 
 ########################################################################
 
-import cProfile
-# ~from com.sun.star.sheet.CellProtection import Locked, FormulaHidden, HideAll, HideFormula
+def create_progress_bar(title='', steps=100):
+    '''
+    Crea e mostra una barra di avanzamento.
+
+    Args:
+        title (str): Il titolo della barra di avanzamento.
+        steps (int): Il numero totale di passi della barra di avanzamento.
+
+    Returns:
+        StatusIndicator: L'oggetto barra di avanzamento creato.
+    '''
+
+    desktop = LeenoUtils.getDesktop()
+    model = desktop.getCurrentComponent()
+    controller = model.getCurrentController()
+    frame = controller.getFrame()
+
+    # Crea un nuovo oggetto indicatore di stato
+    progressBar = frame.createStatusIndicator()
+
+    # Mostra la barra di avanzamento e imposta il titolo
+    progressBar.start(title, steps)
+    progressBar.Value = 0
+
+    return progressBar
+
+def ESEMPIO_create_progress_bar():
+    oProgressBar = create_progress_bar (title='prova', steps=100)
+    oProgressBar.setValue(30)
+    oProgressBar.start("prova", 30)
+    # ~return
+    DLG.mri(oProgressBar)
+    for i in range(1, 101):
+        oProgressBar.Value = i
+        time.sleep(0.01)
+    oProgressBar.reset()
+    oProgressBar.end()
+########################################################################
+########################################################################
 
 def MENU_debug():
+    # ~calendario_mensile()
+    # ~LeenoExtra.ricevuta_pec()
+    # ~return
+    # ~sistema_cose()
+    LeenoUtils.DocumentRefresh(True)
     return
-    
-    
-    
-    aConfigProvider = LeenoUtils.createUnoService(
-        "com.sun.star.configuration.ConfigurationProvider")
-    arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
-    arg.Name = "nodepath"
-    arg.Value = '/org.openoffice.Setup/Product'
-    return aConfigProvider.createInstanceWithArguments(
-        "com.sun.star.configuration.ConfigurationAccess",
-        (arg, )).ooSetupVersionAboutBox
-    return
+    # ~ESEMPIO_create_progress_bar()
+
+# ~import subprocess
+
     oDoc = LeenoUtils.getDocument()
     DLG.mri(oDoc)
 
@@ -10031,7 +10092,6 @@ def MENU_debug():
     oSheet.unprotect('')  # 
     # ~LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
-    LeenoUtils.DocumentRefresh(True)
     # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     # ~ DLG.chi(stili_cat)

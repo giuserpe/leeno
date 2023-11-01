@@ -470,7 +470,7 @@ def setAdatta():
     dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0,
                                    properties)
 
-def adattaAltezzaRiga(oSheet):
+def adattaAltezzaRiga(oSheet=False):
     '''
     Adatta l'altezza delle righe al contenuto delle celle.
     imposta l'altezza ottimale delle celle
@@ -481,6 +481,8 @@ def adattaAltezzaRiga(oSheet):
     # ~LeenoUtils.DocumentRefresh(False)
 
     oDoc = LeenoUtils.getDocument()
+    if not oSheet:
+        oSheet = oDoc.CurrentController.ActiveSheet
     usedArea = SheetUtils.getUsedArea(oSheet)
     # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
     oSheet.Rows.OptimalHeight = True

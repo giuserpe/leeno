@@ -84,6 +84,7 @@
             <value>_self</value>
           </prop>
         </node>
+        
         <node oor:name="Ma30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -101,6 +102,7 @@
             <value>_self</value>
           </prop>
         </node>
+        
         <node oor:name="Ma35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -118,6 +120,25 @@
             <value>_self</value>
           </prop>
         </node>
+        
+        <node oor:name="Ma36" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_prefisso_VDS_</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/Caschetto</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Duplica voce corrente in Voce Della Sicurezza</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        
         <node oor:name="Ma40" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>

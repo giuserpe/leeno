@@ -583,6 +583,7 @@ di partenza deve essere contigua.''')
             while lrow < last:
                 rigenera_voce(lrow)
                 lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+            LeenoSheetUtils.adattaAltezzaRiga(dccSheet)
             # torno su partenza per prendere i prezzi
             _gotoDoc(fpartenza)
             oDoc = LeenoUtils.getDocument()
@@ -1914,6 +1915,44 @@ def voce_breve():
 ########################################################################
 
 
+def MENU_prefisso_VDS_():
+    '''
+    Duplica la voce di Elenco Prezzi corrente aggiunge il prefisso 'VDS_'
+    e individuandola come Voce Della Sicurezza
+    '''
+    LeenoUtils.DocumentRefresh(False)
+
+    oDoc = LeenoUtils.getDocument()
+    
+    def vds_ep():
+        oSheet = oDoc.CurrentController.ActiveSheet
+        lrow = LeggiPosizioneCorrente()[1]        
+        if "VDS_" in  oSheet.getCellByPosition(0, lrow).String:
+            Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
+            LeenoUtils.DocumentRefresh(True)
+            return
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 9, lrow))
+        comando('Copy')
+        MENU_nuova_voce_scelta()
+        paste_clip(pastevalue = False)
+        oSheet.getCellRangeByName("A4").String = "VDS_" + oSheet.getCellRangeByName("A4").String
+        # ~return
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        # voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
+        # ~art = LeenoComputo.datiVoceComputo(oSheet, lrow)[1]
+        pesca_cod()
+        vds_ep()
+        pesca_cod()
+
+    elif oSheet.Name == 'Elenco Prezzi':
+        vds_ep()
+
+    LeenoUtils.DocumentRefresh(True)
+    
+########################################################################
+
+
 def MENU_prefisso_codice():
     '''
     Aggiunge prefisso al Codice Articolo
@@ -2450,15 +2489,6 @@ def scelta_viste():
                 oRange.setFormulaArray(formule)
                 ###
                 if oRangeAddress.StartColumn != 0:
-                    # evidenzia le quantità eccedenti il VI/I
-                    for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
-                        if oSheet.getCellByPosition(
-                                26,
-                                el).Value >= 0.2 or oSheet.getCellByPosition(
-                                    26, el).String == '20,00%':
-                            oSheet.getCellRangeByPosition(
-                                0, el, 25, el).CellBackColor = 16777062
-                    #  oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                     if DLG.DlgSiNo(
                             "Nascondo eventuali voci non ancora contabilizzate?"
                     ) == 2:
@@ -2527,36 +2557,6 @@ def scelta_viste():
                                                        LeenoSheetUtils.cercaUltimaVoce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
-            # operazioni comuni
-            for el in (11, 15, 19, 26):
-                oSheet.getCellRangeByPosition(
-                    el, 3, el, LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP-mezzo %'
-            for el in (12, 16, 20, 23):
-                oSheet.getCellRangeByPosition(
-                    el, 3, el,
-                    LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche_q'
-            for el in (13, 17, 21, 24, 25):
-                oSheet.getCellRangeByPosition(
-                    el, 3, el,
-                    LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche'
-            oCellRangeAddr.StartColumn = 3
-            oCellRangeAddr.EndColumn = 3
-            oSheet.ungroup(oCellRangeAddr, 0)
-            oSheet.group(oCellRangeAddr, 0)
-            oSheet.getCellRangeByPosition(3, 0, 3, 0).Columns.IsVisible = False
-            oCellRangeAddr.StartColumn = 5
-            oCellRangeAddr.EndColumn = 11
-            oSheet.ungroup(oCellRangeAddr, 0)
-            oSheet.group(oCellRangeAddr, 0)
-            oSheet.getCellRangeByPosition(5, 0, 11,
-                                          0).Columns.IsVisible = False
-
-            oDoc.CurrentController.select(oSheet.getCellRangeByName('AA2'))
-            #  oDoc.CurrentController.select(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
-            comando('Copy')
-            oDoc.CurrentController.select(
-                oSheet.getCellRangeByPosition(26, 3, 26, ER))
-            paste_format()
 
             if(oDialog1.getControl("ComVar").State or
                oDialog1.getControl("ComCon").State or
@@ -2572,6 +2572,45 @@ def scelta_viste():
             _primaCella()
         else:
             return oDialog1.dispose()
+        # evidenzia le quantità eccedenti il VI/V
+        for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
+            if oSheet.getCellByPosition(
+                    26,
+                    el).Value >= 0.2 or oSheet.getCellByPosition(
+                        26, el).String == '20,00%':
+                oSheet.getCellRangeByPosition(
+                    0, el, 25, el).CellBackColor = 16777062
+        LeenoUtils.DocumentRefresh(True)
+        # operazioni comuni
+        for el in (11, 15, 19, 26):
+            oSheet.getCellRangeByPosition(
+                el, 3, el, LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP-mezzo %'
+        for el in (12, 16, 20, 23):
+            oSheet.getCellRangeByPosition(
+                el, 3, el,
+                LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche_q'
+        for el in (13, 17, 21, 24, 25):
+            oSheet.getCellRangeByPosition(
+                el, 3, el,
+                LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche'
+        oCellRangeAddr.StartColumn = 3
+        oCellRangeAddr.EndColumn = 3
+        oSheet.ungroup(oCellRangeAddr, 0)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getCellRangeByPosition(3, 0, 3, 0).Columns.IsVisible = False
+        oCellRangeAddr.StartColumn = 5
+        oCellRangeAddr.EndColumn = 11
+        oSheet.ungroup(oCellRangeAddr, 0)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getCellRangeByPosition(5, 0, 11,
+                                      0).Columns.IsVisible = False
+
+        oDoc.CurrentController.select(oSheet.getCellRangeByName('AA2'))
+        #  oDoc.CurrentController.select(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
+        comando('Copy')
+        oDoc.CurrentController.select(
+            oSheet.getCellRangeByPosition(26, 3, 26, ER))
+        paste_format()
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDialog1 = dp.createDialog(
@@ -3044,6 +3083,9 @@ def XPWE_out(elaborato, out_file):
     # si abilitano funzionalità altrimenti indisponibili
     if elaborato == 'CONTABILITA':
         TipoDocumento.text = '2'
+    if TipoDocumento.text != '2':
+        if Dialogs.YesNoDialog(Title = '' , Text = 'Vuoi abilitare la contabilità nel file esportato?') == 1:
+            TipoDocumento.text = '2'
     TipoFormato = SubElement(top, 'TipoFormato')
     TipoFormato.text = 'XMLPwe'
     Versione = SubElement(top, 'Versione')
@@ -3397,6 +3439,9 @@ def XPWE_out(elaborato, out_file):
             Flags = SubElement(EPItem, 'Flags')
             if oSheet.getCellByPosition(8, n).String == '(AP)':
                 Flags.text = '131072'
+            elif 'VDS_' in oSheet.getCellByPosition(0, n).String:
+                Flags.text = '134217728'
+                Tariffa.text = Tariffa.text.split('VDS_')[-1]
             else:
                 Flags.text = '0'
             Data = SubElement(EPItem, 'Data')
@@ -3591,6 +3636,9 @@ def XPWE_out(elaborato, out_file):
                 sotto = sStRange.RangeAddress.EndRow
                 if elaborato == 'CONTABILITA':
                     sotto -= 1
+
+                voce = LeenoComputo.datiVoceComputo(oSheet, sopra) # voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
+
                 VCItem = SubElement(PweVociComputo, 'VCItem')
                 VCItem.set('ID', str(nVCItem))
                 nVCItem += 1
@@ -3609,6 +3657,8 @@ def XPWE_out(elaborato, out_file):
                     DataMis.text = oggi()  # 26/12/1952'#'28/09/2013'###
                 vFlags = SubElement(VCItem, 'Flags')
                 vFlags.text = '0'
+                if 'VDS_' in voce[1]:
+                    vFlags.text = '134217728'
                 ##########################
                 IDSpCat = SubElement(VCItem, 'IDSpCat')
                 IDSpCat.text = str(oSheet.getCellByPosition(31, sotto).String)
@@ -5009,7 +5059,7 @@ def pesca_cod():
             pass
         ###
 ###
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE') or 'LISTA' in oSheet.Name.upper():
         if oDoc.NamedRanges.hasByName("_Lib_1"):
             if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
                 if DLG.DlgSiNo(
@@ -5468,7 +5518,7 @@ def delete(arg):
 
 
 ########################################################################
-def paste_clip(arg=None, insCells=0, pastevalue=False):
+def paste_clip(insCells=0, pastevalue=False):
     oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
@@ -7124,8 +7174,8 @@ def MENU_vedi_voce():
         # focus = oDoc.CurrentController.getFirstVisibleRow
         if to < lrow:
             vedi_voce_xpwe(oSheet, lrow, to)
-    LeenoSheetUtils.adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def strall(el, n=3, pos=0):
@@ -8964,9 +9014,10 @@ def MENU_taglia_x():
 
 
 ########################################################################
+
 def calendario_mensile():
     '''
-    Colora le colonne del sabato e della domenica, oltre le festività,
+    Colora le colonne del sabato e della domenica, oltre alle festività,
     nel file ../PRIVATO/LeenO/extra/calendario.ods che potrei implementare
     in LeenO per la gestione delle ore in economia o del diagramma di Gantt.
     '''
@@ -8997,6 +9048,62 @@ def calendario_mensile():
                 oSheet.getCellByPosition(x, y).CellStyle = 'ok'
             else:
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
+
+########################################################################
+
+def calendario_liste():
+    LeenoUtils.DocumentRefresh(False)
+    def rgb(r, g, b):
+        return 256*256*r + 256*g + b
+    '''
+    Colora le colonne del sabato e della domenica
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if not "LISTA" in oSheet.Name.upper():
+        return
+        
+    # ~slist = []
+    # ~for x in range(3, 35):
+        # ~if oSheet.getCellByPosition(
+                # ~x, 3).String == 's' or oSheet.getCellByPosition(
+                    # ~x, 3).String == 'd':
+            # ~slist.append(x)
+    slist = [x for x in range(3, 35) if oSheet.getCellByPosition(x, 3).String.lower() in ['s', 'd']]
+    ER = SheetUtils.getUsedArea(oSheet).EndRow
+    for y in range(3, 100):
+        if oSheet.getCellByPosition(4, y).IsMerged == True:
+            ER = y -1
+            break
+    oSheet.getCellRangeByPosition(4, 3, 34, ER).CellBackColor = -1
+    for y in slist:
+        # ~oSheet.getCellRangeByPosition(y, 3, y, ER).CellBackColor = rgb (238,238,238)
+        oSheet.getCellRangeByPosition(y, 3, y, ER).CellStyle = 'ok'
+    LeenoUtils.DocumentRefresh(True)
+
+
+########################################################################
+def dal_al():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for y in range(3, 100):
+        if oSheet.getCellByPosition(4, y).IsMerged == True:
+            ER = y -1
+            break
+    found = True
+    for y in range(4, ER + 1):
+        for x in (4, 34):
+            if found:
+                break  # Esci anche dal ciclo interno se abbiamo trovato ciò che cercavamo
+            if oSheet.getCellByPosition(x, y).Type.value != 'EMPTY':
+                DLG.chi(oSheet.getCellByPosition(x, y).String)
+                found = True  # Abbiamo trovato ciò che cercavamo, impostiamo found a True e usciamo dai cicli
+                break
+                
+    # ~DLG.chi(oSheet.getCellByPosition(x, 2).String)
+                
+        
+    # ~DLG.chi(oSheet.getCellByPosition(4, 4))
 
 
 ########################################################################
@@ -9038,8 +9145,8 @@ def sistema_cose():
                 testo = testo.replace('  ', ' ')
             while '\n\n' in testo:
                 testo = testo.replace('\n\n', '\n')
-            # ~oSheet.getCellByPosition(lcol, y).String = testo.strip() #.strip().strip()
-            oSheet.getCellByPosition(lcol, y).String = ' '.join(testo.split()) # rimuove tutti i capoversi
+            oSheet.getCellByPosition(lcol, y).String = testo.strip() #.strip().strip()
+            # ~oSheet.getCellByPosition(lcol, y).String = ' '.join(testo.split()) # rimuove tutti i capoversi
     Menu_adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
 
@@ -9774,7 +9881,7 @@ def calendario():
     except:
         pass
     comando('Copy')
-    paste_clip(arg=None, insCells=0, pastevalue=True)
+    paste_clip(insCells=0, pastevalue=True)
     
     return
 
@@ -10046,14 +10153,25 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 ########################################################################
-########################################################################
-
+    
 def MENU_debug():
+    # ~nuove_icone()
+    # ~dal_al()
+    # ~sistema_cose()
+    DLG.chi (Dialogs.YesNoDialog(Title = 'aaaaaaaaaaa', Text = 'gfdgfdgdgdf'))
+    
+    LeenoUtils.DocumentRefresh(True)
+    # ~MENU_prefisso_VDS_()
+    # ~calendario_liste()
+    # ~elimina_stili_cella()
+    # ~catalogo_stili_cella()
+    return
+
     # ~calendario_mensile()
     # ~LeenoExtra.ricevuta_pec()
     # ~return
     # ~sistema_cose()
-    LeenoUtils.DocumentRefresh(True)
+
     return
     # ~ESEMPIO_create_progress_bar()
 

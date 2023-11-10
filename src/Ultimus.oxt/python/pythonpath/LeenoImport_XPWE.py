@@ -401,6 +401,9 @@ def leggiElencoPrezzi(misurazioni):
         except:
             tipoep = '0'
         tariffa = elem.find('Tariffa').text or ''
+        # Voce Della Sicurezza
+        if elem.find('Flags').text == '134217728':
+            tariffa = "VDS_" + tariffa
         articolo = elem.find('Articolo').text
         desridotta = elem.find('DesRidotta').text
         destestesa = elem.find('DesEstesa').text  # .strip()
@@ -952,10 +955,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     testcat = '0'
     testsbcat = '0'
 
+    from datetime import datetime, date
+    datarif = datetime.now()
+
     # inizializza la progressbar
-    progress.setLimits(0, len(listaMisure))
+    # ~progress.setLimits(0, len(listaMisure))
+    oProgressBar = PL.create_progress_bar(f'Compilazione {elaborato}', len(listaMisure))
     val = 0
-    progress.setValue(val)
+    # ~progress.setValue(val)
+    oProgressBar.Value = val
 
     for el in listaMisure:
         # dati della misura
@@ -1155,7 +1163,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
         # aggiorna la progressbar
         val += 1
-        progress.setValue(val)
+        # ~progress.setValue(val)
+        oProgressBar.Value = val
+    DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
@@ -1163,6 +1173,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
+    oProgressBar.reset()
+    oProgressBar.end()
     # ~LeenoUtils.DocumentRefresh(True)
     PL.fissa()
 

@@ -70,7 +70,7 @@ def findXmlParser(xmlText):
 
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
-        'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
@@ -285,9 +285,6 @@ def MENU_ImportElencoPrezziXML():
         # salva il file col nome del titolo
         PL.salva_come(dest)
 
-        # messaggio di ok
-        Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
-
         # nasconde la progressbar
         progress.hide()
 
@@ -309,23 +306,23 @@ def MENU_ImportElencoPrezziXML():
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
 
-    if Dialogs.YesNoDialog(Title='AVVISO!',
-    Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+    # ~if Dialogs.YesNoDialog(Title='AVVISO!',
+    # ~Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
-L'operazione potrebbe richiedere del tempo e
-LibreOffice potrebbe sembrare bloccato!
+# ~L'operazione potrebbe richiedere del tempo e
+# ~LibreOffice potrebbe sembrare bloccato!
 
-Vuoi procedere comunque?''') == 0:
-        pass
-    else:
-        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-        SR = oRange.StartRow + 1
-        ER = oRange.EndRow
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
-        PL.sistema_cose()
-        oDoc.CurrentController.select(
-            oDoc.createInstance(
-                "com.sun.star.sheet.SheetCellRanges"))  # unselect
+# ~Vuoi procedere comunque?''') == 0:
+        # ~pass
+    # ~else:
+        # ~oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        # ~SR = oRange.StartRow + 1
+        # ~ER = oRange.EndRow
+        # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        # ~PL.sistema_cose()
+        # ~oDoc.CurrentController.select(
+            # ~oDoc.createInstance(
+                # ~"com.sun.star.sheet.SheetCellRanges"))  # unselect
     # evidenzia e struttura i capitoli
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
@@ -334,7 +331,7 @@ Vuoi procedere comunque?''') == 0:
     LeenoUtils.DocumentRefresh(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Info(
-        Title = "Importazione eseguita con successo!",
+        Title =f'Importate {len(dati["articoli"])} voci di Elenco Prezzi',
         Text = '''
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.

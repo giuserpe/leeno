@@ -982,38 +982,35 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         # le varie 'testspcat', 'testcat' e 'testsbcat' servono per
         # evitare la ripetizione per voci consecutive
 
-        if elaborato != 'CONTABILITA':
-            # supercategoria
-            try:
-                if idspcat != testspcat:
-                    testspcat = idspcat
-                    testcat = '0'
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # ~if elaborato != 'CONTABILITA':
+        # supercategoria
+        try:
+            if idspcat != testspcat:
+                testspcat = idspcat
+                testcat = '0'
+                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
-            # categoria
-            try:
-                if idcat != testcat:
-                    testcat = idcat
-                    testsbcat = '0'
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # categoria
+        try:
+            if idcat != testcat:
+                testcat = idcat
+                testsbcat = '0'
+                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
-            # sottocategoria
-            try:
-                if idsbcat != testsbcat:
-                    testsbcat = idsbcat
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # sottocategoria
+        try:
+            if idsbcat != testsbcat:
+                testsbcat = idsbcat
+                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
         if elaborato == 'CONTABILITA':
             LeenoContab.insertVoceContabilita(oSheet, lrow)
@@ -1323,8 +1320,8 @@ def MENU_XPWE_import(filename = None):
 
     # compilo Elenco Prezzi
     progress.setText("Compilazione elenco prezzi")
-    if elaborato == 'CONTABILITA':
-        capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
+    # ~if elaborato == 'CONTABILITA':
+        # ~capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'

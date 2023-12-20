@@ -1180,7 +1180,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_numera_voci</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image161</value>
+                  <value>%origin%/icons/rinumCap</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Rinumera voci e Categorie</value>
@@ -1189,25 +1189,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m2U12" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Rinumera_TUTTI_Capitoli2</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/rinum_cap</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Rinumera Categorie</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
+
               <node oor:name="m2U13" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

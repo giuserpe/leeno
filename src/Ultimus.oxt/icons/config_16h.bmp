@@ -5,8 +5,8 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="config_16.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="config.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/config_16.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -30,16 +30,18 @@
      inkscape:cx="15.973019"
      inkscape:cy="16"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g1515"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0"
-     inkscape:pagecheckerboard="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -58,7 +60,7 @@
     <g
        id="g1515">
       <circle
-         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.865045;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.865045;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="path3469"
          cx="4.2491021"
          cy="4.267446"
@@ -69,9 +71,9 @@
            id="g1549"
            transform="matrix(4.9006206,0,0,4.9006206,-11.489088,-8.1925061)"
            inkscape:transform-center-y="-3.0333789"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1212"
              width="0.23918672"
              height="0.23464614"
@@ -81,7 +83,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1382"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -98,7 +100,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1464"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -118,9 +120,9 @@
            id="g1895"
            transform="matrix(0,4.9006206,-4.9006206,0,16.690377,-11.489422)"
            inkscape:transform-center-x="-3.0333785"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1889"
              width="0.23918672"
              height="0.23464614"
@@ -130,7 +132,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1891"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -147,7 +149,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1893"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -167,9 +169,9 @@
            id="g1903"
            transform="matrix(-4.9006206,0,0,-4.9006206,19.987293,16.690044)"
            inkscape:transform-center-y="3.033379"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1897"
              width="0.23918672"
              height="0.23464614"
@@ -179,7 +181,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1899"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -196,7 +198,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1901"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -216,9 +218,9 @@
            id="g1911"
            transform="matrix(0,-4.9006206,4.9006206,0,-8.1921728,19.986959)"
            inkscape:transform-center-x="3.033379"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1905"
              width="0.23918672"
              height="0.23464614"
@@ -228,7 +230,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1907"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -245,7 +247,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1909"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -266,9 +268,9 @@
            transform="matrix(3.4652621,-3.4652621,3.4652621,3.4652621,-15.676789,6.5800399)"
            inkscape:transform-center-x="2.0326516"
            inkscape:transform-center-y="-2.0326521"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1913"
              width="0.23918672"
              height="0.23464614"
@@ -278,7 +280,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1915"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -295,7 +297,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1917"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -316,9 +318,9 @@
            transform="matrix(-3.4652621,-3.4652621,3.4652621,-3.4652621,6.5803735,24.174659)"
            inkscape:transform-center-x="2.0326521"
            inkscape:transform-center-y="2.0326513"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1921"
              width="0.23918672"
              height="0.23464614"
@@ -328,7 +330,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1923"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -345,7 +347,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1925"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -366,9 +368,9 @@
            transform="matrix(-3.4652621,3.4652621,-3.4652621,-3.4652621,24.174993,1.9174977)"
            inkscape:transform-center-x="-2.0326514"
            inkscape:transform-center-y="2.0326521"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1929"
              width="0.23918672"
              height="0.23464614"
@@ -378,7 +380,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1931"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -395,7 +397,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1933"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -416,9 +418,9 @@
            transform="matrix(3.4652621,3.4652621,-3.4652621,3.4652621,1.9178313,-15.677122)"
            inkscape:transform-center-x="-2.0326521"
            inkscape:transform-center-y="-2.0326517"
-           style="fill:#000000;fill-opacity:1">
+           style="fill:#ffffff;fill-opacity:1">
           <rect
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.314357;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="rect1937"
              width="0.23918672"
              height="0.23464614"
@@ -428,7 +430,7 @@
              ry="2.7755586e-17" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1939"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -445,7 +447,7 @@
              d="m 10.435412,6.0311457 0.146732,-0.2541485 0.146733,-0.2541485 0.146733,0.2541485 0.146732,0.2541486 -0.293465,0 z" />
           <path
              sodipodi:type="star"
-             style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
+             style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75748;stroke-linecap:round;stroke-linejoin:bevel;paint-order:fill markers stroke"
              id="path1941"
              inkscape:flatsided="false"
              sodipodi:sides="3"
@@ -465,3 +467,4 @@
     </g>
   </g>
 </svg>
+

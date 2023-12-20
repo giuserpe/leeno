@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -57,7 +57,7 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.76171px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.674894;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.76171px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.674894;stroke-miterlimit:4;stroke-dasharray:none"
        x="2.8486693"
        y="8.414444"
        id="text941"><tspan
@@ -65,10 +65,10 @@
          id="tspan939"
          x="2.8486693"
          y="8.414444"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.76171px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.674894;stroke-miterlimit:4;stroke-dasharray:none">1</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.76171px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.674894;stroke-miterlimit:4;stroke-dasharray:none">1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.62707px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.655809;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.62707px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.655809;stroke-miterlimit:4;stroke-dasharray:none"
        x="0.0078541366"
        y="3.2813797"
        id="text1200"><tspan
@@ -76,10 +76,10 @@
          id="tspan1198"
          x="0.0078541366"
          y="3.2813797"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:4.62707px;font-family:'Liberation Sans Narrow';-inkscape-font-specification:'Liberation Sans Narrow Bold Condensed';fill:#000000;fill-opacity:1;stroke-width:0.655809;stroke-miterlimit:4;stroke-dasharray:none">UNO</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:4.62707px;font-family:'Liberation Sans Narrow';-inkscape-font-specification:'Liberation Sans Narrow Bold Condensed';fill:#ffffff;fill-opacity:1;stroke-width:0.655809;stroke-miterlimit:4;stroke-dasharray:none">UNO</tspan></text>
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.88976;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.88976;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="path1145"
        inkscape:flatsided="false"
        sodipodi:sides="3"
@@ -96,3 +96,4 @@
        inkscape:transform-center-y="0.14686962" />
   </g>
 </svg>
+

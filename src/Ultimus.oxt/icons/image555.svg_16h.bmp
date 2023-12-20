@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="image555_16.svg"
+   sodipodi:docname="image555.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/image444_16.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
@@ -27,18 +27,18 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
+     inkscape:cx="16.026981"
      inkscape:cy="16"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1053"
+     inkscape:window-x="1671"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0" />
   <metadata
      id="metadata5">
@@ -81,14 +81,18 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.96096px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.124024"
-       x="4.5715585"
-       y="8.1566687"
-       id="text1611"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.37386px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none"
+       x="4.7066417"
+       y="8.8372383"
+       id="text1039"
+       transform="scale(1.0295701,0.97127918)"
+       inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part_det_26.png"
+       inkscape:export-xdpi="104"
+       inkscape:export-ydpi="104"><tspan
          sodipodi:role="line"
-         id="tspan1609"
-         style="stroke-width:0.124024"
-         x="4.5715585"
-         y="8.1566687">+</tspan></text>
+         id="tspan1037"
+         x="4.7066417"
+         y="8.8372383"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.86536px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
   </g>
 </svg>

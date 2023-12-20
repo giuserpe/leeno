@@ -5,8 +5,8 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="griglia3_16.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="griglia3.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/griglia3_16.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
@@ -21,25 +21,27 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="19.53125"
-     inkscape:cx="15.9744"
-     inkscape:cy="16"
+     inkscape:zoom="9.765625"
+     inkscape:cx="13.2096"
+     inkscape:cy="25.4976"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0"
-     inkscape:pagecheckerboard="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="996"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -57,14 +59,16 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.298px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.74303;stroke-miterlimit:4;stroke-dasharray:none"
-       x="0.766738"
-       y="8.4169416"
-       id="text1039"><tspan
+       style="font-size:8.40814px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:none;stroke-width:0.264583"
+       x="1.4922686"
+       y="7.745708"
+       id="text1"
+       transform="scale(1.1233886,0.89016394)"><tspan
          sodipodi:role="line"
-         id="tspan1037"
-         x="0.766738"
-         y="8.4169416"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.298px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke-width:1.74303;stroke-miterlimit:4;stroke-dasharray:none">#</tspan></text>
+         id="tspan1"
+         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="1.4922686"
+         y="7.745708">#</tspan></text>
   </g>
 </svg>
+

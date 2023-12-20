@@ -2,96 +2,54 @@
 <svg
    width="32"
    height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 32 32"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="vedivoce_16.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/vedivoce_16.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   id="svg2"
+   sodipodi:docname="vedivoce.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
+     id="namedview2"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
+     inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
-     inkscape:cy="16"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0"
-     inkscape:pagecheckerboard="0" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="25"
+     inkscape:cx="15.98"
+     inkscape:cy="15.98"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g2" />
   <g
-     inkscape:label="Livello 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#001000;stroke-width:0.532625;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect9378"
-       width="4.2381101"
-       height="2.291204"
-       x="-11.00503"
-       y="-1.1238606"
-       rx="1.1690496"
-       ry="1.1690496"
-       transform="rotate(-135)" />
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#008000;stroke-width:0.532625;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect9753"
-       width="4.2381101"
-       height="2.291204"
-       x="-5.2147188"
-       y="-1.1238606"
-       rx="1.1690496"
-       ry="1.1690496"
-       transform="rotate(-135)" />
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#000100;stroke-width:0.532625;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect9194"
-       width="4.2381101"
-       height="2.291204"
-       x="-5.2147188"
-       y="-1.1238606"
-       rx="1.1690496"
-       ry="1.1690496"
-       transform="rotate(-135)" />
+     fill="#363545"
+     fill-rule="evenodd"
+     transform="translate(4 4)"
+     id="g2">
     <path
-       style="fill:none;stroke:#fffcff;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 5.5479288,5.507989 2.9540366,2.8842565"
-       id="path9874" />
+       d="M8.52210245,3.48768557 C7.83811867,3.41233585 7.02942102,3.48768557 7.02942102,3.48768557 L9.32809939,1.1784944 C9.32809939,1.1784944 10.4015032,-1.17572426e-10 11.8861216,0 C13.37074,1.17572336e-10 14.6482712,0.77884449 15.1612433,1.26134364 C15.6742154,1.74384278 16.5704366,2.94289531 16.415606,4.57839679 C16.2607754,6.21389826 15.2396282,7.14384496 15.2396282,7.14384496 L11.9596075,10.4199874 C11.9596075,10.4199874 11.2558783,11.2241184 9.89414461,11.3860136 C8.53241089,11.5479089 7.55280361,11.2358366 6.83284636,10.6549668 C6.11288911,10.074097 5.66666667,9.33225715 5.66666667,9.33225715 L7.23069061,7.74537564 C7.23069061,7.74537564 7.67752544,8.52493966 8.41248605,9.14322521 C9.14744667,9.76151076 9.88842904,9.23080281 10.3616984,8.96282768 C10.8349677,8.69485255 13.6786661,5.72893214 13.9272933,5.40688914 C14.1759204,5.08484615 14.3123796,4.73206876 14.3123796,4.06331301 C14.3123796,3.39455727 14.0676309,2.99161806 13.6204898,2.63873788 C13.1733488,2.2858577 12.6577231,1.98776491 11.931642,2.10165692 C11.2055609,2.21554892 10.5554152,2.88923861 10.5554152,2.88923861 L9.70175455,3.78207789 C9.70175455,3.78207789 9.20608623,3.56303529 8.52210245,3.48768557 Z"
+       id="path1"
+       style="fill:#ffffff" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.631056;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 5.5298512,5.4777079 2.935959,2.8539754"
-       id="path9419" />
+       d="M3.28616628,7.88232868 C2.6021825,7.80697896 1.79348485,7.88232868 1.79348485,7.88232868 L4.09216322,5.57313751 C4.09216322,5.57313751 5.16556703,4.39464311 6.65018543,4.39464311 C8.13480382,4.39464311 9.412335,5.1734876 9.9253071,5.65598675 C10.4382792,6.13848589 11.3345004,7.33753842 11.1796698,8.97303989 C11.0248392,10.6085414 10.003692,11.5384881 10.003692,11.5384881 L6.72367128,14.8146305 C6.72367128,14.8146305 6.01994215,15.6187615 4.65820844,15.7806567 C3.29647472,15.942552 2.31686744,15.6304797 1.59691019,15.0496099 C0.876952939,14.4687401 0.430730497,13.7269003 0.430730497,13.7269003 L1.99475444,12.1400187 C1.99475444,12.1400187 2.44158927,12.9195828 3.17654988,13.5378683 C3.9115105,14.1561539 4.65249287,13.6254459 5.12576219,13.3574708 C5.59903151,13.0894957 8.44272997,10.1235752 8.69135711,9.80153225 C8.93998426,9.47948925 9.07644341,9.12671186 9.07644341,8.45795612 C9.07644341,7.78920038 8.83169468,7.38626117 8.38455367,7.03338099 C7.93741265,6.68050081 7.4217869,6.38240802 6.69570583,6.49630002 C5.96962476,6.61019203 5.31947907,7.28388172 5.31947907,7.28388172 L4.46581838,8.176721 C4.46581838,8.176721 3.97015006,7.95767839 3.28616628,7.88232868 Z"
+       transform="rotate(180 5.814 10.109)"
+       id="path2"
+       style="fill:#ffffff" />
+    <polygon
+       points="19,18.011 16,18.011 16,10 14,10 14,18.011 11,18.011 15,25 "
+       id="polygon2"
+       transform="matrix(1,0,0,-1,0,35)"
+       style="fill:#ffffff" />
   </g>
 </svg>
+

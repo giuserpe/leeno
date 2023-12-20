@@ -27,8 +27,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.9053397"
-     inkscape:cx="-1.9550088"
-     inkscape:cy="17.305449"
+     inkscape:cx="-1.8826011"
+     inkscape:cy="17.305448"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -36,8 +36,8 @@
      units="px"
      inkscape:window-width="1440"
      inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-x="1923"
+     inkscape:window-y="83"
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="0" />
   <metadata
@@ -57,7 +57,7 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.94967px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#2b0000;fill-opacity:1;stroke:none;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.94967px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none"
        x="1.7910712"
        y="4.932229"
        id="text1039"
@@ -69,7 +69,7 @@
          id="tspan1037"
          x="1.7910712"
          y="4.932229"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#2b0000;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
     <path
        style="fill:#000000;stroke:#000000;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.14190979,4.8557775 H 8.3552974"

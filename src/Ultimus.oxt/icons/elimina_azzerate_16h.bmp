@@ -5,9 +5,9 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="elimina_azzerate_26.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/elimina_azzerate_26.png"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="azzera.svg"
+   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/strutt_voci_zero_26.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -21,25 +21,27 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="16.026981"
-     inkscape:cy="16"
+     inkscape:zoom="20.09375"
+     inkscape:cx="16.348367"
+     inkscape:cy="15.975117"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1440"
-     inkscape:window-height="843"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-width="1920"
+     inkscape:window-height="996"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0" />
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -55,36 +57,50 @@
      inkscape:label="Livello 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.352315;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 4.1776809,5.1496515 5.3468752,3.9804572 4.1776807,2.8112627"
-       id="path855" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.12681px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.72664;stroke-miterlimit:4;stroke-dasharray:none"
-       x="5.6547389"
-       y="5.6625471"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.12681px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.52664;stroke-miterlimit:4;stroke-dasharray:none"
+       x="5.6679063"
+       y="5.9357347"
        id="text1039"><tspan
          sodipodi:role="line"
          id="tspan1037"
-         x="5.6547389"
-         y="5.6625471"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.12681px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke-width:0.72664;stroke-miterlimit:4;stroke-dasharray:none">0</tspan></text>
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 3.686278,1.6035924 H 0.12075924"
-       id="path875" />
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 3.686278,3.1913024 H 0.12075924"
-       id="path16966" />
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 3.686278,4.78548 H 0.12075924"
-       id="path16968" />
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 3.686278,6.4421827 H 0.12075924"
-       id="path16970" />
+         x="5.6679063"
+         y="5.9357347"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.12681px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke-width:0.52664;stroke-miterlimit:4;stroke-dasharray:none">0</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.07328px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.52664;stroke-miterlimit:4;stroke-dasharray:none"
+       x="4.8461723"
+       y="4.6602821"
+       id="text1039-4"
+       transform="scale(0.79450482,1.2586456)"><tspan
+         sodipodi:role="line"
+         id="tspan1037-4"
+         x="4.8461723"
+         y="4.6602821"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.07328px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke-width:0.52664;stroke-miterlimit:4;stroke-dasharray:none">&gt;</tspan></text>
+    <g
+       id="g1003"
+       transform="matrix(0.90398212,0,0,1,0.36270874,0.55303266)"
+       style="stroke-width:1.05177">
+      <path
+         style="fill:none;stroke:#ff0000;stroke-width:0.536238;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 3.6403773,1.1985626 H 0.07485847"
+         id="path875" />
+      <path
+         style="fill:none;stroke:#ff0000;stroke-width:0.536238;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 3.6403773,2.7862726 H 0.07485847"
+         id="path16966" />
+      <path
+         style="fill:none;stroke:#ff0000;stroke-width:0.536238;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 3.6403773,4.3804502 H 0.07485847"
+         id="path16968" />
+      <path
+         style="fill:none;stroke:#ff0000;stroke-width:0.536238;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 3.6403773,6.0371529 H 0.07485847"
+         id="path16970" />
+    </g>
   </g>
 </svg>
+

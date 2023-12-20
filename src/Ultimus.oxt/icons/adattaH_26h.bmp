@@ -5,8 +5,8 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="adattaH_16_bn.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="adattaH.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -18,13 +18,13 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="18.53125"
-     inkscape:cx="16.026981"
+     inkscape:cx="16.053963"
      inkscape:cy="16"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
@@ -34,9 +34,11 @@
      inkscape:window-width="1440"
      inkscape:window-height="843"
      inkscape:window-x="0"
-     inkscape:window-y="32"
+     inkscape:window-y="286"
      inkscape:window-maximized="0"
-     inkscape:pagecheckerboard="0" />
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -51,22 +53,6 @@
   </metadata>
   <g
      inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="contorno"
-     style="display:inline"
-     sodipodi:insensitive="true">
-    <rect
-       style="fill:#fffffe;fill-opacity:0;stroke:#008000;stroke-width:0.0743415;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect1586"
-       width="8.3923244"
-       height="8.3923254"
-       x="0.037170749"
-       y="0.037170749"
-       rx="0.2973659"
-       ry="0.2973659" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="segni"
      style="display:inline"
@@ -75,21 +61,21 @@
        id="g840"
        transform="translate(0,0.31410896)">
       <path
-         style="fill:none;stroke:#000600;stroke-width:0.55;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 5.3663071,1.9463502 4.2497125,0.82975585 3.1331178,1.9463504"
          id="path855"
          inkscape:transform-center-x="0.012011757"
          inkscape:transform-center-y="0.022914849" />
       <path
-         style="fill:none;stroke:#000600;stroke-width:0.5453;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.39871936,3.0215994 H 8.0844845"
          id="path2217" />
       <path
-         style="fill:none;stroke:#000600;stroke-width:0.5453;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.39871936,4.6639813 H 8.0844845"
          id="path2784" />
       <path
-         style="fill:none;stroke:#000600;stroke-width:0.55;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 5.3663071,5.8261081 4.2497125,6.9427027 3.1331178,5.826108"
          id="path2786"
          inkscape:transform-center-x="0.012011757"
@@ -97,3 +83,4 @@
     </g>
   </g>
 </svg>
+

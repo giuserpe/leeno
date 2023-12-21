@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -86,21 +86,21 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#919191;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="7"
        height="1.2"
        x=".7"
        y="1" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="5"
        height="1.2"
        x="2.7"
        y="3.5" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#919191;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="3"
        height="1.2"
@@ -109,4 +109,3 @@
 
   </g>
 </svg>
-

@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -66,9 +66,8 @@
        transform="scale(1.1233886,0.89016394)"><tspan
          sodipodi:role="line"
          id="tspan1"
-         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         style="font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke-width:0.264583"
          x="1.4922686"
          y="7.745708">#</tspan></text>
   </g>
 </svg>
-

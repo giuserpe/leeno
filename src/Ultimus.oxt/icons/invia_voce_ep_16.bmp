@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -59,7 +59,7 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.2766px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.2766px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        x="-0.18222865"
        y="8.3606367"
        id="text1039"
@@ -68,10 +68,10 @@
          id="tspan1037"
          x="-0.18222865"
          y="8.3606367"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">DP</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">DP</tspan></text>
     <path
        sodipodi:type="star"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:square;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:square;paint-order:fill markers stroke"
        id="path901"
        inkscape:flatsided="false"
        sodipodi:sides="3"
@@ -87,21 +87,21 @@
        transform="matrix(0.31228832,0,0,0.31228832,-2.3328441,-0.37486579)"
        inkscape:transform-center-y="0.43578159" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect847"
        width="3.9332073"
        height="0.4"
        x="0.3"
        y="0.3" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect1070"
        width="3.9332073"
        height="0.4"
        x="0.3"
        y="1.5" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect1072"
        width="3.9332073"
        height="0.4"
@@ -109,4 +109,3 @@
        y="2.7" />
   </g>
 </svg>
-

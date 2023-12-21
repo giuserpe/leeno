@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -59,29 +59,29 @@
        id="g2114"
        transform="translate(-0.34266432)">
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 2.5737939,2.4752913 H 5.943528"
          id="path881" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.79649154,1.6272225 3.1138796,3.9746582 3.9292212,7.9446078"
          id="path1053" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 7.6333881,1.6272225 5.316,3.9746582 4.5006584,7.9446078"
          id="path1055" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 2.5737939,1.4455133 H 5.943528"
          id="path1126" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#000000;stroke-width:0.55;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 2.5737939,0.41573528 H 5.943528"
          id="path1128" />
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.37386px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.37386px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none"
        x="4.7066417"
        y="8.8372383"
        id="text1039"
@@ -93,7 +93,6 @@
          id="tspan1037"
          x="4.7066417"
          y="8.8372383"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.86536px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.86536px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.619921;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
   </g>
 </svg>
-

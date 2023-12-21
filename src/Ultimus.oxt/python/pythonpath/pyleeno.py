@@ -10112,28 +10112,14 @@ def nuove_icone(chiaro = True):
     Imposta il tema chiaro/scuro delle toolbar di LeenO
     Copia le icone SVG nella cartella ../icons/
     '''
-    # Apre una finestra di dialogo per la selezione del file
-    # ~file_path = ''
-    # ~file_path = Dialogs.FileSelect('Scegli il file SVG...', '*.svg')
-    # ~if file_path in ('Cancel', '', None):
-        # ~return
-
     if chiaro == True:
-        fn = '\\svg'
+        fn = '/svg'
         e = 'Chiaro'
     else:
-        fn = '\\scuro'
+        fn = '/scuro'
         e = 'Scuro'
-
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        fname = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fn
-    else:
-        fname = 'W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fn
-    
-    # ~fname = os.path.dirname(file_path)
+    fname = uno.fileUrlToSystemPath(LeenO_path()) + '/icons' + fn
     files_in_folder = os.listdir(fname)
-    # ~DLG.chi(fname)
-    # ~return
 
     # attiva la progress bar
     Title=f'Impostazione del tema {e} di LeenO...'
@@ -10171,9 +10157,6 @@ def nuove_icone(chiaro = True):
     progress.hide()
 
     Dialogs.Info(Title='Info', Text=f"Tema {e} di LeenO impostato con successo. Riavviare LibreOffice!")
-
-        # ~Dialogs.Info(Title='Info', Text=f"File '{fn}' copiato in ../icons/ con successo!")
-    
     return
 
 def celle_colorate(flag = False):
@@ -10274,6 +10257,8 @@ def get_windows_color_mode():
 # ~########################################################################
 
 def MENU_debug():
+    nuove_icone()
+    return
     oDoc = LeenoUtils.getDocument()
     ctx = LeenoUtils.getComponentContext()
 

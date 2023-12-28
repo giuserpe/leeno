@@ -820,7 +820,7 @@ def avvia_IDE():
 
     if sys.platform == 'linux' or sys.platform == 'darwin':
 
-        dest = '/media/giuserpe/PRIVATO/LeenO/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
         if not os.path.exists(dest):
             try:
                 dest = os.getenv(
@@ -10113,12 +10113,12 @@ def nuove_icone(chiaro = True):
     Copia le icone SVG nella cartella ../icons/
     '''
     if chiaro == True:
-        fn = '/svg'
+        fn = 'svg'
         e = 'Chiaro'
     else:
-        fn = '/scuro'
+        fn = 'scuro'
         e = 'Scuro'
-    fname = uno.fileUrlToSystemPath(LeenO_path()) + '/icons' + fn
+    fname = uno.fileUrlToSystemPath(LeenO_path()) + '/icons/' + fn
     files_in_folder = os.listdir(fname)
 
     # attiva la progress bar
@@ -10128,17 +10128,14 @@ def nuove_icone(chiaro = True):
     progress.setLimits(0, len(files_in_folder))
     progress.show()
 
-
     step = 0
     progress.setValue(step)
     for el in files_in_folder:
-        file_path = fname + '\\' + el
+        file_path = fname + '/' + el
         # Estrai il nome del file senza estensione
         fn = os.path.splitext(os.path.basename(file_path))[0]
-        if sys.platform == 'linux' or sys.platform == 'darwin':
-            file_name = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fn
-        else:
-            file_name = 'W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/icons/' + fn
+        
+        file_name = uno.fileUrlToSystemPath(LeenO_path()) + '/icons/' + fn
 
         # Crea i nomi dei nuovi file BMP
         bmp_26h = file_name + "_26h.bmp"
@@ -10147,13 +10144,15 @@ def nuove_icone(chiaro = True):
         bmp_16 = file_name + "_16.bmp"
 
         # Copia il file SVG selezionato nei nuovi file BMP
-        shutil.copy(file_path, bmp_26h)
+        try:
+            shutil.copy(file_path, bmp_26h)
+        except Exception as e:
+            DLG.chi(f"Errore durante l'elaborazione: {e}")
         shutil.copy(file_path, bmp_26)
         shutil.copy(file_path, bmp_16h)
         shutil.copy(file_path, bmp_16)
         step += 1
         progress.setValue(step)
-
     progress.hide()
 
     Dialogs.Info(Title='Info', Text=f"Tema {e} di LeenO impostato con successo. Riavviare LibreOffice!")
@@ -10236,24 +10235,24 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 # ~########################################################################
-import winreg
+# ~import winreg
 
-def get_windows_color_mode():
-    try:
-        key_path = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path) as key:
-            value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
-            return "Chiara" if value == 1 else "Scura"
-    except Exception as e:
-        DLG.chi(f"Errore durante l'accesso al Registro di sistema: {e}")
-        return None
+# ~def get_windows_color_mode():
+    # ~try:
+        # ~key_path = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+        # ~with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path) as key:
+            # ~value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
+            # ~return "Chiara" if value == 1 else "Scura"
+    # ~except Exception as e:
+        # ~DLG.chi(f"Errore durante l'accesso al Registro di sistema: {e}")
+        # ~return None
 
-    # Esempio di utilizzo
-    modalita_colore = get_windows_color_mode()
-    if modalita_colore is not None:
-        DLG.chi(f"La modalità di colore di Windows è impostata su: {modalita_colore}")
-    else:
-        DLG.chi("Impossibile recuperare la modalità di colore.")
+    # ~# Esempio di utilizzo
+    # ~modalita_colore = get_windows_color_mode()
+    # ~if modalita_colore is not None:
+        # ~DLG.chi(f"La modalità di colore di Windows è impostata su: {modalita_colore}")
+    # ~else:
+        # ~DLG.chi("Impossibile recuperare la modalità di colore.")
 # ~########################################################################
 
 def MENU_debug():

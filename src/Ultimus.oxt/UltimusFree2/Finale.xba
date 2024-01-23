@@ -17,6 +17,9 @@ public sStile_Pag
 public oAktPage
 &apos;global sStile_Pag
 &apos;global oAktPage
+Sub Duplica_Sheet_in_Doc
+ScriptPy(&quot;pyleeno.py&quot;,&quot;copia_sheet_consolida&quot;)
+end sub
 
 Sub Prepara_un_Doc_per_la_stampa(optional sCosa as long)
 	sduplica = Duplica_Sheet_in_Doc

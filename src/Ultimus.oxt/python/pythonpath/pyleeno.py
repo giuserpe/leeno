@@ -1388,6 +1388,18 @@ def copia_sheet(nSheet, tag="_copia"):
 
 
 ########################################################################
+def copia_sheet_consolida():
+    '''Copia il foglio corrente e ne consolida il contenuto'''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    copia_sheet(oSheet.Name)
+    
+    comando("SelectAll")
+    comando("Copy")
+    paste_clip(insCells=0, pastevalue=True)
+    
+    return
+########################################################################
 
 
 def Filtra_computo(nSheet, nCol, sString):
@@ -2356,6 +2368,7 @@ def scelta_viste():
             cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
+        fissa()
 #Elenco Prezzi
     elif oSheet.Name in ('Elenco Prezzi'):
         oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -5540,6 +5553,11 @@ def delete(arg):
 
 ########################################################################
 def paste_clip(insCells=0, pastevalue=False):
+    '''
+    Incolla il contenuto della clipboard.
+    insCells       { bit }  : con 1 inserisce nuove righe
+    pastevalue     { boolean }  : con True non incolla le formule
+    '''
     oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
     ctx = LeenoUtils.getComponentContext()
@@ -10254,19 +10272,34 @@ def ESEMPIO_create_progress_bar():
     # ~else:
         # ~DLG.chi("Impossibile recuperare la modalità di colore.")
 # ~########################################################################
-
+import LeenoImport
 def MENU_debug():
-    nuove_icone()
-    return
     oDoc = LeenoUtils.getDocument()
-    ctx = LeenoUtils.getComponentContext()
-
-
-    DLG.mri(ctx)
-    # ~MENU_leeno_conf()
-    # ~get_libreoffice_color_mode()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    copia_sheet(oSheet.Name)
+    
+    comando("SelectAll")
+    comando("Copy")
+    paste_clip(insCells=0, pastevalue=True)
+    
     return
     
+    
+    # ~lcol = LeggiPosizioneCorrente()[0]
+    # ~lrow = LeggiPosizioneCorrente()[1]
+    # ~if oSheet.Name in (
+            # ~'COMPUTO',
+            # ~'VARIANTE',
+            # ~'Elenco Prezzi'
+    # ~):
+    oDoc.CurrentController.freezeAtPosition(0, 3)
+    DLG.chi(888)
+
+    # ~sistema_cose()
+    # ~ LeenoImport.MENU_emilia_romagna()
+
+    return
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~DLG.mri(oSheet.getCellByPosition(1, 159).Rows.IsStartOfNewPage)
@@ -10325,6 +10358,7 @@ def MENU_debug():
     if not hasattr(model, "Sheets"):
         return
     
+    
     # Ottieni il foglio attivo
     active_sheet = model.CurrentController.ActiveSheet
     
@@ -10340,6 +10374,7 @@ def MENU_debug():
     # ~richiesta_offerta()
     # ~LeenoComputo.Menu_computoSenzaPrezzi()
  
+ 
     # ~richiesta_offerta()
     # ~DLG.ScegliElaborato('oioi')
     oDoc = LeenoUtils.getDocument()
@@ -10350,12 +10385,7 @@ def MENU_debug():
     # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     # ~ DLG.chi(stili_cat)
-    # ~return
-
-
-
-
-
+    # ~return  
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # g_exportedScripts = (MENU_debug, )

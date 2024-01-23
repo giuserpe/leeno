@@ -84,7 +84,7 @@
             <value>_self</value>
           </prop>
         </node>
-        
+
         <node oor:name="Ma30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -102,7 +102,7 @@
             <value>_self</value>
           </prop>
         </node>
-        
+
         <node oor:name="Ma35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -120,7 +120,7 @@
             <value>_self</value>
           </prop>
         </node>
-        
+
         <node oor:name="Ma36" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -138,7 +138,7 @@
             <value>_self</value>
           </prop>
         </node>
-        
+
         <node oor:name="Ma40" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -569,7 +569,7 @@
             <value>_self</value>
           </prop>
         </node>
-        
+
         <node oor:name="Ca26" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -885,7 +885,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
+
               <node oor:name="N020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
@@ -971,7 +971,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
+
               <node oor:name="IE021" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -986,7 +986,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
+
               <node oor:name="IE030" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1019,7 +1019,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              
+
               <node oor:name="IE040" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1298,8 +1298,23 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
+
               <node oor:name="m2U21" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.copia_sheet_consolida</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Copia e consolida Foglio corrente</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+
+              <node oor:name="m2U22" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -1307,13 +1322,13 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.MENU_SheetToDoc</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Copia Foglio in Nuovo File</value>
+                  <value>Copia Foglio corrente in Nuovo File</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
                 </prop>
               </node>
-              
+
             </node>
           </node>
           <node oor:name="m04" oor:op="replace">

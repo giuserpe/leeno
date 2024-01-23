@@ -6,6 +6,7 @@ Funzioni di utilità extra
 
 import xml.etree.ElementTree as ET
 import Dialogs
+import LeenoDialogs as DLG
 import LeenoUtils
 import pyleeno as PL
 
@@ -37,23 +38,32 @@ def ricevuta_pec():
             "Tipo Ricevuta": tipo_ricevuta,
             "Consegna": root.findtext("dati/consegna") or ''
         }
-
         # Converte il dizionario in una lista di coppie chiave-valore
         dati_lista = list(dati.items())
         oDoc = LeenoUtils.getDocument()
-        nome = 'PEC_'+ dati['Tipo']
+        if dati['Tipo'] == "avvenuta-consegna":
+            nome = 'Ricevuta di avvenuta consegna'
+        elif dati['Tipo'] == "accettazione":
+            nome = 'Ricevuta di accettazione'
+        else:
+            nome = dati['Tipo']
+            
         try:
             oDoc.Sheets.insertNewByName(nome, 100)
-        except:
+        except Exception as e:
+            # ~ DLG.chi(f"Errore sconosciuto: {e}")
             pass
         PL.GotoSheet(nome)
         oSheet = oDoc.CurrentController.ActiveSheet
 
         # Imposta i dati nella riga 0 del foglio
-        for idx, (key, value) in enumerate(dati_lista, start=0):
+        for idx, (key, value) in enumerate(dati_lista):
             oSheet.getCellByPosition(0, idx).String = key
-            oSheet.getCellByPosition(1, idx).String = value
-
+            try:
+                oSheet.getCellByPosition(1, idx).String = value
+            except Exception as e:
+                # ~ DLG.chi(f"Errore durante l'assegnazione del valore alla cella {idx}: {e}")
+                pass
         # Converti il foglio di calcolo in PDF
         # ~convert_to_pdf(pdf_output_file)
         oSheet.getCellRangeByName('A1:B1048576').Columns.OptimalWidth = True

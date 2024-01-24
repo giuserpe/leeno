@@ -3,6 +3,7 @@ Importazione computo/variante/contabilità/prezzario
 dal formato XPWE
 """
 import logging
+import re
 
 from xml.etree.ElementTree import ElementTree, ParseError
 from com.sun.star.table import CellRangeAddress
@@ -273,7 +274,7 @@ def leggiApprossimazioni(dati):
         PweDGConfigNumeri = dati.find('PweDGConfigurazione')
     except AttributeError:
         PweDGConfigNumeri = None
-    
+
     if PweDGConfigNumeri is None:
         return {}
     PweDGConfigNumeri = PweDGConfigNumeri.getchildren()[0]
@@ -358,14 +359,18 @@ def compilaApprossimazioni(oDoc, approssimazioni):
 
     if 'PartiUguali' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a PU', approssimazioni['PartiUguali'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a PU ROSSO', approssimazioni['PartiUguali'])
     if 'Lunghezza' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LUNG', approssimazioni['Lunghezza'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LUNG ROSSO', approssimazioni['Lunghezza'])
     if 'Larghezza' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LARG', approssimazioni['Larghezza'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LARG ROSSO', approssimazioni['Larghezza'])
     if 'HPeso' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a peso', approssimazioni['HPeso'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a peso ROSSO', approssimazioni['HPeso'])
     if 'Quantita' in approssimazioni:
-        for el in ('Comp-Variante num sotto', 'An-lavoraz-input', 'Blu'):
+        for el in ('Comp-Variante num sotto', 'Comp-Variante num sotto ROSSO', 'An-lavoraz-input', 'Blu', 'Blu ROSSO'):
             LeenoFormat.setCellStyleDecimalPlaces(el, approssimazioni['Quantita'])
     if 'Prezzi' in approssimazioni:
         for el in ('comp sotto Unitario', 'An-lavoraz-generica'):
@@ -632,22 +637,49 @@ def leggiMisurazioni(misurazioni, ordina):
                     descrizione = el.find('Descrizione').text
                 else:
                     descrizione = ''
+
+                # verifico la presenza di * prima delle parentesi aperte
+                pattern = r'(\d+)(\()'
                 partiuguali = el.find('PartiUguali').text
-                if partiuguali != None:
-                    if '  ' in partiuguali:
-                        partiuguali = None
+                if isinstance(partiuguali, (str, bytes)):
+                    try:
+                        partiuguali = re.sub(pattern, r'\1*\2', partiuguali)
+                    except:
+                        pass
+                    if partiuguali != None:
+                        if '  ' in partiuguali:
+                            partiuguali = None
+
                 lunghezza = el.find('Lunghezza').text
-                if lunghezza != None:
-                    if '  ' in lunghezza:
-                        lunghezza = None
+                if isinstance(lunghezza, (str, bytes)):
+                    try:
+                        lunghezza = re.sub(pattern, r'\1*\2', lunghezza)
+                    except:
+                        pass
+                    if lunghezza != None:
+                        if '  ' in lunghezza:
+                            lunghezza = None
+
                 larghezza = el.find('Larghezza').text
-                if larghezza != None:
-                    if '  ' in larghezza:
-                        larghezza = None
+                if isinstance(larghezza, (str, bytes)):
+                    try:
+                        larghezza = re.sub(pattern, r'\1*\2', larghezza)
+                    except:
+                        pass
+                    if larghezza != None:
+                        if '  ' in larghezza:
+                            larghezza = None
+
                 hpeso = el.find('HPeso').text
-                if hpeso != None:
-                    if '  ' in hpeso:
-                        hpeso = None
+                if isinstance(larghezza, (str, bytes)):
+                    try:
+                        hpeso = re.sub(pattern, r'\1*\2', hpeso)
+                    except:
+                        pass
+                    if hpeso != None:
+                        if '  ' in hpeso:
+                            hpeso = None
+
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
                 riga_misura = (

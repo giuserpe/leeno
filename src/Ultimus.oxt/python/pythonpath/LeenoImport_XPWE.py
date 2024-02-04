@@ -932,8 +932,8 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
                     oSheet.getRows().removeByIndex(m, 1)
                 if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
                     oSheet.getCellByPosition(0, m).String = ''
-            if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
-                oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
+            # ~ if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
+                # ~ oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
             oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
 
             # aggiorna la progressbar

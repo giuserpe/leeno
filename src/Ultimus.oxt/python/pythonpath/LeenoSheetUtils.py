@@ -278,7 +278,7 @@ def selezionaVoce(oSheet, lrow):
 
 # ###############################################################
 
-def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
+def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     '''
     oSheet { obect }
     lrow { double }   : riga di riferimento
@@ -301,6 +301,10 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
     # la parte che segue sposta il focus alla voce successiva
     if lrow >= fine:
         return lrow
+    if saltaCat == True:
+        if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+            lrow += 1
+            return lrow
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili:
         if n == 0:
             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
@@ -308,10 +312,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    if saltaCat == True:
-        while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-            lrow += 1
-    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
+    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna'):
         lrow += 1
     return lrow
 # ###############################################################

@@ -556,13 +556,13 @@ di partenza deve essere contigua.''')
                 lista.append(codice_voce(el))
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
-            # ~DLG.MsgBox('Il foglio di destinazione non è corretto.', 'ATTENZIONE!')
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text='Il foglio di destinazione non è corretto.')
             oDoc.CurrentController.select(
                 oDoc.createInstance(
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
             return
+        noVoce = LeenoUtils.getGlobalVar('noVoce')
         if nSheetDCC in ('COMPUTO', 'VARIANTE'):
             comando('Copy')
             # arrivo
@@ -570,12 +570,16 @@ di partenza deve essere contigua.''')
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
             lrow = LeggiPosizioneCorrente()[1]
-            if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
-                lrow = LeggiPosizioneCorrente()[1] + 1
-            elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
-                # ~DLG.MsgBox('La posizione di destinazione non è corretta.', 'ATTENZIONE!')
+
+            if dccSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
+                lrow += 1
+            else:
+                return
+            if dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
                 Dialogs.Exclamation(Title = 'ATTENZIONE!',
-                Text='La posizione di destinazione non è corretta.')
+                Text='''La posizione di destinazione non è corretta.
+I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
+
                 # unselect
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
                 return
@@ -587,7 +591,7 @@ di partenza deve essere contigua.''')
             last = lrow + ER - SR + 1
             while lrow < last:
                 rigenera_voce(lrow)
-                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+                lrow = LeenoSheetUtils.prossimaVoce(dccSheet, lrow, 1)
             LeenoSheetUtils.adattaAltezzaRiga(dccSheet)
             # torno su partenza per prendere i prezzi
             _gotoDoc(fpartenza)
@@ -597,7 +601,7 @@ di partenza deve essere contigua.''')
             selezione = []
             ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
             for el in lista:
-                y = SheetUtils.uFindStringCol(el, 0, oSheet)
+                y = SheetUtils.uFindStringCol(el, 0, oSheet, equal=1)
                 rangen = oSheet.getCellRangeByPosition(0, y, 100,
                                                        y).RangeAddress
                 selezione.append(rangen)
@@ -682,7 +686,12 @@ def codice_voce(lrow, cod=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        try:
+            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        except:
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+                Text='''La posizione di partenza non è corretta.''')
+            return
     elif oSheet.Name in ('Analisi di Prezzo'):
         sopra = Circoscrive_Analisi(lrow).RangeAddress.StartRow + 1
     if cod is None:
@@ -1955,6 +1964,8 @@ def MENU_prefisso_VDS_():
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
         oSheet.getCellRangeByName("A4").String = "VDS_" + oSheet.getCellRangeByName("A4").String
+        oSheet.getCellRangeByName("A4").CellBackColor = 13500076
+
         # ~return
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -10274,21 +10285,37 @@ def ESEMPIO_create_progress_bar():
 # ~########################################################################
 import LeenoImport
 def MENU_debug():
-    stringa ='=(6,8*4,45)-(2*(1,3*2,7))-(2*(1,3*2,7))'
-    pattern = r'(\d+)(\()'
-    nuova_stringa = re.sub(pattern, r'\1*\2', stringa)
-    trovati = re.findall(pattern, stringa)
-    DLG.chi(nuova_stringa)
-    return
+    LeenoUtils.initGlobalVars({
+        'Lmajor': 3,        # INCOMPATIBILITA'
+        'Lminor': 24,       # NUOVE FUNZIONALITA'
+        'Lsubv': "0.dev",       # CORREZIONE BUGS
+        # ~'Lmajor': 3,        # INCOMPATIBILITA'
+        # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
+        # ~'Lsubv': "0",       # CORREZIONE BUGS
 
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    copia_sheet(oSheet.Name)
+        'noVoce': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta',
+                   'comp Int_colonna', 'Ultimus_centro_bordi_lati',
+                   'comp Int_colonna_R_prima'),
 
-    comando("SelectAll")
-    comando("Copy")
-    paste_clip(insCells=0, pastevalue=True)
+        'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 
+                    'comp Int_colonna_R_prima', 'comp Int_colonna'),
 
+        'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',
+                        'Comp End Attributo'),
+
+        'stili_contab': ('Comp Start Attributo_R', 'comp 10 s_R', 'uuuuu',
+                         'Comp End Attributo_R', 'Comp TOTALI'),
+        'stili_analisi': ('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla',
+                          'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN',
+                          'An-sfondo-basso Att End'),
+        'stili_elenco':  ('EP-Cs', 'EP-aS'),
+
+        'codice_da_cercare': '',
+        'sUltimus': '',
+
+        'sblocca_computo': 0,
+
+    })
     return
 
 

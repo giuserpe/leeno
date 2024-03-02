@@ -508,6 +508,7 @@ rem ----------------------------------------------------------------------
 barra_chiudi
 rem ----------------------------------------------------------------------
 rem inserisco la prima riga GIALLA del REGISTRO
+
 &apos;	Print &quot;GIALLO REGISTRO&quot;
 	oNamedRange=oRanges.getByName(nomearea).referredCells
 	ins = oNamedRange.RangeAddress.StartRow

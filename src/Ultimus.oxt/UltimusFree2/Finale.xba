@@ -281,7 +281,7 @@ Verifica_chiudi_preview
 	End Select		
 
 
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;EliminaColonne&apos; L&apos; ho spiegata su Output &apos; incasina l&apos;area di stampa
+
 
 &apos;Visualizza_normale &apos; Una volta messo a punto il foglio si pu� togliere il Pagebreak
 &apos; mi sembra meglio lasciarlo... per il momento
@@ -711,23 +711,6 @@ Sub Pulisci_Tabella(oRange)
  	oRange.clearContents(Flags)
  	oRange.CellBackColor = RGB(255, 255, 255)
  	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
-END SUB
-
-&apos;Sub EliminaColonne &apos; Questa passa tutte le colonne e se ne trova una nascosta la elimina
-				 &apos; Parte dalla quarta, perche mi sembra che sulla terza ci sia qualcosa che
-				 &apos; viene utilizzato da Impagina_bis
-Sub EliminaColonne &apos; 
-i = 3
-oSheet = ThisComponent.currentController.activeSheet
-Do
-oColumns = oSheet.getColumns()
- oCol = oColumns.getByIndex(i) 
-	If Not oCol.IsVisible Then
-		oSheet.Columns.removeByIndex(i , 1)
- 	 Else
-		i = i + 1
-	End If
-	Loop Until i = 50
 END SUB
 
 

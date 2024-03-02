@@ -14,7 +14,7 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
                    'comp Int_colonna_R_prima'),
 
         'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 
-                    'comp Int_colonna_R_prima'),
+                    'comp Int_colonna_R_prima', 'comp Int_colonna'),
 
         'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',
                         'Comp End Attributo'),

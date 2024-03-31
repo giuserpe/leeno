@@ -838,7 +838,7 @@ def MENU_SheetToDoc():
         oDoc.CurrentController.select(oSheet.getCellRangeByName('A1:I1048576'))
         PL.comando('Copy')
         #oDoc.CurrentController.select(oCell)
-        PL.paste_clip(arg=None, insCells=0, pastevalue=True)
+        PL.paste_clip(insCells=0, pastevalue=True)
         oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselec
     oDoc.CurrentController.ZoomValue = 100

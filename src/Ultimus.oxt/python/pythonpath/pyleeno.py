@@ -489,6 +489,9 @@ def MENU_invia_voce():
             _gotoCella(0, 3)
             paste_clip(insCells=1, pastevalue=True)
             LeenoSheetUtils.adattaAltezzaRiga(dccSheet)
+            if cfg.read('Generale', 'torna_a_ep') == '1':
+                _gotoDoc(fpartenza)
+            return
             # EliminaVociDoppieElencoPrezzi()
         if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
@@ -10289,6 +10292,8 @@ def ESEMPIO_create_progress_bar():
 # ~########################################################################
 import LeenoImport
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+
     return
 
 

@@ -71,6 +71,7 @@ def findXmlParser(xmlText):
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Calabria"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,

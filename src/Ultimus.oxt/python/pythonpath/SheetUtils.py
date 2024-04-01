@@ -375,7 +375,7 @@ def getUsedArea(oSheet):
     Restituisce l'indirizzo dell' area usata nello spreadsheet
     in forma di oggetto CellRangeAddress
     I membri sono:
-        Sheet 	numero intero indice dello Sheet contenente l'area
+        Sheet   numero intero indice dello Sheet contenente l'area
                 occhio che è un indice, NON un oggetto spreadsheet
         StartColumn
         StartRow
@@ -463,11 +463,11 @@ def uFindString(sString, oSheet, up=False):
     righe = range (0, aAddress.EndRow + 1)
     if up==True:
         righe = reversed (righe)
-        
+
     for nRow in righe:
         for nCol in range(0, aAddress.EndColumn + 1):
             # ritocco di +Daniele Zambelli:
-            if sString in oSheet.getCellByPosition(nCol, nRow).String:
+            if sString == oSheet.getCellByPosition(nCol, nRow).String:
                 return (nCol, nRow)
 
 # ###############################################################

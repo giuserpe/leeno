@@ -3,6 +3,8 @@ import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
 import LeenoConfig
+import Dialogs
+
 import LeenoDialogs as DLG
 
 import pyleeno as PL
@@ -213,3 +215,38 @@ def ins_voce_computo(cod=None):
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 
+def Menu_computoSenzaPrezzi():
+    '''
+    Duplica il COMPUTO/VARIANTE aggiungendo il suffissio '_copia'
+    e cancella i prezzi unitari dal nuovo foglio
+    '''
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.Name
+    if nSheet not in ('COMPUTO', 'VARIANTE'):
+        return
+    tag="_copia"
+    idSheet = oSheet.RangeAddress.Sheet + 1
+    if oDoc.getSheets().hasByName(nSheet + tag):
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text=f'La tabella di nome {nSheet}{tag} è già presente.')
+        return
+    else:
+        oDoc.Sheets.copyByName(nSheet, nSheet + tag, idSheet)
+    nSheet = nSheet + tag
+    PL.GotoSheet(nSheet)
+    # ~oSheet.protect('')  # 
+    # ~Dialogs.Info(Title = 'Ricerca conclusa', Text=f'Il foglio {nSheet} è stato protetto, ma senza password.')
+
+    oSheet = oDoc.getSheets().getByName(nSheet)
+    PL.setTabColor(10079487)
+
+    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    
+    ultime_voci = set([circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow for lrow in range(6, ultima_voce)])
+
+    for lrow in ultime_voci:
+        oSheet.getCellByPosition(11, lrow).String = ''
+        oSheet.getCellByPosition(11, lrow).CellStyle = 'comp 1-a'
+    LeenoUtils.DocumentRefresh(True)

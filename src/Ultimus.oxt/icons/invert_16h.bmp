@@ -5,7 +5,7 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    sodipodi:docname="invert.svg"
    inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/invert_26.png"
    inkscape:export-xdpi="104"
@@ -27,25 +27,33 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="19.53125"
-     inkscape:cx="15.9744"
-     inkscape:cy="15.3856"
+     inkscape:cx="18.944"
+     inkscape:cy="19.3024"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g2"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
-     inkscape:window-width="1680"
-     inkscape:window-height="953"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:window-width="1920"
+     inkscape:window-height="996"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <sodipodi:guide
-       position="-0.04064,7.15264"
+       position="4.8090667,7.96544"
        orientation="0,-1"
-       id="guide830" />
+       id="guide830"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="0.28447999,0.73152002"
+       orientation="0,-1"
+       id="guide1"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -62,72 +70,62 @@
      inkscape:label="Livello 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.08588px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.579105;stroke-miterlimit:4;stroke-dasharray:none"
-       x="0.03046814"
-       y="3.4746809"
-       id="text1039"
-       transform="scale(1.0295701,0.97127918)"
-       inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part_det_26.png"
-       inkscape:export-xdpi="104"
-       inkscape:export-ydpi="104"><tspan
-         sodipodi:role="line"
-         id="tspan1037"
-         x="0.03046814"
-         y="3.4746809"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.47918px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.579105;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.401119;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="path30899"
-       sodipodi:type="arc"
-       sodipodi:cx="-2.3088837"
-       sodipodi:cy="5.1137605"
-       sodipodi:rx="3.2988696"
-       sodipodi:ry="3.5057158"
-       sodipodi:start="5.9449287"
-       sodipodi:end="1.0471976"
-       sodipodi:arc-type="arc"
-       d="M 0.80305428,3.9504132 A 3.2988696,3.5057158 0 0 1 -0.659449,8.1497995"
-       sodipodi:open="true"
-       transform="matrix(0.54635244,-0.83755538,0.89047541,0.45503136,0,0)" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 7.7200236,4.30784 6.8756834,5.1521802 6.0313431,4.3078399"
-       id="path2786"
-       inkscape:transform-center-x="0.0077303557"
-       inkscape:transform-center-y="-0.01474721" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.47807px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.776426;stroke-miterlimit:4;stroke-dasharray:none"
-       x="3.1939292"
-       y="12.576475"
-       id="text1039-6"
-       transform="scale(1.5326459,0.65246644)"><tspan
-         sodipodi:role="line"
-         id="tspan1037-0"
-         x="3.1939292"
-         y="12.576475"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.34613px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ff0000;fill-opacity:1;stroke-width:0.776426;stroke-miterlimit:4;stroke-dasharray:none">-</tspan></text>
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.401119;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="path30899-3"
-       sodipodi:type="arc"
-       sodipodi:cx="1.4394727"
-       sodipodi:cy="-6.8175564"
-       sodipodi:rx="3.2988696"
-       sodipodi:ry="3.5057158"
-       sodipodi:start="5.9449287"
-       sodipodi:end="1.0471976"
-       sodipodi:arc-type="arc"
-       sodipodi:open="true"
-       transform="matrix(-0.54635244,0.83755538,-0.89047541,-0.45503136,0,0)"
-       d="M 4.5514106,-7.9809036 A 3.2988696,3.5057158 0 0 1 3.0889073,-3.7815173" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 0.85659668,4.2607392 1.7009368,3.416399 2.5452771,4.2607393"
-       id="path2786-6"
-       inkscape:transform-center-x="-0.0077303345"
-       inkscape:transform-center-y="0.014747184" />
+    <g
+       id="g5"
+       transform="translate(-0.02709333,0.29802667)">
+      <g
+         id="g3"
+         transform="matrix(1.2285764,0,0,1.2285764,-5.8298768,2.0007757)"
+         style="stroke-width:0.81395">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.08588px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none"
+           x="4.8704281"
+           y="4.0859895"
+           id="text1039"
+           transform="scale(1.0295701,0.97127918)"
+           inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/part_det_26.png"
+           inkscape:export-xdpi="104"
+           inkscape:export-ydpi="104"><tspan
+             sodipodi:role="line"
+             id="tspan1037"
+             x="4.8704281"
+             y="4.0859895"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.47918px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.47807px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none"
+           x="3.1296158"
+           y="8.216404"
+           id="text1039-6"
+           transform="scale(1.5326459,0.65246644)"><tspan
+             sodipodi:role="line"
+             id="tspan1037-0"
+             x="3.1296158"
+             y="8.216404"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.34613px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ff0000;fill-opacity:1;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none">-</tspan></text>
+      </g>
+      <g
+         id="g1"
+         transform="matrix(1.5377921,0,0,1.5377921,-9.9167973,-1.0479678)"
+         style="stroke-width:0.650283">
+        <g
+           id="g2"
+           transform="translate(-0.264275,0.01761833)">
+          <polygon
+             fill="#000000"
+             points="11.929,21.036 9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 11.939,13.321 "
+             transform="matrix(0.26458333,0,0,-0.26458333,6.5732075,7.4789107)"
+             id="polygon1"
+             style="stroke-width:0.650283" />
+          <polygon
+             fill="#000000"
+             points="19.625,23.124 19.62,15.405 18.239,15.421 18.229,23.136 16.1,23.1 18.9,27.3 21.7,23.1 "
+             id="polygon2"
+             transform="matrix(0.26458333,0,0,0.26458333,6.12394,-2.6295879)"
+             style="stroke-width:0.650283" />
+        </g>
+      </g>
+    </g>
   </g>
 </svg>

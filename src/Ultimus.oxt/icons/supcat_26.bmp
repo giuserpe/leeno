@@ -5,9 +5,9 @@
    viewBox="0 0 8.4666665 8.4666669"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
-   sodipodi:docname="supcat.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/cat_26.png"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="cat.svg"
+   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/supcat_26.png"
    inkscape:export-xdpi="104"
    inkscape:export-ydpi="104"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -26,38 +26,49 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="29.086003"
-     inkscape:cy="12.27656"
+     inkscape:zoom="18.531251"
+     inkscape:cx="24.175378"
+     inkscape:cy="20.640808"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1051"
-     inkscape:window-x="1671"
-     inkscape:window-y="-9"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <sodipodi:guide
-       position="4.4974704,9.8087692"
+       position="4.2404721,9.7516585"
        orientation="1,0"
-       id="guide825" />
+       id="guide825"
+       inkscape:locked="false" />
     <sodipodi:guide
-       position="2.1559303,9.0806073"
+       position="0.1263595,7.509566"
        orientation="1,0"
-       id="guide829" />
+       id="guide827"
+       inkscape:locked="false" />
     <sodipodi:guide
-       position="2.1559303,0.86379989"
-       orientation="0,-1"
-       id="guide1733" />
+       position="2.1416526,10.337044"
+       orientation="1,0"
+       id="guide829"
+       inkscape:locked="false" />
     <sodipodi:guide
-       position="-0.39977516,4.1833615"
+       position="4.240472,0.90519129"
        orientation="0,-1"
-       id="guide2256" />
+       id="guide830"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="8.3238894,3.5408659"
+       orientation="1,0"
+       id="guide1"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -74,22 +85,27 @@
      inkscape:label="Livello 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       style="fill:#e6e6e6;stroke:#919191;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 2.1559303,4.2833052 6.1551399,1e-7"
-       id="path10606"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;stroke:#919191;stroke-width:1.57647;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 4.4974704,7.6028668 3.8135998,1e-7"
-       id="path10606-4"
-       sodipodi:nodetypes="cc" />
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.177791;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
-       width="8.0072193"
-       height="1.5422658"
-       x="0.22455075"
-       y="0.22830506" />
+       width="7"
+       height="1.2"
+       x=".7"
+       y="1" />
+    <rect
+       style="fill:#919191;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect4331"
+       width="5"
+       height="1.2"
+       x="2.7"
+       y="3.5" />
+    <rect
+       style="fill:#919191;fill-opacity:1;stroke:#000000;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect4331"
+       width="3"
+       height="1.2"
+       x="4.7"
+       y="6" />
+
   </g>
 </svg>

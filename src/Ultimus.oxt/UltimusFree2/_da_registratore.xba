@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">sub undo
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">
+
+sub dark
 rem ----------------------------------------------------------------------
 rem define variables
 dim document   as object
@@ -10,14 +12,9 @@ rem get access to the document
 document   = ThisComponent.CurrentController.Frame
 dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 
-rem ----------------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;ToPoint&quot;
-args1(0).Value = &quot;$J$5808&quot;
+rem -----------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:OptionsTreeDialog&quot;, &quot;&quot;, 0, Array())
 
-dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args1())
 
-rem ----------------------------------------------------------------------
-rem dispatcher.executeDispatch(document, &quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
 end sub
 </script:module>

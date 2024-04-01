@@ -4,7 +4,7 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
     LeenoUtils.initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
         'Lminor': 24,       # NUOVE FUNZIONALITA'
-        'Lsubv': "0",       # CORREZIONE BUGS
+        'Lsubv': "1",       # CORREZIONE BUGS
         # ~'Lmajor': 3,        # INCOMPATIBILITA'
         # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
         # ~'Lsubv': "0",       # CORREZIONE BUGS
@@ -14,7 +14,7 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
                    'comp Int_colonna_R_prima'),
 
         'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 
-                    'comp Int_colonna_R_prima'),
+                    'comp Int_colonna_R_prima', 'comp Int_colonna'),
 
         'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',
                         'Comp End Attributo'),

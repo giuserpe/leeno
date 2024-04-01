@@ -80,37 +80,6 @@ Function repository(n As Integer, Optional x)
  repository = oObj(n)
 End Function
 
-
-Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;
-&apos; credo in tutto il doc... ____ Alt K _______
-	Clessid_lock_Start 
-	oEnum = thisComponent.AreaLinks.createEnumeration
-	while oEnum.hasMoreElements
-	 oLink = oEnum.NextElement
-	 oLink.refresh
-	wend
-	oEnum = thisComponent.SheetLinks.createEnumeration
-	while oEnum.hasMoreElements
-	 oLink = oEnum.NextElement
-	 oLink.refresh
-	wend
-	oEnum = thisComponent.DDELinks.createEnumeration
-	while oEnum.hasMoreElements
-	 oLink = oEnum.NextElement
-	 oLink.refresh
-	wend
-	 Clessid_lock_End
-End Sub
-
-&apos;Sub Visualizza_sheet_TUTTE
-&apos;Rimetti_in_ordine_tab
-&apos;	oSheets = ThisComponent.Sheets
-&apos;	For I = 0 to oSheets.Count -1 
-&apos;		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-&apos;		oCalcSheet.unprotect(&quot;&quot;)
-&apos;		oCalcSheet.isVisible = TRUE
-&apos;	Next I	
-&apos;End Sub
 rem ----------------------------------------------------------------------
 
 SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se

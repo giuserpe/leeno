@@ -41,6 +41,11 @@ def setCellStyleDecimalPlaces(nome_stile, n):
     oDoc = LeenoUtils.getDocument()
     stringa = getFormatString(nome_stile).split(';')
     new = []
-    for el in stringa:
-        new.append(el.split(',')[0] + ',' + '0' * n)
-    oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(';'.join(new))
+    # ~ import LeenoDialogs as DLG
+    try:
+        for el in stringa:
+            new.append(el.split(',')[0] + ',' + '0' * n)
+        oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(';'.join(new))
+    except Exception as e:
+        # ~ DLG.chi(f"Errore durante l'elaborazione: {e}")
+        pass

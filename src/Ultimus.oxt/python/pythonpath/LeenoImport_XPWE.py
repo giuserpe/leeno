@@ -3,6 +3,7 @@ Importazione computo/variante/contabilità/prezzario
 dal formato XPWE
 """
 import logging
+import re
 
 from xml.etree.ElementTree import ElementTree, ParseError
 from com.sun.star.table import CellRangeAddress
@@ -273,7 +274,7 @@ def leggiApprossimazioni(dati):
         PweDGConfigNumeri = dati.find('PweDGConfigurazione')
     except AttributeError:
         PweDGConfigNumeri = None
-    
+
     if PweDGConfigNumeri is None:
         return {}
     PweDGConfigNumeri = PweDGConfigNumeri.getchildren()[0]
@@ -358,14 +359,18 @@ def compilaApprossimazioni(oDoc, approssimazioni):
 
     if 'PartiUguali' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a PU', approssimazioni['PartiUguali'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a PU ROSSO', approssimazioni['PartiUguali'])
     if 'Lunghezza' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LUNG', approssimazioni['Lunghezza'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LUNG ROSSO', approssimazioni['Lunghezza'])
     if 'Larghezza' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LARG', approssimazioni['Larghezza'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a LARG ROSSO', approssimazioni['Larghezza'])
     if 'HPeso' in approssimazioni:
         LeenoFormat.setCellStyleDecimalPlaces('comp 1-a peso', approssimazioni['HPeso'])
+        LeenoFormat.setCellStyleDecimalPlaces('comp 1-a peso ROSSO', approssimazioni['HPeso'])
     if 'Quantita' in approssimazioni:
-        for el in ('Comp-Variante num sotto', 'An-lavoraz-input', 'Blu'):
+        for el in ('Comp-Variante num sotto', 'Comp-Variante num sotto ROSSO', 'An-lavoraz-input', 'Blu', 'Blu ROSSO'):
             LeenoFormat.setCellStyleDecimalPlaces(el, approssimazioni['Quantita'])
     if 'Prezzi' in approssimazioni:
         for el in ('comp sotto Unitario', 'An-lavoraz-generica'):
@@ -401,6 +406,9 @@ def leggiElencoPrezzi(misurazioni):
         except:
             tipoep = '0'
         tariffa = elem.find('Tariffa').text or ''
+        # Voce Della Sicurezza
+        if elem.find('Flags').text == '134217728':
+            tariffa = "VDS_" + tariffa
         articolo = elem.find('Articolo').text
         desridotta = elem.find('DesRidotta').text
         destestesa = elem.find('DesEstesa').text  # .strip()
@@ -629,22 +637,49 @@ def leggiMisurazioni(misurazioni, ordina):
                     descrizione = el.find('Descrizione').text
                 else:
                     descrizione = ''
+
+                # verifico la presenza di * prima delle parentesi aperte
+                pattern = r'(\d+)(\()'
                 partiuguali = el.find('PartiUguali').text
-                if partiuguali != None:
-                    if '  ' in partiuguali:
-                        partiuguali = None
+                if isinstance(partiuguali, (str, bytes)):
+                    try:
+                        partiuguali = re.sub(pattern, r'\1*\2', partiuguali)
+                    except:
+                        pass
+                    if partiuguali != None:
+                        if '  ' in partiuguali:
+                            partiuguali = None
+
                 lunghezza = el.find('Lunghezza').text
-                if lunghezza != None:
-                    if '  ' in lunghezza:
-                        lunghezza = None
+                if isinstance(lunghezza, (str, bytes)):
+                    try:
+                        lunghezza = re.sub(pattern, r'\1*\2', lunghezza)
+                    except:
+                        pass
+                    if lunghezza != None:
+                        if '  ' in lunghezza:
+                            lunghezza = None
+
                 larghezza = el.find('Larghezza').text
-                if larghezza != None:
-                    if '  ' in larghezza:
-                        larghezza = None
+                if isinstance(larghezza, (str, bytes)):
+                    try:
+                        larghezza = re.sub(pattern, r'\1*\2', larghezza)
+                    except:
+                        pass
+                    if larghezza != None:
+                        if '  ' in larghezza:
+                            larghezza = None
+
                 hpeso = el.find('HPeso').text
-                if hpeso != None:
-                    if '  ' in hpeso:
-                        hpeso = None
+                if isinstance(larghezza, (str, bytes)):
+                    try:
+                        hpeso = re.sub(pattern, r'\1*\2', hpeso)
+                    except:
+                        pass
+                    if hpeso != None:
+                        if '  ' in hpeso:
+                            hpeso = None
+
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
                 riga_misura = (
@@ -897,8 +932,8 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
                     oSheet.getRows().removeByIndex(m, 1)
                 if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
                     oSheet.getCellByPosition(0, m).String = ''
-            if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
-                oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
+            # ~ if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
+                # ~ oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
             oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
 
             # aggiorna la progressbar
@@ -952,10 +987,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     testcat = '0'
     testsbcat = '0'
 
+    from datetime import datetime, date
+    datarif = datetime.now()
+
     # inizializza la progressbar
-    progress.setLimits(0, len(listaMisure))
+    # ~progress.setLimits(0, len(listaMisure))
+    oProgressBar = PL.create_progress_bar(f'Compilazione {elaborato}', len(listaMisure))
     val = 0
-    progress.setValue(val)
+    # ~progress.setValue(val)
+    oProgressBar.Value = val
 
     for el in listaMisure:
         # dati della misura
@@ -974,38 +1014,35 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         # le varie 'testspcat', 'testcat' e 'testsbcat' servono per
         # evitare la ripetizione per voci consecutive
 
-        if elaborato != 'CONTABILITA':
-            # supercategoria
-            try:
-                if idspcat != testspcat:
-                    testspcat = idspcat
-                    testcat = '0'
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # ~if elaborato != 'CONTABILITA':
+        # supercategoria
+        try:
+            if idspcat != testspcat:
+                testspcat = idspcat
+                testcat = '0'
+                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
-            # categoria
-            try:
-                if idcat != testcat:
-                    testcat = idcat
-                    testsbcat = '0'
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # categoria
+        try:
+            if idcat != testcat:
+                testcat = idcat
+                testsbcat = '0'
+                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
-            # sottocategoria
-            try:
-                if idsbcat != testsbcat:
-                    testsbcat = idsbcat
-                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                    LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
-                    lrow += 1
-            except UnboundLocalError:
-                pass
+        # sottocategoria
+        try:
+            if idsbcat != testsbcat:
+                testsbcat = idsbcat
+                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
 
         if elaborato == 'CONTABILITA':
             LeenoContab.insertVoceContabilita(oSheet, lrow)
@@ -1155,7 +1192,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
         # aggiorna la progressbar
         val += 1
-        progress.setValue(val)
+        # ~progress.setValue(val)
+        oProgressBar.Value = val
+    DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
@@ -1163,6 +1202,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
+    oProgressBar.reset()
+    oProgressBar.end()
     # ~LeenoUtils.DocumentRefresh(True)
     PL.fissa()
 
@@ -1311,8 +1352,8 @@ def MENU_XPWE_import(filename = None):
 
     # compilo Elenco Prezzi
     progress.setText("Compilazione elenco prezzi")
-    if elaborato == 'CONTABILITA':
-        capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
+    # ~if elaborato == 'CONTABILITA':
+        # ~capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'

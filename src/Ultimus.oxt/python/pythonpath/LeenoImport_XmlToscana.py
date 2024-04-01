@@ -42,11 +42,31 @@ def parseXML(data, defaultTitle=None):
     # alcuni files sono degli XML-SIX con un bug
     # consistente nella mancata dichiarazione del namespace
     # quindi lo aggiungiamo a manina nei dati
-    if data.find("xmlns:PRT=") < 0:
-        pattern = "<PRT:Prezzario>"
-        pos = data.find(pattern) + len(pattern) - 1
-        data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
-        print(data[:1000])
+    # ~def PRT():
+        # ~return "PRT"
+    def trovaTipo(xmlText):
+        Dati = {
+            'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': 'PRT',
+            'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',
+        }
+        # controlla se il file è di tipo conosciuto
+        # la Regione Toscana ha l'abitudine di cambiare i tags dei formati XML
+        for pattern, tipo in Dati.items():
+            if pattern in xmlText:
+                return tipo
+        return None
+ 
+    if trovaTipo(data) == 'EASY':
+        if data.find("xmlns:EASY=") < 0:
+            pattern = "<EASY:Prezzario>"
+            pos = data.find(pattern) + len(pattern) - 1
+            data = data[:pos] + ' xmlns:EASY="mynamespace"' + data[pos:]
+
+    if trovaTipo(data) == 'PRT' or trovaTipo(data) == None:
+        if data.find("xmlns:PRT=") < 0:
+            pattern = "<PRT:Prezzario>"
+            pos = data.find(pattern) + len(pattern) - 1
+            data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
@@ -87,8 +107,14 @@ def parseXML(data, defaultTitle=None):
         codiceCat = codiceSuperCat + '.' + codiceSplit[1]
 
         # estrae supercategoria e categoria
-        superCat = articolo.find('tipo').text
-        cat = articolo.find('capitolo').text
+        try:
+            superCat = articolo.find('tipo').text
+        except AttributeError:
+            superCat = articolo.find('livello1').text
+        try:
+            cat = articolo.find('capitolo').text
+        except AttributeError:
+            cat = articolo.find('livello2').text
 
         # li inserisce se necessario nelle liste
         if not codiceSuperCat in superCatList:
@@ -96,10 +122,17 @@ def parseXML(data, defaultTitle=None):
         if not codiceCat in catList:
             catList[codiceCat] = cat
 
-        voce = articolo.find('voce').text
+        try:
+            voce = articolo.find('voce').text
+        except AttributeError:
+            voce = articolo.find('livello3').text
         if voce is None:
             voce = ''
-        art = articolo.find('articolo').text
+        
+        try:
+            art = articolo.find('articolo').text
+        except AttributeError:
+            art = articolo.find('livello4').text
         if art is None:
             art = ''
         desc = voce + '\n' + art

@@ -298,8 +298,14 @@ Sub B_Apri ()
  oProgressBar = _
  ThisComponent.CurrentController.Frame.CreateStatusIndicator
  oProgressBar.Start(&quot;&quot;,100)&apos;
- oProgressBar.Value = 100
+ oProgressBar.Value = 0
  oProgressBar.Text = &quot; B_APRI! &quot;
+	for i = 1 to 100
+		oProgressBar.Value = i
+	&apos;	wait 1
+	Next
+	oProgressBar.reset()
+	oProgressBar.End 
 &apos;xray ThisComponent.CurrentController.Frame
 &apos;print oProgressBar
 End Sub

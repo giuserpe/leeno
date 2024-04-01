@@ -278,7 +278,7 @@ def selezionaVoce(oSheet, lrow):
 
 # ###############################################################
 
-def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
+def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     '''
     oSheet { obect }
     lrow { double }   : riga di riferimento
@@ -301,6 +301,10 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
     # la parte che segue sposta il focus alla voce successiva
     if lrow >= fine:
         return lrow
+    if saltaCat == True:
+        if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+            lrow += 1
+            return lrow
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili:
         if n == 0:
             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
@@ -308,10 +312,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=False):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    if saltaCat == True:
-        while oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-            lrow += 1
-    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
+    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna'):
         lrow += 1
     return lrow
 # ###############################################################
@@ -470,7 +471,7 @@ def setAdatta():
     dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0,
                                    properties)
 
-def adattaAltezzaRiga(oSheet):
+def adattaAltezzaRiga(oSheet=False):
     '''
     Adatta l'altezza delle righe al contenuto delle celle.
     imposta l'altezza ottimale delle celle
@@ -481,6 +482,8 @@ def adattaAltezzaRiga(oSheet):
     # ~LeenoUtils.DocumentRefresh(False)
 
     oDoc = LeenoUtils.getDocument()
+    if not oSheet:
+        oSheet = oDoc.CurrentController.ActiveSheet
     usedArea = SheetUtils.getUsedArea(oSheet)
     # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
     oSheet.Rows.OptimalHeight = True
@@ -798,3 +801,84 @@ def MENU_elimina_righe_vuote():
     PL._gotoCella(1, 4)
     Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
 
+
+# ###############################################################
+
+
+def MENU_SheetToDoc():
+    '''
+    Copia il foglio corrente in un nuovo documento.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'DocName'
+    oProp0.Value = ''
+    oProp1 = PropertyValue()
+    oProp1.Name = 'Index'
+    oProp1.Value = 32767
+    oProp2 = PropertyValue()
+    oProp2.Name = 'Copy'
+    oProp2.Value = True
+    oProp.append(oProp0)
+    oProp.append(oProp1)
+    oProp.append(oProp2)
+    properties = tuple(oProp)
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper.executeDispatch(oFrame, '.uno:Move', '', 0, properties)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    oDoc = LeenoUtils.getDocument()
+
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if "COMPUTO" in oSheet.Name or "VARIANTE" in oSheet.Name:
+        oDoc.CurrentController.select(oSheet.getCellRangeByName('A1:I1048576'))
+        PL.comando('Copy')
+        #oDoc.CurrentController.select(oCell)
+        PL.paste_clip(insCells=0, pastevalue=True)
+        oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselec
+    oDoc.CurrentController.ZoomValue = 100
+    return
+
+
+# ###############################################################
+
+
+def aggiungi_righe(start_column, end_column, start_row, end_row, id_column, stringa=''):
+    
+    """
+    Aggiunge righe al foglio di calcolo corrente.
+
+    Parametri:
+    - start_column, end_column: Indici di colonna per l'intervallo.
+    - start_row, end_row: Indici di riga per l'intervallo.
+    - id_column: Indice di colonna per la cella da aggiornare con la stringa fornita.
+    - stringa: Stringa da inserire nella colonna specificata.
+    """
+    
+    documento_corrente = LeenoUtils.getDocument()
+    oSheet = documento_corrente.CurrentController.ActiveSheet
+
+    # Imposta l'area di stampa
+    area_stampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    area_stampa.StartColumn = start_column
+    area_stampa.EndColumn = end_column
+    area_stampa.StartRow = start_row
+
+    for _ in range(100):
+        oSheet.getRows().insertByIndex(end_row, 1)
+        oSheet.getCellByPosition(id_column, end_row).String = stringa
+        end_row += 1
+
+        # Aggiorna l'area di stampa
+        area_stampa.EndRow = end_row
+        oSheet.setPrintAreas((area_stampa,))
+
+        if oSheet.getCellByPosition(1, end_row).Rows.IsStartOfNewPage:
+            oSheet.getRows().removeByIndex(end_row, 1)
+            break
+    return

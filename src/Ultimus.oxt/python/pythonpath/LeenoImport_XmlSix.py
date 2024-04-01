@@ -277,6 +277,17 @@ def parseXML(data, defaultTitle):
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
         # ~desc = LeenoImport.fixParagraphSize(desc)
+        
+        #sistema_cose
+        desc.replace('\t', ' ').replace('Ã¨', 'è').replace('','').replace(
+            'Â°', '°').replace('Ã', 'à').replace(' $', '').replace('Ó', 'à').replace(
+            'Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace(
+            '&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','').replace('\n \n','\n')
+        while '  ' in desc:
+            desc = desc.replace('  ', ' ')
+        while '\n\n' in desc:
+            desc = desc.replace('\n\n', '\n')
+        desc = desc.strip()
 
         # gruppo, nel caso ci sia
         try:

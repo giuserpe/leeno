@@ -8906,7 +8906,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    description_upd() # aggiorna description.xml - da disattivare prima del rilascio
+    # ~ description_upd() # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -10271,133 +10271,8 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 # ~########################################################################
-# ~import winreg
-
-# ~def get_windows_color_mode():
-    # ~try:
-        # ~key_path = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
-        # ~with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path) as key:
-            # ~value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
-            # ~return "Chiara" if value == 1 else "Scura"
-    # ~except Exception as e:
-        # ~DLG.chi(f"Errore durante l'accesso al Registro di sistema: {e}")
-        # ~return None
-
-    # ~# Esempio di utilizzo
-    # ~modalita_colore = get_windows_color_mode()
-    # ~if modalita_colore is not None:
-        # ~DLG.chi(f"La modalità di colore di Windows è impostata su: {modalita_colore}")
-    # ~else:
-        # ~DLG.chi("Impossibile recuperare la modalità di colore.")
-# ~########################################################################
-import LeenoImport
-def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
-
-    return
 
 
-    # ~lcol = LeggiPosizioneCorrente()[0]
-    # ~lrow = LeggiPosizioneCorrente()[1]
-    # ~if oSheet.Name in (
-            # ~'COMPUTO',
-            # ~'VARIANTE',
-            # ~'Elenco Prezzi'
-    # ~):
-    oDoc.CurrentController.freezeAtPosition(0, 3)
-    DLG.chi(888)
-
-    # ~sistema_cose()
-    # ~ LeenoImport.MENU_emilia_romagna()
-
-    return
-
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    # ~DLG.mri(oSheet.getCellByPosition(1, 159).Rows.IsStartOfNewPage)
-    # ~return
-    ER = SheetUtils.getLastUsedRow(oSheet) + 1
-
-    LeenoSheetUtils.aggiungi_righe(0, 9, 0, ER, 1, stringa = "====================")
-    return
-
-    catalogo_stili_cella()
-    # ~ESEMPIO_create_progress_bar
-
-    LeenoUtils.DocumentRefresh(True)
-    return
-    nSal =LeenoContab.ultimo_sal()
-    DLG.chi(int(nSal[0]))
-    LeenoContab.mostra_sal(int(nSal[0]))
-
-    # ~LeenoContab.struttura_CONTAB()
-    # ~calendario_liste()
-    return
-
-
-
-
-    return
-    # ~nuove_icone()
-    # ~dal_al()
-    # ~sistema_cose()
-    DLG.chi (Dialogs.YesNoDialog(Title = 'aaaaaaaaaaa', Text = 'gfdgfdgdgdf'))
-
-    # ~MENU_prefisso_VDS_()
-    # ~calendario_liste()
-    # ~elimina_stili_cella()
-    # ~catalogo_stili_cella()
-    return
-
-    # ~calendario_mensile()
-    # ~LeenoExtra.ricevuta_pec()
-    # ~return
-    # ~sistema_cose()
-
-    return
-    # ~ESEMPIO_create_progress_bar()
-
-# ~import subprocess
-
-    oDoc = LeenoUtils.getDocument()
-    DLG.mri(oDoc)
-
-
-    # Ottieni il componente del desktop di LibreOffice
-    desktop = LeenoUtils.getDesktop()
-    model = desktop.getCurrentComponent()
-
-    if not hasattr(model, "Sheets"):
-        return
-
-
-    # Ottieni il foglio attivo
-    active_sheet = model.CurrentController.ActiveSheet
-
-    # Configura le opzioni di protezione
-    protection_flags = Locked | FormulaHidden | HideAll | HideFormula
-
-    # Applica la protezione al foglio
-    for row in range(0, active_sheet.Rows.getCount()):
-        for col in range(0, active_sheet.Columns.getCount()):
-            cell = active_sheet.getCellByPosition(col, row)
-            cell.Protection = protection_flags
-    return
-    # ~richiesta_offerta()
-    # ~LeenoComputo.Menu_computoSenzaPrezzi()
-
-
-    # ~richiesta_offerta()
-    # ~DLG.ScegliElaborato('oioi')
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.unprotect('')  #
-    # ~LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
-
-    # ~ stili_cat = LeenoUtils.getGlobalVar('stili_cat')
-
-    # ~ DLG.chi(stili_cat)
-    # ~return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # g_exportedScripts = (MENU_debug, )

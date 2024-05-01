@@ -7863,29 +7863,6 @@ def autoexec():
     ScriviNomeDocumentoPrincipale()
 
     dp()
-    # ~ d = {
-        # ~ 'COMPUTO': 'F1',
-        # ~ 'VARIANTE': 'F1',
-        # ~ 'Elenco Prezzi': 'A1',
-        # ~ 'CONTABILITA': 'F1',
-        # ~ 'Analisi di Prezzo': 'A1'
-    # ~ }
-    # ~ for el in d.keys():
-        # ~ try:
-            # ~ oSheet = oDoc.Sheets.getByName(el)
-            # ~ if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
-                # ~ oSheet.getCellRangeByName(
-                    # ~ "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
-                # ~ oSheet.getCellRangeByName(
-                    # ~ d[el]).String = 'DP: Questo documento'
-            # ~ else:
-                # ~ oSheet.getCellRangeByName(
-                    # ~ "A1:AT1").clearContents(HARDATTR)
-                # ~ oSheet.getCellRangeByName(
-                    # ~ d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
-
-        # ~ except Exception:
-            # ~ pass
 
     LeenoUtils.DocumentRefresh(True)
     if len(oDoc.getURL()) != 0:

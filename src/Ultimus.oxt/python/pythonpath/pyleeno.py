@@ -665,11 +665,11 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
-    try:
+    # ~ try:
         oSheet = oDoc.getSheets().getByName(nSheetDCC)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    except:
-        pass
+    # ~ except:
+        # ~ pass
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
@@ -1937,7 +1937,8 @@ def voce_breve():
 
     for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi", "Analisi di Prezzo"):
         try:
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet = oDoc.getSheets().getByName(el))
+            # ~ LeenoSheetUtils.adattaAltezzaRiga(oSheet = oDoc.getSheets().getByName(el))
+            pass
         except:
             pass
 
@@ -4472,7 +4473,7 @@ def MENU_azzera_voce():
         # ~numera_voci(1)
     except Exception:
         pass
-    _gotoCella(1, fine +3)
+    # ~ _gotoCella(1, fine +3)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -5972,11 +5973,11 @@ def ins_voce_elenco():
     oCellAddress = oSheet.getCellByPosition(15, 3).getCellAddress()
     oSheet.copyRange(oCellAddress, oRangeAddress)
     oCell = oSheet.getCellByPosition(2, 3)
-    valida_cella(
-        oCell,
-        '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";""',
-        titoloInput='Scegli...',
-        msgInput='Unità di misura')
+    # ~ valida_cella(
+        # ~ oCell,
+        # ~ '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";""',
+        # ~ titoloInput='Scegli...',
+        # ~ msgInput='Unità di misura')
     oDoc.enableAutomaticCalculation(True)
 
 
@@ -7861,6 +7862,39 @@ def autoexec():
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
 
+    dp()
+    # ~ d = {
+        # ~ 'COMPUTO': 'F1',
+        # ~ 'VARIANTE': 'F1',
+        # ~ 'Elenco Prezzi': 'A1',
+        # ~ 'CONTABILITA': 'F1',
+        # ~ 'Analisi di Prezzo': 'A1'
+    # ~ }
+    # ~ for el in d.keys():
+        # ~ try:
+            # ~ oSheet = oDoc.Sheets.getByName(el)
+            # ~ if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+                # ~ oSheet.getCellRangeByName(
+                    # ~ "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
+                # ~ oSheet.getCellRangeByName(
+                    # ~ d[el]).String = 'DP: Questo documento'
+            # ~ else:
+                # ~ oSheet.getCellRangeByName(
+                    # ~ "A1:AT1").clearContents(HARDATTR)
+                # ~ oSheet.getCellRangeByName(
+                    # ~ d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
+
+        # ~ except Exception:
+            # ~ pass
+
+    LeenoUtils.DocumentRefresh(True)
+    if len(oDoc.getURL()) != 0:
+        # scegli cosa visualizzare all'avvio:
+        vedi = cfg.read('Generale', 'dialogo')
+        if vedi == '1':
+                DlgMain()
+
+def dp():
     d = {
         'COMPUTO': 'F1',
         'VARIANTE': 'F1',
@@ -7868,6 +7902,7 @@ def autoexec():
         'CONTABILITA': 'F1',
         'Analisi di Prezzo': 'A1'
     }
+    oDoc = LeenoUtils.getDocument()
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
@@ -7882,16 +7917,9 @@ def autoexec():
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
 
-        except Exception:
+        except Exception as e:
+            # ~ DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
             pass
-
-    LeenoUtils.DocumentRefresh(True)
-    if len(oDoc.getURL()) != 0:
-        # scegli cosa visualizzare all'avvio:
-        vedi = cfg.read('Generale', 'dialogo')
-        if vedi == '1':
-                DlgMain()
-
 #
 ########################################################################
 def vista_terra_terra():
@@ -8690,6 +8718,7 @@ def DlgMain():
         except Exception:
             pass
     LeenoUtils.DocumentRefresh(True)
+    fissa()
     return
 
 
@@ -9633,20 +9662,13 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 ########################################################################
 def fissa():
     '''
-    @@ DA DOCUMENTARE
+    Fissa prima riga e colonna nel foglio attivo.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = LeggiPosizioneCorrente()[0]
     lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.Name in (
-            'COMPUTO',
-            'VARIANTE',
-            'Elenco Prezzi'
-    ):
-        _gotoCella(0, 3)
-        oDoc.CurrentController.freezeAtPosition(0, 3)
-    elif oSheet.Name in ('CONTABILITA'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Elenco Prezzi'):
         _gotoCella(0, 3)
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -9822,11 +9844,17 @@ def MENU_hl():
             cell_string = oSheet.getCellByPosition(lcol, el).String
 
             # Verifica se la stringa rappresenta un indirizzo di file o cartella
-            if cell_string[1] == ':' or cell_string[2] == ':' or cell_string[0:1] == '\\':
+            # ~ if cell_string[1] == ':' or cell_string[2] == ':' or cell_string[0:1] == '\\':
+            if ':' in cell_string :
                 cell_string = cell_string.replace('"', '')
                 # Costruisci la formula per l'iperlink
                 hyperlink_formula = '=HYPERLINK("' + cell_string + '";">>>")'
-
+                # Applica la formula all'interno della cella
+                oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
+            elif '@' in cell_string :
+                cell_string = cell_string.replace('"', '')
+                # Costruisci la formula per l'iperlink
+                hyperlink_formula = '=HYPERLINK("mailto:' + cell_string + '";"@>>")'
                 # Applica la formula all'interno della cella
                 oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
         except Exception as e:
@@ -10272,7 +10300,8 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
-    calendario_liste()
+    # ~ calendario_liste()
+    fissa()
     LeenoUtils.DocumentRefresh(True)
     return
 

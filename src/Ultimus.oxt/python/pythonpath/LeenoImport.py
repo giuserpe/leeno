@@ -72,6 +72,7 @@ def findXmlParser(xmlText):
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Calabria"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Campania"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
@@ -235,12 +236,12 @@ def MENU_ImportElencoPrezziXML():
     if xmlParser is None:
         Dialogs.Exclamation(
             Title = "File sconosciuto",
-            Text = "Il file fornito sembra di tipo sconosciuto,\n"
-                   "ma sarà tentata una importazione dal formato XPWE.\n\n" 
+            Text = """Il file fornito sembra essere di un tipo sconosciuto.
+Verrà tentata un'importazione utilizzando il formato XPWE.
 
-                   "In caso di nuovo errore, puoi inviare una copia del file\n"
-                   "allo staff di LeenO affinchè il suo formato possa essere\n"
-                   "importato dalla prossima versione del programma.\n\n"
+Se si verifica un nuovo errore, ti invitiamo a inviare
+una copia del file al team di LeenO, affinché il formato
+possa essere supportato nella prossima versione del programma."""
         )
         import LeenoImport_XPWE as LXPWE
         LXPWE.MENU_XPWE_import(filename)
@@ -307,25 +308,26 @@ def MENU_ImportElencoPrezziXML():
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
 
-    # ~if Dialogs.YesNoDialog(Title='AVVISO!',
-    # ~Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+    # ~ if Dialogs.YesNoDialog(Title='AVVISO!',
+    # ~ Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
-# ~L'operazione potrebbe richiedere del tempo e
-# ~LibreOffice potrebbe sembrare bloccato!
+# ~ L'operazione potrebbe richiedere del tempo e
+# ~ LibreOffice potrebbe sembrare bloccato!
 
-# ~Vuoi procedere comunque?''') == 0:
+# ~ Vuoi procedere comunque?''') == 0:
         # ~pass
-    # ~else:
-        # ~oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-        # ~SR = oRange.StartRow + 1
-        # ~ER = oRange.EndRow
-        # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
-        # ~PL.sistema_cose()
-        # ~oDoc.CurrentController.select(
-            # ~oDoc.createInstance(
-                # ~"com.sun.star.sheet.SheetCellRanges"))  # unselect
+    # ~ else:
+        # ~ oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        # ~ SR = oRange.StartRow + 1
+        # ~ ER = oRange.EndRow
+        # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        # ~ PL.sistema_cose()
+        # ~ oDoc.CurrentController.select(
+            # ~ oDoc.createInstance(
+                # ~ "com.sun.star.sheet.SheetCellRanges"))  # unselect
+
     # evidenzia e struttura i capitoli
-    PL.struttura_Elenco()
+    # ~ PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
 
     PL._gotoCella(0, 3)
@@ -342,6 +344,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
         sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
         )
+    PL.dlg_donazioni()
 
 ########################################################################
 

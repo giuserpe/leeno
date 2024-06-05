@@ -1405,3 +1405,4 @@ def MENU_XPWE_import(filename = None):
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
+    PL.dlg_donazioni()

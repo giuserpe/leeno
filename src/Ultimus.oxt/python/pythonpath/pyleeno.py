@@ -36,6 +36,7 @@ import re
 import traceback
 import threading
 import time
+import csv
 
 import os
 import shutil
@@ -1937,7 +1938,7 @@ def voce_breve():
 
     for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi", "Analisi di Prezzo"):
         try:
-            # ~ LeenoSheetUtils.adattaAltezzaRiga(oSheet = oDoc.getSheets().getByName(el))
+            LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(el))
             pass
         except:
             pass
@@ -4007,6 +4008,23 @@ def MENU_firme_in_calce(lrowF=None):
                                  riga_corrente).String = 'Materiali\ne Noli €'
         oSheet.getCellByPosition(ad, riga_corrente).String = 'Incidenza\nMDO %'
         oSheet.getCellByPosition(ae, riga_corrente).String = 'Importo\nMDO €'
+
+        #  TITOLI PER CRONOPROGRAMMA
+        oSheet.getCellByPosition(45, riga_corrente -1).CellStyle = 'comp 1-a peso'
+        oSheet.Annotations.insertNew(oSheet.getCellByPosition(45, riga_corrente -1).CellAddress,
+    'Inserisci qui il costo orario medio della Manodopera.')
+        oSheet.getCellByPosition(47, riga_corrente -1).CellStyle = 'comp 1-a peso'
+        oSheet.Annotations.insertNew(oSheet.getCellByPosition(47, riga_corrente -1).CellAddress,
+    'Inserisci qui il numero di componenti della squadra di operai.')
+        nOperai = "AV$" + str(riga_corrente)
+        mdo = riga_corrente
+        oSheet.getCellByPosition(45, riga_corrente).Formula = '=concatenate("MDO\nmedia\n€ ";AT' + str(mdo) + ';"/h")'
+        oSheet.getCellByPosition(46, riga_corrente).Formula = '=concatenate("EC U/GG.\nMDO media\n€ ";AT' + str(mdo) + ';"/h")'
+        oSheet.getCellByPosition(47, riga_corrente).String = '(Gl)\nGiorni\nlavorativi'
+        oSheet.getCellByPosition(48, riga_corrente).String = '(Gs)\nGiorni\nsfavorevoli'
+        oSheet.getCellByPosition(49, riga_corrente).String = 'GG\nTempo di\nesecuzione'
+        oSheet.getCellRangeByPosition(45, riga_corrente,49,
+                                      riga_corrente).CellStyle = 'Ultimus_centro'
         inizio_gruppo = riga_corrente
         riga_corrente += 1
 
@@ -4048,6 +4066,22 @@ def MENU_firme_in_calce(lrowF=None):
                     ad, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
+                
+                # dati cronoprogramma 1/3
+                oSheet.getCellRangeByPosition(
+                    45, riga_corrente, 49,
+                    riga_corrente).CellStyle = 'ULTIMUS_1'
+                oSheet.getCellByPosition(
+                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+                oSheet.getCellByPosition(
+                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+                oSheet.getCellByPosition(
+                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+                oSheet.getCellByPosition(
+                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+                oSheet.getCellByPosition(
+                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1,
                                           i).CellStyle == 'Livello-1-scritta':
@@ -4078,6 +4112,22 @@ def MENU_firme_in_calce(lrowF=None):
                                          riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
+                
+                # dati cronoprogramma 2/3
+                oSheet.getCellRangeByPosition(
+                    45, riga_corrente, 49,
+                    riga_corrente).CellStyle = 'ULTIMUS_2'
+                oSheet.getCellByPosition(
+                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+                oSheet.getCellByPosition(
+                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+                oSheet.getCellByPosition(
+                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+                oSheet.getCellByPosition(
+                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+                oSheet.getCellByPosition(
+                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1, i).CellStyle == 'livello2 valuta':
                 oSheet.getRows().insertByIndex(riga_corrente, 1)
@@ -4107,6 +4157,22 @@ def MENU_firme_in_calce(lrowF=None):
                     ad, riga_corrente).CellStyle = 'Ultimus %_3'
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
+                oSheet.getCellByPosition(
+                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+                
+                # dati cronoprogramma 3/3
+                oSheet.getCellRangeByPosition(
+                    45, riga_corrente, 49,
+                    riga_corrente).CellStyle = 'ULTIMUS_3'
+                oSheet.getCellByPosition(
+                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+                oSheet.getCellByPosition(
+                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+                oSheet.getCellByPosition(
+                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+                oSheet.getCellByPosition(
+                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
                 riga_corrente += 1
         progress.hide()
         oSheet.getCellRangeByPosition(
@@ -4131,6 +4197,54 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(
             2, riga_corrente).String = '          T O T A L E   €'
         oSheet.getCellByPosition(2, riga_corrente).CellStyle = 'ULTIMUS_1'
+
+        # lettura dati cronoprogramma
+        oSheet.getCellRangeByPosition(
+            45, riga_corrente, 49,
+            riga_corrente).CellStyle = 'ULTIMUS_1'
+        oSheet.getCellByPosition(
+            45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+        oSheet.getCellByPosition(
+            46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+        oSheet.getCellByPosition(
+            47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/3'
+
+        oSheet.getCellByPosition(48, riga_corrente).CellStyle = 'comp 1-a peso'
+        oSheet.Annotations.insertNew(oSheet.getCellByPosition(48, riga_corrente).CellAddress,
+    'Inserisci qui il numero di giorni sfavorevoli per il cantiere.')
+
+        oSheet.getCellByPosition(
+            49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
+        # imposta 0 cifre decimali
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(46, mdo -1, 49, riga_corrente))
+        ctx = LeenoUtils.getComponentContext()
+        desktop = LeenoUtils.getDesktop()
+        oFrame = desktop.getCurrentFrame()
+        
+        oProp = PropertyValue()
+        oProp.Name = 'NumberFormatValue'
+        oProp.Value = 1
+        properties = (oProp, )
+        dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+            'com.sun.star.frame.DispatchHelper', ctx)
+        dispatchHelper.executeDispatch(oFrame, '.uno:NumberFormatValue', '', 0, properties)
+
+        # ~ iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct(
+            'com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        oCellRangeAddr.StartColumn = 44
+        oCellRangeAddr.EndColumn = 49
+        oCellRangeAddr.StartRow = mdo
+        oCellRangeAddr.EndRow = riga_corrente
+        oSheet.ungroup(oCellRangeAddr, 0)
+        oSheet.group(oCellRangeAddr, 0)
+        # ~ if flag == 1:
+        
+        # ~ else:
+            # ~ oSheet.ungroup(oCellRangeAddr, 1)
+
         # fine_gruppo = riga_corrente
         #  DATA
         oSheet.getCellByPosition(
@@ -4165,7 +4279,67 @@ def MENU_firme_in_calce(lrowF=None):
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     LeenoUtils.DocumentRefresh(True)
 
+def gantt():
+    # Ottieni il documento corrente e prepara il percorso del file di output
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    
+    if oSheet.Name not in ("COMPUTO", "VARIANTE"):
+        Dialogs.Exclamation(Title='Avviso!',
+        Text= '''L'esportazione in formato CSV per GanttProject\npuò avvenire dal COMPUTO o dalla VARIANTE.    ''')
+        # ~ GotoSheet("COMPUTO")
+        return
+    try:
+        sRow = SheetUtils.uFindStringCol('Riepilogo', 2, oSheet, start=2, equal=0, up=False) + 1
+    except Exception as e:
+        Dialogs.Exclamation(Title='Informazione',
+        Text= "L'esportazione in formato CSV può avvenire solo\nin presenza del Riepilogo strutturale delle Categorie.")
+        return
+    
+    out_file = oDoc.getURL().rsplit('.', 1)[0] + '-' + oSheet.Name + '_gantt.csv'
+    
+    try:
+        out_file = out_file.split('///')[-1]
+    except Exception as e:
+        pass
+    
+    sRow = SheetUtils.uFindStringCol('Riepilogo', 2, oSheet, start=2, equal=0, up=False) + 1
+    eRow = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet, start=sRow, equal=0, up=False)
+    dati = [(
+        "ID", "Nome", "Data d'inizio", "Data di fine", "Durata", "Completamento",
+        "Costo", "Coordinatore", "Predecessori", "Numero dello schema", "Risorse",
+        "Assignments", "Colore attività", "Link Web", "Note"
+    )]
 
+    ID = 1
+    
+    nome = oSheet.getCellByPosition(2, eRow).String.replace("€","").replace(" ","")
+    durata = int(oSheet.getCellByPosition(49, eRow).Value)
+    costo = oSheet.getCellByPosition(18, eRow).String.replace(".","").replace(",",".")
+    schema = oSheet.getCellByPosition(1, eRow).String
+    dati.append((ID, nome, '', '', durata, '', costo, '', '', schema, '', '', '', '', ''))
+    
+    for r in range(sRow, eRow):
+        ID += 1
+        nome = oSheet.getCellByPosition(2, r).String
+        durata = int(oSheet.getCellByPosition(49, r).Value)
+        costo = oSheet.getCellByPosition(18, r).String.replace(".","").replace(",",".")
+        schema = oSheet.getCellByPosition(1, r).String
+        dati.append((ID, nome, '', '', durata, '', costo, '', '', schema, '', '', '', '', ''))
+    
+    # Scrivi i dati in un file CSV
+    try:
+        with open(out_file, 'w', newline='') as file:
+            for row in dati:
+                # Converti ogni tupla di riga in una stringa separata da virgole
+                file.write(','.join(map(str, row)) + "\n")
+    except Exception as e:
+        DLG.chi(f"Errore durante la scrittura del file: {e}")
+
+    Dialogs.Info(Title = 'Avviso.',
+    Text='Il file:\n\n' + out_file + '\n\nè pronto per essere importato in GanttProject.' )
+
+    return
 ########################################################################
 
 def cancella_analisi_da_ep():
@@ -5530,6 +5704,7 @@ def comando(cmd):
     'Undo'                  = Annulla ultimo comando
     'CalculateHard'         = Ricalcolo incondizionato
     'Save'                  = Salva il file
+    'NumberFormatDecimal'   = 
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -9561,7 +9736,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
             nomefile = oDoc.getURL().replace('%20',' ')
-            oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO\n" + os.path.basename(nomefile)
+            oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + os.path.basename(nomefile)
             oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
             oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
@@ -10277,6 +10452,35 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    # Lista di parole chiave da cercare nelle colonne 15 (colonna P) e 1 (colonna A)
+    lista = ['ABBIGLIAMENTO', 'FASHION', 'SPOSA', 'CERIMONIA', 'ABITI', 'SARTORIA']
+
+    # Ottenere l'ultima riga utilizzata nel foglio
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+
+    # Scorrere tutte le righe dalla fine all'inizio
+    for y in reversed(range(1, lrow + 1)):  # Aggiungere 1 per includere l'ultima riga
+        cell_value_col15 = oSheet.getCellByPosition(15, y).String.upper()
+        cell_value_col1 = oSheet.getCellByPosition(1, y).String.upper()
+        
+        if any(el in cell_value_col15 for el in lista) or any(el in cell_value_col1 for el in lista):
+            # ~ pass
+        # ~ else:
+            oSheet.getRows().removeByIndex(y, 1)
+
+    # Aggiornare la visualizzazione del foglio per riflettere le modifiche
+    LeenoUtils.DocumentRefresh(True)
+
+            # ~ righe.append(y)
+
+    # ~ for el in reversed(righe):
+            
+                # ~ oSheet.getRows().removeByIndex(y, 1)
+    # ~ gantt()
+    return
     # ~ calendario_liste()
     fissa()
     LeenoUtils.DocumentRefresh(True)

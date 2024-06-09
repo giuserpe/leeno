@@ -78,6 +78,8 @@ def findXmlParser(xmlText):
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
         '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
+        '<autore>LOM': LeenoImport_XmlLombardia.parseXML0,
+        'xsi:noNamespaceSchemaLocation="Parte': LeenoImport_XmlLombardia.parseXML1,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -221,6 +223,11 @@ def MENU_ImportElencoPrezziXML():
     if filename is None:
         return
 
+    Dialogs.Info(
+        Title ='Informazione',
+        Text = '''L'operazione potrebbe richiedere del tempo e
+LibreOffice potrebbe sembrare bloccato.''')
+
     # se il file non contiene un titolo, utilizziamo il nome del file
     # come titolo di default
     defaultTitle = os.path.split(filename)[1]
@@ -237,25 +244,20 @@ def MENU_ImportElencoPrezziXML():
         Dialogs.Exclamation(
             Title = "File sconosciuto",
             Text = """Il file fornito sembra essere di un tipo sconosciuto.
-Verrà tentata un'importazione utilizzando il formato XPWE.
-
-Se si verifica un nuovo errore, ti invitiamo a inviare
-una copia del file al team di LeenO, affinché il formato
-possa essere supportato nella prossima versione del programma."""
+Verrà tentata un'importazione utilizzando il formato XPWE."""
         )
         import LeenoImport_XPWE as LXPWE
         LXPWE.MENU_XPWE_import(filename)
 
     else:
 
-        #try:
+        # ~ try:
         dati = xmlParser(data, defaultTitle)
-
-        #except Exception:
-        #    Dialogs.Exclamation(
-        #       Title="Errore nel file XML",
-        #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-        #    return
+        # ~ except Exception:
+            # ~ Dialogs.Exclamation(
+               # ~ Title="Errore nel file XML",
+               # ~ Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+            # ~ return
 
         # il parser può gestirsi l'errore direttamente, nel qual caso
         # ritorna None ed occorre uscire
@@ -333,6 +335,20 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    try:
+        dati
+    except:
+        Dialogs.Exclamation(
+            Title = "IMPORTAZIONE ANNULLATA!",
+            Text = """IMPORTAZIONE ANNULLATA!
+
+Formato del file non riconosciuto.
+
+Ti invitiamo a inviare una copia del file
+al team di LeenO, affinché il formato possa essere
+supportato nella prossima versione del programma."""
+        )
+        return
     Dialogs.Info(
         Title =f'Importate {len(dati["articoli"])} voci di Elenco Prezzi',
         Text = '''

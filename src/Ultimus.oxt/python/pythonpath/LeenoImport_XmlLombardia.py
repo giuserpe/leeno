@@ -191,17 +191,15 @@ def parseXML1(data, defaultTitle=None):
         codice = voce.find('Codice').text
         if ' - ' in codice:
             codice = codice.split(' - ')[0]
+            # ~ DLG.chi(codice)
+            DLG.chi(voce.find('Codice').text[len(codice):])
+            desc = voce.find('Codice').text[len(codice):]
+            # ~ return
         try:
             desc = PL.clean_text(voce.find('Declaratoria').text)
-        except:
+        except Exception as e:
+            # ~ DLG.chi(f'Errore: {e} code: {codice}')
             desc = ''
-        # ~ try:
-            # ~ if desc[-1] == ':':
-                # ~ madre = desc
-            # ~ else:
-                # ~ desc = madre + '\n' + desc
-        # ~ except:
-            # ~ pass
         try:
             um = voce.find('UM').text
             desc = madre + '\n' + desc

@@ -78,7 +78,7 @@ def findXmlParser(xmlText):
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
         '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
-        '<autore>LOM': LeenoImport_XmlLombardia.parseXML0,
+        '<autore>LOM': LeenoImport_XmlLombardia.parseXML,
         'xsi:noNamespaceSchemaLocation="Parte': LeenoImport_XmlLombardia.parseXML1,
     }
 

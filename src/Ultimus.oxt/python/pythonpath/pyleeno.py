@@ -9405,10 +9405,10 @@ def clean_text(desc):
         '&#xA;': '',
         '&apos;': "'",
         '&#x3;&#x1;': '',
-        '  ': ' ',
+        '—': '-',
+        '–': '-',
         '\n \n': '\n',
         '\n ': '\n'
-            
     }
 
     for old, new in sostituzioni.items():
@@ -9453,61 +9453,10 @@ def sistema_cose():
         for el in reversed(range(y[0], y[1] + 1)):
             lista_y.append(el)
 
-    sostituzioni = {
-        "&Agrave;": "À",
-        "&#192;": "À",
-        "&Egrave;": "È",
-        "&#200;": "È",
-        "&Igrave;": "Ì",
-        "&#204;": "Ì",
-        "&Ograve;": "Ò",
-        "&#210;": "Ò",
-        "&Ugrave;": "Ù",
-        "&#217;": "Ù",
-        "&agrave;": "à",
-        "&#224;": "à",
-        "&egrave;": "è",
-        "&#232;": "è",
-        "&igrave;": "ì",
-        "&#236;": "ì",
-        "&ograve;": "ò",
-        "&#242;": "ò",
-        "&ugrave;": "ù",
-        "&#249;": "ù",
-        '\t': ' ',
-        'Ã¨': 'è',
-        '': '',
-        'Â°': '°',
-        'Ã': 'à',
-        ' $': '',
-        'Ó': 'à',
-        'Þ': 'é',
-        '&#x13;': '',
-        '&#xD;&#xA;': '',
-        '&#xA;': '',
-        '&apos;': "'",
-        '&#x3;&#x1;': '',
-        '\n \n': '\n',
-        '\n ': '\n'
-    }
-
     for y in lista_y:
         cell = oSheet.getCellByPosition(lcol, y)
         if cell.Type.value == 'TEXT':
-            testo = cell.String
-            # Esegui le sostituzioni
-            for chiave, valore in sostituzioni.items():
-                testo = testo.replace(chiave, valore)
-
-            # Rimuove spazi multipli
-            while '  ' in testo:
-                testo = testo.replace('  ', ' ')
-
-            # Rimuove righe vuote multiple
-            while '\n\n' in testo:
-                testo = testo.replace('\n\n', '\n')
-
-            cell.String = testo.strip()
+            cell.String = clean_text(cell.String)
 
     Menu_adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
@@ -10551,12 +10500,14 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
+    sistema_cose()
+    return
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     
     # ~ DLG.chi(clean_text(oSheet.getCellByPosition(2, 0).String))
     oSheet.getCellByPosition(2, 0).String = clean_text(oSheet.getCellByPosition(2, 0).String)
-    # ~ sistema_cose()
     return
 
     # Lista di parole chiave da cercare nelle colonne 15 (colonna P) e 1 (colonna A)

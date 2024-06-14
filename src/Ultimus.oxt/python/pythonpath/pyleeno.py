@@ -4334,7 +4334,10 @@ def gantt():
                 # Converti ogni tupla di riga in una stringa separata da virgole
                 file.write(','.join(map(str, row)) + "\n")
     except Exception as e:
-        DLG.chi(f"Errore durante la scrittura del file: {e}")
+        # ~ DLG.chi(f"Errore durante la scrittura del file: {e}")
+        Dialogs.Exclamation(Title='Avviso!',
+        Text= '''Prima di esportazione nel formato CSV\nè necessario generare il riepilogo delle categoirie.    ''')
+        return
 
     Dialogs.Info(Title = 'Avviso.',
     Text='Il file:\n\n' + out_file + '\n\nè pronto per essere importato in GanttProject.' )

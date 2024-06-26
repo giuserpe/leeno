@@ -1,3 +1,4 @@
+import re
 import LeenoImport
 import xml.etree.ElementTree as ET
 import LeenoDialogs as DLG
@@ -30,6 +31,9 @@ def parseXML(data, defaultTitle=None):
             'articoli' : artList
         }
     '''
+    #ripulisce il testo da caratteri non stampabili
+    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+
     # alcuni files sono degli XML-SIX con un bug
     # consistente nella mancata dichiarazione del namespace
     # quindi lo aggiungiamo a manina nei dati

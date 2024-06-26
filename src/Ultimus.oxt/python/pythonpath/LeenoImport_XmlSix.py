@@ -1,6 +1,7 @@
 """
     LeenO - modulo parser XML per il formato XML-SIX
 """
+import re
 import Dialogs
 import LeenoImport
 import LeenoDialogs as DLG
@@ -30,6 +31,8 @@ def parseXML(data, defaultTitle):
             'articoli' : artList
         }
     '''
+    #ripulisce il testo da caratteri non stampabili
+    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML

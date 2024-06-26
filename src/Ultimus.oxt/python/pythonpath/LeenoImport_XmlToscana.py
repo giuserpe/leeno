@@ -49,6 +49,7 @@ def parseXML(data, defaultTitle=None):
             'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': 'PRT',
             'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.regione.campania.it/prezzario.xsd"': 'EASY',
+            'EASY="https://prezzario.calabriallpp.it/prezzario.xsd"': 'EASY',
         }
         # controlla se il file è di tipo conosciuto
         # la Regione Toscana ha l'abitudine di cambiare i tags dei formati XML
@@ -76,8 +77,10 @@ def parseXML(data, defaultTitle=None):
         root = LeenoImport.stripXMLNamespaces(data)
     except Exception as e:
         Dialogs.Exclamation(
-        Title="ERRORE xmlns.",
-        Text="""Il namespace dichiarato nel file fornito
+        Title="ERRORE xmlns:",
+        Text=f"""{e}
+
+Il namespace dichiarato nel file fornito
 non è incluso nel set di importazione.
 
 Ti invitiamo ad inviare una copia del file XML

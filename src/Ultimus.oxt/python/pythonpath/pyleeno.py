@@ -58,7 +58,7 @@ import LeenoEvents
 import LeenoExtra
 import LeenoBasicBridge
 import DocUtils
-
+import re
 
 import LeenoConfig
 cfg = LeenoConfig.Config()
@@ -9373,6 +9373,8 @@ def dal_al():
 
 ########################################################################
 def clean_text(desc):
+    #ripulisce il testo da caratteri non stampabili
+    desc = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', desc)
     sostituzioni = {
         "&Agrave;": "À",
         "&#192;": "À",
@@ -9396,7 +9398,6 @@ def clean_text(desc):
         "&#249;": "ù",
         '\t': ' ',
         'Ã¨': 'è',
-        '': '',
         'Â°': '°',
         'Ã': 'à',
         ' $': '',
@@ -10502,6 +10503,8 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
+    calendario_liste()
+    return
     sistema_cose()
     return
 

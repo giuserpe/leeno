@@ -4296,12 +4296,7 @@ def gantt():
         Text= "L'esportazione in formato CSV può avvenire solo\nin presenza del Riepilogo strutturale delle Categorie.")
         return
     
-    out_file = oDoc.getURL().rsplit('.', 1)[0] + '-' + oSheet.Name + '_gantt.csv'
-    
-    try:
-        out_file = out_file.split('///')[-1]
-    except Exception as e:
-        pass
+    out_file = uno.fileUrlToSystemPath(oDoc.getURL()).rsplit('.', 1)[0] + '-' + oSheet.Name + '_gantt.csv'
     
     sRow = SheetUtils.uFindStringCol('Riepilogo', 2, oSheet, start=2, equal=0, up=False) + 1
     eRow = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet, start=sRow, equal=0, up=False)
@@ -4335,7 +4330,7 @@ def gantt():
                 file.write(','.join(map(str, row)) + "\n")
     except Exception as e:
         Dialogs.Exclamation(Title='Avviso!',
-        Text= '''Prima di esportazione nel formato CSV\nè necessario generare il riepilogo delle categoirie.''')
+        Text= f'''Errore: {e}\nPrima di esportazione nel formato CSV\nè necessario generare il riepilogo delle categoirie.''')
         return
 
     Dialogs.Info(Title = 'Avviso.',

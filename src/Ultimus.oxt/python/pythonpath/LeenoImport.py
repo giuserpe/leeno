@@ -882,7 +882,7 @@ def MENU_FVG():
     # ~oDoc = LeenoUtils.getDocument()
     # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
     oSheet = oDoc.CurrentController.ActiveSheet
-    fine = SheetUtils.getLastUsedRow(oSheet)
+    fine = SheetUtils.getLastUsedRow(oSheet) +1
     
     oDoc.CurrentController.select(
         oSheet.getCellRangeByPosition(2, 3, 2, fine))

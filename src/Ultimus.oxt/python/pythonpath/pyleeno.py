@@ -3524,6 +3524,7 @@ def XPWE_out(elaborato, out_file):
     # Analisi di prezzo
     progress.setValue(5)
     if len(lista_AP) != 0:
+        lista_AP = list(set(lista_AP))
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         k = n + 1
         for el in lista_AP:
@@ -4066,7 +4067,7 @@ def MENU_firme_in_calce(lrowF=None):
                     ad, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
-                
+
                 # dati cronoprogramma 1/3
                 oSheet.getCellRangeByPosition(
                     45, riga_corrente, 49,
@@ -4112,7 +4113,7 @@ def MENU_firme_in_calce(lrowF=None):
                                          riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
-                
+
                 # dati cronoprogramma 2/3
                 oSheet.getCellRangeByPosition(
                     45, riga_corrente, 49,
@@ -4159,7 +4160,7 @@ def MENU_firme_in_calce(lrowF=None):
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
                 oSheet.getCellByPosition(
                     48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
-                
+
                 # dati cronoprogramma 3/3
                 oSheet.getCellRangeByPosition(
                     45, riga_corrente, 49,
@@ -4221,7 +4222,7 @@ def MENU_firme_in_calce(lrowF=None):
         ctx = LeenoUtils.getComponentContext()
         desktop = LeenoUtils.getDesktop()
         oFrame = desktop.getCurrentFrame()
-        
+
         oProp = PropertyValue()
         oProp.Name = 'NumberFormatValue'
         oProp.Value = 1
@@ -4241,7 +4242,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.ungroup(oCellRangeAddr, 0)
         oSheet.group(oCellRangeAddr, 0)
         # ~ if flag == 1:
-        
+
         # ~ else:
             # ~ oSheet.ungroup(oCellRangeAddr, 1)
 
@@ -4283,7 +4284,7 @@ def gantt():
     # Ottieni il documento corrente e prepara il percorso del file di output
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     if oSheet.Name not in ("COMPUTO", "VARIANTE"):
         Dialogs.Exclamation(Title='Avviso!',
         Text= '''L'esportazione in formato CSV per GanttProject\npuò avvenire dal COMPUTO o dalla VARIANTE.    ''')
@@ -4295,9 +4296,9 @@ def gantt():
         Dialogs.Exclamation(Title='Informazione',
         Text= "L'esportazione in formato CSV può avvenire solo\nin presenza del Riepilogo strutturale delle Categorie.")
         return
-    
+
     out_file = uno.fileUrlToSystemPath(oDoc.getURL()).rsplit('.', 1)[0] + '-' + oSheet.Name + '_gantt.csv'
-    
+
     sRow = SheetUtils.uFindStringCol('Riepilogo', 2, oSheet, start=2, equal=0, up=False) + 1
     eRow = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet, start=sRow, equal=0, up=False)
     dati = [(
@@ -4307,13 +4308,13 @@ def gantt():
     )]
 
     ID = 1
-    
+
     nome = oSheet.getCellByPosition(2, eRow).String.replace("€","").replace(" ","")
     durata = int(oSheet.getCellByPosition(49, eRow).Value)
     costo = oSheet.getCellByPosition(18, eRow).String.replace(".","").replace(",",".")
     schema = oSheet.getCellByPosition(1, eRow).String
     dati.append((ID, nome, '', '', durata, '', costo, '', '', schema, '', '', '', '', ''))
-    
+
     for r in range(sRow, eRow):
         ID += 1
         nome = oSheet.getCellByPosition(2, r).String
@@ -4321,7 +4322,7 @@ def gantt():
         costo = oSheet.getCellByPosition(18, r).String.replace(".","").replace(",",".")
         schema = oSheet.getCellByPosition(1, r).String
         dati.append((ID, nome, '', '', durata, '', costo, '', '', schema, '', '', '', '', ''))
-    
+
     # Scrivi i dati in un file CSV
     try:
         with open(out_file, 'w', newline='') as file:
@@ -5701,7 +5702,7 @@ def comando(cmd):
     'Undo'                  = Annulla ultimo comando
     'CalculateHard'         = Ricalcolo incondizionato
     'Save'                  = Salva il file
-    'NumberFormatDecimal'   = 
+    'NumberFormatDecimal'   =
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -10505,7 +10506,7 @@ def MENU_debug():
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     # ~ DLG.chi(clean_text(oSheet.getCellByPosition(2, 0).String))
     oSheet.getCellByPosition(2, 0).String = clean_text(oSheet.getCellByPosition(2, 0).String)
     return
@@ -10520,7 +10521,7 @@ def MENU_debug():
     for y in reversed(range(1, lrow + 1)):  # Aggiungere 1 per includere l'ultima riga
         cell_value_col15 = oSheet.getCellByPosition(15, y).String.upper()
         cell_value_col1 = oSheet.getCellByPosition(1, y).String.upper()
-        
+
         if any(el in cell_value_col15 for el in lista) or any(el in cell_value_col1 for el in lista):
             # ~ pass
         # ~ else:
@@ -10532,7 +10533,7 @@ def MENU_debug():
             # ~ righe.append(y)
 
     # ~ for el in reversed(righe):
-            
+
                 # ~ oSheet.getRows().removeByIndex(y, 1)
     # ~ gantt()
     return

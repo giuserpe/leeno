@@ -666,11 +666,12 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
-    # ~ try:
+    try:
         oSheet = oDoc.getSheets().getByName(nSheetDCC)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    # ~ except:
-        # ~ pass
+    except Exception as e:
+        DLG.chi(f"Errore durante l'elaborazione: {e}")
+        pass
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
@@ -9593,7 +9594,7 @@ def DelPrintArea ():
 
 
 def set_area_stampa():
-    ''' Imposta area di stampa il relazione all'elaborato da produrre'''
+    ''' Imposta area di stampa in relazione all'elaborato da produrre'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.removeAllManualPageBreaks()
@@ -10499,6 +10500,8 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+    return
     calendario_liste()
     return
     sistema_cose()

@@ -51,17 +51,25 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
 
 def SbiancaCellePrintArea():
     '''
-    area 
+    area
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     oPrintArea = oSheet.getPrintAreas()
 
     oSheet.getCellRangeByPosition(
         oPrintArea[0].StartColumn, oPrintArea[0].StartRow,
         oPrintArea[0].EndColumn, oPrintArea[0].EndRow
         ).CellBackColor = 16777215 #sbianca
+
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    for y in range(0, oPrintArea[0].EndRow):
+        if oSheet.getCellByPosition(0, y).CellStyle in stili_cat:
+            # conserva il colore di sfondo delle categorie
+            # ~ oSheet.getCellRangeByPosition(0, y, 40, y).clearContents(HARDATTR)
+            # attribuisce il grigio
+            oSheet.getCellRangeByPosition(0, y, 40, y).CellBackColor = int('eeeeee', 16)
     return
 
 ########################################################################
@@ -320,7 +328,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
 def eliminaVoce(oSheet, lrow):
     '''
     usata in PL.MENU_elimina_voci_azzerate()
-    
+
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
@@ -329,7 +337,7 @@ def eliminaVoce(oSheet, lrow):
     ER = voce[1]
 
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
-    
+
 def elimina_voce(lrow=None, msg=1):
     '''
     @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
@@ -377,7 +385,7 @@ Stai per eliminare la voce selezionata.
             try:
                 undo
                 PL.comando ('Undo')
-            except: 
+            except:
                 pass
             oSheet.getRows().removeByIndex(SR, ER - SR + 1)
             PL._gotoCella(0, SR+1)
@@ -787,7 +795,7 @@ def MENU_elimina_righe_vuote():
 
     for y in reversed(range(0, lrow)):
         progress.setValue(y)
-        
+
         if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
             row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
 
@@ -849,7 +857,7 @@ def MENU_SheetToDoc():
 
 
 def aggiungi_righe(start_column, end_column, start_row, end_row, id_column, stringa=''):
-    
+
     """
     Aggiunge righe al foglio di calcolo corrente.
 
@@ -859,7 +867,7 @@ def aggiungi_righe(start_column, end_column, start_row, end_row, id_column, stri
     - id_column: Indice di colonna per la cella da aggiornare con la stringa fornita.
     - stringa: Stringa da inserire nella colonna specificata.
     """
-    
+
     documento_corrente = LeenoUtils.getDocument()
     oSheet = documento_corrente.CurrentController.ActiveSheet
 

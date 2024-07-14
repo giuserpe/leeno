@@ -586,7 +586,8 @@ def leggiElencoPrezzi(misurazioni):
 
 def leggiMisurazioni(misurazioni, ordina):
     ''' leggo voci di misurazione e righe '''
-
+    if not misurazioni:
+        return
     listaMisure = []
     try:
         PweVociComputo = misurazioni.getchildren()[1]
@@ -1310,9 +1311,11 @@ def MENU_XPWE_import(filename = None):
         misurazioni = root.getchildren()[0].find('PweMisurazioni')
 
     # legge l'elenco prezzi
-    elencoPrezzi = leggiElencoPrezzi(misurazioni)
-    # ~DLG.chi(elencoPrezzi)
-    # ~return
+    try:
+        elencoPrezzi = leggiElencoPrezzi(misurazioni)
+    except Exception as e:
+        # ~ DLG.chi(f"Errore: {e}")
+        return
     progress.setValue(5)
 
     # legge le misurazioni
@@ -1405,3 +1408,4 @@ def MENU_XPWE_import(filename = None):
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
+    PL.dlg_donazioni()

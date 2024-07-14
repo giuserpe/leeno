@@ -1020,6 +1020,20 @@
                 </prop>
               </node>
 
+              <node oor:name="IE038" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.gantt</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Esporta dati in formato CSV per GanttProject</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
               <node oor:name="IE040" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

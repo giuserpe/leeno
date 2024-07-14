@@ -72,11 +72,14 @@ def findXmlParser(xmlText):
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Calabria"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Campania"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
         '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
+        '<autore>LOM': LeenoImport_XmlLombardia.parseXML,
+        'xsi:noNamespaceSchemaLocation="Parte': LeenoImport_XmlLombardia.parseXML1,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -220,6 +223,11 @@ def MENU_ImportElencoPrezziXML():
     if filename is None:
         return
 
+    Dialogs.Info(
+        Title ='Informazione',
+        Text = '''L'operazione potrebbe richiedere del tempo e
+LibreOffice potrebbe sembrare bloccato.''')
+
     # se il file non contiene un titolo, utilizziamo il nome del file
     # come titolo di default
     defaultTitle = os.path.split(filename)[1]
@@ -235,26 +243,21 @@ def MENU_ImportElencoPrezziXML():
     if xmlParser is None:
         Dialogs.Exclamation(
             Title = "File sconosciuto",
-            Text = "Il file fornito sembra di tipo sconosciuto,\n"
-                   "ma sarà tentata una importazione dal formato XPWE.\n\n" 
-
-                   "In caso di nuovo errore, puoi inviare una copia del file\n"
-                   "allo staff di LeenO affinchè il suo formato possa essere\n"
-                   "importato dalla prossima versione del programma.\n\n"
+            Text = """Il file fornito sembra essere di un tipo sconosciuto.
+Verrà tentata un'importazione utilizzando il formato XPWE."""
         )
         import LeenoImport_XPWE as LXPWE
         LXPWE.MENU_XPWE_import(filename)
 
     else:
 
-        #try:
+        # ~ try:
         dati = xmlParser(data, defaultTitle)
-
-        #except Exception:
-        #    Dialogs.Exclamation(
-        #       Title="Errore nel file XML",
-        #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-        #    return
+        # ~ except Exception:
+            # ~ Dialogs.Exclamation(
+               # ~ Title="Errore nel file XML",
+               # ~ Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+            # ~ return
 
         # il parser può gestirsi l'errore direttamente, nel qual caso
         # ritorna None ed occorre uscire
@@ -307,30 +310,45 @@ def MENU_ImportElencoPrezziXML():
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
 
-    # ~if Dialogs.YesNoDialog(Title='AVVISO!',
-    # ~Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
+    # ~ if Dialogs.YesNoDialog(Title='AVVISO!',
+    # ~ Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
-# ~L'operazione potrebbe richiedere del tempo e
-# ~LibreOffice potrebbe sembrare bloccato!
+# ~ L'operazione potrebbe richiedere del tempo e
+# ~ LibreOffice potrebbe sembrare bloccato!
 
-# ~Vuoi procedere comunque?''') == 0:
+# ~ Vuoi procedere comunque?''') == 0:
         # ~pass
-    # ~else:
-        # ~oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-        # ~SR = oRange.StartRow + 1
-        # ~ER = oRange.EndRow
-        # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
-        # ~PL.sistema_cose()
-        # ~oDoc.CurrentController.select(
-            # ~oDoc.createInstance(
-                # ~"com.sun.star.sheet.SheetCellRanges"))  # unselect
+    # ~ else:
+        # ~ oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        # ~ SR = oRange.StartRow + 1
+        # ~ ER = oRange.EndRow
+        # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, SR, 1, ER -1))
+        # ~ PL.sistema_cose()
+        # ~ oDoc.CurrentController.select(
+            # ~ oDoc.createInstance(
+                # ~ "com.sun.star.sheet.SheetCellRanges"))  # unselect
+
     # evidenzia e struttura i capitoli
-    PL.struttura_Elenco()
+    # ~ PL.struttura_Elenco()
     oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
 
     PL._gotoCella(0, 3)
     LeenoUtils.DocumentRefresh(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    try:
+        dati
+    except:
+        Dialogs.Exclamation(
+            Title = "IMPORTAZIONE ANNULLATA!",
+            Text = """IMPORTAZIONE ANNULLATA!
+
+Formato del file non riconosciuto.
+
+Ti invitiamo a inviare una copia del file
+al team di LeenO, affinché il formato possa essere
+supportato nella prossima versione del programma."""
+        )
+        return
     Dialogs.Info(
         Title =f'Importate {len(dati["articoli"])} voci di Elenco Prezzi',
         Text = '''
@@ -342,6 +360,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
         sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
         )
+    PL.dlg_donazioni()
 
 ########################################################################
 
@@ -863,7 +882,7 @@ def MENU_FVG():
     # ~oDoc = LeenoUtils.getDocument()
     # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
     oSheet = oDoc.CurrentController.ActiveSheet
-    fine = SheetUtils.getLastUsedRow(oSheet)
+    fine = SheetUtils.getLastUsedRow(oSheet) +1
     
     oDoc.CurrentController.select(
         oSheet.getCellRangeByPosition(2, 3, 2, fine))

@@ -1,3 +1,4 @@
+import re
 import Dialogs
 import pyleeno as PL
 
@@ -39,6 +40,9 @@ def parseXML(data, defaultTitle=None):
             'articoli' : artList
         }
     '''
+    #ripulisce il testo da caratteri non stampabili
+    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    
     # alcuni files sono degli XML-SIX con un bug
     # consistente nella mancata dichiarazione del namespace
     # quindi lo aggiungiamo a manina nei dati
@@ -48,6 +52,8 @@ def parseXML(data, defaultTitle=None):
         Dati = {
             'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': 'PRT',
             'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',
+            'EASY="https://prezzario.regione.campania.it/prezzario.xsd"': 'EASY',
+            'EASY="https://prezzario.calabriallpp.it/prezzario.xsd"': 'EASY',
         }
         # controlla se il file è di tipo conosciuto
         # la Regione Toscana ha l'abitudine di cambiare i tags dei formati XML
@@ -70,7 +76,22 @@ def parseXML(data, defaultTitle=None):
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
-    root = LeenoImport.stripXMLNamespaces(data)
+    
+    try:
+        root = LeenoImport.stripXMLNamespaces(data)
+    except Exception as e:
+        Dialogs.Exclamation(
+        Title="ERRORE xmlns:",
+        Text=f"""{e}
+
+Il namespace dichiarato nel file fornito
+non è incluso nel set di importazione.
+
+Ti invitiamo ad inviare una copia del file XML
+al team di LeenO, affinché il formato possa essere
+supportato nella prossima versione del programma""")
+# ~ in caso di errore, aggiungere il namespace richiesto in Dati{}
+        return
 
     intestazione = root.find('intestazione')
     autore = intestazione.attrib['autore']

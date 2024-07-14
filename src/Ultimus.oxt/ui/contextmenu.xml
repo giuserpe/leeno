@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbar:toolbar xmlns:toolbar="http://openoffice.org/2010/toolbar" 
+                 xmlns:xlink="http://www.w3.org/1999/xlink" 
+                 toolbar:visible="true" 
+                 toolbar:locked="false">
+    <toolbar:menuitem toolbar:id="contextmenu_m001" 
+                      toolbar:label="Esegui Script" 
+                      toolbar:tip="Esegui uno script personalizzato" 
+                      toolbar:target="_self" 
+                      xlink:href="service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_script_exec"/>
+    <toolbar:menuitem toolbar:id="contextmenu_m002" 
+                      toolbar:label="Esegui Debug" 
+                      toolbar:tip="Esegui il debug" 
+                      toolbar:target="_self" 
+                      xlink:href="service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_debug"/>
+    <toolbar:separator/>
+    <toolbar:menuitem toolbar:id="contextmenu_m003" 
+                      toolbar:label="Importa DAT" 
+                      toolbar:tip="Importa un file DAT" 
+                      toolbar:target="_self" 
+                      xlink:href="service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_fuf"/>
+</toolbar:toolbar>

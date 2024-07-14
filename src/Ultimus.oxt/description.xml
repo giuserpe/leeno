@@ -5,9 +5,9 @@
   </update-information>
   <identifier value="org.giuseppe-vizziello.leeno" />
 <!--
-  <version value="3.24.0.64-TESTING-20240401" />
+  <version value="3.24.1.32-TESTING-20240709" />
 -->
-  <version value="3.24.1-20240401" />
+  <version value="3.24.2-20240724" />
   <publisher>
     <name xlink:href="http://leeno.org">LeenO</name>
   </publisher>
@@ -26,4 +26,8 @@
       <license-text xlink:href="registration/lgpl-it.txt" lang="it" />
     </simple-license>
   </registration>
+  <unoinfo>
+    <toolbar name="org.giuseppe-vizziello.leeno.ContextMenu" 
+             resource-url="vnd.sun.star.expand:$UNO_USER_PACKAGES_CACHE/uno_packages/cache/uno_packages/org.giuseppe-vizziello.leeno/ui/contextmenu.xml"/>
+  </unoinfo>
 </description>

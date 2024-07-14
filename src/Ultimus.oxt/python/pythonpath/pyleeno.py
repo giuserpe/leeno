@@ -7426,6 +7426,7 @@ def MENU_vedi_voce():
         try:
             to = int(to.split('$')[-1]) - 1
         except ValueError:
+            LeenoUtils.DocumentRefresh(True)
             return
         _gotoCella(2, lrow)
         # focus = oDoc.CurrentController.getFirstVisibleRow
@@ -9086,7 +9087,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    description_upd() # aggiorna description.xml - da disattivare prima del rilascio
+    # ~ description_upd() # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -10505,44 +10506,6 @@ def MENU_debug():
     calendario_liste()
     return
     sistema_cose()
-    return
-
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    # ~ DLG.chi(clean_text(oSheet.getCellByPosition(2, 0).String))
-    oSheet.getCellByPosition(2, 0).String = clean_text(oSheet.getCellByPosition(2, 0).String)
-    return
-
-    # Lista di parole chiave da cercare nelle colonne 15 (colonna P) e 1 (colonna A)
-    lista = ['ABBIGLIAMENTO', 'FASHION', 'SPOSA', 'CERIMONIA', 'ABITI', 'SARTORIA']
-
-    # Ottenere l'ultima riga utilizzata nel foglio
-    lrow = SheetUtils.getLastUsedRow(oSheet)
-
-    # Scorrere tutte le righe dalla fine all'inizio
-    for y in reversed(range(1, lrow + 1)):  # Aggiungere 1 per includere l'ultima riga
-        cell_value_col15 = oSheet.getCellByPosition(15, y).String.upper()
-        cell_value_col1 = oSheet.getCellByPosition(1, y).String.upper()
-
-        if any(el in cell_value_col15 for el in lista) or any(el in cell_value_col1 for el in lista):
-            # ~ pass
-        # ~ else:
-            oSheet.getRows().removeByIndex(y, 1)
-
-    # Aggiornare la visualizzazione del foglio per riflettere le modifiche
-    LeenoUtils.DocumentRefresh(True)
-
-            # ~ righe.append(y)
-
-    # ~ for el in reversed(righe):
-
-                # ~ oSheet.getRows().removeByIndex(y, 1)
-    # ~ gantt()
-    return
-    # ~ calendario_liste()
-    fissa()
-    LeenoUtils.DocumentRefresh(True)
     return
 
 ########################################################################

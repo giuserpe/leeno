@@ -867,7 +867,7 @@ def avvia_IDE():
         else:
             dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
 
-        subprocess.Popen('"C:/Program Files/Geany/bin/geany.exe" ' +
+        subprocess.Popen('"W:/programmi/GeanyPortable/App/Geany64/bin/geany.exe" ' +
                          dest +
                          '/python/pythonpath/pyleeno.py',
                          shell=True,
@@ -9406,6 +9406,7 @@ def clean_text(desc):
         '&#xA;': '',
         '&apos;': "'",
         '&#x3;&#x1;': '',
+        '- -': '- ',
         '—': '-',
         '–': '-',
         '\n \n': '\n',
@@ -10500,7 +10501,10 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 # ~########################################################################
+import LeenoImport
 def MENU_debug():
+    LeenoImport.MENU_PUG()
+    
     LeenoUtils.DocumentRefresh(True)
     return
     calendario_liste()

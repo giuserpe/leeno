@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:officeooo="http://openoffice.org/2009/office" office:version="1.3" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:creation-date>2009-04-16T11:32:02.640000000</meta:creation-date><meta:editing-duration>P2DT1H11M24S</meta:editing-duration><meta:editing-cycles>266</meta:editing-cycles><meta:generator>LibreOffice/24.2.4.2$Windows_X86_64 LibreOffice_project/51a6219feb6075d9a4c46691dcfe0cd9c4fff3c2</meta:generator><dc:date>2024-06-16T19:23:21.378000000</dc:date><meta:print-date>2024-06-16T19:21:06.354000000</meta:print-date><meta:printed-by>File PDF</meta:printed-by><meta:document-statistic meta:table-count="0" meta:image-count="2" meta:object-count="0" meta:page-count="4" meta:paragraph-count="94" meta:word-count="487" meta:character-count="3772" meta:non-whitespace-character-count="3448"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
+ <office:meta><meta:creation-date>2009-04-16T11:32:02.640000000</meta:creation-date><meta:editing-duration>P2DT1H26M40S</meta:editing-duration><meta:editing-cycles>267</meta:editing-cycles><meta:generator>LibreOffice/24.2.5.2$Windows_X86_64 LibreOffice_project/bffef4ea93e59bebbeaf7f431bb02b1a39ee8a59</meta:generator><dc:date>2024-07-15T08:08:20.416000000</dc:date><meta:print-date>2024-07-15T07:43:15.480000000</meta:print-date><meta:printed-by>File PDF</meta:printed-by><meta:document-statistic meta:table-count="0" meta:image-count="2" meta:object-count="0" meta:page-count="4" meta:paragraph-count="94" meta:word-count="488" meta:character-count="3773" meta:non-whitespace-character-count="3448"/><meta:user-defined meta:name="Info 1"/><meta:user-defined meta:name="Info 2"/><meta:user-defined meta:name="Info 3"/><meta:user-defined meta:name="Info 4"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="long">30268</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="long">71261</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
-   <config:config-item config:name="ViewAreaWidth" config:type="long">42706</config:config-item>
-   <config:config-item config:name="ViewAreaHeight" config:type="long">21936</config:config-item>
+   <config:config-item config:name="ViewAreaWidth" config:type="long">41189</config:config-item>
+   <config:config-item config:name="ViewAreaHeight" config:type="long">18325</config:config-item>
    <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
    <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="long">23031</config:config-item>
-     <config:config-item config:name="ViewTop" config:type="long">43277</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="long">22183</config:config-item>
+     <config:config-item config:name="ViewTop" config:type="long">85901</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="long">30268</config:config-item>
-     <config:config-item config:name="VisibleRight" config:type="long">42704</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="long">52202</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="long">71261</config:config-item>
+     <config:config-item config:name="VisibleRight" config:type="long">41187</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="long">89584</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
-     <config:config-item config:name="ZoomFactor" config:type="short">100</config:config-item>
+     <config:config-item config:name="ZoomFactor" config:type="short">120</config:config-item>
      <config:config-item config:name="IsSelectedFrame" config:type="boolean">false</config:config-item>
      <config:config-item config:name="KeepRatio" config:type="boolean">false</config:config-item>
      <config:config-item config:name="AnchoredTextOverflowLegacy" config:type="boolean">false</config:config-item>
@@ -43,7 +43,7 @@
      <config:config-item config:name="EndLine" config:type="string"/>
     </config:config-item-map-entry>
    </config:config-item-map-indexed>
-   <config:config-item config:name="PrinterName" config:type="string">Brother MFC-L2700DW series</config:config-item>
+   <config:config-item config:name="PrinterName" config:type="string">PDF24</config:config-item>
    <config:config-item config:name="EmbeddedDatabaseName" config:type="string"/>
    <config:config-item config:name="CurrentDatabaseDataSource" config:type="string">Addresses</config:config-item>
    <config:config-item config:name="LinkUpdateMode" config:type="short">1</config:config-item>
@@ -55,7 +55,7 @@
    <config:config-item config:name="AddParaTableSpacing" config:type="boolean">true</config:config-item>
    <config:config-item config:name="ChartAutoUpdate" config:type="boolean">true</config:config-item>
    <config:config-item config:name="CurrentDatabaseCommand" config:type="string"/>
-   <config:config-item config:name="PrinterSetup" config:type="base64Binary">jA7+/0Jyb3RoZXIgTUZDLUwyNzAwRFcgc2VyaWVzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQnJvdGhlciBNRkMtTDI3MDBEVyBzZXJpZXMAAAAAAAAWAAEAWg0AAAAAAAAEAAhSAAAEdAAAM1ROVwAAAAAKAEIAcgBvAHQAaABlAHIAIABNAEYAQwAtAEwAMgA3ADAAMABEAFcAIABzAGUAcgBpAGUAcwAAAAAAAAAAAAAAAAABBAgB3AB0DA+TAQABAAkAmgs0CGQAAQAHAFgCAQABAFgCAQAAAEEANAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFGh4swAAAAAAAAAAAAAAgAAAAAAAAAAAAAA9gT6AgAA9gT6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAAAAAAQAAAAAAAAYAAAAHAAcAAAAAAAEAAAAAAAAAAgAAAAIBAAEAARYAAAAAAAABAAACAAAABwAAAAAAAAAAGQAA5AwAAAAAAAC4CwAAcBcAAAAAAADcBQAAWAIAAAAAAAAAAAAAAAAAAP7/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3DAAA2gwAABAnAAAQJwAAECcAABAnAACgCgAAwgYAALgGAAAsBAAAQAEAANIAAAAYAAAAAAAQJxAnECcAABAnAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAACAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQABAAUBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////2QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBAHIAaQBhAGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBAHIAaQBhAGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBAHIAaQBhAGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAkAZAAAAAAAAAAAAPoC9gQDAQAAAAAAAAEAAQABAAAAAAACAAEAAQABAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAD1////AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAQQByAGkAYQBsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8AAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQgAAQEwAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAgAAAAIAAAABAAEAECcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAASVRBTElBTgAAAAAAAAAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAUFJJVgH/AEZDLUwyNzAwRFcgc2VyaWVzAAAAAAAAAD8AAAAAAAAAAAAAAAAhAAAAAAD0AQAAAAAAAAAA/wEAAIkQAACJEAAAiRAAAIkQAACJEAAAiRAAAIkQAACJEAAAAAAAAAAAAAAAAAAAAAsAAAAAECfkBAAAZwBpAHUAcwBlAHIAcABlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUABDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAGQAAAAAAAEAAAAAAF8AIwAjAE4ATwBVAFMARQAjACMAXwBfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAQ09NUEFUX0RVUExFWF9NT0RFDwBEdXBsZXhNb2RlOjpPZmYMAFBSSU5URVJfTkFNRRoAQnJvdGhlciBNRkMtTDI3MDBEVyBzZXJpZXMLAERSSVZFUl9OQU1FGgBCcm90aGVyIE1GQy1MMjcwMERXIHNlcmllcw==</config:config-item>
+   <config:config-item config:name="PrinterSetup" config:type="base64Binary">TgX+/1BERjI0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUERGMjQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAEAQgQAAAAAAAAEAAhSAAAEdAAAM1ROVwAAAAAKAFAARABGADIANAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBAMG3ABcA1PvgAEBAAkAmgs0CGQAAQAPAFgCAgABAFgCAgABAEEANAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQUklW4jAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAECcQJxAnAAAQJwAAAAAAAAAAaABcAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAQAFA0AwAoiAQAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAB8bFJwDAAAABgAOAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoAAAAU01USgAAAAAQAFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAQ09NUEFUX0RVUExFWF9NT0RFEwBEdXBsZXhNb2RlOjpVbmtub3duDABQUklOVEVSX05BTUUFAFBERjI0CwBEUklWRVJfTkFNRQUAUERGMjQ=</config:config-item>
    <config:config-item config:name="AlignTabStopPosition" config:type="boolean">true</config:config-item>
    <config:config-item config:name="PrinterPaperFromSetup" config:type="boolean">false</config:config-item>
    <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
@@ -98,7 +98,7 @@
    <config:config-item config:name="UnxForceZeroExtLeading" config:type="boolean">false</config:config-item>
    <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
    <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">true</config:config-item>
-   <config:config-item config:name="Rsid" config:type="int">38619445</config:config-item>
+   <config:config-item config:name="Rsid" config:type="int">38820635</config:config-item>
    <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">true</config:config-item>
    <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
    <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
@@ -186,7 +186,7 @@
   <draw:hatch draw:name="hatch" draw:style="single" draw:color="#3465a4" draw:distance="0.02cm" draw:rotation="0"/>
   <style:default-style style:family="graphic">
    <style:graphic-properties svg:stroke-color="#000000" draw:fill-color="#99ccff" fo:wrap-option="no-wrap" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:start-line-spacing-horizontal="0.283cm" draw:start-line-spacing-vertical="0.283cm" draw:end-line-spacing-horizontal="0.283cm" draw:end-line-spacing-vertical="0.283cm" style:writing-mode="lr-tb" style:flow-with-text="false"/>
-   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" loext:tab-stop-distance="0cm" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
+   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" loext:tab-stop-distance="0cm" style:font-independent-line-spacing="false">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="en" fo:country="US" style:letter-kerning="true" style:font-name-asian="Andale Sans UI" style:font-size-asian="12pt" style:language-asian="en" style:country-asian="US" style:font-name-complex="Tahoma1" style:font-size-complex="12pt" style:language-complex="en" style:country-complex="US"/>
@@ -1030,7 +1030,7 @@
   </style:style>
   <style:style style:name="P162" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L2">
    <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" style:contextual-spacing="false"/>
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="014fd185" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00122372" officeooo:paragraph-rsid="024eae8b" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="P163" style:family="paragraph" style:parent-style-name="Standard" style:list-style-name="L1">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
@@ -1265,330 +1265,333 @@
    <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00157034" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T40" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="001845c5" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T41" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T42" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T43" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T44" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00c53645" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T45" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00c53645" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T46" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="normal" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T47" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T48" style:family="text">
-   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" officeooo:rsid="00157034" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal"/>
   </style:style>
   <style:style style:name="T49" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="normal" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="normal" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T50" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T51" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T52" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T53" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T54" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T55" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" officeooo:rsid="00997a4a" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T56" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T57" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="019b8387" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T58" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" officeooo:rsid="019b8387" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T59" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="001e2fd4" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="bold" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T60" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="001e2fd4" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T61" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T62" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T63" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T64" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="00357fd3" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T65" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="00357fd3" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T66" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T67" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="001e2fd4" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T68" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T69" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T70" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="00357fd3" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="00997a4a" fo:background-color="#ffff00" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T71" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0097a853" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="00357fd3" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T72" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01be19e4" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0097a853" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T73" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="023ac3ee" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01be19e4" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T74" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="024a6361" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="023ac3ee" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T75" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00a88c51" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="024a6361" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T76" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00a88c51" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T77" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T78" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T79" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00c53645" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T80" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00c53645" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T81" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="016c51c8" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T82" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T83" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00a88c51" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T84" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="0059febf" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00a88c51" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T85" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00549c0a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="0059febf" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:language-asian="zxx" style:country-asian="none" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T86" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0059febf" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00549c0a" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T87" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0059febf" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T88" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="002430e8" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T89" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0023f64b" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="002430e8" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T90" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00549c0a" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="0023f64b" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T91" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="0039d5c8" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" officeooo:rsid="00549c0a" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
   </style:style>
   <style:style style:name="T92" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="012d4290" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="0039d5c8" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T93" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="014214f3" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="012d4290" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T94" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-weight="bold" officeooo:rsid="014214f3" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T95" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01a932ed" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T96" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="01a932ed" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T97" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0074abe1" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T98" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="00122372" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T99" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="010d93d4" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="00122372" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T100" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:font-weight="bold" officeooo:rsid="010d93d4" style:font-size-asian="14pt" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T101" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T102" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T103" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="01bdf2c1" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T104" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="normal" officeooo:rsid="00122372" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="normal" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="normal"/>
   </style:style>
   <style:style style:name="T105" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T106" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T107" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="00122372" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T108" style:family="text">
-   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="01bdf2c1" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="01bdf2c1" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T109" style:family="text">
-   <style:text-properties officeooo:rsid="004adf87"/>
+   <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" officeooo:rsid="01bdf2c1" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T110" style:family="text">
-   <style:text-properties officeooo:rsid="007a2ac7"/>
+   <style:text-properties officeooo:rsid="004adf87"/>
   </style:style>
   <style:style style:name="T111" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties officeooo:rsid="007a2ac7"/>
   </style:style>
   <style:style style:name="T112" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T113" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T114" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T115" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="02317dc5" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T116" style:family="text">
-   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="02317dc5" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T117" style:family="text">
-   <style:text-properties fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties fo:color="#800000" loext:opacity="100%" style:text-line-through-style="none" style:text-line-through-type="none" fo:font-size="14pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="003dfdd4" style:font-size-asian="14pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T118" style:family="text">
-   <style:text-properties fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T119" style:family="text">
-   <style:text-properties fo:language="zxx" fo:country="none" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T120" style:family="text">
-   <style:text-properties fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties fo:language="zxx" fo:country="none" fo:background-color="transparent" loext:char-shading-value="0" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T121" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+   <style:text-properties fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T122" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T123" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" style:font-size-asian="9pt"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="012b7c1d" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T124" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Lucida Console2" fo:font-size="9pt" style:font-size-asian="9pt"/>
   </style:style>
   <style:style style:name="T125" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="bold" style:font-size-asian="10pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T126" style:family="text">
-   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console2" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01682376" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:font-size-complex="10pt" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T127" style:family="text">
-   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Lucida Console" fo:font-size="9pt" fo:language="zxx" fo:country="none" fo:font-style="italic" fo:font-weight="bold" officeooo:rsid="0140e64d" fo:background-color="transparent" loext:char-shading-value="0" style:font-size-asian="9pt" style:language-asian="zxx" style:country-asian="none" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:language-complex="zxx" style:country-complex="none" style:font-style-complex="italic" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T128" style:family="text">
-   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00c53645" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
+   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T129" style:family="text">
-   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" officeooo:rsid="00c53645" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
   </style:style>
   <style:style style:name="T130" style:family="text">
-   <style:text-properties style:font-name="Liberation Serif1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01266163" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
+   <style:text-properties fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T131" style:family="text">
-   <style:text-properties officeooo:rsid="00173334"/>
+   <style:text-properties style:font-name="Liberation Serif1" fo:font-size="10pt" fo:language="zxx" fo:country="none" fo:font-weight="bold" officeooo:rsid="01266163" style:language-asian="zxx" style:country-asian="none" style:font-weight-asian="bold" style:language-complex="zxx" style:country-complex="none" style:font-weight-complex="bold"/>
   </style:style>
   <style:style style:name="T132" style:family="text">
-   <style:text-properties fo:background-color="transparent" loext:char-shading-value="0"/>
+   <style:text-properties officeooo:rsid="00173334"/>
   </style:style>
   <style:style style:name="T133" style:family="text">
-   <style:text-properties style:font-name="Lucida Console2"/>
+   <style:text-properties fo:background-color="transparent" loext:char-shading-value="0"/>
   </style:style>
   <style:style style:name="T134" style:family="text">
-   <style:text-properties style:font-name="Lucida Console2" fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
+   <style:text-properties style:font-name="Lucida Console2"/>
   </style:style>
   <style:style style:name="T135" style:family="text">
-   <style:text-properties officeooo:rsid="017bc5ff"/>
+   <style:text-properties style:font-name="Lucida Console2" fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic"/>
   </style:style>
   <style:style style:name="T136" style:family="text">
-   <style:text-properties officeooo:rsid="01682376"/>
+   <style:text-properties officeooo:rsid="017bc5ff"/>
   </style:style>
   <style:style style:name="T137" style:family="text">
-   <style:text-properties officeooo:rsid="01a2bdd3"/>
+   <style:text-properties officeooo:rsid="01682376"/>
   </style:style>
   <style:style style:name="T138" style:family="text">
-   <style:text-properties officeooo:rsid="01a4269b"/>
+   <style:text-properties officeooo:rsid="01a2bdd3"/>
   </style:style>
   <style:style style:name="T139" style:family="text">
-   <style:text-properties officeooo:rsid="01732522"/>
+   <style:text-properties officeooo:rsid="01a4269b"/>
   </style:style>
   <style:style style:name="T140" style:family="text">
-   <style:text-properties officeooo:rsid="019cd7f6"/>
+   <style:text-properties officeooo:rsid="01732522"/>
   </style:style>
   <style:style style:name="T141" style:family="text">
-   <style:text-properties officeooo:rsid="001845c5"/>
+   <style:text-properties officeooo:rsid="019cd7f6"/>
   </style:style>
   <style:style style:name="T142" style:family="text">
-   <style:text-properties officeooo:rsid="01b1d94b"/>
+   <style:text-properties officeooo:rsid="001845c5"/>
   </style:style>
   <style:style style:name="T143" style:family="text">
-   <style:text-properties officeooo:rsid="02332848"/>
+   <style:text-properties officeooo:rsid="01b1d94b"/>
   </style:style>
   <style:style style:name="T144" style:family="text">
-   <style:text-properties fo:background-color="#ffff00" loext:char-shading-value="0"/>
+   <style:text-properties officeooo:rsid="02332848"/>
   </style:style>
   <style:style style:name="T145" style:family="text">
-   <style:text-properties officeooo:rsid="01732522" fo:background-color="#ffff00" loext:char-shading-value="0"/>
+   <style:text-properties fo:background-color="#ffff00" loext:char-shading-value="0"/>
   </style:style>
   <style:style style:name="T146" style:family="text">
-   <style:text-properties officeooo:rsid="019cd7f6" fo:background-color="#ffff00" loext:char-shading-value="0"/>
+   <style:text-properties officeooo:rsid="01732522" fo:background-color="#ffff00" loext:char-shading-value="0"/>
   </style:style>
   <style:style style:name="T147" style:family="text">
-   <style:text-properties officeooo:rsid="001845c5" fo:background-color="#ffff00" loext:char-shading-value="0"/>
+   <style:text-properties officeooo:rsid="019cd7f6" fo:background-color="#ffff00" loext:char-shading-value="0"/>
   </style:style>
   <style:style style:name="T148" style:family="text">
+   <style:text-properties officeooo:rsid="001845c5" fo:background-color="#ffff00" loext:char-shading-value="0"/>
+  </style:style>
+  <style:style style:name="T149" style:family="text">
    <style:text-properties officeooo:rsid="024d1920"/>
   </style:style>
   <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Graphics">
@@ -2177,27 +2180,27 @@
      </draw:image>
     </draw:frame></text:p>
    <text:p text:style-name="P6"/>
-   <text:p text:style-name="P107"><text:span text:style-name="T93">C</text:span><text:span text:style-name="T91">heck list </text:span><text:span text:style-name="T92">Sviluppo e Rilasci</text:span></text:p>
+   <text:p text:style-name="P107"><text:span text:style-name="T94">C</text:span><text:span text:style-name="T92">heck list </text:span><text:span text:style-name="T93">Sviluppo e Rilasci</text:span></text:p>
    <text:p text:style-name="P8"/>
-   <text:p text:style-name="P9"><text:span text:style-name="T98">P</text:span><text:span text:style-name="T97">er svi</text:span><text:span text:style-name="T99">l</text:span><text:span text:style-name="T97">u</text:span><text:span text:style-name="T99">pp</text:span><text:span text:style-name="T97">are:</text:span></text:p>
+   <text:p text:style-name="P9"><text:span text:style-name="T99">P</text:span><text:span text:style-name="T98">er svi</text:span><text:span text:style-name="T100">l</text:span><text:span text:style-name="T98">u</text:span><text:span text:style-name="T100">pp</text:span><text:span text:style-name="T98">are:</text:span></text:p>
    <text:p text:style-name="P2"/>
    <text:list text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P130"><text:span text:style-name="T117">Cancellare </text:span><text:span text:style-name="T118">python/pythonpath/__pycache__</text:span>.</text:p>
+     <text:p text:style-name="P130"><text:span text:style-name="T118">Cancellare </text:span><text:span text:style-name="T119">python/pythonpath/__pycache__</text:span>.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P131"><text:span text:style-name="T117">Cancellare </text:span><text:span text:style-name="T130">MANUALE_LeenO.pdf</text:span>.</text:p>
+     <text:p text:style-name="P131"><text:span text:style-name="T118">Cancellare </text:span><text:span text:style-name="T131">MANUALE_LeenO.pdf</text:span>.</text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P134">creare/attivare il branch &quot;dev&quot;: </text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P134"><text:span text:style-name="T121">$ git</text:span><text:span text:style-name="T122"> checkout dev</text:span></text:p>
+       <text:p text:style-name="P134"><text:span text:style-name="T122">$ git</text:span><text:span text:style-name="T123"> checkout dev</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P135"><text:span text:style-name="T131">Aggiornamento del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T131">:</text:span></text:p>
+     <text:p text:style-name="P135"><text:span text:style-name="T132">Aggiornamento del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T132">:</text:span></text:p>
      <text:list>
       <text:list-item>
        <text:p text:style-name="P129"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T31">Lmajor</text:span></text:span><text:span text:style-name="T28"> INCOMPATIBILITA&apos;</text:span></text:p>
@@ -2211,10 +2214,10 @@
      </text:list>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P132"><text:span text:style-name="T43">in </text:span><text:span text:style-name="T40">make_pack()</text:span></text:p>
+     <text:p text:style-name="P132"><text:span text:style-name="T44">in </text:span><text:span text:style-name="T41">make_pack()</text:span></text:p>
      <text:list>
       <text:list-item>
-       <text:p text:style-name="P133"><text:span text:style-name="T43">attivare </text:span><text:span text:style-name="T40">description_upd()</text:span><text:span text:style-name="T44"> </text:span><text:span text:style-name="T43">e </text:span><text:span text:style-name="T44">p</text:span><text:span text:style-name="T45">acchettizzare con </text:span><text:span text:style-name="T46">CTRL-SHIFT-G</text:span></text:p>
+       <text:p text:style-name="P133"><text:span text:style-name="T44">attivare </text:span><text:span text:style-name="T41">description_upd()</text:span><text:span text:style-name="T45"> </text:span><text:span text:style-name="T44">e </text:span><text:span text:style-name="T45">p</text:span><text:span text:style-name="T46">acchettizzare con </text:span><text:span text:style-name="T47">CTRL-SHIFT-G</text:span></text:p>
       </text:list-item>
      </text:list>
     </text:list-item>
@@ -2222,7 +2225,7 @@
    <text:p text:style-name="P54"/>
    <text:list text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P153"><text:span text:style-name="T123">$ git clone </text:span><text:a xlink:type="simple" xlink:href="https://gitlab.com/giuserpe/leeno" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://gitlab.com/giuserpe/leeno</text:a></text:p>
+     <text:p text:style-name="P153"><text:span text:style-name="T124">$ git clone </text:span><text:a xlink:type="simple" xlink:href="https://gitlab.com/giuserpe/leeno" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">https://gitlab.com/giuserpe/leeno</text:a></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P163">$ cd leeno</text:p>
@@ -2231,7 +2234,7 @@
      <text:p text:style-name="P163">$ git branch -a</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P163">$ git checkout <text:span text:style-name="T137">dev</text:span></text:p>
+     <text:p text:style-name="P163">$ git checkout <text:span text:style-name="T138">dev</text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P164">$ python src2bin.py</text:p>
@@ -2240,7 +2243,7 @@
    <text:p text:style-name="P81"/>
    <text:list text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P164"><text:span text:style-name="T47">rinomainare il pacchetto in </text:span><text:span text:style-name="T48">LeenO.oxt</text:span></text:p>
+     <text:p text:style-name="P164"><text:span text:style-name="T48">rinomainare il pacchetto in </text:span><text:span text:style-name="T49">LeenO.oxt</text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P165">installare il pacchetto</text:p>
@@ -2250,14 +2253,14 @@
     </text:list-item>
    </text:list>
    <text:p text:style-name="P84"/>
-   <text:p text:style-name="P88">WINDOWS SYSTEM: <text:span text:style-name="T18">avviare il file </text:span><text:span text:style-name="T148">W:\_dwg\ULTIMUSFREE\LeenO.bat</text:span><text:span text:style-name="T18"> con privilegi di amministratore</text:span></text:p>
+   <text:p text:style-name="P88">WINDOWS SYSTEM: <text:span text:style-name="T18">avviare il file </text:span><text:span text:style-name="T149">W:\_dwg\ULTIMUSFREE\LeenO.bat</text:span><text:span text:style-name="T18"> con privilegi di amministratore</text:span></text:p>
    <text:p text:style-name="P87"/>
    <text:list text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P167"><text:span text:style-name="T133">WIN-KEY &quot;cmd&quot; </text:span><text:span text:style-name="T134">esegui come amministratore</text:span></text:p>
+     <text:p text:style-name="P167"><text:span text:style-name="T134">WIN-KEY &quot;cmd&quot; </text:span><text:span text:style-name="T135">esegui come amministratore</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P168"><text:span text:style-name="T142">cd</text:span> %<text:span text:style-name="T135">appdata%</text:span>\LibreOffice\4\user\uno_packages\cache\uno_packages\lu12045ntrh.tmp_</text:p>
+     <text:p text:style-name="P168"><text:span text:style-name="T143">cd</text:span> %<text:span text:style-name="T136">appdata%</text:span>\LibreOffice\4\user\uno_packages\cache\uno_packages\lu12045ntrh.tmp_</text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P168">mv LeenO.oxt LeenO.oxt.old</text:p>
@@ -2269,9 +2272,9 @@
    </text:list>
    <text:p text:style-name="P98">LINUX SYSTEM</text:p>
    <text:p text:style-name="P93"/>
-   <text:list xml:id="list192322977164636" text:continue-numbering="true" text:style-name="L1">
+   <text:list xml:id="list80822121645511" text:continue-numbering="true" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P170"><text:span text:style-name="T142">cd</text:span> $HOME/.config/libreoffice/4/user/uno_packages/cache/uno_packages/<text:span text:style-name="T136">lu12045ntrh.tmp_</text:span></text:p>
+     <text:p text:style-name="P170"><text:span text:style-name="T143">cd</text:span> $HOME/.config/libreoffice/4/user/uno_packages/cache/uno_packages/<text:span text:style-name="T137">lu12045ntrh.tmp_</text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P171">mv LeenO.oxt LeenO.oxt.old</text:p>
@@ -2284,16 +2287,16 @@
     </text:list-item>
    </text:list>
    <text:p text:style-name="P94"/>
-   <text:p text:style-name="P3"><text:span text:style-name="Source_20_Text"><text:span text:style-name="T41">git config --global core.autocrlf false</text:span></text:span><text:span text:style-name="T119"> per rispettare i fine riga esistenti</text:span></text:p>
+   <text:p text:style-name="P3"><text:span text:style-name="Source_20_Text"><text:span text:style-name="T42">git config --global core.autocrlf false</text:span></text:span><text:span text:style-name="T120"> per rispettare i fine riga esistenti</text:span></text:p>
    <text:p text:style-name="P96"/>
    <text:p text:style-name="P75">Per pubblicare:</text:p>
    <text:p text:style-name="P6"/>
-   <text:list xml:id="list3060801156" text:style-name="L2">
+   <text:list xml:id="list4239144089" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P175"><text:span text:style-name="T67">CANCELLARE leeno.conf</text:span><text:span text:style-name="T50"> e </text:span><text:span text:style-name="T49">reinstallare l&apos;</text:span><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T55">OXT</text:span></text:span><text:span text:style-name="T49"> per verifica informazioni</text:span></text:p>
+     <text:p text:style-name="P175"><text:span text:style-name="T68">CANCELLARE leeno.conf</text:span><text:span text:style-name="T51"> e </text:span><text:span text:style-name="T50">reinstallare l&apos;</text:span><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T56">OXT</text:span></text:span><text:span text:style-name="T50"> per verifica informazioni</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list text:continue-list="list192322977164636" text:style-name="L1">
+   <text:list text:continue-list="list80822121645511" text:style-name="L1">
     <text:list-item>
      <text:p text:style-name="P158">ricavo il log di tutto l&apos;archivio:</text:p>
     </text:list-item>
@@ -2307,10 +2310,10 @@
      <text:p text:style-name="P136">Scrivere l&apos;articolo di presentazione</text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P21">Aggiornamento <text:span text:style-name="T131">del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T131">:</text:span></text:p>
-   <text:list xml:id="list1332322147" text:style-name="L3">
+   <text:p text:style-name="P21">Aggiornamento <text:span text:style-name="T132">del codice </text:span><text:span text:style-name="T3">Basic e </text:span><text:span text:style-name="T4">Python </text:span><text:span text:style-name="T5">(LeenoGlobals.py)</text:span><text:span text:style-name="T132">:</text:span></text:p>
+   <text:list xml:id="list1022277706" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P176"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T31">Lmajor</text:span></text:span><text:span text:style-name="T28"> INCOMPATIBILITA&apos;</text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T32">https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser</text:span></text:a></text:p>
+     <text:p text:style-name="P176"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T31">Lmajor</text:span></text:span><text:span text:style-name="T28"> INCOMPATIBILITA&apos;</text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P176"><text:span text:style-name="Strong_20_Emphasis"><text:span text:style-name="T31">Lminor</text:span></text:span><text:span text:style-name="T28"> NUOVE FUNZIONALITA&apos;</text:span></text:p>
@@ -2332,7 +2335,7 @@
      <text:p text:style-name="P155">controllare il contenuto del foglio <text:span text:style-name="T1">S1</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list text:continue-list="list1332322147" text:style-name="L3">
+   <text:list text:continue-list="list1022277706" text:style-name="L3">
     <text:list-item>
      <text:p text:style-name="P139">cambiare le <text:span text:style-name="T1">proprietà</text:span> del <text:span text:style-name="T1">.ODS </text:span><text:span text:style-name="T17">(es. numero di versione)</text:span></text:p>
     </text:list-item>
@@ -2343,10 +2346,10 @@
      <text:p text:style-name="P138"><text:span text:style-name="T15">controllare </text:span><text:span text:style-name="T14">esistenza e correttezza </text:span><text:span text:style-name="T15">macro su </text:span><text:span text:style-name="T2">Personalizza&gt;Eventi</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P177"><text:span text:style-name="T87">cancellare anagrafica generale </text:span><text:span text:style-name="T88">e</text:span><text:span text:style-name="T87"> </text:span><text:span text:style-name="T89">situazione contabile</text:span></text:p>
+     <text:p text:style-name="P177"><text:span text:style-name="T88">cancellare anagrafica generale </text:span><text:span text:style-name="T89">e</text:span><text:span text:style-name="T88"> </text:span><text:span text:style-name="T90">situazione contabile</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P161"><text:span text:style-name="T13">aggiorna</text:span><text:span text:style-name="T16">r</text:span><text:span text:style-name="T13">e </text:span>def adegu<text:span text:style-name="T143">a</text:span>_tmpl<text:span text:style-name="T13"> al numero del template</text:span></text:p>
+     <text:p text:style-name="P161"><text:span text:style-name="T13">aggiorna</text:span><text:span text:style-name="T16">r</text:span><text:span text:style-name="T13">e </text:span>def adegu<text:span text:style-name="T144">a</text:span>_tmpl<text:span text:style-name="T13"> al numero del template</text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P157">sostituire il manuale in PDF</text:p>
@@ -2356,10 +2359,10 @@
    <text:p text:style-name="P26">Aggiornamento file del pacchetto</text:p>
    <text:list text:style-name="L5">
     <text:list-item>
-     <text:p text:style-name="P178"><text:span text:style-name="T76">disattivare </text:span><text:span text:style-name="T125">description_upd()</text:span><text:span text:style-name="T79"> </text:span><text:span text:style-name="T117">in</text:span><text:span text:style-name="T80"> </text:span><text:span text:style-name="T125">make_pack()</text:span></text:p>
+     <text:p text:style-name="P178"><text:span text:style-name="T77">disattivare </text:span><text:span text:style-name="T126">description_upd()</text:span><text:span text:style-name="T80"> </text:span><text:span text:style-name="T118">in</text:span><text:span text:style-name="T81"> </text:span><text:span text:style-name="T126">make_pack()</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:list text:continue-list="list3060801156" text:style-name="L2">
+   <text:list text:continue-list="list4239144089" text:style-name="L2">
     <text:list-item>
      <text:p text:style-name="P140">cambiare versione in <text:span text:style-name="T1">\description.xml</text:span></text:p>
     </text:list-item>
@@ -2373,28 +2376,28 @@
      <text:p text:style-name="P160">cancellare il <text:span text:style-name="T1">def MENU_debug</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P179"><text:span text:style-name="T128">p</text:span><text:span text:style-name="T127">acchettizzare con </text:span><text:span text:style-name="T129">CTRL-SHIFT-G</text:span></text:p>
+     <text:p text:style-name="P179"><text:span text:style-name="T129">p</text:span><text:span text:style-name="T128">acchettizzare con </text:span><text:span text:style-name="T130">CTRL-SHIFT-G</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P181"><text:span text:style-name="T117">aggiungere il </text:span><text:span text:style-name="T118">MANUALE_LeenO.pdf</text:span><text:span text:style-name="T117"> al pacchetto </text:span><text:span text:style-name="T118">OXT</text:span></text:p>
+     <text:p text:style-name="P181"><text:span text:style-name="T118">aggiungere il </text:span><text:span text:style-name="T119">MANUALE_LeenO.pdf</text:span><text:span text:style-name="T118"> al pacchetto </text:span><text:span text:style-name="T119">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P180"><text:span text:style-name="T117">cancellare la dir </text:span><text:span text:style-name="T118">/python/pythonpath/__pycache__/</text:span><text:span text:style-name="T117"> dal pacchetto </text:span><text:span text:style-name="T118">OXT</text:span></text:p>
+     <text:p text:style-name="P180"><text:span text:style-name="T118">cancellare la dir </text:span><text:span text:style-name="T119">/python/pythonpath/__pycache__/</text:span><text:span text:style-name="T118"> dal pacchetto </text:span><text:span text:style-name="T119">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P183"><text:span text:style-name="T102">controllare</text:span><text:span text:style-name="T103"> versione in </text:span><text:span text:style-name="T106">\leeno_version_code</text:span><text:span text:style-name="T117"> </text:span><text:span text:style-name="T120">nel pacchetto </text:span><text:span text:style-name="T108">OXT</text:span></text:p>
+     <text:p text:style-name="P183"><text:span text:style-name="T103">controllare</text:span><text:span text:style-name="T104"> versione in </text:span><text:span text:style-name="T107">\leeno_version_code</text:span><text:span text:style-name="T118"> </text:span><text:span text:style-name="T121">nel pacchetto </text:span><text:span text:style-name="T109">OXT</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P184"><text:span text:style-name="T51">rinominare il pacchetto come </text:span><text:span text:style-name="T57">LeenO-x.xx.x</text:span></text:p>
+     <text:p text:style-name="P184"><text:span text:style-name="T52">rinominare il pacchetto come </text:span><text:span text:style-name="T58">LeenO-x.xx.x</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P182"><text:span text:style-name="T59">copiare il pacchetto </text:span><text:span text:style-name="T63">OXT</text:span><text:span text:style-name="T59"> ed il file di </text:span><text:span text:style-name="T63">esempio</text:span><text:span text:style-name="T59"> in </text:span><text:span text:style-name="T63">INCUBATRICE</text:span></text:p>
+     <text:p text:style-name="P182"><text:span text:style-name="T60">copiare il pacchetto </text:span><text:span text:style-name="T64">OXT</text:span><text:span text:style-name="T60"> ed il file di </text:span><text:span text:style-name="T64">esempio</text:span><text:span text:style-name="T60"> in </text:span><text:span text:style-name="T64">INCUBATRICE</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P162">copiare i<text:span text:style-name="T139">l</text:span> pacchetto sul sito <text:span text:style-name="T140">e </text:span><text:span text:style-name="T141">sistemare le categorie di file con </text:span><text:span text:style-name="T7">\</text:span><text:span text:style-name="T6"> </text:span><text:span text:style-name="T141">trasferendo da </text:span><text:span text:style-name="T6">LeenO</text:span><text:span text:style-name="T141"> ad </text:span><text:span text:style-name="T6">Archivio</text:span><text:span text:style-name="T141"> la vecchia versione</text:span></text:p>
+     <text:p text:style-name="P162">copiare i<text:span text:style-name="T140">l</text:span> pacchetto sul sito <text:span text:style-name="T141">e </text:span><text:span text:style-name="T142">sistemare le categorie di file con </text:span><text:span text:style-name="T7">\</text:span><text:span text:style-name="T6"> </text:span><text:span text:style-name="T142">trasferendo da </text:span><text:span text:style-name="T6">LeenO</text:span><text:span text:style-name="T142"> ad </text:span><text:span text:style-name="T6">Archivio</text:span><text:span text:style-name="T142"> la vecchia versione </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T40">https://leeno.org/wp-admin/admin.php?page=wpfilebase_filebrowser</text:span></text:a></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P174"><text:span text:style-name="T61">cambiare versione in </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/LeenO.update.xml" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T65">https://leeno.org/LeenO.update.xml</text:span></text:a></text:p>
+     <text:p text:style-name="P174"><text:span text:style-name="T62">cambiare versione in </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/LeenO.update.xml" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T66">https://leeno.org/LeenO.update.xml</text:span></text:a></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P143"><text:span text:style-name="T13">fare il </text:span><text:span text:style-name="T1">Sincronizza Filebase:</text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T1">https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1</text:span></text:a><text:span text:style-name="T1"> </text:span></text:p>
@@ -2406,13 +2409,13 @@
    <text:p text:style-name="P22">Pubblicazione</text:p>
    <text:list text:style-name="L6">
     <text:list-item>
-     <text:p text:style-name="P145">fare il commit <text:span text:style-name="T110">di tutti gli aggiornamenti</text:span></text:p>
+     <text:p text:style-name="P145">fare il commit <text:span text:style-name="T111">di tutti gli aggiornamenti</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P100">git push</text:p>
-   <text:list xml:id="list192322132264985" text:continue-numbering="true" text:style-name="L6">
+   <text:p text:style-name="P100"><text:soft-page-break/>git push</text:p>
+   <text:list xml:id="list80821232781314" text:continue-numbering="true" text:style-name="L6">
     <text:list-item>
-     <text:p text:style-name="P186"><text:soft-page-break/>attivare il branch &quot;master&quot;</text:p>
+     <text:p text:style-name="P186">attivare il branch &quot;master&quot;</text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="P101">git checkout master</text:p>
@@ -2423,27 +2426,27 @@
    </text:list>
    <text:p text:style-name="P101">git merge dev</text:p>
    <text:p text:style-name="P24">taggare il commit:</text:p>
-   <text:p text:style-name="P7"><text:span text:style-name="T64">git tag -s v</text:span><text:span text:style-name="T70">3.</text:span><text:span text:style-name="T73">24</text:span><text:span text:style-name="T72">.</text:span><text:span text:style-name="T74">1</text:span><text:span text:style-name="T64"> -m &apos;Release LeenO versione </text:span><text:span text:style-name="T70">3.</text:span><text:span text:style-name="T71">2</text:span><text:span text:style-name="T73">4</text:span><text:span text:style-name="T72">.</text:span><text:span text:style-name="T74">1</text:span><text:span text:style-name="T64">&apos;</text:span></text:p>
-   <text:p text:style-name="P106">git push origin <text:span text:style-name="T109">--</text:span>tags</text:p>
+   <text:p text:style-name="P7"><text:span text:style-name="T65">git tag -s v</text:span><text:span text:style-name="T71">3.</text:span><text:span text:style-name="T74">24</text:span><text:span text:style-name="T73">.</text:span><text:span text:style-name="T75">1</text:span><text:span text:style-name="T65"> -m &apos;Release LeenO versione </text:span><text:span text:style-name="T71">3.</text:span><text:span text:style-name="T72">2</text:span><text:span text:style-name="T74">4</text:span><text:span text:style-name="T73">.</text:span><text:span text:style-name="T75">1</text:span><text:span text:style-name="T65">&apos;</text:span></text:p>
+   <text:p text:style-name="P106">git push origin <text:span text:style-name="T110">--</text:span>tags</text:p>
    <text:p text:style-name="P100">git push</text:p>
-   <text:p text:style-name="P17"><text:span text:style-name="T95">push verso github</text:span><text:span text:style-name="T96"> :</text:span></text:p>
+   <text:p text:style-name="P17"><text:span text:style-name="T96">push verso github</text:span><text:span text:style-name="T97"> :</text:span></text:p>
    <text:list text:style-name="L8">
     <text:list-item>
-     <text:p text:style-name="P127"><text:span text:style-name="T94">git remote </text:span><text:span text:style-name="T132"># </text:span><text:a xlink:type="simple" xlink:href="https://git-scm.com/docs/git-remote" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T132">https://git-scm.com/docs/git-remote</text:span></text:a><text:span text:style-name="T132"> </text:span></text:p>
+     <text:p text:style-name="P127"><text:span text:style-name="T95">git remote </text:span><text:span text:style-name="T133"># </text:span><text:a xlink:type="simple" xlink:href="https://git-scm.com/docs/git-remote" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T133">https://git-scm.com/docs/git-remote</text:span></text:a><text:span text:style-name="T133"> </text:span></text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P128">git branch -r</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P128">git remote add <text:span text:style-name="T138">GH </text:span>https://github.com/giuserpe/leeno</text:p>
+     <text:p text:style-name="P128">git remote add <text:span text:style-name="T139">GH </text:span>https://github.com/giuserpe/leeno</text:p>
     </text:list-item>
     <text:list-item>
      <text:p text:style-name="P188">git push GH</text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="P83">git clone https://gitlab.com/giuserpe/leeno -b dev</text:p>
-   <text:p text:style-name="P1"><text:a xlink:type="simple" xlink:href="https://rogerdudler.github.io/git-guide/index.it.html" office:target-frame-name="_blank" xlink:show="new" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T124">https://rogerdudler.github.io/git-guide/index.it.html</text:span></text:a></text:p>
-   <text:list text:continue-list="list192322132264985" text:style-name="L6">
+   <text:p text:style-name="P1"><text:a xlink:type="simple" xlink:href="https://rogerdudler.github.io/git-guide/index.it.html" office:target-frame-name="_blank" xlink:show="new" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T125">https://rogerdudler.github.io/git-guide/index.it.html</text:span></text:a></text:p>
+   <text:list text:continue-list="list80821232781314" text:style-name="L6">
     <text:list-item>
      <text:p text:style-name="P146">pubblicare su:</text:p>
      <text:list>
@@ -2465,7 +2468,7 @@
      <text:p text:style-name="P150">New<text:span text:style-name="T11">s</text:span>letter</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P185"><text:span text:style-name="T85"><draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="2.422cm" svg:height="0.633cm" draw:z-index="0"><draw:image draw:mime-type="image/png">
+     <text:p text:style-name="P185"><text:span text:style-name="T86"><draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="2.422cm" svg:height="0.633cm" draw:z-index="0"><draw:image draw:mime-type="image/png">
          <office:binary-data>iVBORw0KGgoAAAANSUhEUgAAAs0AAAC7CAYAAACeq6N0AABbNUlEQVR4nO2dBXgUVxeGD+4Q
           PHhwdyvu7i1SpLSFYsWhuLtbi5TiUihe3B0KBCcJEAgQnAQNTrB/v8u/2yTN7tzZndnZJOft
           s09ZmL17k52d+e6553wnpvuyGJ+JYRiGYRiGYRirxDR6AgzDMAzDMAzj6rBoZhiGYRiGYRgF
@@ -2902,7 +2905,7 @@
           o8D/AAAt6MBDEvBEAAAAAElFTkSuQmCC
          </office:binary-data>
         </draw:image>
-       </draw:frame></text:span><text:span text:style-name="T132"><text:s/></text:span><text:a xlink:type="simple" xlink:href="https://extensions.libreoffice.org/extensions/leeno-2" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T132">https://extensions.libreoffice.org/extensions/leeno-2</text:span></text:a><text:span text:style-name="T132"> </text:span></text:p>
+       </draw:frame></text:span><text:span text:style-name="T133"><text:s/></text:span><text:a xlink:type="simple" xlink:href="https://extensions.libreoffice.org/extensions/leeno-2" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T133">https://extensions.libreoffice.org/extensions/leeno-2</text:span></text:a><text:span text:style-name="T133"> </text:span></text:p>
     </text:list-item>
    </text:list>
   </office:text>

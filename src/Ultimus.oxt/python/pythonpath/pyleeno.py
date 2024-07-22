@@ -1947,25 +1947,23 @@ def voce_breve():
 
 
 ########################################################################
-
-
 def MENU_prefisso_VDS_():
     '''
     Duplica la voce di Elenco Prezzi corrente aggiunge il prefisso 'VDS_'
     e individuandola come Voce Della Sicurezza
     '''
-    LeenoUtils.DocumentRefresh(False)
-
     oDoc = LeenoUtils.getDocument()
+    LeenoUtils.DocumentRefresh(False)
 
     def vds_ep():
         oSheet = oDoc.CurrentController.ActiveSheet
         lrow = LeggiPosizioneCorrente()[1]
         if "VDS_" in  oSheet.getCellByPosition(0, lrow).String:
-            Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
+            # ~ Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
             LeenoUtils.DocumentRefresh(True)
             return
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 9, lrow))
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 9, lrow)
+        )
         comando('Copy')
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
@@ -1973,17 +1971,69 @@ def MENU_prefisso_VDS_():
         oSheet.getCellRangeByName("A4").CellBackColor = 13500076
 
         # ~return
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        # voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
-        # ~art = LeenoComputo.datiVoceComputo(oSheet, lrow)[1]
-        pesca_cod()
-        vds_ep()
-        pesca_cod()
+    # ~ oSheet = oDoc.CurrentController.ActiveSheet
 
-    elif oSheet.Name == 'Elenco Prezzi':
-        vds_ep()
+    try:
+        oSheet = oDoc.CurrentController.ActiveSheet
+        if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            try:
+                sRow = oDoc.getCurrentSelection().getRangeAddresses(
+                )[0].StartRow
+                eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
 
+            except Exception:
+                sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
+                eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, sRow)
+            sStRange.RangeAddress
+            sRow = sStRange.RangeAddress.StartRow
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, eRow)
+            try:
+                sStRange.RangeAddress
+            except Exception:
+                return
+            inizio = sStRange.RangeAddress.StartRow
+            eRow = sStRange.RangeAddress.EndRow + 1
+            lrow = sRow
+            fini = []
+            for x in range(sRow, eRow):
+                if oSheet.getCellByPosition(
+                        0, x).CellStyle == 'Comp End Attributo':
+                    fini.append(x)
+                elif oSheet.getCellByPosition(
+                        0, x).CellStyle == 'Comp End Attributo_R':
+                    fini.append(x - 2)
+        idx = 0
+        for lrow in reversed(fini):
+            lrow += idx
+            try:
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+                sStRange.RangeAddress
+                inizio = sStRange.RangeAddress.StartRow
+                fine = sStRange.RangeAddress.EndRow
+                if oSheet.Name == 'CONTABILITA':
+                    fine -= 1
+                _gotoCella(2, fine - 1)
+               
+                if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                    # voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
+                    # ~art = LeenoComputo.datiVoceComputo(oSheet, lrow)[1]
+                    pesca_cod()
+                    vds_ep()
+                    pesca_cod()
+
+                elif oSheet.Name == 'Elenco Prezzi':
+                    vds_ep()
+
+                    ###
+                lrow = LeggiPosizioneCorrente()[1]
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+            except Exception:
+                pass
+        # ~numera_voci(1)
+    except Exception:
+        pass
+    # ~ _gotoCella(1, fine +3)
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
@@ -10501,10 +10551,9 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 # ~########################################################################
-import LeenoImport
 def MENU_debug():
-    LeenoImport.MENU_PUG()
-    
+    VDS()
+    return
     LeenoUtils.DocumentRefresh(True)
     return
     calendario_liste()

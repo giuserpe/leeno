@@ -1201,7 +1201,6 @@ def GeneraRegistro(oDoc):
     oSheet.getCellRangeByPosition (0, insRow, 9, insRow).CellStyle = "uuuuu"
     PL.fissa()
     # ci metto le informazioni
-    # ~oSheet.getCellByPosition(1, insRow).String = "segue Stato di Avanzamento Lavori n." + str(nSal) + " - 1÷" + str(aVoce)
     oSheet.getCellByPosition(1, insRow).String = "segue Stato di Avanzamento Lavori n." + str(nSal) + " - " + str(daVoce) + "÷" + str(aVoce)
     # ~oSheet.getCellByPosition(2, insRow).Value = nSal        #numero libretto
 

@@ -989,7 +989,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     testsbcat = '0'
 
     from datetime import datetime, date
-    datarif = datetime.now()
+    # ~ datarif = datetime.now()
 
     # inizializza la progressbar
     # ~progress.setLimits(0, len(listaMisure))
@@ -1195,7 +1195,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         val += 1
         # ~progress.setValue(val)
         oProgressBar.Value = val
-    DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+    # ~ DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 

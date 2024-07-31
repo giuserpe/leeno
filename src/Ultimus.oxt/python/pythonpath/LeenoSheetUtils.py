@@ -119,7 +119,7 @@ def setLarghezzaColonne(oSheet):
         # nascondi colonne
         oSheet.getCellRangeByPosition(51, 0, 1023, 0).Columns.IsVisible = False
 
-        for col, width in {'A':600, 'B':1500, 'C':6300, 'F':1300, 'G':1300,
+        for col, width in {'A':600, 'B':1500, 'C':8200, 'F':1300, 'G':1300,
                            'H':1300, 'I':1300, 'J':1700, 'L':1700, 'N':1900,
                            'P':1900, 'T':1000, 'U':1000, 'W':1000, 'X':1000,
                            'Z':1900, 'AC':1700, 'AD':1700, 'AE':1700,

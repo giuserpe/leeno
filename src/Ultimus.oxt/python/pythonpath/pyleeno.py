@@ -802,10 +802,9 @@ def MENU_copia_sorgente_per_git():
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
 
-        subprocess.Popen(f'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen(f'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "W:/programmi/PortableGit/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
 
     return
-
 
 
 ########################################################################
@@ -867,7 +866,7 @@ def avvia_IDE():
         else:
             dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
 
-        subprocess.Popen('"W:/programmi/GeanyPortable/App/Geany64/bin/geany.exe" ' +
+        subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
                          dest +
                          '/python/pythonpath/pyleeno.py',
                          shell=True,
@@ -1711,7 +1710,13 @@ def setPreview(arg=0):
     attiva il preview
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
+    try:
+        oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
+    except Exception as e:
+        # ~ DLG.chi(f"Errore durante l'elaborazione: {e}")
+        pass
+        
+        
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -3050,11 +3055,10 @@ def riordina_ElencoPrezzi(oDoc):
 def MENU_doppioni():
     LeenoUtils.DocumentRefresh(False)
     EliminaVociDoppieElencoPrezzi()
-    # ~elimina_voci_doppie()
+    # ~ elimina_voci_doppie()
     genera_sommario()
     sistema_stili()
     LeenoUtils.DocumentRefresh(True)
-
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -7282,7 +7286,8 @@ Vuoi continuare?''') == 0:
     elencoStili = oDoc.StyleFamilies[0].ElementNames
     for el in (elencoStili):
         try:
-            num = oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat
+            # ~ num = oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat
+            num = oDoc.StyleFamilies.getByName("PageStyles").getByName(el).NumberFormat
             stili_celle[el] = oDoc.getNumberFormats().getByKey(num).FormatString
         except:
             pass
@@ -7293,6 +7298,7 @@ Vuoi continuare?''') == 0:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
         oSheet = oDoc.getSheets().getByName(el)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    return
     #ripristina il formato numerico di alcune celle
     for el in (
     'comp sotto Euro Originale', 'Livello-0-scritta mini val',
@@ -8208,11 +8214,13 @@ def elimina_stili_cella():
     '''
     Elimina gli stili di cella non utilizzati.
     '''
+    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
 
     # Crea una lista di stili non utilizzati
     stili_da_elim = [el for el in stili if not oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse()]
+    # ~ stili_da_elim = stili # ELIMINA TUTTI GLI STILI DI CELLA!!!
 
     # Rimuovi gli stili non utilizzati
     n = 0
@@ -8220,6 +8228,7 @@ def elimina_stili_cella():
         oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
         n += 1
     Dialogs.Exclamation(Title = 'ATTENZIONE!', Text=f'Eliminati {n} stili di cella!')
+    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -9735,7 +9744,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
-    committente = "\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
+    committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
     luogo = '\n' + oSheet.Name
     if oSheet.Name == 'COMPUTO':
         luogo = '\nComputo Metrico Estimativo'
@@ -9763,9 +9772,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         oAktPage.HeaderIsOn = True
         oAktPage.FooterIsOn = True
 
-        oAktPage.TopMargin = 1500
-        oAktPage.BottomMargin = 800
-        oAktPage.LeftMargin = 1500
+        oAktPage.TopMargin = 1000
+        oAktPage.BottomMargin = 1350
+        oAktPage.LeftMargin = 1000
         oAktPage.RightMargin = 1000
 
         oAktPage.FooterLeftMargin = 0
@@ -9845,16 +9854,37 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
+            #leggo il numero di sal
+            nSal = 1
+            for i in reversed(range(2, 50)):
+                if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
+                    nSal = i
+                    break
+
+            bordo = oAktPage.BottomBorder
+            bordo.LineWidth = 1
+            bordo.OuterLineWidth = 0
+            oAktPage.BottomBorder = bordo
+            
+            bordo = oAktPage.RightBorder
+            bordo.LineWidth = 1
+            bordo.OuterLineWidth = 0
+            oAktPage.RightBorder = bordo
+            
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
-            # oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle misure n.'
-            # oHRText = oHeader.RightText.Text.String = luogo
+            oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle misure n.' + str(nSal)
+            
+            # Inserisci il numero di pagina nell'intestazione destra
+            # il numero di pagina è predisposto nello stile di Pagina (la riga sotto non funziona)
+            # ~ oHRText = oHeader.RightText.Text.String = "Pagina &P"
+
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
-            # oHLText = oFooter.CenterText.Text.String = "L'IMPRESA                    IL DIRETTORE DEI LAVORI"
-            # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(
-            #    oDoc.getURL() + '\n\n\n')
+            oHLText = oFooter.CenterText.Text.String = "L'IMPRESA \t\t\t\t\t\t\t IL DIRETTORE DEI LAVORI"
+            # ~ oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org - " + os.path.basename(oDoc.getURL() + '\n\n\n')
+            oHLText = oFooter.LeftText.Text.String = ''
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
@@ -10552,8 +10582,9 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
-    VDS()
-    return
+    setPreview()
+    # ~ calendario_liste()
+    # ~ MENU_importa_stili()
     LeenoUtils.DocumentRefresh(True)
     return
     calendario_liste()

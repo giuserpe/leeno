@@ -7265,58 +7265,68 @@ def MENU_importa_stili():
     '''
     LeenoUtils.DocumentRefresh(False)
 
-    if Dialogs.YesNoDialog(Title='Importa Stili in blocco?',
-    Text='''Questa operazione sovrascriverà gli stili
+    if Dialogs.YesNoDialog(
+        Title='Importa Stili in blocco?',
+        Text='''Questa operazione sovrascriverà gli stili
 del documento attivo, se già presenti!
 
 Se non scegli un file di riferimento, saranno
 importati gli stili di default di LeenO.
 
-Vuoi continuare?''') == 0:
+Vuoi continuare?'''
+    ) == 0:
         return
+    # Mostra una finestra di dialogo per selezionare il file di riferimento
     filename = Dialogs.FileSelect('Scegli il file di riferimento...', '*.ods')
     if filename is None:
-        #  desktop = LeenoUtils.getDesktop()
         filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
-    else:
-        filename = uno.systemPathToFileUrl(filename)
-    oDoc = LeenoUtils.getDocument()
-    #conserva il formato numerico di tutte le celle
+
+    # Carica il documento di riferimento per ottenere gli stili
+    rifDoc = DocUtils.loadDocument(filename, Hidden=True)
     stili_celle = {}
-    elencoStili = oDoc.StyleFamilies[0].ElementNames
-    for el in (elencoStili):
-        try:
-            # ~ num = oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat
-            num = oDoc.StyleFamilies.getByName("PageStyles").getByName(el).NumberFormat
-            stili_celle[el] = oDoc.getNumberFormats().getByKey(num).FormatString
-        except:
-            pass
+    elencoStili = rifDoc.StyleFamilies.getByName("CellStyles").ElementNames
 
+    # Salva il formato numerico di tutti gli stili di cella
+    for el in elencoStili:
+        try:
+            style = rifDoc.StyleFamilies.getByName("CellStyles").getByName(el)
+            num = style.NumberFormat
+            stili_celle[el] = rifDoc.NumberFormats.getByKey(num).FormatString
+        except Exception as e:
+            DLG.chi(f"Errore durante il salvataggio del formato numerico per lo stile {el}: {e}")
+
+    # Chiudi il documento di riferimento
+    rifDoc.close(True)
+
+    # Ottieni il documento corrente
+    oDoc = LeenoUtils.getDocument()
     nome = oDoc.CurrentController.ActiveSheet.Name
-    oDoc.getStyleFamilies().loadStylesFromURL(filename, [])
-    for el in oDoc.Sheets.ElementNames:
-        oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
-        oSheet = oDoc.getSheets().getByName(el)
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    return
-    #ripristina il formato numerico di alcune celle
-    for el in (
-    'comp sotto Euro Originale', 'Livello-0-scritta mini val',
-               'Livello-1-scritta mini val', 'livello2 scritta mini',
-               'Comp TOTALI', 'Ultimus_totali_1', 'Ultimus_bordo',
-               'ULTIMUS_3', 'Ultimus_Bordo_sotto',
-               'Comp-Variante num sotto', 'An-valuta-dx', 'An-1v-dx',
-               'An-lavoraz-generica', 'An-lavoraz-Utili-num sin',
-               'comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG', 'comp 1-a peso',
-               'Comp-Variante num sotto', 'An-lavoraz-input', 'Blu',
-               'comp sotto Unitario', 'An-lavoraz-generica',
-               ):
-        try:
-            oDoc.StyleFamilies.getByName("CellStyles").getByName(
-                el).NumberFormat = LeenoFormat.getNumFormat(stili_celle[el])
-        except:
-            pass
 
+    # Carica gli stili dal file di riferimento nel documento corrente
+    try:
+        oDoc.StyleFamilies.loadStylesFromURL(filename, [])
+    except Exception as e:
+        DLG.chi(f"Errore durante il caricamento degli stili da {filename}: {e}")
+        return
+
+    progress = Dialogs.Progress(Title='Carica gli stili dal file di riferimento...', Text="Scrittura dati")
+    progress.setLimits(0, len(stili_celle))
+    progress.setValue(0)
+    progress.show()
+
+    # Ripristina il formato numerico di tutte le celle salvate
+    for n, el in enumerate(stili_celle.keys(), start=1):
+        progress.setValue(n)
+        try:
+            style = oDoc.StyleFamilies.getByName("CellStyles").getByName(el)
+            style.NumberFormat = LeenoFormat.getNumFormat(stili_celle[el])
+        except Exception as e:
+            DLG.chi(f"Errore durante il ripristino del formato numerico per lo stile {el}: {e}")
+
+    # Nascondi la finestra di progresso
+    progress.hide()
+
+    # Torna al foglio originale e riabilita il refresh automatico
     GotoSheet(nome)
     LeenoUtils.DocumentRefresh(True)
 
@@ -9665,7 +9675,7 @@ def set_area_stampa():
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oTitles.Sheet = iSheet
 
-    if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA', 'Registro', 'SAL'):
+    if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA'):
 
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
         SR = 2
@@ -9692,6 +9702,9 @@ def set_area_stampa():
         SR = 0
         ER -= 1
         oSheet.setPrintTitleRows(False)
+    elif oSheet.Name in ('SAL'):
+        SR = 2
+        EC = 5
     else:
         SR = 0
         ER = SheetUtils.getLastUsedRow(oSheet)
@@ -10582,9 +10595,13 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
-    setPreview()
-    # ~ calendario_liste()
-    # ~ MENU_importa_stili()
+    oDoc = LeenoUtils.getDocument()
+
+    # ~ mio = 
+    # ~ DLG.chi(LeenoFormat.getNumFormat('List-num-euro'))
+    oDoc.StyleFamilies.getByName("CellStyles").getByName(
+        'cicco').NumberFormat = LeenoFormat.getNumFormat('[>0]#.##0,00 [$€] ;[<0]-#.##0,00 [$€] ;-# [$€] ;@" "')
+    
     LeenoUtils.DocumentRefresh(True)
     return
     calendario_liste()

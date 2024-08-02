@@ -731,6 +731,7 @@ def GeneraLibretto(oDoc):
 
     iSheet = oSheet.RangeAddress.Sheet
     # imposta area di stampa
+    PL.set_area_stampa()
     # ~oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     # ~oCellRangeAddr.Sheet = iSheet
     # ~oCellRangeAddr.StartColumn = daColonna
@@ -917,7 +918,7 @@ def GeneraRegistro(oDoc):
         # i= LeenoSheetUtils.prossimaVoce(oSheet, i)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
     try:
-        oDoc.getSheets().insertNewByName('Registro',5)
+        oDoc.getSheets().insertNewByName('Registro',oSheet.RangeAddress.Sheet + 1)
         PL.GotoSheet('Registro')
         oSheet = oDoc.Sheets.getByName('Registro')
 
@@ -1119,7 +1120,7 @@ def GeneraRegistro(oDoc):
     progress.setValue(1)
 
     try:
-        oDoc.getSheets().insertNewByName('SAL',6)
+        oDoc.getSheets().insertNewByName('SAL',oSheet.RangeAddress.Sheet + 1)
         PL.GotoSheet('SAL')
         oSheet = oDoc.Sheets.getByName('SAL')
 

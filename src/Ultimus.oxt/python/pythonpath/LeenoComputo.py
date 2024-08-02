@@ -38,7 +38,7 @@ def datiVoceComputo (oSheet, lrow):
             quantN = quantP
             quantP = ''
         data     = oSheet.getCellByPosition(1,  i+2).String
-        um       = oSheet.getCellByPosition(9,  i+1).String
+        um       = oSheet.getCellByPosition(8,  f).String.split('[')[-1].split(']')[0]
         Nlib     = int(oSheet.getCellByPosition(19, i+1).Value)
         Plib     = int(oSheet.getCellByPosition(20, i+1).Value)
         flag     = oSheet.getCellByPosition(22, i+1).String

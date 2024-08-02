@@ -866,7 +866,6 @@ salto:
 	&apos;print &quot;finito&quot;
 end sub
 
-
 Sub AddPageNumber &apos; esempio trovato in rete... anche questo funziona...
 					&apos; tenerlo un po&apos; di tempo...
  Dim oSheet as Object &apos; Represent current worksheet
@@ -901,11 +900,6 @@ Sub AddPageNumber &apos; esempio trovato in rete... anche questo funziona...
  Next iCurrentRow
 End Sub
 
-sub togli_salti_pagina &apos;(C) Giuseppe Vizziello 2014
-	exit sub
-	oSheet = ThisComponent.currentController.activeSheet
-	oSheet.removeAllManualPageBreaks
-end sub
 
 
 </script:module>

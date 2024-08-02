@@ -81,7 +81,12 @@ def loadDataBlock(oDoc, baseName):
 
 def loadDocument(filePath, Hidden=True):
 
-    url = uno.systemPathToFileUrl(filePath)
+    try:
+        url = uno.systemPathToFileUrl(filePath)
+    except Exception as e:
+        # ~ import LeenoDialogs as DLG
+        # ~ DLG.chi(f"Errore: {e}")
+        url = filePath
 
     if Hidden:
         # start hidden

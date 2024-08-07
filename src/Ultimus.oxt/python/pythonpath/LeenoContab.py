@@ -161,8 +161,10 @@ def ultimo_sal():
 
 def mostra_sal(uSal):
     '''
-    uSal { integer } : numero del sal da annullare
-    Mostro solo gli atti relativi al SAL scelto.
+    Mostra solo gli atti relativi al SAL scelto.
+
+    Parametri:
+    uSal { integer } : numero del SAL da annullare
     '''
     oDoc = LeenoUtils.getDocument()
 
@@ -176,35 +178,40 @@ def mostra_sal(uSal):
 
     if uSal:
         SheetUtils.visualizza_PageBreak()
-        for sal in range(1, len(listaSal)+1):
+        for sal in range(1, len(listaSal) + 1):
             for el in d:
                 nomearea = el[1] + str(sal)
-                oSheet = oDoc.Sheets.getByName(el[0])
+                try:
+                    oSheet = oDoc.Sheets.getByName(el[0])
+                    oRanges = oDoc.NamedRanges
+                    oNamedRange = oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
-                oRanges = oDoc.NamedRanges
-                oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+                    # Definisci i limiti dell'intervallo
+                    daRiga = oNamedRange.StartRow
+                    aRiga = oNamedRange.EndRow
+                    daColonna = oNamedRange.StartColumn
+                    aColonna = oNamedRange.EndColumn
 
-                #range
-                daRiga = oNamedRange.StartRow
-                aRiga = oNamedRange.EndRow
-                daColonna = oNamedRange.StartColumn
-                aColonna = oNamedRange.EndColumn
+                    oNamedRange.EndColumn = el[2]
 
-                oNamedRange.EndColumn = el[2]
+                    # Gruppo e scomposizione delle celle
+                    oSheet.ungroup(oNamedRange, 1)
+                    oSheet.group(oNamedRange, 1)
 
-                oSheet.ungroup(oNamedRange, 1)
-                oSheet.group(oNamedRange, 1)
+                    if sal == uSal:
+                        oSheet.setPrintAreas((oNamedRange,))
+                        oSheet.setPrintTitleRows(True)
+                        PL.GotoSheet(oSheet.Name)
+                        oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
+                        oDoc.CurrentController.setFirstVisibleRow(1)
+                        PL._gotoCella(0, daRiga - 1)
+                    else:
+                        oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
+                except Exception as e:
+                    DLG.chi(f"Errore nell'accesso all'area nominata {nomearea}: {e}")
 
-                if sal == uSal:
-                    oSheet.setPrintAreas((oNamedRange,))
-                    oSheet.setPrintTitleRows(True)
-                    PL.GotoSheet(oSheet.Name)
-                    oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
-                    oDoc.CurrentController.setFirstVisibleRow(1)
-                    PL._gotoCella(0, daRiga -1)
-                else:
-                    oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
     return
+
 
 def MENU_AnnullaAttiContabili():
     '''
@@ -294,25 +301,25 @@ def MENU_AnnullaAttiContabili():
                 #cancella area di stampa
                 LeenoSheetUtils.DelPrintSheetArea()
             oDoc.NamedRanges.removeByName(nome_area)
-    PL.GotoSheet('CONTABILITA')
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        nSal = ultimo_sal()[-1]
+        oSheet.getCellRangeByName('Z3').String = nSal
+    except:
+        oSheet.getCellRangeByName('Z3').String = ''
     oSheet.Rows.OptimalHeight = True
 
     if len (listaSal) == 1:
         SheetUtils.visualizza_PageBreak(False)
 
-    if cfg.read('Generale', 'descrizione_in_una_colonna') == '1':
-        PL.descrizione_in_una_colonna(False)
-    else:
-        PL.descrizione_in_una_colonna(True)
-
     try:
         nSal = int(listaSal[-1]) -1
         mostra_sal(nSal)
-    except:
-        return
-    struttura_CONTAB()
+    except Exception as e:
+        DLG.chi(f'Errore________________: {e}')
+        pass
+    PL.GotoSheet('CONTABILITA')
 
 
 # ###############################################################
@@ -573,6 +580,7 @@ def GeneraLibretto(oDoc):
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA':
         return
+    oSheet.PageStyle = "Page_Style_Libretto_Misure2"
     PL.numera_voci()
     oRanges = oDoc.NamedRanges
 
@@ -613,7 +621,7 @@ def GeneraLibretto(oDoc):
 
     #  Recupero la prima riga non registrata
 
-    daVoce = PL.InputBox(str(daVoce), "Registra Libretto, da voce n.")
+    daVoce = PL.InputBox(str(daVoce), f"SAL n.{nSal}: Libretto delle Misure, da voce n.")
     if len(daVoce) ==0:
         return
 
@@ -638,11 +646,12 @@ def GeneraLibretto(oDoc):
         0, 3, 0, SheetUtils.getUsedArea(oSheet).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
 
-    aVoce = PL.InputBox(str(aVoce), "Registra Libretto, a voce n.")
-    # ~aVoce = str(int(daVoce) + 1)
+    aVoce = PL.InputBox(str(aVoce), f"SAL n.{nSal}: Libretto delle Misure, a voce n.")
+
     if len(aVoce) == 0:
         return
-    elif int(aVoce) < int(aVoce):
+    if int(aVoce) < int(daVoce):
+        Dialogs.Exclamation(Title='ATTENZIONE!', Text=f"Il range di voci scelto ({daVoce} ÷ {aVoce}) non è valido.")
         return
 
     try:
@@ -718,6 +727,7 @@ def GeneraLibretto(oDoc):
 
 
     oSheet.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
+    oSheet.getCellByPosition(2, inizioFirme + 1).CellStyle = "Ultimus_destra"
     #applico gli stili corretti ad alcuni dati della firma
     # ~oSheet.getCellByPosition(2, inizioFirme + 1).CellStyle = "Ultimus_destra"
 
@@ -752,7 +762,6 @@ def GeneraLibretto(oDoc):
     oSheet.setPrintAreas((oNamedRange,))
     oSheet.setPrintTitleRows(True)
 
-    oSheet.PageStyle = "Page_Style_Libretto_Misure2"
 
     progress.setValue(3)
 
@@ -795,7 +804,7 @@ def GeneraLibretto(oDoc):
     inumPag = 1 + old_nPage
     nLib = nSal
 
-    struttura_CONTAB()
+    # ~ struttura_CONTAB()
 
 ##########
     # COMPILO LA SITUAZIONE CONTABILE IN "S2" 1di2
@@ -874,7 +883,7 @@ def GeneraLibretto(oDoc):
 #  Protezione_area ("CONTABILITA",nomearea)
 #  Struttura_Contab ("_Lib_")
 #  Genera_REGISTRO
-    struttura_CONTAB()
+    # ~ struttura_CONTAB()
 
     # ~for el in (nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo):
         # ~DLG.chi(el)
@@ -1104,12 +1113,12 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(9, fineFirme).Formula = ('=IF(SUBTOTAL(9;$J$2:$J$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(fineFirme))
     oSheet.getCellRangeByPosition (0, fineFirme, 9, fineFirme).CellStyle = "Ultimus_Bordo_sotto"
 
-    struttura_CONTAB()
+    # ~ struttura_CONTAB()
 
     progress.setValue(5)
     progress.hide()
 
-    struttura_CONTAB()
+    # ~ struttura_CONTAB()
 
 # ~def GeneraSAL (oDoc):
 
@@ -1336,10 +1345,10 @@ def GeneraRegistro(oDoc):
     oSheet.getCellRangeByPosition (0, fineFirme, 5, fineFirme).CellStyle = "comp Descr"
     oSheet.getCellByPosition(1, fineFirme).String = ""
 
-    mostra_sal(nSal)
+    # ~ mostra_sal(nSal)
     progress.setValue(8)
     progress.hide()
-    struttura_CONTAB()
+    # ~ struttura_CONTAB()
 
     return
 
@@ -1366,14 +1375,19 @@ def GeneraAttiContabili():
     # ~except:
         # ~return
     GeneraRegistro(oDoc)
+
     LeenoUtils.DocumentRefresh(True)
+
+    listaSal = ultimo_sal()
+    try:
+        nSal = int(listaSal[-1])
+        mostra_sal(nSal)
+    except Exception as e:
+        DLG.chi(f'Errore: {e}')
+        pass
     PL.GotoSheet('CONTABILITA')
-
-    struttura_CONTAB()
-
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
-    # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     # ~Dialogs.Info(Title = 'Voci registrate!',
         # ~Text="La generazione degli allegati contabili è stata completata.")
 

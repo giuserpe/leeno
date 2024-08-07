@@ -10595,6 +10595,8 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
+    DLG.chi('stacio')
+    return
     listaSal = LeenoContab.ultimo_sal()
     try:
         nSal = int(listaSal[-1])

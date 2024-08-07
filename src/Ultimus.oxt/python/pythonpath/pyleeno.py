@@ -2797,8 +2797,8 @@ def scelta_viste():
     # Mostra SAL n.
         oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
         try:
-            # ~oDialog1.getControl('ComboBox1').Text = listaSal[-1]
-            oDialog1.getControl('ComboBox1').Text = ''
+            oDialog1.getControl('ComboBox1').Text = listaSal[-1]
+            # ~ oDialog1.getControl('ComboBox1').Text = ''
         except:
             pass
         if len(listaSal) != 0:
@@ -2822,7 +2822,9 @@ def scelta_viste():
 
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
-        oDialog1.execute()
+
+        if oDialog1.execute() == 0:
+            return
 
         LeenoUtils.DocumentRefresh(False)
 
@@ -2856,17 +2858,14 @@ def scelta_viste():
         try:
             nSal = int(oDialog1.getControl('ComboBox1').getText())
             LeenoContab.mostra_sal(nSal)
-        except:
+        except Exception as e:
+            # ~ DLG.chi(f'Errore: {e}')
             pass
+
         GotoSheet('CONTABILITA')
     # ~oSheet = oDoc.getSheets().getByName('CONTABILITA')
     # ~oSheet.Rows.OptimalHeight = True
 
-
-        # ~if nSal == False:
-            # ~SheetUtils.visualizza_PageBreak(False)
-        # ~else:
-            # ~SheetUtils.visualizza_PageBreak(True)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -5619,12 +5618,12 @@ def dettaglio_misure(bit):
         return
     ER = SheetUtils.getUsedArea(oSheet).EndRow
 
-    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
-    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    progress.setValue(0)
-    progress.show()
-
     if bit == 1:
+        progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
+        progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        progress.setValue(0)
+        progress.show()
+
         for lrow in range(0, ER):
             progress.setValue(lrow)
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle and \
@@ -5670,16 +5669,15 @@ def dettaglio_misure(bit):
                         oSheet.getCellByPosition(
                             2, lrow).String = oSheet.getCellByPosition(
                                 2, lrow).String + stringa.replace('.', ',')
+        progress.hide()
     else:
         for lrow in range(0, ER):
-            progress.setValue(lrow)
             if ' ►' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String.split(' ►')[0]
 
     LeenoUtils.DocumentRefresh(True)
-    progress.hide()
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     return
 
@@ -9867,6 +9865,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
+            pass
+        if oAktPage.DisplayName == 'taratatta':
             #leggo il numero di sal
             nSal = 1
             for i in reversed(range(2, 50)):
@@ -10595,7 +10595,14 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.end()
 # ~########################################################################
 def MENU_debug():
-    oDoc = LeenoUtils.getDocument()
+    listaSal = LeenoContab.ultimo_sal()
+    try:
+        nSal = int(listaSal[-1])
+        LeenoContab.mostra_sal(nSal)
+    except Exception as e:
+        DLG.chi(f'Errore: {e}')
+        pass
+    return
 
     # ~ mio = 
     # ~ DLG.chi(LeenoFormat.getNumFormat('List-num-euro'))

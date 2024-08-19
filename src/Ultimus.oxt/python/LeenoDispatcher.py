@@ -190,7 +190,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             if 'giuserpe' in os.getlogin():
                 msg += '------------------------------\n' + traceback.format_exc()
 
-            Dialogs.Exclamation(Title="Errore interno", Text=msg)
+            Dialogs.Exclamation(Title=f"Errore interno: {e} ", Text=msg)
 
 
 g_ImplementationHelper = unohelper.ImplementationHelper()

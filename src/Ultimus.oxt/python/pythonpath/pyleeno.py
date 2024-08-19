@@ -1648,7 +1648,7 @@ def setPageStyle():
         'Analisi di Prezzo': 'PageStyle_COMPUTO_A4',
         'CONTABILITA': 'Page_Style_Libretto_Misure2',
         'Registro': 'PageStyle_REGISTRO_A4',
-        'SAL': 'PageStyle_REGISTRO_A4',
+        'SAL': 'PageStyle_SAL_A4',
     }
 
     ctx = LeenoUtils.getComponentContext()
@@ -1713,7 +1713,7 @@ def setPreview(arg=0):
     try:
         oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
     except Exception as e:
-        # ~ DLG.chi(f"Errore durante l'elaborazione: {e}")
+        # ~ DLG.chi(f"Errore setPreview: {e}")
         pass
         
         
@@ -3906,6 +3906,7 @@ def MENU_firme_in_calce(lrowF=None):
         datafirme="Data,"
     else:
         datafirme = datafirme + ", "
+
     if oSheet.Name == "CONTABILITA":
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
@@ -3928,6 +3929,7 @@ def MENU_firme_in_calce(lrowF=None):
         oRange = oSheet.getCellRangeByPosition (2, riga_corrente, 40, riga_corrente)
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
+
     if oSheet.Name in ("Registro", "SAL"):
         if lrowF == None:
             lrowF = SheetUtils.getLastUsedRow(oSheet)
@@ -3968,6 +3970,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
             "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
                 '$S2.C16').String + ")")
+
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -9718,13 +9721,13 @@ def set_area_stampa():
 
     setPageStyle()
 
-
-
 ########################################################################
 
 
-def MENU_sistema_pagine():
+def MENU_sistema_pagine(msg = True):
     '''
+    msg { boolean } : se True mostra dialogo e lancia anteprima
+
     Configura intestazioni e pie' di pagina degli stili di stampa
     e propone un'anteprima di stampa
     '''
@@ -9737,16 +9740,16 @@ def MENU_sistema_pagine():
         set_area_stampa()
     except:
         return
-
-    if Dialogs.YesNoDialog(Title='AVVISO!',
-    Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
+    if msg:
+        if Dialogs.YesNoDialog(Title='AVVISO!',
+            Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
 Le formattazioni dirette impostate durante il lavoro andranno perse.
 
 Per ripristinare i colori, tipici dei fogli di LeenO, basterà selezionare
 le celle ed usare "CTRL+M".
 
 Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
-        LeenoSheetUtils.SbiancaCellePrintArea()
+            LeenoSheetUtils.SbiancaCellePrintArea()
 
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.removeAllManualPageBreaks()
@@ -9865,8 +9868,11 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
-            pass
-        if oAktPage.DisplayName == 'taratatta':
+            # Adatto lo zoom alla larghezza pagina
+            oAktPage.PageScale = 0
+            oAktPage.CenterHorizontally = True
+            oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
             #leggo il numero di sal
             nSal = 1
             for i in reversed(range(2, 50)):
@@ -9886,7 +9892,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
-            oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle misure n.' + str(nSal)
+            oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle Misure n.' + str(nSal)
             
             # Inserisci il numero di pagina nell'intestazione destra
             # il numero di pagina è predisposto nello stile di Pagina (la riga sotto non funziona)
@@ -9901,17 +9907,50 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
-            # ~HEADER
+            
+            # Adatto lo zoom alla larghezza pagina
+            oAktPage.PageScale = 0
+            oAktPage.CenterHorizontally = True
+            oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
+            
+            # HEADER
             oHeader = oAktPage.RightPageHeaderContent
-            # oHLText = oHeader.LeftText.Text.String = committente + '\nRegistro di contabilità n.'
+            oHLText = oHeader.LeftText.Text.String = committente + '\nRegistro di Contabilità n.' + str(nSal)
+
             # oHRText = oHeader.RightText.Text.String = luogo
             oAktPage.RightPageHeaderContent = oHeader
-            # ~FOOTER
+            
+            # FOOTER
             oFooter = oAktPage.RightPageFooterContent
             # oHLText = oFooter.CenterText.Text.String = ''
             # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(
             #    oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent = oFooter
+            bordo = oAktPage.BottomBorder
+            bordo.LineWidth = 1
+            bordo.OuterLineWidth = 0
+            oAktPage.BottomBorder = bordo
+
+        if oAktPage.DisplayName == 'PageStyle_SAL_A4':
+            # Adatto lo zoom alla larghezza pagina
+            oAktPage.PageScale = 0
+            oAktPage.CenterHorizontally = True
+            oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
+            # ~HEADER
+            oHeader = oAktPage.RightPageHeaderContent
+            oHLText = oHeader.LeftText.Text.String = committente + '\nSato di Avanzamento Lavori n.' + str(nSal)
+
+            oAktPage.RightPageHeaderContent = oHeader
+            # ~FOOTER
+            oFooter = oAktPage.RightPageFooterContent
+
+            oAktPage.RightPageFooterContent = oFooter
+            bordo = oAktPage.BottomBorder
+            bordo.LineWidth = 1
+            bordo.OuterLineWidth = 0
+            oAktPage.BottomBorder = bordo
     try:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
                                                        'CONTABILITA',
@@ -9940,7 +9979,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):
             LeenoAnalysis.MENU_impagina_analisi()
             _gotoCella(0, 2)
-        setPreview(1)
+        if msg:
+            setPreview(1)
     except Exception:
         pass
         # bordo lato destro in attesa di LibreOffice 6.2
@@ -10594,19 +10634,59 @@ def ESEMPIO_create_progress_bar():
     oProgressBar.reset()
     oProgressBar.end()
 # ~########################################################################
+
 def MENU_debug():
-    DLG.chi('stacio')
+    LeenoContab.insrow()
     return
-    listaSal = LeenoContab.ultimo_sal()
-    try:
-        nSal = int(listaSal[-1])
-        LeenoContab.mostra_sal(nSal)
-    except Exception as e:
-        DLG.chi(f'Errore: {e}')
-        pass
+    # ~ LeenoUtils.DocumentRefresh(True)
+    # ~ return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    
+    # Calcola l'altezza pagina basata sui PageBreaks
+    hpagina = (len(oSheet.RowPageBreaks) - 1) * 25150
+    # ~ DLG.chi(f'hpagina: {hpagina}')
+    col = 1
+    irow = insrow()
+    LeenoSheetUtils.aggiungi_righe(irow, col, stringa = '====================')
     return
 
-    # ~ mio = 
+    for i in range(50):
+        oSheet.getRows().insertByIndex(irow, 1)
+        oSheet.getCellByPosition(col, irow).String = '?????????????????'  # Imposta la stringa nella cella specificata
+        irow += 1  # Passa alla riga successiva
+
+        # Verifica se la cella supera l'altezza pagina e interrompe il ciclo se necessario
+        if oSheet.getCellByPosition(col, irow).Position.Y > hpagina:
+            # ~ irow -= 1  # Torna all'ultima riga valida
+            # ~ oSheet.getRows().removeByIndex(irow, 1)  # Rimuove la riga appena aggiunta
+            break
+    
+    return
+    DLG.chi(len(oSheet.RowPageBreaks))
+    oRanges = oDoc.NamedRanges
+    
+    listaSal = LeenoContab.ultimo_sal()
+    nSal = int(listaSal[-1])
+
+    nomearea = "_Lib_" + str(nSal)
+    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+    irow = oNamedRange.EndRow
+
+    LeenoSheetUtils.aggiungi_righe(irow, col = 1, stringa = '====================')
+    return
+    LeenoUtils.DocumentRefresh(True)
+
+    # ~ LeenoContab.mostra_sal(nSal)
+    return
+    LeenoSheetUtils.aggiungi_righe(irow = 112 , col = 2, stringa='=lib===================')
+    # ~ set_area_stampa()
+    return
+  
+    # ~ DLG.mri((oSheet.getCellByPosition(2, 157)))
+    DLG.chi(((oSheet.getCellByPosition(2, 3)).Position.Y - (oSheet.getCellByPosition(2, 431)).Position.Y)/9)
+    return
+
     # ~ DLG.chi(LeenoFormat.getNumFormat('List-num-euro'))
     oDoc.StyleFamilies.getByName("CellStyles").getByName(
         'cicco').NumberFormat = LeenoFormat.getNumFormat('[>0]#.##0,00 [$€] ;[<0]-#.##0,00 [$€] ;-# [$€] ;@" "')

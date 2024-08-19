@@ -49,7 +49,6 @@ def chi(s):
     doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
     s1 = str(s) + '\n\n' + str(dir(s).__str__())
-    # ~MsgBox(parentwin, s1, str(type(s)), 'infobox')
     MessageBox(parentwin, s1, str(type(s)), 'infobox')
 
 

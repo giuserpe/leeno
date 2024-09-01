@@ -57,6 +57,8 @@ import PersistUtils as PU
 import LeenoEvents
 import LeenoExtra
 import LeenoBasicBridge
+import LeenoSettings as LS
+import LeenoPdf as LPdf
 import DocUtils
 import re
 
@@ -2862,7 +2864,7 @@ def scelta_viste():
             # ~ DLG.chi(f'Errore: {e}')
             pass
 
-        GotoSheet('CONTABILITA')
+        # ~ GotoSheet('CONTABILITA')
     # ~oSheet = oDoc.getSheets().getByName('CONTABILITA')
     # ~oSheet.Rows.OptimalHeight = True
 
@@ -9782,10 +9784,16 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         dettaglio_misure(0)
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-        # ~chi((n , oAktPage.DisplayName))
-        oAktPage.HeaderIsOn = True
-        oAktPage.FooterIsOn = True
 
+        # ~chi((n , oAktPage.DisplayName))
+        if oAktPage.DisplayName == 'Page_Style_COPERTINE':
+            oAktPage.HeaderIsOn = False
+            oAktPage.FooterIsOn = False
+        else:
+            oAktPage.HeaderIsOn = True
+            oAktPage.FooterIsOn = True
+
+        # margini della pagina
         oAktPage.TopMargin = 1000
         oAktPage.BottomMargin = 1350
         oAktPage.LeftMargin = 1000
@@ -9799,14 +9807,14 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         oAktPage.HeaderBodyDistance = 0
         oAktPage.FooterBodyDistance = 0
 
-        if oAktPage.DisplayName == 'Page_Style_COPERTINE':
-            oAktPage.HeaderIsOn = False
-            oAktPage.FooterIsOn = False
-            # Adatto lo zoom alla larghezza pagina
-            oAktPage.PageScale = 0
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
+        # Adatto lo zoom alla larghezza pagina
+        oAktPage.PageScale = 0
+        oAktPage.CenterHorizontally = True
+        oAktPage.ScaleToPagesX = 1
+        oAktPage.ScaleToPagesY = 0
+        
+
+
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo',
                                     'PageStyle_COMPUTO_A4',
                                     'PageStyle_Elenco Prezzi'):
@@ -9815,6 +9823,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
                 htxt = 9.0 / 100 * oAktPage.PageScale
             # if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
             #     htxt = 10.0
+            #azzera i bordi
             bordo = oAktPage.TopBorder
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
@@ -9834,10 +9843,6 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
             oAktPage.LeftBorder = bordo
-            # Adatto lo zoom alla larghezza pagina
-            oAktPage.PageScale = 0
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
 
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
@@ -9846,9 +9851,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt
 
-            oHLText = oHeader.CenterText.Text.String = oggetto
-            oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
+            # ~ oHLText = oHeader.CenterText.Text.String = oggetto
+            # ~ oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            # ~ oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
 
             oHRText = oHeader.RightText.Text.String = luogo
             oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
@@ -9864,93 +9869,99 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
             oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHLText = oFooter.RightText.Text.Text.CharHeight = htxt
-            # ~oHLText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
-            # Adatto lo zoom alla larghezza pagina
-            oAktPage.PageScale = 0
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
-            #leggo il numero di sal
-            nSal = 1
-            for i in reversed(range(2, 50)):
-                if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
-                    nSal = i
-                    break
+            scelta_viste()
+            # ~ nSal = int(oDialog1.getControl('ComboBox1').getText())
+            # ~ LeenoContab.mostra_sal(nSal)
+            # ~ mostra_sal()
 
-            bordo = oAktPage.BottomBorder
-            bordo.LineWidth = 1
-            bordo.OuterLineWidth = 0
-            oAktPage.BottomBorder = bordo
+
+
+            # ~ # Adatto lo zoom alla larghezza pagina
+            # ~ oAktPage.PageScale = 0
+            # ~ oAktPage.CenterHorizontally = True
+            # ~ oAktPage.ScaleToPagesX = 1
+            # ~ oAktPage.ScaleToPagesY = 0
+            # ~ #leggo il numero di sal
+            # ~ nSal = 1
+            # ~ for i in reversed(range(2, 50)):
+                # ~ if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
+                    # ~ nSal = i
+                    # ~ break
+
+            # ~ bordo = oAktPage.BottomBorder
+            # ~ bordo.LineWidth = 1
+            # ~ bordo.OuterLineWidth = 0
+            # ~ oAktPage.BottomBorder = bordo
             
-            bordo = oAktPage.RightBorder
-            bordo.LineWidth = 1
-            bordo.OuterLineWidth = 0
-            oAktPage.RightBorder = bordo
+            # ~ bordo = oAktPage.RightBorder
+            # ~ bordo.LineWidth = 1
+            # ~ bordo.OuterLineWidth = 0
+            # ~ oAktPage.RightBorder = bordo
             
-            # ~HEADER
-            oHeader = oAktPage.RightPageHeaderContent
-            oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle Misure n.' + str(nSal)
+            # ~ # ~HEADER
+            # ~ oHeader = oAktPage.RightPageHeaderContent
+            # ~ oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle Misure n.' + str(nSal)
             
-            # Inserisci il numero di pagina nell'intestazione destra
-            # il numero di pagina è predisposto nello stile di Pagina (la riga sotto non funziona)
-            # ~ oHRText = oHeader.RightText.Text.String = "Pagina &P"
+            # ~ # Inserisci il numero di pagina nell'intestazione destra
+            # ~ # il numero di pagina è predisposto nello stile di Pagina (la riga sotto non funziona)
+            #oHRText = oHeader.RightText.Text.String = "Pagina &P"
 
-            oAktPage.RightPageHeaderContent = oHeader
-            # ~FOOTER
-            oFooter = oAktPage.RightPageFooterContent
-            oHLText = oFooter.CenterText.Text.String = "L'IMPRESA \t\t\t\t\t\t\t IL DIRETTORE DEI LAVORI"
-            # ~ oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org - " + os.path.basename(oDoc.getURL() + '\n\n\n')
-            oHLText = oFooter.LeftText.Text.String = ''
-            oAktPage.RightPageFooterContent = oFooter
+            # ~ oAktPage.RightPageHeaderContent = oHeader
+            # ~ # ~FOOTER
+            # ~ oFooter = oAktPage.RightPageFooterContent
+            # ~ oHLText = oFooter.CenterText.Text.String = "L'IMPRESA \t\t\t\t\t\t\t IL DIRETTORE DEI LAVORI"
+            #oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org - " + os.path.basename(oDoc.getURL() + '\n\n\n')
+            # ~ oHLText = oFooter.LeftText.Text.String = ''
+            # ~ oAktPage.RightPageFooterContent = oFooter
 
-        if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
+        # ~ if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
             
-            # Adatto lo zoom alla larghezza pagina
-            oAktPage.PageScale = 0
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
+            # ~ # Adatto lo zoom alla larghezza pagina
+            # ~ oAktPage.PageScale = 0
+            # ~ oAktPage.CenterHorizontally = True
+            # ~ oAktPage.ScaleToPagesX = 1
+            # ~ oAktPage.ScaleToPagesY = 0
             
-            # HEADER
-            oHeader = oAktPage.RightPageHeaderContent
-            oHLText = oHeader.LeftText.Text.String = committente + '\nRegistro di Contabilità n.' + str(nSal)
+            # ~ # HEADER
+            # ~ oHeader = oAktPage.RightPageHeaderContent
+            # ~ oHLText = oHeader.LeftText.Text.String = committente + '\nRegistro di Contabilità n.' + str(nSal)
 
-            # oHRText = oHeader.RightText.Text.String = luogo
-            oAktPage.RightPageHeaderContent = oHeader
+            # ~ # oHRText = oHeader.RightText.Text.String = luogo
+            # ~ oAktPage.RightPageHeaderContent = oHeader
             
-            # FOOTER
-            oFooter = oAktPage.RightPageFooterContent
-            # oHLText = oFooter.CenterText.Text.String = ''
-            # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(
-            #    oDoc.getURL() + '\n\n\n')
-            oAktPage.RightPageFooterContent = oFooter
-            bordo = oAktPage.BottomBorder
-            bordo.LineWidth = 1
-            bordo.OuterLineWidth = 0
-            oAktPage.BottomBorder = bordo
+            # ~ # FOOTER
+            # ~ oFooter = oAktPage.RightPageFooterContent
+            # ~ # oHLText = oFooter.CenterText.Text.String = ''
+            # ~ # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(
+            # ~ #    oDoc.getURL() + '\n\n\n')
+            # ~ oAktPage.RightPageFooterContent = oFooter
+            # ~ bordo = oAktPage.BottomBorder
+            # ~ bordo.LineWidth = 1
+            # ~ bordo.OuterLineWidth = 0
+            # ~ oAktPage.BottomBorder = bordo
 
-        if oAktPage.DisplayName == 'PageStyle_SAL_A4':
-            # Adatto lo zoom alla larghezza pagina
-            oAktPage.PageScale = 0
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
-            # ~HEADER
-            oHeader = oAktPage.RightPageHeaderContent
-            oHLText = oHeader.LeftText.Text.String = committente + '\nSato di Avanzamento Lavori n.' + str(nSal)
+        # ~ if oAktPage.DisplayName == 'PageStyle_SAL_A4':
+            # ~ # Adatto lo zoom alla larghezza pagina
+            # ~ oAktPage.PageScale = 0
+            # ~ oAktPage.CenterHorizontally = True
+            # ~ oAktPage.ScaleToPagesX = 1
+            # ~ oAktPage.ScaleToPagesY = 0
+            # ~ # ~HEADER
+            # ~ oHeader = oAktPage.RightPageHeaderContent
+            # ~ oHLText = oHeader.LeftText.Text.String = committente + '\nSato di Avanzamento Lavori n.' + str(nSal)
 
-            oAktPage.RightPageHeaderContent = oHeader
-            # ~FOOTER
-            oFooter = oAktPage.RightPageFooterContent
+            # ~ oAktPage.RightPageHeaderContent = oHeader
+            # ~ # ~FOOTER
+            # ~ oFooter = oAktPage.RightPageFooterContent
 
-            oAktPage.RightPageFooterContent = oFooter
-            bordo = oAktPage.BottomBorder
-            bordo.LineWidth = 1
-            bordo.OuterLineWidth = 0
-            oAktPage.BottomBorder = bordo
+            # ~ oAktPage.RightPageFooterContent = oFooter
+            # ~ bordo = oAktPage.BottomBorder
+            # ~ bordo.LineWidth = 1
+            # ~ bordo.OuterLineWidth = 0
+            # ~ oAktPage.BottomBorder = bordo
     try:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
                                                        'CONTABILITA',
@@ -10633,11 +10644,58 @@ def ESEMPIO_create_progress_bar():
         time.sleep(0.01)
     oProgressBar.reset()
     oProgressBar.end()
-# ~########################################################################
+
 
 def MENU_debug():
-    LeenoContab.insrow()
+    oDoc = LeenoUtils.getDocument()
+    # ~ LPdf.MENU_Pdf()
+    # ~ return
+
+    # ~ LS.MENU_JobSettings()
+    obj = LS.MENU_PrintSettings()
+    # ~ obj = LS.loadJobSettings(oDoc)
+    # ~ DLG.chi(obj)
     return
+    # ~ oSheet = oDoc.CurrentController.ActiveSheet
+
+    stili = {
+        # 'PageStyle_COMPUTO_A4': 'Computo Metrico',
+        'PageStyle_Elenco Prezzi': 'Elenco Prezzi',
+        'Page_Style_Libretto_Misure2': 'Libretto delle Misure',
+        'PageStyle_REGISTRO_A4': 'Registro di Contabilità',
+        'PageStyle_SAL_A4': 'Stato di Avanzamento Lavori',
+    }
+
+    for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
+        oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
+        try:
+            committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
+            committente = committente + '\n' + stili[oAktPage.DisplayName]
+        except Exception as e:
+            # ~ DLG.chi(f"Errore stile di pagina: {e}")
+            committente = ""
+        
+        for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
+            oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
+            htxt = 8.0 / 100 * oAktPage.PageScale
+            # ~ committente = get_committente(oDoc, oAktPage, stili)
+
+            if oAktPage.DisplayName == 'Page_Style_COPERTINE':
+                oAktPage.HeaderIsOn = False
+                oAktPage.FooterIsOn = False
+            else:
+                oAktPage.HeaderIsOn = True
+                oAktPage.FooterIsOn = True
+
+            LS.set_page_margins(oAktPage)
+            LS.set_page_borders(oAktPage)
+            LS.set_header(oAktPage, committente, '', '')
+            LS.set_footer(oAktPage, '', '', '')
+
+    LS.npagina()
+
+    return
+
     # ~ LeenoUtils.DocumentRefresh(True)
     # ~ return
     oDoc = LeenoUtils.getDocument()
@@ -10661,7 +10719,6 @@ def MENU_debug():
             # ~ irow -= 1  # Torna all'ultima riga valida
             # ~ oSheet.getRows().removeByIndex(irow, 1)  # Rimuove la riga appena aggiunta
             break
-    
     return
     DLG.chi(len(oSheet.RowPageBreaks))
     oRanges = oDoc.NamedRanges

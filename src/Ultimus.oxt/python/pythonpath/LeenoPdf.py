@@ -5,6 +5,8 @@ import SheetUtils
 import Dialogs
 import LeenoSettings
 import LeenoConfig
+import LeenoDialogs as DLG
+
 
 _EXPORTSETTINGSITEMS = (
     'npElencoPrezzi',
@@ -191,7 +193,7 @@ def PdfElencoPrezzi(destFolder, nTavola):
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
     nPages = len(ep.RowPageBreaks) - 1
 
-    # ~nPages = LeenoUtils.countPdfPages(destPath)
+    # ~ nPages = LeenoUtils.countPdfPages(destPath)
     docSubst['[PAGINE]'] = nPages
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
 
@@ -207,7 +209,7 @@ def PdfComputoMetrico(destFolder, nTavola):
     if nDoc != '' and nDoc is not None:
         baseName = nDoc + '-'
     destPath = os.path.join(destFolder, baseName + 'ComputoMetrico.pdf')
-    # ~print(f"Export to '{destPath}' file")
+    # ~ print(f"Export to '{destPath}' file")
     selection = [ep, ]
     docSubst = {
         '[OGGETTO]':'Computo Metrico',
@@ -216,7 +218,7 @@ def PdfComputoMetrico(destFolder, nTavola):
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
 
     nPages = len(ep.RowPageBreaks) - 1
-    # ~nPages = LeenoUtils.countPdfPages(destPath)
+    # ~ nPages = LeenoUtils.countPdfPages(destPath)
     docSubst['[PAGINE]'] = nPages
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
 
@@ -238,11 +240,11 @@ def MENU_Pdf():
 
     # estrae la path
     destFolder = dlg['pathEdit'].getPath()
-    # ~destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
+    # ~ destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
     
-    # ~import LeenoDialogs as DLG
-    # ~DLG.chi(destFolder)
-    # ~return
+    # ~ import LeenoDialogs as DLG
+    # ~ DLG.chi(destFolder)
+    # ~ return
 
     # controlla se selezionato elenco prezzi
     if dlg['cbElencoPrezzi'].getState():

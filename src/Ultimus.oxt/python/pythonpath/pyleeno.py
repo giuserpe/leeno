@@ -5810,39 +5810,21 @@ def paste_clip(insCells=0, pastevalue=False):
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'Flags'
     if pastevalue==True:
-        oProp0.Value = 'SVTD' # Numeri, Testo, Data e ora, Formati
+        oProp.append(crea_property_value('Flags', 'SVTD')) # Numeri, Testo, Data e ora, Formati
     else:
-        oProp0.Value = 'A'  #Tutto
-    oProp1 = PropertyValue()
-    oProp1.Name = 'FormulaCommand'
-    oProp1.Value = 0
-    oProp2 = PropertyValue()
-    oProp2.Name = 'SkipEmptyCells'
-    oProp2.Value = False
-    oProp3 = PropertyValue()
-    oProp3.Name = 'Transpose'
-    oProp3.Value = False
-    oProp4 = PropertyValue()
-    oProp4.Name = 'AsLink'
-    oProp4.Value = False
-    oProp.append(oProp0)
-    oProp.append(oProp1)
-    oProp.append(oProp2)
-    oProp.append(oProp3)
-    oProp.append(oProp4)
+        oProp.append(crea_property_value('Flags', 'A'))  #Tutto
+    oProp.append(crea_property_value('FormulaCommand', 0))
+    oProp.append(crea_property_value('SkipEmptyCells', False))
+    oProp.append(crea_property_value('Transpose', False))
+    oProp.append(crea_property_value('AsLink', False))
+
     # insert mode ON
     if insCells == 1:
-        oProp5 = PropertyValue()
-        oProp5.Name = 'MoveMode'
-        oProp5.Value = 0
-        oProp.append(oProp5)
-    properties = tuple(oProp)
+        oProp.append(crea_property_value('MoveMode', 0))
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
+    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
 
 
@@ -7261,6 +7243,44 @@ def colora_vecchio_elenco():
 
 
 ########################################################################
+def crea_property_value(name, value):
+    """
+    Crea e restituisce un oggetto PropertyValue con il nome e il valore specificati.
+    name : string : Nome della proprietà
+    value : any : Valore della proprietà
+    """
+    from com.sun.star.beans import PropertyValue
+    prop = PropertyValue()
+    prop.Name = name
+    prop.Value = value
+    return prop
+
+
+def importa_stili():
+    """
+    Importa solo gli stili di pagina dal template di LeenO senza sovrascrivere quelli esistenti.
+    """
+
+    filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
+
+    oDoc = LeenoUtils.getDocument()
+
+    # Creare la lista di PropertyValue per le opzioni di caricamento
+    loadOptions = []
+    prop = PropertyValue()
+    prop.Name = "LoadPageStyles"
+    prop.Value = True
+    loadOptions.append(prop)
+    try:
+        # Carica gli stili di pagina dal file di riferimento
+        oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(loadOptions))
+    except Exception as e:
+        DLG.chi(f"Errore: {e}")
+
+
+########################################################################
+
+
 def MENU_importa_stili():
     '''
     Importa tutti gli stili da un documento di riferimento. Se non è
@@ -10647,6 +10667,8 @@ def ESEMPIO_create_progress_bar():
 
 
 def MENU_debug():
+    importa_stili_pagina()
+    return
     oDoc = LeenoUtils.getDocument()
     # ~ LPdf.MENU_Pdf()
     # ~ return

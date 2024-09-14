@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -79,7 +79,7 @@
          style="stroke-width:0.81395">
         <text
            xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.08588px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.08588px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none"
            x="4.8704281"
            y="4.0859895"
            id="text1039"
@@ -91,7 +91,7 @@
              id="tspan1037"
              x="4.8704281"
              y="4.0859895"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.47918px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.47918px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
         <text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.47807px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none"
@@ -113,13 +113,13 @@
            id="g2"
            transform="translate(-0.264275,0.01761833)">
           <polygon
-             fill="#000000"
+             fill="#ffffff"
              points="11.929,21.036 9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 11.939,13.321 "
              transform="matrix(0.26458333,0,0,-0.26458333,6.5732075,7.4789107)"
              id="polygon1"
              style="stroke-width:0.650283" />
           <polygon
-             fill="#000000"
+             fill="#ffffff"
              points="19.625,23.124 19.62,15.405 18.239,15.421 18.229,23.136 16.1,23.1 18.9,27.3 21.7,23.1 "
              id="polygon2"
              transform="matrix(0.26458333,0,0,0.26458333,6.12394,-2.6295879)"
@@ -129,3 +129,4 @@
     </g>
   </g>
 </svg>
+

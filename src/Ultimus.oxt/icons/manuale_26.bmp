@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -59,7 +59,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.0924793;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1.0;paint-order:fill markers stroke"
+       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.0924793;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1.0;paint-order:fill markers stroke"
        id="rect1035"
        width="8.3088522"
        height="8.3078842"
@@ -68,34 +68,35 @@
        rx="3.4001262e-17"
        ry="3.4448648e-17" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.0918768;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1.0"
+       style="fill:none;stroke:#ffffff;stroke-width:0.0918768;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1.0"
        d="M 4.2773192,0.05902917 V 8.3669218"
        id="path1722" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:8.72851px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1.0;stroke:none;stroke-width:0.218213"
+       style="font-style:normal;font-weight:normal;font-size:8.72851px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1.0;stroke:none;stroke-width:0.218213"
        x="3.5108156"
        y="8.2257652"
        id="text3148"
        transform="scale(1.3631059,0.73361871)"><tspan
          sodipodi:role="line"
          id="tspan3146"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif';fill:#000000;fill-opacity:1.0;stroke-width:0.218213"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif';fill:#ffffff;fill-opacity:1.0;stroke-width:0.218213"
          x="3.5108156"
          y="8.2257652">i</tspan></text>
     <path
-       style="fill:#000000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
        d="M 0.3909626,0.82293872 H 3.8851841"
        id="path4381" />
     <path
-       style="fill:#000000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
        d="M 0.3909626,2.1194226 H 3.8851841"
        id="path4481" />
     <path
-       style="fill:#000000;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
        d="M 0.3909626,3.4159067 H 3.8851841"
        id="path4483" />
   </g>
 </svg>
+
 
 

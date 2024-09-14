@@ -7243,6 +7243,8 @@ def colora_vecchio_elenco():
 
 
 ########################################################################
+
+
 def crea_property_value(name, value):
     """
     Crea e restituisce un oggetto PropertyValue con il nome e il valore specificati.
@@ -7256,9 +7258,13 @@ def crea_property_value(name, value):
     return prop
 
 
-def importa_stili():
+def importa_stili_pagina(overwrite = False):
     """
-    Importa solo gli stili di pagina dal template di LeenO senza sovrascrivere quelli esistenti.
+    Importa solo gli stili di pagina dal template di LeenO,
+    con la possibilità di sovrascrivere quelli esistenti.
+
+    Args:
+        overwrite (bool): se True sovrascrive gli stili esistenti.
     """
 
     filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
@@ -7267,15 +7273,32 @@ def importa_stili():
 
     # Creare la lista di PropertyValue per le opzioni di caricamento
     loadOptions = []
-    prop = PropertyValue()
-    prop.Name = "LoadPageStyles"
-    prop.Value = True
-    loadOptions.append(prop)
+    loadOptions.append(crea_property_value("LoadPageStyles", True))
+    loadOptions.append(crea_property_value("LoadCellStyles", False))
+    loadOptions.append(crea_property_value("LoadTextStyles", False))
+    loadOptions.append(crea_property_value("LoadFrameStyles", False))
+    loadOptions.append(crea_property_value("LoadNumberingStyles", False))
+    # sovrascrivi se esistente
+    loadOptions.append(crea_property_value("OverwriteStyles", overwrite))
+
     try:
         # Carica gli stili di pagina dal file di riferimento
         oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(loadOptions))
     except Exception as e:
         DLG.chi(f"Errore: {e}")
+
+    # attiva la progressbar
+    oProgressBar = create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
+    n = 1 
+    for el in oDoc.Sheets.ElementNames:
+        oProgressBar.Value = n
+        n += 1
+        oDoc.CurrentController.setActiveSheet(
+            oDoc.getSheets().getByName(el))
+        oSheet = oDoc.getSheets().getByName(el)
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    oProgressBar.reset()
+    oProgressBar.end()
 
 
 ########################################################################
@@ -7331,15 +7354,12 @@ Vuoi continuare?'''
     except Exception as e:
         DLG.chi(f"Errore durante il caricamento degli stili da {filename}: {e}")
         return
-
-    progress = Dialogs.Progress(Title='Carica gli stili dal file di riferimento...', Text="Scrittura dati")
-    progress.setLimits(0, len(stili_celle))
-    progress.setValue(0)
-    progress.show()
+    # ~ oDoc.lockControllers()
+    oProgressBar = create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(stili_celle))
 
     # Ripristina il formato numerico di tutte le celle salvate
     for n, el in enumerate(stili_celle.keys(), start=1):
-        progress.setValue(n)
+        oProgressBar.Value = n
         try:
             style = oDoc.StyleFamilies.getByName("CellStyles").getByName(el)
             style.NumberFormat = LeenoFormat.getNumFormat(stili_celle[el])
@@ -7347,7 +7367,9 @@ Vuoi continuare?'''
             DLG.chi(f"Errore durante il ripristino del formato numerico per lo stile {el}: {e}")
 
     # Nascondi la finestra di progresso
-    progress.hide()
+    oProgressBar.reset()
+    oProgressBar.end()
+    # ~ oDoc.unlockControllers()
 
     # Torna al foglio originale e riabilita il refresh automatico
     GotoSheet(nome)
@@ -10636,7 +10658,7 @@ def create_progress_bar(title='', steps=100):
         steps (int): Il numero totale di passi della barra di avanzamento.
 
     Returns:
-        StatusIndicator: L'oggetto barra di avanzamento creato.
+        progressBar: L'oggetto creato.
     '''
 
     desktop = LeenoUtils.getDesktop()
@@ -10655,19 +10677,21 @@ def create_progress_bar(title='', steps=100):
 
 def ESEMPIO_create_progress_bar():
     oProgressBar = create_progress_bar (title='prova', steps=100)
-    oProgressBar.setValue(30)
-    oProgressBar.start("prova", 30)
     # ~return
-    DLG.mri(oProgressBar)
     for i in range(1, 101):
-        oProgressBar.Value = i
-        time.sleep(0.01)
+        oProgressBar.Value = i + 1
+        time.sleep(0.1)
     oProgressBar.reset()
     oProgressBar.end()
+    oDoc = LeenoUtils.getDocument()
+    oDoc.unlockControllers()
 
 
 def MENU_debug():
-    importa_stili_pagina()
+    DLG.chi(88886666666668888)
+    sistema_cose()
+    
+    # ~ importa_stili_pagina()
     return
     oDoc = LeenoUtils.getDocument()
     # ~ LPdf.MENU_Pdf()

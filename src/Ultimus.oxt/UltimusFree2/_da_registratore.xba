@@ -1,22 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">Sub AddPageNumberFooter
+    Dim oDoc As Object
+    Dim oPageStyles As Object
+    Dim oDefault As Object
+    Dim oFooter As Object
+    Dim oTextCursor As Object
+    Dim oPageNumber As Object
+    Dim oPageCount As Object
+
+    oDoc = ThisComponent
+    oPageStyles = oDoc.StyleFamilies.getByName(&quot;PageStyles&quot;)
+    oDefault = oPageStyles.getByName(&quot;PageStyle_SAL_A4&quot;)
+
+    &apos; Abilita il piè di pagina
+    oDefault.FooterIsOn = True
+    oFooter = oDefault.RightPageFooterContent
+    oFooter.RightText.String = &quot;&quot;
+
+    &apos; Inserisci il numero di pagina
+    oPageNumber = oDoc.createInstance(&quot;com.sun.star.text.TextField.PageNumber&quot;)
+    oTextCursor = oFooter.RightText.createTextCursor
+    oTextCursor.gotoEnd(False)
+    oTextCursor.String = &quot;ciccio &quot;
+    oTextCursor.gotoEnd(False)
+    oFooter.RightText.insertTextContent(oTextCursor, oPageNumber, True)
+
+    &apos; Inserisci il testo &quot; of &quot; e il conteggio totale delle pagine
+    oPageCount = oDoc.createInstance(&quot;com.sun.star.text.TextField.PageCount&quot;)
+    oTextCursor.gotoEnd(False)
+    oTextCursor.String = &quot; di &quot;
+    oTextCursor.gotoEnd(False)
+    oFooter.RightText.insertTextContent(oTextCursor, oPageCount, True)
+
+    &apos; Applica le modifiche
+    oDefault.RightPageFooterContent = oFooter
+End Sub
 
 
+Sub AddPageNumberHeader
+    Dim oDoc As Object
+    Dim oPageStyles As Object
+    Dim oDefault As Object
+    Dim oHeader As Object
+    Dim oTextCursor As Object
+    Dim oPageNumber As Object
+    Dim oPageCount As Object
 
-sub pag
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+    oDoc = ThisComponent
+    oPageStyles = oDoc.StyleFamilies.getByName(&quot;PageStyles&quot;)
+    oDefault = oPageStyles.getByName(&quot;PageStyle_SAL_A4&quot;)
 
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:EditLinks&quot;, &quot;&quot;, 0, Array())
+    &apos; Abilita l&apos;intestazione
+    oDefault.HeaderIsOn = True
+    oHeader = oDefault.RightPageHeaderContent
+    oHeader.RightText.String = &quot;&quot;
 
+    &apos; Inserisci il numero di pagina
+    oPageNumber = oDoc.createInstance(&quot;com.sun.star.text.TextField.PageNumber&quot;)
+    oTextCursor = oHeader.RightText.createTextCursor
+    oTextCursor.gotoEnd(False)
+    oTextCursor.String = &quot;Pagina &quot;
+    oTextCursor.gotoEnd(False)
+    oHeader.RightText.insertTextContent(oTextCursor, oPageNumber, True)
 
-end sub
+    &apos; Inserisci il testo &quot; di &quot; e il conteggio totale delle pagine
+    oPageCount = oDoc.createInstance(&quot;com.sun.star.text.TextField.PageCount&quot;)
+    oTextCursor.gotoEnd(False)
+    oTextCursor.String = &quot; di &quot;
+    oTextCursor.gotoEnd(False)
+    oHeader.RightText.insertTextContent(oTextCursor, oPageCount, True)
+
+    &apos; Applica le modifiche
+    oDefault.RightPageHeaderContent = oHeader
+End Sub
+
 </script:module>

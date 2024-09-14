@@ -12,17 +12,21 @@
     <node oor:name="Modules">
       <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
         <!--F3-->
+<!--
         <node oor:name="F3" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
         <!--CTRL-, virgola -->
+<!--
         <node oor:name="COMMA_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
         <!--CTRL-0-->
         <node oor:name="0_MOD1" oor:op="replace">
           <prop oor:name="Command">

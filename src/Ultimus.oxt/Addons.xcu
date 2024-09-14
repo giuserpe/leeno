@@ -829,7 +829,7 @@
         </node>
       </node>
     </node>
-    <!--   -->
+
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -1695,6 +1695,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m29" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1704,6 +1705,21 @@
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Descrizione abbreviata ON/OFF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="m29a" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_sistema_pagine</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Stampa...</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>
@@ -1747,128 +1763,7 @@
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/print_ok</value>
             </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>STAMPA...</value>
-            </prop>
-            <node oor:name="Submenu">
-              <node oor:name="m13S1" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36b</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Duplica il foglio attivo...</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m13S3" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.set_area_stampa</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Approssima area stampa...</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m13S4" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale.Pulisci_Tabella_Tutta?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36b</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Sbianca il foglio (nasconde i colori)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m13S5" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36b</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Prepara il foglio per la stampa</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <!-- Utile solo per le analisi -->
-              <node oor:name="m13S6" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                    <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoAnalysis.MENU_impagina_analisi</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image36b</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Imposta i salti pagina... (solo Analisi)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m13S7" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale.togli_salti_pagina?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>--- ELIMINA tutti i salti pagina!</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m13S9" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_tanti_Fogli_PDF?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/pdf-icon</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>> ESPORTA in PDF foglio attivo e copertina (cP_Cop)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-            </node>
+
           </node>
           <node oor:name="m40" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">

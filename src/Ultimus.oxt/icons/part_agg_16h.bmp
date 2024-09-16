@@ -21,7 +21,7 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -57,7 +57,7 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.94967px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.94967px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none"
        x="1.7910712"
        y="4.932229"
        id="text1039"
@@ -69,7 +69,7 @@
          id="tspan1037"
          x="1.7910712"
          y="4.932229"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#000000;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
     <path
        style="fill:none;stroke:#919191;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.14190979,4.8557775 H 8.3552974"
@@ -84,4 +84,3 @@
        id="path1186" />
   </g>
 </svg>
-

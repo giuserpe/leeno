@@ -31,7 +31,7 @@ def leggiAnagraficaGenerale(dati):
 
     datiAnagrafici = {}
     try:
-        DatiGenerali = dati.getchildren()[0][0]
+        DatiGenerali = list(dati)[0][0]
 
         datiAnagrafici['comune'] = DatiGenerali[1].text or ''
         datiAnagrafici['oggetto'] = DatiGenerali[3].text or ''
@@ -57,7 +57,7 @@ def leggiSuperCapitoli(CapCat):
     # PweDGSuperCapitoli
     listaSuperCapitoli = []
     if CapCat.find('PweDGSuperCapitoli'):
-        PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
+        PweDGSuperCapitoli = list(CapCat.find('PweDGSuperCapitoli'))
         for elem in PweDGSuperCapitoli:
             id_sc = elem.get('ID')
             #~ codice = elem.find('Codice').text
@@ -85,7 +85,7 @@ def leggiCapitoli(CapCat):
     # PweDGCapitoli
     listaCapitoli = []
     if CapCat.find('PweDGCapitoli'):
-        PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
+        PweDGCapitoli = list(CapCat.find('PweDGCapitoli'))
         for elem in PweDGCapitoli:
             id_sc = elem.get('ID')
             #~ codice = elem.find('Codice').text
@@ -113,7 +113,7 @@ def leggiSottoCapitoli(CapCat):
     # PweDGSubCapitoli
     listaSottoCapitoli = []
     if CapCat.find('PweDGSubCapitoli'):
-        PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
+        PweDGSubCapitoli = list(CapCat.find('PweDGSubCapitoli'))
         for elem in PweDGSubCapitoli:
             id_sc = elem.get('ID')
             try:
@@ -144,8 +144,7 @@ def leggiSuperCategorie(CapCat):
     # PweDGSuperCategorie
     listaSuperCategorie = []
     if CapCat.find('PweDGSuperCategorie'):
-        PweDGSuperCategorie = CapCat.find(
-            'PweDGSuperCategorie').getchildren()
+        PweDGSuperCategorie = list(CapCat.find('PweDGSuperCategorie'))
         for elem in PweDGSuperCategorie:
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
@@ -164,7 +163,7 @@ def leggiCategorie(CapCat):
     # PweDGCategorie
     listaCategorie = []
     if CapCat.find('PweDGCategorie'):
-        PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
+        PweDGCategorie = list(CapCat.find('PweDGCategorie'))
         for elem in PweDGCategorie:
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
@@ -183,7 +182,7 @@ def leggiSottoCategorie(CapCat):
     # PweDGSubCategorie
     listaSottoCategorie = []
     if CapCat.find('PweDGSubCategorie'):
-        PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
+        PweDGSubCategorie = list(CapCat.find('PweDGSubCategorie'))
         for elem in PweDGSubCategorie:
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
@@ -234,7 +233,7 @@ def leggiDatiGeneraliAnalisi(dati):
     ''' legge i dati generali di analisi '''
 
     try:
-        PweDGAnalisi = dati.find('PweDGModuli').getchildren()[0]
+        PweDGAnalisi = list(dati.find('PweDGModuli'))[0]
 
         try:
             speseGenerali = float(PweDGAnalisi.find('SpeseGenerali').text) / 100
@@ -277,7 +276,7 @@ def leggiApprossimazioni(dati):
 
     if PweDGConfigNumeri is None:
         return {}
-    PweDGConfigNumeri = PweDGConfigNumeri.getchildren()[0]
+    PweDGConfigNumeri = list(PweDGConfigNumeri)[0]
     res = {}
 
     partiUguali = PweDGConfigNumeri.find('PartiUguali')
@@ -393,7 +392,7 @@ def leggiElencoPrezzi(misurazioni):
     listaAnalisi = []
     listaTariffeAnalisi = []
 
-    PweElencoPrezzi = misurazioni.getchildren()[0]
+    PweElencoPrezzi = list(misurazioni)[0]
 
     # leggo l'elenco prezzi
     epitems = PweElencoPrezzi.findall('EPItem')
@@ -590,7 +589,7 @@ def leggiMisurazioni(misurazioni, ordina):
         return
     listaMisure = []
     try:
-        PweVociComputo = misurazioni.getchildren()[1]
+        PweVociComputo = list(misurazioni)[1]
         vcitems = PweVociComputo.findall('VCItem')
         prova_l = []
         for elem in vcitems:
@@ -624,7 +623,7 @@ def leggiMisurazioni(misurazioni, ordina):
             except AttributeError:
                CodiceWBS = ''
             '''
-            righi_mis = elem.getchildren()[-1].findall('RGItem')
+            righi_mis = list(elem)[-1].findall('RGItem')
             riga_misura = []
             lista_righe = []
             new_id_l = []
@@ -1259,6 +1258,7 @@ def MENU_XPWE_import(filename = None):
 
     # effettua il parsing del file XML
     tree = ElementTree()
+    # ~ DLG.chi(tree.parse(filename))
     try:
         tree.parse(filename)
     except ParseError:
@@ -1288,7 +1288,7 @@ def MENU_XPWE_import(filename = None):
     # va alla sezione dei dati generali
     dati = root.find('PweDatiGenerali')
     if dati == None:
-        dati = root.getchildren()[0].find('PweDatiGenerali')
+        dati = list(root)[0].find('PweDatiGenerali')
 
     # legge i dati anagrafici generali
     datiAnagrafici = leggiAnagraficaGenerale(dati)
@@ -1308,7 +1308,7 @@ def MENU_XPWE_import(filename = None):
 
     misurazioni = root.find('PweMisurazioni')
     if misurazioni == None:
-        misurazioni = root.getchildren()[0].find('PweMisurazioni')
+        misurazioni = list(root)[0].find('PweMisurazioni')
 
     # legge l'elenco prezzi
     try:

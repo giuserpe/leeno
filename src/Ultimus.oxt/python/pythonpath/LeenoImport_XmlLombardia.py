@@ -58,9 +58,9 @@ def parseXML(data, defaultTitle=None):
 
     # prendo il suffisso da aggiungere al codice categorie
     try:
-        suff = root[0][0].getchildren()[1].attrib['CMPcodifica_voce'][:8]
+        suff = list(root[0][0])[1].attrib['CMPcodifica_voce'][:8]
     except:
-        suff = root[0][0].getchildren()[1].attrib['codice_voce'][:8]
+        suff = list(root[0][0])[1].attrib['codice_voce'][:8]
 
     voci = root.find('voci')
     for voce in voci:
@@ -179,7 +179,8 @@ def parseXML1(data, defaultTitle=None):
     titolo = root.items()[0][-1].split('.')[0]
 
     # ~ voci = root.find('Parte3')
-    voci = list(root.getchildren())
+    # ~ voci = list(root.getchildren())
+    voci = list(root)
             # ~ 'codice': codice,
             # ~ 'desc': desc,
             # ~ 'um': um,

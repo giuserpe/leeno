@@ -1637,74 +1637,6 @@ def sproteggi_sheet_TUTTE():
 
 ########################################################################
 
-def setPageStyle():
-    '''
-    Attribuisce ad ogni foglio il suo specifico stile di pagina
-    '''
-    stili = {
-        'cP_Cop': 'Page_Style_COPERTINE',
-        'COMPUTO': 'PageStyle_COMPUTO_A4',
-        'VARIANTE': 'PageStyle_COMPUTO_A4',
-        'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
-        # ~'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
-        'Analisi di Prezzo': 'PageStyle_COMPUTO_A4',
-        'CONTABILITA': 'Page_Style_Libretto_Misure2',
-        'Registro': 'PageStyle_REGISTRO_A4',
-        'SAL': 'PageStyle_SAL_A4',
-    }
-
-    ctx = LeenoUtils.getComponentContext()
-    desktop = LeenoUtils.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-
-    oDoc = LeenoUtils.getDocument()
-    nSheet = oDoc.CurrentController.ActiveSheet.Name
-
-    for el in (stili.keys()):
-        try:
-            GotoSheet(el)
-
-            oProp = []
-
-            oProp0 = PropertyValue()
-            oProp0.Name = "Template"
-            oProp0.Value = stili[el]
-            oProp.append(oProp0)
-
-            oProp1 = PropertyValue()
-            oProp1.Name =  "Family"
-            oProp1.Value = 8
-            oProp.append(oProp1)
-
-            properties = tuple(oProp)
-
-            dispatchHelper.executeDispatch(oFrame, ".uno:StyleApply", "", 0, properties)
-        except:
-            pass
-
-    GotoSheet(nSheet)
-
-    # cancella stili di pagina #######################################
-    # ~stili_pagina = []
-    # ~fine = oDoc.StyleFamilies.getByName('PageStyles').Count
-    # ~for n in range(0, fine):
-    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-    # ~stili_pagina.append(oAktPage.DisplayName)
-    # ~for el in stili_pagina:
-    # ~if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE',
-    # 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4',
-    # 'PageStyle_Elenco Prezzi'):
-    # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
-    # ~return
-    # cancella stili di pagina #######################################
-
-
-    return
-
-
-########################################################################
-
 
 def setPreview(arg=0):
     '''
@@ -7258,49 +7190,6 @@ def crea_property_value(name, value):
     return prop
 
 
-def importa_stili_pagina(overwrite = False):
-    """
-    Importa solo gli stili di pagina dal template di LeenO,
-    con la possibilità di sovrascrivere quelli esistenti.
-
-    Args:
-        overwrite (bool): se True sovrascrive gli stili esistenti.
-    """
-
-    filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
-
-    oDoc = LeenoUtils.getDocument()
-
-    # Creare la lista di PropertyValue per le opzioni di caricamento
-    loadOptions = []
-    loadOptions.append(crea_property_value("LoadPageStyles", True))
-    loadOptions.append(crea_property_value("LoadCellStyles", False))
-    loadOptions.append(crea_property_value("LoadTextStyles", False))
-    loadOptions.append(crea_property_value("LoadFrameStyles", False))
-    loadOptions.append(crea_property_value("LoadNumberingStyles", False))
-    # sovrascrivi se esistente
-    loadOptions.append(crea_property_value("OverwriteStyles", overwrite))
-
-    try:
-        # Carica gli stili di pagina dal file di riferimento
-        oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(loadOptions))
-    except Exception as e:
-        DLG.chi(f"Errore: {e}")
-
-    # attiva la progressbar
-    oProgressBar = create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
-    n = 1 
-    for el in oDoc.Sheets.ElementNames:
-        oProgressBar.Value = n
-        n += 1
-        oDoc.CurrentController.setActiveSheet(
-            oDoc.getSheets().getByName(el))
-        oSheet = oDoc.getSheets().getByName(el)
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    oProgressBar.reset()
-    oProgressBar.end()
-
-
 ########################################################################
 
 
@@ -8101,6 +7990,7 @@ def autoexec():
     questa è richiamata da creaComputo()
     '''
     LeenoUtils.DocumentRefresh(False)
+    LS.importa_stili_pagina_non_presenti()
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
@@ -9763,7 +9653,7 @@ def set_area_stampa():
     oStampa.EndRow = ER
     oSheet.setPrintAreas((oStampa,))
 
-    setPageStyle()
+    LS.setPageStyle()
 
 ########################################################################
 
@@ -10688,8 +10578,17 @@ def ESEMPIO_create_progress_bar():
 
 
 def MENU_debug():
-    DLG.chi(88886666666668888)
-    sistema_cose()
+    LeenoContab.insrow()
+    # ~ LS.setPageStyle()
+    
+    return
+    LS.npagina()
+    return
+    import _elementtree
+    
+    DLG.chi(help ('modules'))
+    # ~ DLG.chi(sys.modules)
+    # ~ sistema_cose()
     
     # ~ importa_stili_pagina()
     return
@@ -10704,41 +10603,7 @@ def MENU_debug():
     return
     # ~ oSheet = oDoc.CurrentController.ActiveSheet
 
-    stili = {
-        # 'PageStyle_COMPUTO_A4': 'Computo Metrico',
-        'PageStyle_Elenco Prezzi': 'Elenco Prezzi',
-        'Page_Style_Libretto_Misure2': 'Libretto delle Misure',
-        'PageStyle_REGISTRO_A4': 'Registro di Contabilità',
-        'PageStyle_SAL_A4': 'Stato di Avanzamento Lavori',
-    }
 
-    for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
-        oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-        try:
-            committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
-            committente = committente + '\n' + stili[oAktPage.DisplayName]
-        except Exception as e:
-            # ~ DLG.chi(f"Errore stile di pagina: {e}")
-            committente = ""
-        
-        for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
-            oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-            htxt = 8.0 / 100 * oAktPage.PageScale
-            # ~ committente = get_committente(oDoc, oAktPage, stili)
-
-            if oAktPage.DisplayName == 'Page_Style_COPERTINE':
-                oAktPage.HeaderIsOn = False
-                oAktPage.FooterIsOn = False
-            else:
-                oAktPage.HeaderIsOn = True
-                oAktPage.FooterIsOn = True
-
-            LS.set_page_margins(oAktPage)
-            LS.set_page_borders(oAktPage)
-            LS.set_header(oAktPage, committente, '', '')
-            LS.set_footer(oAktPage, '', '', '')
-
-    LS.npagina()
 
     return
 

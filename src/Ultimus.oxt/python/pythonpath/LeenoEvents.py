@@ -6,6 +6,7 @@ import sys
 from com.sun.star.beans import PropertyValue
 import LeenoUtils
 import LeenoBasicBridge
+import pyleeno as PL
 
 def macro_SHEET(nSheet, nEvento, miamacro):
     '''
@@ -19,23 +20,16 @@ def macro_SHEET(nSheet, nEvento, miamacro):
  # ~"OnRightClick"  click destro
  # ~"OnChange"      modificando il contenuto
  # ~"OnCalculate"   mboh...
-    oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'EventType'
-    oProp0.Value = 'Script'
-    oProp1 = PropertyValue()
-    oProp1.Name = 'Script'
-    oProp1.Value = miamacro
-    
-    oProp.append(oProp0)
-    oProp.append(oProp1)
 
-    properties = tuple(oProp)
+    oProp = [
+        PL.crea_property_value("EventType", 'Script'),
+        PL.crea_property_value("Script", miamacro)
+    ]
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(nSheet)
     uno.invoke(
         oSheet.Events, 'replaceByName',
-        (nEvento, uno.Any('[]com.sun.star.beans.PropertyValue', properties))
+        (nEvento, uno.Any('[]com.sun.star.beans.PropertyValue', tuple(oProp)))
     )
     return
 
@@ -98,44 +92,48 @@ def assegna():
     '''sotto Linux l'assegnazione delle macro agli eventi deve passare attraverso Basic, quindi:'''
 
     # ~ macro_SHEET ("Elenco Prezzi", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-    macro_SHEET ("Elenco Prezzi", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+    try:
+        macro_SHEET ("Elenco Prezzi", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
-    if oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        # ~ macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-        macro_SHEET ("Analisi di Prezzo", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        if oDoc.getSheets().hasByName('Analisi di Prezzo'):
+            # ~ macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+            macro_SHEET ("Analisi di Prezzo", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
-    # ~ macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-    macro_SHEET ("COMPUTO", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        # ~ macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_SHEET ("COMPUTO", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
-    if oDoc.getSheets().hasByName("VARIANTE"):
-        # ~ macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-        macro_SHEET ("VARIANTE", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        if oDoc.getSheets().hasByName("VARIANTE"):
+            # ~ macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+            macro_SHEET ("VARIANTE", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
 
-    if oDoc.getSheets().hasByName("CONTABILITA"):
-        # ~ macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-        macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
-    macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
-    # ~ macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
-    macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
-    # ~OnStartApp
-    # ~OnCloseApp
-    # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    # ~OnLoadFinished
-    macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
-    macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    macro_DOC ("OnSave", macro_URL("LeenoBasicBridge", "bak0"))
-    # ~OnSaveDone
-    # ~OnSaveFailed
-    macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    # ~OnSaveAsDone
-    macro_DOC ("OnSaveAsFailed", "vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&location=application")
-    # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    # ~OnCopyToDone
-    # ~OnCopyToFailed
-    macro_DOC ("OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-    # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
+        if oDoc.getSheets().hasByName("CONTABILITA"):
+            # ~ macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+            macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
+        # ~ macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        # ~OnStartApp
+        # ~OnCloseApp
+        # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        # ~OnLoadFinished
+        macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
+        macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
+        macro_DOC ("OnSave", macro_URL("LeenoBasicBridge", "bak0"))
+        # ~OnSaveDone
+        # ~OnSaveFailed
+        macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
+        # ~OnSaveAsDone
+        macro_DOC ("OnSaveAsFailed", "vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&location=application")
+        # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
+        # ~OnCopyToDone
+        # ~OnCopyToFailed
+        macro_DOC ("OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
+    except Exception as e:
+        # ~ PL.DLG.chi(f'Errore: {e}')
+        pass
     # ~OnPrint
     # ~OnViewCreated
     # ~OnPrepareViewClosing

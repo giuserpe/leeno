@@ -51,6 +51,23 @@ def chi(s):
     s1 = str(s) + '\n\n' + str(dir(s).__str__())
     MessageBox(parentwin, s1, str(type(s)), 'infobox')
 
+def errore(e):
+    '''
+    Mostra un messaggio dettagliato dell'errore, includendo il tipo di eccezione,
+    il messaggio e la traccia dello stack per facilitare il debug.
+
+    Args:
+        e (Exception): L'eccezione catturata.
+
+    Comportamento:
+        Visualizza un dialogo con il tipo di errore, il messaggio e la traccia completa dello stack.
+    '''
+    import traceback
+    error_type = type(e).__name__
+    stack_trace = traceback.format_exc()
+
+    chi(f'Errore di tipo "{error_type}": {str(e)}\n\nTraccia dello stack:\n{stack_trace}')
+
 
 def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     '''

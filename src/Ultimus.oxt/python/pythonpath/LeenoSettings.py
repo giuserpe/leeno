@@ -406,7 +406,7 @@ def setPageStyle():
             oAktPage.ScaleToPagesX = 1  # Adatta alla larghezza
             oAktPage.ScaleToPagesY = 0  # Altezza non specificata
         except Exception as e:
-            PL.importa_stili_pagina_non_presenti()
+            importa_stili_pagina_non_presenti()
             continue
 
     # Ritorna al foglio originale

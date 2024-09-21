@@ -7,6 +7,7 @@ from com.sun.star.sheet.CellFlags import \
 import LeenoUtils
 import SheetUtils
 import LeenoSheetUtils
+import LeenoSettings as LS
 import LeenoComputo
 import Dialogs
 import LeenoDialogs as DLG
@@ -179,6 +180,7 @@ def mostra_sal(uSal):
                 # ~ nomearea = el[1] + str(sal)
                 try:
                     nomearea = el[1] + str(sal)
+                    # ~ DLG.chi(el[0])
                     oSheet = oDoc.Sheets.getByName(el[0])
                     oRanges = oDoc.NamedRanges
                     oNamedRange = oRanges.getByName(nomearea).ReferredCells.RangeAddress
@@ -191,7 +193,6 @@ def mostra_sal(uSal):
 
                     oNamedRange.EndColumn = el[2]
 
-                    # Gruppo e scomposizione delle celle
                     oSheet.ungroup(oNamedRange, 1)
                     oSheet.group(oNamedRange, 1)
 
@@ -205,8 +206,11 @@ def mostra_sal(uSal):
                     else:
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
                 except Exception as e:
+                    # ~ DLG.errore(e)
+                    continue
+
                     # ~ DLG.chi(f"Errore nell'accesso all'area nominata {nomearea}: {e}")
-                    pass
+                    # ~ pass
 
     return
 
@@ -263,7 +267,7 @@ def MENU_AnnullaAttiContabili():
             for el in ('Registro', 'SAL')   #from
             if len (listaSal) == 1]         #where
         except Exception as e:
-            # ~ DLG.chi(f'Errore: {e}')
+            # ~ DLG.errore(e)
             pass
 
         if len(listaSal) > 1:
@@ -317,7 +321,7 @@ def MENU_AnnullaAttiContabili():
         nSal = int(listaSal[-1]) -1
         mostra_sal(nSal)
     except Exception as e:
-        # ~ DLG.chi(f'Errore________________: {e}')
+        # ~ DLG.errore(e)
         pass
     PL.GotoSheet('CONTABILITA')
 
@@ -667,73 +671,78 @@ def GeneraLibretto(oDoc):
         datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
         SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
-    sic = []
-    mdo = []
-    for el in SAL:
-        sic.append(el[6])
-        mdo.append(el[7])
-    sic = sum(sic)
-    mdo = sum(mdo)
+    try:
+        sic = []
+        mdo = []
+        for el in SAL:
+            sic.append(el[6])
+            mdo.append(el[7])
+        sic = sum(sic)
+        mdo = sum(mdo)
 
-    datiSAL = []
-    for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(0,1,2)):
-        quant = sum(float(q[3]) for q in g)
-        k = list(k)
-        k.append(quant)
-        datiSAL.append(k)
+        datiSAL = []
+        for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(0,1,2)):
+            quant = sum(float(q[3]) for q in g)
+            k = list(k)
+            k.append(quant)
+            datiSAL.append(k)
 
-    PL.comando ('DeletePrintArea')
-    SheetUtils.visualizza_PageBreak()
+        PL.comando ('DeletePrintArea')
+        SheetUtils.visualizza_PageBreak()
 
-    oSheet.getCellByPosition(25, ultimariga - 1).String = "SAL n." + str(nSal)
-    oSheet.getCellByPosition(25, ultimariga).Formula = (
-        "=SUBTOTAL(9;P" + str(primariga + 1) + ":P" + str(ultimariga+1) + ")" )
-    oSheet.getCellByPosition(25, ultimariga).CellStyle = "comp sotto Euro 3_R"
+        oSheet.getCellByPosition(25, ultimariga - 1).String = "SAL n." + str(nSal)
+        oSheet.getCellByPosition(25, ultimariga).Formula = (
+            "=SUBTOTAL(9;P" + str(primariga + 1) + ":P" + str(ultimariga+1) + ")" )
+        oSheet.getCellByPosition(25, ultimariga).CellStyle = "comp sotto Euro 3_R"
 
-    # immetti le firme
-    inizioFirme = ultimariga + 1
+        # immetti le firme
+        inizioFirme = ultimariga + 1
 
-    PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
-    fineFirme = inizioFirme + 10
+        PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
+        fineFirme = inizioFirme + 10
 
-    progress.setValue(2)
-    area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
+        progress.setValue(2)
+        area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
 
-    SheetUtils.NominaArea(oDoc, "CONTABILITA", area, nomearea)
+        SheetUtils.NominaArea(oDoc, "CONTABILITA", area, nomearea)
 
-    #applico gli stili corretti ad alcuni dati della firma
-    oSheet.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
-    oSheet.getCellByPosition(2, inizioFirme + 1).CellStyle = "Ultimus_destra"
+        #applico gli stili corretti ad alcuni dati della firma
+        oSheet.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
+        oSheet.getCellByPosition(2, inizioFirme + 1).CellStyle = "Ultimus_destra"
 
-    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+        oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
-    #range del _Lib_
-    daRiga = oNamedRange.StartRow
-    aRiga = oNamedRange.EndRow
-    daColonna = oNamedRange.StartColumn
-    aColonna = oNamedRange.EndColumn
+        #range del _Lib_
+        daRiga = oNamedRange.StartRow
+        aRiga = oNamedRange.EndRow
+        daColonna = oNamedRange.StartColumn
+        aColonna = oNamedRange.EndColumn
+        
+        LS.importa_stili_pagina_non_presenti()
+        LS.setPageStyle()
+        oSheet.PageStyle = "Page_Style_Libretto_Misure2"
+        LeenoSheetUtils.setLarghezzaColonne(oSheet)
+        oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('Page_Style_Libretto_Misure2')
+        committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String + '\nLibretto delle Misure n.' + str(nSal)
+        LS.set_header(oAktPage, committente, '', '')
+        LS.npagina()
+        LS.set_footer(oAktPage, '', "L'IMPRESA \t\t\t\t\t\t\t IL DIRETTORE DEI LAVORI", '')
 
-    oSheet.PageStyle = "Page_Style_Libretto_Misure2"
-    # Adatto lo zoom alla larghezza pagina
-    oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('Page_Style_Libretto_Misure2')
-    oAktPage.PageScale = 0
-    oAktPage.CenterHorizontally = True
-    oAktPage.ScaleToPagesX = 1
-    oAktPage.ScaleToPagesY = 0
+        iSheet = oSheet.RangeAddress.Sheet
 
-    iSheet = oSheet.RangeAddress.Sheet
-
-    # imposta area di stampa e riga da ripetere
-    oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oTitles.Sheet = iSheet
-    oTitles.StartColumn = 0
-    oTitles.StartRow = 2
-    oTitles.EndColumn = 11
-    oTitles.EndRow = 2
-    oSheet.setTitleRows(oTitles)
-    oNamedRange.EndColumn = 11
-    oSheet.setPrintAreas((oNamedRange,))
-    oSheet.setPrintTitleRows(True)
+        # imposta area di stampa e riga da ripetere
+        oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oTitles.Sheet = iSheet
+        oTitles.StartColumn = 0
+        oTitles.StartRow = 2
+        oTitles.EndColumn = 11
+        oTitles.EndRow = 2
+        oSheet.setTitleRows(oTitles)
+        oNamedRange.EndColumn = 11
+        oSheet.setPrintAreas((oNamedRange,))
+        oSheet.setPrintTitleRows(True)
+    except Exception as e:
+        DLG.errore(e)
 
     progress.setValue(3)
 
@@ -742,7 +751,7 @@ def GeneraLibretto(oDoc):
 
     x = fineFirme
     #=lib===================
-    insrow()
+    # ~ insrow()
 
     #cancello la prima riga per aumentare lo spazio per la firma
     oSheet.getCellByPosition(2, x).String = ""
@@ -847,7 +856,8 @@ def GeneraRegistro(oDoc):
 
     try:
         nSal, daVoce, aVoce, primariga, ultimariga, datiSAL, sic, mdo = GeneraLibretto(oDoc)
-    except:
+    except Exception as e:
+        DLG.errore(e)
         return
 
     progress = Dialogs.Progress(Title='Generazione Registro di Contabilità...', Text="Registro di Contabilità")
@@ -889,7 +899,7 @@ def GeneraRegistro(oDoc):
         # ~oSheet.getCellByPosition(10,0).String = ("Num.\nPag.")
     # larghezza colonne
         oSheet.getCellByPosition(0,0).Columns.Width = 1600 #'N. ord.
-        oSheet.getCellByPosition(1,0).Columns.Width = 7000 #'LAVORAZIONI
+        oSheet.getCellByPosition(1,0).Columns.Width = 7500 #'LAVORAZIONI
         oSheet.getCellByPosition(2,0).Columns.Width = 650 #'Lib.N.
         oSheet.getCellByPosition(3,0).Columns.Width = 650 #'Lib.P.
         oSheet.getCellByPosition(4,0).Columns.Width = 1000 #'U.M.
@@ -901,7 +911,9 @@ def GeneraRegistro(oDoc):
         # ~oSheet.getCellByPosition(0, 2).Rows.OptimalHeight = True
         # ~oSheet.getCellByPosition(10,0).Columns.OptimalWidth = True #'n.pag.
         insRow = 1 #'prima riga inserimento in Registro
-    except:
+    except Exception as e:
+        DLG.errore()
+
         # recupera il registro precedente
         PL.GotoSheet('Registro')
         oSheet= oDoc.Sheets.getByName("Registro")
@@ -986,13 +998,13 @@ def GeneraRegistro(oDoc):
     # ~daColonna = oNamedRange.StartColumn
     # ~aColonna = oNamedRange.EndColumn
 
+    LS.setPageStyle()
     oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
-    # Adatto lo zoom alla larghezza pagina
     oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_REGISTRO_A4')
-    oAktPage.PageScale = 0
-    oAktPage.CenterHorizontally = True
-    oAktPage.ScaleToPagesX = 1
-    oAktPage.ScaleToPagesY = 0
+    committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String + \
+    '\nRegistro di Contabilità n.' + str(nSal)
+    LS.set_header(oAktPage, committente, '', '')
+    LS.npagina()
     
     iSheet = oSheet.RangeAddress.Sheet
 
@@ -1039,7 +1051,7 @@ def GeneraRegistro(oDoc):
 
     x = fineFirme
     #=reg===================
-    insrow()
+    # ~ insrow()
 
     fineFirme = SheetUtils.getLastUsedRow(oSheet)
 
@@ -1076,7 +1088,7 @@ def GeneraRegistro(oDoc):
         oSheet.getCellByPosition(6,0).String = ("Pagine")
     # larghezza colonne
         oSheet.getCellByPosition(0,0).Columns.Width = 1600 #'N. ord.
-        oSheet.getCellByPosition(1,0).Columns.Width = 10700 #'LAVORAZIONI
+        oSheet.getCellByPosition(1,0).Columns.Width = 11050 #'LAVORAZIONI
         oSheet.getCellByPosition(2,0).Columns.Width = 1500 #'U.M.
         oSheet.getCellByPosition(3,0).Columns.Width = 1800 #'Quantità
         oSheet.getCellByPosition(4,0).Columns.Width = 1400 #'Prezzo
@@ -1167,13 +1179,38 @@ def GeneraRegistro(oDoc):
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     fineFirme = lastRow + 5
 
+    LS.setPageStyle()
     oSheet.PageStyle = 'PageStyle_SAL_A4'
-    # Adatto lo zoom alla larghezza pagina
     oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_SAL_A4')
-    oAktPage.PageScale = 0
-    oAktPage.CenterHorizontally = True
-    oAktPage.ScaleToPagesX = 1
-    oAktPage.ScaleToPagesY = 0
+    committente = "Committente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String + \
+    "\nStato di Avanzamento Lavori n." + str(nSal) + " a tutto il " + PL.oggi()
+    LS.set_header(oAktPage, committente, '', '')
+    LS.npagina()
+    
+    # ~ oHeader = oAktPage.RightPageHeaderContent
+    # ~oAktPage.PageScale = 95
+    # ~ oHLText = oHeader.LeftText.Text.String = committente
+    # ~ oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+    # ~ oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt
+
+    # ~ oHLText = oHeader.CenterText.Text.String = oggetto
+    # ~ oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+    # ~ oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
+
+    # ~ oHRText = oHeader.RightText.Text.String = '{Page}'
+    # ~ oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+    # ~ oHRText = oHeader.RightText.Text.Text.CharHeight = htxt
+
+    # ~ oAktPage.RightPageHeaderContent = oHeader
+    # ~FOOTER
+    # ~ oFooter = oAktPage.RightPageFooterContent
+    # ~ oHLText = oFooter.CenterText.Text.String = ''
+    # ~ nomefile = oDoc.getURL().replace('%20',' ')
+    # ~ oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + os.path.basename(nomefile)
+    # ~ oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+    # ~ oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
+    # ~ oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+    # ~ oHLText = oFooter.RightText.Text.Text.CharHeight = htxt
 
 # set area di stampa del SAL
     area="$A$" + str(insRow + 2) + ":$F$" + str(fineFirme + 1)
@@ -1193,7 +1230,7 @@ def GeneraRegistro(oDoc):
     oSheet.setPrintTitleRows(True)
 
     # =sal===================
-    insrow()
+    # ~ insrow()
     fineFirme = SheetUtils.getLastUsedRow(oSheet) +1
 
 #applico gli stili corretti ad alcuni dati della firma
@@ -1268,7 +1305,7 @@ def GeneraRegistro(oDoc):
     oSheet.setPrintAreas((oNamedRange,))
 
     #=sal===================
-    insrow()
+    # ~ insrow()
     progress.setValue(8)
     progress.hide()
 
@@ -1313,6 +1350,7 @@ def insrow():
     oSheet.getCellByPosition(col, sRow).Position.Y
 
     hpagina = (len(oSheet.RowPageBreaks) - 1) * 25110
+    # ~ hpagina = (len(oSheet.RowPageBreaks) - 1) * 25850
 
     for i in range(50):
         oSheet.getRows().insertByIndex(iRow, 1)
@@ -1321,18 +1359,20 @@ def insrow():
         # Verifica se la cella supera l'altezza pagina e interrompe il ciclo se necessario
         hattuale = oSheet.getCellByPosition(col, iRow).Position.Y - \
         oSheet.getCellByPosition(col, sRow).Position.Y
+
+        # ~ DLG.chi(f'hattuale: {hattuale}\nhpagina: {hpagina}')
+
         if hattuale >= hpagina:
             break
-
+    return
 
 ########################################################################
 
 
 def GeneraAttiContabili():
     '''
-    @@ DA DOCUMENTARE
+    Genera atti contabili.
     '''
-
     # ~ LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1349,7 +1389,7 @@ def GeneraAttiContabili():
         nSal = int(listaSal[-1])
         mostra_sal(nSal)
     except Exception as e:
-        DLG.chi(f'Errore: {e}')
+        # ~ DLG.errore(e)
         pass
     PL.GotoSheet('CONTABILITA')
 

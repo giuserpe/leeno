@@ -8150,7 +8150,7 @@ def catalogo_stili_cella():
         oSheet.getCellByPosition( 3, i).CellStyle = el
         oSheet.getCellByPosition( 1, i).Value = -2000
         oSheet.getCellByPosition( 3, i).String = "LeenO"
-        i += 2
+        i += 1
         progress.setValue(i)
     progress.hide()
 
@@ -8175,6 +8175,34 @@ def elimina_stili_cella():
     Dialogs.Exclamation(Title = 'ATTENZIONE!', Text=f'Eliminati {n} stili di cella!')
     LeenoUtils.DocumentRefresh(True)
 
+
+def elimina_stile():
+    '''
+    Elimina lo stile della cella selezionata.
+    '''
+    stili_utili = elenca_stili_applicati().append('Default')
+    try:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        selezione = oDoc.getCurrentSelection()
+        stile = selezione.CellStyle
+        DLG.chi(stile)
+        selezione.CellStyle = 'Default' # Assegna lo stile predefinito alla cella
+        # Rimuovi lo stile
+        if stile not in stili_utili:
+            oDoc.StyleFamilies.getByName('CellStyles').removeByName(stile)
+    except Exception as e:
+        DLG.errore(e)
+        pass
+
+    # Ottieni la posizione attuale del cursore
+    cella_corrente = selezione.getCellAddress()
+    nuova_riga = cella_corrente.Row + 1  # Sposta di una riga in basso
+
+    # Assicurati di non uscire dall'intervallo delle righe del foglio
+    if nuova_riga < oSheet.Rows.Count:
+        # Sposta il cursore alla cella nella stessa colonna ma una riga sotto
+        oDoc.CurrentController.select(oSheet.getCellByPosition(cella_corrente.Column, nuova_riga))
 
 ########################################################################
 def inizializza():
@@ -10218,24 +10246,6 @@ def MENU_filtro_descrizione():
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
-# sardegna_2019 moved to LeenoImport.py
-########################################################################
-
-########################################################################
-# basilicata_2020 moved to LeenoImport.py
-########################################################################
-
-########################################################################
-# Piemonte_2019 moved to LeenoImport.py
-########################################################################
-
-
-########################################################################
-def errore():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    DLG.MsgBox(traceback.format_exc())
 
 # ~from collections import OrderedDict
 def somma():
@@ -10578,6 +10588,15 @@ def ESEMPIO_create_progress_bar():
 
 
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    LeenoContab.GeneraLibretto(oDoc)
+    return
+    elimina_stili_cella()
+
+    # ~ elimina_stile()
+    # ~ return
+    catalogo_stili_cella()
+    return
     LeenoContab.insrow()
     # ~ LS.setPageStyle()
     

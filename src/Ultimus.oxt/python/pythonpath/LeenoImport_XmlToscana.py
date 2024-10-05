@@ -163,13 +163,7 @@ supportato nella prossima versione del programma""")
         # ~desc = LeenoImport.fixParagraphSize(desc)
 
         # un po' di pulizia nel testo
-        desc = desc.replace(
-            '\t', ' ').replace('\n', ' ').replace('\n\n', '\n').replace('Ã¨', 'è').replace(
-                'Â°', '°').replace('Ã', 'à').replace(' $', '')
-        while '  ' in desc:
-            desc = desc.replace('  ', ' ')
-        while '\n\n' in desc:
-            desc = desc.replace('\n\n', '\n')
+        desc = PL.clean_text (desc)
 
         um = articolo.find('um').text
         prezzo = articolo.find('prezzo').text

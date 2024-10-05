@@ -99,12 +99,7 @@ def parseXML(data, defaultTitle=None):
         desc = voce + '\n- ' + art
 
         # un po' di pulizia nel testo
-        desc = desc.replace('\t', ' ').replace('Ã¨', 'è').replace(
-        'Â°', '°').replace('Ã', 'à').replace(' $', '')
-        while '  ' in desc:
-            desc = desc.replace('  ', ' ')
-        while '\n\n' in desc:
-            desc = desc.replace('\n\n', '\n')
+        desc = PL.clean_text (desc)
 
         um = articolo.find('um').text.split('(')[-1][: -1]
         prezzo = articolo.find('prezzo').attrib['valore']

@@ -1,4 +1,5 @@
 import re
+import pyleeno as PL
 import LeenoImport
 import xml.etree.ElementTree as ET
 # ~import LeenoDialogs as DLG
@@ -96,13 +97,7 @@ def parseXML(data, defaultTitle=None):
                         mdo = ''
 
                     # un po' di pulizia nel testo
-                    desc = desc.replace('\t', ' ').replace('Ã¨', 'è'
-                    ).replace('Â°', '°').replace('Ã', 'à').replace(
-                    ' $', '').replace('#13;', ' ').replace('\n \n', '\n')
-                    while '  ' in desc:
-                        desc = desc.replace('  ', ' ')
-                    while '\n\n' in desc:
-                        desc = desc.replace('\n\n', '\n')
+                    desc = PL.clean_text (desc)
 
                     # compone l'articolo e lo mette in lista
                     artList[codice] = {

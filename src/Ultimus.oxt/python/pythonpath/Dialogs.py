@@ -2641,7 +2641,15 @@ class Progress:
             if maxVal - minVal ==0:
                 maxVal = +1
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
-            txt = self._text + ' (' + percent + ')'
+            
+            caller_frame = inspect.stack()[1]
+            line_number = caller_frame.lineno
+            function_name = caller_frame.function  # Nome della funzione chiamante
+            
+            txt = f"{self._text} ({percent})" 
+            if 'giuserpe' in os.getlogin():
+                txt = txt + f"\nFunzione: {function_name}()      Linea: {line_number}"
+
             self._textWidget.setText(txt)
 
     def getValue(self):
@@ -2653,7 +2661,15 @@ class Progress:
             minVal, maxVal = self.getLimits()
             val = self.getValue()
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
-            txt = self._text + ' (' + percent + ')'
+            
+            caller_frame = inspect.stack()[1]
+            line_number = caller_frame.lineno
+            function_name = caller_frame.function  # Nome della funzione chiamante
+            
+            txt = f"{self._text} ({percent})" 
+            if 'giuserpe' in os.getlogin():
+                txt = txt + f"\nFunzione: {function_name}()      Linea: {line_number}"
+
             self._textWidget.setText(txt)
 
 def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):

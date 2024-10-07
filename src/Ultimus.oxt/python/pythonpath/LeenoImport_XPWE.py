@@ -94,6 +94,8 @@ def leggiCapitoli(CapCat):
             except AttributeError:
                 codice = ''
             dessintetica = elem.find('DesSintetica').text
+            if dessintetica == "Nuova voce":
+                dessintetica = elem.find('DesEstesa').text
             try:
                 percentuale = elem.find('Percentuale').text
             except:
@@ -125,6 +127,8 @@ def leggiSottoCapitoli(CapCat):
             except AttributeError:
                 codice = ''
             dessintetica = elem.find('DesSintetica').text
+            if dessintetica == "Nuova voce":
+                dessintetica = elem.find('DesEstesa').text
             try:
                 percentuale = elem.find('Percentuale').text
             except:

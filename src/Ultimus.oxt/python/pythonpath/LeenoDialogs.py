@@ -8,6 +8,10 @@ import LeenoUtils
 import pyleeno as PL
 import Dialogs
 
+import inspect
+import os
+import traceback
+
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK_CANCEL
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_YES_NO
@@ -46,10 +50,35 @@ def chi(s):
     s    { object }  : oggetto da interrogare
     Mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili.
     '''
+
+    # Ottieni il frame del chiamante per recuperare il numero di linea, il nome del file e il nome della funzione
+    caller_frame = inspect.stack()[1]
+    line_number = caller_frame.lineno
+    file_name = os.path.basename(caller_frame.filename)
+    function_name = caller_frame.function  # Nome della funzione chiamante
+    # Verifica che il documento sia disponibile
     doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
-    s1 = str(s) + '\n\n' + str(dir(s).__str__())
-    MessageBox(parentwin, s1, str(type(s)), 'infobox')
+    parentwin = doc.CurrentController.Frame.ContainerWindow if doc else None
+
+    if parentwin is not None:
+        # Costruisci il messaggio
+        s1 = (
+            f'Rappresentazione dell\'oggetto:\n{str(s)}\n\n'
+            f'Metodi e attributi disponibili:\n{str(dir(s))}\n\n'
+            f'Nome del file chiamante: {file_name}\n'
+            f'Numero di linea della chiamata: {line_number}\n'
+            f'Nome della funzione chiamante: {function_name}()'
+        )
+
+        # Traccia dello stack attuale (se presente)
+        stack_trace = traceback.format_exc()
+        if stack_trace.strip():  # Se c'è una traccia di stack, includerla
+            s1 += f'\n\nTraccia dello stack:\n{stack_trace}'
+
+        # Mostra il messaggio in un dialogo
+        MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
+
+
 
 def errore(e):
     '''

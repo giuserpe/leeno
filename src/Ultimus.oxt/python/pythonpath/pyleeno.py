@@ -473,8 +473,7 @@ def MENU_invia_voce():
                 for el in costi:
                     el_y.append(SheetUtils.uFindStringCol(el, 0, oSheet))
                 for y in el_y:
-                    rangen = oSheet.getCellRangeByPosition(0, y, 10,
-                                                           y).RangeAddress
+                    rangen = oSheet.getCellRangeByPosition(0, y, 10, y).RangeAddress
                     selezione.append(rangen)
                 voci.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(voci)
@@ -496,6 +495,7 @@ def MENU_invia_voce():
                 _gotoDoc(fpartenza)
             return
             # EliminaVociDoppieElencoPrezzi()
+
         def gestisciElencoPrezzi(ddcDoc, nome):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             dccSheet.IsVisible = True
@@ -507,6 +507,9 @@ def MENU_invia_voce():
             ddcDoc = LeenoUtils.getDocument()
             GotoSheet(nome)
             return ddcDoc.getSheets().getByName(nome)
+
+        def isStyleIn(cell, styles):
+            return cell.CellStyle in styles
 
         if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = gestisciElencoPrezzi(ddcDoc, nome)
@@ -538,9 +541,6 @@ def MENU_invia_voce():
                     _gotoCella(1, lrow + 2)
                     numera_voci(1)
                     lrow = LeggiPosizioneCorrente()[1]
-
-                def isStyleIn(cell, styles):
-                    return cell.CellStyle in styles
 
                 if isStyleIn(dccSheet.getCellByPosition(0, lrow), stili_cat + stili_computo + stili_contab + ('comp Int_colonna_R',)):
                     codice = codice_voce(lrow)
@@ -612,6 +612,11 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
                 lrow = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
             _gotoCella(0, lrow)
             paste_clip(insCells=1)
+            if dccSheet.Name == 'CONTABILITA':
+                rem = LeenoComputo.circoscriveVoceComputo(dccSheet, lrow).RangeAddress.EndRow -2
+                DLG.chi(rem)
+                dccSheet.getRows().removeByIndex(rem, 1)
+
             numera_voci(1)
             last = lrow + ER - SR + 1
             while lrow < last:
@@ -627,8 +632,7 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
             ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
             for el in lista:
                 y = SheetUtils.uFindStringCol(el, 0, oSheet, equal=1)
-                rangen = oSheet.getCellRangeByPosition(0, y, 8,
-                                                       y).RangeAddress
+                rangen = oSheet.getCellRangeByPosition(0, y, 8, y).RangeAddress
                 selezione.append(rangen)
 
             ranges.addRangeAddresses(selezione, True)
@@ -830,6 +834,36 @@ def MENU_copia_sorgente_per_git():
 
 ########################################################################
 
+def apri_con_editor(full_file_path, line_number):
+    # Determina il percorso di Geany a seconda del sistema operativo
+    geany_path = 'geany'  # Predefinito per Linux e macOS
+    if sys.platform == 'win32':
+        geany_path = r'W:\\programmi\\Geany\\bin\\geany.exe'
+
+    # Controlla se il file esiste
+    if not os.path.exists(full_file_path):
+        DLG.chi(f"File non trovato: {full_file_path}")
+        return
+
+    # Controlla che il numero di riga sia valido
+    if not isinstance(line_number, int) or line_number < 1:
+        DLG.chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
+        return
+
+    # Costruisci il comando per inviare il file alla finestra esistente di Geany
+    comando_socket = f'geany --socket-msg "open-file:{full_file_path}:{line_number}"'
+
+    # Prova a inviare il file all'istanza aperta di Geany
+    try:
+        result = subprocess.run(comando_socket, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            # Se fallisce, apre una nuova istanza di Geany
+            comando = f'"{geany_path}" "{full_file_path}:{line_number}"'
+            subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        DLG.chi(f"Errore durante l'apertura del file con Geany: {e}")
+
+
 
 def MENU_avvia_IDE():
     '''
@@ -870,10 +904,10 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-        subprocess.Popen('geany ' + dest + '/pyleeno.py',
+        # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
         # ~ subprocess.Popen('eric ' + dest + '/pyleeno.py',
-                         shell=True,
-                         stdout=subprocess.PIPE)
+                         # ~ shell=True,
+                         # ~ stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -887,11 +921,12 @@ def avvia_IDE():
         else:
             dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
 
-        subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
-                         dest +
-                         '/python/pythonpath/pyleeno.py',
-                         shell=True,
-                         stdout=subprocess.PIPE)
+        # ~ subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
+                         # ~ dest +
+                         # ~ '/python/pythonpath/pyleeno.py',
+                         # ~ shell=True,
+                         # ~ stdout=subprocess.PIPE)
+    apri_con_editor(dest + '/python/pythonpath/pyleeno.py', 1)
     return
 
 
@@ -7492,7 +7527,7 @@ def MENU_vedi_voce():
         if to < lrow:
             vedi_voce_xpwe(oSheet, lrow, to)
     LeenoUtils.DocumentRefresh(True)
-    LeenoSheetUtils.adattaAltezzaRiga()
+    # ~ LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def strall(el, n=3, pos=0):
@@ -7707,6 +7742,13 @@ def MENU_filtra_codice():
     Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
+
+    # per filtrare la prossima voce
+    # ~ oDoc = LeenoUtils.getDocument()
+    # ~ lrow = LeggiPosizioneCorrente()[1]
+    # ~ oSheet = oDoc.CurrentController.ActiveSheet
+    # ~ _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow))
+
     filtra_codice()
 
 
@@ -8049,7 +8091,7 @@ def autoexec():
     questa è richiamata da creaComputo()
     '''
     LeenoUtils.DocumentRefresh(False)
-    LS.importa_stili_pagina_non_presenti()
+    # ~ LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
@@ -10685,7 +10727,10 @@ def ESEMPIO_create_progress_bar():
 
 
 def MENU_debug():
-    sistema_cose()
+    LeenoUtils.DocumentRefresh(True)
+    # ~ trova_ricorrenze()
+    # ~ fissa()
+    # ~ DLG.errore(e)
     return
     
     oDoc = LeenoUtils.getDocument()

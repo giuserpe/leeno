@@ -11,6 +11,7 @@ import Dialogs
 import inspect
 import os
 import traceback
+import subprocess
 
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK_CANCEL
@@ -54,13 +55,15 @@ def chi(s):
     # Ottieni il frame del chiamante per recuperare il numero di linea, il nome del file e il nome della funzione
     caller_frame = inspect.stack()[1]
     line_number = caller_frame.lineno
-    file_name = os.path.basename(caller_frame.filename)
-    function_name = caller_frame.function  # Nome della funzione chiamante
+    full_file_path = caller_frame.filename  # Ottieni il percorso completo
+    file_name = os.path.basename(full_file_path)  # Solo il nome del file
+    function_name = caller_frame.function
+
     # Verifica che il documento sia disponibile
     doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow if doc else None
 
-    if parentwin is not None:
+    if parentwin:
         # Costruisci il messaggio
         s1 = (
             f'Rappresentazione dell\'oggetto:\n{str(s)}\n\n'
@@ -70,14 +73,11 @@ def chi(s):
             f'Nome della funzione chiamante: {function_name}()'
         )
 
-        # Traccia dello stack attuale (se presente)
-        stack_trace = traceback.format_exc()
-        if stack_trace.strip():  # Se c'è una traccia di stack, includerla
-            s1 += f'\n\nTraccia dello stack:\n{stack_trace}'
+        # Apri il file con Geany e vai alla riga specificata
+        PL.apri_con_editor(full_file_path, line_number)
 
         # Mostra il messaggio in un dialogo
         MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
-
 
 
 def errore(e):
@@ -91,7 +91,6 @@ def errore(e):
     Comportamento:
         Visualizza un dialogo con il tipo di errore, il messaggio e la traccia completa dello stack.
     '''
-    import traceback
     error_type = type(e).__name__
     stack_trace = traceback.format_exc()
 

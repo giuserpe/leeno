@@ -172,10 +172,11 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             tbInfo = traceback.extract_tb(tb)[-1]
             function = tbInfo.name
             line = tbInfo.lineno
-            file = os.path.split(tbInfo.filename)[1]
+            # ~ filen = os.path.split(tbInfo.filename)[1]
+            filen = os.path.basename(tbInfo.filename)
             msg = (
                 msg +
-                "File:     '" + file + "'\n" +
+                "File:     '" + filen + "'\n" +
                 "Line:     '" + str(line) + "'\n" +
                 "Function: '" + function + "'\n")
             msg += "-" * 30 + "\n"
@@ -183,12 +184,13 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             for bkInfo in traceback.extract_tb(tb):
                 function = bkInfo.name
                 line = str(bkInfo.lineno)
-                file = os.path.split(bkInfo.filename)[1]
-                msg += f"File:{file}, Line:{line}, Function:{function}\n"
+                # ~ filen = os.path.split(bkInfo.filename)[1]
+                filen = os.path.basename(tbInfo.filename)
+                msg += f"File: {filen}, Line: {line}, Function: {function}\n"
             msg += "\n"
             # messaggi di errore solo per me
             if 'giuserpe' in os.getlogin():
-                msg += '------------------------------\n' + traceback.format_exc()
+                msg += "+-" * 30 + "\n" + traceback.format_exc()
 
             Dialogs.Exclamation(Title=f"Errore interno: {e} ", Text=msg)
 

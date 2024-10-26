@@ -12,10 +12,9 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 &apos;Elenco delle macro che vengono avviate tramite pulsanti nei riquadri di dialogo.
-
 Dim oDialogViste_N as Object
 
-Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
+Sub ScriptPy_old (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
 
 	&apos; questa funzione sfrutta il servizio dispatcher di LeenO per eseguire da basic
 	&apos; dele funzioni in Python, senza i problemi legati ai percorsi fissi
@@ -39,6 +38,64 @@ Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, O
 	bridge.trigger(sModulo + &quot;.&quot; + sFunzione)
 
 End Sub
+
+Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
+
+    &apos; Se il nome del modulo finisce in .py, elimina la parte finale
+    If Right(sModulo, 3) = &quot;.py&quot; Then
+        sModulo = Left(sModulo, Len(sModulo) - 3)
+    End If
+
+    Dim args() As Variant
+    args = Array()
+
+    &apos; Aggiungi gli argomenti solo se sono forniti
+    If Not IsMissing(arg1) Then Appenditem(args, arg1)
+    If Not IsMissing(arg2) Then Appenditem(args, arg2)
+    If Not IsMissing(arg3) Then Appenditem(args, arg3)
+    If Not IsMissing(arg4) Then Appenditem(args, arg4)
+    If Not IsMissing(arg5) Then Appenditem(args, arg5)
+
+    Dim retryCount As Integer
+    retryCount = 0
+    Dim bridge As Object
+
+    &apos; Ciclo per il tentativo di esecuzione fino a 3 volte
+    Do While retryCount &lt; 3
+        On Error GoTo ErrorHandler &apos; Attiva il gestore degli errori
+        
+        &apos; Crea il dispatcher per il modulo Python
+        bridge = GetProcessServiceManager().createInstanceWithArguments(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args)
+
+        &apos; Controllo se il bridge è stato creato correttamente
+        If IsNull(bridge) Then
+            MsgBox &quot;Errore: impossibile creare il dispatcher.&quot;
+            Exit Sub
+        End If
+
+        &apos; Esegui la funzione Python specificata
+        bridge.trigger(sModulo + &quot;.&quot; + sFunzione)
+
+        &apos; Se arriva qui senza errori, esci dal ciclo
+        Exit Sub
+
+        &apos; Incrementa il contatore di tentativi se l&apos;operazione fallisce
+        retryCount = retryCount + 1
+
+    Loop
+
+    &apos; Messaggio se i 3 tentativi falliscono
+    MsgBox &quot;Errore: impossibile eseguire la funzione Python dopo 3 tentativi.&quot;
+    Exit Sub
+
+ErrorHandler:
+    &apos; Gestione degli errori
+    MsgBox &quot;Errore nell&apos;esecuzione del modulo Python: &quot; &amp; Err.Description
+    retryCount = retryCount + 1 &apos; Incrementa il contatore dei tentativi
+    Resume Next &apos; Continua il ciclo per ritentare
+End Sub
+
+
 
 rem ######################################################################
 &apos;Sub MENU_debug

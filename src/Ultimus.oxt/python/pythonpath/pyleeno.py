@@ -473,8 +473,7 @@ def MENU_invia_voce():
                 for el in costi:
                     el_y.append(SheetUtils.uFindStringCol(el, 0, oSheet))
                 for y in el_y:
-                    rangen = oSheet.getCellRangeByPosition(0, y, 10,
-                                                           y).RangeAddress
+                    rangen = oSheet.getCellRangeByPosition(0, y, 10, y).RangeAddress
                     selezione.append(rangen)
                 voci.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(voci)
@@ -496,6 +495,7 @@ def MENU_invia_voce():
                 _gotoDoc(fpartenza)
             return
             # EliminaVociDoppieElencoPrezzi()
+
         def gestisciElencoPrezzi(ddcDoc, nome):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             dccSheet.IsVisible = True
@@ -507,6 +507,9 @@ def MENU_invia_voce():
             ddcDoc = LeenoUtils.getDocument()
             GotoSheet(nome)
             return ddcDoc.getSheets().getByName(nome)
+
+        def isStyleIn(cell, styles):
+            return cell.CellStyle in styles
 
         if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = gestisciElencoPrezzi(ddcDoc, nome)
@@ -538,9 +541,6 @@ def MENU_invia_voce():
                     _gotoCella(1, lrow + 2)
                     numera_voci(1)
                     lrow = LeggiPosizioneCorrente()[1]
-
-                def isStyleIn(cell, styles):
-                    return cell.CellStyle in styles
 
                 if isStyleIn(dccSheet.getCellByPosition(0, lrow), stili_cat + stili_computo + stili_contab + ('comp Int_colonna_R',)):
                     codice = codice_voce(lrow)
@@ -612,6 +612,11 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
                 lrow = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
             _gotoCella(0, lrow)
             paste_clip(insCells=1)
+            if dccSheet.Name == 'CONTABILITA':
+                rem = LeenoComputo.circoscriveVoceComputo(dccSheet, lrow).RangeAddress.EndRow -2
+                DLG.chi(rem)
+                dccSheet.getRows().removeByIndex(rem, 1)
+
             numera_voci(1)
             last = lrow + ER - SR + 1
             while lrow < last:
@@ -627,8 +632,7 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
             ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
             for el in lista:
                 y = SheetUtils.uFindStringCol(el, 0, oSheet, equal=1)
-                rangen = oSheet.getCellRangeByPosition(0, y, 8,
-                                                       y).RangeAddress
+                rangen = oSheet.getCellRangeByPosition(0, y, 8, y).RangeAddress
                 selezione.append(rangen)
 
             ranges.addRangeAddresses(selezione, True)
@@ -830,6 +834,26 @@ def MENU_copia_sorgente_per_git():
 
 ########################################################################
 
+def apri_con_editor(full_file_path, line_number):
+    # Determina il percorso di Geany a seconda del sistema operativo
+    geany_path = 'geany'  # Predefinito per Linux e macOS
+    if sys.platform == 'win32':
+        geany_path = r'W:\programmi\Geany\bin\geany.exe'
+
+    # Controlla se il file esiste
+    if not os.path.exists(full_file_path):
+        print(f"File non trovato: {full_file_path}")
+        return
+
+    # Costruisci il comando per aprire il file con Geany alla linea specificata
+    comando = f'"{geany_path}" "{full_file_path}:{line_number}"'
+
+    # Prova ad aprire il file con Geany
+    try:
+        subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        print(f"Errore durante l'apertura del file con Geany: {e}")
+
 
 def MENU_avvia_IDE():
     '''
@@ -837,62 +861,105 @@ def MENU_avvia_IDE():
     '''
     avvia_IDE()
 
+# ~ def avvia_IDE():
+    # ~ '''Avvia la modifica di pyleeno.py con geany o eric6'''
+    # ~ basic_LeenO('PY_bridge.avvia_IDE')
+    # ~ oDoc = LeenoUtils.getDocument()
+    # ~ Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
+    # ~ try:
+        # ~ if oDoc.getSheets().getByName('S1').getCellByPosition(
+                # ~ 7, 338).String == '':
+            # ~ src_oxt = '_LeenO'
+        # ~ else:
+            # ~ src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
+                # ~ 7, 338).String
+    # ~ except Exception:
+        # ~ pass
+
+    # ~ if sys.platform == 'linux' or sys.platform == 'darwin':
+
+        # ~ dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        # ~ if not os.path.exists(dest):
+            # ~ try:
+                # ~ dest = os.getenv(
+                    # ~ "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
+                # ~ os.makedirs(dest)
+                # ~ os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
+                # ~ os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
+            # ~ except FileExistsError:
+                # ~ pass
+
+        # ~ subprocess.Popen('caja '+
+                         # ~ # ~dest,
+                         # ~ uno.fileUrlToSystemPath(LeenO_path()),
+                         # ~ shell=True,
+                         # ~ stdout=subprocess.PIPE)
+        # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
+        #subprocess.Popen('eric ' + dest + '/pyleeno.py',
+                         # ~ shell=True,
+                         # ~ stdout=subprocess.PIPE)
+    # ~ elif sys.platform == 'win32':
+        # ~ if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+            # ~ try:
+                # ~ os.makedirs(
+                    # ~ os.getenv("HOMEPATH") + '\\' + src_oxt +
+                    # ~ '\\leeno\\src\\Ultimus.oxt\\')
+            # ~ except FileExistsError:
+                # ~ pass
+            # ~ dest = os.getenv("HOMEDRIVE") + os.getenv(
+                # ~ "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+        # ~ else:
+            # ~ dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
+
+        # ~ subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
+                         # ~ dest +
+                         # ~ '/python/pythonpath/pyleeno.py',
+                         # ~ shell=True,
+                         # ~ stdout=subprocess.PIPE)
+    # ~ return
 def avvia_IDE():
-    '''Avvia la modifica di pyleeno.py con geany o eric6'''
+    '''Avvia la modifica di pyleeno.py con Geany o Eric6'''
     basic_LeenO('PY_bridge.avvia_IDE')
     oDoc = LeenoUtils.getDocument()
     Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
+
     try:
-        if oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String == '':
-            src_oxt = '_LeenO'
-        else:
-            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String
+        sheet = oDoc.getSheets().getByName('S1')
+        cell_value = sheet.getCellByPosition(7, 338).String
+        src_oxt = cell_value if cell_value else '_LeenO'
     except Exception:
-        pass
+        src_oxt = '_LeenO'  # Default value if something goes wrong
 
     if sys.platform == 'linux' or sys.platform == 'darwin':
-
-        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        # Imposta il percorso di destinazione in base a Linux/macOS
+        dest = f'/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/{src_oxt}/src/Ultimus.oxt/python/pythonpath'
         if not os.path.exists(dest):
             try:
-                dest = os.getenv(
-                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
+                # Creazione delle directory se non esistono
                 os.makedirs(dest)
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
+                os.makedirs(os.getenv("HOME") + f'/{src_oxt}/leeno/bin/')
+                os.makedirs(os.getenv("HOME") + f'/{src_oxt}/_SRC/OXT')
             except FileExistsError:
                 pass
 
-        subprocess.Popen('caja '+
-                         # ~dest,
-                         uno.fileUrlToSystemPath(LeenO_path()),
-                         shell=True,
-                         stdout=subprocess.PIPE)
-        subprocess.Popen('geany ' + dest + '/pyleeno.py',
-        # ~ subprocess.Popen('eric ' + dest + '/pyleeno.py',
-                         shell=True,
-                         stdout=subprocess.PIPE)
+        # Usa subprocess per aprire Geany o l'editor preferito
+        subprocess.Popen(f'geany {dest}/pyleeno.py', shell=True, stdout=subprocess.PIPE)
+
     elif sys.platform == 'win32':
-        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+        # Imposta il percorso di destinazione in base a Windows
+        dest = f'w:/_dwg/ULTIMUSFREE/_SRC/{src_oxt}/leeno/src/Ultimus.oxt'
+        if not os.path.exists(dest):
             try:
-                os.makedirs(
-                    os.getenv("HOMEPATH") + '\\' + src_oxt +
-                    '\\leeno\\src\\Ultimus.oxt\\')
+                os.makedirs(dest)
             except FileExistsError:
                 pass
-            dest = os.getenv("HOMEDRIVE") + os.getenv(
-                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
-        else:
-            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
+        
+        # Usa subprocess per aprire Geany su Windows
+        subprocess.Popen(f'"W:\\programmi\\Geany\\bin\\geany.exe" {dest}/python/pythonpath/pyleeno.py',
+                         shell=True, stdout=subprocess.PIPE)
 
-        subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
-                         dest +
-                         '/python/pythonpath/pyleeno.py',
-                         shell=True,
-                         stdout=subprocess.PIPE)
     return
+
 
 
 ########################################################################
@@ -10685,7 +10752,7 @@ def ESEMPIO_create_progress_bar():
 
 
 def MENU_debug():
-    sistema_cose()
+    DLG.chi(traceback)
     return
     
     oDoc = LeenoUtils.getDocument()

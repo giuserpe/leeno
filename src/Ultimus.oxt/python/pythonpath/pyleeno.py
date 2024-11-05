@@ -838,21 +838,31 @@ def apri_con_editor(full_file_path, line_number):
     # Determina il percorso di Geany a seconda del sistema operativo
     geany_path = 'geany'  # Predefinito per Linux e macOS
     if sys.platform == 'win32':
-        geany_path = r'W:\programmi\Geany\bin\geany.exe'
+        geany_path = r'W:\\programmi\\Geany\\bin\\geany.exe'
 
     # Controlla se il file esiste
     if not os.path.exists(full_file_path):
-        print(f"File non trovato: {full_file_path}")
+        DLG.chi(f"File non trovato: {full_file_path}")
         return
 
-    # Costruisci il comando per aprire il file con Geany alla linea specificata
-    comando = f'"{geany_path}" "{full_file_path}:{line_number}"'
+    # Controlla che il numero di riga sia valido
+    if not isinstance(line_number, int) or line_number < 1:
+        DLG.chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
+        return
 
-    # Prova ad aprire il file con Geany
+    # Costruisci il comando per inviare il file alla finestra esistente di Geany
+    comando_socket = f'geany --socket-msg "open-file:{full_file_path}:{line_number}"'
+
+    # Prova a inviare il file all'istanza aperta di Geany
     try:
-        subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(comando_socket, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            # Se fallisce, apre una nuova istanza di Geany
+            comando = f'"{geany_path}" "{full_file_path}:{line_number}"'
+            subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception as e:
-        print(f"Errore durante l'apertura del file con Geany: {e}")
+        DLG.chi(f"Errore durante l'apertura del file con Geany: {e}")
+
 
 
 def MENU_avvia_IDE():
@@ -861,105 +871,63 @@ def MENU_avvia_IDE():
     '''
     avvia_IDE()
 
-# ~ def avvia_IDE():
-    # ~ '''Avvia la modifica di pyleeno.py con geany o eric6'''
-    # ~ basic_LeenO('PY_bridge.avvia_IDE')
-    # ~ oDoc = LeenoUtils.getDocument()
-    # ~ Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
-    # ~ try:
-        # ~ if oDoc.getSheets().getByName('S1').getCellByPosition(
-                # ~ 7, 338).String == '':
-            # ~ src_oxt = '_LeenO'
-        # ~ else:
-            # ~ src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
-                # ~ 7, 338).String
-    # ~ except Exception:
-        # ~ pass
+def avvia_IDE():
+    '''Avvia la modifica di pyleeno.py con geany o eric6'''
+    basic_LeenO('PY_bridge.avvia_IDE')
+    oDoc = LeenoUtils.getDocument()
+    Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
+    try:
+        if oDoc.getSheets().getByName('S1').getCellByPosition(
+                7, 338).String == '':
+            src_oxt = '_LeenO'
+        else:
+            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
+                7, 338).String
+    except Exception:
+        pass
 
-    # ~ if sys.platform == 'linux' or sys.platform == 'darwin':
+    if sys.platform == 'linux' or sys.platform == 'darwin':
 
-        # ~ dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
-        # ~ if not os.path.exists(dest):
-            # ~ try:
-                # ~ dest = os.getenv(
-                    # ~ "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
-                # ~ os.makedirs(dest)
-                # ~ os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
-                # ~ os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
-            # ~ except FileExistsError:
-                # ~ pass
+        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        if not os.path.exists(dest):
+            try:
+                dest = os.getenv(
+                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
+                os.makedirs(dest)
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
+            except FileExistsError:
+                pass
 
-        # ~ subprocess.Popen('caja '+
-                         # ~ # ~dest,
-                         # ~ uno.fileUrlToSystemPath(LeenO_path()),
-                         # ~ shell=True,
-                         # ~ stdout=subprocess.PIPE)
+        subprocess.Popen('caja '+
+                         # ~dest,
+                         uno.fileUrlToSystemPath(LeenO_path()),
+                         shell=True,
+                         stdout=subprocess.PIPE)
         # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
-        #subprocess.Popen('eric ' + dest + '/pyleeno.py',
+        # ~ subprocess.Popen('eric ' + dest + '/pyleeno.py',
                          # ~ shell=True,
                          # ~ stdout=subprocess.PIPE)
-    # ~ elif sys.platform == 'win32':
-        # ~ if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
-            # ~ try:
-                # ~ os.makedirs(
-                    # ~ os.getenv("HOMEPATH") + '\\' + src_oxt +
-                    # ~ '\\leeno\\src\\Ultimus.oxt\\')
-            # ~ except FileExistsError:
-                # ~ pass
-            # ~ dest = os.getenv("HOMEDRIVE") + os.getenv(
-                # ~ "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
-        # ~ else:
-            # ~ dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
+    elif sys.platform == 'win32':
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+            try:
+                os.makedirs(
+                    os.getenv("HOMEPATH") + '\\' + src_oxt +
+                    '\\leeno\\src\\Ultimus.oxt\\')
+            except FileExistsError:
+                pass
+            dest = os.getenv("HOMEDRIVE") + os.getenv(
+                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+        else:
+            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
 
         # ~ subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
                          # ~ dest +
                          # ~ '/python/pythonpath/pyleeno.py',
                          # ~ shell=True,
                          # ~ stdout=subprocess.PIPE)
-    # ~ return
-def avvia_IDE():
-    '''Avvia la modifica di pyleeno.py con Geany o Eric6'''
-    basic_LeenO('PY_bridge.avvia_IDE')
-    oDoc = LeenoUtils.getDocument()
-    Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
-
-    try:
-        sheet = oDoc.getSheets().getByName('S1')
-        cell_value = sheet.getCellByPosition(7, 338).String
-        src_oxt = cell_value if cell_value else '_LeenO'
-    except Exception:
-        src_oxt = '_LeenO'  # Default value if something goes wrong
-
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        # Imposta il percorso di destinazione in base a Linux/macOS
-        dest = f'/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/{src_oxt}/src/Ultimus.oxt/python/pythonpath'
-        if not os.path.exists(dest):
-            try:
-                # Creazione delle directory se non esistono
-                os.makedirs(dest)
-                os.makedirs(os.getenv("HOME") + f'/{src_oxt}/leeno/bin/')
-                os.makedirs(os.getenv("HOME") + f'/{src_oxt}/_SRC/OXT')
-            except FileExistsError:
-                pass
-
-        # Usa subprocess per aprire Geany o l'editor preferito
-        subprocess.Popen(f'geany {dest}/pyleeno.py', shell=True, stdout=subprocess.PIPE)
-
-    elif sys.platform == 'win32':
-        # Imposta il percorso di destinazione in base a Windows
-        dest = f'w:/_dwg/ULTIMUSFREE/_SRC/{src_oxt}/leeno/src/Ultimus.oxt'
-        if not os.path.exists(dest):
-            try:
-                os.makedirs(dest)
-            except FileExistsError:
-                pass
-        
-        # Usa subprocess per aprire Geany su Windows
-        subprocess.Popen(f'"W:\\programmi\\Geany\\bin\\geany.exe" {dest}/python/pythonpath/pyleeno.py',
-                         shell=True, stdout=subprocess.PIPE)
-
+    apri_con_editor(dest + '/python/pythonpath/pyleeno.py', 1)
     return
-
 
 
 ########################################################################
@@ -2356,6 +2324,9 @@ def scelta_viste():
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
+    
+    vRow = oDoc.CurrentController.getFirstVisibleRow()
+    
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
     global oDialog1
@@ -2592,7 +2563,7 @@ def scelta_viste():
                 oRangeAddress.StartColumn = 15
                 oRangeAddress.EndColumn = 18
 
-                oSheet.getCellRangeByName ('X1').String = 'COMPUTO - CONTABILITÀ'
+                oSheet.getCellRangeByName ('X1').String = 'COMPUTO - CONTvisteABILITÀ'
                 for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2):
                     formule.append([
                         '=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' +
@@ -2720,18 +2691,21 @@ def scelta_viste():
                 oSheet.getCellRangeByPosition(
                     0, el, 25, el).CellBackColor = 16777062
         LeenoUtils.DocumentRefresh(True)
-        # ~# operazioni comuni
-        # ~for el in (11, 15, 19, 26):
-            # ~oSheet.getCellRangeByPosition(
-                # ~el, 3, el, LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP-mezzo %'
-        # ~for el in (12, 16, 20, 23):
-            # ~oSheet.getCellRangeByPosition(
-                # ~el, 3, el,
-                # ~LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche_q'
-        # ~for el in (13, 17, 21, 24, 25):
-            # ~oSheet.getCellRangeByPosition(
-                # ~el, 3, el,
-                # ~LeenoSheetUtils.cercaUltimaVoce(oSheet)).CellStyle = 'EP statistiche'
+        # operazioni comuni
+        # Dizionario per gestire le colonne e i rispettivi stili
+        colonne_stili = {
+            'EP-mezzo %': (11, 15, 19, 26),
+            'EP statistiche_q': (12, 16, 20, 23),
+            'EP statistiche': (13, 17, 21, 24, 25)
+        }
+
+        ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+
+        # Applicazione di stili alle colonne
+        for stile, colonne in colonne_stili.items():
+            for col in colonne:
+                oSheet.getCellRangeByPosition(col, 3, col, ultima_voce).CellStyle = stile
+
         oCellRangeAddr.StartColumn = 3
         oCellRangeAddr.EndColumn = 3
         oSheet.ungroup(oCellRangeAddr, 0)
@@ -2907,8 +2881,10 @@ def scelta_viste():
         # ~ GotoSheet('CONTABILITA')
     # ~oSheet = oDoc.getSheets().getByName('CONTABILITA')
     # ~oSheet.Rows.OptimalHeight = True
-
+    oDoc.CurrentController.setFirstVisibleRow(vRow)
     LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
+
 
 
 ########################################################################
@@ -5042,7 +5018,8 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
     if rigen:
         rigenera_parziali(False)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-    oDoc.enableAutomaticCalculation(True)
+    # ~ oDoc.enableAutomaticCalculation(True)
+    LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 def copia_riga_computo(lrow):
@@ -5081,7 +5058,13 @@ def copia_riga_computo(lrow):
                 lrow + 1) + ')=0;"";PRODUCT(E' + str(lrow +
                                                      1) + ':I' + str(lrow +
                                                                      1) + '))'
+        # Ottieni l'intervallo delle righe e collassa il gruppo
+        # ~ r_addr = oSheet.getCellRangeByPosition(0, 0, 0, lrow).RangeAddress
+        # ~ oSheet.group(r_addr, 1)  # Raggruppa le righe
+        # ~ oSheet.hideDetail(r_addr)  # Collassa il gruppo
         _gotoCella(2, lrow)
+
+    LeenoUtils.DocumentRefresh(True)
         # ~oDoc.CurrentController.select(oSheet.getCellByPosition(2, lrow))
         # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
@@ -5095,30 +5078,35 @@ def copia_riga_contab(lrow):
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheetto = oDoc.getSheets().getByName('S5')
     oRangeAddress = oSheetto.getCellRangeByPosition(0, 24, 42, 24).getRangeAddress()
-    #  lrow = LeggiPosizioneCorrente()[1]
-    stile = oSheet.getCellByPosition(1, lrow).CellStyle
-    if oSheet.getCellByPosition(1,
-                                lrow + 1).CellStyle == 'comp sotto Bianche_R':
-        return
-    if stile in ('comp Art-EP_R', 'Data_bianca', 'Comp-Bianche in mezzo_R'):
 
-        lrow = lrow + 1  # PER INSERIMENTO SOTTO RIGA CORRENTE
+    stile = oSheet.getCellByPosition(1, lrow).CellStyle
+
+    if oSheet.getCellByPosition(1, lrow + 1).CellStyle == 'comp sotto Bianche_R':
+        return
+
+    if stile in ('comp Art-EP_R', 'Data_bianca', 'Comp-Bianche in mezzo_R'):
+        lrow = lrow + 1  # Inserisci sotto la riga corrente
 
         oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
         oSheet.getRows().insertByIndex(lrow, 1)
         oSheet.copyRange(oCellAddress, oRangeAddress)
-        if stile in ('comp Art-EP_R'):
-            oRangeAddress = oSheet.getCellByPosition(1, lrow +
-                                                     1).getRangeAddress()
+
+        if stile == 'comp Art-EP_R':
+            oRangeAddress = oSheet.getCellByPosition(1, lrow + 1).getRangeAddress()
             oCellAddress = oSheet.getCellByPosition(1, lrow).getCellAddress()
             oSheet.copyRange(oCellAddress, oRangeAddress)
             oSheet.getCellByPosition(1, lrow + 1).String = ""
-            oSheet.getCellByPosition(1, lrow + 1
-                                ).CellStyle = 'Comp-Bianche in mezzo_R'
+            oSheet.getCellByPosition(1, lrow + 1).CellStyle = 'Comp-Bianche in mezzo_R'
         else:
             oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
+    # Esempio di utilizzo di hideDetail()
+    r_addr = oSheet.getCellRangeByPosition(0, 0, 0, lrow).RangeAddress
+    oSheet.hideDetail(r_addr)  # Collassa il gruppo dell'intervallo specificato
+
     _gotoCella(2, lrow)
-    return
+
+    LeenoUtils.DocumentRefresh(True)
+
 
 
 def copia_riga_analisi(lrow):
@@ -5183,7 +5171,7 @@ def MENU_Copia_riga_Ent():
     @@ DA DOCUMENTARE
     '''
     Copia_riga_Ent()
-    LeenoSheetUtils.adattaAltezzaRiga()
+    # ~ LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def Copia_riga_Ent(num_righe=1):
@@ -5809,6 +5797,7 @@ def comando(cmd):
     'CalculateHard'         = Ricalcolo incondizionato
     'Save'                  = Salva il file
     'NumberFormatDecimal'   =
+    'DataBarFormatDialog'   = Formato Barra dati
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -7559,7 +7548,7 @@ def MENU_vedi_voce():
         if to < lrow:
             vedi_voce_xpwe(oSheet, lrow, to)
     LeenoUtils.DocumentRefresh(True)
-    LeenoSheetUtils.adattaAltezzaRiga()
+    # ~ LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def strall(el, n=3, pos=0):
@@ -7774,6 +7763,13 @@ def MENU_filtra_codice():
     Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
+
+    # per filtrare la prossima voce
+    # ~ oDoc = LeenoUtils.getDocument()
+    # ~ lrow = LeggiPosizioneCorrente()[1]
+    # ~ oSheet = oDoc.CurrentController.ActiveSheet
+    # ~ _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow))
+
     filtra_codice()
 
 
@@ -7873,8 +7869,6 @@ def filtra_codice(voce=None):
     oCellRangeAddr.EndColumn = 30
     oSheet.group(oCellRangeAddr, 0)
     oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
-
-
 
     try:
         _gotoCella(0, qui)
@@ -8116,7 +8110,7 @@ def autoexec():
     questa è richiamata da creaComputo()
     '''
     LeenoUtils.DocumentRefresh(False)
-    LS.importa_stili_pagina_non_presenti()
+    # ~ LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
@@ -10751,28 +10745,24 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 
+
+
 def MENU_debug():
-    DLG.chi(traceback)
+    minuti()
     return
-    
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        lrow = LeggiPosizioneCorrente()[1]
 
-    lrow = LeggiPosizioneCorrente()[1]
+        # ~ DLG.chi(lrow)
 
-    # ~if dccSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-        # ~DLG.chi(dccSheet.getCellByPosition(0, lrow).CellStyle)
-        # ~lrow += 1
-    LeenoContab.insertVoceContabilita(oSheet, lrow + 1)
-    
-    LeenoUtils.DocumentRefresh(True)
-    # ~ catalogo_stili_cella()
+        dati = LeenoComputo.datiVoceComputo(oSheet, lrow)
+    except Exception as e:
+        DLG.errore(e)
+    DLG.chi(dati[0][5])
 
-    # ~ LeenoContab.insrow()
-    # ~ elimina_stile()
-    return
-    oDoc = LeenoUtils.getDocument()
-    LeenoContab.GeneraLibretto(oDoc)
+    # ~ LeenoUtils.DocumentRefresh(True)
     return
     elimina_stili_cella()
 
@@ -10844,7 +10834,6 @@ def MENU_debug():
 
     LeenoSheetUtils.aggiungi_righe(irow, col = 1, stringa = '====================')
     return
-    LeenoUtils.DocumentRefresh(True)
 
     # ~ LeenoContab.mostra_sal(nSal)
     return

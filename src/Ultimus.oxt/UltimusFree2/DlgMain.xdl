@@ -63,6 +63,6 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_S1?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:text>
   <dlg:textfield dlg:style-id="7" dlg:id="TextField1" dlg:tab-index="25" dlg:left="31" dlg:top="8" dlg:width="240" dlg:height="25" dlg:help-text="&amp;498.DlgMain.TextField1.HelpText" dlg:multiline="true" dlg:value="&amp;499.DlgMain.TextField1.Text"/>
-  <dlg:checkbox dlg:style-id="8" dlg:id="CheckBox1" dlg:tab-index="26" dlg:left="174" dlg:top="67" dlg:width="98" dlg:height="10" dlg:help-text="&amp;670.DlgMain.CheckBox1.HelpText" dlg:value="&amp;671.DlgMain.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="8" dlg:id="CheckBox1" dlg:tab-index="26" dlg:left="114" dlg:top="67" dlg:width="158" dlg:height="10" dlg:help-text="&amp;670.DlgMain.CheckBox1.HelpText" dlg:value="&amp;671.DlgMain.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

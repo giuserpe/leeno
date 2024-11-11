@@ -7368,7 +7368,8 @@ Vuoi continuare?'''
             style = oDoc.StyleFamilies.getByName("CellStyles").getByName(el)
             style.NumberFormat = LeenoFormat.getNumFormat(stili_celle[el])
         except Exception as e:
-            DLG.chi(f"Errore durante il ripristino del formato numerico per lo stile {el}: {e}")
+            pass
+            # ~ DLG.chi(f"Errore durante il ripristino del formato numerico per lo stile {el}: {e}")
 
     # Nascondi la finestra di progresso
     oProgressBar.reset()
@@ -10747,8 +10748,15 @@ def ESEMPIO_create_progress_bar():
 
 
 
+
+def f():
+    x = int("four")
 def MENU_debug():
-    minuti()
+    try:
+        f()
+    except ValueError as e:
+        DLG.chi(e)
+
     return
     try:
         oDoc = LeenoUtils.getDocument()

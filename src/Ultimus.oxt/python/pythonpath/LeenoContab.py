@@ -644,22 +644,6 @@ def GeneraLibretto(oDoc):
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     ultimariga = sStRange.RangeAddress.EndRow
-    
-    #################################
-    #################################
-    #################################
-    oSheet.removeAllManualPageBreaks()
-    for i in range(primariga, ultimariga):
-        # ~ oDoc.CurrentController.select(oSheet.getCellByPosition(2, i))
-        if "SICUREZZA" in oSheet.getCellByPosition(2, i).String:
-            # ~ insRighe()
-            oSheet.getCellByPosition(0, i).Rows.IsManualPageBreak = True
-            break
-    #################################
-    #################################
-    #################################
-
-
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Generazione Libretto delle Misure...', Text="Libretto delle Misure")
     progress.setLimits(1, 6)
@@ -767,7 +751,7 @@ def GeneraLibretto(oDoc):
 
     x = fineFirme
     #=lib===================
-    insRighe()
+    insrow()
 
     #cancello la prima riga per aumentare lo spazio per la firma
     oSheet.getCellByPosition(2, x).String = ""
@@ -1067,7 +1051,7 @@ def GeneraRegistro(oDoc):
 
     x = fineFirme
     #=reg===================
-    insRighe()
+    # ~ insrow()
 
     fineFirme = SheetUtils.getLastUsedRow(oSheet)
 
@@ -1246,7 +1230,7 @@ def GeneraRegistro(oDoc):
     oSheet.setPrintTitleRows(True)
 
     # =sal===================
-    insRighe()
+    # ~ insrow()
     fineFirme = SheetUtils.getLastUsedRow(oSheet) +1
 
 #applico gli stili corretti ad alcuni dati della firma
@@ -1299,7 +1283,7 @@ def GeneraRegistro(oDoc):
     fineFirme = inizioFirme + 12
 
     oSheet.getCellRangeByPosition(
-        0, lastRow, 5, fineFirme +1).CellStyle = "Ultimus_centro_bordi_lati"
+        0, lastRow, 5, fineFirme +2).CellStyle = "Ultimus_centro_bordi_lati"
     oSheet.getCellByPosition(1, lastRow + 1).CellStyle = "Ultimus_centro_Dsottolineato"
     oSheet.getCellRangeByPosition(1, lastRow + 3, 1, lastRow + 4).CellStyle = "Ultimus_sx_italic"
     oSheet.getCellRangeByPosition (5, lastRow + 6,5, lastRow + 15).CellStyle = "ULTIMUS"
@@ -1321,7 +1305,7 @@ def GeneraRegistro(oDoc):
     oSheet.setPrintAreas((oNamedRange,))
 
     #=sal===================
-    insRighe()
+    # ~ insrow()
     progress.setValue(8)
     progress.hide()
 
@@ -1331,7 +1315,7 @@ def GeneraRegistro(oDoc):
 ########################################################################
 
 
-def insRighe():
+def insrow():
     """
     Inserisce righe nel foglio attivo basandosi su ultima area nominata
     e altezza della pagina.
@@ -1364,13 +1348,9 @@ def insRighe():
         col = 1
     hattuale = oSheet.getCellByPosition(col, iRow).Position.Y - \
     oSheet.getCellByPosition(col, sRow).Position.Y
-    
-    if oSheet.Name == 'CONTABILITA':
-        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25510
-    elif oSheet.Name == 'Registro':
-        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25810
-    elif oSheet.Name == 'SAL':
-        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25850
+
+    hpagina = (len(oSheet.RowPageBreaks) - 1) * 25110
+    # ~ hpagina = (len(oSheet.RowPageBreaks) - 1) * 25850
 
     for i in range(50):
         oSheet.getRows().insertByIndex(iRow, 1)

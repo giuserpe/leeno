@@ -23,7 +23,7 @@ from com.sun.star.util import MeasureUnit
 
 from LeenoConfig import Config
 import LeenoUtils
-import pyleeno as PL
+
 
 def getCurrentPath():
     ''' get current script's path '''
@@ -2648,10 +2648,7 @@ class Progress:
             function_name = caller_frame.function  # Nome della funzione chiamante
             
             txt = f"{self._text} ({percent})"
-
             if 'giuserpe' in os.getlogin():
-                # Apri il file con Geany e vai alla riga specificata
-                # ~ PL.apri_con_editor(full_file_path, line_number)
                 txt = txt + f"\nFunzione: {function_name}()\n   Linea: {line_number}"
 
             self._textWidget.setText(txt)
@@ -2674,10 +2671,7 @@ class Progress:
             txt = f"{self._text} ({percent})"
 
             if 'giuserpe' in os.getlogin():
-                # Apri il file con Geany e vai alla riga specificata
-                # ~ PL.apri_con_editor(full_file_path, line_number)
                 txt = txt + f"\nFunzione: {function_name}()\n   Linea: {line_number}"
-
 
             self._textWidget.setText(txt)
 

@@ -74,4 +74,5 @@ Sub AddPageNumberHeader
     &apos; Applica le modifiche
     oDefault.RightPageHeaderContent = oHeader
 End Sub
+
 </script:module>

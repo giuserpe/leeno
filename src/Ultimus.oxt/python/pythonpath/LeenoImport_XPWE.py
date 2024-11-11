@@ -995,11 +995,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # ~ datarif = datetime.now()
 
     # inizializza la progressbar
-    # ~progress.setLimits(0, len(listaMisure))
-    oProgressBar = PL.create_progress_bar(f'Compilazione {elaborato}', len(listaMisure))
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title=f'Compilazione {elaborato}', Text="Lettura dati")
+    # ~ n = 0
+    progress.show()
+    progress.setLimits(0, len(listaMisure))
+    # ~ oProgressBar = PL.create_progress_bar(f'Compilazione {elaborato}', len(listaMisure))
     val = 0
-    # ~progress.setValue(val)
-    oProgressBar.Value = val
+    progress.setValue(val)
+    # ~ oProgressBar.Value = val
 
     for el in listaMisure:
         # dati della misura
@@ -1196,8 +1200,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
         # aggiorna la progressbar
         val += 1
-        # ~progress.setValue(val)
-        oProgressBar.Value = val
+        progress.setValue(val)
+        progress.hide()
+        # ~ oProgressBar.Value = val
     # ~ DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
 
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
@@ -1206,8 +1211,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
-    oProgressBar.reset()
-    oProgressBar.end()
+    # ~ oProgressBar.reset()
+    # ~ oProgressBar.end()
     # ~LeenoUtils.DocumentRefresh(True)
     PL.fissa()
 

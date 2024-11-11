@@ -751,7 +751,7 @@ def GeneraLibretto(oDoc):
 
     x = fineFirme
     #=lib===================
-    # ~ insrow()
+    insrow()
 
     #cancello la prima riga per aumentare lo spazio per la firma
     oSheet.getCellByPosition(2, x).String = ""
@@ -912,7 +912,7 @@ def GeneraRegistro(oDoc):
         # ~oSheet.getCellByPosition(10,0).Columns.OptimalWidth = True #'n.pag.
         insRow = 1 #'prima riga inserimento in Registro
     except Exception as e:
-        DLG.errore()
+        # ~ DLG.errore(e)
 
         # recupera il registro precedente
         PL.GotoSheet('Registro')

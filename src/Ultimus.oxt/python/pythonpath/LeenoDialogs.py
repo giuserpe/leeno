@@ -46,9 +46,6 @@ def barra_di_stato(testo='', valore=0):
     oProgressBar.end()
 
 
-import subprocess
-import os
-
 def chi(s):
     '''
     s    { object }  : oggetto da interrogare
@@ -83,7 +80,6 @@ def chi(s):
         MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
 
 
-
 def errore(e):
     '''
     Mostra un messaggio dettagliato dell'errore, includendo il tipo di eccezione,
@@ -95,7 +91,6 @@ def errore(e):
     Comportamento:
         Visualizza un dialogo con il tipo di errore, il messaggio e la traccia completa dello stack.
     '''
-    import traceback
     error_type = type(e).__name__
     stack_trace = traceback.format_exc()
 

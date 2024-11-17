@@ -49,8 +49,9 @@ import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
 import LeenoComputo
-import LeenoGiornale
 import LeenoContab
+import LeenoGiornale
+import LeenoGlobals
 import LeenoAnalysis
 import LeenoDialogs as DLG
 import PersistUtils as PU
@@ -320,19 +321,16 @@ def invia_voce_interno():
     oSheet = oDoc.CurrentController.ActiveSheet
 
     elenco = seleziona()
-    codici = []
-    for el in elenco:
-        cod = oSheet.getCellByPosition(0, el).String
-        codici.append(cod)
-    dest = oSheet.getCellRangeByName('C2').String
+    codici = [oSheet.getCellByPosition(0, el).String for el in elenco]
+    meta = oSheet.getCellRangeByName('C2').String
 
-    if dest == 'VARIANTE':
+    if meta == 'VARIANTE':
         genera_variante()
-    elif dest == 'CONTABILITA':
+    elif meta == 'CONTABILITA':
         LeenoContab.attiva_contabilita()
         # ~ins_voce_contab()
-    elif dest == 'COMPUTO':
-        GotoSheet(dest)
+    elif meta == 'COMPUTO':
+        GotoSheet(meta)
     else:
         LeenoUtils.DocumentRefresh(True)
         Dialogs.Exclamation(Title='AVVISO!',
@@ -345,10 +343,10 @@ assicurati di aver scelto anche
 la posizione di destinazione.''')
         _gotoCella(2, 1)
         return
-    oSheet = oDoc.getSheets().getByName(dest)
+    oSheet = oDoc.getSheets().getByName(meta)
     for el in codici:
         if oSheet.Name == 'CONTABILITA':
-            GotoSheet(dest)
+            GotoSheet(meta)
             ins_voce_contab(cod=el)
         else:
             LeenoComputo.ins_voce_computo(cod=el)
@@ -751,16 +749,18 @@ def _gotoDoc(sUrl):
     porta il focus su di un determinato documento
     '''
     sUrl = uno.systemPathToFileUrl(sUrl)
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        target = LeenoUtils.getDesktop().loadComponentFromURL(
-            sUrl, "_default", 0, [])
-        target.getCurrentController().Frame.ContainerWindow.toFront()
-        target.getCurrentController().Frame.activate()
-    elif sys.platform == 'win32':
+    if sys.platform == 'win32':
         desktop = LeenoUtils.getDesktop()
         oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
         target = desktop.loadComponentFromURL(sUrl, "_default", 0, [])
         target.getCurrentController().getFrame().focusGained(oFocus)
+
+    # if sys.platform == 'linux' or sys.platform == 'darwin':
+    else:
+        target = LeenoUtils.getDesktop().loadComponentFromURL(
+            sUrl, "_default", 0, [])
+        target.getCurrentController().Frame.ContainerWindow.toFront()
+        target.getCurrentController().Frame.activate()
     return target
 
 
@@ -811,23 +811,14 @@ def MENU_copia_sorgente_per_git():
 
     make_pack(bar=1)
 
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        os.makedirs(os.path.expanduser(f'~/{src_oxt}/leeno/src/Ultimus.oxt'), exist_ok=True)
-        os.makedirs(os.path.expanduser(f'~/{src_oxt}/leeno/bin/'), exist_ok=True)
-        os.makedirs(os.path.expanduser(f'~/{src_oxt}/_SRC/OXT'), exist_ok=True)
-        comandi = f'cd {dest} && mate-terminal && gitk &'
+    dest = LeenoGlobals.dest()
 
+    if os.name == 'nt':
+        subprocess.Popen(f'w: && cd {dest} && "W:/programmi/PortableGit/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+    else:
+        comandi = f'cd {dest} && mate-terminal && gitk &'
         if not processo('wish'):
             subprocess.Popen(comandi, shell=True, stdout=subprocess.PIPE)
-    elif sys.platform == 'win32':
-        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
-            os.makedirs(os.path.expanduser(f'{os.getenv("HOMEPATH")}/{src_oxt}/leeno/src/Ultimus.oxt/'), exist_ok=True)
-            dest = os.path.expanduser(f'{os.getenv("HOMEDRIVE")}{os.getenv("HOMEPATH")}/{src_oxt}/leeno/src/Ultimus.oxt/')
-        else:
-            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-
-        subprocess.Popen(f'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "W:/programmi/PortableGit/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
 
     return
 
@@ -836,10 +827,9 @@ def MENU_copia_sorgente_per_git():
 
 def apri_con_editor(full_file_path, line_number):
     # Determina il percorso di Geany a seconda del sistema operativo
-    geany_path = 'geany'  # Predefinito per Linux e macOS
+    editor_path = 'geany'  # Predefinito per Linux e macOS
     if sys.platform == 'win32':
-        geany_path = r'W:\\programmi\\Geany\\bin\\geany.exe'
-
+        editor_path = r'W:\\programmi\\Geany\\bin\\geany.exe'
     # Controlla se il file esiste
     if not os.path.exists(full_file_path):
         DLG.chi(f"File non trovato: {full_file_path}")
@@ -851,17 +841,44 @@ def apri_con_editor(full_file_path, line_number):
         return
 
     # Costruisci il comando per inviare il file alla finestra esistente di Geany
-    comando_socket = f'geany --socket-msg "open-file:{full_file_path}:{line_number}"'
+    comando_socket = f'{editor_path} --socket-msg "open-file:{full_file_path}:{line_number}"'
 
     # Prova a inviare il file all'istanza aperta di Geany
     try:
         result = subprocess.run(comando_socket, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             # Se fallisce, apre una nuova istanza di Geany
-            comando = f'"{geany_path}" "{full_file_path}:{line_number}"'
+            comando = f'"{editor_path}" "{full_file_path}:{line_number}"'
             subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception as e:
         DLG.chi(f"Errore durante l'apertura del file con Geany: {e}")
+
+def apri_con_editor(full_file_path, line_number):
+    # Imposta il percorso di VSCodium per Windows
+    # if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
+    #     editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
+    # else:
+    #     editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
+    editor_path = r"C:\Users\giuserpe\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+    # Controlla se il file esiste
+    if not os.path.exists(full_file_path):
+        DLG.chi(f"File non trovato: {full_file_path}")
+        return
+
+    # Controlla che il numero di riga sia valido
+    if not isinstance(line_number, int) or line_number < 1:
+        DLG.chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
+        return
+
+    # Costruisci il comando per aprire il file con VSCodium alla linea specifica
+    comando = f'"{editor_path}" --goto "{full_file_path}:{line_number}"'
+
+    # Prova ad aprire il file con VSCodium
+    try:
+        subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        DLG.chi(f"Errore durante l'apertura del file con VSCodium: {e}")
+
 
 
 
@@ -886,47 +903,9 @@ def avvia_IDE():
     except Exception:
         pass
 
-    if sys.platform == 'linux' or sys.platform == 'darwin':
+    dest = LeenoGlobals.dest()
 
-        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
-        if not os.path.exists(dest):
-            try:
-                dest = os.getenv(
-                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
-                os.makedirs(dest)
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
-                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
-            except FileExistsError:
-                pass
-
-        subprocess.Popen('caja '+
-                         # ~dest,
-                         uno.fileUrlToSystemPath(LeenO_path()),
-                         shell=True,
-                         stdout=subprocess.PIPE)
-        # ~ subprocess.Popen('geany ' + dest + '/pyleeno.py',
-        # ~ subprocess.Popen('eric ' + dest + '/pyleeno.py',
-                         # ~ shell=True,
-                         # ~ stdout=subprocess.PIPE)
-    elif sys.platform == 'win32':
-        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
-            try:
-                os.makedirs(
-                    os.getenv("HOMEPATH") + '\\' + src_oxt +
-                    '\\leeno\\src\\Ultimus.oxt\\')
-            except FileExistsError:
-                pass
-            dest = os.getenv("HOMEDRIVE") + os.getenv(
-                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
-        else:
-            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
-
-        # ~ subprocess.Popen('"W:\\programmi\\Geany\\bin\\geany.exe" ' +
-                         # ~ dest +
-                         # ~ '/python/pythonpath/pyleeno.py',
-                         # ~ shell=True,
-                         # ~ stdout=subprocess.PIPE)
-    apri_con_editor(dest + '/python/pythonpath/pyleeno.py', 1)
+    apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
     return
 
 
@@ -9280,7 +9259,27 @@ def make_pack(bar=0):
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
-    if sys.platform == 'linux' or sys.platform == 'darwin':
+    
+    if os.name == 'nt':
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
+            try:
+                os.makedirs(os.getenv("HOMEPATH") + '/' + src_oxt + '/')
+            except FileExistsError:
+                pass
+            nomeZip2 = os.getenv(
+                "HOMEPATH") + '/' + src_oxt + '/OXT/' + oxt_name + '.oxt'
+            subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") + '\\' +
+                             src_oxt + '\\OXT\\',
+                             shell=True,
+                             stdout=subprocess.PIPE)
+        else:
+            nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/' + oxt_name + '.oxt'
+            subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\',
+                             shell=True,
+                             stdout=subprocess.PIPE)
+
+    # if sys.platform == 'linux' or sys.platform == 'darwin':
+    else:
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         if not os.path.exists(dest):
             try:
@@ -9303,23 +9302,6 @@ def make_pack(bar=0):
                 'caja /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
                 shell=True,
                 stdout=subprocess.PIPE)
-    elif sys.platform == 'win32':
-        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
-            try:
-                os.makedirs(os.getenv("HOMEPATH") + '/' + src_oxt + '/')
-            except FileExistsError:
-                pass
-            nomeZip2 = os.getenv(
-                "HOMEPATH") + '/' + src_oxt + '/OXT/' + oxt_name + '.oxt'
-            subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") + '\\' +
-                             src_oxt + '\\OXT\\',
-                             shell=True,
-                             stdout=subprocess.PIPE)
-        else:
-            nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/' + oxt_name + '.oxt'
-            subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\',
-                             shell=True,
-                             stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     LeenoUtils.DocumentRefresh(False)
@@ -10745,121 +10727,9 @@ def ESEMPIO_create_progress_bar():
     oDoc = LeenoUtils.getDocument()
     oDoc.unlockControllers()
 
-
-
-
-
-def f():
-    x = int("four")
 def MENU_debug():
-    try:
-        f()
-    except ValueError as e:
-        DLG.chi(e)
 
-    return
-    try:
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        lrow = LeggiPosizioneCorrente()[1]
-
-        # ~ DLG.chi(lrow)
-
-        dati = LeenoComputo.datiVoceComputo(oSheet, lrow)
-    except Exception as e:
-        DLG.errore(e)
-    DLG.chi(dati[0][5])
-
-    # ~ LeenoUtils.DocumentRefresh(True)
-    return
-    elimina_stili_cella()
-
-    # ~ elimina_stile()
-    # ~ return
-    return
-    
-    # ~ LS.setPageStyle()
-    
-    return
-    LS.npagina()
-    return
-    import _elementtree
-    
-    DLG.chi(help ('modules'))
-    # ~ DLG.chi(sys.modules)
-    # ~ sistema_cose()
-    
-    # ~ importa_stili_pagina()
-    return
-    oDoc = LeenoUtils.getDocument()
-    # ~ LPdf.MENU_Pdf()
-    # ~ return
-
-    # ~ LS.MENU_JobSettings()
-    obj = LS.MENU_PrintSettings()
-    # ~ obj = LS.loadJobSettings(oDoc)
-    # ~ DLG.chi(obj)
-    return
-    # ~ oSheet = oDoc.CurrentController.ActiveSheet
-
-
-
-    return
-
-    # ~ LeenoUtils.DocumentRefresh(True)
-    # ~ return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    
-    # Calcola l'altezza pagina basata sui PageBreaks
-    hpagina = (len(oSheet.RowPageBreaks) - 1) * 25150
-    # ~ DLG.chi(f'hpagina: {hpagina}')
-    col = 1
-    irow = insrow()
-    LeenoSheetUtils.aggiungi_righe(irow, col, stringa = '====================')
-    return
-
-    for i in range(50):
-        oSheet.getRows().insertByIndex(irow, 1)
-        oSheet.getCellByPosition(col, irow).String = '?????????????????'  # Imposta la stringa nella cella specificata
-        irow += 1  # Passa alla riga successiva
-
-        # Verifica se la cella supera l'altezza pagina e interrompe il ciclo se necessario
-        if oSheet.getCellByPosition(col, irow).Position.Y > hpagina:
-            # ~ irow -= 1  # Torna all'ultima riga valida
-            # ~ oSheet.getRows().removeByIndex(irow, 1)  # Rimuove la riga appena aggiunta
-            break
-    return
-    DLG.chi(len(oSheet.RowPageBreaks))
-    oRanges = oDoc.NamedRanges
-    
-    listaSal = LeenoContab.ultimo_sal()
-    nSal = int(listaSal[-1])
-
-    nomearea = "_Lib_" + str(nSal)
-    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
-    irow = oNamedRange.EndRow
-
-    LeenoSheetUtils.aggiungi_righe(irow, col = 1, stringa = '====================')
-    return
-
-    # ~ LeenoContab.mostra_sal(nSal)
-    return
-    LeenoSheetUtils.aggiungi_righe(irow = 112 , col = 2, stringa='=lib===================')
-    # ~ set_area_stampa()
-    return
-  
-    # ~ DLG.mri((oSheet.getCellByPosition(2, 157)))
-    DLG.chi(((oSheet.getCellByPosition(2, 3)).Position.Y - (oSheet.getCellByPosition(2, 431)).Position.Y)/9)
-    return
-
-    # ~ DLG.chi(LeenoFormat.getNumFormat('List-num-euro'))
-    oDoc.StyleFamilies.getByName("CellStyles").getByName(
-        'cicco').NumberFormat = LeenoFormat.getNumFormat('[>0]#.##0,00 [$€] ;[<0]-#.##0,00 [$€] ;-# [$€] ;@" "')
-    
-    LeenoUtils.DocumentRefresh(True)
-    return
-    calendario_liste()
+    DLG.chi(LeenoGlobals.dest())
     return
     sistema_cose()
     return

@@ -855,11 +855,11 @@ def apri_con_editor(full_file_path, line_number):
 
 def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
-    # if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
-    #     editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
-    # else:
-    #     editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
-    editor_path = r"C:\Users\giuserpe\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+    if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
+        editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
+    else:
+        editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
+    # editor_path = r"C:\Users\giuserpe\AppData\Local\Programs\Microsoft VS Code\Code.exe"
     # Controlla se il file esiste
     if not os.path.exists(full_file_path):
         DLG.chi(f"File non trovato: {full_file_path}")

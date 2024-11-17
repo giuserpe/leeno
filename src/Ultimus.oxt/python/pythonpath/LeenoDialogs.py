@@ -5,6 +5,7 @@
 import threading
 
 import LeenoUtils
+import LeenoGlobals
 import pyleeno as PL
 import Dialogs
 
@@ -56,6 +57,8 @@ def chi(s):
     caller_frame = inspect.stack()[1]
     line_number = caller_frame.lineno
     full_file_path = caller_frame.filename  # Ottieni il percorso completo
+    full_file_path = LeenoGlobals.dest() + full_file_path.split('LeenO.oxt')[-1]
+
     file_name = os.path.basename(full_file_path)  # Solo il nome del file
     function_name = caller_frame.function
 
@@ -66,13 +69,14 @@ def chi(s):
     if parentwin:
         # Costruisci il messaggio
         s1 = (
+
             f'Rappresentazione dell\'oggetto:\n{str(s)}\n\n'
             f'Metodi e attributi disponibili:\n{str(dir(s))}\n\n'
             f'Nome del file chiamante: {file_name}\n'
             f'Numero di linea della chiamata: {line_number}\n'
             f'Nome della funzione chiamante: {function_name}()'
         )
-
+        
         # Apri il file con Geany e vai alla riga specificata
         PL.apri_con_editor(full_file_path, line_number)
 

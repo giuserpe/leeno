@@ -644,6 +644,21 @@ def GeneraLibretto(oDoc):
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     ultimariga = sStRange.RangeAddress.EndRow
+        
+    #################################
+    #################################
+    #################################
+    oSheet.removeAllManualPageBreaks()
+    for i in range(primariga, ultimariga):
+        # ~ oDoc.CurrentController.select(oSheet.getCellByPosition(2, i))
+        if "SICUREZZA" in oSheet.getCellByPosition(2, i).String:
+            # ~ insRighe()
+            oSheet.getCellByPosition(0, i).Rows.IsManualPageBreak = True
+            break
+    #################################
+    #################################
+    #################################
+
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Generazione Libretto delle Misure...', Text="Libretto delle Misure")
     progress.setLimits(1, 6)
@@ -1348,9 +1363,14 @@ def insrow():
         col = 1
     hattuale = oSheet.getCellByPosition(col, iRow).Position.Y - \
     oSheet.getCellByPosition(col, sRow).Position.Y
+    
+    if oSheet.Name == 'CONTABILITA':
+        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25510
+    elif oSheet.Name == 'Registro':
+        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25810
+    elif oSheet.Name == 'SAL':
+        hpagina = (len(oSheet.RowPageBreaks) - 1) * 25850
 
-    hpagina = (len(oSheet.RowPageBreaks) - 1) * 25110
-    # ~ hpagina = (len(oSheet.RowPageBreaks) - 1) * 25850
 
     for i in range(50):
         oSheet.getRows().insertByIndex(iRow, 1)

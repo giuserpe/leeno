@@ -853,7 +853,7 @@ def apri_con_editor(full_file_path, line_number):
     except Exception as e:
         DLG.chi(f"Errore durante l'apertura del file con Geany: {e}")
 
-def apri_con_editor(full_file_path, line_number):
+def apri_con_editor_(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
     if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
         editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
@@ -878,8 +878,6 @@ def apri_con_editor(full_file_path, line_number):
         subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception as e:
         DLG.chi(f"Errore durante l'apertura del file con VSCodium: {e}")
-
-
 
 
 def MENU_avvia_IDE():
@@ -1885,6 +1883,7 @@ def MENU_voce_breve():
 
 ########################################################################
 
+
 def voce_breve():
     '''
     Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
@@ -1897,39 +1896,49 @@ def voce_breve():
     # ~nome_foglio = oDoc.CurrentController.ActiveSheet.getName()
 
     if oDoc.NamedRanges.hasByName("_Lib_1"):
-        Dialogs.Exclamation(Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
+        Dialogs.Exclamation(
+            Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
         fogli_lavoro = ['COMPUTO']
     else:
         fogli_lavoro = ['COMPUTO', 'CONTABILITA']
-        oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H335').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H337').Value
-        oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H336').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H338').Value
+        oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'S1.H335').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H337').Value
+        oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'S1.H336').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H338').Value
 
     oSheet = oDoc.getSheets().getByName('S1')
     for nome_foglio in fogli_lavoro:
         if nome_foglio == 'CONTABILITA':
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
-                cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
+                cfg.write('Contabilita', 'cont_inizio_voci_abbreviate',
+                          oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H335').Value = int(cfg.read('Contabilita', 'cont_inizio_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H335').Value = int(
+                    cfg.read('Contabilita', 'cont_inizio_voci_abbreviate'))
             if oSheet.getCellRangeByName('S1.H336').Value < 10000:
-                cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
+                cfg.write('Contabilita', 'cont_fine_voci_abbreviate',
+                          oSheet.getCellRangeByName('S1.H336').String)
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilita', 'cont_fine_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H336').Value = int(
+                    cfg.read('Contabilita', 'cont_fine_voci_abbreviate'))
 
         else:
             if oSheet.getCellRangeByName('S1.H337').Value < 10000:
-                cfg.write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
+                cfg.write('Computo', 'inizio_voci_abbreviate',
+                          oSheet.getCellRangeByName('S1.H337').String)
                 oSheet.getCellRangeByName('S1.H337').Value = 10000
             else:
                 oSheet.getCellRangeByName('S1.H337').Value = int(
                     cfg.read('Computo', 'inizio_voci_abbreviate'))
             if oSheet.getCellRangeByName('S1.H338').Value < 10000:
-                cfg.write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
+                cfg.write('Computo', 'fine_voci_abbreviate',
+                          oSheet.getCellRangeByName('S1.H338').String)
                 oSheet.getCellRangeByName('S1.H338').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H338').Value = int(cfg.read('Computo', 'fine_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H338').Value = int(
+                    cfg.read('Computo', 'fine_voci_abbreviate'))
 
     for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi", "Analisi di Prezzo"):
         try:
@@ -1937,8 +1946,6 @@ def voce_breve():
             pass
         except:
             pass
-
-
 
 ########################################################################
 def MENU_prefisso_VDS_():
@@ -2202,7 +2209,7 @@ Vuoi procedere comunque?''') == 0:
                 for n in range(0, ER):
                     cell = oSheet.getCellByPosition(1, n)
                     if cell.CellStyle == stile:
-                                lista.append(cell.String)
+                        lista.append(cell.String)
         except Exception as e:
             # ~DLG.errore(e)
             pass
@@ -3955,8 +3962,8 @@ def MENU_firme_in_calce(lrowF=None):
                 nSal = i
                 break
         oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
-        # ~'=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
-        '=CONCATENATE("In data __/__/____ è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+            # ~'=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+            '=CONCATENATE("In data __/__/____ è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
         comando('CalculateHard')
 
         oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
@@ -5333,7 +5340,8 @@ def pesca_cod():
         try:
             if test == '':
                 oSheet = oDoc.CurrentController.ActiveSheet
-                y = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) + 1
+                y = SheetUtils.uFindStringCol(
+                    'ELENCO DEI COSTI ELEMENTARI', 0, oSheet) + 1
                 _gotoCella(0, y)
             return
         except:
@@ -5451,7 +5459,8 @@ def MENU_ricicla_misure():
                 sotto - sopra +1).CellStyle = 'Comp-Bianche in mezzo_R'
 
         oDest.copyRange(oCellAddress, oSrc)
-        oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
+        oDest.getCellByPosition(
+            1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
         oDest.getCellByPosition(2, partenza[1]).CellBackColor = 13500076
         rigenera_voce(partenza[1])
         # ~rigenera_parziali(False)
@@ -5848,9 +5857,12 @@ def paste_clip(insCells=0, pastevalue=False, noformat=False):
         oProp.append(crea_property_value('MoveMode', 0))
         # ~ oProp.append(crea_property_value('MoveMode', 4))  # per inserire intere righe
 
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+        'com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper.executeDispatch(
+        oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
+    oDoc.CurrentController.select(oDoc.createInstance(
+        "com.sun.star.sheet.SheetCellRanges"))  # unselect
 
 
 
@@ -10728,8 +10740,16 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-
-    DLG.chi(LeenoGlobals.dest())
+    DLG.chi(74676)
+    return
+    try:
+        i
+    except:
+        # DLG.errore(e)
+        # DLG.chi(type(i).__name__)
+        DLG.chi(traceback.print_exc())
+    # DLG.chi(i)
+    # DLG.chi(LeenoGlobals.dest())
     return
     sistema_cose()
     return

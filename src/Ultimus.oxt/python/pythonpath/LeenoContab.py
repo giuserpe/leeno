@@ -678,14 +678,15 @@ def GeneraLibretto(oDoc):
         EP = elenco articoli
         '''
         # ~if 'VDS_' in LeenoComputo.datiVoceComputo(oSheet, i)[1][0]:
-            # ~datiSAL_VDS = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
+            # ~datiSAL_VDS = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (num, art,  desc, um, quant, prezzo, importo, sic, mdo)
             # ~SAL_VDS.append(datiSAL_VDS)
         # ~else:
-            # ~datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
+            # ~datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (num, art,  desc, um, quant, prezzo, importo, sic, mdo)
             # ~SAL.append(datiSAL)
-        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
+        datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (num, art,  desc, um, quant, prezzo, importo, sic, mdo)
         SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
+    SAL = list(set(SAL))
     try:
         sic = []
         mdo = []
@@ -696,8 +697,8 @@ def GeneraLibretto(oDoc):
         mdo = sum(mdo)
 
         datiSAL = []
-        for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(0,1,2)):
-            quant = sum(float(q[3]) for q in g)
+        for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(1, 2, 3)):
+            quant = sum(float(q[4]) for q in g)
             k = list(k)
             k.append(quant)
             datiSAL.append(k)
@@ -1111,7 +1112,9 @@ def GeneraRegistro(oDoc):
         oSheet.getCellByPosition(6,0).Columns.OptimalWidth = True #'n.pag.
         oSheet.getCellByPosition(0, 2).Rows.OptimalHeight = True
         insRow = 1 #'prima riga inserimento in Registro
-    except:
+    except Exception as e:
+        DLG.errore(e)
+
         # recupera il registro precedente
         PL.GotoSheet('SAL')
         oSheet= oDoc.Sheets.getByName("SAL")

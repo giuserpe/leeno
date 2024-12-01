@@ -65,7 +65,7 @@ def datiVoceComputo(oSheet, lrow):
         
         quant = quantP if quantP != '' else quantN
 
-        SAL = (art, desc, um, quant, prezzo, importo, sic, mdo)
+        SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
         return REG, SAL
 
     elif oSheet.Name in ('COMPUTO', 'VARIANTE'):

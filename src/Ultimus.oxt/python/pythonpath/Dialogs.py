@@ -2645,11 +2645,12 @@ class Progress:
             caller_frame = inspect.stack()[1]
             line_number = caller_frame.lineno
             full_file_path = caller_frame.filename  # Ottieni il percorso completo
+            file_name = os.path.basename(full_file_path)  # Solo il nome del file
             function_name = caller_frame.function  # Nome della funzione chiamante
             
             txt = f"{self._text} ({percent})"
             if 'giuserpe' in os.getlogin():
-                txt = txt + f"\nFunzione: {function_name}()\n   Linea: {line_number}"
+                txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile: {file_name}"
 
             self._textWidget.setText(txt)
 
@@ -2665,13 +2666,15 @@ class Progress:
             
             caller_frame = inspect.stack()[1]
             line_number = caller_frame.lineno
-            # ~ full_file_path = caller_frame.filename  # Ottieni il percorso completo
+            full_file_path = caller_frame.filename  # Ottieni il percorso completo
             function_name = caller_frame.function  # Nome della funzione chiamante
+            file_name = os.path.basename(full_file_path)  # Solo il nome del file
+
             
             txt = f"{self._text} ({percent})"
 
             if 'giuserpe' in os.getlogin():
-                txt = txt + f"\nFunzione: {function_name}()\n   Linea: {line_number}"
+                txt = txt + f"\nFunzione: {function_name}()\Linea: {line_number}\nFile:{file_name}"
 
             self._textWidget.setText(txt)
 

@@ -122,7 +122,7 @@ def setLarghezzaColonne(oSheet):
         for col, width in {'A':600, 'B':1500, 'C':8700, 'F':1300, 'G':1300,
                            'H':1300, 'I':1300, 'J':1700, 'L':1700, 'N':1900,
                            'P':1900, 'T':1000, 'U':1000, 'W':1000, 'X':1000,
-                           'Z':1900, 'AC':1700, 'AD':1700, 'AE':1700,
+                           'Z':1900, 'AC':1700, 'AD':1800, 'AE':1800,
                            'AX':1900, 'AY':1900}.items():
             oSheet.Columns[col].Width = width
         SheetUtils.freezeRowCol(oSheet, 0, 3)
@@ -142,8 +142,8 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('L').Columns.Width = 1700
         oSheet.getColumns().getByName('S').Columns.Width = 1950
         oSheet.getColumns().getByName('AC').Columns.Width = 1700
-        oSheet.getColumns().getByName('AD').Columns.Width = 1700
-        oSheet.getColumns().getByName('AE').Columns.Width = 1700
+        oSheet.getColumns().getByName('AD').Columns.Width = 1800
+        oSheet.getColumns().getByName('AE').Columns.Width = 1800
         SheetUtils.freezeRowCol(oSheet, 0, 3)
         setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':

@@ -26,6 +26,7 @@
 # ~from scriptforge import CreateScriptService
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
+from collections import OrderedDict
 
 # import distutils.dir_util
 
@@ -853,7 +854,7 @@ def apri_con_editor(full_file_path, line_number):
     except Exception as e:
         DLG.chi(f"Errore durante l'apertura del file con Geany: {e}")
 
-def apri_con_editor_(full_file_path, line_number):
+def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
     if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
         editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
@@ -872,6 +873,8 @@ def apri_con_editor_(full_file_path, line_number):
 
     # Costruisci il comando per aprire il file con VSCodium alla linea specifica
     comando = f'"{editor_path}" --goto "{full_file_path}:{line_number}"'
+
+    dest = LeenoGlobals.dest()
 
     # Prova ad aprire il file con VSCodium
     try:
@@ -903,7 +906,8 @@ def avvia_IDE():
 
     dest = LeenoGlobals.dest()
 
-    apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
+    apri_con_editor(f'{dest}/python/pythonpath', 1)
+    # ~ apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
     return
 
 
@@ -4096,146 +4100,187 @@ def MENU_firme_in_calce(lrowF=None):
         progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
         progress.setValue(i)
         progress.show()
+        categorie = {}
         for i in range(0, lrowF):
             progress.setValue(i)
 
             if oSheet.getCellByPosition(1, i).CellStyle == 'Livello-0-scritta':
-                oSheet.getRows().insertByIndex(riga_corrente, 1)
-                oSheet.getCellRangeByPosition(
-                    0, riga_corrente, 30,
-                    riga_corrente).CellStyle = 'ULTIMUS_1'
-                oSheet.getCellByPosition(
-                    1, riga_corrente).Formula = '=B' + str(i + 1)
-                oSheet.getCellByPosition(
-                    1, riga_corrente).CellStyle = 'Ultimus_destra_1'
-                oSheet.getCellByPosition(
-                    2, riga_corrente).Formula = '=C' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ii, riga_corrente).Formula = '=' + col + str(
-                        riga_corrente + 1) + '/' + col + str(lrowF) + '*100'
-                oSheet.getCellByPosition(
-                    ii, riga_corrente).CellStyle = 'Ultimus %_1'
-                oSheet.getCellByPosition(
-                    vv, riga_corrente).Formula = '=' + col + str(i + 1)
-                oSheet.getCellRangeByPosition(
-                    vv, riga_corrente, ae,
-                    riga_corrente).CellStyle = 'Ultimus_totali_1'
-                oSheet.getCellByPosition(
-                    ac, riga_corrente).Formula = '=AC' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ad, riga_corrente).Formula = '=AD' + str(i + 1) + '*100'
-                oSheet.getCellByPosition(
-                    ad, riga_corrente).CellStyle = 'Ultimus %_1'
-                oSheet.getCellByPosition(
-                    ae, riga_corrente).Formula = '=AE' + str(i + 1)
+                categorie[oSheet.getCellByPosition(1, i).String] = oSheet.getCellByPosition(2, i).String
 
-                # dati cronoprogramma 1/3
-                oSheet.getCellRangeByPosition(
-                    45, riga_corrente, 49,
-                    riga_corrente).CellStyle = 'ULTIMUS_1'
-                oSheet.getCellByPosition(
-                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
-                oSheet.getCellByPosition(
-                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
-                oSheet.getCellByPosition(
-                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
-                oSheet.getCellByPosition(
-                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
-                oSheet.getCellByPosition(
-                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+            elif oSheet.getCellByPosition(1, i).CellStyle == 'Livello-1-scritta':
+                 categorie[oSheet.getCellByPosition(1, i).String] = oSheet.getCellByPosition(2, i).String
 
-                riga_corrente += 1
-            elif oSheet.getCellByPosition(1,
-                                          i).CellStyle == 'Livello-1-scritta':
-                oSheet.getRows().insertByIndex(riga_corrente, 1)
-                oSheet.getCellRangeByPosition(
-                    0, riga_corrente, 30,
-                    riga_corrente).CellStyle = 'ULTIMUS_2'
-                oSheet.getCellByPosition(
-                    1, riga_corrente).Formula = '=B' + str(i + 1)
-                oSheet.getCellByPosition(
-                    1, riga_corrente).CellStyle = 'Ultimus_destra'
-                oSheet.getCellByPosition(
-                    2, riga_corrente).Formula = '=C' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ii, riga_corrente).Formula = '=' + col + str(
-                        riga_corrente + 1) + '/' + col + str(lrowF) + '*100'
-                oSheet.getCellByPosition(ii,
-                                         riga_corrente).CellStyle = 'Ultimus %'
-                oSheet.getCellByPosition(
-                    vv, riga_corrente).Formula = '=' + col + str(i + 1)
-                oSheet.getCellByPosition(
-                    vv, riga_corrente).CellStyle = 'Ultimus_bordo'
-                oSheet.getCellByPosition(
-                    ac, riga_corrente).Formula = '=AC' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ad, riga_corrente).Formula = '=AD' + str(i + 1) + '*100'
-                oSheet.getCellByPosition(ad,
-                                         riga_corrente).CellStyle = 'Ultimus %'
-                oSheet.getCellByPosition(
-                    ae, riga_corrente).Formula = '=AE' + str(i + 1)
-
-                # dati cronoprogramma 2/3
-                oSheet.getCellRangeByPosition(
-                    45, riga_corrente, 49,
-                    riga_corrente).CellStyle = 'ULTIMUS_2'
-                oSheet.getCellByPosition(
-                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
-                oSheet.getCellByPosition(
-                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
-                oSheet.getCellByPosition(
-                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
-                oSheet.getCellByPosition(
-                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
-                oSheet.getCellByPosition(
-                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
-
-                riga_corrente += 1
             elif oSheet.getCellByPosition(1, i).CellStyle == 'livello2 valuta':
-                oSheet.getRows().insertByIndex(riga_corrente, 1)
-                oSheet.getCellRangeByPosition(
-                    0, riga_corrente, 30,
-                    riga_corrente).CellStyle = 'ULTIMUS_3'
-                oSheet.getCellByPosition(
-                    1, riga_corrente).Formula = '=B' + str(i + 1)
-                oSheet.getCellByPosition(
-                    1, riga_corrente).CellStyle = 'Ultimus_destra_3'
-                oSheet.getCellByPosition(
-                    2, riga_corrente).Formula = '=C' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ii, riga_corrente).Formula = '=' + col + str(
-                        riga_corrente + 1) + '/' + col + str(lrowF) + '*100'
-                oSheet.getCellByPosition(
-                    ii, riga_corrente).CellStyle = 'Ultimus %_3'
-                oSheet.getCellByPosition(
-                    vv, riga_corrente).Formula = '=' + col + str(i + 1)
-                oSheet.getCellByPosition(vv,
-                                         riga_corrente).CellStyle = 'ULTIMUS_3'
-                oSheet.getCellByPosition(
-                    ac, riga_corrente).Formula = '=AC' + str(i + 1)
-                oSheet.getCellByPosition(
-                    ad, riga_corrente).Formula = '=AD' + str(i + 1) + '*100'
-                oSheet.getCellByPosition(
-                    ad, riga_corrente).CellStyle = 'Ultimus %_3'
-                oSheet.getCellByPosition(
-                    ae, riga_corrente).Formula = '=AE' + str(i + 1)
-                oSheet.getCellByPosition(
-                    48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+                categorie[oSheet.getCellByPosition(1, i).String] = oSheet.getCellByPosition(2, i).String
 
-                # dati cronoprogramma 3/3
-                oSheet.getCellRangeByPosition(
-                    45, riga_corrente, 49,
-                    riga_corrente).CellStyle = 'ULTIMUS_3'
-                oSheet.getCellByPosition(
-                    45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
-                oSheet.getCellByPosition(
-                    46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
-                oSheet.getCellByPosition(
-                    47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
-                oSheet.getCellByPosition(
-                    49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+        progress.hide()
+        # Funzione per ordinare le chiavi in ordine naturale
+        def chiave_naturale(chiave):
+            return [int(parte) if parte.isdigit() else float(parte) for parte in chiave.split('.')]
 
-                riga_corrente += 1
+        # Ordinamento del dizionario
+        categorie_ordinate = dict(sorted(categorie.items(), key=lambda item: chiave_naturale(item[0])))
+
+        # for key, value in categorie_ordinate.items():
+        #     oSheet.getRows().insertByIndex(riga_corrente, 1)
+
+        #     oSheet.getCellByPosition(1, riga_corrente).String = key
+        #     oSheet.getCellByPosition(2, riga_corrente).String = value
+        #     oSheet.getCellByPosition(18, riga_corrente).Formula = f'=SUMIF($C$2:$S${lrowF};C{riga_corrente + 1};S$2:S${lrowF})'
+
+        #     if len(key.split('.')) == 1:
+        #         oSheet.getCellRangeByPosition(
+        #             0, riga_corrente, 49,
+        #             riga_corrente).CellStyle = 'ULTIMUS_1'
+        #         oSheet.getCellByPosition(
+        #             1, riga_corrente).CellStyle = 'Ultimus_destra_1'
+        #         oSheet.getCellByPosition(
+        #             ii, riga_corrente).CellStyle = 'Ultimus %_1'
+        #         oSheet.getCellRangeByPosition(
+        #             vv, riga_corrente, ae,
+        #             riga_corrente).CellStyle = 'Ultimus_totali_1'
+        #         oSheet.getCellByPosition(
+        #             ad, riga_corrente).CellStyle = 'Ultimus %_1'
+
+        #         # dati cronoprogramma 1/3
+        #         oSheet.getCellByPosition(
+        #             45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+        #         oSheet.getCellByPosition(
+        #             46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+        #         oSheet.getCellByPosition(
+        #             47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+        #         oSheet.getCellByPosition(
+        #             48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+        #         oSheet.getCellByPosition(
+        #             49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
+        #     elif len(key.split('.')) == 2:
+        #         oSheet.getCellRangeByPosition(
+        #             0, riga_corrente, 49,
+        #             riga_corrente).CellStyle = 'ULTIMUS_2'
+        #         oSheet.getCellByPosition(
+        #             1, riga_corrente).CellStyle = 'Ultimus_destra'
+        #         oSheet.getCellByPosition(ii,
+        #                                  riga_corrente).CellStyle = 'Ultimus %'
+        #         oSheet.getCellByPosition(
+        #             vv, riga_corrente).CellStyle = 'Ultimus_bordo'
+        #         oSheet.getCellByPosition(ad,
+        #                                  riga_corrente).CellStyle = 'Ultimus %'
+
+        #         # dati cronoprogramma 2/3
+        #         oSheet.getCellByPosition(
+        #             45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+        #         oSheet.getCellByPosition(
+        #             46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+        #         oSheet.getCellByPosition(
+        #             47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+        #         oSheet.getCellByPosition(
+        #             48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+        #         oSheet.getCellByPosition(
+        #             49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+
+        #     elif len(key.split('.')) == 3:
+        #         oSheet.getCellRangeByPosition(
+        #             0, riga_corrente, 49,
+        #             riga_corrente).CellStyle = 'ULTIMUS_3'
+        #         oSheet.getCellByPosition(
+        #             1, riga_corrente).CellStyle = 'Ultimus_destra_3'
+        #         oSheet.getCellByPosition(
+        #             ii, riga_corrente).CellStyle = 'Ultimus %_3'
+        #         oSheet.getCellByPosition(vv,
+        #                                  riga_corrente).CellStyle = 'ULTIMUS_3'
+        #         oSheet.getCellByPosition(
+        #             ad, riga_corrente).CellStyle = 'Ultimus %_3'
+
+        #         # ~ # dati cronoprogramma 1/3
+        #         oSheet.getCellByPosition(
+        #             45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
+        #         oSheet.getCellByPosition(
+        #             46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
+        #         oSheet.getCellByPosition(
+        #             47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/' + nOperai
+        #         oSheet.getCellByPosition(
+        #             48, riga_corrente).Formula = '=AW' + str(riga_corrente +2) + "/AV" + str(riga_corrente +2) + '*AV' + str(riga_corrente +1)
+        #         oSheet.getCellByPosition(
+        #             49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'
+        #     riga_corrente += 1
+        def applica_stili_e_formule(sheet, row, parametri):
+            # Applicazione degli stili
+            sheet.getCellRangeByPosition(0, row, 49, row).CellStyle = parametri['range_style']
+            sheet.getCellByPosition(1, row).CellStyle = parametri['cell_style_1']
+            sheet.getCellByPosition(parametri['ii'], row).CellStyle = parametri['cell_style_ii']
+            sheet.getCellByPosition(parametri['vv'], row).CellStyle = parametri['cell_style_vv']
+            sheet.getCellByPosition(parametri['ad'], row).CellStyle = parametri['cell_style_ad']
+            
+            # Formule cronoprogramma
+            sheet.getCellByPosition(45, row).Formula = f"=AE{row+1}/AT{parametri['mdo']}"
+            sheet.getCellByPosition(46, row).Formula = f"=AT{row+1}/8"
+            sheet.getCellByPosition(47, row).Formula = f"=AU{row+1}/{parametri['n_operai']}"
+            sheet.getCellByPosition(48, row).Formula = f"=AW{row+2}/AV{row+2}*AV{row+1}"
+            sheet.getCellByPosition(49, row).Formula = f"=SUM(AW{row+1}:AV{row+1})"
+
+        # Parametri per i tre livelli
+        parametri_livello1 = {
+            'range_style': 'ULTIMUS_1',
+            'cell_style_1': 'Ultimus_destra_1',
+            'cell_style_ii': 'Ultimus %_1',
+            'cell_style_vv': 'Ultimus_totali_1',
+            'cell_style_ad': 'Ultimus %_1',
+            'mdo': mdo,
+            'n_operai': nOperai,
+            'ii': ii,
+            'vv': vv,
+            'ad': ad,
+        }
+
+        parametri_livello2 = {
+            'range_style': 'ULTIMUS_2',
+            'cell_style_1': 'Ultimus_destra',
+            'cell_style_ii': 'Ultimus %',
+            'cell_style_vv': 'Ultimus_bordo',
+            'cell_style_ad': 'Ultimus %',
+            'mdo': mdo,
+            'n_operai': nOperai,
+            'ii': ii,
+            'vv': vv,
+            'ad': ad,
+        }
+
+        parametri_livello3 = {
+            'range_style': 'ULTIMUS_3',
+            'cell_style_1': 'Ultimus_destra_3',
+            'cell_style_ii': 'Ultimus %_3',
+            'cell_style_vv': 'ULTIMUS_3',
+            'cell_style_ad': 'Ultimus %_3',
+            'mdo': mdo,
+            'n_operai': nOperai,
+            'ii': ii,
+            'vv': vv,
+            'ad': ad,
+        }
+
+        # Applicazione
+        oRow = SheetUtils.uFindString("TOTALI COMPUTO", oSheet)[1] +1
+
+        for key, value in categorie_ordinate.items():
+            oSheet.getRows().insertByIndex(riga_corrente, 1)
+            oSheet.getCellByPosition(1, riga_corrente).String = key
+            oSheet.getCellByPosition(2, riga_corrente).String = value
+            oSheet.getCellByPosition(11, riga_corrente).Formula = f'=S{riga_corrente + 1}/S{oRow}*100'
+            oSheet.getCellByPosition(18, riga_corrente).Formula = f'=SUMIF($C$2:$S${lrowF};C{riga_corrente + 1};S$2:S${lrowF})'
+            oSheet.getCellByPosition(29, riga_corrente).Formula = f'=AE{riga_corrente + 1}/S{riga_corrente + 1}*100'
+            oSheet.getCellByPosition(30, riga_corrente).Formula = f'=SUMIF($C$2:$AE${lrowF};C{riga_corrente + 1};AE$2:AE${lrowF})'
+
+            livello = len(key.split('.'))
+            if livello == 1:
+                applica_stili_e_formule(oSheet, riga_corrente, parametri_livello1)
+            elif livello == 2:
+                applica_stili_e_formule(oSheet, riga_corrente, parametri_livello2)
+            elif livello == 3:
+                applica_stili_e_formule(oSheet, riga_corrente, parametri_livello3)
+
+            riga_corrente += 1
+
         progress.hide()
         oSheet.getCellRangeByPosition(
             2, inizio_gruppo, ae, inizio_gruppo).CellStyle = "Ultimus_centro"
@@ -9964,9 +10009,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt
 
-            # ~ oHLText = oHeader.CenterText.Text.String = oggetto
-            # ~ oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            # ~ oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
+            oHLText = oHeader.CenterText.Text.String = oggetto
+            oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
 
             oHRText = oHeader.RightText.Text.String = luogo
             oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
@@ -10400,7 +10445,6 @@ def MENU_filtro_descrizione():
 
 ########################################################################
 
-# ~from collections import OrderedDict
 def somma():
     '''
     Mostra la somme dei valori di una selezione su singola colonna. Utile quando la

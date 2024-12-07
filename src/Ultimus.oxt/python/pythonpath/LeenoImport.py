@@ -346,7 +346,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
 Formato del file non riconosciuto.
 
 Ti invitiamo a inviare una copia del file
-al team di LeenO, affinché il formato possa essere
+a supporto@leeno.org, affinché il formato possa essere
 supportato nella prossima versione del programma."""
         )
         return

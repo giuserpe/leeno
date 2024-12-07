@@ -4,6 +4,7 @@ dal formato XPWE
 """
 import logging
 import re
+import os
 
 from xml.etree.ElementTree import ElementTree, ParseError
 from com.sun.star.table import CellRangeAddress
@@ -1417,4 +1418,5 @@ def MENU_XPWE_import(filename = None):
     # riattiva l'output a video
     LeenoUtils.DocumentRefresh(True)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
-    PL.dlg_donazioni()
+    if 'giuserpe' not in os.getlogin():
+        PL.dlg_donazioni()

@@ -98,9 +98,7 @@ def basic_LeenO(funcname, *args):
     mspf = sm.createInstance("com.sun.star.script.provider.MasterScriptProviderFactory")
     scriptPro = mspf.createScriptProvider("")
     Xscript = scriptPro.getScript(
-        "vnd.sun.star.script:UltimusFree2." +
-        funcname +
-        "?language=Basic&location=application")
+        f"vnd.sun.star.script:UltimusFree2.{funcname}?language=Basic&location=application")
     Result = Xscript.invoke(args, None, None)
     return Result[0]
 
@@ -440,7 +438,7 @@ def MENU_invia_voce():
         selezione = []
         voci = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
         for y in lista:
-            rangen = oSheet.getCellRangeByPosition(0, y, 8, y).RangeAddress
+            rangen = oSheet.getCellRangeByPosition(0, y, 100, y).RangeAddress
             selezione.append(rangen)
         voci.addRangeAddresses(selezione, True)
 
@@ -685,7 +683,7 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
     # ~if DLG.DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
         # ~EliminaVociDoppieElencoPrezzi()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
@@ -860,7 +858,6 @@ def apri_con_editor(full_file_path, line_number):
         editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
     else:
         editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
-    # editor_path = r"C:\Users\giuserpe\AppData\Local\Programs\Microsoft VS Code\Code.exe"
     # Controlla se il file esiste
     if not os.path.exists(full_file_path):
         DLG.chi(f"File non trovato: {full_file_path}")
@@ -890,7 +887,7 @@ def MENU_avvia_IDE():
     avvia_IDE()
 
 def avvia_IDE():
-    '''Avvia la modifica di pyleeno.py con geany o eric6'''
+    '''Avvia la modifica di pyleeno.py con geany o VSCodium'''
     basic_LeenO('PY_bridge.avvia_IDE')
     oDoc = LeenoUtils.getDocument()
     Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
@@ -907,7 +904,7 @@ def avvia_IDE():
     dest = LeenoGlobals.dest()
 
     apri_con_editor(f'{dest}/python/pythonpath', 1)
-    # ~ apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
+    # apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
     return
 
 
@@ -1863,8 +1860,6 @@ def loVersion():
         "com.sun.star.configuration.ConfigurationAccess",
         (arg, )).ooSetupVersionAboutBox
 
-########################################################################
-# adatta_altezza_riga moved to LeenoSheetUtils.py as adattaAltezzaRiga
 ########################################################################
 
 def Menu_adattaAltezzaRiga():
@@ -3105,8 +3100,7 @@ def EliminaVociDoppieElencoPrezzi():
         return
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = tuple(set(oRange.getDataArray()))
-    # ~chi ([len(lista_come_array),(lista_come_array)])
-    # ~return
+
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
     lista_tar = []
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
@@ -3144,8 +3138,6 @@ def EliminaVociDoppieElencoPrezzi():
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         tante_analisi_in_ep()
 
-    oDoc.enableAutomaticCalculation(True)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     riordina_ElencoPrezzi(oDoc)
     LeenoUtils.DocumentRefresh(True)
 
@@ -5132,7 +5124,6 @@ def copia_riga_contab(lrow):
             oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
     # Esempio di utilizzo di hideDetail()
     r_addr = oSheet.getCellRangeByPosition(0, 0, 0, lrow).RangeAddress
-    oSheet.hideDetail(r_addr)  # Collassa il gruppo dell'intervallo specificato
 
     _gotoCella(2, lrow)
 
@@ -5202,7 +5193,7 @@ def MENU_Copia_riga_Ent():
     @@ DA DOCUMENTARE
     '''
     Copia_riga_Ent()
-    # ~ LeenoSheetUtils.adattaAltezzaRiga()
+    LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def Copia_riga_Ent(num_righe=1):
@@ -7585,7 +7576,7 @@ def MENU_vedi_voce():
         if to < lrow:
             vedi_voce_xpwe(oSheet, lrow, to)
     LeenoUtils.DocumentRefresh(True)
-    # ~ LeenoSheetUtils.adattaAltezzaRiga()
+    LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def strall(el, n=3, pos=0):
@@ -10784,7 +10775,12 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-    DLG.chi(74676)
+    # elimina_voci_doppie()
+    # return
+    MENU_invia_voce()
+    pesca_cod()
+    # io = inputbox('messaggio')
+    # DLG.chi(io)
     return
     try:
         i

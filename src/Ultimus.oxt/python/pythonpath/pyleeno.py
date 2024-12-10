@@ -267,9 +267,16 @@ def creaComputo(arg=1):
     opz = PropertyValue()
     opz.Name = 'AsTemplate'
     opz.Value = True
-    document = desktop.loadComponentFromURL(
-        LeenO_path() + '/template/leeno/Computo_LeenO.ots', "_blank", 0,
-        (opz, ))
+
+    if not os.path.exists(LeenO_path() + '/template/leeno/Computo_LeenO.ots'):
+        document = desktop.loadComponentFromURL(
+            LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
+            (opz, ))
+    else:
+        document = desktop.loadComponentFromURL(
+            LeenO_path() + '/template/leeno/Computo_LeenO.ots', "_blank", 0,
+            (opz, ))
+
     autoexec()
     if arg == 1:
         Dialogs.Exclamation(Title = 'ATTENZIONE!',
@@ -7356,7 +7363,10 @@ Vuoi continuare?'''
     # Mostra una finestra di dialogo per selezionare il file di riferimento
     filename = Dialogs.FileSelect('Scegli il file di riferimento...', '*.ods')
     if filename is None:
-        filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
+        if not os.path.exists(LeenO_path() + '/template/leeno/Computo_LeenO.ots'):
+            filename = LeenO_path() + '/template/leeno/Computo_LeenO.ods'
+        else:
+            filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
 
     # Carica il documento di riferimento per ottenere gli stili
     rifDoc = DocUtils.loadDocument(filename, Hidden=True)
@@ -10775,6 +10785,7 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
+    DLG.chi(88)
     # elimina_voci_doppie()
     # return
     MENU_invia_voce()

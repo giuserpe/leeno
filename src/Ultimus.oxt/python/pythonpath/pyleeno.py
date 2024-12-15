@@ -636,7 +636,7 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
             ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
             for el in lista:
                 y = SheetUtils.uFindStringCol(el, 0, oSheet, equal=1)
-                rangen = oSheet.getCellRangeByPosition(0, y, 8, y).RangeAddress
+                rangen = oSheet.getCellRangeByPosition(0, y, 100, y).RangeAddress
                 selezione.append(rangen)
 
             ranges.addRangeAddresses(selezione, True)

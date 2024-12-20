@@ -2131,7 +2131,7 @@ Procedo?''') == 1:
 ########################################################################
 
 
-def nascondi_voci_zero():
+def nascondi_voci_zero(lcol = None):
     '''
     Nasconde le voci il cui valore della colonna corrente è pari a zero.
     '''
@@ -2139,7 +2139,8 @@ def nascondi_voci_zero():
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    lcol = LeggiPosizioneCorrente()[0]
+    if lcol is None:
+        lcol = LeggiPosizioneCorrente()[0]
 
 # nascondo i titoli di categoria
     iSheet = oSheet.RangeAddress.Sheet
@@ -2150,7 +2151,8 @@ def nascondi_voci_zero():
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     for i in reversed(range(3, ER)):
-        if oSheet.getCellByPosition(lcol, i).Value == 0:
+        if oSheet.getCellByPosition(lcol, i).Value == 0 and \
+            oSheet.getCellByPosition(lcol, i).CellStyle != 'Ultimus_centro':
             oCellRangeAddr.StartRow = i
             oCellRangeAddr.EndRow = i
             oSheet.ungroup(oCellRangeAddr, 1)
@@ -2244,11 +2246,19 @@ Vuoi procedere comunque?''') == 0:
         if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
             oSheet.Rows.removeByIndex(n, 1)
 
+            # oCellRangeAddr.StartColumn = 0
+            # oCellRangeAddr.EndColumn = 0
+            # oCellRangeAddr.StartRow = n
+            # oCellRangeAddr.EndRow = n
+            # oSheet.group(oCellRangeAddr, 1)
+            # oSheet.getCellRangeByPosition(18, 0, 21,
+            #             0).Rows.IsVisible = False
+
     progress.setValue(5)
     LeenoUtils.DocumentRefresh(True)
     progress.hide()
     _gotoCella(0, 3)
-    Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
+    Dialogs.Info(Title = 'Ricerca conclusa', Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi.")
 
 
 ########################################################################
@@ -2385,6 +2395,7 @@ def scelta_viste():
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(2).Columns.Width = 7900
             #  LeenoSheetUtils.adattaAltezzaRiga(oSheet)
             oSheet.clearOutline()
             struct(3)
@@ -2504,33 +2515,29 @@ def scelta_viste():
                 oSheet.getCellRangeByName ('X1').String = 'COMPUTO - VARIANTE'
                 for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2):
                     formule.append([
-                        '=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' +
-                        str(n) + '-M' + str(n) + ')', '=IF(R' + str(n) + '-N' +
-                        str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
-                        '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) +
-                        '-R' + str(n) + ';"")', '=IFERROR(IFS(AND(N' + str(n) +
-                        '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' +
-                        str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' +
-                        str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' +
-                        str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' +
-                        str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' +
-                        str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'
+                        f'=IF(Q{n}-M{n}=0;"--";Q{n}-M{n})',
+                        f'=IF(R{n}-N{n}>0;R{n}-N{n};"")',
+                        f'=IF(R{n}-N{n}<0;N{n}-R{n};"")',
+                        f'=IFERROR(IFS(AND(N{n}>R{n};R{n}=0);-1;AND(N{n}<R{n};N{n}=0);1;N{n}=R{n};"--";'
+                        f'N{n}>R{n};-(N{n}-R{n})/N{n};N{n}<R{n};-(N{n}-R{n})/N{n});"--")'
                     ])
+
                 n += 1
                 oSheet.getCellByPosition(
                     26, 1
                 ).Formula = '=IFERROR(IFS(AND(N2>R2;R2=0);-1;AND(N2<R2;N2=0);1;N2=R2;"--";N2>R2;-(N2-R2)/N2;N2<R2;-(N2-R2)/N2);"--")'
                 oSheet.getCellByPosition(
                     26, ER
-                ).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(
-                    n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(
-                        n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(
-                            n) + ';"--";N' + str(n) + '>R' + str(
-                                n) + ';-(N' + str(n) + '-R' + str(
-                                    n) + ')/N' + str(n) + ';N' + str(
-                                        n) + '<R' + str(n) + ';-(N' + str(
-                                            n) + '-R' + str(n) + ')/N' + str(
-                                                n) + ');"--")'
+                ).Formula = (
+                            f'=IFERROR(IFS('
+                            f'AND(N{n} > R{n}; R{n} = 0); -1, '
+                            f'AND(N{n} < R{n}; N{n} = 0); 1, '
+                            f'N{n} = R{n}; "--", '
+                            f'N{n} > R{n}; -(N{n} - R{n}) / N{n}, '
+                            f'N{n} < R{n}; -(N{n} - R{n}) / N{n}'
+                            f'); "--")'
+                        )
+
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26,
                                                        LeenoSheetUtils.cercaUltimaVoce(oSheet))
                 formule = tuple(formule)
@@ -2555,21 +2562,16 @@ def scelta_viste():
                 oRangeAddress.StartColumn = 15
                 oRangeAddress.EndColumn = 18
 
-                oSheet.getCellRangeByName ('X1').String = 'COMPUTO - CONTvisteABILITÀ'
+                oSheet.getCellRangeByName ('X1').String = 'COMPUTO - CONTABILITÀ'
                 for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2):
                     formule.append([
-                        '=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' +
-                        str(n) + '-M' + str(n) + ')', '=IF(V' + str(n) + '-N' +
-                        str(n) + '>0;V' + str(n) + '-N' + str(n) + ';"")',
-                        '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) +
-                        '-V' + str(n) + ';"")', '=IFERROR(IFS(AND(N' + str(n) +
-                        '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' +
-                        str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' +
-                        str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' +
-                        str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' +
-                        str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' +
-                        str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'
+                        f'=IF(U{n}-M{n}=0;"--";U{n}-M{n})',
+                        f'=IF(V{n}-N{n}>0;V{n}-N{n};"")',
+                        f'=IF(V{n}-N{n}<0;N{n}-V{n};"")',
+                        f'=IFERROR(IFS(AND(N{n}>V{n};V{n}=0);-1;AND(N{n}<V{n};N{n}=0);1;'
+                        f'N{n}=V{n};"--";N{n}>V{n};-(N{n}-V{n})/N{n};N{n}<V{n};-(N{n}-V{n})/N{n});"--")'
                     ])
+
                 n += 1
                 #  for el in(1, ER+1):
                 oSheet.getCellByPosition(
@@ -2577,15 +2579,16 @@ def scelta_viste():
                 ).Formula = '=IFERROR(IFS(AND(N2>V2;V2=0);-1;AND(N2<V2;N2=0);1;N2=V2;"--";N2>V2;-(N2-V2)/N2;N2<V2;-(N2-V2)/N2);"--")'
                 oSheet.getCellByPosition(
                     26, ER
-                ).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(
-                    n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(
-                        n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(
-                            n) + ';"--";N' + str(n) + '>V' + str(
-                                n) + ';-(N' + str(n) + '-V' + str(
-                                    n) + ')/N' + str(n) + ';N' + str(
-                                        n) + '<V' + str(n) + ';-(N' + str(
-                                            n) + '-V' + str(n) + ')/N' + str(
-                                                n) + ');"--")'
+                ).Formula = (
+                            f"=IFERROR(IFS("
+                            f"AND(N{n} > V{n}, V{n} = 0); -1, "
+                            f"AND(N{n} < V{n}, N{n} = 0); 1, "
+                            f"N{n} = V{n}; '--', "
+                            f"N{n} > V{n}; -(N{n} - V{n}) / N{n}, "
+                            f"N{n} < V{n}; -(N{n} - V{n}) / N{n}"
+                            f"); '--')"
+                        )
+
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26,
                                                        LeenoSheetUtils.cercaUltimaVoce(oSheet))
                 formule = tuple(formule)
@@ -2876,7 +2879,6 @@ def scelta_viste():
     oDoc.CurrentController.setFirstVisibleRow(vRow)
     LeenoUtils.DocumentRefresh(True)
     LeenoUtils.DocumentRefresh(True)
-
 
 
 ########################################################################
@@ -4266,9 +4268,9 @@ def MENU_firme_in_calce(lrowF=None):
             oSheet.getCellByPosition(1, riga_corrente).String = key
             oSheet.getCellByPosition(2, riga_corrente).String = value
             oSheet.getCellByPosition(11, riga_corrente).Formula = f'=S{riga_corrente + 1}/S{oRow}*100'
-            oSheet.getCellByPosition(18, riga_corrente).Formula = f'=SUMIF($C$2:$S${lrowF};C{riga_corrente + 1};S$2:S${lrowF})'
+            oSheet.getCellByPosition(18, riga_corrente).Formula = f'=SUMIF($B$2:$S${lrowF};B{riga_corrente + 1};S$2:S${lrowF})'
             oSheet.getCellByPosition(29, riga_corrente).Formula = f'=AE{riga_corrente + 1}/S{riga_corrente + 1}*100'
-            oSheet.getCellByPosition(30, riga_corrente).Formula = f'=SUMIF($C$2:$AE${lrowF};C{riga_corrente + 1};AE$2:AE${lrowF})'
+            oSheet.getCellByPosition(30, riga_corrente).Formula = f'=SUMIF($B$2:$AE${lrowF};B{riga_corrente + 1};AE$2:AE${lrowF})'
 
             livello = len(key.split('.'))
             if livello == 1:

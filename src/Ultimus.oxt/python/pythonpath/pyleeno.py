@@ -37,7 +37,7 @@ import re
 import traceback
 import threading
 import time
-import csv
+# import csv
 
 import os
 import shutil
@@ -57,8 +57,6 @@ import LeenoAnalysis
 import LeenoDialogs as DLG
 import PersistUtils as PU
 import LeenoEvents
-import LeenoExtra
-import LeenoBasicBridge
 import LeenoSettings as LS
 import LeenoPdf as LPdf
 import DocUtils
@@ -861,10 +859,12 @@ def apri_con_editor(full_file_path, line_number):
 
 def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
-    if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
-        editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
-    else:
-        editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
+    if os.path.exists("C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"):
+        editor_path = "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+    # if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
+    #     editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
+    # else:
+    #     editor_path = r'C:\Users\giuserpe\AppData\Local\Programs\VSCodium\VSCodium.exe'
     # Controlla se il file esiste
     if not os.path.exists(full_file_path):
         DLG.chi(f"File non trovato: {full_file_path}")
@@ -878,7 +878,7 @@ def apri_con_editor(full_file_path, line_number):
     # Costruisci il comando per aprire il file con VSCodium alla linea specifica
     comando = f'"{editor_path}" --goto "{full_file_path}:{line_number}"'
 
-    dest = LeenoGlobals.dest()
+    # dest = LeenoGlobals.dest()
 
     # Prova ad aprire il file con VSCodium
     try:
@@ -2152,7 +2152,7 @@ def nascondi_voci_zero(lcol = None):
 
     for i in reversed(range(3, ER)):
         if oSheet.getCellByPosition(lcol, i).Value == 0 and \
-            oSheet.getCellByPosition(lcol, i).CellStyle != 'Ultimus_centro':
+            oSheet.getCellByPosition(lcol, i).CellStyle not in ('ULTIMUS', 'Ultimus_centro'):
             oCellRangeAddr.StartRow = i
             oCellRangeAddr.EndRow = i
             oSheet.ungroup(oCellRangeAddr, 1)
@@ -2231,11 +2231,9 @@ Vuoi procedere comunque?''') == 0:
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
     progress.setValue(3)
-    # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SRep, 0, ERep))
     struttura_off()
     struttura_off()
     struttura_off()
-    # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     progress.setValue(4)
 
     for n in reversed(range(SRep, ERep)):
@@ -2245,14 +2243,6 @@ Vuoi procedere comunque?''') == 0:
 
         if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
             oSheet.Rows.removeByIndex(n, 1)
-
-            # oCellRangeAddr.StartColumn = 0
-            # oCellRangeAddr.EndColumn = 0
-            # oCellRangeAddr.StartRow = n
-            # oCellRangeAddr.EndRow = n
-            # oSheet.group(oCellRangeAddr, 1)
-            # oSheet.getCellRangeByPosition(18, 0, 21,
-            #             0).Rows.IsVisible = False
 
     progress.setValue(5)
     LeenoUtils.DocumentRefresh(True)
@@ -2326,9 +2316,10 @@ def scelta_viste():
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+    n = SheetUtils.getLastUsedRow(oSheet)
+
     vRow = oDoc.CurrentController.getFirstVisibleRow()
-    
+
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
     global oDialog1
@@ -2336,7 +2327,7 @@ def scelta_viste():
         oDialog1 = dp.createDialog(
             'vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application'
         )
-        # oDialog1Model = oDialog1.Model
+        # configuro il dialogo
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible:
             oDialog1.getControl('CBMis').State = 1
@@ -2345,7 +2336,7 @@ def scelta_viste():
         if oSheet.getColumns().getByIndex(28).Columns.IsVisible:
             oDialog1.getControl('CBMat').State = 1
         if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
-            oDialog1.getControl('CBMdo').State = 1
+            oDialog1.getControl('CBMdo').State = True
         if oSheet.getColumns().getByIndex(31).Columns.IsVisible:
             oDialog1.getControl('CBCat').State = 1
         if oSheet.getColumns().getByIndex(38).Columns.IsVisible:
@@ -2355,16 +2346,28 @@ def scelta_viste():
         sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
             'H337').Value  # inizio_voci_abbreviate
         sString = oDialog1.getControl('TextField11')
+
         sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
             'H338').Value  # fine_voci_abbreviate
+        oDialog1.getControl('ComboVISTA').setText('Scegli...')
 
-        # ~DLG.mri(oDialog1.getControl('CommandButton7'))
 # VARIANTE
         if oSheet.Name == 'VARIANTE':
             oDialog1.getControl('CommandButton7').setEnable(0)
 
-        oDialog1.execute()
+        # descrizione_in_una_colonna
+        for i in range (10):
+            if oSheet.getCellByPosition(2, i).CellStyle == 'Comp-Bianche in mezzo Descr' and \
+                oSheet.getCellByPosition(2, i).IsMerged:
+                oDialog1.getControl('Descrizione_condensata').State = 0
+                break
+            else:
+                oDialog1.getControl('Descrizione_condensata').State = 1
 
+        if oDialog1.execute() == 0:
+            return
+
+        # leggo le scelte
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField10').getText() != '10000':
             cfg.write('Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
@@ -2373,38 +2376,7 @@ def scelta_viste():
         if oDialog1.getControl('TextField11').getText() != '10000':
             cfg.write('Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
-        #  oDialog1.getControl('CBMdo').State = False
-        #  if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
-        #  oDialog1.getControl('CBMdo').State = True
 
-        if oDialog1.getControl('OBTerra').State:
-            vista_terra_terra()
-            oDialog1.getControl('CBSic').State = 0
-            oDialog1.getControl('CBMdo').State = 0
-            oDialog1.getControl('CBMat').State = 0
-            oDialog1.getControl('CBCat').State = 0
-            oDialog1.getControl('CBFig').State = 0
-            oDialog1.getControl('CBMis').State = 1
-
-        lrow = 4
-
-        if oDialog1.getControl('CBMdo').State == 1:  # manodopera
-            oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(2).Columns.Width = 7900
-            #  LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-            oSheet.clearOutline()
-            struct(3)
-            oDialog1.getControl("CBMis").State = 0
-        else:
-            oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
-
-        n = SheetUtils.getLastUsedRow(oSheet)
         if oDialog1.getControl("CBMis").State == 0:  # misure
             for el in range (5, 9):
                 oSheet.getColumns().getByIndex(el).Columns.IsVisible = False
@@ -2419,14 +2391,14 @@ def scelta_viste():
         else:
             for el in range (5, 9):
                 oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
-            #cancella la formula dell'UM nella colonna C
-            for el in range(4, n):
-                if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
-                    oSheet.getCellByPosition(2, el).Formula = ''
+
+        if oDialog1.getControl('Descrizione_condensata').State == 1:
+            descrizione_in_una_colonna(False)
+        else:
+            descrizione_in_una_colonna(True)
 
         if oDialog1.getControl('CBMat').State == 0:  # materiali
             oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
-
         else:
             oSheet.getColumns().getByIndex(28).Columns.IsVisible = True
 
@@ -2456,21 +2428,138 @@ def scelta_viste():
             cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
-        fissa()
+        
+        Menu_adattaAltezzaRiga()
+
+        if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
+            vSintetica(False)
+            vista_configurazione('terra_terra')
+        elif oDialog1.getControl('ComboVISTA').getText() == 'Incidenza Manodopera':
+            vista_configurazione('mdo')
+        elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+            vSintetica(True)
+
+# CONTABILITA
+    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+        GotoSheet('CONTABILITA')
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+        oDialog1 = dp.createDialog(
+            "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
+        )
+
+        oDialog1.getControl('ComboVISTA').setText('Scegli...')
+    
+        # Inizio voce
+        sString = oDialog1.getControl('TextField3')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'H335').Value  # cont_inizio_voci_abbreviate
+
+        # Fine voce
+        sString = oDialog1.getControl('TextField2')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'H336').Value  # cont_fine_voci_abbreviate
+
+        # descrizione_in_una_colonna
+        for i in range (10):
+            if oSheet.getCellByPosition(2, i).CellStyle == 'Comp-Bianche in mezzo Descr_R' and \
+                oSheet.getCellByPosition(2, i).IsMerged:
+                oDialog1.getControl('Descrizione_condensata').State = 0
+                break
+            else:
+                oDialog1.getControl('Descrizione_condensata').State = 1
+
+        listaSal = LeenoContab.ultimo_sal()
+
+    # Mostra SAL n.
+        oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
+        try:
+            oDialog1.getControl('ComboBox1').Text = listaSal[-1]
+        except:
+            pass
+        if len(listaSal) != 0:
+            oDialog1.getControl('RimuoviSAL').Label = "Elimina atti SAL n. " + str(len(listaSal))
+            oDialog1.getControl('GeneraAtti').Label = 'Genera atti SAL n. ' + str(len(listaSal)+1)
+        else:
+            oDialog1.getControl('RimuoviSAL').Enable = False
+            oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL da rimuovere"
+            oDialog1.getControl('SituazioneContabile').Enable = False
+            oDialog1.getControl('GeneraAtti').Label = 'Genera atti SAL n. 1'
+
+        if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
+            oDialog1.getControl('EliminaMisure').Enable = False
+
+        if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
+            oDialog1.getControl('GeneraAtti').Enable = False
+            oDialog1.getControl('GeneraAtti').Label = 'Nessun SAL da generare'
+
+        # Ricicla voci da
+        sString = oDialog1.getControl('ComboBox3')
+        sString.Text = cfg.read('Contabilita', 'ricicla_da')
+
+        oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
+
+        if oDialog1.execute() == 0:
+            return
+
+        LeenoUtils.DocumentRefresh(False)
+
+        if oDialog1.getControl('Descrizione_condensata').State == 1:
+            descrizione_in_una_colonna(False)
+        else:
+            descrizione_in_una_colonna(True)
+ 
+        # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+        if oDialog1.getControl('TextField3').getText() != '10000':
+            cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value = float(oDialog1.getControl('TextField3').getText())
+
+        if oDialog1.getControl('TextField2').getText() != '10000':
+            cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
+
+        if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
+            cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
+        else:
+            cfg.write('Contabilita', 'ricicla_da', 'VARIANTE')
+
+        if oDialog1.getControl('Dettaglio').State == 0:
+            cfg.write('Generale', 'dettaglio', '0')
+            dettaglio_misure(0)
+        else:
+            cfg.write('Generale', 'dettaglio', '1')
+            dettaglio_misure(0)
+            dettaglio_misure(1)
+
+        try:
+            nSal = int(oDialog1.getControl('ComboBox1').getText())
+            LeenoContab.mostra_sal(nSal)
+        except Exception as e:
+            pass
+
+        if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
+            vSintetica(False)
+            vista_configurazione('terra_terra')
+        elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
+            vista_configurazione('Semplificata')
+        elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+            vSintetica(True)
+
+        LeenoUtils.DocumentRefresh(True)
+
 #Elenco Prezzi
     elif oSheet.Name in ('Elenco Prezzi'):
         oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application"
         )
-        # oDialog1Model = oDialog1.Model
 
         if oSheet.getColumns().getByIndex(3).Columns.IsVisible:
-            oDialog1.getControl('CBSic').State = 1
+            oDialog1.getControl('CBSic').State = True
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible:
-            oDialog1.getControl('CBMdo').State = 1
+            oDialog1.getControl('CBMdo').State = True
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible:
-            oDialog1.getControl('CBOrig').State = 1
+            oDialog1.getControl('CBOrig').State = True
         if oDialog1.execute() == 1:
             if oDialog1.getControl("CBSic").State == 0:  # sicurezza
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
@@ -2496,13 +2585,6 @@ def scelta_viste():
             SR = oRangeAddress.StartRow + 1
             ER = oRangeAddress.EndRow  # -1
 
-            # ~oSheet.getCellRangeByPosition(11, 0, 26,
-                                          # ~0).Columns.IsVisible = True
-            # ~oSheet.getCellRangeByPosition(23, SR, 25,
-                                          # ~ER).CellStyle = 'EP statistiche'
-            # ~oSheet.getCellRangeByPosition(26, SR, 26,
-                                          # ~ER).CellStyle = 'EP-mezzo %'
-            # ~oSheet.getCellRangeByName('AA2').CellStyle = 'EP-mezzo %'
             formule = []
             oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
             oSheet.getCellByPosition(15, 0).String = 'VARIANTE'
@@ -2573,7 +2655,6 @@ def scelta_viste():
                     ])
 
                 n += 1
-                #  for el in(1, ER+1):
                 oSheet.getCellByPosition(
                     26, 1
                 ).Formula = '=IFERROR(IFS(AND(N2>V2;V2=0);-1;AND(N2<V2;N2=0);1;N2=V2;"--";N2>V2;-(N2-V2)/N2;N2<V2;-(N2-V2)/N2);"--")'
@@ -2644,7 +2725,7 @@ def scelta_viste():
                         str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'
                     ])
                 n += 1
-                #  for el in(1, ER+1):
+
                 oSheet.getCellByPosition(
                     26, 1
                 ).Formula = '=IFERROR(IFS(AND(R2>V2;V2=0);-1;AND(R2<V2;R2=0);1;R2=V2;"--";R2>V2;-(R2-V2)/R2;R2<V2;-(R2-V2)/R2);"--")'
@@ -2721,6 +2802,7 @@ def scelta_viste():
         paste_format()
 
         _primaCella()
+        LeenoUtils.DocumentRefresh(True)
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -2748,7 +2830,8 @@ def scelta_viste():
         sString.Text = oS1.getCellRangeByName(
             'S1.H326').Value * 100  # maggiorazione
 
-        oDialog1.execute()  # mostra il dialogo
+        if oDialog1.execute() == 0:
+            return
 
         #  sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
         oS1.getCellRangeByName('S1.H319').Value = float(
@@ -2777,107 +2860,10 @@ def scelta_viste():
         sString = oDialog1.getControl('TextField9')
         sString.Text = oS1.getCellRangeByName(
             'S1.H326').Value * 100  # maggiorazione
-# CONTABILITA
-    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
-        GotoSheet('CONTABILITA')
-        oSheet = oDoc.CurrentController.ActiveSheet
+        LeenoUtils.DocumentRefresh(True)
 
-        oDialog1 = dp.createDialog(
-            "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
-        )
-        if oSheet.getColumns().getByIndex(19).Columns.IsVisible:
-            oDialog1.getControl('vista_pre').State = 1
-        else:
-            oDialog1.getControl('vista_sem').State = 1
-        sString = oDialog1.getControl('TextField3')
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H335').Value  # cont_inizio_voci_abbreviate
-        sString = oDialog1.getControl('TextField2')
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H336').Value  # cont_fine_voci_abbreviate
-
-        # Contabilità abilita
-        # ~if oSheet.getCellRangeByName('S1.H328').Value == 1:
-            # ~oDialog1.getControl('CheckBox7').State = 1
-        sString = oDialog1.getControl('TextField13')
-
-        oRanges = oDoc.NamedRanges
-
-        listaSal = LeenoContab.ultimo_sal()
-
-    # Mostra SAL n.
-        oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
-        try:
-            oDialog1.getControl('ComboBox1').Text = listaSal[-1]
-            # ~ oDialog1.getControl('ComboBox1').Text = ''
-        except:
-            pass
-        if len(listaSal) != 0:
-            oDialog1.getControl('CommandButton24').Label = "Elimina atti SAL n. " + str(len(listaSal))
-            oDialog1.getControl('CommandButton15').Label = 'Genera atti SAL n. ' + str(len(listaSal)+1)
-        else:
-            oDialog1.getControl('CommandButton24').Enable = False
-            oDialog1.getControl('CommandButton24').Label = "Nessun SAL da eliminare"
-            oDialog1.getControl('CommandButton25').Enable = False
-            oDialog1.getControl('CommandButton15').Label = 'Genera atti SAL n. 1'
-        if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
-            oDialog1.getControl('CommandButton14').Enable = False
-
-        if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
-            oDialog1.getControl('CommandButton15').Enable = False
-            oDialog1.getControl('CommandButton15').Label = 'Nessun SAL da generare'
-
-        #Ricicla voci da
-        sString = oDialog1.getControl('ComboBox3')
-        sString.Text = cfg.read('Contabilita', 'ricicla_da')
-
-        # oDialog1Model = oDialog1.Model
-        oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
-
-        if oDialog1.execute() == 0:
-            return
-
-        LeenoUtils.DocumentRefresh(False)
-
-        if oDialog1.getControl('vista_pre').State:
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
-        if oDialog1.getControl('vista_sem').State:
-            LeenoSheetUtils.setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFTFTFFFFFFFFFFFFFFFFFFFFF')
-        # ~vista_terra_terra()
-
-        # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
-        if oDialog1.getControl('TextField3').getText() != '10000':
-            cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value = float(oDialog1.getControl('TextField3').getText())
-
-        if oDialog1.getControl('TextField2').getText() != '10000':
-            cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
-
-        if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
-            cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
-        else:
-            cfg.write('Contabilita', 'ricicla_da', 'VARIANTE')
-
-        if oDialog1.getControl('Dettaglio').State == 0:
-            cfg.write('Generale', 'dettaglio', '0')
-            dettaglio_misure(0)
-        else:
-            cfg.write('Generale', 'dettaglio', '1')
-            dettaglio_misure(0)
-            dettaglio_misure(1)
-        try:
-            nSal = int(oDialog1.getControl('ComboBox1').getText())
-            LeenoContab.mostra_sal(nSal)
-        except Exception as e:
-            # ~ DLG.errore(e)
-            pass
-
-        # ~ GotoSheet('CONTABILITA')
-    # ~oSheet = oDoc.getSheets().getByName('CONTABILITA')
-    # ~oSheet.Rows.OptimalHeight = True
+    fissa()
     oDoc.CurrentController.setFirstVisibleRow(vRow)
-    LeenoUtils.DocumentRefresh(True)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -5720,7 +5706,6 @@ def dettaglio_misure(bit):
                                         oSheet.getCellByPosition(
                                             el, lrow).Formula.split('=')
                                         [1].replace('^', '**'))
-                                    # ~eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
                                     stringa = stringa + '(' + oSheet.getCellByPosition(
                                         el, lrow).Formula.split('=')[-1] + ')*'
                                 except Exception:
@@ -5752,7 +5737,7 @@ def dettaglio_misure(bit):
                         2, lrow).String.split(' ►')[0]
 
     LeenoUtils.DocumentRefresh(True)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     return
 
 
@@ -6305,50 +6290,40 @@ def rigenera_voce(lrow=None):
         ).CellStyle = 'comp Art-EP_R'
         oSheet.getCellByPosition(
             2, sopra + 1
-        ).Formula = '=IF(LEN(VLOOKUP(B' + str(
-            sopra + 2
-        ) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(
-            sopra + 2
-        ) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(
-            sopra + 2
-        ) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(
-            sopra + 2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+        ).Formula = (
+                f'=IF(LEN(VLOOKUP(B{sopra+2};elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);'
+                f'VLOOKUP(B{sopra+2};elenco_prezzi;2;FALSE());'
+                f'CONCATENATE(LEFT(VLOOKUP(B{sopra+2};elenco_prezzi;2;FALSE());$S1.$H$337);'
+                f'" [...] ";'
+                f'RIGHT(VLOOKUP(B{sopra+2};elenco_prezzi;2;FALSE());$S1.$H$338)))'
+            )
+
         oSheet.getCellByPosition(
-            8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
-        oSheet.getCellByPosition(
-            9,
-            sotto).Formula = '=SUBTOTAL(9;J' + str(sopra +
-                                                   2) + ':J' + str(sotto +
-                                                                   1) + ')'
-        oSheet.getCellByPosition(11, sotto).Formula = '=VLOOKUP(B' + str(
-            sopra + 2) + ';elenco_prezzi;5;FALSE())'
-        oSheet.getCellByPosition(13, sotto).Formula = '=J' + str(sotto + 1)
+            8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+
+        oSheet.getCellByPosition(9, sotto).Formula = f'=SUBTOTAL(9;J{sopra +2}:J{sotto +1})'
+
+        oSheet.getCellByPosition(0, sotto).String = ''
+        oSheet.getCellByPosition(1, sotto).String = ''
+        oSheet.getCellByPosition(2, sotto).String = ''
+
+        oSheet.getCellByPosition(11, sotto).Formula = f'=VLOOKUP(B{sopra + 2};elenco_prezzi;5;FALSE())'
+        oSheet.getCellByPosition(13, sotto).Formula = f'=J{sotto + 1}'
         oSheet.getCellByPosition(
             17,
-            sotto).Formula = '=AB' + str(sotto + 1) + '*J' + str(sotto + 1)
-        #  oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
+            sotto).Formula = f'=AB{sotto + 1}*J{sotto + 1}'
+
         oSheet.getCellByPosition(
-            18, sotto).Formula = '=IF(VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;3;FALSE())="%";J' + str(
-                    sotto + 1) + '*L' + str(sotto + 1) + '/100;J' + str(
-                        sotto + 1) + '*L' + str(sotto + 1) + ')'
-        oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B' + str(
-            sopra + 2) + ';elenco_prezzi;4;FALSE())'
-        oSheet.getCellByPosition(
-            28,
-            sotto).Formula = '=S' + str(sotto + 1) + '-AE' + str(sotto + 1)
-        oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B' + str(
-            sopra + 2) + ';elenco_prezzi;6;FALSE())'
-        oSheet.getCellByPosition(
-            30, sotto
-        ).Formula = '=IF(AD' + str(sotto + 1) + '<>""; PRODUCT(AD' + str(
-            sotto + 1) + '*S' + str(sotto + 1) + '))'
-        oSheet.getCellByPosition(35, sotto).Formula = '=B' + str(sopra + 2)
-        oSheet.getCellByPosition(
-            36, sotto
-        ).Formula = '=IF(ISERROR(S' + str(sotto + 1) + ');"";IF(S' + str(
-            sotto + 1) + '<>"";S' + str(sotto + 1) + ';""))'
+            18, sotto).Formula = (
+                            f'=IF(VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE())="%"'
+                            f';J{sotto + 1}*L{sotto + 1}/100;J{sotto + 1}*L{sotto + 1})'
+                        )
+        oSheet.getCellByPosition(27, sotto).Formula = f'=VLOOKUP(B{sopra + 2};elenco_prezzi;4;FALSE())'
+        oSheet.getCellByPosition(28, sotto).Formula = f'=S{sotto + 1}-AE{sotto + 1}'
+        oSheet.getCellByPosition(29, sotto).Formula = f'=VLOOKUP(B{sopra + 2};elenco_prezzi;6;FALSE())'
+        oSheet.getCellByPosition(30, sotto).Formula = f'=IF(AD{sotto + 1}<>""; PRODUCT(AD{sotto + 1}*S{sotto + 1}))'
+        oSheet.getCellByPosition(35, sotto).Formula = f'=B{sopra + 2}'
+        oSheet.getCellByPosition(36, sotto).Formula = f'=IF(ISERROR(S{sotto + 1});"";IF(S{sotto + 1}<>"";S{sotto + 1};""))'
 
         formule = []
         for n in range (sopra + 2, sotto):
@@ -6369,17 +6344,11 @@ def rigenera_voce(lrow=None):
                     rosso = 1
                     break
             if rosso == 1:
-                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
-                    str(n + 1) + ')=0;"";-PRODUCT(E' + str(n + 1) +
-                    ':I' + str(n + 1) + '))'])
+                formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";-PRODUCT(E{n+1}:I{n+1}))']
             else:
-                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
-                    str(n + 1) + ')=0;"";PRODUCT(E' + str(n + 1) +
-                    ':I' + str(n + 1) + '))'])
+                formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";PRODUCT(E{n+1}:I{n+1}))']
             if oSheet.getCellByPosition(4, n).Value < 0:
-                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
-                    str(n + 1) + ')=0;"";PRODUCT(E' + str(n + 1) +
-                    ':I' + str(n + 1) + '))'])
+                formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";PRODUCT(E{n+1}:I{n+1}))']
             formule.append(formula)
 
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 9, sotto - 1)
@@ -7954,6 +7923,13 @@ def struttura_ComputoM():
     oSheet.group(oCellRangeAddr, 0)
     oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
 
+    # Raggruppa le colonne di misura e mostra
+    oCellRangeAddr.StartColumn = 5
+    oCellRangeAddr.EndColumn = 8
+    oSheet.group(oCellRangeAddr, 0)
+    for i in range(5, 9):
+        oSheet.getColumns().getByIndex(i).Columns.IsVisible = True
+
     # ~# attiva la progressbar
     progress = Dialogs.Progress(Title='Creazione vista struttura in corso...', Text="Lettura dati")
     progress.setLimits(0, 4)
@@ -7998,7 +7974,7 @@ def struttura_off():
     LeenoUtils.DocumentRefresh(True)
 
 
-def struct(level):
+def struct(level, vedi = True):
     ''' mette in vista struttura secondo categorie
     level { integer } : specifica il livello di categoria
     ### COMPUTO/VARIANTE ###
@@ -8015,7 +7991,7 @@ def struct(level):
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
 
-    if level == 0:
+    if level == 0: # superCategorie
         stile = 'Livello-0-scritta'
         myrange = (
             'Livello-0-scritta',
@@ -8023,7 +7999,7 @@ def struct(level):
         )
         Dsopra = 1
         Dsotto = 1
-    elif level == 1:
+    elif level == 1: # Categorie
         stile = 'Livello-1-scritta'
         myrange = (
             'Livello-1-scritta',
@@ -8032,7 +8008,7 @@ def struct(level):
         )
         Dsopra = 1
         Dsotto = 1
-    elif level == 2:
+    elif level == 2: # subCategorie
         stile = 'livello2 valuta'
         myrange = (
             'livello2 valuta',
@@ -8042,10 +8018,18 @@ def struct(level):
         )
         Dsopra = 1
         Dsotto = 1
-    elif level == 3:
-        stile = 'Comp Start Attributo'
+    elif level == 3: # misure
+        if oSheet.Name == 'CONTABILITA':
+            stile = 'Comp Start Attributo_R'
+        elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            stile = 'Comp Start Attributo'
+
+        if oSheet.Name == 'CONTABILITA':
+            r1 = 'Comp End Attributo_R'
+        elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            r1 = 'Comp End Attributo'
         myrange = (
-            'Comp End Attributo',
+            r1,
             'Comp TOTALI',
         )
         Dsopra = 2
@@ -8079,7 +8063,8 @@ def struct(level):
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]
         oSheet.group(oCellRangeAddr, 1)
-        oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible = True
+        if vedi == False:
+            oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible = False
 
 
 ########################################################################
@@ -8233,52 +8218,190 @@ def dp():
         except Exception as e:
             # ~ DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
             pass
-#
+
 ########################################################################
-def vista_terra_terra():
+
+def vista_configurazione(tipo_configurazione):
     '''
-    Settaggio base di configurazione colonne in COMPUTO e VARIANTE
+    Configurazione base di colonne in base al tipo (terra_terra o mdo).
+    
+    tipo_configurazione: str
+        - "terra_terra" per configurazione standard COMPUTO e VARIANTE
+        - "mdo" per configurazione manodopera
     '''
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
-
     oSheet = oDoc.CurrentController.ActiveSheet
+    vRow = oDoc.CurrentController.getFirstVisibleRow()
 
-    # raggruppo le colonne
-    ncol = oSheet.getColumns().getCount()
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
+    struttura_off()
+
+    # Verifica il nome del foglio e imposta la colonna iniziale
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         col = 46
     elif oSheet.Name == 'CONTABILITA':
         col = 39
-    oCellRangeAddr.StartColumn = col
-    oCellRangeAddr.EndColumn = ncol
-    oSheet.ungroup(oCellRangeAddr, 0)
-    oSheet.group(oCellRangeAddr, 0)
+    else:
+        raise ValueError(f"Nome del foglio non gestito: {oSheet.Name}")
 
-    # ~oSheet.getCellRangeByPosition(col, 0, ncol -1, 0).Columns.IsVisible = False
-
-    # raggruppa le colonne di MDO
+    ncol = oSheet.getColumns().getCount()
     iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = 29
-    oCellRangeAddr.EndColumn = 30
-    oSheet.ungroup(oCellRangeAddr, 0)
-    oSheet.group(oCellRangeAddr, 0)
-    oSheet.getCellRangeByPosition(0, 29, 0, 30).Columns.IsVisible = False
-    # raggruppa le colonne di misura
-    oCellRangeAddr.StartColumn = 5
-    oCellRangeAddr.EndColumn = 9
-    oSheet.ungroup(oCellRangeAddr, 0)
-    oSheet.group(oCellRangeAddr, 0)
-    oSheet.getCellRangeByPosition(0, 5, 0, 9).Columns.IsVisible = False
 
-    LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    # Funzione helper per creare CellRangeAddress
+    def create_cell_range(sheet, start_col, end_col):
+        addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        addr.Sheet = sheet
+        addr.StartColumn = start_col
+        addr.EndColumn = end_col
+        return addr
 
+    # Raggruppo le colonne principali
+    oCellRangeAddr = create_cell_range(iSheet, col, ncol)
+    oSheet.group(oCellRangeAddr, 0)
+
+    n = SheetUtils.getLastUsedRow(oSheet)
+    # Configurazione specifica per "terra_terra" o "mdo"
+    if tipo_configurazione == "terra_terra":
+        struct(3)
+        # Raggruppa le colonne di MDO e nasconde
+        oCellRangeAddr = create_cell_range(iSheet, 29, 30)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
+        oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
+
+        # Raggruppa le colonne di misura e mostra
+        oCellRangeAddr = create_cell_range(iSheet, 5, 8)
+        oSheet.group(oCellRangeAddr, 0)
+        for i in range(5, 9):
+            oSheet.getColumns().getByIndex(i).Columns.IsVisible = True
+        LeenoSheetUtils.setLarghezzaColonne(oSheet)
+
+        for el in range(4, n):
+            if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro" or \
+                oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro_R":
+                for i in range(3):
+                    oSheet.getCellByPosition(i, el).String = ''
+
+    elif tipo_configurazione == "mdo":
+        struct(3, vedi=False)
+
+        # Raggruppa le colonne di MDO e mostra
+        oCellRangeAddr = create_cell_range(iSheet, 29, 30)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
+        oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
+
+        # Raggruppa le colonne di misura e nasconde
+        oCellRangeAddr = create_cell_range(iSheet, 5, 8)
+        oSheet.group(oCellRangeAddr, 0)
+        for i in range(5, 9):
+            oSheet.getColumns().getByIndex(i).Columns.IsVisible = False
+    
+        for el in range(4, n):
+            if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro" or \
+                oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro_R":
+                oSheet.getCellByPosition(2, el).Formula = oSheet.getCellByPosition(8, el).Formula
+        oSheet.getColumns().getByIndex(2).Columns.Width = 7900
+
+    elif tipo_configurazione == "Semplificata":
+        oCellRangeAddr = create_cell_range(iSheet, 17, 27)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getCellRangeByPosition(0, 17, 0, 27).Columns.IsVisible = False
+        for i in range(17, 28):
+            oSheet.getColumns().getByIndex(i).Columns.IsVisible = False
+
+        oCellRangeAddr = create_cell_range(iSheet, 31, 37)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getCellRangeByPosition(0, 31, 0, 37).Columns.IsVisible = False
+        # for i in range(17, 28):
+        #     oSheet.getColumns().getByIndex(i).Columns.IsVisible = False
+    
+        oCellRangeAddr = create_cell_range(iSheet, 28, 28)
+        oSheet.group(oCellRangeAddr, 0)
+        oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
+
+
+
+    # Ripristina la prima riga visibile e aggiorna larghezza colonne
+    oDoc.CurrentController.setFirstVisibleRow(vRow)
     LeenoUtils.DocumentRefresh(True)
+
+def vista_terra_terra():
+    vista_configurazione('terra_terra')
+
+def vista_mdo():
+    vista_configurazione('mdo')
+
+
+########################################################################
+def Menu_vSintetica():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    flag = True
+    for i in range(1000):
+        if oSheet.getCellByPosition(0, i).CellStyle == "Comp End Attributo" and \
+            oSheet.getCellByPosition(0, i).String != '':
+            flag = False
+            break
+    vSintetica(flag)
+
+def vSintetica(flag = True):
+    """
+    Vista sintetica su COMPUTO, VARIANTE o CONTABILITA.
+    Aggiorna le voci in base al foglio attivo e nasconde quelle con valori zero.
+    """
+    LeenoUtils.DocumentRefresh(False)
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
+        nascondi_voci_zero(18)
+    elif oSheet.Name == 'CONTABILITA':
+        uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
+        nascondi_voci_zero(15)
+
+    i = 0
+    uscita = False
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title=f'Elaborazione voci di {oSheet.Name}...', Text=f"Elaborazione di {uRiga} righe ")
+    progress.setLimits(0, uRiga)
+    progress.show()
+
+    while (i < uRiga):
+        i = LeenoSheetUtils.prossimaVoce(oSheet, i)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
+        try:
+            end_row = sStRange.RangeAddress.EndRow
+            sopra = sStRange.RangeAddress.StartRow
+        except:
+            break
+        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)
+        elif oSheet.Name == 'CONTABILITA':
+                dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)[1]
+
+        if flag:
+            for col in range(3):
+                oSheet.getCellByPosition(col, end_row).Formula = f'{dati[col]}'
+            oSheet.getCellRangeByPosition(2, end_row, 7, end_row).merge(True)
+            oSheet.getCellByPosition(8, end_row).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+            oSheet.getRows().getByIndex(end_row).Rows.Height = 750
+        else:
+            oSheet.getCellRangeByPosition(2, end_row, 8, end_row).merge(False)
+            oSheet.getCellByPosition(8, end_row).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+            for col in range(3):
+                oSheet.getCellByPosition(col, end_row).String = ''
+        if uscita:
+            # DLG.chi(end_row)
+            break
+        i += 1
+        progress.setValue(i)
+
+    progress.hide()
+    LeenoUtils.DocumentRefresh(True)
+    return
 
 
 ########################################################################
@@ -9381,7 +9504,8 @@ def dlg_donazioni():
     # oDialog1Model = oDialog1.Model
     sUrl = LeenO_path() + '/icons/pizza.png'
     oDialog1.getModel().ImageControl1.ImageURL = sUrl
-    oDialog1.execute()
+    if oDialog1.execute() == 0:
+        return
 
 
 ########################################################################
@@ -9738,7 +9862,7 @@ def descrizione_in_una_colonna(flag=False):
                     if cell_style in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr', 'Comp-Bianche sopra_R', 'Comp-Bianche in mezzo Descr_R'):
                         cell_range.merge(flag)
 
-        Menu_adattaAltezzaRiga()
+        # Menu_adattaAltezzaRiga()
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -10163,6 +10287,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
     # ~last = SheetUtils.getUsedArea(oSheet).EndRow
 
     # ~oSheet.getCellRangeByPosition(1, 0, 41, last).Rows.OptimalHeight = True
+    LeenoUtils.DocumentRefresh(True)
     return
 
 
@@ -10172,6 +10297,7 @@ def fissa():
     Fissa prima riga e colonna nel foglio attivo.
     '''
     oDoc = LeenoUtils.getDocument()
+    vRow = oDoc.CurrentController.getFirstVisibleRow()
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = LeggiPosizioneCorrente()[0]
     lrow = LeggiPosizioneCorrente()[1]
@@ -10184,7 +10310,8 @@ def fissa():
     elif oSheet.Name in ('Registro', 'SAL'):
         _gotoCella(0, 1)
         oDoc.CurrentController.freezeAtPosition(0, 1)
-    _gotoCella(lcol, lrow)
+    oDoc.CurrentController.setFirstVisibleRow(vRow)
+    # _gotoCella(lcol, lrow)
 
 
 ########################################################################
@@ -10787,9 +10914,31 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-    DLG.chi(88)
-    # elimina_voci_doppie()
+    vista_configurazione('terra_terra')
+
+    # funzioni per misurare la velocità delle macro
+    # from datetime import datetime, date
+    # datarif = datetime.now()
+    # vSintetica(flag = False)
+    # Menu_vSintetica()
+    # DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+
+    # vista_configurazione('terra_terra')
+    # vista_configurazione('mdo')
+    # struct(3)
+    # vista_mdo()
     # return
+
+    # LeenoUtils.DocumentRefresh(True)
+    # vista_terra_terra()
+    return
+    # funzioni per misurare la velocità delle macro
+    from datetime import datetime, date
+    datarif = datetime.now()
+    # vSintetica(True)
+    vSintetica(False)
+    DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+    return
     MENU_invia_voce()
     pesca_cod()
     # io = inputbox('messaggio')

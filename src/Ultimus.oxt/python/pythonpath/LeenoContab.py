@@ -664,7 +664,6 @@ def GeneraLibretto(oDoc):
     progress.setLimits(1, 6)
     progress.setValue(0)
     progress.show()
-    progress.setValue(1)
 
     # Recupero i dati per il SAL
     # ottengo datiSAL = [art,  desc, um, quant] in cui quant è la "somma a tutto il"

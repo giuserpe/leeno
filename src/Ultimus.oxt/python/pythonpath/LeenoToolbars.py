@@ -67,7 +67,7 @@ def Vedi(arg=None):
     except Exception:
         pass
     PL.dp()
-    # ~ PL.fissa()
+    # PL.fissa()
 
 
 def On(toolbarURL, flag):

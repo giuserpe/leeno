@@ -104,6 +104,9 @@ def setLarghezzaColonne(oSheet):
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
+    oDoc = LeenoUtils.getDocument()
+    vRow = oDoc.CurrentController.getFirstVisibleRow()
+
     if oSheet.Name == 'Analisi di Prezzo':
         for col, width in {'A':1600, 'B':11000, 'C':1500, 'D':1500, 'E':1500, 'F':1500,
                            'G':1500, 'H':2000, 'I':1900, 'J':1900, 'K':1900}.items():
@@ -176,7 +179,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         SheetUtils.freezeRowCol(oSheet, 0, 3)
     adattaAltezzaRiga(oSheet)
-
+    oDoc.CurrentController.setFirstVisibleRow(vRow)
 # ###############################################################
 def rRow(oSheet):
     '''
@@ -320,7 +323,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna'):
+    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna', 'ULTIMUS', 'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'):
         lrow += 1
     return lrow
 # ###############################################################

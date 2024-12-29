@@ -9,8 +9,8 @@ from com.sun.star.xml import AttributeData
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
 import LeenoUtils
-import LeenoSettings
 import DocUtils
+import Dialogs
 import LeenoDialogs as DLG
 
 from datetime import date
@@ -420,11 +420,19 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0, up=False):
     righe = range(start, aAddress.EndRow + 1)
     if up==True:
         righe = reversed (righe)
+
+    progress = Dialogs.Progress(Title='Preparazione in corso...', Text='Rimane il')
+    progress.setLimits(0, aAddress.EndRow)
+    progress.setValue(0)
+    progress.show()
+
     for nRow in righe:
-        if equal == 1 and oSheet.getCellByPosition(nCol, nRow).String == sString:
+        progress.setValue(nRow)  # Aggiorna progresso
+        cell_value = oSheet.getCellByPosition(nCol, nRow).String
+        if (equal == 1 and cell_value == sString) or (equal == 0 and sString in cell_value):
+            progress.hide()  # Chiude la barra di progresso
             return nRow
-        if equal == 0 and sString in oSheet.getCellByPosition(nCol, nRow).String:
-            return nRow
+        
 
 def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
     '''

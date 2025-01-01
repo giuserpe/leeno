@@ -2135,20 +2135,16 @@ def nascondi_voci_zero(lcol = None):
     '''
     Nasconde le voci il cui valore della colonna corrente è pari a zero.
     '''
-    LeenoUtils.DocumentRefresh(True)
-
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if lcol is None:
         lcol = LeggiPosizioneCorrente()[0]
 
-# nascondo i titoli di categoria
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
 
     ER = SheetUtils.getLastUsedRow(oSheet)
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     for i in reversed(range(3, ER)):
         if oSheet.getCellByPosition(lcol, i).Value == 0 and \
@@ -2335,8 +2331,13 @@ def scelta_viste():
             oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(28).Columns.IsVisible:
             oDialog1.getControl('CBMat').State = 1
-        if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
-            oDialog1.getControl('CBMdo').State = True
+        
+        try:
+            if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
+                oDialog1.getControl('CBMdo').State = True
+        except:
+            pass
+
         if oSheet.getColumns().getByIndex(31).Columns.IsVisible:
             oDialog1.getControl('CBCat').State = 1
         if oSheet.getColumns().getByIndex(38).Columns.IsVisible:
@@ -2437,6 +2438,7 @@ def scelta_viste():
         elif oDialog1.getControl('ComboVISTA').getText() == 'Incidenza Manodopera':
             vista_configurazione('mdo')
         elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+            struttura_off()
             vSintetica(True)
 
 # CONTABILITA
@@ -2543,6 +2545,7 @@ def scelta_viste():
         elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
             vista_configurazione('Semplificata')
         elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+            struttura_off()
             vSintetica(True)
 
         LeenoUtils.DocumentRefresh(True)
@@ -5619,8 +5622,7 @@ def dettaglio_misura_rigo():
     # ~if oSheet.getCellByPosition(2, lrow).CellStyle in (
             # ~'comp 1-a'
     if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle and \
-    "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2,
-                                                                  lrow).String:
+    "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2, lrow).String:
         for el in range(5, 9):
             if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                 stringa = ''
@@ -8260,7 +8262,7 @@ def vista_configurazione(tipo_configurazione):
     oSheet.group(oCellRangeAddr, 0)
 
     n = SheetUtils.getLastUsedRow(oSheet)
-    # Configurazione specifica per "terra_terra" o "mdo"
+# Configurazione specifica per "terra_terra" o "mdo"
     if tipo_configurazione == "terra_terra":
         struct(3)
         # Raggruppa le colonne di MDO e nasconde
@@ -8268,6 +8270,7 @@ def vista_configurazione(tipo_configurazione):
         oSheet.group(oCellRangeAddr, 0)
         oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
         oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
+        oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
 
         # Raggruppa le colonne di misura e mostra
         oCellRangeAddr = create_cell_range(iSheet, 5, 8)
@@ -8288,6 +8291,7 @@ def vista_configurazione(tipo_configurazione):
         # Raggruppa le colonne di MDO e mostra
         oCellRangeAddr = create_cell_range(iSheet, 29, 30)
         oSheet.group(oCellRangeAddr, 0)
+        oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
         oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
         oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
 
@@ -8357,10 +8361,18 @@ def vSintetica(flag = True):
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
-        nascondi_voci_zero(18)
+        lcol = 18
+        col_start = 29
+        col_end = 30
     elif oSheet.Name == 'CONTABILITA':
         uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
-        nascondi_voci_zero(15)
+        lcol = 15
+        col_start = 19
+        col_end = 30
+
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
 
     i = 0
     uscita = False
@@ -8373,7 +8385,7 @@ def vSintetica(flag = True):
         i = LeenoSheetUtils.prossimaVoce(oSheet, i)
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
         try:
-            end_row = sStRange.RangeAddress.EndRow
+            sotto = sStRange.RangeAddress.EndRow
             sopra = sStRange.RangeAddress.StartRow
         except:
             break
@@ -8384,23 +8396,48 @@ def vSintetica(flag = True):
 
         if flag:
             for col in range(3):
-                oSheet.getCellByPosition(col, end_row).Formula = f'{dati[col]}'
-            oSheet.getCellRangeByPosition(2, end_row, 7, end_row).merge(True)
-            oSheet.getCellByPosition(8, end_row).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
-            oSheet.getRows().getByIndex(end_row).Rows.Height = 750
+                oSheet.getCellByPosition(col, sotto).Formula = f'{dati[col]}'
+            oSheet.getCellRangeByPosition(2, sotto, 7, sotto).merge(True)
+            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+            oSheet.getRows().getByIndex(sotto).Rows.Height = 750
+
+            # if oSheet.getCellByPosition(lcol, i).CellStyle != 'comp sotto Euro Originale' or \
+            # oSheet.getCellByPosition(lcol, i).Value == 0:
+            oCellRangeAddr.StartRow = sopra
+            oCellRangeAddr.EndRow = sotto -1
+            oSheet.group(oCellRangeAddr, 1)
+            oSheet.getCellRangeByPosition(lcol, sopra, lcol, sotto -1).Rows.IsVisible = False
+
         else:
-            oSheet.getCellRangeByPosition(2, end_row, 8, end_row).merge(False)
-            oSheet.getCellByPosition(8, end_row).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+            oSheet.getCellRangeByPosition(2, sotto, 8, sotto).merge(False)
+            if "SOMMANO [" in oSheet.getCellByPosition(8, sotto).String:
+                break                
+            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
             for col in range(3):
-                oSheet.getCellByPosition(col, end_row).String = ''
+                oSheet.getCellByPosition(col, sotto).String = ''
         if uscita:
-            # DLG.chi(end_row)
+            # DLG.chi(sotto)
             break
         i += 1
         progress.setValue(i)
-
     progress.hide()
-    LeenoUtils.DocumentRefresh(True)
+
+    if flag:
+        oCellRangeAddr.StartColumn = col_start
+        oCellRangeAddr.EndColumn = col_end
+        oSheet.group(oCellRangeAddr, 0)
+        for col in range(28, 31):
+            oSheet.getColumns().getByIndex(col).Columns.IsVisible = False
+        Dialogs.Exclamation(Title='AVVISO!',
+            Text='''QUESTA È SOLO UNA MODALITÀ DI VISUALIZZAZIONE!
+
+Apportare modifiche in questa modalità potrebbe
+compromettere l'integrità dei dati contenuti in questo foglio.
+
+Si ricorda che le celle con sfondo bianco, in genere,
+non sono destinate all'inserimento di dati.''')
+
+    # LeenoUtils.DocumentRefresh(True)
     return
 
 
@@ -10915,22 +10952,6 @@ def ESEMPIO_create_progress_bar():
 
 def MENU_debug():
     vista_configurazione('terra_terra')
-
-    # funzioni per misurare la velocità delle macro
-    # from datetime import datetime, date
-    # datarif = datetime.now()
-    # vSintetica(flag = False)
-    # Menu_vSintetica()
-    # DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
-
-    # vista_configurazione('terra_terra')
-    # vista_configurazione('mdo')
-    # struct(3)
-    # vista_mdo()
-    # return
-
-    # LeenoUtils.DocumentRefresh(True)
-    # vista_terra_terra()
     return
     # funzioni per misurare la velocità delle macro
     from datetime import datetime, date

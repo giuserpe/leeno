@@ -186,7 +186,10 @@ rem ######################################################################
 Sub chiudi_dialoghi
 	ScriptPy(&quot;pyleeno&quot;,&quot;chiudi_dialoghi&quot;)
 End Sub
-
+rem ######################################################################
+Sub inserisci_ElencoCosti
+	ScriptPy(&quot;pyleeno&quot;,&quot;inserisci_ElencoCosti&quot;)
+End Sub
 rem ######################################################################
 Sub avvia_IDE
 	print &quot;OK per Python - Annulla per Basic&quot;

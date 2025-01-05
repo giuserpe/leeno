@@ -12,7 +12,7 @@
  <library:element library:name="Lupo_0"/>
  <library:element library:name="_variabili"/>
  <library:element library:name="ShortC_temp"/>
- <library:element library:name="Viste_0"/>
+ <library:element library:name="Zip"/>
  <library:element library:name="Menu"/>
  <library:element library:name="Viste"/>
  <library:element library:name="Varie"/>
@@ -44,7 +44,5 @@
  <library:element library:name="_tools"/>
  <library:element library:name="Taxi_temp"/>
  <library:element library:name="X_TMP"/>
- <library:element library:name="AAA_TO_DO"/>
- <library:element library:name="Zip"/>
  <library:element library:name="Varie_1"/>
 </library:library>

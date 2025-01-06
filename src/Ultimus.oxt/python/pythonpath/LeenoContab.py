@@ -1,5 +1,5 @@
 from datetime import date
-from com.sun.star.table import CellRangeAddress # type: ignore
+from com.sun.star.table import CellRangeAddress
 from com.sun.star.sheet.GeneralFunction import MAX
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED

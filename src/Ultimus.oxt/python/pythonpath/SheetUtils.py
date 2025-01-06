@@ -432,6 +432,9 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0, up=False):
         if (equal == 1 and cell_value == sString) or (equal == 0 and sString in cell_value):
             progress.hide()  # Chiude la barra di progresso
             return nRow
+    progress.hide()  # Chiude la barra di progresso
+    return None
+
         
 
 def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
@@ -610,3 +613,20 @@ def MENU_unisci_fogli():
 
 
 # ###############################################################
+
+def column_name_of(nColumnNumber):
+    """
+    Converte un numero di colonna in un nome alfanumerico (es. 0 -> "A", 1 -> "B", 26 -> "AA").
+    
+    Args:
+        nColumnNumber (int): Numero della colonna (0-based).
+    
+    Returns:
+        str: Nome della colonna in formato alfanumerico.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByIndex(0)  # Deve esserci sempre un foglio con indice 0
+    lcolumns = oSheet.Columns
+    lcolumn = lcolumns.getByIndex(nColumnNumber)
+    cColumnName = lcolumn.Name
+    return cColumnName

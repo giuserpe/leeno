@@ -14,14 +14,14 @@
  <library:element library:name="ShortC_temp"/>
  <library:element library:name="Zip"/>
  <library:element library:name="Menu"/>
- <library:element library:name="Viste"/>
+ <library:element library:name="Accessori_2"/>
  <library:element library:name="Varie"/>
  <library:element library:name="_da_registratore"/>
  <library:element library:name="Voci_Sistema"/>
- <library:element library:name="Computo"/>
+ <library:element library:name="PY_bridge"/>
  <library:element library:name="Taxi"/>
  <library:element library:name="Taxi_Acc"/>
- <library:element library:name="Analisi"/>
+ <library:element library:name="VarGlobal"/>
  <library:element library:name="Voci_Sposta"/>
  <library:element library:name="Voci_Sposta_2"/>
  <library:element library:name="Attesa"/>
@@ -36,7 +36,4 @@
  <library:element library:name="Lupo_tmp"/>
  <library:element library:name="X_TMP"/>
  <library:element library:name="file_gest"/>
- <library:element library:name="PY_bridge"/>
- <library:element library:name="Accessori_2"/>
- <library:element library:name="VarGlobal"/>
 </library:library>

@@ -10983,8 +10983,8 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-
-    setPreview()
+    
+    # setPreview()
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

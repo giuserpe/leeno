@@ -293,15 +293,6 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 		Trova_rangeSRC_Computo = oSheet.getCellRangeByPosition(0,lrowInizio,250,lrowEnd).RangeAddress
 end function
 
-Sub focus_doc (sUrl As String)
-rem ----------------------------------------------------------------------
-	Target = StarDesktop.loadComponentFromURL(sUrl, &quot;_default&quot;,0 , Array()) 
-	aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
-	Target.getCurrentController().getFrame().focusGained(aFocusEvent)
-rem ----------------------------------------------------------------------
-End Sub
-
-
 Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarget as string, _
 	optional sRangeTarget as string, optional sStringa as string, optional sFrName as string )
 	
@@ -418,31 +409,6 @@ end sub
  oRanges.addNewByName(sAreaName, sDefArea , oCellAddress, 0)
 END SUB 
 
-Function DCC_non_Definito
-	sSourceURL = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
-	If sSourceURL = &quot;&quot; Then 
- 		exit function
-	end if
-&apos;	sSourceURL = ConvertToUrl(sSourceURL)
-	Select case msgbox (&quot;Attenzione!! Sto per importare gli stili da del file:&quot; &amp; CHR$(10)_
-					&amp; sSourceURL &amp; CHR$(10)_
-					&amp; &quot;Questa operazione sovrascriverà irrimediabilmente gli eventuali stili con lo stesso nome del doc	attivo!&quot; &amp; CHR$(10)_
-					&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
- 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Importa Stili in blocco ?&quot;) 
- 				
-				case 6 &apos;SI
- 					curl = ConvertToUrl(sSourceURL) &apos;sSourceURL
-					styles=thiscomponent.getStyleFamilies() &apos;get the interface to load styles
-					styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
-				case 7
-	 				exit function
- 	 			case 2
- 					exit function
- 	end select	
-end function
-
-
-
 Sub gina &apos; trasferisce una sheet da un doc ad un altro
 &apos; verifcando e trasferendo sino a a 3 link
 	dim sAreaNameSRC as string
@@ -456,10 +422,6 @@ Sub gina &apos; trasferisce una sheet da un doc ad un altro
 &apos;	dim oSheetSRC as object
 	DlgAcAnnulla
 	UrlSrc = ThisComponent.getURL() &apos; file sorgente
-	
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	
 	if ismissing(UrlSrc) or UrlSrc = &quot;&quot; then
 	 	 msgbox &quot; Questo documento (il SORGENTE) non è noto al file system &quot;&amp; sSheetSRC &amp; &quot; &quot; &amp; CHR$(10)_
@@ -516,9 +478,7 @@ annullato:
 						If sSourceURL &lt;&gt; &quot;&quot; Then 
  								Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 1, Array())
 			 					wait 100 &apos; 
- 								&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-								Verifica_chiudi_preview
-								&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+
 							else
 								Print &quot;ok.... ANNULLO!&quot;
 								exit sub
@@ -806,232 +766,4 @@ annullato:
 end sub
 
 
-
-sub Elimina_AP_da_EP
-	oSheet = ThisComponent.Sheets.getByName (&quot;Elenco Prezzi&quot;)
-&apos;	oSheet = ThisComponent.Sheets.getByName (&quot;Elenco_Prezzi_copia&quot;)
-
-	lcolbase = Colonna_giusta_EP (oSheet)
- 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-	end if
- 	
-
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Riordina_Taxi (oSheet, lcolbase+8, true) &apos;mmm
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-
-
-	lrow = 1
-	oCell = oSheet.getCellByPosition(lcolbase+8 , lrow )
-
-	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,313).string = 1 then
-		goto nessuna_AP
-	end if
-	xA = oCell.string
-	do while xA = &quot;&quot; 
-		if lrow = 3 then
-		&apos;	print &quot;nessuna&quot;
-			goto nessuna_AP
-			exit do
-		end if
-		lrow = lrow +1 
-		oCell = oSheet.getCellByPosition( lcolbase+8, lrow )
-		xA = oCell.string
-	loop
-	lrow = lrow +1 
-	oCell = oSheet.getCellByPosition( lcolbase+8, lrow )
-	xA = oCell.string	
-	lrowStart = oCell.RangeAddress.StartRow -1
-
-	do while xA = &quot;(AP)&quot;
-		lrow = lrow +1 
-		oCell = oSheet.getCellByPosition(lcolbase+8, lrow )
-		xA = oCell.string
-	loop	
-	
-	lrowEnd = oCell.RangeAddress.EndRow -1
-	lpippo = lrowEnd-lrowStart+1
-	myrows = oSheet.getrows &apos; AP eliminazione dall&apos;EP
-
-	myrows.removebyindex(lrowStart,lrowEnd-lrowStart+1)
-	&apos; tutti i prezzi AP cancellati!
-
-	nessuna_AP: 
-	
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	&apos;circoscrive l&apos;elenco sorgente
-	sString$ = &quot;Fine elenco&quot;
-	if not isempty(uFindString_taxi(sString$, oSheet) ) then
-			oEnd=uFindString_taxi(sString$, oSheet) 
-			lrowEnd=oEnd.RangeAddress.EndRow 
-		else
-			lrowEnd=TrovaFine_Computo(oSheet)
-	end if
-
-&apos;	oEnd = UltimusFree2.Taxi.uFindString_taxi(sString$, oSheet) 
-&apos;	lrowEnd=oEnd.RangeAddress.EndRow &apos;arcangelo
-	&apos;	oRangeSRC = oSheet.getCellRangeByPosition(0,1,250,lrowEnd-1)
-	&apos;print lrowEnd
-	iRowS = 2 &apos;oRangeSRC.Startrow
-	iRowE = lrowEnd &apos;oRangeSRC.Endrow
-	sRangeSRC_EP = &quot;$A&quot; &amp; iRowS &amp; &quot;:$EA&quot; &amp; iRowE
-	
-end sub
-
-
-
-Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	 &apos;&apos;	 &apos;Clessid_lock_Start_D
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
-	&apos;print &quot;parto da &quot;	 &amp; lrow
-	If lrow = 0 then
-		lrow = 2
-	end if
-	&apos;oSheet = ThisComponent.currentController.activeSheet
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-
-	oCell = oSheet.getCellByPosition( 5 , lrow) &apos;???????
-	oCell1 = oSheet.getCellByPosition( 3 , lrow) &apos;??????
-
-	&apos;@ ThisComponent.CurrentController.Select(oCell)
- 	if oCell.string = &quot;TOTALE&quot; OR (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
- 		goto saltarello			
-	end if
-	
-	&apos; trovo l&apos;inizio voce Analisi
-	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		 lrow = lrow - 1
- 		 oCell = oSheet.getCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
-		 oCell1 = oSheet.getCellByPosition( 3 , lrow)
-	loop
-
-	saltarello:
-	lrowRisel = lrow
-	&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 0, lrow ) )&apos;debug
-		 &apos; print &quot;voilà&quot;		 
-	oCodAnalisi = oSheet.getCellByPosition( 0, lrow ).string
-	&apos;	xA = oCell.string
- oCelle = oSheet.getCellByPosition( 1, lrow ) 
-	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-	oConv.Address = oCelle.getCellAddress
-	oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 	&apos; print oLdescAnalisi
- 
- 	oCelle = oSheet.getCellByPosition( 2, lrow ) 
-	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-	oConv.Address = oCelle.getCellAddress
-	oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-	
- 	oCelle = oSheet.getCellByPosition( 9, lrow ) &apos; rigagiuserpe
-	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-	oConv.Address = oCelle.getCellAddress
-	oLsicAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 	
-	oCelle = oSheet.getCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
- &apos; diversa dopo la mofùdifica della struttura della voce di analisi
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 
- 
- oCelle = oSheet.getCellByPosition( 7, lrow ) 
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oIncidAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-	
- oCelle = oSheet.getCellByPosition( 0, lrow ) 
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLOrigPAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-
- oAP = &quot;(AP)&quot;
- 
- &apos;........ rimando di selezione sulla tab Analisi di prezzo
- oCella = oSheet.getCellByPosition( 1, lrowRisel ) 
- ThisComponent.CurrentController.Select(oCella)
- &apos; .... per quando si torna sulla tab 
- 
-
- oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
- &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; oCell=thisComponent.getCurrentSelection()&apos;
- 
-	lcolbase = Colonna_giusta_EP (oSheet)
- 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-	end if
- 	
-rem ----------------------------------------------------------------------
-	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
-	rIntest=oStart.CellAddress.Row+1
-	Print rIntest
-	fissa (0,idxRow+1)
-rem ----------------------------------------------------------------------	
- oCell = oSheet.getCellByPosition( lcolbase+0,3 ) 
- ThisComponent.CurrentController.Select(oCell)&apos;@
- 
-	lrow = 3
-	oSheet.unprotect(&quot;&quot;)
-	insRows (lrow,1)
-&apos;	oSheet.getRows.insertByIndex(lrow,1)
-	oCell = oSheet.getCellByPosition( lcolbase+0 , lrow)
-	oCell.CellStyle=&quot;EP-Cs&quot;
-					
-	oCell.string= oCodAnalisi
-
-rem ----------------------------------------------------------------------
-rem sistemo i sommari
-	oSheet.getCellByPosition(lcolbase+10 , lrow).formula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
-	oSheet.getCellByPosition(lcolbase+10 , lrow).cellstyle = &quot;EP statistiche_q&quot;
-
-	oSheet.getCellByPosition(lcolbase+11 , lrow).formula = &quot;=K&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1
-	oSheet.getCellByPosition(lcolbase+11 , lrow).cellstyle = &quot;EP statistiche&quot;
-rem ----------------------------------------------------------------------
-
-	lscarto	= 0 &apos; dA USARE PER LA vER. 4
-
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto +1 , lrow) 
- oCell.formula = oLdescAnalisi
-	oCell.CellStyle=&quot;EP-C&quot;
- 					
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto +2 , lrow)
-	oCell.CellStyle=&quot;EP-C mezzo&quot;
- 	oCell.formula = oLumAnalisi
- 	
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
-	oCell.CellStyle=&quot;EP-C mezzo&quot;
- 	oCell.formula = oLsicAnalisi
- 	
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 4 , lrow)
- 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
- 	 oCell.formula = oLprezzoAnalisi 
-
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
-	 oCell.formula = oIncidAnalisi
-	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
-	 					 
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
-	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
-	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 		 					 
-	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 7 , lrow)
-	 oCell.formula = oLOrigPAnalisi
-	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 
- oCell = oSheet.getCellByPosition( lcolbase+lscarto + 8 , lrow)
- oCell.string = oAP 
-	oCell.CellStyle=&quot;EP-C mezzo&quot;
-	
- oCell = oSheet.getCellByPosition( lcolbase+lscarto + 9 , lrow)
- 	&apos; oCell.CellBackColor = RGB(0,0,139)
- oCell.CellStyle=&quot;EP-sfondo&quot;
-
-
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-&apos;	Clessid_lock_End
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-END SUB
 </script:module>

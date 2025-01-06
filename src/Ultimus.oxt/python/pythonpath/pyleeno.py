@@ -10984,7 +10984,6 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-    
     # setPreview()
     return
     oDoc = LeenoUtils.getDocument()

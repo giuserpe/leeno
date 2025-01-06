@@ -10,7 +10,7 @@ from datetime import date
 import calendar
 
 import PyPDF2
-
+import LeenoDialogs as DLG
 '''
 ALCUNE COSE UTILI
 
@@ -272,3 +272,172 @@ def replacePatternWithField(oTxt, pattern, oField):
         repl = True
     return repl
 
+########################################################################
+
+def elimina_nomi_area_errati():
+    '''
+    Rimuove i nomi di area con riferimenti non validi (#REF! o #rif!).
+    '''
+    oDoc = LeenoUtils.getDocument()
+
+    sheets = oDoc.Sheets
+    named_ranges = oDoc.NamedRanges
+    nomi_area = named_ranges.ElementNames
+    n = len(nomi_area)
+
+    # Crea o ottieni il foglio "duplicati"
+    if sheets.hasByName("duplicati"):
+        sheet = sheets.getByName("duplicati")
+    else:
+        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+        sheets.insertByName("duplicati", sheet)
+
+    # Analizza i nomi di area
+    for i, nome_area in enumerate(nomi_area):
+        cella_nome = sheet.getCellByPosition(0, i)  # Prima colonna
+        cella_nome.String = nome_area
+
+        cella_contenuto = sheet.getCellByPosition(1, i)  # Seconda colonna
+        contenuto = named_ranges.getByName(nome_area).Content
+        cella_contenuto.String = contenuto
+
+        # Rimuovi i nomi di area con riferimenti non validi
+        if "#REF!" in contenuto or "#rif!" in contenuto:
+            named_ranges.removeByName(nome_area)
+
+    # Rimuovi il foglio temporaneo
+    sheets.removeByName("duplicati")
+
+########################################################################
+
+def indirizzo_in_forma_leggibile():
+    """
+    Restituisce l'indirizzo leggibile della cella attualmente selezionata.
+
+    - Usa `CellAddressConversion` per convertire l'indirizzo della cella selezionata.
+    - Restituisce la rappresentazione leggibile per l'interfaccia utente.
+
+    Returns:
+        str: L'indirizzo della cella in formato leggibile.
+    """
+    oDoc = LeenoUtils.getDocument()
+
+    # Controlla che il documento sia un foglio di calcolo
+    if not hasattr(oDoc, "Sheets"):
+        print("Il documento corrente non è un foglio di calcolo.")
+        return None
+
+    # Ottieni la cella attiva
+    active_cell = oDoc.CurrentSelection
+    cell_address = active_cell.CellAddress
+
+    # Converte l'indirizzo in una rappresentazione leggibile
+    converter = oDoc.createInstance("com.sun.star.table.CellAddressConversion")
+    converter.Address = cell_address
+
+    user_representation = converter.UserInterfaceRepresentation
+    persistent_representation = converter.PersistentRepresentation
+
+    # Stampa le rappresentazioni (opzionale)
+    DLG.chi(f"Interfaccia utente: {user_representation}\nRappresentazione persistente: {persistent_representation}")
+
+    return user_representation
+
+########################################################################
+
+def reset_properties(o_range, cell_formatting=False, character_formatting=False, 
+                     paragraph_formatting=False, border_and_table_formatting=False, 
+                     number_formatting=False, alignment_and_justification=False, 
+                     validation=False, shadow_and_effects=False):
+    """
+    Ripristina le proprietà di una selezione di celle (o range) ai valori predefiniti.
+
+    Args:
+        o_range (object): L'oggetto range che rappresenta una selezione di celle.
+        cell_formatting (bool): Se True, ripristina le proprietà relative alla formattazione delle celle.
+        character_formatting (bool): Se True, ripristina le proprietà relative alla formattazione del carattere.
+        paragraph_formatting (bool): Se True, ripristina le proprietà relative alla formattazione del paragrafo.
+        border_and_table_formatting (bool): Se True, ripristina le proprietà relative ai bordi e alla formattazione della tabella.
+        number_formatting (bool): Se True, ripristina le proprietà relative alla formattazione numerica.
+        alignment_and_justification (bool): Se True, ripristina le proprietà relative all'allineamento e giustificazione.
+        validation (bool): Se True, ripristina le proprietà relative alla validazione.
+        shadow_and_effects (bool): Se True, ripristina le proprietà relative agli effetti di ombreggiatura.
+
+    ### ESEMPIO D'USO:
+        oDoc = LeenoUtils.getDocument()
+        o_range = oDoc.CurrentSelection
+        reset_properties(o_range, cell_formatting=True, character_formatting=True)
+    """
+    # Proprietà ordinate per categoria
+    cell_formatting_properties = [
+        'CellBackColor', 'CellBackgroundComplexColor', 'CellProtection', 'CellStyle', 'IsCellBackgroundTransparent'
+    ]
+
+    character_formatting_properties = [
+        'CharColor', 'CharComplexColor', 'CharContoured', 'CharCrossedOut', 'CharEmphasis', 'CharFont', 
+        'CharFontCharSet', 'CharFontCharSetAsian', 'CharFontCharSetComplex', 'CharFontFamily', 'CharFontFamilyAsian',
+        'CharFontFamilyComplex', 'CharFontName', 'CharFontNameAsian', 'CharFontNameComplex', 'CharFontPitch', 
+        'CharFontPitchAsian', 'CharFontPitchComplex', 'CharFontStyleName', 'CharFontStyleNameAsian', 
+        'CharFontStyleNameComplex', 'CharHeight', 'CharHeightAsian', 'CharHeightComplex', 'CharLocale', 
+        'CharLocaleAsian', 'CharLocaleComplex', 'CharOverline', 'CharOverlineColor', 'CharOverlineHasColor', 
+        'CharPosture', 'CharPostureAsian', 'CharPostureComplex', 'CharRelief', 'CharShadowed', 'CharStrikeout', 
+        'CharUnderline', 'CharUnderlineColor', 'CharUnderlineHasColor', 'CharWeight', 'CharWeightAsian', 
+        'CharWeightComplex', 'CharWordMode'
+    ]
+
+    paragraph_formatting_properties = [
+        'ParaAdjust', 'ParaBottomMargin', 'ParaIndent', 'ParaIsCharacterDistance', 'ParaIsForbiddenRules', 
+        'ParaIsHangingPunctuation', 'ParaIsHyphenation', 'ParaLastLineAdjust', 'ParaLeftMargin', 'ParaRightMargin', 
+        'ParaTopMargin'
+    ]
+
+    border_and_table_formatting_properties = [
+        'BottomBorder', 'BottomBorder2', 'BottomBorderComplexColor', 'LeftBorder', 'LeftBorder2', 
+        'LeftBorderComplexColor', 'RightBorder', 'RightBorder2', 'RightBorderComplexColor', 'TopBorder', 
+        'TopBorder2', 'TopBorderComplexColor', 'TableBorder', 'TableBorder2'
+    ]
+
+    number_formatting_properties = [
+        'NumberFormat', 'NumberingRules'
+    ]
+
+    alignment_and_justification_properties = [
+        'HoriJustify', 'HoriJustifyMethod', 'VertJustify', 'VertJustifyMethod', 'IsTextWrapped'
+    ]
+
+    validation_properties = [
+        'Validation', 'ValidationLocal', 'ValidationXML'
+    ]
+
+    shadow_and_effects_properties = [
+        'ShadowFormat', 'ShrinkToFit', 'CharPosture', 'CharStrikeout', 'CharShadowed'
+    ]
+
+    # Creiamo una lista di tutte le proprietà da ripristinare
+    properties_to_reset = []
+
+    if cell_formatting:
+        properties_to_reset.extend(cell_formatting_properties)
+    if character_formatting:
+        properties_to_reset.extend(character_formatting_properties)
+    if paragraph_formatting:
+        properties_to_reset.extend(paragraph_formatting_properties)
+    if border_and_table_formatting:
+        properties_to_reset.extend(border_and_table_formatting_properties)
+    if number_formatting:
+        properties_to_reset.extend(number_formatting_properties)
+    if alignment_and_justification:
+        properties_to_reset.extend(alignment_and_justification_properties)
+    if validation:
+        properties_to_reset.extend(validation_properties)
+    if shadow_and_effects:
+        properties_to_reset.extend(shadow_and_effects_properties)
+
+    # Ripristina tutte le proprietà ai valori predefiniti
+    for prop in properties_to_reset:
+        try:
+            o_range.setPropertyToDefault(prop)
+        except Exception as e:
+            DLG.chi(f"Proprietà non supportata: {prop} - {e}")
+
+########################################################################

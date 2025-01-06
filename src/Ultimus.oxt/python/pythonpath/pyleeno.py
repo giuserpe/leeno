@@ -43,6 +43,7 @@ import os
 import shutil
 import sys
 import uno
+import zipfile
 
 import SheetUtils
 import LeenoUtils

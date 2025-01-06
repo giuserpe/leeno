@@ -556,7 +556,7 @@ unSelect &apos;deseleziona
 	rem RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.getCellByPosition( 0 , rIntest)
 	oPrimaCella.Rows.Height = 1200
-fissa (0,idxrow+1)
+
 	 Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_

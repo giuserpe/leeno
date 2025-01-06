@@ -10,7 +10,6 @@ from datetime import date
 import calendar
 
 import PyPDF2
-import LeenoDialogs as DLG
 '''
 ALCUNE COSE UTILI
 
@@ -339,7 +338,6 @@ def indirizzo_in_forma_leggibile():
     persistent_representation = converter.PersistentRepresentation
 
     # Stampa le rappresentazioni (opzionale)
-    DLG.chi(f"Interfaccia utente: {user_representation}\nRappresentazione persistente: {persistent_representation}")
 
     return user_representation
 
@@ -434,10 +432,12 @@ def reset_properties(o_range, cell_formatting=False, character_formatting=False,
         properties_to_reset.extend(shadow_and_effects_properties)
 
     # Ripristina tutte le proprietà ai valori predefiniti
-    for prop in properties_to_reset:
-        try:
-            o_range.setPropertyToDefault(prop)
-        except Exception as e:
-            DLG.chi(f"Proprietà non supportata: {prop} - {e}")
+
+    # for prop in properties_to_reset:
+    #     try:
+    #         o_range.setPropertyToDefault(prop)
+    #     except Exception as e:
+    #         pass
+    
 
 ########################################################################

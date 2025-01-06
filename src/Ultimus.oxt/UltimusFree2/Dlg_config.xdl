@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="4" dlg:id="Dlg_config" dlg:left="170" dlg:top="148" dlg:width="247" dlg:height="153" dlg:help-text="&amp;209.Dlg_config.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;210.Dlg_config.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Dlg_config" dlg:left="170" dlg:top="148" dlg:width="247" dlg:height="153" dlg:help-text="&amp;209.Dlg_config.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;210.Dlg_config.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="4" dlg:font-height="11"/>
-  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="3" dlg:font-height="11"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="0" dlg:left="16" dlg:top="88" dlg:width="95" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:valign="center" dlg:checked="false"/>
@@ -15,25 +14,22 @@
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="2" dlg:left="129" dlg:top="111" dlg:width="50" dlg:height="12" dlg:help-text="&amp;224.Dlg_config.Label3.HelpText" dlg:value="&amp;225.Dlg_config.Label3.Label" dlg:valign="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="3" dlg:left="16" dlg:top="12" dlg:width="95" dlg:height="10" dlg:help-text="&amp;226.Dlg_config.CheckBox1.HelpText" dlg:value="&amp;227.Dlg_config.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="4" dlg:left="16" dlg:top="57" dlg:width="95" dlg:height="10" dlg:help-text="&amp;230.Dlg_config.CheckBox3.HelpText" dlg:value="&amp;231.Dlg_config.CheckBox3.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl4" dlg:tab-index="6" dlg:left="8" dlg:top="203" dlg:width="230" dlg:height="50" dlg:help-text="&amp;266.Dlg_config.FrameControl4.HelpText">
-   <dlg:title dlg:value="&amp;267.Dlg_config.FrameControl4.Label"/>
-  </dlg:titledbox>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="180" dlg:top="135" dlg:width="25" dlg:height="15" dlg:help-text="&amp;274.Dlg_config.CommandButton1.HelpText" dlg:value="&amp;275.Dlg_config.CommandButton1.Label" dlg:multiline="true">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="180" dlg:top="135" dlg:width="25" dlg:height="15" dlg:help-text="&amp;274.Dlg_config.CommandButton1.HelpText" dlg:value="&amp;275.Dlg_config.CommandButton1.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_default?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="1" dlg:id="Label7" dlg:tab-index="7" dlg:left="129" dlg:top="12" dlg:width="47" dlg:height="12" dlg:help-text="&amp;278.Dlg_config.Label7.HelpText" dlg:value="&amp;279.Dlg_config.Label7.Label" dlg:valign="center"/>
-  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox2" dlg:tab-index="8" dlg:left="180" dlg:top="12" dlg:width="55" dlg:height="12" dlg:help-text="&amp;280.Dlg_config.ComboBox2.HelpText" dlg:value="&amp;283.Dlg_config.ComboBox2.Text" dlg:spin="true">
+  <dlg:text dlg:style-id="1" dlg:id="Label7" dlg:tab-index="6" dlg:left="129" dlg:top="12" dlg:width="47" dlg:height="12" dlg:help-text="&amp;278.Dlg_config.Label7.HelpText" dlg:value="&amp;279.Dlg_config.Label7.Label" dlg:valign="center"/>
+  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox2" dlg:tab-index="7" dlg:left="180" dlg:top="12" dlg:width="55" dlg:height="12" dlg:help-text="&amp;280.Dlg_config.ComboBox2.HelpText" dlg:value="&amp;283.Dlg_config.ComboBox2.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;281.ComboBox2.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;282.ComboBox2.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox8" dlg:tab-index="9" dlg:left="16" dlg:top="27" dlg:width="102" dlg:height="10" dlg:help-text="&amp;288.Dlg_config.CheckBox8.HelpText" dlg:value="&amp;289.Dlg_config.CheckBox8.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:text dlg:style-id="1" dlg:id="Label17" dlg:tab-index="10" dlg:left="129" dlg:top="33" dlg:width="76" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;306.Dlg_config.Label17.HelpText" dlg:value="&amp;307.Dlg_config.Label17.Label" dlg:valign="center"/>
-  <dlg:textfield dlg:style-id="4" dlg:id="TextField14" dlg:tab-index="11" dlg:left="207" dlg:top="33" dlg:width="28" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;308.Dlg_config.TextField14.HelpText" dlg:align="center" dlg:value="&amp;309.Dlg_config.TextField14.Text"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox5" dlg:tab-index="12" dlg:left="16" dlg:top="42" dlg:width="95" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox6" dlg:tab-index="13" dlg:left="16" dlg:top="73" dlg:width="95" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox4" dlg:tab-index="14" dlg:left="207" dlg:top="74" dlg:width="28" dlg:height="12" dlg:help-text="&amp;719.Dlg_config.ComboBox4.HelpText" dlg:value="&amp;720.Dlg_config.ComboBox4.Text" dlg:align="center" dlg:spin="true" dlg:maxlength="2">
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox8" dlg:tab-index="8" dlg:left="16" dlg:top="27" dlg:width="102" dlg:height="10" dlg:help-text="&amp;288.Dlg_config.CheckBox8.HelpText" dlg:value="&amp;289.Dlg_config.CheckBox8.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label17" dlg:tab-index="9" dlg:left="129" dlg:top="33" dlg:width="76" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;306.Dlg_config.Label17.HelpText" dlg:value="&amp;307.Dlg_config.Label17.Label" dlg:valign="center"/>
+  <dlg:textfield dlg:style-id="3" dlg:id="TextField14" dlg:tab-index="10" dlg:left="207" dlg:top="33" dlg:width="28" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;308.Dlg_config.TextField14.HelpText" dlg:align="center" dlg:value="&amp;309.Dlg_config.TextField14.Text"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox5" dlg:tab-index="11" dlg:left="16" dlg:top="42" dlg:width="95" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox6" dlg:tab-index="12" dlg:left="16" dlg:top="73" dlg:width="95" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox4" dlg:tab-index="13" dlg:left="207" dlg:top="74" dlg:width="28" dlg:height="12" dlg:help-text="&amp;719.Dlg_config.ComboBox4.HelpText" dlg:value="&amp;720.Dlg_config.ComboBox4.Text" dlg:align="center" dlg:spin="true" dlg:maxlength="2">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;823.ComboBox4.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;824.ComboBox4.StringItemList"/>
@@ -48,16 +44,16 @@
     <dlg:menuitem dlg:value="&amp;833.ComboBox4.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="1" dlg:id="Label4" dlg:tab-index="15" dlg:left="129" dlg:top="74" dlg:width="76" dlg:height="12" dlg:help-text="&amp;731.Dlg_config.Label4.HelpText" dlg:value="&amp;732.Dlg_config.Label4.Label" dlg:valign="center"/>
-  <dlg:text dlg:style-id="1" dlg:id="Label8" dlg:tab-index="16" dlg:left="129" dlg:top="91" dlg:width="76" dlg:height="12" dlg:help-text="&amp;733.Dlg_config.Label8.HelpText" dlg:value="&amp;734.Dlg_config.Label8.Label" dlg:valign="center"/>
-  <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="17" dlg:left="10" dlg:top="7" dlg:width="110" dlg:height="123" dlg:help-text="&amp;765.Dlg_config.FrameControl1.HelpText">
+  <dlg:text dlg:style-id="1" dlg:id="Label4" dlg:tab-index="14" dlg:left="129" dlg:top="74" dlg:width="76" dlg:height="12" dlg:help-text="&amp;731.Dlg_config.Label4.HelpText" dlg:value="&amp;732.Dlg_config.Label4.Label" dlg:valign="center"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label8" dlg:tab-index="15" dlg:left="129" dlg:top="91" dlg:width="76" dlg:height="12" dlg:help-text="&amp;733.Dlg_config.Label8.HelpText" dlg:value="&amp;734.Dlg_config.Label8.Label" dlg:valign="center"/>
+  <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="16" dlg:left="10" dlg:top="7" dlg:width="110" dlg:height="123" dlg:help-text="&amp;765.Dlg_config.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;766.Dlg_config.FrameControl1.Label"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:id="FrameControl5" dlg:tab-index="18" dlg:left="125" dlg:top="7" dlg:width="115" dlg:height="123" dlg:help-text="&amp;771.Dlg_config.FrameControl5.HelpText">
+  <dlg:titledbox dlg:id="FrameControl5" dlg:tab-index="17" dlg:left="125" dlg:top="7" dlg:width="115" dlg:height="123" dlg:help-text="&amp;771.Dlg_config.FrameControl5.HelpText">
    <dlg:title dlg:value="&amp;772.Dlg_config.FrameControl5.Label"/>
   </dlg:titledbox>
-  <dlg:button dlg:id="CommandButton2" dlg:tab-index="19" dlg:left="215" dlg:top="135" dlg:width="25" dlg:height="15" dlg:help-text="&amp;773.Dlg_config.CommandButton2.HelpText" dlg:value="&amp;774.Dlg_config.CommandButton2.Label" dlg:button-type="ok"/>
-  <dlg:combobox dlg:id="ComboBox5" dlg:tab-index="20" dlg:left="207" dlg:top="91" dlg:width="28" dlg:height="12" dlg:help-text="&amp;834.Dlg_config.ComboBox5.HelpText" dlg:value="&amp;835.Dlg_config.ComboBox5.Text" dlg:align="center" dlg:autocomplete="false" dlg:spin="true">
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="18" dlg:left="215" dlg:top="135" dlg:width="25" dlg:height="15" dlg:help-text="&amp;773.Dlg_config.CommandButton2.HelpText" dlg:value="&amp;774.Dlg_config.CommandButton2.Label" dlg:button-type="ok"/>
+  <dlg:combobox dlg:id="ComboBox5" dlg:tab-index="19" dlg:left="207" dlg:top="91" dlg:width="28" dlg:height="12" dlg:help-text="&amp;834.Dlg_config.ComboBox5.HelpText" dlg:value="&amp;835.Dlg_config.ComboBox5.Text" dlg:align="center" dlg:autocomplete="false" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;855.ComboBox5.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;856.ComboBox5.StringItemList"/>
@@ -70,9 +66,9 @@
     <dlg:menuitem dlg:value="&amp;863.ComboBox5.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="21" dlg:left="129" dlg:top="68" dlg:width="106" dlg:height="2" dlg:help-text="&amp;946.Dlg_config.FixedLine1.HelpText" dlg:value="&amp;947.Dlg_config.FixedLine1.Label"/>
-  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="22" dlg:left="129" dlg:top="27" dlg:width="106" dlg:height="2" dlg:help-text="&amp;948.Dlg_config.FixedLine2.HelpText" dlg:value="&amp;949.Dlg_config.FixedLine2.Label"/>
-  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox6" dlg:tab-index="23" dlg:left="207" dlg:top="51" dlg:width="28" dlg:height="12" dlg:help-text="&amp;950.Dlg_config.ComboBox6.HelpText" dlg:value="&amp;951.Dlg_config.ComboBox6.Text" dlg:align="center" dlg:spin="true">
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="20" dlg:left="129" dlg:top="68" dlg:width="106" dlg:height="2" dlg:help-text="&amp;946.Dlg_config.FixedLine1.HelpText" dlg:value="&amp;947.Dlg_config.FixedLine1.Label"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="21" dlg:left="129" dlg:top="27" dlg:width="106" dlg:height="2" dlg:help-text="&amp;948.Dlg_config.FixedLine2.HelpText" dlg:value="&amp;949.Dlg_config.FixedLine2.Label"/>
+  <dlg:combobox dlg:style-id="1" dlg:id="ComboBox6" dlg:tab-index="22" dlg:left="207" dlg:top="51" dlg:width="28" dlg:height="12" dlg:help-text="&amp;950.Dlg_config.ComboBox6.HelpText" dlg:value="&amp;951.Dlg_config.ComboBox6.Text" dlg:align="center" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;953.ComboBox6.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;954.ComboBox6.StringItemList"/>
@@ -81,8 +77,8 @@
     <dlg:menuitem dlg:value="&amp;957.ComboBox6.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:fixedline dlg:id="FixedLine3" dlg:tab-index="24" dlg:left="129" dlg:top="109" dlg:width="106" dlg:height="0" dlg:help-text="&amp;987.Dlg_config.FixedLine3.HelpText" dlg:value="&amp;988.Dlg_config.FixedLine3.Label"/>
-  <dlg:combobox dlg:style-id="5" dlg:id="ComboBox1" dlg:tab-index="25" dlg:left="180" dlg:top="112" dlg:width="55" dlg:height="12" dlg:help-text="&amp;993.Dlg_config.ComboBox1.HelpText" dlg:value="&amp;994.Dlg_config.ComboBox1.Text" dlg:spin="true">
+  <dlg:fixedline dlg:id="FixedLine3" dlg:tab-index="23" dlg:left="129" dlg:top="109" dlg:width="106" dlg:height="0" dlg:help-text="&amp;987.Dlg_config.FixedLine3.HelpText" dlg:value="&amp;988.Dlg_config.FixedLine3.Label"/>
+  <dlg:combobox dlg:style-id="4" dlg:id="ComboBox1" dlg:tab-index="24" dlg:left="180" dlg:top="112" dlg:width="55" dlg:height="12" dlg:help-text="&amp;993.Dlg_config.ComboBox1.HelpText" dlg:value="&amp;994.Dlg_config.ComboBox1.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;995.ComboBox1.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;996.ComboBox1.StringItemList"/>

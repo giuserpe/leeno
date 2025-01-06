@@ -11,7 +11,6 @@
   <dlg:style dlg:style-id="6" dlg:background-color="0xff4000" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="8" dlg:background-color="0x66ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="9" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton28" dlg:tab-index="5" dlg:left="9" dlg:top="171" dlg:width="95" dlg:height="15" dlg:help-text="&amp;517.Dialogviste_N.CommandButton28.HelpText" dlg:value="Trova ricorrenze voci di E.P.">
@@ -86,6 +85,6 @@
   <dlg:button dlg:style-id="8" dlg:id="GeneraAtti" dlg:tab-index="2" dlg:left="9" dlg:top="114" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1099.Dialogviste_N.GeneraAtti.HelpText" dlg:value="&amp;1100.Dialogviste_N.GeneraAtti.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.GeneraAttiContabili?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:checkbox dlg:style-id="9" dlg:id="Descrizione_condensata" dlg:tab-index="29" dlg:left="137" dlg:top="121" dlg:width="76" dlg:height="10" dlg:help-text="&amp;1103.Dialogviste_N.Descrizione_condensata.HelpText" dlg:value="&amp;1104.Dialogviste_N.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="Descrizione_condensata" dlg:tab-index="29" dlg:left="137" dlg:top="121" dlg:width="76" dlg:height="10" dlg:help-text="&amp;1103.Dialogviste_N.Descrizione_condensata.HelpText" dlg:value="&amp;1104.Dialogviste_N.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

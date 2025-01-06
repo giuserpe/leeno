@@ -441,3 +441,37 @@ def reset_properties(o_range, cell_formatting=False, character_formatting=False,
     
 
 ########################################################################
+
+def imposta_schermo_intero(stato):
+    """
+    Attiva o disattiva la modalità schermo intero.
+    
+    :param stato: Booleano, True per abilitare, False per disabilitare lo schermo intero.
+    """
+    ctx = uno.getComponentContext()
+    smgr = ctx.ServiceManager
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    document = desktop.getCurrentComponent()
+
+    if document is not None:
+        controller = document.getCurrentController()
+        frame = controller.getFrame()
+        dispatcher = smgr.createInstanceWithContext("com.sun.star.frame.DispatchHelper", ctx)
+        
+        # Configura i parametri per il comando FullScreen
+        args = [uno.createUnoStruct("com.sun.star.beans.PropertyValue")]
+        args[0].Name = "FullScreen"
+        args[0].Value = stato
+        
+        # Esegue il comando FullScreen
+        dispatcher.executeDispatch(frame, ".uno:FullScreen", "", 0, tuple(args))
+
+def massimizza():
+    """Abilita la modalità schermo intero."""
+    imposta_schermo_intero(True)
+
+def torna_a_schermo_normale():
+    """Disabilita la modalità schermo intero."""
+    imposta_schermo_intero(False)
+
+########################################################################

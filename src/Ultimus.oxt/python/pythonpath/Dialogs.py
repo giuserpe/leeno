@@ -2672,7 +2672,6 @@ class Progress:
 
             
             txt = f"{self._text} ({percent})"
-
             if 'giuserpe' in os.getlogin():
                 txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile:{file_name}"
 

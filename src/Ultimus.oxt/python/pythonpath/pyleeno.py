@@ -9493,12 +9493,12 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    description_upd() # aggiorna description.xml - da disattivare prima del rilascio
+    description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
-    
+
     if os.name == 'nt':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:
@@ -9541,10 +9541,23 @@ def make_pack(bar=0):
                 'caja /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
                 shell=True,
                 stdout=subprocess.PIPE)
-    shutil.make_archive(nomeZip2, 'zip', oxt_path)
+
+    # Creazione manuale dello ZIP escludendo `.mypy_cache` e `_pycache_`
+    with zipfile.ZipFile(nomeZip2 + '.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(oxt_path):
+            # Escludi le directory `.mypy_cache` e `_pycache_`
+            for exclude in ['.mypy_cache', '__pycache__']:
+                if exclude in dirs:
+                    dirs.remove(exclude)
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, oxt_path)
+                zipf.write(file_path, arcname)
+
+    # Rinomina l'archivio in `.oxt`
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     LeenoUtils.DocumentRefresh(False)
-    # ~shutil.copyfile(nomeZip2, nomeZip)
+
 
 
 #######################################################################

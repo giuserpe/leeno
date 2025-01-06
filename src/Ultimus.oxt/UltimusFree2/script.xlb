@@ -25,7 +25,7 @@
  <library:element library:name="Voci_Sposta"/>
  <library:element library:name="Voci_Sposta_2"/>
  <library:element library:name="Attesa"/>
- <library:element library:name="celle"/>
+ <library:element library:name="Varie_1"/>
  <library:element library:name="Finale_2"/>
  <library:element library:name="ShortCut"/>
  <library:element library:name="Voci_Crea_Att"/>
@@ -44,5 +44,4 @@
  <library:element library:name="_tools"/>
  <library:element library:name="Taxi_temp"/>
  <library:element library:name="X_TMP"/>
- <library:element library:name="Varie_1"/>
 </library:library>

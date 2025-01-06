@@ -130,7 +130,7 @@ rem larghezza colonne
 			oCell = oSheetReg.getCellRangeByPosition(0,fRow,11,lRow)
 	&apos;		oCell.Rows.IsVisible=false &apos; chiudi gruppo
 	End Select
-fissa (0,idxrow+1)
+
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	ThisComponent.CurrentController.Select(oSheet)&apos;.getCellRangeByPosition(0,0,0,0))
 rem ----------------------------------------------------------------------
@@ -470,7 +470,7 @@ ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponen
 &apos;	oCell=oSheetReg.getCellRangeByPosition(0,precRowReg+1,11,getLastUsedRow(oSheetReg))
 &apos;	ThisComponent.CurrentController.Select(oCell)
 &apos;Raggruppa_righe
-&apos;MOSTRA_righe (&quot;off&quot;)
+
 &apos;	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 &apos;	oCell.Rows.IsVisible=true &apos; lascia aperto il gruppo
 
@@ -514,7 +514,7 @@ rem inserisco la prima riga GIALLA del REGISTRO
 	ins = oNamedRange.RangeAddress.StartRow
 	insRows (ins, 1) &apos;insertByIndex non funziona
 	oSheetReg.getCellRangeByPosition (0,ins,10,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
-fissa (0, ins+1)
+
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
@@ -599,8 +599,6 @@ rem chiudo il vecchio SAL
 	End Select
 &apos;	ThisComponent.CurrentController.ZoomValue = 100
 
-&apos;fissa (0,fRow+1)
-fissa (0,idxrow+1)
 &apos;vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo)
 &apos;Print &quot;qui&quot;
 &apos;xray vociSAL()
@@ -797,7 +795,7 @@ firme (InsRow+17)
 
 	seleziona_area(&quot;_SAL_&quot; &amp; nSal)
 &apos;Raggruppa_righe
-&apos;MOSTRA_righe (&quot;off&quot;)
+
 	oSheetSal.getCellByPosition(fcol+1, InsRow+27).setstring(&quot;====================&quot;)
 	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol+1, InsRow+27))
 copy_clip
@@ -826,7 +824,7 @@ rem inserisco la prima riga del documento
 	ins = oNamedRange.RangeAddress.StartRow
 	insRows (ins, 1) &apos;insertByIndex non funziona
 	oSheetSal.getCellRangeByPosition (0,ins,10,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
-fissa (0, ins + 1)
+
 &apos;print
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
@@ -1226,7 +1224,7 @@ rem annoto ultimo numero di pagina
 	oSheetCont.getCellByPosition(20 , fineFirme).value = UBound(IntPag)&apos;inumPag
 	oSheetCont.getCellByPosition(20 , fineFirme).CellStyle = &quot;num centro&quot;
 rem ----------------------------------------------------------------------
-&apos;fissa (0,idxrow+1)
+
 
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	rem ----------------------------------------------------------------------
@@ -1236,7 +1234,7 @@ rem inserisco la prima riga GIALLA del LIBRETTO
 	&apos;insRows (ins, 1) &apos;insertByIndex non funziona
     oSheetCont.getRows().insertByIndex(ins, 1)
 	oSheetCont.getCellRangeByPosition (0,ins,25,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
-fissa (0, ins + 1)
+
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	oSheetCont.getCellByPosition(2,ins).string = &quot;segue Libretto delle Misure n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
@@ -1260,7 +1258,7 @@ For i= 2 To 100
 	EndIf
 	
 Next
-&apos;fissa (0,idxRow)
+
 ThisComponent.CurrentController().freezeAtPosition(0,idxRow+1)
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
 Protezione_area (&quot;CONTABILITA&quot;,nomearea)
@@ -1331,48 +1329,6 @@ sub definisci_area_di_stampa
 	
 	rem ----------------------------------------------------------------------
 	dispatcher.executeDispatch(document, &quot;.uno:DefinePrintArea&quot;, &quot;&quot;, 0, Array())
-	
-end sub
-
-rem ######################################################################
-
-sub SEPARA_righe &apos;da registratore macro
-	
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dim args1(0) as new com.sun.star.beans.PropertyValue
-	args1(0).Name = &quot;RowOrCol&quot;
-	args1(0).Value = &quot;R&quot;
-	
-	dispatcher.executeDispatch(document, &quot;.uno:Ungroup&quot;, &quot;&quot;, 0, args1())
-	
-	
-end sub
-
-rem ######################################################################
-
-sub MOSTRA_righe (switch As String)&apos; &quot;on&quot; per mostrare, &quot;off&quot; per nascondere
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	If switch =&quot;on&quot; Then azione =&quot;.uno:ShowRow&quot;
-	If switch =&quot;off&quot; Then azione =&quot;.uno:HideRow&quot;
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dispatcher.executeDispatch(document, azione, &quot;&quot;, 0, Array())
 	
 end sub
 

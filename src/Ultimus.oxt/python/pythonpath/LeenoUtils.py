@@ -278,7 +278,7 @@ def elimina_nomi_area_errati():
     '''
     Rimuove i nomi di area con riferimenti non validi (#REF! o #rif!).
     '''
-    oDoc = LeenoUtils.getDocument()
+    oDoc = getDocument()
 
     sheets = oDoc.Sheets
     named_ranges = oDoc.NamedRanges
@@ -320,7 +320,7 @@ def indirizzo_in_forma_leggibile():
     Returns:
         str: L'indirizzo della cella in formato leggibile.
     """
-    oDoc = LeenoUtils.getDocument()
+    oDoc = getDocument()
 
     # Controlla che il documento sia un foglio di calcolo
     if not hasattr(oDoc, "Sheets"):

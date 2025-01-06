@@ -895,7 +895,6 @@ def MENU_avvia_IDE():
 
 def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany o VSCodium'''
-    basic_LeenO('PY_bridge.avvia_IDE')
     oDoc = LeenoUtils.getDocument()
     Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
     try:
@@ -912,6 +911,7 @@ def avvia_IDE():
 
     apri_con_editor(f'{dest}/python/pythonpath', 1)
     # apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
+    basic_LeenO('PY_bridge.avvia_IDE')
     return
 
 
@@ -1677,20 +1677,10 @@ def sproteggi_sheet_TUTTE():
 ########################################################################
 
 
-def setPreview(arg=0):
+def setPreview():
     '''
-    arg   { bit } : acceso/spento
-    attiva il preview
+    Attiva/disattiva il preview
     '''
-    oDoc = LeenoUtils.getDocument()
-    try:
-        oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
-    except Exception as e:
-        # ~ DLG.chi(f"Errore setPreview: {e}")
-        pass
-        
-        
-    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1698,7 +1688,8 @@ def setPreview(arg=0):
         'com.sun.star.frame.DispatchHelper', ctx)
     oProp = PropertyValue()
     properties = (oProp, )
-    dispatchHelper.executeDispatch(oFrame, '.uno:PrintPreview', '', arg, properties)
+    dispatchHelper.executeDispatch(oFrame, '.uno:PrintPreview', '', 0, properties)
+    return
 
 
 ########################################################################
@@ -2563,6 +2554,11 @@ def scelta_viste():
             oDialog1.getControl('CBMdo').State = True
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible:
             oDialog1.getControl('CBOrig').State = True
+
+        costo_elem_row = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 1, oSheet)
+        if costo_elem_row:
+            oDialog1.getControl('Titolo_COSTI').Enable = False
+
         if oDialog1.execute() == 1:
             if oDialog1.getControl("CBSic").State == 0:  # sicurezza
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
@@ -2592,7 +2588,8 @@ def scelta_viste():
             oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
             oSheet.getCellByPosition(15, 0).String = 'VARIANTE'
             oSheet.getCellByPosition(19, 0).String = "CONTABILITA"
-            if oDialog1.getControl("ComVar").State:  # Computo - Variante
+
+            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Computo - Variante':
                 genera_sommario()
                 oRangeAddress.StartColumn = 19
                 oRangeAddress.EndColumn = 22
@@ -2642,7 +2639,7 @@ def scelta_viste():
                                                   0).Columns.IsVisible = False
                 ###
 
-            if oDialog1.getControl("ComCon").State:  # Computo - Contabilità
+            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Computo - Contabilità':
                 genera_sommario()
                 oRangeAddress.StartColumn = 15
                 oRangeAddress.EndColumn = 18
@@ -2705,8 +2702,7 @@ def scelta_viste():
                                                   0).Columns.IsVisible = False
                 ###
 
-            if oDialog1.getControl(
-                    "VarCon").State:  # Variante - Contabilità
+            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Variante - Contabilità':
                 genera_sommario()
 
                 oRangeAddress.StartColumn = 11
@@ -2748,9 +2744,7 @@ def scelta_viste():
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
 
-            if(oDialog1.getControl("ComVar").State or
-               oDialog1.getControl("ComCon").State or
-               oDialog1.getControl("VarCon").State):
+            if oDialog1.getControl('ComboRAFFRONTO').getText() != '&1120.DialogViste_EP.ComboRAFFRONTO.Text':
                 if DLG.DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
                     errori = ('#DIV/0!', '--')
                     hide_error(errori, 26)
@@ -3012,41 +3006,49 @@ def MENU_riordina_ElencoPrezzi():
 
 
 def riordina_ElencoPrezzi(oDoc):
-    '''
-    Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
-    '''
-    #chiudi_dialoghi()
+    """
+    Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo.
+    """
+    # Ottieni il foglio di lavoro
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
-    test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) +1)
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    
+    last_row = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1)
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
 
-    SR = oRangeAddress.StartRow + 1
-    SC = 0 #oRangeAddress.StartColumn
-    EC = oRangeAddress.EndColumn
-    ER = oRangeAddress.EndRow -1
+    start_row = oRangeAddress.StartRow + 1
+    start_col = 0
+    end_col = oRangeAddress.EndColumn
+    end_row = oRangeAddress.EndRow - 1
 
-    if SR == ER:
+    if start_row == end_row:
         return
+
+    def ordina_intervallo(sheet, start_row, end_row, start_col, end_col):
+        """
+        Ordina un intervallo di celle per la prima colonna.
+        """
+        oRange = sheet.getCellRangeByPosition(start_col, start_row, end_col, end_row)
+        SheetUtils.simpleSortColumn(oRange, 0, True)
+
     try:
-        ER = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) -1
-        oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
-        SheetUtils.simpleSortColumn(oRange, 0, True)
+        # Trova il limite della prima sezione
+        costo_elem_row = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 1, oSheet)
+        
+        if costo_elem_row is None:
+            # Ordina tutto l'intervallo se la stringa non viene trovata
+            ordina_intervallo(oSheet, start_row, end_row, start_col, end_col)
+        else:
+            # Ordina la prima sezione
+            ordina_intervallo(oSheet, start_row, costo_elem_row - 1, start_col, end_col)
+            # Ordina la seconda sezione
+            ordina_intervallo(oSheet, costo_elem_row + 1, end_row, start_col, end_col)
+    except Exception as e:
+        DLG.errore(e)
 
-        SR = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 0, oSheet) +1
-        SC = 0 #oRangeAddress.StartColumn
-        EC = oRangeAddress.EndColumn
-        ER = oRangeAddress.EndRow -1
-        oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
-        SheetUtils.simpleSortColumn(oRange, 0, True)
-    except:
-        pass
-
-    oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
-    SheetUtils.simpleSortColumn(oRange, 0, True)
 
 
 ########################################################################
@@ -5375,7 +5377,7 @@ def pesca_cod():
             if test == '':
                 oSheet = oDoc.CurrentController.ActiveSheet
                 y = SheetUtils.uFindStringCol(
-                    'ELENCO DEI COSTI ELEMENTARI', 0, oSheet) + 1
+                    'ELENCO DEI COSTI ELEMENTARI', 1, oSheet) + 1
                 _gotoCella(0, y)
             return
         except:
@@ -6932,6 +6934,22 @@ def inizializza_elenco():
     #  MsgBox('Rigenerazione del foglio eseguita!','')
 
 
+def inserisci_ElencoCosti():
+    '''
+    Inserisci titolo 'ELENCO DEI COSTI ELEMENTARI' in fondo a Elenco Prezzi.
+    '''
+    chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+
+    oSheet.getRows().insertByIndex(lrow, 2)
+    oSheet.getCellRangeByPosition(0, lrow , 26, lrow).CellStyle = 'EP-a -Top'
+    oSheet.getCellRangeByPosition(0, lrow , 26, lrow).Rows.Height = 1000
+    oSheet.getCellByPosition(1, lrow).String = 'ELENCO DEI COSTI ELEMENTARI'
+    _gotoCella(0, lrow + 1)
+    return
+
 ########################################################################
 def inizializza_computo():
     '''
@@ -8455,7 +8473,7 @@ def catalogo_stili_cella():
         oSheet = oDoc.Sheets.getByName("stili")
     else:
         sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-        unione = oDoc.Sheets.insertByName('stili', sheet)
+        oDoc.Sheets.insertByName('stili', sheet)
         oSheet = oDoc.Sheets.getByName("stili")
     GotoSheet("stili")
     # attiva la progressbar
@@ -9002,7 +9020,7 @@ def XPWE_export_run():
     testo = '\n'
     for el in lista:
         XPWE_out(el, out_file)
-        testo += f'● {out_file}-{elemento}.xpwe\n\n'
+        testo += f'● {out_file}-{el}.xpwe\n\n'
 
     Dialogs.Info(Title = 'Avviso.',
     Text='Esportazione in formato XPWE eseguita con successo su:\n' + testo)
@@ -9159,6 +9177,7 @@ def DlgMain():
         creaComputo()
     Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    global oDlgMain
     oDlgMain = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application"
     )
@@ -10313,7 +10332,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             LeenoAnalysis.MENU_impagina_analisi()
             _gotoCella(0, 2)
         if msg:
-            setPreview(1)
+            setPreview()
     except Exception:
         pass
         # bordo lato destro in attesa di LibreOffice 6.2
@@ -10951,7 +10970,16 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
-    vista_configurazione('terra_terra')
+
+    setPreview()
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    return
+    LeenoUtils.verify_and_close_preview()
+    return
+    o_range = oDoc.CurrentSelection
+    LeenoUtils.reset_properties(o_range, cell_formatting=True, character_formatting=True)
     return
     # funzioni per misurare la velocità delle macro
     from datetime import datetime, date

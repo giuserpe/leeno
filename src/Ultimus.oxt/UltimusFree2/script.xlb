@@ -3,8 +3,8 @@
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
  <library:element library:name="Accessori"/>
  <library:element library:name="Cerca_Rior"/>
- <library:element library:name="Pesca_mi"/>
- <library:element library:name="Focus"/>
+ <library:element library:name="_tools"/>
+ <library:element library:name="Contab"/>
  <library:element library:name="Header_Footer"/>
  <library:element library:name="ListenerMouse"/>
  <library:element library:name="ListenersSelectRange"/>
@@ -18,7 +18,7 @@
  <library:element library:name="Varie"/>
  <library:element library:name="_da_registratore"/>
  <library:element library:name="Voci_Sistema"/>
- <library:element library:name="Pesca_mi_reg_A"/>
+ <library:element library:name="Computo"/>
  <library:element library:name="Taxi"/>
  <library:element library:name="Taxi_Acc"/>
  <library:element library:name="Analisi"/>
@@ -39,7 +39,4 @@
  <library:element library:name="PY_bridge"/>
  <library:element library:name="Accessori_2"/>
  <library:element library:name="VarGlobal"/>
- <library:element library:name="Contab"/>
- <library:element library:name="Computo"/>
- <library:element library:name="_tools"/>
 </library:library>

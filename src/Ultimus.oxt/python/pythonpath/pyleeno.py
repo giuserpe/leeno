@@ -862,6 +862,8 @@ def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
     if os.path.exists("C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"):
         editor_path = "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+    else:
+        editor_path = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
     # if os.path.exists("C:\Program Files\VSCodium\VSCodium.exe"):
     #     editor_path = r'C:\Program Files\VSCodium\VSCodium.exe'
     # else:

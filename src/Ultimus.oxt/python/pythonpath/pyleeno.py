@@ -1954,7 +1954,6 @@ def MENU_prefisso_VDS_():
     e individuandola come Voce Della Sicurezza
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
 
     def vds_ep():
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -1963,17 +1962,17 @@ def MENU_prefisso_VDS_():
             # ~ Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
             LeenoUtils.DocumentRefresh(True)
             return
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 9, lrow)
-        )
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 9, lrow))
         comando('Copy')
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
         oSheet.getCellRangeByName("A4").String = "VDS_" + oSheet.getCellRangeByName("A4").String
         oSheet.getCellRangeByName("A4").CellBackColor = 13500076
 
-        # ~return
+        LeenoUtils.DocumentRefresh(False)
     # ~ oSheet = oDoc.CurrentController.ActiveSheet
 
+    LeenoUtils.DocumentRefresh(False)
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -2907,6 +2906,11 @@ Cancello le voci di misurazione?
             LeenoComputo.ins_voce_computo()
             oSheet = oDoc.getSheets().getByName('VARIANTE')
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+            if SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet):
+                row = SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet)
+                _gotoCella(0, row)
+                LeenoSheetUtils.elimina_voce(row, msg = 0)
+                _gotoCella(1, 4)
     #  else:
     GotoSheet('VARIANTE')
     ScriviNomeDocumentoPrincipale()

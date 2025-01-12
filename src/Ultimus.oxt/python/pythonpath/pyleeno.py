@@ -4077,16 +4077,16 @@ def MENU_firme_in_calce(lrowF=None):
         #  TITOLI PER CRONOPROGRAMMA
         oSheet.getCellByPosition(45, riga_corrente -1).CellStyle = 'comp 1-a peso'
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(45, riga_corrente -1).CellAddress,
-    'Inserisci qui il costo orario medio della Manodopera.')
+    'Inserisci il costo orario medio della Manodopera.')
         oSheet.getCellByPosition(47, riga_corrente -1).CellStyle = 'comp 1-a peso'
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(47, riga_corrente -1).CellAddress,
-    'Inserisci qui il numero di componenti della squadra di operai.')
+    'Inserisci il numero di componenti della squadra di operai.')
         nOperai = "AV$" + str(riga_corrente)
         mdo = riga_corrente
         oSheet.getCellByPosition(45, riga_corrente).Formula = '=concatenate("MDO\nmedia\n€ ";AT' + str(mdo) + ';"/h")'
         oSheet.getCellByPosition(46, riga_corrente).Formula = '=concatenate("EC U/GG.\nMDO media\n€ ";AT' + str(mdo) + ';"/h")'
         oSheet.getCellByPosition(47, riga_corrente).String = '(Gl)\nGiorni\nlavorativi'
-        oSheet.getCellByPosition(48, riga_corrente).String = '(Gs)\nGiorni\nsfavorevoli'
+        oSheet.getCellByPosition(48, riga_corrente).String = '(Gs)\nGiorni\nimproduttivi'
         oSheet.getCellByPosition(49, riga_corrente).String = 'GG\nTempo di\nesecuzione'
         oSheet.getCellRangeByPosition(45, riga_corrente,49,
                                       riga_corrente).CellStyle = 'Ultimus_centro'
@@ -4317,7 +4317,7 @@ def MENU_firme_in_calce(lrowF=None):
 
         oSheet.getCellByPosition(48, riga_corrente).CellStyle = 'comp 1-a peso'
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(48, riga_corrente).CellAddress,
-    'Inserisci qui il numero di giorni sfavorevoli per il cantiere.')
+    'Inserisci il numero di giorni improduttivi per il cantiere (compresi i riposi settimanali).')
 
         oSheet.getCellByPosition(
             49, riga_corrente).Formula = '=sum(AW' + str(riga_corrente +1) + ":AV" + str(riga_corrente +1) +')'

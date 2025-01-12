@@ -1409,6 +1409,7 @@ def MENU_XPWE_import(filename = None):
     progress.setText("Fine")
     progress.hide()
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    PL.Rinumera_TUTTI_Capitoli2(oSheet)
 
     # salva il file col nome del file di origine
     if len(oDoc.getURL()) == 0:

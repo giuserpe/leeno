@@ -10546,6 +10546,10 @@ def MENU_hl():
 
     # Ottieni la posizione corrente della cella
     lcol = LeggiPosizioneCorrente()[0]
+    lrow= LeggiPosizioneCorrente()[1]
+
+    if oSheet.getCellByPosition(lcol, lrow).Type.value == 'EMPTY':
+        comando("Paste")
 
     # Itera sulle righe del foglio, partendo dall'ultima e andando verso l'alto
     for el in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow + 1)):
@@ -10558,7 +10562,7 @@ def MENU_hl():
             if ':' in cell_string :
                 cell_string = cell_string.replace('"', '')
                 # Costruisci la formula per l'iperlink
-                hyperlink_formula = '=HYPERLINK("' + cell_string + '";">>>")'
+                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"►")'
                 # Applica la formula all'interno della cella
                 oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
             elif '@' in cell_string :

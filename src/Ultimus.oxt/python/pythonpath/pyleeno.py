@@ -1972,7 +1972,7 @@ def MENU_prefisso_VDS_():
         LeenoUtils.DocumentRefresh(False)
     # ~ oSheet = oDoc.CurrentController.ActiveSheet
 
-    LeenoUtils.DocumentRefresh(False)
+    # LeenoUtils.DocumentRefresh(False)
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -1985,7 +1985,7 @@ def MENU_prefisso_VDS_():
                 sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
                 eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, sRow)
-            sStRange.RangeAddress
+            # sStRange.RangeAddress
             sRow = sStRange.RangeAddress.StartRow
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, eRow)
             try:
@@ -2011,6 +2011,7 @@ def MENU_prefisso_VDS_():
                 sStRange.RangeAddress
                 inizio = sStRange.RangeAddress.StartRow
                 fine = sStRange.RangeAddress.EndRow
+                oSheet.getCellByPosition(1, inizio + 1).CellBackColor = 13500076
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
@@ -10994,6 +10995,7 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
     # setPreview()
     return
     oDoc = LeenoUtils.getDocument()

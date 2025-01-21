@@ -10995,33 +10995,7 @@ def ESEMPIO_create_progress_bar():
     oDoc.unlockControllers()
 
 
-def sposta_voce(lrow=None, msg=1):
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    SR, ER = seleziona_voce()[0], seleziona_voce()[1]
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-        0, SR, 250, ER))
-    comando('Copy')
-    # comando('DeleteRows')
-
-    to = basic_LeenO('ListenersSelectRange.getRange',
-                        "Seleziona voce di riferimento o indica n. d'ordine")
-    if oSheet.Name not in to:
-        to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(to, 0, oSheet))
-    try:
-        to = int(to.split('$')[-1]) - 1
-    except ValueError:
-        LeenoUtils.DocumentRefresh(True)
-        return
-    
-    lrow = LeenoSheetUtils.prossimaVoce(oSheet, to, 1, True)
-    _gotoCella(0, lrow)
-    paste_clip(insCells=1)
-    # LeenoSheetUtils.elimina_voce(SR, msg =0)
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-    time.sleep(1)
-    comando('DeleteRows')
-    return
+########################################################################
 
 def sposta_voce(lrow=None, msg=1):
     '''
@@ -11045,6 +11019,7 @@ def sposta_voce(lrow=None, msg=1):
 
     # Se la voce non è riferita al foglio attivo, cerchiamo la colonna corrispondente
     if oSheet.Name not in to:
+
         col_num = SheetUtils.uFindStringCol(to, 0, oSheet)
         to = '$' + oSheet.Name + '.$C$' + str(col_num)
     

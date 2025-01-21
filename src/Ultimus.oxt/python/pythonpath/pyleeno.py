@@ -10994,8 +10994,99 @@ def ESEMPIO_create_progress_bar():
     oDoc = LeenoUtils.getDocument()
     oDoc.unlockControllers()
 
+
+def sposta_voce(lrow=None, msg=1):
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    SR, ER = seleziona_voce()[0], seleziona_voce()[1]
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+        0, SR, 250, ER))
+    comando('Copy')
+    # comando('DeleteRows')
+
+    to = basic_LeenO('ListenersSelectRange.getRange',
+                        "Seleziona voce di riferimento o indica n. d'ordine")
+    if oSheet.Name not in to:
+        to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(to, 0, oSheet))
+    try:
+        to = int(to.split('$')[-1]) - 1
+    except ValueError:
+        LeenoUtils.DocumentRefresh(True)
+        return
+    
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, to, 1, True)
+    _gotoCella(0, lrow)
+    paste_clip(insCells=1)
+    # LeenoSheetUtils.elimina_voce(SR, msg =0)
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    time.sleep(1)
+    comando('DeleteRows')
+    return
+
+def sposta_voce(lrow=None, msg=1):
+    '''
+    Sposta la voce selezionata in una posizione indicata dall'utente.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    
+    # Seleziona la voce da copiare (ottenendo le righe di inizio e fine)
+    SR, ER = seleziona_voce()
+    
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    comando('Copy')
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+
+
+    # Richiede all'utente di selezionare una voce di riferimento o indicare il numero d'ordine
+    to = basic_LeenO('ListenersSelectRange.getRange', "Seleziona voce di riferimento o indica nuovo numero d'ordine")
+
+    # datarif = datetime.now()
+
+    # Se la voce non è riferita al foglio attivo, cerchiamo la colonna corrispondente
+    if oSheet.Name not in to:
+        col_num = SheetUtils.uFindStringCol(to, 0, oSheet)
+        to = '$' + oSheet.Name + '.$C$' + str(col_num)
+    
+    # Estrae la riga dal riferimento trovato
+    try:
+        to_row = int(to.split('$')[-1]) - 1  # Conversione in indice 0-based
+    except ValueError:
+        # Se non è possibile convertire, ricarica il documento e interrompe l'esecuzione
+        LeenoUtils.DocumentRefresh(True)
+        return
+    
+    # Trova la prossima voce disponibile nel foglio
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, to_row, 1, True)
+    
+    # Vai alla cella individuata e incolla i dati copiati
+    _gotoCella(0, lrow)
+    paste_clip(insCells=1)
+    
+    if to_row < SR:
+        add = ER - SR
+        SR = SR + add + 1
+        ER = ER + add + 1
+
+    # Rimuovi la voce originale (se necessario)
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    # oSheet.getRows().removeByIndex(SR, ER - SR)
+    comando('DeleteRows')  # Delezione delle righe originali
+
+    
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    # DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+
+    numera_voci()
+    return
+
+
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
+    sposta_voce()
+
+    # LeenoUtils.DocumentRefresh(True)
+    # LeenoUtils.DocumentRefresh(True)
+    # LeenoUtils.DocumentRefresh(True)
     # setPreview()
     return
     oDoc = LeenoUtils.getDocument()

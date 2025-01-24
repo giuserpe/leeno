@@ -1268,14 +1268,26 @@ def MENU_XPWE_import(filename = None):
 
     # effettua il parsing del file XML
     tree = ElementTree()
-    # ~ DLG.chi(tree.parse(filename))
+    # DLG.chi(tree.parse(filename))
     try:
         tree.parse(filename)
     except ParseError:
-        Dialogs.Exclamation(Title="Errore nel file",
-                            Text="È stato riscontrato un errore nel contenuto del file\n"
-                                 "Accertati il file sia in formato XPWE.")
-        return
+        # Legge il file
+        with open(filename, 'r', encoding='utf-8') as file:
+            contenuto = file.read()
+
+        # Pulisce il contenuto
+        contenuto_pulito = PL.clean_text(contenuto)
+
+        # Scrive il file pulito (opzionale)
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(contenuto_pulito)
+        
+        tree.parse(filename)
+        # Dialogs.Exclamation(Title="Errore nel file",
+        #                     Text="È stato riscontrato un errore nel contenuto del file\n"
+        #                          "Accertati il file sia in formato XPWE.")
+        # return
     except PermissionError:
         Dialogs.Exclamation(Title="Errore",
                             Text="Impossibile leggere il file\n"

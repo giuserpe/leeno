@@ -593,7 +593,7 @@ def MENU_invia_voce():
         noVoce = LeenoUtils.getGlobalVar('noVoce')
         if nSheetDCC in ('COMPUTO', 'VARIANTE'):
             comando('Copy')
-            # arrivo
+    # arrivo
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
@@ -648,6 +648,7 @@ I nomi delle tabelle di partenza e di arrivo devo essere coincidenti.''')
             GotoSheet('Elenco Prezzi')
             _gotoCella(0, 3)
             paste_clip(insCells=1)
+            # DLG.chi('finito')
             # EliminaVociDoppieElencoPrezzi()
         if nSheetDCC in ('Elenco Prezzi'):
             # ~DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -9842,7 +9843,8 @@ def clean_text(desc):
         '–': '-',
         '\n- -': '\n-',
         '\n \n': '\n',
-        '\n ': '\n'
+        '\n ': '\n',
+        '': '\n',
     }
 
     # Esegue tutte le sostituzioni
@@ -10563,7 +10565,7 @@ def MENU_hl():
             if ':' in cell_string :
                 cell_string = cell_string.replace('"', '')
                 # Costruisci la formula per l'iperlink
-                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"►")'
+                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"►►►")' # >>>
                 # Applica la formula all'interno della cella
                 oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
             elif '@' in cell_string :
@@ -11015,6 +11017,8 @@ def sposta_voce(lrow=None, msg=1):
     # Richiede all'utente di selezionare una voce di riferimento o indicare il numero d'ordine
     to = basic_LeenO('ListenersSelectRange.getRange', "Seleziona voce di riferimento o indica nuovo numero d'ordine")
 
+    vRow = oDoc.CurrentController.getFirstVisibleRow()
+
     # datarif = datetime.now()
 
     # Se la voce non è riferita al foglio attivo, cerchiamo la colonna corrispondente
@@ -11030,7 +11034,7 @@ def sposta_voce(lrow=None, msg=1):
         # Se non è possibile convertire, ricarica il documento e interrompe l'esecuzione
         LeenoUtils.DocumentRefresh(True)
         return
-    
+
     # Trova la prossima voce disponibile nel foglio
     lrow = LeenoSheetUtils.prossimaVoce(oSheet, to_row, 1, True)
     
@@ -11048,18 +11052,25 @@ def sposta_voce(lrow=None, msg=1):
     # oSheet.getRows().removeByIndex(SR, ER - SR)
     comando('DeleteRows')  # Delezione delle righe originali
 
-    
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     # DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+    oDoc.CurrentController.setFirstVisibleRow(vRow)
 
     numera_voci()
+    # oDoc.CurrentController.setFirstVisibleRow(SR - 10)
     return
 
 
 def MENU_debug():
+    '''
+    Funzione di debug per testare le funzionalità di LeenO.
+    '''
+    rimuovi_caratteri_non_stampabili()
+    return
+    # DLG.chi(8)
     sposta_voce()
 
-    # LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
     # LeenoUtils.DocumentRefresh(True)
     # LeenoUtils.DocumentRefresh(True)
     # setPreview()

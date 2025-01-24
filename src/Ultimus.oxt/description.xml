@@ -5,9 +5,9 @@
   </update-information>
   <identifier value="org.giuseppe-vizziello.leeno" />
 <!--
-  <version value="3.24.2.151-TESTING-20250124" />
+  <version value="3.24.2.152-TESTING-20250124" />
 -->
-  <version value="3.24.2.151-TESTING-20250124" />
+  <version value="3.24.2.152-TESTING-20250124" />
   <publisher>
     <name xlink:href="http://leeno.org">LeenO</name>
   </publisher>

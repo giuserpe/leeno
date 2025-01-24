@@ -11006,30 +11006,21 @@ def sposta_voce(lrow=None, msg=1):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     
-    # Seleziona la voce da copiare (ottenendo le righe di inizio e fine)
     SR, ER = seleziona_voce()
     
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
     comando('Copy')
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-
 
     # Richiede all'utente di selezionare una voce di riferimento o indicare il numero d'ordine
     to = basic_LeenO('ListenersSelectRange.getRange', "Seleziona voce di riferimento o indica nuovo numero d'ordine")
 
-    vRow = oDoc.CurrentController.getFirstVisibleRow()
-
-    # datarif = datetime.now()
-
     # Se la voce non è riferita al foglio attivo, cerchiamo la colonna corrispondente
     if oSheet.Name not in to:
-
         col_num = SheetUtils.uFindStringCol(to, 0, oSheet)
         to = '$' + oSheet.Name + '.$C$' + str(col_num)
     
-    # Estrae la riga dal riferimento trovato
     try:
-        to_row = int(to.split('$')[-1]) - 1  # Conversione in indice 0-based
+        to_row = int(to.split('$')[-1]) - 1
     except ValueError:
         # Se non è possibile convertire, ricarica il documento e interrompe l'esecuzione
         LeenoUtils.DocumentRefresh(True)
@@ -11049,15 +11040,18 @@ def sposta_voce(lrow=None, msg=1):
 
     # Rimuovi la voce originale (se necessario)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-    # oSheet.getRows().removeByIndex(SR, ER - SR)
     comando('DeleteRows')  # Delezione delle righe originali
 
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-    # DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
-    oDoc.CurrentController.setFirstVisibleRow(vRow)
+    try:
+        add
+        _gotoCella(1, lrow + 1)
+    except:
+        _gotoCella(1, lrow - ER + SR)
 
+    lrow = LeggiPosizioneCorrente()[1]
+
+    oDoc.CurrentController.setFirstVisibleRow(lrow - 8)
     numera_voci()
-    # oDoc.CurrentController.setFirstVisibleRow(SR - 10)
     return
 
 
@@ -11065,8 +11059,6 @@ def MENU_debug():
     '''
     Funzione di debug per testare le funzionalità di LeenO.
     '''
-    rimuovi_caratteri_non_stampabili()
-    return
     # DLG.chi(8)
     sposta_voce()
 

@@ -421,18 +421,18 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0, up=False):
     if up==True:
         righe = reversed (righe)
 
-    progress = Dialogs.Progress(Title='Preparazione in corso...', Text='Rimane il')
-    progress.setLimits(0, aAddress.EndRow)
-    progress.setValue(0)
-    progress.show()
+    # progress = Dialogs.Progress(Title='Preparazione in corso...', Text='Rimane il')
+    # progress.setLimits(0, aAddress.EndRow)
+    # progress.setValue(0)
+    # progress.show()
 
     for nRow in righe:
-        progress.setValue(nRow)  # Aggiorna progresso
+        # progress.setValue(nRow)  # Aggiorna progresso
         cell_value = oSheet.getCellByPosition(nCol, nRow).String
         if (equal == 1 and cell_value == sString) or (equal == 0 and sString in cell_value):
-            progress.hide()  # Chiude la barra di progresso
+            # progress.hide()  # Chiude la barra di progresso
             return nRow
-    progress.hide()  # Chiude la barra di progresso
+    # progress.hide()  # Chiude la barra di progresso
     return None
 
         

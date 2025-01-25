@@ -11016,7 +11016,8 @@ def sposta_voce(lrow=None, msg=1):
 
     # Se la voce non è riferita al foglio attivo, cerchiamo la colonna corrispondente
     if oSheet.Name not in to:
-        col_num = SheetUtils.uFindStringCol(to, 0, oSheet)
+        to = str(int(to) - 1)
+        col_num = SheetUtils.uFindStringCol(to, 0, oSheet, equal=1)
         to = '$' + oSheet.Name + '.$C$' + str(col_num)
     
     try:

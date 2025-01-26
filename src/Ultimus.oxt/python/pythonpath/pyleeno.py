@@ -9863,6 +9863,22 @@ def clean_text(desc):
 
     return desc
 
+def clean_text_file(filename):
+    '''
+    Pulisce il testo di un file da caratteri non stampabili e cattive codifiche.
+    '''
+    # Legge il file
+    with open(filename, 'r', encoding='utf-8') as file:
+        contenuto = file.read()
+
+    # Pulisce il contenuto
+    contenuto_pulito = PL.clean_text(contenuto)
+
+    # Scrive il file pulito (opzionale)
+    with open(filename, 'w', encoding='utf-8') as file:
+        file.write(contenuto_pulito)
+    return contenuto_pulito
+
 def sistema_cose():
     '''
     Ripulisce il testo da capoversi, spazi multipli e cattive codifiche.

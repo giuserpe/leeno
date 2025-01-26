@@ -33,7 +33,8 @@ def parseXML(data, defaultTitle):
         }
     '''
     #ripulisce il testo da caratteri non stampabili
-    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    # data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    data = PL.clean_text(data)
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
@@ -283,7 +284,7 @@ def parseXML(data, defaultTitle):
         # ~desc = LeenoImport.fixParagraphSize(desc)
         
         #sistema_cose
-        desc = PL.clean_text (desc)
+        # desc = PL.clean_text (desc)
 
         # gruppo, nel caso ci sia
         try:

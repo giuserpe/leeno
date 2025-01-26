@@ -1272,17 +1272,7 @@ def MENU_XPWE_import(filename = None):
     try:
         tree.parse(filename)
     except ParseError:
-        # Legge il file
-        with open(filename, 'r', encoding='utf-8') as file:
-            contenuto = file.read()
-
-        # Pulisce il contenuto
-        contenuto_pulito = PL.clean_text(contenuto)
-
-        # Scrive il file pulito (opzionale)
-        with open(filename, 'w', encoding='utf-8') as file:
-            file.write(contenuto_pulito)
-        
+        PL.clean_text_file(filename)
         tree.parse(filename)
     except PermissionError:
         Dialogs.Exclamation(Title="Errore",

@@ -9872,7 +9872,7 @@ def clean_text_file(filename):
         contenuto = file.read()
 
     # Pulisce il contenuto
-    contenuto_pulito = PL.clean_text(contenuto)
+    contenuto_pulito = clean_text(contenuto)
 
     # Scrive il file pulito (opzionale)
     with open(filename, 'w', encoding='utf-8') as file:

@@ -41,7 +41,8 @@ def parseXML(data, defaultTitle=None):
         }
     '''
     #ripulisce il testo da caratteri non stampabili
-    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    # data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    data = PL.clean_text(data)
     
     # alcuni files sono degli XML-SIX con un bug
     # consistente nella mancata dichiarazione del namespace
@@ -163,7 +164,7 @@ supportato nella prossima versione del programma""")
         # ~desc = LeenoImport.fixParagraphSize(desc)
 
         # un po' di pulizia nel testo
-        desc = PL.clean_text (desc)
+        # desc = PL.clean_text (desc)
 
         um = articolo.find('um').text
         prezzo = articolo.find('prezzo').text

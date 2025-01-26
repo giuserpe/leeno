@@ -1284,14 +1284,15 @@ def MENU_XPWE_import(filename = None):
             file.write(contenuto_pulito)
         
         tree.parse(filename)
-        # Dialogs.Exclamation(Title="Errore nel file",
-        #                     Text="È stato riscontrato un errore nel contenuto del file\n"
-        #                          "Accertati il file sia in formato XPWE.")
-        # return
     except PermissionError:
         Dialogs.Exclamation(Title="Errore",
                             Text="Impossibile leggere il file\n"
                                  "Accertati che il nome del file sia corretto.")
+    except Exception as e:
+        Dialogs.Exclamation(Title="Errore",
+                            Text="Errore generico nella lettura del file\n"
+                                 "Accertati che il file sia in formato XPWE.")
+        DLG.errore(str(e))
         return
 
     # ottieni l'item root

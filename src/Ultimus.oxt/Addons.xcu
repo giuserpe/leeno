@@ -1151,6 +1151,20 @@
                   <value>_self</value>
                 </prop>
               </node>
+              <node oor:name="m2U07.6" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elenco_puntato_misure</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Aggiunge il trattino (-) alle righe di misura</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
               <node oor:name="m2U08a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

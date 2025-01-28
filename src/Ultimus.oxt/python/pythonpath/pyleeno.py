@@ -9627,13 +9627,13 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         oSheet = oDoc.CurrentController.ActiveSheet
 
         # attiva la progressbar
-        progress = Dialogs.Progress(Title='Esportazione di ' + oSheet.Name + ' in corso...', Text="Lettura dati")
+        progress = Dialogs.Progress(Title='Inserimrnto in corso...', Text="Lettura dati")
         progress.setLimits(0, SheetUtils.getUsedArea(oSheet).EndRow)
         progress.setValue(0)
 
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
-        descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
+        descrizione = InputBox(t='Inserisci una descrizione per la nuova riga')
         progress.show()
         i = 0
         while (i < SheetUtils.getUsedArea(oSheet).EndRow):
@@ -9657,6 +9657,30 @@ def MENU_inserisci_nuova_riga_con_descrizione():
     una nuova riga con una descrizione a scelta
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
+
+
+def MENU_elenco_puntato_misure():
+    '''
+    Aggiunge il trattino (-) alle righe di misura
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+    for el in range(3, lrow):
+        cell = oSheet.getCellByPosition(2, el)
+        cell_string = cell.String
+        cell_style = cell.CellStyle
+
+        is_not_dash_space = cell_string[0:2] != '- '
+        is_comp_1_a = cell_style == 'comp 1-a'
+        is_not_empty = cell_string != ''
+        is_not_arrow = cell_string[0:2] != '►('
+
+        if is_not_dash_space and is_comp_1_a and is_not_empty and is_not_arrow:
+            cell.String = '- ' + cell.String
+    return
 
 
 ########################################################################
@@ -11076,9 +11100,9 @@ def sposta_voce(lrow=None, msg=1):
 
 
 def MENU_debug():
-    '''
-    Funzione di debug per testare le funzionalità di LeenO.
-    '''
+    MENU_elenco_puntato_misure()
+    return
+
     # DLG.chi(8)
     sposta_voce()
 
@@ -11086,9 +11110,6 @@ def MENU_debug():
     # LeenoUtils.DocumentRefresh(True)
     # LeenoUtils.DocumentRefresh(True)
     # setPreview()
-    return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     return
     LeenoUtils.verify_and_close_preview()
     return

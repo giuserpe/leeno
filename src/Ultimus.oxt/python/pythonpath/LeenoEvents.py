@@ -7,6 +7,7 @@ from com.sun.star.beans import PropertyValue
 import LeenoUtils
 import LeenoBasicBridge
 import pyleeno as PL
+import LeenoDialogs as DLG
 
 def macro_SHEET(nSheet, nEvento, miamacro):
     '''
@@ -134,6 +135,17 @@ def assegna():
     except Exception as e:
         # ~ PL.DLG.chi(f'Errore: {e}')
         pass
+    sheets = oDoc.getSheets()
+    for i in range(sheets.getCount()):
+        sheet = sheets.getByIndex(i)
+        sheet_name = sheet.getName()
+        if "lista" in sheet_name.lower():  # Ignora maiuscole/minuscole
+            try:
+                # DLG.chi(f'Assegno macro a {sheet_name}')
+                macro_SHEET(sheet_name, "OnRightClick", 'vnd.sun.star.script:UltimusFree2.PY_bridge.calendario_liste?language=Basic&location=application')
+            except Exception as e:
+                # DLG.errore(e)
+                pass
     # ~OnPrint
     # ~OnViewCreated
     # ~OnPrepareViewClosing

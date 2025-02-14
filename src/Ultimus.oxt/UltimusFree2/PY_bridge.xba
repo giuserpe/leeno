@@ -54,6 +54,10 @@ Sub attiva_contabilita
 	ScriptPy(&quot;LeenoContab&quot;,&quot;attiva_contabilita&quot;)
 End Sub
 rem ######################################################################
+Sub calendario_liste
+	ScriptPy(&quot;pyleeno&quot;,&quot;calendario_liste&quot;)
+End Sub
+rem ######################################################################
 Sub genera_variante
 	chiudi_dialoghi
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;genera_variante&quot;)

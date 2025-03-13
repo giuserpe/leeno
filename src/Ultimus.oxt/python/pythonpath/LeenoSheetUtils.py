@@ -554,7 +554,7 @@ def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-0-scritta'
+    oSheet.getCellRangeByPosition(0, lrow, 38, lrow).CellStyle = 'Livello-0-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
     oSheet.getCellRangeByPosition( 18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-0-scritta mini %'
@@ -597,7 +597,7 @@ def inserCapitolo(oSheet, lrow, sTesto='Categoria'):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
+    oSheet.getCellRangeByPosition(0, lrow, 38, lrow).CellStyle = 'Livello-1-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
     oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
@@ -641,7 +641,7 @@ def inserSottoCapitolo(oSheet, lrow, sTesto):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 41,lrow).CellStyle = 'livello2 valuta'
+    oSheet.getCellRangeByPosition(0, lrow, 38,lrow).CellStyle = 'livello2 valuta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
     oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'livello2 scritta mini'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'livello2 valuta mini %'
@@ -803,7 +803,11 @@ def MENU_elimina_righe_vuote():
             row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
 
         if not row_has_data:
-            oSheet.getRows().removeByIndex(y, 1)
+            try:
+                PL.MENU_elimina_righe()
+                # oSheet.getRows().removeByIndex(y, 1)
+            except:
+                pass
 
     progress.hide()
     LeenoUtils.DocumentRefresh(True)

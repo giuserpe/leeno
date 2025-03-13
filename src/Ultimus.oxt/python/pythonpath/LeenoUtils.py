@@ -5,8 +5,11 @@ Copyright 2020 by Massimo Del Fedele
 '''
 import sys
 import uno
+import unohelper
+
 from com.sun.star.beans import PropertyValue
 from datetime import date
+
 import calendar
 
 import PyPDF2
@@ -103,7 +106,60 @@ def isLeenoDocument():
     except Exception:
         return False
 
+###############################################################################
+def findOpenDocument(filepath):
+    '''
+    Check if a document is already open and return it.
+    '''
+    desktop = getDesktop()
+    file_url = unohelper.systemPathToFileUrl(filepath)
 
+    for component in desktop.getComponents():
+        if hasattr(component, "getURL"):
+            if component.getURL() == file_url:
+                return component
+    return None
+
+def openAndSetActiveDocument(filepath):
+    '''
+    Open a document if not already open, and set it as active.
+    '''
+    desktop = getDesktop()
+    file_url = unohelper.systemPathToFileUrl(filepath)
+
+    # Controlla se il documento è già aperto
+    document = findOpenDocument(filepath)
+
+    if not document:
+        properties = (PropertyValue("Hidden", 0, False, 0),)
+        document = desktop.loadComponentFromURL(file_url, "_blank", 0, properties)
+
+    if document:
+        frame = desktop.getCurrentFrame()
+        frame.activate()
+        return document
+
+    return None
+
+def getCursorPosition(document):
+    '''
+    Get the current cursor position in the active sheet of a Calc document.
+    Returns (row, column) or None if the document is not a Calc spreadsheet.
+    '''
+    if not document.supportsService("com.sun.star.sheet.SpreadsheetDocument"):
+        print("Il documento non è un foglio di calcolo.")
+        return None
+
+    controller = document.getCurrentController()
+    active_sheet = controller.getActiveSheet()
+    selection = controller.getSelection()
+
+    if selection is not None and hasattr(selection, "getRangeAddress"):
+        address = selection.getRangeAddress()
+        return address.StartRow, address.StartColumn
+
+    return None
+###############################################################################
 
 def DocumentRefresh(boo):
     '''

@@ -363,7 +363,7 @@ def svuotaContabilita(oDoc):
     oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
     SheetUtils.setTabColor(oSheet, 16757935)
-    oSheet.getCellRangeByName('C1').String = 'CONTABILITA'
+    oSheet.getCellRangeByName('C1').Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
     oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
     oSheet.getCellRangeByName('C1').CellBackColor = 16757935
     oSheet.getCellRangeByName('A3').String = 'N.'
@@ -393,7 +393,7 @@ def svuotaContabilita(oDoc):
     oSheet.getCellRangeByName('AG3').String = 'Cat'
     oSheet.getCellRangeByName('AH3').String = 'Sub Cat'
     #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
-    #  oSheet.getCellByPosition(35,2).String = 'tag C'
+    oSheet.getCellByPosition(35,2).String = 'tag C'
     oSheet.getCellRangeByName('AK3').String = 'Importi\nsenza errori'
     oSheet.getCellByPosition(0, 2).Rows.Height = 800
     #  colore colonne riga di intestazione
@@ -683,24 +683,37 @@ def GeneraLibretto(oDoc):
             # ~datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (num, art,  desc, um, quant, prezzo, importo, sic, mdo)
             # ~SAL.append(datiSAL)
         datiSAL = LeenoComputo.datiVoceComputo(oSheet, i)[1] #SAL = (num, art,  desc, um, quant, prezzo, importo, sic, mdo)
-        SAL.append(datiSAL)
+        if 'VDS_' in datiSAL[1]:
+            SAL_VDS.append(datiSAL)
+        else:
+            SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
+    # DLG.chi(f"SAL = {SAL}")
+    # DLG.chi(f"SAL_VDS = {SAL_VDS}")
     SAL = list(set(SAL))
     try:
         sic = []
         mdo = []
         for el in SAL:
-            sic.append(el[6])
-            mdo.append(el[7])
+            sic.append(el[7])
+            mdo.append(el[8])
         sic = sum(sic)
         mdo = sum(mdo)
 
+
+
+
+        from collections import defaultdict
         datiSAL = []
-        for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(1, 2, 3)):
-            quant = sum(float(q[4]) for q in g)
-            k = list(k)
-            k.append(quant)
-            datiSAL.append(k)
+        gruppi = defaultdict(float)  # Dizionario per sommare direttamente i valori
+        for row in SAL:
+            key = (row[1], row[2], row[3])  # Chiave di raggruppamento
+            gruppi[key] += float(row[4])  # Somma diretta
+        # Converti il dizionario in lista
+        datiSAL = [list(k) + [v] for k, v in gruppi.items()]
+
+
+
 
         PL.comando ('DeletePrintArea')
         SheetUtils.visualizza_PageBreak()
@@ -1112,7 +1125,7 @@ def GeneraRegistro(oDoc):
         oSheet.getCellByPosition(0, 2).Rows.OptimalHeight = True
         insRow = 1 #'prima riga inserimento in Registro
     except Exception as e:
-        DLG.errore(e)
+        # DLG.errore(e)
 
         # recupera il registro precedente
         PL.GotoSheet('SAL')

@@ -650,12 +650,12 @@ def importa_stili_pagina(overwrite = False):
 
     # Creare la lista di PropertyValue per le opzioni di caricamento
     loadOptions = [
-        crea_property_value("LoadPageStyles", True),
-        crea_property_value("LoadCellStyles", False),
-        crea_property_value("LoadTextStyles", False),
-        crea_property_value("LoadFrameStyles", False),
-        crea_property_value("LoadNumberingStyles", False),
-        crea_property_value("OverwriteStyles", overwrite)
+        PL.crea_property_value("LoadPageStyles", True),
+        PL.crea_property_value("LoadCellStyles", False),
+        PL.crea_property_value("LoadTextStyles", False),
+        PL.crea_property_value("LoadFrameStyles", False),
+        PL.crea_property_value("LoadNumberingStyles", False),
+        PL.crea_property_value("OverwriteStyles", overwrite)
     ]
 
     try:
@@ -665,7 +665,7 @@ def importa_stili_pagina(overwrite = False):
         DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
 
     # attiva la progressbar
-    oProgressBar = create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
+    oProgressBar = PL.create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
     n = 1 
     for el in oDoc.Sheets.ElementNames:
         oProgressBar.Value = n

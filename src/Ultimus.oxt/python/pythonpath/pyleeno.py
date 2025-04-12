@@ -43,6 +43,7 @@ import shutil
 import sys
 import uno
 import zipfile
+import inspect
 
 import SheetUtils
 import LeenoUtils
@@ -437,9 +438,12 @@ def MENU_invia_voce():
         e la inserisce nel foglio di destinazione
         '''
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        # oCell = SheetUtils.uFindString(codice_da_cercare, oSheet)
-        oCell = LeggiPosizioneCorrente()
-        range_src = f'A{oCell[1]+1}:G{oCell[1]+1}'
+        if SheetUtils.getLastUsedRow(oDoc.getSheets().getByName('COMPUTO')) > 20:
+            row = SheetUtils.uFindString(codice_da_cercare, oSheet)[1]
+        else:
+            row = LeggiPosizioneCorrente()[1]
+
+        range_src = f'A{row+1}:G{row+1}'
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
@@ -453,9 +457,6 @@ def MENU_invia_voce():
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
         cerca_in_elenco_prezzi = SheetUtils.uFindString(voce_da_inviare, dccSheet)
         if not cerca_in_elenco_prezzi:
-            # Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            # Text= f'La voce {voce_da_inviare} è già presente nel foglio di destinazione.')
-            # return
             recupera_voce(voce_da_inviare)
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
@@ -463,170 +464,25 @@ def MENU_invia_voce():
             lrow = LeggiPosizioneCorrente()
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
             dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-            dccSheet.getCellByPosition(lrow[0]+1, lrow[1]).CellBackColor = 13500076
+            dccSheet.getCellByPosition(lrow[0]+1, lrow[1]).CellBackColor = 14942166
             _gotoCella(lrow[0]+1, lrow[1]+1)
             
         return
-        if oSheet.getCellByPosition(
-                0,
-                LeggiPosizioneCorrente()[1]).CellStyle not in ('EP-Cs', 'EP-aS'):
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text='La posizione di PARTENZA non è corretta.')
-            return
-
-        analisi = getAnalisi(oSheet)[0]
-        lrow = getAnalisi(oSheet)[1][0]
-        LeenoUtils.setGlobalVar('cod', oSheet.getCellByPosition(0, lrow).String)
-        lista = getAnalisi(oSheet)[1]
-
-        selezione = []
-        voci = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
-        for y in lista:
-            rangen = oSheet.getCellRangeByPosition(0, y, 100, y).RangeAddress
-            selezione.append(rangen)
-        voci.addRangeAddresses(selezione, True)
-
-        coppia = []
-
-        if analisi:
-            GotoSheet('Analisi di Prezzo')
-            oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-
-            ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
-            selezione_analisi = []
-            for el in analisi:
-                y = SheetUtils.uFindStringCol(el, 0, oSheet)
-                sStRange = Circoscrive_Analisi(y)
-                SR = sStRange.RangeAddress.StartRow
-                ER = sStRange.RangeAddress.EndRow
-                coppia.append((SR, ER))
-                selezione_analisi.append(sStRange.RangeAddress)
-            costi = []
-            for el in coppia:
-                for y in range(el[0], el[1]):
-                    if oSheet.getCellByPosition(0, y).CellStyle == 'An-lavoraz-Cod-sx' and \
-                       oSheet.getCellByPosition(0, y).Type.value != 'EMPTY':
-                        costi.append(oSheet.getCellByPosition(0, y).String)
-            if len(costi) > 0:
-                GotoSheet('Elenco Prezzi')
-                oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-                el_y = []
-                for el in costi:
-                    el_y.append(SheetUtils.uFindStringCol(el, 0, oSheet))
-                for y in el_y:
-                    rangen = oSheet.getCellRangeByPosition(0, y, 10, y).RangeAddress
-                    selezione.append(rangen)
-                voci.addRangeAddresses(selezione, True)
-        oDoc.CurrentController.select(voci)
-        comando('Copy')
-        oDoc.CurrentController.select(
-            oDoc.createInstance(
-                "com.sun.star.sheet.SheetCellRanges"))  # unselect
-        _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-        # ddcDoc = LeenoUtils.getDocument()
-        dccSheet = ddcDoc.CurrentController.ActiveSheet
-        nome = dccSheet.Name
-
-        if nome in ('Elenco Prezzi'):
-            ddcDoc.CurrentController.setActiveSheet(dccSheet)
-            _gotoCella(0, 3)
-            paste_clip(insCells=1, pastevalue=True)
-            LeenoSheetUtils.adattaAltezzaRiga(dccSheet)
-            if cfg.read('Generale', 'torna_a_ep') == '1':
-                _gotoDoc(fpartenza)
-            return
-            # EliminaVociDoppieElencoPrezzi()
-
-        def gestisciElencoPrezzi(ddcDoc, nome):
-            dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
-            dccSheet.IsVisible = True
-            ddcDoc.CurrentController.setActiveSheet(dccSheet)
-            _gotoCella(0, 3)
-            paste_clip(insCells=1)
-            # EliminaVociDoppieElencoPrezzi()
-            _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-            # ddcDoc = LeenoUtils.getDocument()
-            GotoSheet(nome)
-            return ddcDoc.getSheets().getByName(nome)
-
-        def isStyleIn(cell, styles):
-            return cell.CellStyle in styles
-
-        if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            dccSheet = gestisciElencoPrezzi(ddcDoc, nome)
-            lrow = LeggiPosizioneCorrente()[1]
-
-            if nome in ('COMPUTO', 'VARIANTE'):
-                if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna',):
-                    LeenoComputo.insertVoceComputoGrezza(dccSheet, lrow + 1)
-                    _gotoCella(1, lrow + 2)
-                    numera_voci(1)
-                    lrow = LeggiPosizioneCorrente()[1]
-
-                if isStyleIn(dccSheet.getCellByPosition(0, lrow), stili_cat + stili_computo + stili_contab + ('comp Int_colonna',)):
-                    codice = codice_voce(lrow)
-                    if codice in ('', 'Cod. Art.?'):
-                        codice_voce(lrow, LeenoUtils.getGlobalVar('cod'))
-                    else:
-                        LeenoComputo.ins_voce_computo()
-                        GotoSheet(nome)
-                        codice_voce(LeggiPosizioneCorrente()[1], LeenoUtils.getGlobalVar('cod'))
-
-                    if LeggiPosizioneCorrente()[1] > 20:
-                        ddcDoc.CurrentController.setFirstVisibleColumn(0)
-                        ddcDoc.CurrentController.setFirstVisibleRow(LeggiPosizioneCorrente()[1] - 5)
-
-            elif nome == 'CONTABILITA':
-                if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna_R',):
-                    ins_voce_contab(lrow + 1)
-                    _gotoCella(1, lrow + 2)
-                    numera_voci(1)
-                    lrow = LeggiPosizioneCorrente()[1]
-
-                if isStyleIn(dccSheet.getCellByPosition(0, lrow), stili_cat + stili_computo + stili_contab + ('comp Int_colonna_R',)):
-                    codice = codice_voce(lrow)
-                    if codice in ('', 'Cod. Art.?'):
-                        codice_voce(lrow, LeenoUtils.getGlobalVar('cod'))
-                    else:
-                        ins_voce_contab(lrow + 1)
-                        GotoSheet(nome)
-                        codice_voce(LeggiPosizioneCorrente()[1], LeenoUtils.getGlobalVar('cod'))
-
-                    if LeggiPosizioneCorrente()[1] > 20:
-                        ddcDoc.CurrentController.setFirstVisibleColumn(0)
-                        ddcDoc.CurrentController.setFirstVisibleRow(LeggiPosizioneCorrente()[1] - 5)
-
+ 
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        art = codice_voce(lrow)
-        LeenoUtils.setGlobalVar('cod', art)
-        try:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-        except AttributeError:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-        try:
-            SR = oRangeAddress.StartRow
-            SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
-        except AttributeError:
-            # Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            # Text='''La selezione delle voci di partenza deve essere contigua.''')
-            return
-        ER = oRangeAddress.EndRow
-        ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
+        dv = LeenoComputo.DatiVoce(oSheet, lrow)
+        art = dv.art
+        ER = dv.ER
+        SR = dv.SR
 
         range_src = f'A{SR+1}:AZ{ER+1}'
 
-        # DLG.mri(oSheet.getCellRangeByName(f'A{SR+1}:AZ{ER+1}'))
-
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
-        oSheet.getCellRangeByPosition(30, SR, 30, ER).CellBackColor = 15757935
-        oSheet.getCellByPosition(1, SR +1).CellBackColor = 16777072
+        # oSheet.getCellRangeByPosition(30, SR, 30, ER).CellBackColor = 15757935
+        oSheet.getCellByPosition(1, SR +1).CellBackColor = 14942166
 
-        lista = []
-        for el in range(SR, ER + 1):
-            if oSheet.getCellByPosition(0, el).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo R'):
-                lista.append(codice_voce(el))
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
@@ -640,16 +496,16 @@ def MENU_invia_voce():
             comando('Copy')
             prossima = LeenoSheetUtils.prossimaVoce(oSheet, ER, 1)
             _gotoCella(0, prossima)
-        # arrivo
+    # arrivo
             # DP = LeenoUtils.getGlobalVar('sUltimus')
             # ddcDoc = LeenoUtils.findOpenDocument(DP)
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-
+            dccSheet.getCellByPosition(1, SR +1).CellBackColor = 14942166
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             lrow = LeggiPosizioneCorrente()[1]
-            # lrow = LeenoUtils.getCursorPosition(ddcDoc)[0]
-            # DLG.chi(lrow)
-            
+
+            # dccv = LeenoComputo.DatiVoce(dccSheet, lrow)
+
             if dccSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo + stili_contab):
                 lrow += 1
             else:
@@ -658,7 +514,6 @@ def MENU_invia_voce():
                 Dialogs.Exclamation(Title = 'ATTENZIONE!',
                 Text='''La posizione di destinazione non è corretta.
     I nomi dei fogli di partenza e di arrivo devo essere coincidenti.''')
-
                 # unselect
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
                 return
@@ -677,9 +532,6 @@ def MENU_invia_voce():
             range_dest = f'A{lrow+1}:AZ{lrow+1+ER-SR}'
 
             dccSheet.getCellRangeByName(range_dest).FormulaArray = data
-            # dccSheet.getCellByPosition(1, lrow+1).CellBackColor = 16777072
-            
-            # copia_stili_celle(oSheet, range_src, dccSheet, range_dest)
 
             rigenera_voce(lrow)
             rigenera_parziali(False)
@@ -688,12 +540,15 @@ def MENU_invia_voce():
             # se nella voce inserita la descrizione non risulta presente
             # la voce di prezzo viene presa dal foglio di partenza
             
+            art = dv.art
+            ddcSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             
-            if dccSheet.getCellByPosition(2, lrow+1).String == '#N/A':
-                codice_da_cercare = dccSheet.getCellByPosition(1, lrow+1).String
-                recupera_voce (codice_da_cercare)
-            # LeenoUtils.DocumentRefresh(True)
+            cerca_in_elenco_prezzi = SheetUtils.uFindString(art, ddcSheet)
+            recupera_voce(art)
 
+            if not cerca_in_elenco_prezzi:
+                recupera_voce(art)
+  
         if nSheetDCC in ('Elenco Prezzi'):
             # ~DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
@@ -718,7 +573,6 @@ def MENU_invia_voce():
         comando('Copy')
 
         _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-        # ddcDoc = LeenoUtils.getDocument()
         inizializza_analisi()
         _gotoCella(0, 0)
         paste_clip(insCells=1)
@@ -731,14 +585,12 @@ def MENU_invia_voce():
     _gotoDoc(fpartenza)
     GotoSheet(nSheet)
     _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-    # ~if DLG.DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
-        # ~EliminaVociDoppieElencoPrezzi()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
-        ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 16777072
+        ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 14942166
         _gotoCella(2, lrow + 1)
     try:
         oSheet = oDoc.getSheets().getByName(nSheetDCC)
@@ -749,17 +601,6 @@ def MENU_invia_voce():
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
-
-# def recupera_voce (oDoc, ddcDoc, codice_da_cercare):
-#     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-#     oCell = SheetUtils.uFindString(codice_da_cercare, oSheet)
-                
-#     range_src = f'A{oCell[1]+1}:G{oCell[1]+1}'
-#     data = oSheet.getCellRangeByName(range_src).FormulaArray
-#     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
-#     dccSheet.getRows().insertByIndex(4, 1)
-#     range_dest = f'A5:G5'
-#     dccSheet.getCellRangeByName(range_dest).FormulaArray = data
 
 
 ########################################################################
@@ -789,19 +630,6 @@ def codice_voce(lrow, cod=None):
     else:
         oSheet.getCellByPosition(1, sopra + 1).String = cod
 
-
-# def getVoce(cod=None):
-# oDoc = LeenoUtils.getDocument()
-# oSheet = oDoc.CurrentController.ActiveSheet
-# lrow = LeggiPosizioneCorrente()[1]
-# sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-# return oSheet.getCellByPosition(1, sopra+1).String
-# def setVoce(cod):
-# oDoc = LeenoUtils.getDocument()
-# oSheet = oDoc.CurrentController.ActiveSheet
-# lrow = LeggiPosizioneCorrente()[1]
-# sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-# oSheet.getCellByPosition(1, sopra+1).String = cod
 ########################################################################
 
 
@@ -2025,7 +1853,7 @@ def MENU_prefisso_VDS_():
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
         oSheet.getCellRangeByName("A4").String = "VDS_" + oSheet.getCellRangeByName("A4").String
-        oSheet.getCellRangeByName("A4").CellBackColor = 13500076
+        oSheet.getCellRangeByName("A4").CellBackColor = 14942166
 
         LeenoUtils.DocumentRefresh(False)
     # ~ oSheet = oDoc.CurrentController.ActiveSheet
@@ -2069,7 +1897,7 @@ def MENU_prefisso_VDS_():
                 sStRange.RangeAddress
                 inizio = sStRange.RangeAddress.StartRow
                 fine = sStRange.RangeAddress.EndRow
-                oSheet.getCellByPosition(1, inizio + 1).CellBackColor = 13500076
+                oSheet.getCellByPosition(1, inizio + 1).CellBackColor = 14942166
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
@@ -2112,6 +1940,13 @@ Procedo?''') == 1:
         pass
     else:
         return
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+        Text='''Vuoi che il prefisso sia incrementale?
+    (es: "BAS22/1_", "BAS22/2_", "BAS22/3_", ecc.)''') == 1:
+        inc = True
+    else:
+        inc = False
 
     LeenoUtils.DocumentRefresh(False)
 
@@ -2161,24 +1996,26 @@ Procedo?''') == 1:
         lrow = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
         for y in range(0, lrow):
             lista.append(oSheet.getCellByPosition(0, y).String)
-
+    i = 0
     for el in ('Elenco Prezzi', 'COMPUTO', 'VARIANTE', 'CONTABILITA', 'Analisi di Prezzo'):
-        try:
-            oSheet = oDoc.getSheets().getByName(el)
-            lrow = SheetUtils.getLastUsedRow(oSheet)
-            x = stili[el][0]
-            stile = stili[el][1]
-            for y in range(0, lrow):
-                codice = oSheet.getCellByPosition(x, y).String
-                if codice in lista:
-                    if oSheet.getCellByPosition(x, y).CellStyle ==  stile and \
-                    oSheet.getCellByPosition(x, y).String != "000":
-                        oSheet.getCellByPosition(x, y).String = prefisso + codice
-        except:
-            LeenoUtils.DocumentRefresh(True)
-            pass
+        i = i + 1
+        if inc:
+            # prefisso = prefisso + str(i) + '_'
+            try:
+                oSheet = oDoc.getSheets().getByName(el)
+                lrow = SheetUtils.getLastUsedRow(oSheet)
+                x = stili[el][0]
+                stile = stili[el][1]
+                for y in range(0, lrow):
+                    codice = oSheet.getCellByPosition(x, y).String
+                    if codice in lista:
+                        if oSheet.getCellByPosition(x, y).CellStyle ==  stile and \
+                        oSheet.getCellByPosition(x, y).String != "000":
+                            oSheet.getCellByPosition(x, y).String = prefisso + str(i) + '_' + codice
+            except:
+                LeenoUtils.DocumentRefresh(True)
+                pass
     LeenoUtils.DocumentRefresh(True)
-
 
 ########################################################################
 
@@ -2643,7 +2480,7 @@ def scelta_viste():
 
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow + 1
-            ER = oRangeAddress.EndRow  # -1
+            ER = oRangeAddress.EndRow - 1
 
             formule = []
             oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
@@ -2770,7 +2607,7 @@ def scelta_viste():
                 oRangeAddress.EndColumn = 14
 
                 oSheet.getCellRangeByName ('X1').String = 'VARIANTE - CONTABILITÀ'
-                for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2):
+                for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1):
                     formule.append([
                         '=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' +
                         str(n) + '-Q' + str(n) + ')', '=IF(V' + str(n) + '-R' +
@@ -2814,6 +2651,7 @@ def scelta_viste():
                     oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0,
                                                   oRangeAddress.EndColumn,
                                                   1).Columns.IsVisible = False
+            LeenoSheetUtils.inserisciRigaRossa(oSheet)
         else:
             return oDialog1.dispose()
         # evidenzia le quantità eccedenti il VI/V
@@ -2823,7 +2661,8 @@ def scelta_viste():
                     el).Value >= 0.2 or oSheet.getCellByPosition(
                         26, el).String == '20,00%':
                 oSheet.getCellRangeByPosition(
-                    0, el, 25, el).CellBackColor = 16777175
+                    0, el, 1, el).CellBackColor = 16777175
+        trova_np()
         LeenoUtils.DocumentRefresh(True)
         # operazioni comuni
         # Dizionario per gestire le colonne e i rispettivi stili
@@ -5589,7 +5428,7 @@ def MENU_ricicla_misure():
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8,
                                              sotto).getRangeAddress()
-        oSheet.getCellByPosition(2, sopra - 1).CellBackColor = 13500076
+        oSheet.getCellByPosition(2, sopra - 1).CellBackColor = 14942166
         partenza = LeenoUtils.getGlobalVar('partenza')
         if partenza is None:
             return
@@ -5605,7 +5444,7 @@ def MENU_ricicla_misure():
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(
             1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
-        oDest.getCellByPosition(2, partenza[1]).CellBackColor = 13500076
+        oDest.getCellByPosition(2, partenza[1]).CellBackColor = 14942166
         rigenera_voce(partenza[1])
         # ~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
@@ -6459,6 +6298,11 @@ def rigenera_voce(lrow=None):
             if oSheet.getCellByPosition(4, n).Value < 0:
                 formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";PRODUCT(E{n+1}:I{n+1}))']
             formule.append(formula)
+            if 'Parziale [' in oSheet.getCellByPosition(8, n).Formula:
+                oSheet.getCellRangeByPosition(2, n, 7,
+                                      n).CellStyle = 'comp sotto centro'
+                oSheet.getCellByPosition(8, n).CellStyle = 'comp sotto BiancheS'
+                oSheet.getCellByPosition(9, n).CellStyle = 'Comp-Variante num sotto'
 
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 9, sotto - 1)
         formule = tuple(formule)
@@ -6553,6 +6397,11 @@ def rigenera_voce(lrow=None):
                                 '=IF(PRODUCT(E' + str(n+1) + ':I' +
                                 str(n+1) + ')>=0;"";PRODUCT(E' + str(
                                 n + 1) + ':I' + str(n+1) + ')*-1)'])
+            if 'Parziale [' in oSheet.getCellByPosition(8, n).Formula:
+                oSheet.getCellRangeByPosition(2, n, 7,
+                                            n).CellStyle = "comp sotto centro"
+                oSheet.getCellByPosition(8, n).CellStyle = "comp sotto BiancheS"
+                oSheet.getCellByPosition(9, n).CellStyle = "Comp-Variante num sotto"
 
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
         formule = tuple(formule)
@@ -10654,11 +10503,18 @@ def trova_np():
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~oDoc.enableAutomaticCalculation(False)  # Assicurarsi di disabilitare se necessario
 
-    struttura_off()
+    # struttura_off()
+
+    lrow = SheetUtils.getUsedArea(oSheet).EndRow
+    oProgressBar = create_progress_bar (title='Cerco i nuovi prezzi...', steps=lrow)
+
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     var = 0
     cont = 0
-    for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
+    i = 3
+    for el in range(3, lrow):
+        i += 1
+        oProgressBar.Value = i
         val12 = oSheet.getCellByPosition(12, el).Value
         val17 = oSheet.getCellByPosition(17, el).Value
         val21 = oSheet.getCellByPosition(21, el).Value
@@ -10666,22 +10522,31 @@ def trova_np():
         if val12 == 0 and val21 > 0:
             cont += val21
             oSheet.getCellRangeByPosition(0, el, 1, el).CellBackColor = 16770000
-        elif val12 == 0 and val17 > 0:
+        if val12 == 0 and val17 > 0:
             var += val17
             oSheet.getCellRangeByPosition(0, el, 1, el).CellBackColor = 16770002
         else:
             oCellRangeAddr.StartRow = el
             oCellRangeAddr.EndRow = el
             oSheet.group(oCellRangeAddr, 1)
-            oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
-    if cont > 0:
-        Dialogs.Info(Title='Informazione',
-        Text='''Il totale delle variazioni in CONTABILITÀ è di € {:,.2f}'''.format(somma).replace(',', 'X').replace('.', ',').replace('X', '.'))
+            oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = True
+
+    oProgressBar.reset()
+    oProgressBar.end()
+    oDoc.enableAutomaticCalculation(True)
+    
     if var > 0:
         Dialogs.Info(Title='Informazione',
         Text='''Il totale delle variazioni in VARIANTE è di € {:,.2f}'''.format(var).replace(',', 'X').replace('.', ',').replace('X', '.'))
 
-    oDoc.enableAutomaticCalculation(True)
+    if cont > 0:
+        Dialogs.Info(Title='Informazione',
+        Text='''Il totale delle variazioni in CONTABILITÀ è di € {:,.2f}'''.format(cont).replace(',', 'X').replace('.', ',').replace('X', '.'))
+    
+    # Dialogs.Info(Title='Informazione', Text=Text1 + '\n' + Text2)
+
+    return
+
 
 
 ########################################################################
@@ -11165,6 +11030,17 @@ def create_progress_bar(title='', steps=100):
         progressBar: L'oggetto creato.
     '''
 
+    caller_frame = inspect.stack()[1]
+    line_number = caller_frame.lineno
+    full_file_path = caller_frame.filename  # Ottieni il percorso completo
+    function_name = caller_frame.function  # Nome della funzione chiamante
+    file_name = os.path.basename(full_file_path)  # Solo il nome del file
+
+    
+    # title = f"{self._text} ({percent})"
+    if 'giuserpe' in os.getlogin():
+        title = title + f"    Funzione: {function_name}()    Linea: {line_number}    File:{file_name}"
+
     desktop = LeenoUtils.getDesktop()
     model = desktop.getCurrentComponent()
     controller = model.getCurrentController()
@@ -11274,6 +11150,7 @@ def copia_stili_celle(sheet_src, range_src, sheet_dest, range_dest):
     progress.setLimits(0, rows)
     progress.setValue(0)
     progress.show()
+    # oProgressBar = create_progress_bar(title = 'Importazione stili pagina in corso...', steps = rows)
 
     # Copia formattazione, bordi e allineamento
     for r in range(rows):
@@ -11486,57 +11363,62 @@ def minuti():
                     ore, minuti = orario.split(":")
                     riga[i] = f'=TIME({ore};{minuti};0)'
             except Exception as e:
-                print(f"Errore elaborazione orario in riga {y}: {e}")
+                pass
+                # DLG.chi(f"Errore elaborazione orario in riga {y}: {e}")
 
         if oSheet.getCellByPosition(12, y).Value != 0:
-            riga[7] = f'=B{y+1}'
-            riga[16] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
-            riga[8] = f'=M{y+1}'
-            riga[9] = f'=IF(in1a>=TIME(7;50;0);in1a;TIME(7;50;0))'
-            riga[11] = f'=N{y+1}'
-            riga[10] = f'=IF(M{y+1}>=TIME(7;50;0);M{y+1};TIME(7;50;0))+TIME(6;0;0)'
+            riga[6] = f'=B{y+1}'
+            riga[15] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
+            riga[7] = f'=M{y+1}'
+            riga[8] = f'=IF(in1a>=TIME(7;50;0);in1a;TIME(7;50;0))'
+            riga[10] = f'=N{y+1}'
+            riga[9] = f'=IF(M{y+1}>=TIME(7;50;0);M{y+1};TIME(7;50;0))+TIME(6;0;0)'
 
-        riga[22] = f'=IF(AB{y+1};CELL("row");"")'
+
+        riga[21] = f'=IF(AB{y+1};CELL("row");"")'
 
         cell_value = oSheet.getCellByPosition(4, y).Value
         if cell_value == 100:
-            riga[12] = f'=O{y+1}'
-            riga[15] = f'=P{y+1}'
+            riga[11] = f'=O{y+1}'
+            riga[14] = f'=P{y+1}'
             riga[16] = '=out1b-in1a+out2b-in2a'
         elif cell_value == 401:
-            riga[11] = f'=N{y+1}'
-            riga[17] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
-            riga[16] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
-        elif oSheet.getCellByPosition(0, y).String in ('martedì ', 'giovedì '):
-            riga[11] = f'=N{y+1}'
-            riga[12] = f'=O{y+1}'
-            riga[13] = f'=IF(X{y+1}<=TIME(15;00;0);TIME(15;00;0);X{y+1})'
-            riga[14] = f'=X{y+1}+TIME(3;00;0)'
+            riga[10] = f'=N{y+1}'
+            riga[11] = f'=O{y+1}'
+            riga[14] = f'=P{y+1}'
+            riga[15] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
+        # elif oSheet.getCellByPosition(0, y).String in ('martedì ', 'giovedì '):
+        elif cell_value == 434:
+            riga[10] = f'=N{y+1}'
+            riga[11] = f'=O{y+1}'
+            riga[12] = f'=IF(X{y+1}<=TIME(15;00;0);TIME(15;00;0);X{y+1})'
+            riga[13] = f'=Y{y+1}+TIME(3;00;0)'
+            riga[14] = f'=P{y+1}'
+            riga[15] = '=in1b-in1a+out1b-out1a+in2b-in2a+out2b-out2a'
 
         dati.append(riga)  # Lista di liste
 
     DocumentRefresh(True)
 
     # Range di destinazione
-    range_dest = f'M{test0+6}:AH{test+5}'
+    range_dest = f'M{test0+1}:AI{test}'
 
     # Controllo che le dimensioni di `dati` siano corrette
     if len(dati) != num_righe or any(len(row) != num_colonne for row in dati):
-        DLG.chi(f"Errore dimensioni: {len(dati)}x{len(dati[0])} != {num_righe}x{num_colonne}")
+        DLG.chi(f"Errore dimensioni: {len(dati[1])}x{len(dati[0])} != {num_righe}x{num_colonne}")
         return
 
-    DLG.chi(f"Dimensioni dati: {len(dati)} x {len(dati[0])}\nDimensioni attese: {num_righe} x {num_colonne}")
-
-    oSheet.getCellRangeByName(range_dest).FormulaArray = [tuple(riga) for riga in dati]
+    for i, riga in enumerate(dati):
+        cell_range = f'M{test0+1+i}:AI{test0+1+i}'
+        oSheet.getCellRangeByName(cell_range).FormulaArray = [tuple(riga)]
 
 
 
 
 
 ########################################################################
-def codice_colore_cella():
+def trova_colore_cella():
     oDoc = getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     active_cell = oDoc.CurrentSelection
     DLG.chi(active_cell.CellBackColor)
     return
@@ -11575,10 +11457,28 @@ def cerca_rosso_mancante():
                 pass
     return
 def MENU_debug():
-    codice_colore_cella()
-    # LeenoUtils.DocumentRefresh(True)
-    # LeenoUtils.DocumentRefresh(True)
-    # LeenoUtils.DocumentRefresh(True)
+    oDoc = getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = LeggiPosizioneCorrente()[1] + 1
+    dv = LeenoComputo.DatiVoce(oSheet, lrow)
+    # DLG.chi(dv)
+    DLG.chi(dv.SR)
+    DLG.chi(dv.ER)
+
+    # trova_colore_cella()
+    return
+    LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
+    LeenoUtils.DocumentRefresh(True)
+    # codice_colore_cella()
+    return
+    for el in range(0, lrow):
+        if oSheet.getCellByPosition(0, el).CellStyle in ('comp 10 s_R'):
+            oSheet.getCellByPosition(0, el).CellStyle = 'comp 10 s'
+            # oSheet.getCellByPosition(2, el).String == '#N/A':
+            # oSheet.getCellByPosition(1, el).String = 'NP_' + oSheet.getCellByPosition(1, el).String
+
+    return
     # struct(6, vedi=True)
     # struct(6, vedi=True)
     # struct(7, vedi=True)
@@ -11590,7 +11490,6 @@ def MENU_debug():
     # rigenera_voce(lrow)
     return
     cerca_rosso_mancante()
-    minuti()
     # return
 
         
@@ -11650,7 +11549,6 @@ def MENU_debug():
     vSintetica(False)
     DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
     return
-    MENU_invia_voce()
     pesca_cod()
     # io = inputbox('messaggio')
     # DLG.chi(io)

@@ -284,7 +284,7 @@ def parseXML(data, defaultTitle):
         # ~desc = LeenoImport.fixParagraphSize(desc)
         
         #sistema_cose
-        # desc = PL.clean_text (desc)
+        desc = PL.clean_text (desc)
 
         # gruppo, nel caso ci sia
         try:

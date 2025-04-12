@@ -437,7 +437,7 @@ def inserisciRigaRossa(oSheet):
         SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
                       '$A$3:$K$' + str(SheetUtils.getUsedArea(oSheet).EndRow), 'analisi')
     elif nome == 'Elenco Prezzi':
-        lrow = cercaUltimaVoce(oSheet) + 1
+        lrow = cercaUltimaVoce(oSheet)
         if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':
             lrow += 1
         oSheet.getCellByPosition(0, lrow).String = 'Fine elenco'
@@ -455,7 +455,7 @@ def inserisciRigaRossa(oSheet):
         oSheet.getCellByPosition(23, lrow).String = 'TOTALE'
         oSheet.getCellByPosition(24, lrow).Formula = '=SUBTOTAL(9;Y3:Y' + s + ')'
         oSheet.getCellByPosition(25, lrow).Formula = '=SUBTOTAL(9;Z3:Z' + s + ')'
-        oSheet.getCellByPosition(26, lrow).Formula = '=IFERROR(IFS(AND(N' + s + '>R' + s + ';R' + s + '=0);-1;AND(N' + s + '<R' + s + ';N' + s + '=0);1;N' + s + '=R' + s + ';"--";N' + s + '>R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ';N'+ s + '<R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ');"--")'
+        # oSheet.getCellByPosition(26, lrow).Formula = '=IFERROR(IFS(AND(N' + s + '>R' + s + ';R' + s + '=0);-1;AND(N' + s + '<R' + s + ';N' + s + '=0);1;N' + s + '=R' + s + ';"--";N' + s + '>R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ';N'+ s + '<R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ');"--")'
         oSheet.getCellByPosition(1, lrow
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
@@ -803,11 +803,7 @@ def MENU_elimina_righe_vuote():
             row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
 
         if not row_has_data:
-            try:
-                PL.MENU_elimina_righe()
-                # oSheet.getRows().removeByIndex(y, 1)
-            except:
-                pass
+            oSheet.getRows().removeByIndex(y, 1)
 
     progress.hide()
     LeenoUtils.DocumentRefresh(True)

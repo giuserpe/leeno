@@ -92,6 +92,10 @@ class Config(Borg):
             ('Contabilita', 'idxsal', '20'),
             ('Contabilita', 'ricicla_da', 'COMPUTO'),
 
+            ('Analisi', 'sicurezza', '15,00%'),
+            ('Analisi', 'spese_generali', '15,00%'),
+            ('Analisi', 'utile_impresa', '10,00%'),
+
             ('Importazione', 'ordina_computo', '1'),
 
             ('Lavoro', 'committente', '(str)'),

@@ -4,6 +4,7 @@ relativamente alle funzionalità specifiche di LeenO
 '''
 import uno
 from com.sun.star.sheet.CellFlags import HARDATTR, EDITATTR, FORMATTED
+from com.sun.star.beans import PropertyValue
 
 import pyleeno as PL
 import LeenoUtils
@@ -289,42 +290,119 @@ def selezionaVoce(oSheet, lrow):
 
 # ###############################################################
 
-def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
-    '''
-    oSheet { obect }
-    lrow { double }   : riga di riferimento
-    n    { integer }  : se 0 sposta prima della voce corrente
-                        se 1 sposta dopo della voce corrente
-    sposta il cursore prima o dopo la voce corrente restituendo un idrow
-    '''
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
-    stili = stili_computo + stili_contab
+# def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
+#     '''
+#     oSheet { obect }
+#     lrow { double }   : riga di riferimento
+#     n    { integer }  : se 0 sposta prima della voce corrente
+#                         se 1 sposta dopo della voce corrente
+#     sposta il cursore prima o dopo la voce corrente restituendo un idrow
+#     '''
+#     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+#     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+#     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+#     noVoce = LeenoUtils.getGlobalVar('noVoce')
+#     stili = stili_computo + stili_contab
 
-    # ~lrow = PL.LeggiPosizioneCorrente()[1]
-    if lrow == 0:
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili:
-            lrow += 1
-        return lrow
-    fine = cercaUltimaVoce(oSheet) + 1
-    # la parte che segue sposta il focus alla voce successiva
-    if lrow >= fine:
-        return lrow
-    if saltaCat == True:
-        if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
-            lrow += 1
-            return lrow
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili:
-        if n == 0:
-            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-            lrow = sopra
-        elif n == 1:
-            sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-            lrow = sotto + 1
-    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna', 'ULTIMUS', 'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'):
+#     stile = oSheet.getCellByPosition(0, lrow).CellStyle
+
+#     if stile in stili_cat:
+#         lrow += 1
+#     elif stile in (stili_contab):
+#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+#         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
+
+#     # ~lrow = PL.LeggiPosizioneCorrente()[1]
+#     if lrow == 0: 
+#         while stile not in stili:
+#             lrow += 1
+#         return lrow
+#     fine = cercaUltimaVoce(oSheet) + 1
+#     # la parte che segue sposta il focus alla voce successiva
+#     if lrow >= fine:
+#         return lrow
+#     if saltaCat == True:
+#         if stile in stili_cat:
+#             lrow += 1
+#             return lrow
+#     if stile in stili:
+#         if n == 0:
+#             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+#             lrow = sopra
+#         elif n == 1:
+#             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+#             lrow = sotto + 1
+#     while stile in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna', 'ULTIMUS', 'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'):
+#         lrow += 1
+#     return lrow
+
+def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
+    """
+    Sposta il cursore prima o dopo la voce corrente restituendo l'ID riga.
+    
+    Args:
+        oSheet (object): Foglio di lavoro
+        lrow (int): Riga di riferimento
+        n (int, optional): 
+            0 = sposta prima della voce corrente
+            1 = sposta dopo della voce corrente (default)
+        saltaCat (bool, optional): Se True salta le categorie
+    
+    Returns:
+        int: Nuova posizione di riga
+    """
+    # Precaricamento stili (più efficiente)
+    STILI_CAT = set(LeenoUtils.getGlobalVar('stili_cat'))
+    STILI_COMPUTO = set(LeenoUtils.getGlobalVar('stili_computo'))
+    STILI_CONTAB = set(LeenoUtils.getGlobalVar('stili_contab'))
+    NO_VOCE = set(LeenoUtils.getGlobalVar('noVoce'))
+    STILI_VALIDI = STILI_COMPUTO | STILI_CONTAB
+    
+    # Stili da saltare (insieme per ricerca veloce)
+    STILI_DA_SALTARE = {
+        'uuuuu', 'Ultimus_centro_bordi_lati',
+        'comp Int_colonna', 'ULTIMUS', 
+        'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'
+    }
+
+    # Ottieni stile corrente (una sola chiamata)
+    stile_corrente = oSheet.getCellByPosition(0, lrow).CellStyle
+
+    # Gestione casi particolari
+    if stile_corrente in STILI_CAT:
         lrow += 1
+    elif stile_corrente in STILI_CONTAB:
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
+
+    # Caso riga iniziale
+    if lrow == 0:
+        while stile_corrente not in STILI_VALIDI:
+            lrow += 1
+            stile_corrente = oSheet.getCellByPosition(0, lrow).CellStyle
+        return lrow
+
+    # Trova fine documento
+    fine_doc = cercaUltimaVoce(oSheet) + 1
+    if lrow >= fine_doc:
+        return lrow
+
+    # Logica principale di spostamento
+    if saltaCat and stile_corrente in STILI_CAT:
+        return lrow + 1
+
+    if stile_corrente in STILI_VALIDI:
+        voce_range = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        if n == 0:
+            lrow = voce_range.RangeAddress.StartRow
+        elif n == 1:
+            lrow = voce_range.RangeAddress.EndRow + 1
+
+    # Salta righe con stili particolari
+    while stile_corrente in STILI_DA_SALTARE:
+        lrow += 1
+        stile_corrente = oSheet.getCellByPosition(0, lrow).CellStyle
+
     return lrow
 # ###############################################################
 
@@ -530,7 +608,60 @@ def adattaAltezzaRiga(oSheet=False):
             oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
     return
 
+def adattaAltezzaRiga(oSheet=False):
+    """
+    Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
+    Versione bilanciata tra velocità e manutenibilità.
+    """
+    # Configurazioni (modificabili)
+    STILI_CELLA = {
+        'comp 1-a', 
+        'Comp-Bianche in mezzo Descr_R',
+        'Comp-Bianche in mezzo Descr', 
+        'EP-a',
+        'Ultimus_centro_bordi_lati'
+    }
+    FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
+    RIGA_SPECIALE = 2
+    ALTEZZA_SPECIALE = 800
 
+    try:
+        # --- INIZIALIZZAZIONE VELOCE ---
+        LeenoUtils.DocumentRefresh(True)
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oSheet or oDoc.CurrentController.ActiveSheet
+        usedArea = SheetUtils.getUsedArea(oSheet)
+        versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
+
+        # --- OPERAZIONE PRINCIPALE (velocizzata) ---
+        oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
+
+        # --- CASI SPECIALI (ottimizzati) ---
+        if oSheet.Name in FOGLI_SPECIALI:
+            # Imposta altezza fissa per riga speciale
+            oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
+
+            # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
+            if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
+                oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
+
+        # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
+        if 520 < versione_lo < 642:
+            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+            for stile in STILI_CELLA:
+                try:
+                    cell_styles.getByName(stile).IsTextWrapped = True
+                except Exception:
+                    continue  # Ignora stili mancanti senza log (più veloce)
+
+            # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
+            for y in range(0, usedArea.EndRow + 1):
+                if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+                    oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
+
+    except Exception as e:
+        print(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
+        raise  # Rilancia per gestione esterna
 # ###############################################################
 
 
@@ -855,3 +986,74 @@ def MENU_SheetToDoc():
     oDoc.CurrentController.ZoomValue = 100
     return
 
+
+# ###############################################################
+
+
+def memorizza_posizione():
+    """Memorizza la posizione corrente del cursore"""
+    ctx = LeenoUtils.getComponentContext()
+    doc = LeenoUtils.getDocument()
+    controller = doc.getCurrentController()
+    
+    # Ottieni la selezione corrente
+    selection = controller.getSelection()
+    
+    # Gestione per diversi tipi di selezione
+    if selection.supportsService("com.sun.star.sheet.SheetCell"):
+        # Singola cella
+        cell_addr = selection.getCellAddress()
+        pos_data = {
+            'type': 'cell',
+            'sheet': cell_addr.Sheet,
+            'col': cell_addr.Column,
+            'row': cell_addr.Row
+        }
+    elif selection.supportsService("com.sun.star.sheet.SheetCellRange"):
+        # Range di celle
+        range_addr = selection.getRangeAddress()
+        pos_data = {
+            'type': 'range',
+            'sheet': range_addr.Sheet,
+            'col': range_addr.StartColumn,
+            'row': range_addr.StartRow,
+            'end_col': range_addr.EndColumn,
+            'end_row': range_addr.EndRow
+        }
+    else:
+        DLG.chi("Tipo di selezione non supportato")
+        return
+    
+    # Memorizza i dati
+    LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
+    # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
+
+def ripristina_posizione():
+    """Ripristina la posizione memorizzata"""
+    pos_data = LeenoUtils.getGlobalVar('ultima_posizione')
+    if not pos_data:
+        DLG.chi("Nessuna posizione memorizzata trovata")
+        return
+    
+    doc = LeenoUtils.getDocument()
+    controller = doc.getCurrentController()
+    sheets = doc.getSheets()
+    
+    try:
+        sheet = sheets.getByIndex(pos_data['sheet'])
+        
+        if pos_data['type'] == 'cell':
+            # Ripristina singola cella
+            cell = sheet.getCellByPosition(pos_data['col'], pos_data['row'])
+            controller.select(cell)
+        else:
+            # Ripristina range di celle
+            cell_range = sheet.getCellRangeByPosition(
+                pos_data['col'], pos_data['row'],
+                pos_data['end_col'], pos_data['end_row']
+            )
+            controller.select(cell_range)
+            
+    except Exception as e:
+        DLG.chi(f"Errore nel ripristino: {str(e)}")
+    doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))

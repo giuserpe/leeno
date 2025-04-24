@@ -509,6 +509,39 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     PL.autoexec()
 
 ########################################################################
+def rimuovi_righe_ridondanti():
+    """
+    Elimina righe ridondanti in Elenco Prezzi.
+
+    Comportamento:
+    1. Disabilita il refresh del documento.
+    2. Scorre le righe dal basso (controllo coppie n/n-1).
+    3. Elimina la riga n-1 se:
+        - Colonna A e B della riga n-1 sono substringhe della riga n.
+        - Colonna E della riga n-1 è vuota.
+
+    Avvertenze: modifica irreversibilmente il documento.
+    """
+
+    try:
+        LeenoUtils.DocumentRefresh(False)
+        oDoc = getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        lrow = getLastUsedCell(oSheet).EndRow
+        oProgressBar = create_progress_bar (title='Elimino le righe ridondanti', steps=lrow)
+        for el in reversed(range(lrow)):
+            oProgressBar.Value = el
+            if oSheet.getCellByPosition(0, el -1).String in oSheet.getCellByPosition(0, el).String and \
+            oSheet.getCellByPosition(1, el -1).String in oSheet.getCellByPosition(1, el).String and \
+            oSheet.getCellByPosition(4, el -1).String == '':
+                oSheet.getRows().removeByIndex(el -1, 1)
+        oProgressBar.reset()
+        oProgressBar.end()
+        LeenoUtils.DocumentRefresh(True)
+    except Exception as e:
+        DLG.errore(e)
+        LeenoUtils.DocumentRefresh(True)
+    return
 
 def MENU_emilia_romagna():
     '''

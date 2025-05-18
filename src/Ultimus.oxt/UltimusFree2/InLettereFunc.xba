@@ -380,5 +380,4 @@ SUB In_Let
 	oBarra.End
 	msgbox &quot; La conversione in LETTERE è terminata!!&quot;
 end sub
-rem ***** BASIC *****
 </script:module>

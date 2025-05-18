@@ -175,7 +175,7 @@ def riordina_ElencoPrezzi():
     '''
     callAlert()
     oDoc = LeenoUtils.getDocument()
-    PL.riordina_ElencoPrezzi(oDoc)
+    PL.riordina_ElencoPrezzi()
 
 
 def cancella_voci_non_usate():

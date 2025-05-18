@@ -15,8 +15,8 @@ import pyleeno as PL
 import LeenoEvents
 import LeenoBasicBridge
 import uno
-import itertools
-import operator
+# import itertools
+# import operator
 import LeenoConfig
 cfg = LeenoConfig.Config()
 
@@ -709,11 +709,10 @@ def GeneraLibretto(oDoc):
         for row in SAL:
             key = (row[1], row[2], row[3])  # Chiave di raggruppamento
             gruppi[key] += float(row[4])  # Somma diretta
+
         # Converti il dizionario in lista
         datiSAL = [list(k) + [v] for k, v in gruppi.items()]
-
-
-
+        datiSAL = sorted(datiSAL, key=lambda x: x[0])
 
         PL.comando ('DeletePrintArea')
         SheetUtils.visualizza_PageBreak()
@@ -1150,8 +1149,7 @@ def GeneraRegistro(oDoc):
     formule = []
     for x in range(insRow, lastRow + 1):
         formule.append(['=VLOOKUP(A' + str(x + 1) + ';elenco_prezzi;5;FALSE())',
-            '=D' + str(x + 1) + '*E' + str(x + 1)]
-            )
+            '=IF(C' + str(x + 1) + '="%";D' + str(x + 1) + '*E' + str(x + 1) + '/100;D' + str(x + 1) + '*E' + str(x + 1) + ')'])
 
     progress.setValue(3)
 

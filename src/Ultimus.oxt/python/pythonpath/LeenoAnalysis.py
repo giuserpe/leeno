@@ -56,27 +56,61 @@ def inizializzaAnalisi(oDoc):
     return oSheet, startRow
 
 
+# def circoscriveAnalisi(oSheet, lrow):
+#     '''
+#     lrow    { int }  : riga di riferimento per
+#                         la selezione dell'intera voce
+#     Circoscrive una voce di analisi
+#     partendo dalla posizione corrente del cursore
+#     '''
+#     stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
+#     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
+#         for el in reversed(range(0, lrow)):
+#             #  chi(oSheet.getCellByPosition(0, el).CellStyle)
+#             if oSheet.getCellByPosition(0, el).CellStyle == 'Analisi_Sfondo':
+#                 SR = el
+#                 break
+#         for el in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
+#             if oSheet.getCellByPosition(0, el).CellStyle == 'An-sfondo-basso Att End':
+#                 ER = el
+#                 break
+#     celle = oSheet.getCellRangeByPosition(0, SR, 250, ER)
+#     return celle
 def circoscriveAnalisi(oSheet, lrow):
     '''
-    lrow    { int }  : riga di riferimento per
-                        la selezione dell'intera voce
-    Circoscrive una voce di analisi
-    partendo dalla posizione corrente del cursore
+    Circoscrive una voce di analisi partendo dalla posizione corrente del cursore
+    
+    Args:
+        oSheet (object): Foglio di lavoro
+        lrow (int): Riga di riferimento per la selezione dell'intera voce
+    
+    Returns:
+        object: Intervallo di celle che rappresenta l'analisi
     '''
+    # Pre-carica gli stili necessari
     stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
-        for el in reversed(range(0, lrow)):
-            #  chi(oSheet.getCellByPosition(0, el).CellStyle)
-            if oSheet.getCellByPosition(0, el).CellStyle == 'Analisi_Sfondo':
-                SR = el
+    cell_style = oSheet.getCellByPosition(0, lrow).CellStyle
+    
+    # Variabili per i limiti
+    start_row = 0
+    end_row = SheetUtils.getLastUsedRow(oSheet)
+    
+    # Trova inizio analisi (cerca all'indietro)
+    if cell_style in stili_analisi:
+        # Ottimizzazione: usa xrange in Python 2 o range in Python 3
+        for row in reversed(range(lrow)):
+            if oSheet.getCellByPosition(0, row).CellStyle == 'Analisi_Sfondo':
+                start_row = row
                 break
-        for el in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
-            if oSheet.getCellByPosition(0, el).CellStyle == 'An-sfondo-basso Att End':
-                ER = el
+        
+        # Trova fine analisi (cerca in avanti)
+        for row in range(lrow, end_row + 1):
+            if oSheet.getCellByPosition(0, row).CellStyle == 'An-sfondo-basso Att End':
+                end_row = row
                 break
-    celle = oSheet.getCellRangeByPosition(0, SR, 250, ER)
-    return celle
-
+    
+    # Restituisci l'intervallo trovato (250 colonne è un valore arbitrario)
+    return oSheet.getCellRangeByPosition(0, start_row, 250, end_row)
 
 def copiaRigaAnalisi(oSheet, lrow):
     '''

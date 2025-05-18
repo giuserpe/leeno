@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
- <library:element library:name="Finale"/>
- <library:element library:name="Contab"/>
  <library:element library:name="InLettereFunc"/>
  <library:element library:name="Accessori"/>
+ <library:element library:name="Contab"/>
+ <library:element library:name="Finale"/>
  <library:element library:name="Cerca_Rior"/>
  <library:element library:name="_tools"/>
+ <library:element library:name="ListenerMouse"/>
  <library:element library:name="Taxi_temp"/>
  <library:element library:name="Finale_2"/>
- <library:element library:name="ListenerMouse"/>
  <library:element library:name="Header_Footer"/>
- <library:element library:name="Voci_Sistema"/>
  <library:element library:name="ListenersSelectRange"/>
- <library:element library:name="Digestione"/>
+ <library:element library:name="Voci_Sistema"/>
  <library:element library:name="Lupo_0"/>
- <library:element library:name="Voci_Crea_Att"/>
+ <library:element library:name="Digestione"/>
  <library:element library:name="_variabili"/>
+ <library:element library:name="Voci_Crea_Att"/>
  <library:element library:name="ShortC_temp"/>
  <library:element library:name="Zip"/>
  <library:element library:name="Menu"/>
@@ -26,11 +26,12 @@
  <library:element library:name="PY_bridge"/>
  <library:element library:name="Taxi"/>
  <library:element library:name="Taxi_Acc"/>
- <library:element library:name="file_gest"/>
  <library:element library:name="VarGlobal"/>
+ <library:element library:name="file_gest"/>
  <library:element library:name="Voci_Sposta"/>
- <library:element library:name="Attesa"/>
+ <library:element library:name="Analisi"/>
  <library:element library:name="Voci_Sposta_2"/>
+ <library:element library:name="Attesa"/>
  <library:element library:name="Varie_1"/>
  <library:element library:name="ShortCut"/>
  <library:element library:name="Cerca_Rior_2"/>

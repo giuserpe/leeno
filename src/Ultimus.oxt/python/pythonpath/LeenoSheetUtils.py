@@ -194,6 +194,10 @@ def rRow(oSheet):
             return n
 
 def cercaUltimaVoce(oSheet):
+    if oSheet.Name == 'Elenco Prezzi':
+        nRow = SheetUtils.getLastUsedRow(oSheet)
+        return nRow
+
     nRow = SheetUtils.getLastUsedRow(oSheet) +1
     if nRow == 0:
         return 0

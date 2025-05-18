@@ -363,6 +363,8 @@ def setPageStyle():
     '''
     Attribuisce ad ogni foglio il suo specifico stile di pagina.
     '''
+    importa_stili_pagina_non_presenti()
+
     stili = {
         'cP_Cop': 'Page_Style_COPERTINE',
         'COMPUTO': 'PageStyle_COMPUTO_A4',

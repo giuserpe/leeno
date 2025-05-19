@@ -2976,269 +2976,89 @@ def MENU_doppioni():
     LeenoUtils.DocumentRefresh(True)
 
 
-def _EliminaVociDoppieElencoPrezzi():
-    """Versione ottimizzata e corretta per la rimozione di voci doppie"""
-    COL_CODE = 0
-    MAX_COMPARE_COLS = 6  # Confronta fino alla colonna del markup
+def EliminaVociDoppieElencoPrezzi():
+    """
+    Rimuove dall'elenco prezzi:
+    1. Voci duplicate (stessa chiave fino a MAX_COMPARE_COLS, esclusa colonna 1)
+       - Per duplicati: mantiene righe con markup (col5) o prima riga
+    2. Tutte le voci che contengono "(AP)" nella colonna 8
+    3. Voci già presenti in Analisi
+    """
+    from collections import OrderedDict
+
+    # --- CONFIGURAZIONE ---
+    MARKUP_COL = 5             # Colonna markup/note
+    EXCLUDE_COL = 8            # Colonna per esclusione "(AP)"
+    MAX_COMPARE_COLS = 6       # Colonne per confronto duplicati
+    TOTAL_COLS = 14            # Totale colonne elenco
+    AP_FLAG = "(AP)"           # Testo da cercare per esclusione
 
     oDoc = LeenoUtils.getDocument()
     LeenoUtils.DocumentRefresh(False)
 
-    # 1. Recupera i codici dall'Analisi in modo ottimizzato
-    analysis_codes = set()
-    if oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-        last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-        for row in range(0, last_row + 1):
-            cell = oSheet.getCellByPosition(0, row)
-            if cell.CellStyle == 'An-1_sigla':
-                analysis_codes.add(cell.String)
+    # Recupera dati da Elenco Prezzi
+    if not oDoc.NamedRanges.hasByName('elenco_prezzi'):
+        LeenoUtils.DocumentRefresh(True)
+        return
 
-    # 2. Processa Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    named_range = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    named_range = oDoc.NamedRanges.getByName('elenco_prezzi').ReferredCells.RangeAddress
     start_row, end_row = named_range.StartRow + 1, named_range.EndRow - 1
 
     if end_row <= start_row:
         LeenoUtils.DocumentRefresh(True)
         return
 
-    # Lettura dati in blocco
-    data_range = oSheet.getCellRangeByPosition(0, start_row, 13, end_row)
+    # Lettura dati
+    data_range = oSheet.getCellRangeByPosition(0, start_row, TOTAL_COLS - 1, end_row)
     full_data = data_range.getDataArray()
 
-    # 3. Filtraggio dati in memoria
-    clean_data = []
-    seen_items = {}
-    duplicate_count = 0
-    codes_set = set()
-    has_duplicates = False
-
+    # Filtraggio dati
+    filtered_data = []
     for row in full_data:
-        current_code = row[COL_CODE]
-
-        # Salta righe presenti in Analisi
-        if current_code in analysis_codes:
-            duplicate_count += 1
+        # Escludi se contiene "(AP)" nella colonna 8
+        if EXCLUDE_COL < len(row) and AP_FLAG in str(row[EXCLUDE_COL]):
             continue
+            
+        filtered_data.append(row)
 
-        # Crea chiave per confronto duplicati (escludi colonna 1)
+    # Eliminazione duplicati
+    groups = OrderedDict()
+    for row in filtered_data:
         key = tuple(row[i] for i in range(MAX_COMPARE_COLS) if i != 1)
+        if key not in groups:
+            groups[key] = []
+        groups[key].append(row)
 
-        # Gestione duplicati
-        if key in seen_items:
-            existing = seen_items[key]
-            # Condizione duplicato:
-            # - almeno una delle due ha colonna 5 vuota
-            # - oppure entrambe hanno colonna 5 piena e sono uguali
-            if (
-                row[5] == '' or existing[5] == '' or
-                (row[5] == existing[5] and row[5] != '')
-            ):
-                duplicate_count += 1
-                # Se la nuova riga ha colonna 5 valorizzata e la precedente è vuota, sostituisci
-                if row[5] != '' and existing[5] == '':
-                    clean_data.remove(existing)
-                    clean_data.append(row)
-                    seen_items[key] = row
-                # Altrimenti, NON aggiungere la nuova riga (così ne resta solo una)
-            else:
-                # Se entrambe hanno colonna 5 piena ma diversa, sono distinte
-                seen_items[key + (len(clean_data),)] = row
-                clean_data.append(row)
+    clean_data = []
+    for rows in groups.values():
+        with_markup = [r for r in rows if r[MARKUP_COL] not in ('', None)]
+        
+        if with_markup:
+            clean_data.append(with_markup[0])
         else:
-            seen_items[key] = row
-            clean_data.append(row)
-            # Controllo duplicati per codice
-            if current_code in codes_set:
-                has_duplicates = True
-            codes_set.add(current_code)
+            clean_data.append(rows[0])
 
-    # 4. Scrittura ottimizzata
-    if duplicate_count > 0:
-        new_rows = len(clean_data)
-        # Ottimizzazione: modifica diretta se possibile
-        if new_rows == len(full_data):
-            data_range.setDataArray(clean_data)
-        else:
-            oSheet.getRows().removeByIndex(start_row, end_row - start_row + 1)
-            oSheet.getRows().insertByIndex(start_row, new_rows)
-            oSheet.getCellRangeByPosition(0, start_row, 13, start_row + new_rows - 1).setDataArray(clean_data)
+    # Scrittura risultati
+    if len(clean_data) != len(full_data):
+        oSheet.getRows().removeByIndex(start_row, end_row - start_row + 1)
+        oSheet.getRows().insertByIndex(start_row, len(clean_data))
+        
+        output_range = oSheet.getCellRangeByPosition(
+            0, start_row, 
+            TOTAL_COLS - 1, 
+            start_row + len(clean_data) - 1
+        )
+        output_range.setDataArray(clean_data)
 
-    # 5. Avviso duplicati residui
-    # if has_duplicates:
-    #     Dialogs.Exclamation(
-    #         Title='ATTENZIONE!',
-    #         Text='''Ci sono ancora 2 o più voci che hanno
-    # lo stesso Codice Articolo pur essendo diverse.'''
-    #     )
-
-    # 6. Operazioni finali
+    # Operazioni finali
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         tante_analisi_in_ep()
-
+        
     riordina_ElencoPrezzi()
     LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.ripristina_posizione()
 
-def EliminaVociDoppieElencoPrezzi():
-    """
-    Rimuove le voci duplicate dall'elenco prezzi seguendo queste regole:
-    - Due righe sono duplicate se hanno la stessa chiave (tutte le colonne fino a MAX_COMPARE_COLS, esclusa la colonna 1)
-    - Per ogni gruppo di duplicati:
-        * Se almeno una riga ha la colonna MARKUP_COL valorizzata, mantiene una qualsiasi di quelle valorizzate
-        * Altrimenti, mantiene solo la prima riga del gruppo
-    - Le righe già presenti in Analisi vengono sempre escluse
-    
-    Miglioramenti apportati:
-    1. Aggiunte costanti configurabili all'inizio
-    2. Migliore gestione degli errori
-    3. Ottimizzazione delle operazioni su celle
-    4. Commenti più dettagliati
-    5. Struttura più modulare
-    6. Logging delle operazioni
-    """
-    import logging
-    from collections import OrderedDict
-    from time import time
-
-    # --- CONFIGURAZIONE ---
-    COL_CODE = 0               # Colonna del codice voce
-    MARKUP_COL = 5             # Colonna del markup/note (parte dalla 0)
-    MAX_COMPARE_COLS = 6       # Numero di colonne da considerare per il confronto
-    SHEET_NAME = 'Elenco Prezzi'
-    ANALYSIS_SHEET = 'Analisi di Prezzo'
-    NAMED_RANGE = 'elenco_prezzi'
-    TOTAL_COLS = 14            # Numero totale di colonne nell'elenco prezzi
-    
-    # Configura logging
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    start_time = time()
-
-    try:
-        oDoc = LeenoUtils.getDocument()
-        LeenoUtils.DocumentRefresh(False)
-        logger.info("Inizio pulizia voci doppie nell'elenco prezzi")
-
-        # 1. Recupera i codici dall'Analisi (se esiste)
-        analysis_codes = set()
-        if oDoc.getSheets().hasByName(ANALYSIS_SHEET):
-            logger.info(f"Lettura codici dal foglio {ANALYSIS_SHEET}")
-            oSheet = oDoc.getSheets().getByName(ANALYSIS_SHEET)
-            last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            
-            # Ottimizzazione: legge tutta la colonna in una volta
-            code_col = oSheet.getCellRangeByPosition(COL_CODE, 0, COL_CODE, last_row)
-            codes = code_col.getDataArray()
-            
-            style_col = oSheet.getCellRangeByPosition(COL_CODE, 0, COL_CODE, last_row)
-            styles = style_col.getCellStyles()
-            
-            for i, (code, style) in enumerate(zip(codes, styles)):
-                if style == 'An-1_sigla':
-                    analysis_codes.add(code[0])  # codes è una lista di liste
-            
-            logger.info(f"Trovati {len(analysis_codes)} codici da escludere")
-
-        # 2. Recupera dati da Elenco Prezzi
-        if not oDoc.getSheets().hasByName(SHEET_NAME):
-            raise Exception(f"Foglio {SHEET_NAME} non trovato")
-            
-        if not oDoc.NamedRanges.hasByName(NAMED_RANGE):
-            raise Exception(f"Intervallo nominato {NAMED_RANGE} non trovato")
-
-        oSheet = oDoc.getSheets().getByName(SHEET_NAME)
-        named_range = oDoc.NamedRanges.getByName(NAMED_RANGE).ReferredCells.RangeAddress
-        start_row, end_row = named_range.StartRow + 1, named_range.EndRow - 1
-
-        if end_row <= start_row:
-            logger.info("Nessun dato da processare")
-            LeenoUtils.DocumentRefresh(True)
-            return
-
-        logger.info(f"Elaborazione righe da {start_row} a {end_row}")
-        
-        # Ottimizzazione: legge tutti i dati in una singola operazione
-        data_range = oSheet.getCellRangeByPosition(0, start_row, TOTAL_COLS - 1, end_row)
-        full_data = data_range.getDataArray()
-        original_count = len(full_data)
-        logger.info(f"Letti {original_count} righe")
-
-        # 3. Raggruppa righe per chiave (escludi colonna 1)
-        groups = OrderedDict()
-        duplicates_count = 0
-        
-        for row in full_data:
-            current_code = row[COL_CODE]
-            if current_code in analysis_codes:
-                continue
-                
-            # Crea la chiave di confronto (escludendo colonna 1)
-            key = tuple(row[i] for i in range(MAX_COMPARE_COLS) if i != 1)
-            
-            if key not in groups:
-                groups[key] = []
-            else:
-                duplicates_count += 1
-                
-            groups[key].append(row)
-
-        logger.info(f"Trovati {duplicates_count} duplicati in {len(groups)} gruppi")
-
-        # 4. Filtra i gruppi mantenendo solo le righe necessarie
-        clean_data = []
-        removed_count = 0
-        
-        for key, rows in groups.items():
-            # Cerca righe con markup valorizzato
-            with_markup = [r for r in rows if r[MARKUP_COL] not in ('', None)]
-            
-            if with_markup:
-                clean_data.append(with_markup[0])
-                removed_count += len(rows) - 1
-            else:
-                clean_data.append(rows[0])
-                removed_count += len(rows) - 1
-
-        logger.info(f"Rimosse {removed_count} righe duplicate")
-
-        # 5. Scrittura ottimizzata (solo se necessario)
-        if len(clean_data) != original_count or any(
-            any(a != b for a, b in zip(row1, row2)) 
-            for row1, row2 in zip(clean_data, full_data)
-        ):
-            logger.info("Applicazione modifiche all'elenco prezzi")
-            
-            # Ottimizzazione: operazioni batch
-            oSheet.getRows().removeByIndex(start_row, end_row - start_row + 1)
-            oSheet.getRows().insertByIndex(start_row, len(clean_data))
-            output_range = oSheet.getCellRangeByPosition(
-                0, start_row, 
-                TOTAL_COLS - 1, 
-                start_row + len(clean_data) - 1
-            )
-            output_range.setDataArray(clean_data)
-            
-            logger.info(f"Scritte {len(clean_data)} righe pulite")
-        else:
-            logger.info("Nessuna modifica necessaria")
-
-        # 6. Operazioni finali
-        if oDoc.getSheets().hasByName(ANALYSIS_SHEET):
-            logger.info("Esecuzione tante_analisi_in_ep()")
-            tante_analisi_in_ep()
-            
-        logger.info("Riordinamento elenco prezzi")
-        riordina_ElencoPrezzi()
-
-        elapsed_time = time() - start_time
-        logger.info(f"Operazione completata in {elapsed_time:.2f} secondi")
-
-    except Exception as e:
-        logger.error(f"Errore durante l'elaborazione: {str(e)}")
-        raise
-    finally:
-        LeenoUtils.DocumentRefresh(True)
 ########################################################################
 # Scrive un file.
 def XPWE_out(elaborato, out_file):
@@ -11737,113 +11557,6 @@ def MENU_debug():
     LeenoUtils.DocumentRefresh(True)
     return
 
-    for i in range(1, 101):
-        time.sleep(0.1)
-    
-    
-    # return
-    
-    
-
-
-    # dv = LeenoComputo.DatiVoce(oSheet, lrow)
-
-    # DLG.chi(dv)
-    DLG.chi(dv.SR)
-    DLG.chi(dv.ER)
-
-    # trova_colore_cella()
-    return
-    # codice_colore_cella()
-    return
-    for el in range(0, lrow):
-        if oSheet.getCellByPosition(0, el).CellStyle in ('comp 10 s_R'):
-            oSheet.getCellByPosition(0, el).CellStyle = 'comp 10 s'
-            # oSheet.getCellByPosition(2, el).String == '#N/A':
-            # oSheet.getCellByPosition(1, el).String = 'NP_' + oSheet.getCellByPosition(1, el).String
-
-    return
-    # struct(6, vedi=True)
-    # struct(6, vedi=True)
-    # struct(7, vedi=True)
-    return
-    # oDoc = getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
-    # lrow = LeggiPosizioneCorrente()[1]
-
-    # rigenera_voce(lrow)
-    return
-    cerca_rosso_mancante()
-    # return
-
-        
-
-
-
-    # Copia_riga_Ent(10)
-
-    return
-    DLG.mri(oSheet)
-    return
-    catalogo_stili_cella()
-    # er = getLastUsedCell(oSheet).EndRow + 1
-    # for el in range(0, er):
-    #     if oSheet.getCellByPosition(2, el).CellStyle in ('comp sotto centro', 'comp sotto centro_R'):
-    #         if oSheet.getCellByPosition(2, el).IsMerged == True:
-    #             _gotoCella(2, el)
-    #             comando('SplitCell')
-
-
-
-
-    return
-
-    
-
-    # DLG.chi(LeggiPosizioneCorrente()[1])
-    # LeenoUtils.DocumentRefresh(False)
-    # MENU_elenco_puntato_misure()
-    # return
-
-    # DLG.chi(8)
-    # sposta_voce()
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    # oCellAddress = oSheet.getCellByPosition(, y+1).getCellAddress()
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr.StartColumn = 0
-    oCellRangeAddr.StartRow = ufind
-    oCellRangeAddr.EndColumn = 50
-    oCellRangeAddr.EndRow = ufind
-    # setPreview()
-    # oSheet.copyRange(oCellAddress, oCellRangeAddr)
-    return
-    LeenoUtils.verify_and_close_preview()
-    return
-    o_range = oDoc.CurrentSelection
-    LeenoUtils.reset_properties(o_range, cell_formatting=True, character_formatting=True)
-    return
-    # funzioni per misurare la velocità delle macro
-    from datetime import datetime, date
-    datarif = datetime.now()
-    # vSintetica(True)
-    vSintetica(False)
-    DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
-    return
-    pesca_cod()
-    # io = inputbox('messaggio')
-    # DLG.chi(io)
-    return
-    try:
-        i
-    except:
-        # DLG.errore(e)
-        # DLG.chi(type(i).__name__)
-        DLG.chi(traceback.print_exc())
-    # DLG.chi(i)
-    # DLG.chi(LeenoGlobals.dest())
-    return
-    sistema_cose()
-    return
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

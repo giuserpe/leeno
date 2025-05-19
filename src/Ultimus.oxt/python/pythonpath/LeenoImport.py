@@ -81,6 +81,7 @@ def findXmlParser(xmlText):
         '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
         '<autore>LOM': LeenoImport_XmlLombardia.parseXML,
         'xsi:noNamespaceSchemaLocation="Parte': LeenoImport_XmlLombardia.parseXML1,
+        'urn:schemas-microsoft-com:officedata': LeenoImport_XmlLombardia.parseXML1,
     }
 
     # controlla se il file è di tipo conosciuto...

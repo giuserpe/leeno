@@ -176,8 +176,7 @@ def parseXML1(data, defaultTitle=None):
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
     root = LeenoImport.stripXMLNamespaces(data)
-    titolo = root.items()[0][-1].split('.')[0]
-
+    titolo = root.items()[0][-1].split('.')[0].replace(':','_')
     # ~ voci = root.find('Parte3')
     # ~ voci = list(root.getchildren())
     voci = list(root)
@@ -211,11 +210,19 @@ def parseXML1(data, defaultTitle=None):
             um = ''
             madre = desc
         try:
-            prezzo = float(voce.find('Prezzo').text)
+            prezzo_testo = voce.find('Prezzo').text.strip().replace(' €', '')
+            # Gestione formattazione europea (1.234,56 → 1234.56)
+            prezzo_testo = prezzo_testo.replace('.', '').replace(',', '.')
+            prezzo = float(prezzo_testo) if prezzo_testo else ''
         except:
             prezzo = ''
         try:
-            mdo = float(voce.find('Rapporto_RU').text)
+            mdo = float(voce.find('Rapporto_RU').text.replace(' €',''))
+
+            mdo_testo = voce.find('Prezzo').text.strip().replace(' €', '')
+            # Gestione formattazione europea (1.234,56 → 1234.56)
+            mdo_testo = mdo_testo.replace('.', '').replace(',', '.')
+            mdo = float(mdo_testo) if mdo_testo else ''
         except:
             mdo = ''
 

@@ -146,12 +146,12 @@ def getCursorPosition(document):
     Get the current cursor position in the active sheet of a Calc document.
     Returns (row, column) or None if the document is not a Calc spreadsheet.
     '''
-    if not document.supportsService("com.sun.star.sheet.SpreadsheetDocument"):
-        print("Il documento non è un foglio di calcolo.")
-        return None
+    # if not document.supportsService("com.sun.star.sheet.SpreadsheetDocument"):
+    #     print("Il documento non è un foglio di calcolo.")
+    #     return None
 
     controller = document.getCurrentController()
-    active_sheet = controller.getActiveSheet()
+    # active_sheet = controller.getActiveSheet()
     selection = controller.getSelection()
 
     if selection is not None and hasattr(selection, "getRangeAddress"):

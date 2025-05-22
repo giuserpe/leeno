@@ -9,6 +9,7 @@ import unohelper
 
 from com.sun.star.beans import PropertyValue
 from datetime import date
+from contextlib import contextmanager
 
 import calendar
 
@@ -161,6 +162,7 @@ def getCursorPosition(document):
     return None
 ###############################################################################
 
+
 def DocumentRefresh(boo):
     '''
     Abilita / disabilita il refresh per accelerare le procedure
@@ -180,6 +182,26 @@ def DocumentRefresh(boo):
         oDoc.lockControllers()
         oDoc.addActionLock()
 
+
+@contextmanager
+def DocumentRefreshContext(enable_refresh: bool):
+    """
+    Context manager per gestire lo stato di refresh del documento.
+    
+    Esempio d'uso:
+    with LeenoUtils.DocumentRefreshContext(False):
+        # Operazioni veloci senza refresh
+        ...
+    # All'uscita il refresh viene riabilitato automaticamente
+    """
+    original_state = not enable_refresh
+    DocumentRefresh(enable_refresh)
+    try:
+        yield
+    finally:
+        DocumentRefresh(original_state)
+
+###############################################################################
 
 def getGlobalVar(name):
     if type(__builtins__) == type(sys):

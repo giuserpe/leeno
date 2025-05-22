@@ -216,6 +216,10 @@ def compilaElencoPrezzi(oDoc, dati, progress):
 
 
 def MENU_ImportElencoPrezziXML():
+    with LeenoUtils.DocumentRefreshContext(False):
+        ImportElencoPrezziXML()
+
+def ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
     '''

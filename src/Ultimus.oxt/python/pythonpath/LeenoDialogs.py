@@ -36,17 +36,6 @@ from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
 
-def barra_di_stato(testo='', valore=0):
-    '''Informa l'utente sullo stato progressivo dell'elaborazione.'''
-    oDoc = LeenoUtils.getDocument()
-    oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
-    oProgressBar.start('', 100)
-    oProgressBar.Value = valore
-    oProgressBar.Text = testo
-    oProgressBar.reset()
-    oProgressBar.end()
-
-
 def chi(s):
     '''
     s    { object }  : oggetto da interrogare

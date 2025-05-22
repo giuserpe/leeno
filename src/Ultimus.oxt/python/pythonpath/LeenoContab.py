@@ -1406,28 +1406,28 @@ def GeneraAttiContabili():
     '''
     Genera atti contabili.
     '''
-    # ~ LeenoUtils.DocumentRefresh(False)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name != "CONTABILITA":
-        # ~ LeenoUtils.DocumentRefresh(True)
-        return
-    # la generazione del libretto è inclusa in GeneraRegistro()
-    # ~ GeneraLibretto(oDoc)
+    with LeenoUtils.DocumentRefreshContext(False):
 
-    GeneraRegistro(oDoc)
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        if oSheet.Name != "CONTABILITA":
+            return
 
-    listaSal = ultimo_sal()
-    try:
-        nSal = int(listaSal[-1])
-        mostra_sal(nSal)
-    except Exception as e:
-        # ~ DLG.errore(e)
-        pass
-    PL.GotoSheet('CONTABILITA')
+        # la generazione del libretto è inclusa in GeneraRegistro()
+        # ~ GeneraLibretto(oDoc)
+        GeneraRegistro(oDoc)
 
-    # ~Dialogs.Info(Title = 'Voci registrate!',
-        # ~Text="La generazione degli allegati contabili è stata completata.")
+        listaSal = ultimo_sal()
+        try:
+            nSal = int(listaSal[-1])
+            mostra_sal(nSal)
+        except Exception as e:
+            # ~ DLG.errore(e)
+            pass
+        PL.GotoSheet('CONTABILITA')
+
+        # ~Dialogs.Info(Title = 'Voci registrate!',
+            # ~Text="La generazione degli allegati contabili è stata completata.")
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

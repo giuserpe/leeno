@@ -9,6 +9,7 @@ from com.sun.star.beans import PropertyValue
 import pyleeno as PL
 import LeenoUtils
 import SheetUtils
+import LeenoSheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import Dialogs
@@ -101,86 +102,355 @@ def setVisibilitaColonne(oSheet, sValori):
 
 # ###############################################################
 
+def getColumnWidths(oSheet):
+    '''
+    Legge tutte le impostazioni delle colonne 
+    Restituisce: dict con widths, hidden_ranges, group_levels, visible_cols, freeze
+    '''
+    def col_index_to_letter(n):
+        name = ''
+        while n >= 0:
+            name = chr(ord('A') + (n % 26)) + name
+            n = n // 26 - 1
+            if n < 0:
+                break
+        return name or 'A'
+
+    config = {
+        'widths': {},
+        'hidden_ranges': [],
+        'group_levels': {},
+        'visible_cols': '',
+        'freeze': None
+    }
+
+    try:
+        # 1. Rileva colonne/righe bloccate
+        try:
+            freeze_cols = oSheet.FreezeColumns
+            freeze_rows = oSheet.FreezeRows
+            if freeze_cols > 0 or freeze_rows > 0:
+                config['freeze'] = (freeze_cols, freeze_rows)
+        except Exception as e:
+            print(f"Errore freeze: {str(e)}")
+
+        # 2. Analizza tutte le colonne
+        cols = oSheet.getColumns()
+        col_count = 26
+        visible_cols = []
+        
+        for col_idx in range(col_count):
+            try:
+                col = cols.getByIndex(col_idx)
+                col_letter = col_index_to_letter(col_idx)
+                
+                # Larghezza colonna
+                width = col.Width
+                config['widths'][col_letter] = width
+                
+                # Visibilità colonna (invertita in Calc)
+                visible_cols.append('T' if col.IsVisible else 'F')
+                
+                # Livelli di raggruppamento
+                outline_level = col.getPropertyValue("OutlineLevel")
+                if outline_level > 0:
+                    config['group_levels'][col_letter] = outline_level
+                    
+            except Exception as e:
+                print(f"Errore colonna {col_idx}: {str(e)}")
+                continue
+
+        # 3. Elabora i risultati
+        config['visible_cols'] = optimize_visibility_string(''.join(visible_cols))
+        config['hidden_ranges'] = find_hidden_ranges(visible_cols)
+        
+    except Exception as e:
+        print(f"Errore generale: {str(e)}")
+    
+    return config
+
+def optimize_visibility_string(s):
+    '''Compatta la stringa di visibilità per colonne consecutive'''
+    from itertools import groupby
+    result = []
+    for k, g in groupby(s):
+        count = len(list(g))
+        if count > 5:
+            result.append(f"'{k}'*{count}")
+        else:
+            result.append(k * count)
+    return '+'.join(result)
+
+def find_hidden_ranges(visible_list):
+    '''Identifica range di colonne nascoste in formato (start, end)'''
+    ranges = []
+    start = None
+    
+    for i, visible in enumerate(visible_list):
+        if visible == 'F':
+            if start is None:
+                start = i
+        elif start is not None:
+            ranges.append((start, i-1))
+            start = None
+    
+    if start is not None:
+        ranges.append((start, len(visible_list)-1))
+    
+    return [r for r in ranges if r[1] >= r[0]]
+
+def generate_config_snippet(oSheet):
+    '''Genera la configurazione pronta per l'uso'''
+    config = getColumnWidths(oSheet)
+    
+    if not any([config['widths'], config['freeze'], config['group_levels'], 'F' in config['visible_cols']]):
+        return "Nessuna impostazione personalizzata trovata"
+
+    snippet = [f"'{oSheet.getName()}': {{"]
+    
+    # Widths
+    if config['widths']:
+        snippet.append("'widths': {")
+        for col in sorted(config['widths'], key=lambda x: (len(x), x)):
+            snippet.append(f"'{col}': {config['widths'][col]},")
+        snippet.append("},")
+    
+    # Visibilità
+    # if 'F' in config['visible_cols']:
+    #     snippet.append(f"'visible_cols': \"{config['visible_cols']}\",")
+    
+    # Freeze
+    if config['freeze']:
+        snippet.append(f"'freeze': {config['freeze']},")
+    
+    # Raggruppamenti
+    if config['group_levels']:
+        snippet.append(f"'group_levels': {config['group_levels']},")
+    
+    # Nascoste
+    if config['hidden_ranges']:
+        snippet.append(f"'hidden_ranges': {config['hidden_ranges']},")
+    
+    snippet.append("}")
+    return ' '.join(snippet)
+
+def show_config_snippet():
+    '''Mostra la configurazione in una dialog'''
+    try:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        
+        config = generate_config_snippet(oSheet)
+        
+        if "Nessuna impostazione" in config:
+            DLG.chi("Nessuna impostazione personalizzata trovata")
+        else:
+            DLG.chi(
+                "=== CONFIGURAZIONE COLONNE ===\n"
+                "Copia questo codice:\n\n" +
+                config +
+                "\n\nSostituisci nel dizionario sheet_configs"
+            )
+            
+    except Exception as e:
+        DLG.chi(f"ERRORE: {str(e)}\nAssicurati che:\n1. Un foglio sia aperto\n2. Le macro siano abilitate")
+# Esempio di sheet_configs risultante
+'''
+sheet_configs = {
+    'Elenco Prezzi': {
+        'widths': {'A': 1535, 'B': 11407, ...},
+        'visible_cols': "T'*12+'F'*188+'T'*200",
+        'hidden_ranges': [(12, 199)],
+        'group_levels': {'C': 1, 'D': 2},
+        'freeze': (0, 3)
+    }
+}
+'''
+
+
+
 def setLarghezzaColonne(oSheet):
     '''
-    regola la larghezza delle colonne a seconda della sheet
+    Regola la larghezza delle colonne e altre proprietà visive in base al foglio specifico
+    Args:
+        oSheet: L'oggetto foglio di lavoro su cui operare
     '''
-    oDoc = LeenoUtils.getDocument()
-    vRow = oDoc.CurrentController.getFirstVisibleRow()
+    # Configurazioni predefinite per tutti i fogli
+    SHEET_CONFIGS = {
+        'Analisi di Prezzo': {
+            'widths': {
+                'A': 1600, 'B': 11000, 'C': 1500, 'D': 1500, 'E': 1500,
+                'F': 1500, 'G': 1500, 'H': 2000, 'I': 1900, 'J': 1900, 'K': 1900
+            },
+            'freeze': (0, 2),
+            'visible_cols': None
+        },
+        'CONTABILITA': {
+            'widths': {
+                'A': 600, 'B': 1500, 'C': 8700, 'F': 1300, 'G': 1300,
+                'H': 1300, 'I': 1300, 'J': 1700, 'L': 1700, 'N': 1900,
+                'P': 1900, 'T': 1000, 'U': 1000, 'W': 1000, 'X': 1000,
+                'Z': 1900, 'AC': 1700, 'AD': 1800, 'AE': 1800,
+                'AX': 1900, 'AY': 1900
+            },
+            'freeze': (0, 3),
+            'visible_cols': 'TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF',
+            'range_widths': [
+                (13, 1023, 1900),
+                (19, 23, 1000)
+            ],
+            'hidden_ranges': [
+                (51, 1023)
+            ]
+        },
+        'COMPUTO': {
+            'widths': {
+                'A': 600, 'B': 1500, 'C': 6300, 'F': 1500, 'G': 1300,
+                'H': 1300, 'I': 1300, 'J': 1700, 'L': 1700, 'S': 1950,
+                'AC': 1700, 'AD': 1800, 'AE': 1800
+            },
+            'freeze': (0, 3),
+            'visible_cols': 'TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT',
+            'visible_ranges': [
+                (5, 8)
+            ]
+        },
+        'VARIANTE': {
+            'widths': {
+                'A': 600, 'B': 1500, 'C': 6300, 'F': 1500, 'G': 1300,
+                'H': 1300, 'I': 1300, 'J': 1700, 'L': 1700, 'S': 1950,
+                'AC': 1700, 'AD': 1800, 'AE': 1800
+            },
+            'freeze': (0, 3),
+            'visible_cols': 'TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT',
+            'visible_ranges': [
+                (5, 8)
+            ]
+        },
+        'Elenco Prezzi': {
+            'default': {
+                'widths': { 'A': 1600, 'B': 9999, 'C': 1499, 'D': 1499,
+                    'E': 1600, 'F': 1499, 'G': 1499, 'H': 1600, 'I': 1199,
+                    'J': 1199, 'K': 101, 'L': 1600, 'M': 1600, 'N': 1600,
+                    'O': 101, 'P': 1600, 'Q': 1600, 'R': 1600, 'S': 101,
+                    'T': 2000, 'U': 2000, 'V': 2000, 'W': 101, 'X': 2000,
+                    'Y': 2000, 'Z': 1500,
+                },
+                'hidden_ranges': [
+                    (6, 9), (3, 3)
+                ],
+                'visible_ranges': [
+                    (6, 9), (3, 3)
+                ]
+            },
+            'COMPUTO_VARIANTE': {
+                'widths': {
+                    'A': 1600, 'B': 9999, 'C': 1499, 'D': 1499, 'E': 1600,
+                    'F': 1499, 'G': 1499, 'H': 1600, 'I': 1199, 'J': 1199,
+                    'K': 101, 'L': 1600, 'M': 1600, 'N': 1600, 'O': 101,
+                    'P': 1600, 'Q': 1600, 'R': 1600, 'S': 101, 'T': 2000,
+                    'U': 2000, 'V': 2000, 'W': 101, 'X': 2000, 'Y': 2000,
+                    'Z': 1500
+                },
+                'hidden_ranges': [
+                    (3, 3), (5, 9), (13, 13), (16, 17), (21, 21)
+                ]
+            },
+            'COMPUTO_CONTABILITÀ': {
+                'widths': {
+                    'A': 1600, 'B': 9999, 'C': 1499, 'D': 1499, 'E': 1600,
+                    'F': 1499, 'G': 1499, 'H': 1600, 'I': 1199, 'J': 1199,
+                    'K': 101, 'L': 1600, 'M': 1600, 'N': 1600, 'O': 101,
+                    'P': 1600, 'Q': 1600, 'R': 1600, 'S': 101, 'T': 2000,
+                    'U': 2000, 'V': 2000, 'W': 101, 'X': 2000, 'Y': 2000,
+                    'Z': 1500,
+                },
+                'hidden_ranges': [
+                    (3, 3), (5, 9), (12, 12), (15, 15), (17, 17), (20, 20)
+                ],
+            },
+            'VARIANTE_CONTABILITÀ': {
+                'widths': {
+                    'A': 1600, 'B': 9999, 'C': 1499, 'D': 1499, 'E': 1600,
+                    'F': 1499, 'G': 1499, 'H': 1600, 'I': 1199, 'J': 1199,
+                    'K': 101, 'L': 1600, 'M': 1600, 'N': 1600, 'O': 101,
+                    'P': 1600, 'Q': 1600, 'R': 1600, 'S': 101, 'T': 2000,
+                    'U': 2000, 'V': 2000, 'W': 101, 'X': 2000, 'Y': 2000,
+                    'Z': 1500,
+                },
+                'hidden_ranges': [
+                    (3, 3), (6, 9), (11, 11), (15, 16), (19, 19)
+                ],
+            },
+        }
+    }
+    with LeenoUtils.DocumentRefreshContext(False):
+        memorizza_posizione()
 
-    if oSheet.Name == 'Analisi di Prezzo':
-        for col, width in {'A':1600, 'B':11000, 'C':1500, 'D':1500, 'E':1500, 'F':1500,
-                           'G':1500, 'H':2000, 'I':1900, 'J':1900, 'K':1900}.items():
+        # Gestione speciale per Elenco Prezzi
+        if oSheet.Name == 'Elenco Prezzi':
+            oSheet.clearOutline()
+            x1_value = oSheet.getCellRangeByName("X1").String
+
+            if str(x1_value).strip() == 'COMPUTO_VARIANTE':
+                variant = 'COMPUTO_VARIANTE'
+
+            elif str(x1_value).strip() == 'COMPUTO_CONTABILITÀ':
+                variant = 'COMPUTO_CONTABILITÀ'
+
+            elif str(x1_value).strip() == 'VARIANTE_CONTABILITÀ':
+                variant = 'VARIANTE_CONTABILITÀ'
+
+            else:
+                variant = 'default'
+
+            config = SHEET_CONFIGS['Elenco Prezzi'].get(variant)
+
+        else:
+            config = SHEET_CONFIGS.get(oSheet.Name)
+
+        if not config:
+            ripristina_posizione()
+            return
+
+        # Applicazione delle configurazioni
+        # try:
+            # Impostazione larghezze colonne
+        for col, width in config.get('widths', {}).items():
             oSheet.Columns[col].Width = width
-        SheetUtils.freezeRowCol(oSheet, 0, 2)
 
-    elif oSheet.Name == 'CONTABILITA':
-        setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
-        # larghezza colonne importi
-        oSheet.getCellRangeByPosition(13, 0, 1023, 0).Columns.Width = 1900
-        # larghezza colonne importi
-        oSheet.getCellRangeByPosition(19, 0, 23, 0).Columns.Width = 1000
-        # nascondi colonne
-        oSheet.getCellRangeByPosition(51, 0, 1023, 0).Columns.IsVisible = False
+        # Gestione proprietà speciali
+        for col in config.get('optimal_widths', []):
+            oSheet.Columns[col].OptimalWidth = True
 
-        for col, width in {'A':600, 'B':1500, 'C':8700, 'F':1300, 'G':1300,
-                           'H':1300, 'I':1300, 'J':1700, 'L':1700, 'N':1900,
-                           'P':1900, 'T':1000, 'U':1000, 'W':1000, 'X':1000,
-                           'Z':1900, 'AC':1700, 'AD':1800, 'AE':1800,
-                           'AX':1900, 'AY':1900}.items():
-            oSheet.Columns[col].Width = width
-        SheetUtils.freezeRowCol(oSheet, 0, 3)
+        for start, end, width in config.get('range_widths', []):
+            oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.Width = width
 
-    elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        # mostra colonne
-        oSheet.getCellRangeByPosition(5, 0, 8, 0).Columns.IsVisible = True
+        # Gestione visibilità colonne
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct(
+            'com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        for start, end in config.get('hidden_ranges', []):
+            oCellRangeAddr.StartColumn = start
+            oCellRangeAddr.EndColumn = end
+            # oSheet.ungroup(oCellRangeAddr, 0)
+            # PL.struttura_off()
+            oSheet.group(oCellRangeAddr, 0)
+            oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible = False
 
-        oSheet.getColumns().getByName('A').Columns.Width = 600
-        oSheet.getColumns().getByName('B').Columns.Width = 1500
-        oSheet.getColumns().getByName('C').Columns.Width = 6300  # 7800
-        oSheet.getColumns().getByName('F').Columns.Width = 1500
-        oSheet.getColumns().getByName('G').Columns.Width = 1300
-        oSheet.getColumns().getByName('H').Columns.Width = 1300
-        oSheet.getColumns().getByName('I').Columns.Width = 1300
-        oSheet.getColumns().getByName('J').Columns.Width = 1700
-        oSheet.getColumns().getByName('L').Columns.Width = 1700
-        oSheet.getColumns().getByName('S').Columns.Width = 1950
-        oSheet.getColumns().getByName('AC').Columns.Width = 1700
-        oSheet.getColumns().getByName('AD').Columns.Width = 1800
-        oSheet.getColumns().getByName('AE').Columns.Width = 1800
-        SheetUtils.freezeRowCol(oSheet, 0, 3)
-        setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
-    if oSheet.Name == 'Elenco Prezzi':
-        oSheet.getColumns().getByName('A').Columns.Width = 1600
-        oSheet.getColumns().getByName('B').Columns.Width = 10000
-        oSheet.getColumns().getByName('C').Columns.Width = 1500
-        oSheet.getColumns().getByName('D').Columns.Width = 1500
-        oSheet.getColumns().getByName('E').Columns.Width = 1600
-        oSheet.getColumns().getByName('F').Columns.Width = 1500
-        oSheet.getColumns().getByName('G').Columns.Width = 1500
-        oSheet.getColumns().getByName('H').Columns.Width = 1600
-        oSheet.getColumns().getByName('I').Columns.Width = 1200
-        oSheet.getColumns().getByName('J').Columns.Width = 1200
-        oSheet.getColumns().getByName('K').Columns.Width = 100
-        oSheet.getColumns().getByName('L').Columns.Width = 1600
-        oSheet.getColumns().getByName('M').Columns.Width = 1600
-        oSheet.getColumns().getByName('N').Columns.OptimalWidth = True
-        oSheet.getColumns().getByName('O').Columns.Width = 100
-        oSheet.getColumns().getByName('P').Columns.Width = 1600
-        oSheet.getColumns().getByName('Q').Columns.Width = 1600
-        oSheet.getColumns().getByName('R').Columns.OptimalWidth = True
-        oSheet.getColumns().getByName('S').Columns.Width = 100
-        oSheet.getColumns().getByName('T').Columns.Width = 1600
-        oSheet.getColumns().getByName('U').Columns.Width = 1600
-        oSheet.getColumns().getByName('V').Columns.OptimalWidth = True
-        oSheet.getColumns().getByName('W').Columns.Width = 100
-        oSheet.getColumns().getByName('X').Columns.Width = 1600
-        oSheet.getColumns().getByName('Y').Columns.OptimalWidth = True
-        oSheet.getColumns().getByName('Z').Columns.OptimalWidth = True
-        oSheet.getColumns().getByName('AA').Columns.Width = 1600
-        SheetUtils.freezeRowCol(oSheet, 0, 3)
-    adattaAltezzaRiga(oSheet)
-    oDoc.CurrentController.setFirstVisibleRow(vRow)
+        for start, end in config.get('visible_ranges', []):
+            oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible = True
+
+        if 'visible_cols' in config and config['visible_cols']:
+            setVisibilitaColonne(oSheet, config['visible_cols'])
+
+        if 'freeze' in config:
+            SheetUtils.freezeRowCol(oSheet, *config['freeze'])
+
+        adattaAltezzaRiga(oSheet)
+        # finally:
+        ripristina_posizione()
 # ###############################################################
 def rRow(oSheet):
     '''
@@ -522,24 +792,22 @@ def inserisciRigaRossa(oSheet):
         lrow = cercaUltimaVoce(oSheet)
         if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':
             lrow += 1
+
         oSheet.getCellByPosition(0, lrow).String = 'Fine elenco'
-        oSheet.getCellRangeByPosition(0, lrow, 9, lrow).CellStyle = 'Riga_rossa_Chiudi'
-        oSheet.getCellRangeByPosition(11, lrow, 21, lrow).CellStyle = 'EP statistiche_Contab'
-        oSheet.getCellRangeByPosition(23, lrow, 25, lrow).CellStyle = 'EP statistiche'
-        oSheet.getCellRangeByPosition(26, lrow, 26, lrow).CellStyle = 'EP-mezzo %'
-        s = str(lrow + 1)
-        oSheet.getCellByPosition(12, lrow).String = 'TOTALE'
-        oSheet.getCellByPosition(13, lrow).Formula = '=SUBTOTAL(9;N3:N' + s + ')'
-        oSheet.getCellByPosition(16, lrow).String = 'TOTALE'
-        oSheet.getCellByPosition(17, lrow).Formula = '=SUBTOTAL(9;R3:R' + s + ')'
-        oSheet.getCellByPosition(20, lrow).String = 'TOTALE'
-        oSheet.getCellByPosition(21, lrow).Formula = '=SUBTOTAL(9;V3:V' + s + ')'
-        oSheet.getCellByPosition(23, lrow).String = 'TOTALE'
-        oSheet.getCellByPosition(24, lrow).Formula = '=SUBTOTAL(9;Y3:Y' + s + ')'
-        oSheet.getCellByPosition(25, lrow).Formula = '=SUBTOTAL(9;Z3:Z' + s + ')'
-        # oSheet.getCellByPosition(26, lrow).Formula = '=IFERROR(IFS(AND(N' + s + '>R' + s + ';R' + s + '=0);-1;AND(N' + s + '<R' + s + ';N' + s + '=0);1;N' + s + '=R' + s + ';"--";N' + s + '>R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ';N'+ s + '<R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ');"--")'
         oSheet.getCellByPosition(1, lrow
         ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
+
+        oSheet.getCellRangeByPosition(0, lrow, 9, lrow).CellStyle = 'Riga_rossa_Chiudi'
+        # oSheet.getCellRangeByPosition(11, lrow, 25, lrow).CellStyle = 'EP statistiche_q'
+        # oSheet.getCellRangeByPosition(25, lrow, 25, lrow).CellStyle = 'EP-mezzo %'
+
+        # oSheet.getCellByPosition(19, lrow).Formula = '=SUBTOTAL(9;T:T)'
+        # oSheet.getCellByPosition(21, lrow).Formula = '=SUBTOTAL(9;U:U)'
+        # oSheet.getCellByPosition(21, lrow).Formula = '=SUBTOTAL(9;V:V)'
+        # oSheet.getCellByPosition(23, lrow).Formula = '=SUBTOTAL(9;X:X)'
+        # oSheet.getCellByPosition(24, lrow).Formula = '=SUBTOTAL(9;Y:Y)'
+        # oSheet.getCellByPosition(25, lrow).Formula = '=Z2'
+
 
 # ###############################################################
 from com.sun.star.beans import PropertyValue
@@ -627,7 +895,7 @@ def adattaAltezzaRiga(oSheet=False):
     }
     FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
     RIGA_SPECIALE = 2
-    ALTEZZA_SPECIALE = 800
+    ALTEZZA_SPECIALE = 1050
 
     try:
         # --- INIZIALIZZAZIONE VELOCE ---
@@ -909,43 +1177,44 @@ def numeraVoci(oSheet, lrow, tutte):
 
 def MENU_elimina_righe_vuote():
     '''Elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
-    oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
+    with LeenoUtils.DocumentRefreshContext(False):
+        LeenoSheetUtils.memorizza_posizione()
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
 
-    if oSheet.Name not in valid_sheets:
-        Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
-        return
+        if oSheet.Name not in valid_sheets:
+            Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
+            return
 
-    confirmation_text = f'Stai per eliminare tutte le righe vuote nell\'elaborato {oSheet.Name}.\nVuoi procedere?'
-    if Dialogs.YesNoDialog(Title='ATTENZIONE!', Text=confirmation_text) == 0:
-        return
+        confirmation_text = f'Stai per eliminare tutte le righe vuote nell\'elaborato {oSheet.Name}.\nVuoi procedere?'
+        if Dialogs.YesNoDialog(Title='ATTENZIONE!', Text=confirmation_text) == 0:
+            return
 
-    lrow_c = PL.LeggiPosizioneCorrente()[1]
-    sString = 'T O T A L E' if oSheet.Name == 'CONTABILITA' else 'TOTALI COMPUTO'
-    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+        # lrow_c = PL.LeggiPosizioneCorrente()[1]
+        sString = 'T O T A L E' if oSheet.Name == 'CONTABILITA' else 'TOTALI COMPUTO'
+        lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
 
-    progress = Dialogs.Progress(Title='Eliminazione delle righe vuote in corso...', Text='Rimane il')
-    progress.setLimits(0, lrow)
-    progress.setValue(0)
-    progress.show()
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start("", lrow)  # 100 = max progresso
+        indicator.Text = 'Eliminazione delle righe vuote in corso...'
 
-    for y in reversed(range(0, lrow)):
-        progress.setValue(y)
+        for y in reversed(range(0, lrow)):
+            indicator.Value = y
 
-        if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-            row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
+            if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
 
-        if not row_has_data:
-            oSheet.getRows().removeByIndex(y, 1)
+            if not row_has_data:
+                oSheet.getRows().removeByIndex(y, 1)
 
-    progress.hide()
-    LeenoUtils.DocumentRefresh(True)
+        indicator.end()
+        LeenoUtils.DocumentRefresh(True)
 
-    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
-    PL._gotoCella(1, 4)
-    Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
+        lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+        # PL._gotoCella(1, 4)
+        Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
+        LeenoSheetUtils.ripristina_posizione()
 
 
 # ###############################################################

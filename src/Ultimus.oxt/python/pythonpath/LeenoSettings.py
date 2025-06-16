@@ -646,7 +646,7 @@ def importa_stili_pagina(overwrite = False):
         overwrite (bool): se True sovrascrive gli stili esistenti.
     """
 
-    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ots'
+    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
     oDoc = LeenoUtils.getDocument()
 
@@ -688,7 +688,7 @@ def importa_stili_pagina_non_presenti():
     """
     LeenoUtils.DocumentRefresh(False)
     # Percorso del file di template
-    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ots'
+    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
     oDoc = LeenoUtils.getDocument()
 

@@ -1,0 +1,1 @@
+# contenuto già presente nel canvas, escluso per brevità

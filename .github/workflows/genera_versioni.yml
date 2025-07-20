@@ -15,13 +15,14 @@ jobs:
       - name: Checkout codice
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necessario per ottenere l'history completo per git describe
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          cache: 'pip'  # Abilita caching per pip
+          # Rimossa la cache pip poiché non abbiamo requirements.txt
+          check-latest: true  # Meglio usare sempre l'ultima versione patch
 
       - name: Installa dipendenze
         run: pip install requests packaging
@@ -29,9 +30,9 @@ jobs:
       - name: Verifica struttura repository
         run: |
           echo "Struttura repository:"
-          tree -a -L 3 || true
+          ls -R --group-directories-first
           echo -e "\nContenuto di tools/version:"
-          ls -la tools/version || true
+          ls -la tools/version
 
       - name: Esegui script generazione versione
         run: python tools/version/leeno_version_generator.py
@@ -42,19 +43,18 @@ jobs:
 
       - name: Verifica file generati
         run: |
-          echo -e "\nFile version.h generato:"
-          cat include/version.h || true
-          echo -e "\nFile leeno_version_code aggiornato:"
-          cat src/Ultimus.oxt/leeno_version_code || true
+          [ -f include/version.h ] && echo "version.h trovato" || echo "version.h NON trovato"
+          [ -f src/Ultimus.oxt/leeno_version_code ] && echo "leeno_version_code trovato" || echo "leeno_version_code NON trovato"
 
       - name: Carica via SFTP
-        if: success()  # Esegui solo se i passi precedenti hanno avuto successo
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
           sftp_host: ${{ secrets.SFTP_HOST }}
-          sftp_port: ${{ secrets.SFTP_PORT || '22' }}  # Default alla porta 22
+          sftp_port: ${{ secrets.SFTP_PORT || '22' }}
           sftp_username: ${{ secrets.SFTP_USER }}
           sftp_password: ${{ secrets.SFTP_PASS }}
-          local_path: include/version.h  # Modificato per caricare il file header
-          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}/versions/
-          args: --verbose --reverse --delete-first
+          local_path: |
+            include/version.h
+            src/Ultimus.oxt/leeno_version_code
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+          args: --verbose --reverse

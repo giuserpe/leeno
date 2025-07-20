@@ -8,7 +8,7 @@ from datetime import datetime
 # --- CONFIGURAZIONE ---
 WEBDAV_URL = "https://dev.leeno.org/remote.php/dav/files/loadmin/LeenoNigthlyBuilds/"
 WEBDAV_USER = "loadmin"
-WEBDAV_PASS = "yGT.:jya09--"
+WEBDAV_PASS = "passerword"
 GITHUB_API_TAGS = "https://api.github.com/repos/giuserpe/leeno/tags"
 PUBLIC_DOWNLOAD_BASE = "https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files="
 

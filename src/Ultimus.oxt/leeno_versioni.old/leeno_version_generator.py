@@ -1,3 +1,4 @@
+# WEBDAV_PASS = "yGT.:jya09--"
 import os
 import hashlib
 import requests
@@ -41,7 +42,7 @@ def list_webdav_oxt_files():
 
             lastmod_elem = resp.find(".//{DAV:}getlastmodified")
             size_elem = resp.find(".//{DAV:}getcontentlength")
-
+            
             lastmod = lastmod_elem.text if lastmod_elem is not None else ""
             size = int(size_elem.text) if size_elem is not None else 0
 

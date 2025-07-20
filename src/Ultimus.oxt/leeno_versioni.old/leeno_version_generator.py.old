@@ -1,0 +1,89 @@
+# generate_versions.py
+
+import subprocess
+import requests
+import hashlib
+import os
+from datetime import datetime
+from pathlib import Path
+
+# CONFIG
+REPO_URL = "https://github.com/giuserpe/leeno.git"
+NEXTCLOUD_BASE_URL = "https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=%2F&files="
+OUTPUT_FILE = "versions.html"
+LOCAL_REPO_DIR = "leenO_repo"
+COMPATIBILITY = "LibreOffice ≥ 7.6"
+
+# HTML TEMPLATE
+HTML_HEAD = """
+<style>
+.version-card{border:1px solid #ccc;padding:1rem;margin-bottom:1rem;border-radius:8px;background:#f9f9f9;}
+.version-card .badge{background:#28a745;color:white;padding:0.2rem .5rem;border-radius:5px;font-size:.8rem;}
+</style>
+"""
+
+CARD_TEMPLATE = """
+<div class=\"version-card\">
+  <h2>{version} {badge}</h2>
+  <p>🗓️ Rilasciata: {date}</p>
+  <p>🔧 Compatibile: {compat}</p>
+  <p>📜 {changelog}</p>
+  <ul>
+    <li><a href=\"{download_link}\">Scarica (.oxt)</a></li>
+    <li>SHA256: <code>{sha256}</code></li>
+  </ul>
+</div>
+"""
+
+def clone_or_pull():
+    if not Path(LOCAL_REPO_DIR).exists():
+        subprocess.run(["git", "clone", REPO_URL, LOCAL_REPO_DIR])
+    else:
+        subprocess.run(["git", "-C", LOCAL_REPO_DIR, "pull"])
+
+def get_tags():
+    tags = subprocess.check_output(["git", "-C", LOCAL_REPO_DIR, "tag", "--sort=-v:refname"])
+    return tags.decode().split()
+
+def get_tag_date(tag):
+    ts = subprocess.check_output(["git", "-C", LOCAL_REPO_DIR, "log", "-1", "--format=%aI", tag])
+    return datetime.fromisoformat(ts.decode().strip()).date().isoformat()
+
+def get_tag_changelog(tag):
+    msg = subprocess.check_output(["git", "-C", LOCAL_REPO_DIR, "log", "-1", "--format=%s", tag])
+    return msg.decode().strip()
+
+def get_sha256_from_url(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return "Errore download"
+    return hashlib.sha256(r.content).hexdigest()
+
+def generate_html():
+    clone_or_pull()
+    tags = get_tags()
+    output = HTML_HEAD
+    for i, tag in enumerate(tags):
+        version = tag
+        date = get_tag_date(tag)
+        changelog = get_tag_changelog(tag)
+        download_link = f"{NEXTCLOUD_BASE_URL}LeenO-{version}.oxt"
+        sha256 = get_sha256_from_url(download_link)
+        badge = "<span class=\"badge\">Stabile</span>" if i == 0 else ""
+
+        output += CARD_TEMPLATE.format(
+            version=version,
+            badge=badge,
+            date=date,
+            compat=COMPATIBILITY,
+            changelog=changelog,
+            download_link=download_link,
+            sha256=sha256
+        )
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write(output)
+    print(f"Generato {OUTPUT_FILE} con {len(tags)} versioni.")
+
+if __name__ == "__main__":
+    generate_html()

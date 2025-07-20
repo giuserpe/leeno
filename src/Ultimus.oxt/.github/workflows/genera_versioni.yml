@@ -3,7 +3,7 @@ name: Genera pagina versioni LeenO
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build:

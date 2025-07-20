@@ -64,13 +64,13 @@ jobs:
 
       - name: Test SFTP Connection
         run: |
-          echo "open sftp://${{ secrets.SFTP_USER }}:${{ secrets.SFTP_PASSWORD }}@${{ secrets.SFTP_HOST }}
+          echo "open sftp://${{ secrets.SFTP_USER }}:${{ secrets.SFTP_PASS }}@${{ secrets.SFTP_HOST }}
           ls ${{ secrets.SFTP_REMOTE_PATH }}
           bye" | lftp -e "set sftp:auto-confirm yes; set ftp:ssl-allow no"
 
       - name: Upload with rsync
         run: |
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" rsync -avz \
+          sshpass -p "${{ secrets.SFTP_PASS }}" rsync -avz \
           -e "ssh -p ${{ secrets.SFTP_PORT || 22 }} -o StrictHostKeyChecking=no" \
           include/version.h \
           src/Ultimus.oxt/leeno_version_code \

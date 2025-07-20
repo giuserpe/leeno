@@ -47,16 +47,20 @@ jobs:
           cat src/Ultimus.oxt/leeno_version_code
           echo -e "\nVersion header:"
           cat include/version.h
-      - name: Carica via SFTP
-      
+
+      - name: Carica file via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
-          sftp_host: ${{ secrets.SFTP_HOST }}
-          sftp_port: ${{ secrets.SFTP_PORT || '22' }}
-          sftp_username: ${{ secrets.SFTP_USER }}
-          sftp_password: ${{ secrets.SFTP_PASS }}
-          local_path: |
-            include/version.h
+          host: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT || '22' }}
+          user: ${{ secrets.SFTP_USER }}
+          pass: ${{ secrets.SFTP_PASS }}
+          localDir: |
+            include/
             src/Ultimus.oxt/leeno_version_code
-          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-          args: --verbose --reverse
+          remoteDir: ${{ secrets.SFTP_REMOTE_PATH }}
+          reverse: true
+          options: |
+            --verbose
+            --delete-first
+            --parallel=3

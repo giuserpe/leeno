@@ -154,7 +154,9 @@ def copiaRigaAnalisi(oSheet, lrow):
             oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
 
+import LeenoDialogs as DLG
 def MENU_impagina_analisi():
+    '''
     PL.set_area_stampa()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -166,3 +168,26 @@ def MENU_impagina_analisi():
         if oSheet.getCellByPosition(0, el).String == '----':
             if oSheet.getCellByPosition(0, el + 2).CellStyle != 'Ultimus_centro':
                 oSheet.getCellByPosition(0, el + 2).Rows.IsStartOfNewPage = True
+    '''
+
+    PL.set_area_stampa()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    # Esegui solo se il foglio attivo è 'Analisi di Prezzo'
+    if oSheet.Name != 'Analisi di Prezzo':
+        return
+
+    # Calcola l'ultima riga utilizzata
+    last_row = SheetUtils.getLastUsedRow(oSheet) + 1
+
+    # Rimuovi tutte le interruzioni di pagina manuali
+    oSheet.removeAllManualPageBreaks()
+
+    # Imposta una nuova interruzione di pagina dopo ogni sezione individuata
+    for row in range(1, last_row):
+        cell = oSheet.getCellByPosition(0, row)
+        if cell.String == '----':
+            next_cell = oSheet.getCellByPosition(0, row + 2)
+            if next_cell.CellStyle != 'Ultimus_centro':
+                next_cell.Rows.IsStartOfNewPage = True

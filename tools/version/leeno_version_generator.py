@@ -1,113 +1,203 @@
 #!/usr/bin/env python3
 """
-Script aggiornato per il formato specifico LeenO-3.24.2.210-TESTING-20250720
+Script avanzato per la gestione delle versioni LeenO con:
+- Validazione robusta del formato
+- Supporto per versioni STABLE/TESTING
+- Logging dettagliato
+- Gestione degli errori migliorata
 """
 
 import os
 import re
+import logging
+import argparse
 from datetime import datetime
 from pathlib import Path
+from typing import Dict
 
-def parse_version_code():
-    """Analizza la stringa di versione nel formato LeenO-3.24.2.210-TESTING-20250720"""
-    version_file = Path(__file__).parent.parent.parent / 'src' / 'Ultimus.oxt' / 'leeno_version_code'
-    try:
-        with open(version_file, 'r') as f:
-            version_str = f.read().strip()
-            
-            match = re.match(
-                r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)-TESTING-(?P<date>\d+)$',
-                version_str
-            )
-            
-            if not match:
-                raise ValueError(f"Formato versione non riconosciuto: {version_str}")
+# Configurazione logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
+
+class VersionManager:
+    """Gestisce tutte le operazioni relative al versionamento"""
+    
+    VERSION_PATTERN = re.compile(
+        r'^LeenO-'
+        r'(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)-'
+        r'(?P<type>STABLE|TESTING)-'
+        r'(?P<date>\d{8})$'
+    )
+    
+    def __init__(self, repo_root: Path):
+        self.repo_root = repo_root
+        self.version_file = repo_root / 'src' / 'Ultimus.oxt' / 'leeno_version_code'
+        self.include_dir = repo_root / 'include'
+        
+        # Validazione percorsi
+        if not self.version_file.exists():
+            raise FileNotFoundError(f"File di versione non trovato: {self.version_file}")
+        self.include_dir.mkdir(exist_ok=True)
+
+    def parse_current_version(self) -> Dict[str, str]:
+        """Analizza la versione corrente con validazione robusta"""
+        try:
+            with open(self.version_file, 'r') as f:
+                version_str = f.read().strip()
+                logger.info(f"Versione corrente: {version_str}")
                 
-            return {
-                'full': version_str,
-                'major': match.group('major'),
-                'minor': match.group('minor'),
-                'patch': match.group('patch'),
-                'build': match.group('build'),
-                'date': match.group('date'),
-                'semver': f"{match.group('major')}.{match.group('minor')}.{match.group('patch')}"
-            }
+                match = self.VERSION_PATTERN.match(version_str)
+                if not match:
+                    raise ValueError(f"Formato versione non valido: {version_str}")
+                
+                return {
+                    'full': version_str,
+                    'major': match.group('major'),
+                    'minor': match.group('minor'),
+                    'patch': match.group('patch'),
+                    'build': match.group('build'),
+                    'type': match.group('type'),
+                    'date': match.group('date'),
+                    'semver': f"{match.group('major')}.{match.group('minor')}.{match.group('patch')}"
+                }
+                
+        except Exception as e:
+            logger.error(f"Errore nel parsing della versione: {str(e)}")
+            raise
+
+    def generate_new_version(self, current: Dict[str, str], version_type: str = None) -> Dict[str, str]:
+        """Genera una nuova versione mantenendo i numeri di versione esistenti"""
+        now = datetime.utcnow()
+        build_number = os.getenv('BUILD_NUMBER', current['build'])
+        git_sha = os.getenv('GITHUB_SHA', 'local')[:7]
+        
+        # Mantiene il tipo di versione esistente se non specificato
+        version_type = version_type if version_type else current['type']
+        
+        new_version = {
+            'full': f"LeenO-{current['major']}.{current['minor']}.{current['patch']}.{build_number}-{version_type}-{now.strftime('%Y%m%d')}",
+            'major': current['major'],
+            'minor': current['minor'],
+            'patch': current['patch'],
+            'build_number': build_number,
+            'build_date': now.strftime("%Y-%m-%d"),
+            'build_time': now.strftime("%H:%M:%S"),
+            'git_sha': git_sha,
+            'type': version_type,
+            'semver': current['semver']
+        }
+        
+        logger.info(f"Nuova versione generata: {new_version['full']}")
+        return new_version
+
+    def update_version_files(self, current: Dict[str, str], new: Dict[str, str]) -> None:
+        """Aggiorna tutti i file relativi alla versione"""
+        try:
+            # Aggiorna il file di versione principale
+            with open(self.version_file, 'w') as f:
+                f.write(new['full'])
             
-    except Exception as e:
-        print(f"ERRORE analizzando leeno_version_code: {str(e)}")
-        print("Il formato atteso è: LeenO-MAJOR.MINOR.PATCH.BUILD-TESTING-DATA")
-        raise
+            # Genera l'header C++
+            self._generate_version_header(current, new)
+            
+            logger.info("File di versione aggiornati con successo")
+            
+        except Exception as e:
+            logger.error(f"Errore nell'aggiornamento dei file: {str(e)}")
+            raise
 
-def generate_new_version(version_info):
-    """Genera la nuova stringa di versione"""
-    now = datetime.utcnow()
-    build_number = os.getenv('BUILD_NUMBER', version_info['build'])
-    git_sha = os.getenv('GITHUB_SHA', 'local')[:7]
-    
-    return {
-        'full': f"LeenO-{version_info['major']}.{version_info['minor']}.{version_info['patch']}.{build_number}-TESTING-{now.strftime('%Y%m%d')}",
-        'build_number': build_number,
-        'build_date': now.strftime("%Y-%m-%d"),
-        'build_time': now.strftime("%H:%M:%S"),
-        'git_sha': git_sha
-    }
-
-def update_version_file(new_version):
-    """Aggiorna il file leeno_version_code"""
-    version_file = Path(__file__).parent.parent.parent / 'src' / 'Ultimus.oxt' / 'leeno_version_code'
-    
-    with open(version_file, 'w') as f:
-        f.write(new_version['full'])
-
-def generate_version_header(version_info, build_info):
-    """Genera il file version.h per C++"""
-    include_dir = Path(__file__).parent.parent.parent / 'include'
-    include_dir.mkdir(exist_ok=True)
-    
-    header_content = f"""// Auto-generated by version generator
+    def _generate_version_header(self, version_info: Dict[str, str], build_info: Dict[str, str]) -> None:
+        """Genera il file version.h per C++"""
+        header_content = f"""// Auto-generated by version generator
 #ifndef LEENO_VERSION_H
 #define LEENO_VERSION_H
 
+// Version information
 #define LEENO_VERSION_MAJOR {version_info['major']}
 #define LEENO_VERSION_MINOR {version_info['minor']}
 #define LEENO_VERSION_PATCH {version_info['patch']}
 #define LEENO_VERSION_BUILD {build_info['build_number']}
 #define LEENO_VERSION_STRING "{version_info['semver']}"
-#define LEENO_VERSION_FULL "{version_info['full']}"
+#define LEENO_VERSION_FULL "{build_info['full']}"
+#define LEENO_VERSION_TYPE "{build_info['type']}"
+
+// Build information
 #define LEENO_BUILD_NUMBER "{build_info['build_number']}"
 #define LEENO_BUILD_DATE "{build_info['build_date']}"
 #define LEENO_BUILD_TIME "{build_info['build_time']}"
 #define LEENO_GIT_SHA "{build_info['git_sha']}"
 
+// Compatibility macros
+#define LEENO_VERSION_CODE(major, minor, patch) \\
+    ((major << 24) | (minor << 16) | (patch << 8))
+#define LEENO_VERSION_CHECK(major, minor, patch) \\
+    (LEENO_VERSION_CODE(major, minor, patch) <= LEENO_VERSION_CODE(\\
+        LEENO_VERSION_MAJOR, \\
+        LEENO_VERSION_MINOR, \\
+        LEENO_VERSION_PATCH))
+
 #endif // LEENO_VERSION_H
 """
-    
-    with open(include_dir / 'version.h', 'w') as f:
-        f.write(header_content)
+        
+        with open(self.include_dir / 'version.h', 'w') as f:
+            f.write(header_content)
+        logger.debug("File version.h generato")
+
+def parse_args():
+    """Configura gli argomenti da riga di comando"""
+    parser = argparse.ArgumentParser(description='Generatore di versioni LeenO')
+    parser.add_argument(
+        '--type',
+        choices=['STABLE', 'TESTING'],
+        default=None,
+        help='Tipo di build (STABLE/TESTING)'
+    )
+    parser.add_argument(
+        '--repo-root',
+        type=Path,
+        default=Path(__file__).parent.parent.parent,
+        help='Percorso root del repository'
+    )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Abilita logging debug'
+    )
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
+    
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    
     try:
-        print("Generazione informazioni versione Leeno...")
+        logger.info("Avvio generazione versione LeenO")
         
-        # Analizza la versione esistente
-        version_info = parse_version_code()
-        print(f"Versione corrente: {version_info['full']}")
+        # Inizializza il version manager
+        vm = VersionManager(args.repo_root)
         
-        # Genera nuove informazioni
-        build_info = generate_new_version(version_info)
-        print(f"Nuova versione: {build_info['full']}")
-        print(f"Build number: {build_info['build_number']}")
-        print(f"Git SHA: {build_info['git_sha']}")
+        # Analizza la versione corrente
+        current_version = vm.parse_current_version()
+        
+        # Genera nuova versione (mantenendo i numeri di versione)
+        new_version = vm.generate_new_version(
+            current_version,
+            version_type=args.type
+        )
         
         # Aggiorna i file
-        update_version_file(build_info)
-        generate_version_header(version_info, build_info)
+        vm.update_version_files(current_version, new_version)
         
-        print("File versione generati con successo!")
+        logger.info("Processo completato con successo")
         return 0
         
     except Exception as e:
-        print(f"ERRORE: {str(e)}")
+        logger.critical(f"Errore critico: {str(e)}", exc_info=args.debug)
         return 1
 
 if __name__ == "__main__":

@@ -1,46 +1,35 @@
-name: Deploy LeenO Versions
+name: Genera pagina versioni LeenO
 
 on:
-  workflow_dispatch:     # ← Permette l'avvio manuale
   push:
     branches:
       - dev
-    paths:
-      - 'tools/version/**'
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout codice
+        uses: actions/checkout@v3
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-          
-      - name: Install dependencies
-        run: pip install requests pysftp
-        
-      - name: Generate HTML
-        working-directory: ./tools/version
+          python-version: 3.10
+
+      - name: Installa dipendenze
+        run: pip install requests
+
+      - name: Esegui script generazione
         run: python leeno_version_generator.py
-        
-      - name: Verify file exists
-        run: |
-          echo "File content:"
-          ls -la tools/version/
-          [ -f tools/version/versions.html ] || exit 1
-          
-      - name: Upload to WordPress
-        uses: appleboy/scp-action@v0.1.4
+
+      - name: Carica via SFTP
+        uses: pressidium/lftp-mirror-action@v1.1.0
         with:
-          host: ftp.leeno.org
-          username: leenoorgxl
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: 22
-          source: "tools/version/versions.html"
-          target: "/home/leenoorgxl/www/wp-content/plugins/leeno_versioni/versions.html"
-          overwrite: true
-          strip_components: 1
+          sftp_host: ${{ secrets.SFTP_HOST }}
+          sftp_port: ${{ secrets.SFTP_PORT }}
+          sftp_username: ${{ secrets.SFTP_USER }}
+          sftp_password: ${{ secrets.SFTP_PASS }}
+          local_path: ./versions.html
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+          args: -e -R

@@ -56,24 +56,11 @@ jobs:
           echo -e "\nContenuto di leeno_version_code:"
           cat src/Ultimus.oxt/leeno_version_code || true
 
-      - name: Verify SFTP Access
+      - name: Upload via cURL
         run: |
-          echo "Test connessione a ${{ secrets.SFTP_HOST }}"
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp \
-          -oPort=${{ secrets.SFTP_PORT || '22' }} \
-          -oStrictHostKeyChecking=no \
-          ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} <<< "pwd"
-
-      - name: Upload Files via SFTP
-        run: |
-          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
-          sftp://${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT || '22' }} <<EOF
-          set sftp:auto-confirm yes
-          mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}
-          put include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
-          put src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
-          bye
-          EOF
+          curl -T include/version.h \
+          --user "${{ secrets.SFTP_USER }}:${{ secrets.SFTP_PASSWORD }}" \
+          sftp://${{ secrets.SFTP_HOST }}${{ secrets.SFTP_REMOTE_PATH }}/version.h
 
 
       - name: Set correct permissions

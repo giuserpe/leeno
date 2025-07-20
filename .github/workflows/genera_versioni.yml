@@ -57,27 +57,17 @@ jobs:
           cat src/Ultimus.oxt/leeno_version_code || true
 
 
-      - name: Carica file via SFTP
-        uses: pressidium/lftp-mirror-action@v1.1.0
+      - name: Upload files via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          host: ${{ secrets.SFTP_HOST }}
-          port: ${{ secrets.SFTP_PORT || '22' }}
-          user: ${{ secrets.SFTP_USER }}
-          pass: ${{ secrets.SFTP_PASS }}
-          localDir: |
-            include/
-            src/Ultimus.oxt/
-          remoteDir: ${{ secrets.SFTP_REMOTE_PATH }}
-          reverse: true
-          options: |
-            --verbose
-            --delete-first
-            --parallel=3
-            --only-newer
-            --include=leeno_version_code
-            --include=version.h
-          forceSSL: true
-          verifyCertificate: true
+          username: ${{ secrets.SFTP_USER }}
+          server: ${{ secrets.SFTP_HOST }}
+          ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          local_path: |
+            include/*
+            src/Ultimus.oxt/leeno_version_code
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+
 
       - name: Set correct permissions
         run: |

@@ -48,6 +48,15 @@ jobs:
           echo -e "\nVersion header:"
           cat include/version.h
 
+
+      - name: Verifica file da caricare
+        run: |
+          echo "File in include/:"
+          ls -la include/
+          echo -e "\nContenuto di leeno_version_code:"
+          cat src/Ultimus.oxt/leeno_version_code || true
+
+
       - name: Carica file via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
@@ -64,3 +73,6 @@ jobs:
             --verbose
             --delete-first
             --parallel=3
+            --only-newer
+          forceSSL: true
+          verifyCertificate: true

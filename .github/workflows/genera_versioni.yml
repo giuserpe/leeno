@@ -56,29 +56,24 @@ jobs:
           echo -e "\nContenuto di leeno_version_code:"
           cat src/Ultimus.oxt/leeno_version_code || true
 
-
-      - name: Verify Credentials
+      - name: Verify SFTP Access
         run: |
-          echo "Testing connection to ${{ secrets.SFTP_HOST }}"
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp -oPort=${{ secrets.SFTP_PORT || '22' }} \
+          echo "Test connessione a ${{ secrets.SFTP_HOST }}"
+          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp \
+          -oPort=${{ secrets.SFTP_PORT || '22' }} \
           -oStrictHostKeyChecking=no \
-          ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} <<< "ls"
+          ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} <<< "pwd"
 
-
-      - name: Upload files via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          username: ${{ secrets.SFTP_USER }}
-          server: ${{ secrets.SFTP_HOST }}
-          password: ${{ secrets.SFTP_PASSWORD }}  # Assicurati che questo secret esista
-          local_path: |
-            include/version.h
-            src/Ultimus.oxt/leeno_version_code
-          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
-          port: ${{ secrets.SFTP_PORT || '22' }}
-          sftp_only: true
-          delete_remote_files: false
-          sftp_args: -o PreferredAuthentications=password -o PubkeyAuthentication=no  # Disabilita esplicitamente SSH
+      - name: Upload Files via SFTP
+        run: |
+          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }}" \
+          sftp://${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT || '22' }} <<EOF
+          set sftp:auto-confirm yes
+          mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}
+          put include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
+          put src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
+          bye
+          EOF
 
 
       - name: Set correct permissions

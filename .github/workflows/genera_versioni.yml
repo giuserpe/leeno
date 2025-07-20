@@ -1,7 +1,11 @@
 name: Genera pagina versioni LeenO
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'tools/version/**'
 
 jobs:
   build:
@@ -9,26 +13,25 @@ jobs:
 
     steps:
       - name: Checkout codice
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.10
 
       - name: Installa dipendenze
-        run: pip install requests
+        run: pip install requests requests_toolbelt lxml
 
-      - name: Esegui script generazione
+      - name: Esegui script generazione HTML
         run: python tools/version/leeno_version_generator.py
 
-      - name: Verifica file generato
+      - name: Verifica presenza file
         run: |
-          echo "Contenuto della cartella tools/version:"
           ls -la tools/version/
-          [ -f tools/version/versions.html ] || (echo "File non trovato!" && exit 1)
+          [ -f tools/version/versions.html ] || exit 1
 
-      - name: Carica via SFTP
+      - name: Carica su WordPress via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
           sftp_host: ${{ secrets.SFTP_HOST }}

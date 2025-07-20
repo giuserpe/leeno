@@ -36,38 +36,36 @@ jobs:
           BUILD_NUMBER: ${{ github.run_number }}
         working-directory: ${{ github.workspace }}
 
-      - name: Verifica output
+      - name: Verifica file generati
         run: |
+          echo "Contenuto di src/Ultimus.oxt/leeno_version_code:"
           cat src/Ultimus.oxt/leeno_version_code
+          echo -e "\nContenuto di include/version.h:"
           cat include/version.h
+          echo -e "\nContenuto di tools/version/versions.html:"
+          cat tools/version/versions.html || echo "versions.html non trovato"
+          echo -e "\nPermessi files:"
+          stat -c "%A %a %n" src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html
 
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y sshpass rsync
 
-      # - name: Upload files
-      #   run: |
-      #     # Crea la directory remota se non esiste
-      #     sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SFTP_PORT || 22 }} \
-      #       ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-      #       "mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}"
-          
-      #     # Upload dei file
-      #     sshpass -p "${{ secrets.SFTP_PASS }}" rsync -avz \
-      #       -e "ssh -p ${{ secrets.SFTP_PORT || 22 }} -o StrictHostKeyChecking=no" \
-      #       include/version.h \
-      #       src/Ultimus.oxt/leeno_version_code \
-      #       ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-
-      - name: Upload files to SFTP
+      - name: Crea directory remota
         run: |
-          # File da trasferire
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SFTP_PORT || 22 }} \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
+            "mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}"
+
+      - name: Upload files
+        run: |
+          # Lista dei file da trasferire
           FILES=(
             "include/version.h"
             "src/Ultimus.oxt/leeno_version_code"
             "tools/version/versions.html"
           )
           
-          # Verifica che i file esistano
+          # Verifica esistenza file locali
           for file in "${FILES[@]}"; do
             if [ ! -f "$file" ]; then
               echo "ERRORE: File $file non trovato!"
@@ -77,19 +75,13 @@ jobs:
           done
           
           # Trasferimento con rsync
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" rsync -avz \
+          sshpass -p "${{ secrets.SFTP_PASS }}" rsync -avz \
             -e "ssh -p ${{ secrets.SFTP_PORT || 22 }} -o StrictHostKeyChecking=no" \
             "${FILES[@]}" \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-          
-          # Verifica remota
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"
 
       - name: Verify upload
         run: |
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code"
+            "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"

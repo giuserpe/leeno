@@ -248,13 +248,13 @@ class VersionManager:
         self.repo_root = repo_root
         self.version_file = repo_root / 'src' / 'Ultimus.oxt' / 'leeno_version_code'
         self.include_dir = repo_root / 'include'
-        self.web_dir = repo_root / 'web'
+        self.version_dir = repo_root / 'tools' / 'version'  # Nuova directory per versions.html
         
         # Validazione percorsi
         if not self.version_file.exists():
             raise FileNotFoundError(f"File di versione non trovato: {self.version_file}")
         self.include_dir.mkdir(exist_ok=True)
-        self.web_dir.mkdir(exist_ok=True)
+        self.version_dir.mkdir(exist_ok=True)  # Crea la directory se non esiste
 
     def parse_current_version(self) -> Dict[str, str]:
         """Analizza la versione corrente con validazione robusta"""
@@ -345,7 +345,7 @@ class VersionManager:
         logger.debug("File version.h generato")
 
     def _generate_versions_html(self, version_info: Dict[str, str], build_info: Dict[str, str]) -> None:
-        """Genera il file versions.html con le informazioni di versione"""
+        """Genera il file versions.html nella directory tools/version"""
         html_content = f"""<!DOCTYPE html>
 <html lang="it">
 <head>
@@ -499,10 +499,10 @@ class VersionManager:
 </html>
 """
         
-        html_file = self.web_dir / 'versions.html'
+        html_file = self.version_dir / 'versions.html'  # Salva in tools/version
         with open(html_file, 'w') as f:
             f.write(html_content)
-        logger.debug("File versions.html generato")
+        logger.debug(f"File versions.html generato in {html_file}")
 
     def update_version_files(self, current: Dict[str, str], new: Dict[str, str]) -> None:
         """Aggiorna tutti i file relativi alla versione"""

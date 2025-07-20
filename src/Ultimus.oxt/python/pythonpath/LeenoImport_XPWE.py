@@ -751,36 +751,6 @@ def leggiMisurazioni(misurazioni, ordina):
 
     return listaMisure
 
-
-def stileCelleElencoPrezzi(oSheet, startRow, endRow, color=None):
-    '''Applica gli stili alle celle del foglio Elenco Prezzi in modo ottimizzato.
-    
-    Args:
-        oSheet: Il foglio di lavoro su cui applicare gli stili
-        startRow: Riga di inizio dell'intervallo
-        endRow: Riga di fine dell'intervallo
-        color: Colore opzionale da applicare (non implementato in questa versione)
-    '''
-    # Mappatura degli stili in formato {stile: lista di tuple (col_start, col_end)}
-    style_map = {
-        'EP-aS': [(0, 0)],
-        'EP-a': [(1, 1)],
-        'EP-mezzo': [(2, 4), (6, 7)],
-        'EP-mezzo %': [(5, 5), (11, 11), (15, 15), (19, 19), (25, 25)],
-        'EP-sfondo': [(8, 9)],
-        'EP statistiche_q': [(12, 12), (16, 16), (20, 20), (23, 23)],
-        'EP statistiche': [(13, 13), (17, 17), (21, 21), (24, 25)]
-    }
-    # Applica gli stili in batch
-    for style_name, ranges in style_map.items():
-        for col_start, col_end in ranges:
-            oSheet.getCellRangeByPosition(
-                col_start, startRow, 
-                col_end, endRow
-            ).CellStyle = style_name
-    if color is not None:
-        oSheet.getCellRangeByPosition(0, startRow, 0, endRow).CellBackColor = color
-
 def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
     resList = []
     for el in capitoliCategorie[catName]:
@@ -813,7 +783,7 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
 #         oRange.setDataArray(sliced)
 
 #         # modifica lo stile del gruppo di celle
-#         stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
+#         PL.stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
 
 #         riga = riga + num
 #         # progress.setValue(riga + progStart)
@@ -870,7 +840,7 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=Fa
         num = len(sliced)
         oRange = oSheet.getCellRangeByPosition(0, 3 + riga, colonne - 1, 3 + riga + num - 1)
         oRange.setDataArray(sliced)
-        stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
+        PL.stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
         riga += num
 
 def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
@@ -1406,12 +1376,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 def MENU_XPWE_import(filename = None):
     with LeenoUtils.DocumentRefreshContext(False):
         XPWE_import(filename = None)
+        # oDoc = LeenoUtils.getDocument()
+        # oSheet = oDoc.CurrentController.ActiveSheet
+        # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
 def XPWE_import(filename = None):
     '''
     Importazione dati dal formato XPWE
     '''
     oDoc = LeenoUtils.getDocument()
-    # LeenoUtils.DocumentRefresh(False)
     isLeenoDoc = LeenoUtils.isLeenoDocument()
     if isLeenoDoc == False:
         PL.creaComputo(0)
@@ -1616,9 +1589,7 @@ def XPWE_import(filename = None):
         dest = filename[0:-5]+ '.ods'
         PL.salva_come(dest)
 
-    # riattiva l'output a video
-    # LeenoUtils.DocumentRefresh(True)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Ok(Text=f'Importazione di {elaborato} eseguita con successo!')
     if 'giuserpe' not in os.getlogin():
         PL.dlg_donazioni()

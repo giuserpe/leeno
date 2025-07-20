@@ -16,7 +16,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: 3.10
 
       - name: Installa dipendenze
         run: pip install requests
@@ -35,3 +35,10 @@ jobs:
           local_path: tools/version/versions.html
           remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
           args: -e -R
+      - name: Verifica caricamento
+        run: |
+          if [ ! -f "${{ secrets.SFTP_REMOTE_PATH }}/versions.html" ]; then
+            echo "Caricamento fallito: il file non esiste sul server remoto."
+            exit 1
+          else
+            echo "Caricamento riuscito: il file esiste sul server remoto."

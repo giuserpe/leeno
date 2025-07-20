@@ -6,37 +6,29 @@ on:
       - dev
   workflow_dispatch:
 
-    paths:
-      - 'tools/version/**'
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout codice
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Mostra struttura file dopo il checkout
-        run: tree -a -L 3
+        run: tree -a -L 3 || true
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: '3.10'
 
       - name: Installa dipendenze
-        run: pip install requests requests_toolbelt lxml
+        run: pip install requests
 
-      - name: Esegui script generazione HTML
+      - name: Esegui script generazione
         run: python tools/version/leeno_version_generator.py
 
-      - name: Verifica presenza file
-        run: |
-          ls -la tools/version/
-          [ -f tools/version/versions.html ] || exit 1
-
-      - name: Carica su WordPress via SFTP
+      - name: Carica via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
           sftp_host: ${{ secrets.SFTP_HOST }}

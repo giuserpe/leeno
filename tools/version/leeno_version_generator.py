@@ -207,7 +207,6 @@ if __name__ == "__main__":
 ########################################################################
 ########################################################################
 ########################################################################
-
 #!/usr/bin/env python3
 """
 Script avanzato per la gestione delle versioni LeenO con:
@@ -248,13 +247,13 @@ class VersionManager:
         self.repo_root = repo_root
         self.version_file = repo_root / 'src' / 'Ultimus.oxt' / 'leeno_version_code'
         self.include_dir = repo_root / 'include'
-        self.version_dir = repo_root / 'tools' / 'version'  # Nuova directory per versions.html
+        self.tools_version_dir = repo_root / 'tools' / 'version'  # Directory specificata
         
         # Validazione percorsi
         if not self.version_file.exists():
             raise FileNotFoundError(f"File di versione non trovato: {self.version_file}")
         self.include_dir.mkdir(exist_ok=True)
-        self.version_dir.mkdir(exist_ok=True)  # Crea la directory se non esiste
+        self.tools_version_dir.mkdir(exist_ok=True)  # Crea la directory se non esiste
 
     def parse_current_version(self) -> Dict[str, str]:
         """Analizza la versione corrente con validazione robusta"""
@@ -356,55 +355,29 @@ class VersionManager:
         body {{ 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6; 
-            margin: 0;
-            padding: 20px;
+            margin: 20px;
             color: #333;
-            background-color: #f5f5f5;
         }}
-        .container {{
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }}
-        h1 {{ 
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }}
-        h2 {{
-            color: #2980b9;
-            margin-top: 25px;
-        }}
-        .version-card {{
+        h1 {{ color: #2c3e50; }}
+        .version-info {{ 
             background-color: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
-            border-left: 4px solid #3498db;
         }}
         table {{
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin-top: 10px;
         }}
         th, td {{
-            padding: 12px 15px;
+            padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }}
         th {{
             background-color: #3498db;
             color: white;
-        }}
-        tr:nth-child(even) {{
-            background-color: #f2f2f2;
-        }}
-        tr:hover {{
-            background-color: #e9f7fe;
         }}
         .badge {{
             display: inline-block;
@@ -413,96 +386,60 @@ class VersionManager:
             font-size: 0.8em;
             font-weight: bold;
         }}
-        .stable {{
-            background-color: #2ecc71;
-            color: white;
-        }}
-        .testing {{
-            background-color: #f39c12;
-            color: white;
-        }}
-        .footer {{
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #7f8c8d;
-            text-align: center;
-        }}
+        .stable {{ background-color: #2ecc71; color: white; }}
+        .testing {{ background-color: #f39c12; color: white; }}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Informazioni Versione LeenO</h1>
-        
-        <div class="version-card">
-            <h2>Dettagli Versione</h2>
-            <table>
-                <tr>
-                    <th>Versione Completa</th>
-                    <td>{version_info['full']}</td>
-                </tr>
-                <tr>
-                    <th>Versione Semantica</th>
-                    <td>{version_info['semver']}</td>
-                </tr>
-                <tr>
-                    <th>Tipo Build</th>
-                    <td><span class="badge {build_info['type'].lower()}">{build_info['type']}</span></td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="version-card">
-            <h2>Informazioni Build</h2>
-            <table>
-                <tr>
-                    <th>Numero Build</th>
-                    <td>{build_info['build_number']}</td>
-                </tr>
-                <tr>
-                    <th>Data Build</th>
-                    <td>{build_info['build_date']}</td>
-                </tr>
-                <tr>
-                    <th>Ora Build</th>
-                    <td>{build_info['build_time']}</td>
-                </tr>
-                <tr>
-                    <th>Commit Git</th>
-                    <td><code>{build_info['git_sha']}</code></td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="version-card">
-            <h2>Componenti Versione</h2>
-            <table>
-                <tr>
-                    <th>Major</th>
-                    <td>{version_info['major']}</td>
-                </tr>
-                <tr>
-                    <th>Minor</th>
-                    <td>{version_info['minor']}</td>
-                </tr>
-                <tr>
-                    <th>Patch</th>
-                    <td>{version_info['patch']}</td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="footer">
-            <p>Generato automaticamente il {datetime.now().strftime('%Y-%m-%d alle %H:%M:%S')}</p>
-        </div>
+    <h1>Informazioni Versione LeenO</h1>
+    
+    <div class="version-info">
+        <h2>Dettagli Versione</h2>
+        <table>
+            <tr>
+                <th>Versione Completa</th>
+                <td>{version_info['full']}</td>
+            </tr>
+            <tr>
+                <th>Versione Semantica</th>
+                <td>{version_info['semver']}</td>
+            </tr>
+            <tr>
+                <th>Tipo Build</th>
+                <td><span class="badge {build_info['type'].lower()}">{build_info['type']}</span></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="version-info">
+        <h2>Informazioni Build</h2>
+        <table>
+            <tr>
+                <th>Numero Build</th>
+                <td>{build_info['build_number']}</td>
+            </tr>
+            <tr>
+                <th>Data Build</th>
+                <td>{build_info['build_date']}</td>
+            </tr>
+            <tr>
+                <th>Ora Build</th>
+                <td>{build_info['build_time']}</td>
+            </tr>
+            <tr>
+                <th>Commit Git</th>
+                <td><code>{build_info['git_sha']}</code></td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>
 """
         
-        html_file = self.version_dir / 'versions.html'  # Salva in tools/version
+        html_file = self.tools_version_dir / 'versions.html'
         with open(html_file, 'w') as f:
             f.write(html_content)
-        logger.debug(f"File versions.html generato in {html_file}")
+        logger.info(f"File versions.html generato in: {html_file}")
 
     def update_version_files(self, current: Dict[str, str], new: Dict[str, str]) -> None:
         """Aggiorna tutti i file relativi alla versione"""

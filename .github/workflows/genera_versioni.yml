@@ -41,3 +41,5 @@ jobs:
           local_path: tools/version/versions.html
           remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
           args: -e -R
+          exclude: '*.pyc' '*.pyo' '__pycache__' 'tools/version/.gitignore'
+          verbose: true 

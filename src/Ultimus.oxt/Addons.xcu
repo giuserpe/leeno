@@ -366,7 +366,7 @@
             <value>%origin%/icons/riordina</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Riordina Elenco Prezzi (ordine alfabetico)</value>
+            <value>Riordina Voci (ordine alfabetico)</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -422,7 +422,7 @@
             <value>%origin%/icons/riordina</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Riordina Elenco Prezzi (ordine alfabetico)</value>
+            <value>Riordina Voci (ordine alfabetico)</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

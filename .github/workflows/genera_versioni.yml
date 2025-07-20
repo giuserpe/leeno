@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout codice
         uses: actions/checkout@v4
@@ -13,15 +14,19 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
       - name: Installa dipendenze
         run: pip install requests
 
-      - name: Genera HTML
+      - name: Esegui script generazione
+        run: python tools/version/leeno_version_generator.py
+
+      - name: Verifica file generato
         run: |
-          cd ${{ github.workspace }}/tools/version
-          python leeno_version_generator.py
+          echo "Contenuto della cartella tools/version:"
+          ls -la tools/version/
+          [ -f tools/version/versions.html ] || (echo "File non trovato!" && exit 1)
 
       - name: Carica via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0

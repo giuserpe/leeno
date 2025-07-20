@@ -15,6 +15,9 @@ jobs:
       - name: Checkout codice
         uses: actions/checkout@v3
 
+      - name: Mostra struttura file dopo il checkout
+        run: tree -a -L 3
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -41,5 +44,3 @@ jobs:
           local_path: tools/version/versions.html
           remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
           args: -e -R
-          exclude: '*.pyc' '*.pyo' '__pycache__' 'tools/version/.gitignore'
-          verbose: true 

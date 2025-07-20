@@ -18,8 +18,10 @@ jobs:
       - name: Installa dipendenze
         run: pip install requests
 
-      - name: Esegui script generazione
-        run: python tools/version/leeno_version_generator.py
+      - name: Genera HTML
+        run: |
+          cd ${{ github.workspace }}/tools/version
+          python leeno_version_generator.py
 
       - name: Carica via SFTP
         uses: pressidium/lftp-mirror-action@v1.1.0

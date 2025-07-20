@@ -57,12 +57,20 @@ jobs:
           cat src/Ultimus.oxt/leeno_version_code || true
 
 
-      - name: Upload files via SFTP (Password Auth)
+      - name: Verify Credentials
+        run: |
+          echo "Testing connection to ${{ secrets.SFTP_HOST }}"
+          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp -oPort=${{ secrets.SFTP_PORT || '22' }} \
+          -oStrictHostKeyChecking=no \
+          ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} <<< "ls"
+
+
+      - name: Upload files via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: ${{ secrets.SFTP_USER }}
           server: ${{ secrets.SFTP_HOST }}
-          password: ${{ secrets.SFTP_PASSWORD }}  # Usa la password invece della chiave SSH
+          password: ${{ secrets.SFTP_PASSWORD }}  # Assicurati che questo secret esista
           local_path: |
             include/version.h
             src/Ultimus.oxt/leeno_version_code
@@ -70,6 +78,7 @@ jobs:
           port: ${{ secrets.SFTP_PORT || '22' }}
           sftp_only: true
           delete_remote_files: false
+          sftp_args: -o PreferredAuthentications=password -o PubkeyAuthentication=no  # Disabilita esplicitamente SSH
 
 
       - name: Set correct permissions

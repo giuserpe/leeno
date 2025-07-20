@@ -68,16 +68,13 @@ jobs:
           ls ${{ secrets.SFTP_REMOTE_PATH }}
           bye" | lftp -e "set sftp:auto-confirm yes; set ftp:ssl-allow no"
 
-      - name: Upload files
+      - name: Upload with rsync
         run: |
-          lftp -u "${{ secrets.SFTP_USER }}","${{ secrets.SFTP_PASSWORD }}" \
-          sftp://${{ secrets.SFTP_HOST }} <<EOF
-          set sftp:auto-confirm yes
-          mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}
-          put include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
-          put src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
-          bye
-          EOF
+          sshpass -p "${{ secrets.SFTP_PASSWORD }}" rsync -avz \
+          -e "ssh -p ${{ secrets.SFTP_PORT || 22 }} -o StrictHostKeyChecking=no" \
+          include/version.h \
+          src/Ultimus.oxt/leeno_version_code \
+          ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}
 
       - name: Set correct permissions
         run: |

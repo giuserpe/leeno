@@ -6,19 +6,20 @@ from datetime import datetime
 from pathlib import Path
 
 def get_version_info():
-    """Read version information from package.json"""
+    """Read version information from VERSION file"""
+    version_file = Path(__file__).parent.parent.parent / 'VERSION'
     try:
-        with open(Path(__file__).parent.parent.parent / 'package.json') as f:
-            data = json.load(f)
-            version = data['version']
+        with open(version_file) as f:
+            version = f.read().strip()
             
             # Validate version format
             if not re.match(r'^\d+\.\d+\.\d+$', version):
-                raise ValueError(f"Invalid version format in package.json: {version}")
+                raise ValueError(f"Invalid version format in VERSION file: {version}")
             
             return version
     except Exception as e:
-        print(f"Error reading package.json: {str(e)}")
+        print(f"Error reading VERSION file: {str(e)}")
+        print("Please create a VERSION file with format MAJOR.MINOR.PATCH (e.g. 1.0.0)")
         raise
 
 def generate_build_metadata():

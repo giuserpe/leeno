@@ -34,19 +34,21 @@ jobs:
           echo -e "\nContenuto di tools/version:"
           ls -la tools/version
 
-      - name: Esegui script generazione versione
+      - name: Genera versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
-          BUILD_NUMBER: ${{ github.run_number }}
+          BUILD_NUMBER: ${{ github.run_number }}  # Usa il numero della run come build number
         working-directory: ${{ github.workspace }}
 
-      - name: Verifica file generati
+      - name: Verifica output
         run: |
-          [ -f include/version.h ] && echo "version.h trovato" || echo "version.h NON trovato"
-          [ -f src/Ultimus.oxt/leeno_version_code ] && echo "leeno_version_code trovato" || echo "leeno_version_code NON trovato"
-
+          echo "Contenuto aggiornato:"
+          cat src/Ultimus.oxt/leeno_version_code
+          echo -e "\nVersion header:"
+          cat include/version.h
       - name: Carica via SFTP
+      
         uses: pressidium/lftp-mirror-action@v1.1.0
         with:
           sftp_host: ${{ secrets.SFTP_HOST }}

@@ -1,6 +1,7 @@
 name: Genera pagina versioni LeenO
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -21,6 +22,7 @@ jobs:
         run: pip install requests
 
       - name: Esegui script generazione
+        working-directory: tools/version
         run: python leeno_version_generator.py
 
       - name: Carica via SFTP

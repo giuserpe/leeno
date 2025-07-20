@@ -30,6 +30,6 @@ jobs:
           sftp_port: ${{ secrets.SFTP_PORT }}
           sftp_username: ${{ secrets.SFTP_USER }}
           sftp_password: ${{ secrets.SFTP_PASS }}
-          local_path: ./versions.html
+          local_path: tools/version/versions.html
           remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
           args: -e -R

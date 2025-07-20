@@ -17,6 +17,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Mostra struttura file dopo il checkout
+        run: tree -a -L 3 || true
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:

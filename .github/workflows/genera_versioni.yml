@@ -56,12 +56,25 @@ jobs:
           echo -e "\nContenuto di leeno_version_code:"
           cat src/Ultimus.oxt/leeno_version_code || true
 
-      - name: Upload via cURL
-        run: |
-          curl -T include/version.h \
-          --user "${{ secrets.SFTP_USER }}:${{ secrets.SFTP_PASSWORD }}" \
-          sftp://${{ secrets.SFTP_HOST }}${{ secrets.SFTP_REMOTE_PATH }}/version.h
 
+      - name: Test SFTP connection
+        run: |
+          echo "open sftp://${{ secrets.SFTP_USER }}:${{ secrets.SFTP_PASSWORD }}@${{ secrets.SFTP_HOST }}
+          ls ${{ secrets.SFTP_REMOTE_PATH }}
+          bye" | lftp -e "set sftp:auto-confirm yes; set ftp:ssl-allow no"
+
+      - name: Upload files via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.SFTP_USER }}
+          server: ${{ secrets.SFTP_HOST }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: |
+            include/version.h
+            src/Ultimus.oxt/leeno_version_code
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+          port: ${{ secrets.SFTP_PORT || '22' }}
+          sftp_args: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
 
       - name: Set correct permissions
         run: |

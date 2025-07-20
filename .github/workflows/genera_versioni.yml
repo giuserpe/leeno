@@ -57,17 +57,27 @@ jobs:
           cat src/Ultimus.oxt/leeno_version_code || true
 
 
-      - name: Upload files via SCP
-        uses: appleboy/scp-action@master
+      - name: Carica file via SFTP
+        uses: pressidium/lftp-mirror-action@v1.1.0
         with:
           host: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USER }}
-          password: ${{ secrets.SFTP_PASS }}
           port: ${{ secrets.SFTP_PORT || '22' }}
-          source: |
-            include/version.h
-            src/Ultimus.oxt/leeno_version_code
-          target: ${{ secrets.SFTP_REMOTE_PATH }}
+          user: ${{ secrets.SFTP_USER }}
+          pass: ${{ secrets.SFTP_PASS }}
+          localDir: |
+            include/
+            src/Ultimus.oxt/
+          remoteDir: ${{ secrets.SFTP_REMOTE_PATH }}
+          reverse: true
+          options: |
+            --verbose
+            --delete-first
+            --parallel=3
+            --only-newer
+            --include=leeno_version_code
+            --include=version.h
+          forceSSL: true
+          verifyCertificate: true
 
       - name: Set correct permissions
         run: |

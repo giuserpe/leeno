@@ -5,10 +5,14 @@ on:
     branches: [dev]
   workflow_dispatch:
 
+env:
+  SFTP_REMOTE_PATH: "/path/to/remote"  # Sovrascritto dal secret
+  SFTP_PORT: "22"                      # Sovrascritto dal secret
+
 jobs:
   generate_version:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -27,35 +31,62 @@ jobs:
           sudo apt-get install -y sshpass
           pip install requests
 
-      - name: Recupera elenco file .oxt da SFTP
-        id: get_oxt
+      - name: Verifica connessione SFTP
         run: |
+          echo "=== Verifica connessione ==="
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "cd ${{ secrets.SFTP_REMOTE_PATH }} && ls -l --time-style=long-iso *.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
+            "cd ${{ secrets.SFTP_REMOTE_PATH }} && pwd && echo 'Contenuto:' && ls -la"
+
+      - name: Recupera elenco file .oxt
+        id: oxt_files
+        run: |
+          set +e
+          echo "=== Recupero file .oxt ==="
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SFTP_PORT || 22 }} \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
+            "cd ${{ secrets.SFTP_REMOTE_PATH }} && ls -l --time-style=long-iso *.oxt 2>/dev/null | sort -k 6,7 -r" > raw_oxt_list.txt
+
+          # Pulizia output
+          grep '.oxt' raw_oxt_list.txt | head -10 > oxt_list.txt
+          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
           
-          echo "=== Contenuto oxt_list.txt ==="
+          echo "=== Trovati $OXT_COUNT file ==="
           cat oxt_list.txt
-          echo "::set-output name=count::$(wc -l < oxt_list.txt)"
+          echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
+          echo "list_path=${{ github.workspace }}/oxt_list.txt" >> $GITHUB_OUTPUT
+
+      - name: Setup ambiente
+        run: |
+          mkdir -p src/Ultimus.oxt
+          mkdir -p include
+          mkdir -p tools/version
+          chmod -R 777 src include tools
 
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
-          OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
+          OXT_LIST_PATH: ${{ steps.oxt_files.outputs.list_path }}
+          SFTP_BASE_URL: "${{ secrets.SFTP_BASE_URL || 'https://download.example.com' }}"
         working-directory: ${{ github.workspace }}
 
-      - name: Verifica file generati
+      - name: Verifica output
         run: |
-          echo "=== Contenuto versions.html ==="
-          grep -A 15 "Archivio Versioni" tools/version/versions.html || true
+          echo "=== Version.h ==="
+          cat include/version.h || echo "version.h non generato"
+          echo "=== Versions.html ==="
+          grep -A 20 "Archivio Versioni" tools/version/versions.html || echo "Nessuna tabella trovata"
           echo "=== File generati ==="
-          ls -la tools/version/versions.html include/version.h src/Ultimus.oxt/leeno_version_code
+          ls -lR src/Ultimus.oxt include tools/version
 
       - name: Upload files
+        if: steps.oxt_files.outputs.count > 0
         run: |
           sshpass -p "${{ secrets.SFTP_PASS }}" scp \
             -o StrictHostKeyChecking=no \
@@ -64,10 +95,15 @@ jobs:
             include/version.h \
             tools/version/versions.html \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-            
-      - name: Debug SFTP output
+
+      - name: Post-upload verification
+        if: steps.oxt_files.outputs.count > 0
         run: |
-          echo "=== Raw oxt_list.txt ==="
-          cat oxt_list.txt
-          echo "=== Formattato ==="
-          column -t oxt_list.txt
+          echo "=== File remoti ==="
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SFTP_PORT || 22 }} \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
+            "ls -l ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
+                   ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
+                   ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"

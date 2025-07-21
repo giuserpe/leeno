@@ -22,13 +22,25 @@ jobs:
           python-version: '3.10'
 
       - name: Installa dipendenze
-        run: pip install requests
+        run: pip install requests sshpass
+
+      - name: Recupera elenco file .oxt da SFTP
+        run: |
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SFTP_PORT || 22 }} \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
+            "ls -l --time-style=long-iso ${{ secrets.SFTP_REMOTE_PATH }}/*.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
+          
+          echo "=== File .oxt trovati ==="
+          cat oxt_list.txt
 
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
+          OXT_LIST_FILE: oxt_list.txt
         working-directory: ${{ github.workspace }}
 
       - name: Verifica file generati
@@ -38,13 +50,10 @@ jobs:
           ls -la include/version.h
           ls -la tools/version/versions.html
           echo "=== Anteprima HTML ==="
-          head -n 15 tools/version/versions.html
+          head -n 20 tools/version/versions.html
 
       - name: Upload files
         run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-          
           sshpass -p "${{ secrets.SFTP_PASS }}" scp \
             -o StrictHostKeyChecking=no \
             -P ${{ secrets.SFTP_PORT || 22 }} \

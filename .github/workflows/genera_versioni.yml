@@ -2,9 +2,8 @@ name: Genera e pubblica versioni LeenO
 
 on:
   push:
-    branches:
-      - dev
-  workflow_dispatch:  # Permette l'avvio manuale
+    branches: [dev]
+  workflow_dispatch:
 
 jobs:
   generate_version:
@@ -12,38 +11,24 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout codice
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Mostra struttura repository
-        run: tree -a -L 3 || true
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          check-latest: true
+          cache: 'pip'
 
       - name: Installa dipendenze
         run: |
-          pip install requests packaging
+          pip install requests
           sudo apt-get update
-          sudo apt-get install -y sshpass rsync lftp
+          sudo apt-get install -y sshpass lftp
 
-      - name: Configura ambiente
-        run: |
-          echo "WEBDAV_URL='${{ secrets.WEBDAV_URL }}'" > tools/version/config.py
-          echo "WEBDAV_USER='${{ secrets.WEBDAV_USER }}'" >> tools/version/config.py
-          echo "WEBDAV_PASS='${{ secrets.WEBDAV_PASS }}'" >> tools/version/config.py
-          echo "GH_API_TAGS='${{ secrets.GH_API_TAGS }}'" >> tools/version/config.py
-          echo "PUBLIC_DOWNLOAD_BASE='${{ secrets.PUBLIC_DOWNLOAD_BASE }}'" >> tools/version/config.py
-          
-          # Debug sicuro (nasconde password)
-          sed 's/\(PASS=\).*/\1********/' tools/version/config.py
-
-      - name: Genera versione e pagina HTML
+      - name: Genera versioni
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -56,76 +41,30 @@ jobs:
           ls -la src/Ultimus.oxt/leeno_version_code \
                include/version.h \
                tools/version/versions.html
-          
-          echo -e "\n=== Anteprima HTML ==="
+          echo "=== Contenuto versions.html ==="
           head -n 15 tools/version/versions.html
 
-      - name: Prepara upload SFTP
+      - name: Setup SFTP
         run: |
-          # Verifica credenziali base
-          if [ -z "${{ secrets.SFTP_PASS }}" ]; then
-            echo "::error::Mancano le credenziali SFTP!"
-            exit 1
-          fi
-          
-          # Crea directory remota
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SFTP_HOST }} ssh-rsa AAAAB3NzaC1yc2E..." >> ~/.ssh/known_hosts
 
       - name: Upload files
         run: |
-          set -x  # Debug dettagliato
-          
-          # Lista file con verifiche
-          declare -a FILES=(
-            "include/version.h"
-            "src/Ultimus.oxt/leeno_version_code"
-            "tools/version/versions.html"
-          )
-          
-          for file in "${FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "::error file=${file}::File non trovato!"
-              exit 1
-            fi
-          done
-          
-          # Upload con rsync (preferito)
-          sshpass -p "${{ secrets.SFTP_PASS }}" rsync -avz \
-            --checksum \
-            -e "ssh -p ${{ secrets.SFTP_PORT || 22 }} -o StrictHostKeyChecking=no" \
-            "${FILES[@]}" \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-          
-          echo "::notice::Upload completato via rsync"
-
-      - name: Fallback LFTP
-        if: failure()  # Solo se rsync fallisce
-        run: |
-          echo "::warning::Tentativo fallback con LFTP"
           lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASS }}" \
-          sftp://${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT || 22 }} <<EOF
+          sftp://${{ secrets.SFTP_HOST }} <<EOF
           set sftp:auto-confirm yes
-          put include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
-          put src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
-          put tools/version/versions.html -o ${{ secrets.SFTP_REMOTE_PATH }}/versions.html
+          mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}
+          put $GITHUB_WORKSPACE/include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
+          put $GITHUB_WORKSPACE/src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
+          put $GITHUB_WORKSPACE/tools/version/versions.html -o ${{ secrets.SFTP_REMOTE_PATH }}/versions.html
           bye
           EOF
 
-      - name: Verifica finale
+      - name: Verifica upload
         run: |
-          echo "=== Verifica remota ==="
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -l ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
+            "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
                    ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
                    ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"
-          
-          echo -e "\n=== Dimensione files ==="
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "du -h ${{ secrets.SFTP_REMOTE_PATH }}/{version.h,leeno_version_code,versions.html}"

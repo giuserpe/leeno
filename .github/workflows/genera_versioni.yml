@@ -24,8 +24,14 @@ jobs:
       - name: Installa dipendenze
         run: |
           sudo apt-get update
-          sudo apt-get install -y sshpass  # Tool per SSH/SCP
+          sudo apt-get install -y sshpass
           pip install requests
+
+      - name: Crea directory necessarie
+        run: |
+          mkdir -p src/Ultimus.oxt
+          mkdir -p include
+          mkdir -p tools/version
 
       - name: Recupera elenco file .oxt da SFTP
         id: get_oxt
@@ -35,10 +41,7 @@ jobs:
             -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
             "ls -l --time-style=long-iso ${{ secrets.SFTP_REMOTE_PATH }}/*.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
-
-          echo "=== File .oxt trovati ==="
-          cat oxt_list.txt
-          echo "::set-output name=count::$(grep -c '.oxt' oxt_list.txt)"
+          echo "::set-output name=count::$(grep -c '.oxt' oxt_list.txt || echo '0')"
 
       - name: Genera file versione
         if: steps.get_oxt.outputs.count != '0'
@@ -52,13 +55,14 @@ jobs:
       - name: Verifica file generati
         run: |
           echo "=== File generati ==="
-          ls -la src/Ultimus.oxt/leeno_version_code
-          ls -la include/version.h
-          ls -la tools/version/versions.html
-          echo "=== Anteprima HTML ==="
-          head -n 25 tools/version/versions.html
+          ls -la src/Ultimus.oxt/leeno_version_code || echo "leeno_version_code non generato"
+          ls -la include/version.h || echo "version.h non generato"
+          ls -la tools/version/versions.html || echo "versions.html non generato"
+          echo "=== Contenuto version.h ==="
+          cat include/version.h || echo "File version.h non esistente"
 
       - name: Upload files
+        if: success()
         run: |
           sshpass -p "${{ secrets.SFTP_PASS }}" scp \
             -o StrictHostKeyChecking=no \
@@ -69,8 +73,8 @@ jobs:
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
 
       - name: Verifica upload
+        if: success()
         run: |
-          echo "=== File remoti ==="
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
@@ -78,9 +82,3 @@ jobs:
             "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
                    ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
                    ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"
-          echo "=== Anteprima HTML remoto ==="
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
-            -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "head -n 10 ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"

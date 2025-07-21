@@ -75,6 +75,7 @@ def findXmlParser(xmlText):
         'autore="Regione Calabria"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Campania"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
+        'xsi:noNamespaceSchemaLocation="SAR24': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,

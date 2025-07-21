@@ -1,4 +1,4 @@
-name: Genera e pubblica versioni LeenO
+name: Genera versioni LeenO
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   generate_version:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -20,15 +20,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          cache: 'pip'
 
       - name: Installa dipendenze
-        run: |
-          pip install requests
-          sudo apt-get update
-          sudo apt-get install -y sshpass lftp
+        run: pip install requests
 
-      - name: Genera versioni
+      - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -38,32 +34,30 @@ jobs:
       - name: Verifica file generati
         run: |
           echo "=== File generati ==="
-          ls -la src/Ultimus.oxt/leeno_version_code \
-               include/version.h \
-               tools/version/versions.html
-          echo "=== Contenuto versions.html ==="
+          ls -la src/Ultimus.oxt/leeno_version_code
+          ls -la include/version.h
+          ls -la tools/version/versions.html
+          echo "=== Anteprima HTML ==="
           head -n 15 tools/version/versions.html
-
-      - name: Setup SFTP
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SFTP_HOST }} ssh-rsa AAAAB3NzaC1yc2E..." >> ~/.ssh/known_hosts
 
       - name: Upload files
         run: |
-          lftp -u "${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASS }}" \
-          sftp://${{ secrets.SFTP_HOST }} <<EOF
-          set sftp:auto-confirm yes
-          mkdir -p ${{ secrets.SFTP_REMOTE_PATH }}
-          put $GITHUB_WORKSPACE/include/version.h -o ${{ secrets.SFTP_REMOTE_PATH }}/version.h
-          put $GITHUB_WORKSPACE/src/Ultimus.oxt/leeno_version_code -o ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code
-          put $GITHUB_WORKSPACE/tools/version/versions.html -o ${{ secrets.SFTP_REMOTE_PATH }}/versions.html
-          bye
-          EOF
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          
+          sshpass -p "${{ secrets.SFTP_PASS }}" scp \
+            -o StrictHostKeyChecking=no \
+            -P ${{ secrets.SFTP_PORT || 22 }} \
+            src/Ultimus.oxt/leeno_version_code \
+            include/version.h \
+            tools/version/versions.html \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
 
       - name: Verifica upload
         run: |
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh -o StrictHostKeyChecking=no \
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
             "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
                    ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \

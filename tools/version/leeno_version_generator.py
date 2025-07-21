@@ -36,26 +36,30 @@ class VersionManager:
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
         """Parsa l'elenco dei file .oxt dal file generato dallo script bash"""
         oxt_list = []
-        oxt_file = os.getenv('OXT_LIST_FILE', '')
+        oxt_file_path = os.getenv('OXT_LIST_PATH', '')
         
-        if not oxt_file or not Path(oxt_file).exists():
-            logger.warning("Nessun file .oxt trovato o lista non disponibile")
+        if not oxt_file_path or not Path(oxt_file_path).exists():
+            logger.warning(f"File lista .oxt non trovato: {oxt_file_path}")
             return oxt_list
             
         try:
-            with open(oxt_file, 'r') as f:
+            with open(oxt_file_path, 'r') as f:
                 for line in f:
                     if '.oxt' in line:
                         parts = line.strip().split()
                         if len(parts) >= 8:
+                            # Estrae nome file (ultimo campo) e rimuove il path se presente
+                            filename = parts[-1].split('/')[-1]
                             oxt_list.append({
-                                "name": parts[-1].split('/')[-1],
+                                "name": filename,
                                 "size": f"{int(parts[4])/1024:.1f} KB",
-                                "date": f"{parts[5]} {parts[6]}"
+                                "date": f"{parts[5]} {parts[6]}",
+                                "url": f"https://{os.getenv('SFTP_HOST')}/{filename}"  # Modifica con URL reale
                             })
             logger.info(f"Trovati {len(oxt_list)} file .oxt")
         except Exception as e:
             logger.error(f"Errore parsing oxt_list: {str(e)}")
+            logger.error(f"Contenuto problematico: {line if 'line' in locals() else 'N/A'}")
             
         return oxt_list[:10]  # Restituisce al massimo 10 elementi
 

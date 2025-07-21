@@ -27,12 +27,6 @@ jobs:
           sudo apt-get install -y sshpass
           pip install requests
 
-      - name: Crea directory necessarie
-        run: |
-          mkdir -p src/Ultimus.oxt
-          mkdir -p include
-          mkdir -p tools/version
-
       - name: Recupera elenco file .oxt da SFTP
         id: get_oxt
         run: |
@@ -40,29 +34,28 @@ jobs:
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -l --time-style=long-iso ${{ secrets.SFTP_REMOTE_PATH }}/*.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
-          echo "::set-output name=count::$(grep -c '.oxt' oxt_list.txt || echo '0')"
+            "cd ${{ secrets.SFTP_REMOTE_PATH }} && ls -l --time-style=long-iso *.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
+          
+          echo "=== Contenuto oxt_list.txt ==="
+          cat oxt_list.txt
+          echo "::set-output name=count::$(wc -l < oxt_list.txt)"
 
       - name: Genera file versione
-        if: steps.get_oxt.outputs.count != '0'
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
-          OXT_LIST_FILE: oxt_list.txt
+          OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
         working-directory: ${{ github.workspace }}
 
       - name: Verifica file generati
         run: |
+          echo "=== Contenuto versions.html ==="
+          grep -A 15 "Archivio Versioni" tools/version/versions.html || true
           echo "=== File generati ==="
-          ls -la src/Ultimus.oxt/leeno_version_code || echo "leeno_version_code non generato"
-          ls -la include/version.h || echo "version.h non generato"
-          ls -la tools/version/versions.html || echo "versions.html non generato"
-          echo "=== Contenuto version.h ==="
-          cat include/version.h || echo "File version.h non esistente"
+          ls -la tools/version/versions.html include/version.h src/Ultimus.oxt/leeno_version_code
 
       - name: Upload files
-        if: success()
         run: |
           sshpass -p "${{ secrets.SFTP_PASS }}" scp \
             -o StrictHostKeyChecking=no \
@@ -71,14 +64,3 @@ jobs:
             include/version.h \
             tools/version/versions.html \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-
-      - name: Verifica upload
-        if: success()
-        run: |
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
-            -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
-                   ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
-                   ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"

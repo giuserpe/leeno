@@ -1,4 +1,4 @@
-name: Genera versioni LeenO
+name: Genera versioni LeenO con archivio .oxt
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   generate_version:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -22,20 +22,26 @@ jobs:
           python-version: '3.10'
 
       - name: Installa dipendenze
-        run: pip install requests sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass  # Tool per SSH/SCP
+          pip install requests
 
       - name: Recupera elenco file .oxt da SFTP
+        id: get_oxt
         run: |
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
             "ls -l --time-style=long-iso ${{ secrets.SFTP_REMOTE_PATH }}/*.oxt | sort -k 6,7 -r | head -10" > oxt_list.txt
-          
+
           echo "=== File .oxt trovati ==="
           cat oxt_list.txt
+          echo "::set-output name=count::$(grep -c '.oxt' oxt_list.txt)"
 
       - name: Genera file versione
+        if: steps.get_oxt.outputs.count != '0'
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
@@ -50,7 +56,7 @@ jobs:
           ls -la include/version.h
           ls -la tools/version/versions.html
           echo "=== Anteprima HTML ==="
-          head -n 20 tools/version/versions.html
+          head -n 25 tools/version/versions.html
 
       - name: Upload files
         run: |
@@ -64,6 +70,7 @@ jobs:
 
       - name: Verifica upload
         run: |
+          echo "=== File remoti ==="
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
@@ -71,3 +78,9 @@ jobs:
             "ls -la ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
                    ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
                    ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"
+          echo "=== Anteprima HTML remoto ==="
+          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SFTP_PORT || 22 }} \
+            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
+            "head -n 10 ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"

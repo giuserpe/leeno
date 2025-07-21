@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script completo per la gestione delle versioni LeenO
+Script completo per la gestione delle versioni LeenO con archivio .oxt
 """
 
 import os
@@ -8,7 +8,7 @@ import re
 import logging
 from pathlib import Path
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 
 # Configurazione logging
 logging.basicConfig(
@@ -32,6 +32,32 @@ class VersionManager:
         # Crea directory se non esistono
         self.include_dir.mkdir(exist_ok=True)
         self.web_dir.mkdir(exist_ok=True)
+
+    def _parse_oxt_list(self) -> List[Dict[str, str]]:
+        """Parsa l'elenco dei file .oxt dal file generato dallo script bash"""
+        oxt_list = []
+        oxt_file = os.getenv('OXT_LIST_FILE', '')
+        
+        if not oxt_file or not Path(oxt_file).exists():
+            logger.warning("Nessun file .oxt trovato o lista non disponibile")
+            return oxt_list
+            
+        try:
+            with open(oxt_file, 'r') as f:
+                for line in f:
+                    if '.oxt' in line:
+                        parts = line.strip().split()
+                        if len(parts) >= 8:
+                            oxt_list.append({
+                                "name": parts[-1].split('/')[-1],
+                                "size": f"{int(parts[4])/1024:.1f} KB",
+                                "date": f"{parts[5]} {parts[6]}"
+                            })
+            logger.info(f"Trovati {len(oxt_list)} file .oxt")
+        except Exception as e:
+            logger.error(f"Errore parsing oxt_list: {str(e)}")
+            
+        return oxt_list[:10]  # Restituisce al massimo 10 elementi
 
     def update_version_files(self, version_info: Dict[str, str]):
         """Genera tutti i file necessari"""
@@ -68,50 +94,36 @@ class VersionManager:
         with open(self.include_dir / 'version.h', 'w') as f:
             f.write(content)
 
-def _generate_versions_html(self, version_info: Dict[str, str]):
-    """Genera la pagina HTML con l'elenco delle ultime 10 versioni .oxt"""
-    # Cerca i file .oxt nella cartella di destinazione (esempio: SFTP_REMOTE_PATH)
-    # Nota: Se i file sono altrove, modifica il percorso o usa una chiamata SSH per ottenerli
-    oxt_files = []
-    oxt_dir = self.repo_root / "src"  # Modifica questo percorso se necessario
-    try:
-        for file in oxt_dir.glob("*.oxt"):
-            oxt_files.append({
-                "name": file.name,
-                "size": f"{file.stat().st_size / 1024:.1f} KB",
-                "date": datetime.fromtimestamp(file.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
-            })
-        # Ordina per data (dal più recente)
-        oxt_files.sort(key=lambda x: x["date"], reverse=True)
-        latest_oxt = oxt_files[:10]  # Prendi solo gli ultimi 10
-    except Exception as e:
-        logger.error(f"Errore durante il caricamento dei file .oxt: {str(e)}")
-        latest_oxt = []
-
-    # Genera l'HTML
-    html = f"""<!DOCTYPE html>
+    def _generate_versions_html(self, version_info: Dict[str, str]):
+        """Genera la pagina HTML completa"""
+        oxt_files = self._parse_oxt_list()
+        
+        html = f"""<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>LeenO {version_info['full']} - Archivio Versioni</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; }}
-        h1 {{ color: #2c3e50; }}
+        h1, h2 {{ color: #2c3e50; }}
         .version-info {{ 
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
-            margin-top: 20px;
+            margin: 20px 0;
         }}
         table {{ width: 100%; border-collapse: collapse; }}
-        th, td {{ padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }}
+        th, td {{ padding: 8px 12px; text-align: left; border-bottom: 1px solid #ddd; }}
+        th {{ background-color: #e9ecef; }}
         .git-sha {{ font-family: monospace; }}
         a {{ color: #0066cc; text-decoration: none; }}
         a:hover {{ text-decoration: underline; }}
+        .file-list {{ margin-top: 30px; }}
     </style>
 </head>
 <body>
     <h1>Versione LeenO {version_info['full']}</h1>
+    
     <div class="version-info">
         <h2>Informazioni Build</h2>
         <table>
@@ -123,22 +135,24 @@ def _generate_versions_html(self, version_info: Dict[str, str]):
         </table>
     </div>
 
-    <div class="version-info">
-        <h2>Ultime 10 Versioni (.oxt)</h2>
+    <div class="version-info file-list">
+        <h2>Archivio Versioni (.oxt)</h2>
         <table>
-            <tr><th>Nome File</th><th>Dimensione</th><th>Data Modifica</th></tr>
+            <tr><th>Nome File</th><th>Dimensione</th><th>Ultima Modifica</th></tr>
             {"".join(
-                f'<tr><td><a href="{file["name"]}">{file["name"]}</a></td><td>{file["size"]}</td><td>{file["date"]}</td></tr>'
-                for file in latest_oxt
+                f'<tr><td><a href="{file["name"]}">{file["name"]}</a></td>'
+                f'<td>{file["size"]}</td>'
+                f'<td>{file["date"]}</td></tr>'
+                for file in oxt_files
             )}
         </table>
     </div>
 </body>
 </html>
 """
-    with open(self.web_dir / "versions.html", "w", encoding="utf-8") as f:
-        f.write(html)
-        
+        with open(self.web_dir / 'versions.html', 'w', encoding='utf-8') as f:
+            f.write(html)
+
 def main():
     try:
         logger.info("Avvio generazione versione...")
@@ -161,7 +175,6 @@ def main():
             'patch': match.group('patch'),
             'build_number': os.getenv('BUILD_NUMBER', match.group('build')),
             'build_date': datetime.now().strftime("%Y-%m-%d"),
-            'build_time': datetime.now().strftime("%H:%M:%S"),
             'git_sha': os.getenv('GITHUB_SHA', 'local')[:7],
             'type': match.group('type')
         }

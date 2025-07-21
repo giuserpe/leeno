@@ -6307,8 +6307,7 @@ per la formulazione dell'offerta'''
     formule = []
     for x in range(3, SheetUtils.getUsedArea(oSheet).EndRow - 1):
         formule.append([
-            '=IF(E' + str(x + 1) + '<>"";D' + str(x + 1) + '*E' + str(x + 1) +
-            ';""'
+            f'=IF(E{x+1}<>""; D{x+1}*E{x+1}; "")'
         ])
     oSheet.getCellRangeByPosition(6, 3, 6,
                                   len(formule) + 2).CellBackColor = 15757935
@@ -6325,14 +6324,21 @@ per la formulazione dell'offerta'''
         VALUE + FORMULA + STRING)  # cancella prezzi unitari
     oSheet.getCellRangeByPosition(0, fine - 1, 100, fine +
                                   1).clearContents(VALUE + FORMULA + STRING)
-    oSheet.Columns.insertByIndex(0, 1)
+    
+    #copio le quantità dalla colonna computo
+    oSrc = oSheet.getCellRangeByPosition(11, 3, 11, fine).getDataArray()  # Ottieni i dati come matrice
+    oDest = oSheet.getCellRangeByPosition(3, 3, 3, fine)
+    oDest.setDataArray(oSrc)
 
+    oSheet.Columns.insertByIndex(0, 1)
     oSrc = oSheet.getCellRangeByPosition(1, 0, 1, fine).RangeAddress
     oDest = oSheet.getCellByPosition(0, 0).CellAddress
     oSheet.copyRange(oDest, oSrc)
     oSheet.getCellByPosition(0, 2).String = "N."
     for x in range(3, fine - 1):
         oSheet.getCellByPosition(0, x).Value = x - 2
+
+    oSheet.getCellRangeByPosition(3, 1, 7, fine).CellStyle = "EP statistiche_q"
     oSheet.getCellRangeByPosition(0, 1, 0, fine).CellStyle = "EP-aS"
     for y in (2, 3):
         for x in range(3, fine - 1):
@@ -6350,7 +6356,8 @@ per la formulazione dell'offerta'''
         7, fine).Formula = "=SUBTOTAL(9;H2:H" + str(fine + 1) + ")"
     oSheet.getCellByPosition(2, fine).String = "TOTALE COMPUTO"
     oSheet.getCellRangeByPosition(0, fine, 7, fine).CellStyle = "Comp TOTALI"
-    oSheet.Rows.removeByIndex(fine - 1, 1)
+
+    oSheet.Rows.removeByIndex(fine - 2, 2)
     oSheet.Rows.removeByIndex(0, 2)
     oSheet.getCellByPosition(2,
                              fine + 3).String = "(diconsi euro - in lettere)"
@@ -6401,6 +6408,7 @@ per la formulazione dell'offerta'''
     pagestyle.RightPageHeaderContent = oHContent
     _gotoCella(0, 1)
     oSheet.Columns.removeByIndex(8, 50)
+    oSheet.getCellRangeByPosition(0, 0, 7, 0).CellStyle = "EP-a -Top"
     return
 
 

@@ -34,47 +34,30 @@ class VersionManager:
         self.web_dir.mkdir(exist_ok=True)
 
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
-        """Gestione avanzata lista file con fallback"""
         oxt_list = []
-        oxt_file_path = os.getenv('OXT_LIST_PATH', '')
+        base_url = os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')
         
         try:
-            if oxt_file_path and Path(oxt_file_path).exists():
-                with open(oxt_file_path, 'r', encoding='utf-8') as f:
-                    for line in f:
-                        try:
-                            if not line.strip() or '.oxt' not in line.lower():
-                                continue
-                                
-                            # Nuovo formato: "YYYY-MM-DD HH:MM SIZEKB ./filename.oxt"
-                            parts = line.strip().split()
-                            if len(parts) >= 4:
-                                filename = parts[-1].split('/')[-1]
-                                if filename == 'placeholder.oxt':
-                                    continue
-                                    
-                                oxt_list.append({
-                                    "name": filename,
-                                    "size": parts[2],
-                                    "date": f"{parts[0]} {parts[1]}",
-                                    "url": f"{os.getenv('SFTP_BASE_URL', '')}/{filename}"
-                                })
-                        except Exception as e:
-                            logger.warning(f"Errore processamento linea: {line[:50]}... - {str(e)}")
+            with open(os.getenv('OXT_LIST_PATH', ''), 'r') as f:
+                for line in f:
+                    if '.oxt' in line.lower():
+                        parts = line.strip().split()
+                        if len(parts) >= 4:
+                            oxt_list.append({
+                                "name": parts[-1],
+                                "size": parts[-2],
+                                "date": ' '.join(parts[:3]),
+                                "url": f"{base_url}/{parts[-1]}"
+                            })
         except Exception as e:
-            logger.error(f"Errore lettura file lista: {str(e)}")
+            logger.error(f"Errore lettura lista file: {str(e)}")
         
-        # Fallback se lista vuota
-        if not oxt_list:
-            logger.warning("Usando dati fallback")
-            oxt_list.append({
-                "name": "Nessun file .oxt trovato",
-                "size": "0KB",
-                "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                "url": "#"
-            })
-        
-        return oxt_list[:10]
+        return oxt_list[:10] or [{
+            "name": "Nessun file disponibile",
+            "size": "0KB",
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "url": "#"
+        }]
     def update_version_files(self, version_info: Dict[str, str]):
         """Genera tutti i file necessari"""
         try:

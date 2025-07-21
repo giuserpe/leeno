@@ -1,13 +1,9 @@
-name: Genera versioni LeenO con archivio .oxt
+name: Genera versioni LeenO con WebDAV
 
 on:
   push:
     branches: [dev]
   workflow_dispatch:
-
-env:
-  SFTP_REMOTE_PATH: "/path/to/remote"  # Sovrascritto dal secret
-  SFTP_PORT: "22"                      # Sovrascritto dal secret
 
 jobs:
   generate_version:
@@ -17,104 +13,81 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Installa dipendenze
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-          pip install requests
-
-      - name: Verifica connessione SFTP
-        run: |
-          echo "=== Verifica connessione ==="
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
-            -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "cd ${{ secrets.SFTP_REMOTE_PATH }} && pwd && echo 'Contenuto:' && ls -la"
-
-      - name: Recupera elenco file .oxt
-        id: oxt_files
-        run: |
-          echo "=== Debug Inizio ==="
-          echo "Remote Path: ${{ secrets.SFTP_REMOTE_PATH }}"
-          echo "Host: ${{ secrets.SFTP_HOST }}"
-          
-          # Comando di ricerca più robusto
-          set +e
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
-            -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "cd '${{ secrets.SFTP_REMOTE_PATH }}' && find . -maxdepth 1 -name '*.oxt' -printf '%TY-%Tm-%Td %TH:%TM %kKB %p\n' | sort -r | head -10" > oxt_list.txt
-          
-          # Verifica risultati
-          echo "=== Contenuto oxt_list.txt ==="
-          cat oxt_list.txt
-          OXT_COUNT=$(wc -l < oxt_list.txt | tr -d ' ')
-          
-          # Crea file vuoto se nessun risultato
-          if [ "$OXT_COUNT" -eq 0 ]; then
-            echo "Nessun file .oxt trovato, uso fallback"
-            echo "LeenO-0.0.0.0-EMPTY-19700101 0KB ./placeholder.oxt" > oxt_list.txt
-            OXT_COUNT=1
-          fi
-          
-          echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
-          echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
-          echo "=== Debug Fine ==="
 
       - name: Setup ambiente
         run: |
-          mkdir -p src/Ultimus.oxt
-          mkdir -p include
-          mkdir -p tools/version
-          chmod -R 777 src include tools
+          sudo apt-get update
+          sudo apt-get install -y curl
+          pip install requests
+          mkdir -p src/Ultimus.oxt include tools/version
+
+      - name: Recupera elenco .oxt da WebDAV
+        id: webdav_files
+        run: |
+          # Configurazione da secret
+          WEBDAV_URL="${{ secrets.MEDDAV_URL }}"
+          WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
+          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+
+          echo "=== Connessione a ${WEBDAV_URL}/${WEBDAV_PATH} ==="
+          
+          # 1. Lista file via PROPFIND
+          curl -s -X PROPFIND \
+            -H "Authorization: Basic $AUTH" \
+            -H "Depth: 1" \
+            "${WEBDAV_URL}/${WEBDAV_PATH}/" \
+            -o webdav.xml
+
+          # 2. Estrai solo file .oxt
+          grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml | 
+            sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt
+
+          # 3. Recupera metadati
+          echo "=== Metadati file ==="
+          while read -r path; do
+            filename=$(basename "$path")
+            curl -s -I -H "Authorization: Basic $AUTH" "${WEBDAV_URL}${path}" | \
+              awk -v fn="$filename" \
+              '/Last-Modified:/ {date=$3" "$4" "$5} /Content-Length:/ {size=$2/1024} END {print date, size"KB", fn}'
+          done < oxt_urls.txt | sort -r | head -10 > oxt_list.txt
+
+          # Output
+          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
+          echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
+          echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
+          echo "=== Trovati $OXT_COUNT file ==="
+          cat oxt_list.txt
 
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
-          OXT_LIST_PATH: ${{ steps.oxt_files.outputs.list_path }}
-          SFTP_BASE_URL: "${{ secrets.SFTP_BASE_URL || 'https://download.example.com' }}"
-        working-directory: ${{ github.workspace }}
+          OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
+          OXT_BASE_URL: "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
+          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOMNLOAD_BASE }}"  # Nota: correggi typo nel secret se possibile
 
       - name: Verifica output
         run: |
-          echo "=== Version.h ==="
-          cat include/version.h || echo "version.h non generato"
-          echo "=== Versions.html ==="
-          grep -A 20 "Archivio Versioni" tools/version/versions.html || echo "Nessuna tabella trovata"
           echo "=== File generati ==="
-          ls -lR src/Ultimus.oxt include tools/version
+          ls -la src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html
+          echo "=== Anteprima HTML ==="
+          grep -A 15 "Archivio Versioni" tools/version/versions.html || true
 
-      - name: Upload files
-        if: steps.oxt_files.outputs.count > 0
+      - name: Upload a WebDAV
+        if: steps.webdav_files.outputs.count > 0
         run: |
-          sshpass -p "${{ secrets.SFTP_PASS }}" scp \
-            -o StrictHostKeyChecking=no \
-            -P ${{ secrets.SFTP_PORT || 22 }} \
-            src/Ultimus.oxt/leeno_version_code \
-            include/version.h \
-            tools/version/versions.html \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
-
-      - name: Post-upload verification
-        if: steps.oxt_files.outputs.count > 0
+          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+          for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
+            curl -X PUT \
+              -H "Authorization: Basic $AUTH" \
+              -T "$file" \
+              "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/$(basename $file)"
+          done
+          
+      - name: Debug WebDAV
         run: |
-          echo "=== File remoti ==="
-          sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
-            -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SFTP_PORT || 22 }} \
-            ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "ls -l ${{ secrets.SFTP_REMOTE_PATH }}/version.h \
-                   ${{ secrets.SFTP_REMOTE_PATH }}/leeno_version_code \
-                   ${{ secrets.SFTP_REMOTE_PATH }}/versions.html"
+          echo "URL: ${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
+          echo "File list:"
+          curl -s -X PROPFIND -H "Authorization: Basic $(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)" \
+            "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/" | grep -Eo '<d:href>[^<]*</d:href>'

@@ -68,13 +68,32 @@ class VersionManager:
         with open(self.include_dir / 'version.h', 'w') as f:
             f.write(content)
 
-    def _generate_versions_html(self, version_info: Dict[str, str]):
-        """Genera la pagina HTML"""
-        html = f"""<!DOCTYPE html>
+def _generate_versions_html(self, version_info: Dict[str, str]):
+    """Genera la pagina HTML con l'elenco delle ultime 10 versioni .oxt"""
+    # Cerca i file .oxt nella cartella di destinazione (esempio: SFTP_REMOTE_PATH)
+    # Nota: Se i file sono altrove, modifica il percorso o usa una chiamata SSH per ottenerli
+    oxt_files = []
+    oxt_dir = self.repo_root / "src"  # Modifica questo percorso se necessario
+    try:
+        for file in oxt_dir.glob("*.oxt"):
+            oxt_files.append({
+                "name": file.name,
+                "size": f"{file.stat().st_size / 1024:.1f} KB",
+                "date": datetime.fromtimestamp(file.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
+            })
+        # Ordina per data (dal più recente)
+        oxt_files.sort(key=lambda x: x["date"], reverse=True)
+        latest_oxt = oxt_files[:10]  # Prendi solo gli ultimi 10
+    except Exception as e:
+        logger.error(f"Errore durante il caricamento dei file .oxt: {str(e)}")
+        latest_oxt = []
+
+    # Genera l'HTML
+    html = f"""<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>LeenO {version_info['full']}</title>
+    <title>LeenO {version_info['full']} - Archivio Versioni</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; }}
         h1 {{ color: #2c3e50; }}
@@ -87,11 +106,14 @@ class VersionManager:
         table {{ width: 100%; border-collapse: collapse; }}
         th, td {{ padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }}
         .git-sha {{ font-family: monospace; }}
+        a {{ color: #0066cc; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
     </style>
 </head>
 <body>
     <h1>Versione LeenO {version_info['full']}</h1>
     <div class="version-info">
+        <h2>Informazioni Build</h2>
         <table>
             <tr><th>Componente</th><th>Valore</th></tr>
             <tr><td>Versione completa</td><td>{version_info['full']}</td></tr>
@@ -100,12 +122,23 @@ class VersionManager:
             <tr><td>Commit Git</td><td class="git-sha">{version_info['git_sha']}</td></tr>
         </table>
     </div>
+
+    <div class="version-info">
+        <h2>Ultime 10 Versioni (.oxt)</h2>
+        <table>
+            <tr><th>Nome File</th><th>Dimensione</th><th>Data Modifica</th></tr>
+            {"".join(
+                f'<tr><td><a href="{file["name"]}">{file["name"]}</a></td><td>{file["size"]}</td><td>{file["date"]}</td></tr>'
+                for file in latest_oxt
+            )}
+        </table>
+    </div>
 </body>
 </html>
 """
-        with open(self.web_dir / 'versions.html', 'w', encoding='utf-8') as f:
-            f.write(html)
-
+    with open(self.web_dir / "versions.html", "w", encoding="utf-8") as f:
+        f.write(html)
+        
 def main():
     try:
         logger.info("Avvio generazione versione...")

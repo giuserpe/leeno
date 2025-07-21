@@ -64,3 +64,10 @@ jobs:
             include/version.h \
             tools/version/versions.html \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_REMOTE_PATH }}/
+            
+      - name: Debug SFTP output
+        run: |
+          echo "=== Raw oxt_list.txt ==="
+          cat oxt_list.txt
+          echo "=== Formattato ==="
+          column -t oxt_list.txt

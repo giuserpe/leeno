@@ -34,44 +34,47 @@ class VersionManager:
         self.web_dir.mkdir(exist_ok=True)
 
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
-        """Parsa l'elenco dei file .oxt con gestione errori migliorata"""
+        """Gestione avanzata lista file con fallback"""
         oxt_list = []
         oxt_file_path = os.getenv('OXT_LIST_PATH', '')
         
-        if not oxt_file_path or not Path(oxt_file_path).exists():
-            logger.warning("Nessun file lista .oxt trovato")
-            return oxt_list
-            
         try:
-            with open(oxt_file_path, 'r') as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or '.oxt' not in line:
-                        continue
-                        
-                    try:
-                        parts = line.split()
-                        if len(parts) >= 6:  # Formato minimo atteso
-                            filename = parts[-1].split('/')[-1]
-                            file_date = f"{parts[5]} {parts[6]}" if len(parts) > 6 else "Data sconosciuta"
-                            file_size = f"{int(parts[4])/1024:.1f} KB" if parts[4].isdigit() else "Dimensione sconosciuta"
-                            
-                            oxt_list.append({
-                                "name": filename,
-                                "size": file_size,
-                                "date": file_date,
-                                "url": f"{os.getenv('SFTP_BASE_URL', '')}/{filename}"
-                            })
-                    except Exception as e:
-                        logger.warning(f"Errore processamento linea: {line} - {str(e)}")
-                        continue
-                        
-            logger.info(f"Trovati {len(oxt_list)} file .oxt validi")
+            if oxt_file_path and Path(oxt_file_path).exists():
+                with open(oxt_file_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        try:
+                            if not line.strip() or '.oxt' not in line.lower():
+                                continue
+                                
+                            # Nuovo formato: "YYYY-MM-DD HH:MM SIZEKB ./filename.oxt"
+                            parts = line.strip().split()
+                            if len(parts) >= 4:
+                                filename = parts[-1].split('/')[-1]
+                                if filename == 'placeholder.oxt':
+                                    continue
+                                    
+                                oxt_list.append({
+                                    "name": filename,
+                                    "size": parts[2],
+                                    "date": f"{parts[0]} {parts[1]}",
+                                    "url": f"{os.getenv('SFTP_BASE_URL', '')}/{filename}"
+                                })
+                        except Exception as e:
+                            logger.warning(f"Errore processamento linea: {line[:50]}... - {str(e)}")
         except Exception as e:
             logger.error(f"Errore lettura file lista: {str(e)}")
-            
+        
+        # Fallback se lista vuota
+        if not oxt_list:
+            logger.warning("Usando dati fallback")
+            oxt_list.append({
+                "name": "Nessun file .oxt trovato",
+                "size": "0KB",
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "url": "#"
+            })
+        
         return oxt_list[:10]
-
     def update_version_files(self, version_info: Dict[str, str]):
         """Genera tutti i file necessari"""
         try:

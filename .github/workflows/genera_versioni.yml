@@ -43,22 +43,33 @@ jobs:
       - name: Recupera elenco file .oxt
         id: oxt_files
         run: |
+          echo "=== Debug Inizio ==="
+          echo "Remote Path: ${{ secrets.SFTP_REMOTE_PATH }}"
+          echo "Host: ${{ secrets.SFTP_HOST }}"
+          
+          # Comando di ricerca più robusto
           set +e
-          echo "=== Recupero file .oxt ==="
           sshpass -p "${{ secrets.SFTP_PASS }}" ssh \
             -o StrictHostKeyChecking=no \
             -p ${{ secrets.SFTP_PORT || 22 }} \
             ${{ secrets.SFTP_USER }}@${{ secrets.SFTP_HOST }} \
-            "cd ${{ secrets.SFTP_REMOTE_PATH }} && ls -l --time-style=long-iso *.oxt 2>/dev/null | sort -k 6,7 -r" > raw_oxt_list.txt
-
-          # Pulizia output
-          grep '.oxt' raw_oxt_list.txt | head -10 > oxt_list.txt
-          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
+            "cd '${{ secrets.SFTP_REMOTE_PATH }}' && find . -maxdepth 1 -name '*.oxt' -printf '%TY-%Tm-%Td %TH:%TM %kKB %p\n' | sort -r | head -10" > oxt_list.txt
           
-          echo "=== Trovati $OXT_COUNT file ==="
+          # Verifica risultati
+          echo "=== Contenuto oxt_list.txt ==="
           cat oxt_list.txt
+          OXT_COUNT=$(wc -l < oxt_list.txt | tr -d ' ')
+          
+          # Crea file vuoto se nessun risultato
+          if [ "$OXT_COUNT" -eq 0 ]; then
+            echo "Nessun file .oxt trovato, uso fallback"
+            echo "LeenO-0.0.0.0-EMPTY-19700101 0KB ./placeholder.oxt" > oxt_list.txt
+            OXT_COUNT=1
+          fi
+          
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
-          echo "list_path=${{ github.workspace }}/oxt_list.txt" >> $GITHUB_OUTPUT
+          echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
+          echo "=== Debug Fine ==="
 
       - name: Setup ambiente
         run: |

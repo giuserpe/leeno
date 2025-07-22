@@ -7,9 +7,10 @@
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="3" dlg:font-height="11"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="0" dlg:left="16" dlg:top="88" dlg:width="95" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="0" dlg:left="16" dlg:top="87" dlg:width="95" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:text dlg:style-id="1" dlg:id="Label1" dlg:tab-index="1" dlg:left="129" dlg:top="51" dlg:width="74" dlg:height="12" dlg:help-text="&amp;215.Dlg_config.Label1.HelpText" dlg:value="&amp;216.Dlg_config.Label1.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="2" dlg:left="129" dlg:top="111" dlg:width="50" dlg:height="12" dlg:help-text="&amp;224.Dlg_config.Label3.HelpText" dlg:value="&amp;225.Dlg_config.Label3.Label" dlg:valign="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="3" dlg:left="16" dlg:top="12" dlg:width="95" dlg:height="10" dlg:help-text="&amp;226.Dlg_config.CheckBox1.HelpText" dlg:value="&amp;227.Dlg_config.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
@@ -28,7 +29,7 @@
   <dlg:text dlg:style-id="1" dlg:id="Label17" dlg:tab-index="9" dlg:left="129" dlg:top="33" dlg:width="76" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;306.Dlg_config.Label17.HelpText" dlg:value="&amp;307.Dlg_config.Label17.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField14" dlg:tab-index="10" dlg:left="207" dlg:top="33" dlg:width="28" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;308.Dlg_config.TextField14.HelpText" dlg:align="center" dlg:value="&amp;309.Dlg_config.TextField14.Text"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox5" dlg:tab-index="11" dlg:left="16" dlg:top="42" dlg:width="95" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox6" dlg:tab-index="12" dlg:left="16" dlg:top="73" dlg:width="95" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox6" dlg:tab-index="12" dlg:left="16" dlg:top="72" dlg:width="95" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:combobox dlg:style-id="1" dlg:id="ComboBox4" dlg:tab-index="13" dlg:left="207" dlg:top="74" dlg:width="28" dlg:height="12" dlg:help-text="&amp;719.Dlg_config.ComboBox4.HelpText" dlg:value="&amp;720.Dlg_config.ComboBox4.Text" dlg:align="center" dlg:spin="true" dlg:maxlength="2">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;823.ComboBox4.StringItemList"/>
@@ -84,5 +85,6 @@
     <dlg:menuitem dlg:value="&amp;996.ComboBox1.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
+  <dlg:checkbox dlg:style-id="5" dlg:id="CheckBox4" dlg:tab-index="25" dlg:left="16" dlg:top="102" dlg:width="97" dlg:height="10" dlg:help-text="&amp;1134.Dlg_config.CheckBox4.HelpText" dlg:value="&amp;1135.Dlg_config.CheckBox4.Label" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

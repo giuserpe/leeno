@@ -129,7 +129,8 @@ def MENU_leeno_conf():
         oSheets.remove(nome)
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
-        if not oSheet.IsVisible:
+        # visualizzazione fogli
+        if not oSheet.IsVisible: 
             oDlg_config.getControl('CheckBox2').State = 0
             test = 0
             break
@@ -137,8 +138,18 @@ def MENU_leeno_conf():
         test = 1
     if oDoc.getSheets().getByName("copyright_LeenO").IsVisible:
         oDlg_config.getControl('CheckBox2').State = 1
+
+    # precisione come mostrato
+    if cfg.read('Generale', 'precisione_come_mostrato') == 'True':
+        oDoc.CalcAsShown = True
+        oDlg_config.getControl('CheckBox4').State = 1  
+
     if cfg.read('Generale', 'pesca_auto') == '1':
         oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
+
+    if cfg.read('Generale', 'pesca_auto') == '1':
+        oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
+
     if cfg.read('Generale', 'toolbar_contestuali') == '1':
         oDlg_config.getControl('CheckBox6').State = 1
 
@@ -195,6 +206,7 @@ def MENU_leeno_conf():
     # MOSTRA IL DIALOGO
     oDlg_config.execute()
 
+
     if oDlg_config.getControl('CheckBox2').State != test:
         if oDlg_config.getControl('CheckBox2').State == 1:
             show_sheets(True)
@@ -210,6 +222,14 @@ def MENU_leeno_conf():
         Toolbars.Switch(False)
     else:
         Toolbars.Switch(True)
+
+    if oDlg_config.getControl('CheckBox4').State == 1:
+        cfg.write('Generale', 'precisione_come_mostrato', 'True')
+        oDoc.CalcAsShown = True
+    else:
+        cfg.write('Generale', 'precisione_come_mostrato', 'False')
+        oDoc.CalcAsShown = False
+
 
     ctx = LeenoUtils.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
@@ -8572,7 +8592,7 @@ def autoexec():
     except Exception:
         pass
     oDoc.RegularExpressions = False
-    oDoc.CalcAsShown = True  # precisione come mostrato
+    # oDoc.CalcAsShown = True  # precisione come mostrato
     adegua_tmpl()  # esegue degli aggiustamenti del template
     oSheet = oDoc.CurrentController.ActiveSheet
     for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO'):

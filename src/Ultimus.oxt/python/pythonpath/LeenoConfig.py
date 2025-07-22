@@ -81,6 +81,7 @@ class Config(Borg):
             ('Generale', 'pausa_backup', '15'),
             ('Generale', 'conta_usi', '0'),
             ('Generale', 'ultimo_percorso', expanduser("~")),
+            ('Generale', 'precisione_come_mostrato', '(bool)True'),
 
             #  ('Computo', 'riga_bianca_categorie', '1'),
             #  ('Computo', 'voci_senza_numerazione', '0'),

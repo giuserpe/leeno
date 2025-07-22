@@ -12313,7 +12313,6 @@ def export_selected_range_to_odt():
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
 def MENU_debug():
-    "importazione prezzario Valle D'Aosta"
     with LeenoUtils.DocumentRefreshContext(False):
 
         oDoc = LeenoUtils.getDocument()

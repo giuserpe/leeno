@@ -384,7 +384,12 @@ la posizione di destinazione.''')
     LeenoUtils.DocumentRefresh(True)
     return
 
+###############################################################################
 def MENU_invia_voce():
+     with LeenoUtils.DocumentRefreshContext(False):
+        invia_voce()
+    
+def invia_voce():
     '''
     Invia le voci di computo, elenco prezzi e analisi, con costi elementari,
     dal documento corrente al Documento Principale.
@@ -416,6 +421,9 @@ def MENU_invia_voce():
     DP = LeenoUtils.getGlobalVar('sUltimus')
     ddcDoc = LeenoUtils.findOpenDocument(DP)
     lrow = LeggiPosizioneCorrente()[1]
+
+
+    DLG.chi(1)
 
     def getAnalisi(oSheet):
         try:
@@ -477,10 +485,13 @@ def MENU_invia_voce():
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
         ddcDoc.CurrentController.setFirstVisibleRow(4)
 
+    DLG.chi(1)
+
     # partenza
     if oSheet.Name == 'Elenco Prezzi':
         voce_da_inviare = oSheet.getCellByPosition(0, lrow).String
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
+        # verifica presenza codice in EP
         cerca_in_elenco_prezzi = SheetUtils.uFindString(voce_da_inviare, dccSheet)
         if not cerca_in_elenco_prezzi:
             recupera_voce(voce_da_inviare)
@@ -494,6 +505,8 @@ def MENU_invia_voce():
             _gotoCella(lrow[0]+1, lrow[1]+1)
         return
  
+    DLG.chi(1)
+
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         dv = LeenoComputo.DatiVoce(oSheet, lrow)
@@ -569,7 +582,7 @@ def MENU_invia_voce():
             ddcSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             
             cerca_in_elenco_prezzi = SheetUtils.uFindString(art, ddcSheet)
-            recupera_voce(art)
+            # recupera_voce(art)
 
             if not cerca_in_elenco_prezzi:
                 recupera_voce(art)
@@ -605,6 +618,9 @@ def MENU_invia_voce():
         tante_analisi_in_ep()
     except Exception:
         pass
+
+
+    DLG.chi(1)
 
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -6679,44 +6695,41 @@ def rigenera_tutte(arg=None, ):
     '''
     Ripristina le formule in tutto il foglio
     '''
+    with LeenoUtils.DocumentRefreshContext(False):
 
-    LeenoUtils.DocumentRefresh(False)
+        chiudi_dialoghi()
+        oDoc = LeenoUtils.getDocument()
 
-    chiudi_dialoghi()
-    oDoc = LeenoUtils.getDocument()
+        riordina_ElencoPrezzi()
 
-    riordina_ElencoPrezzi()
-
-    oSheet = oDoc.CurrentController.ActiveSheet
-    nome = oSheet.Name
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+        oSheet = oDoc.CurrentController.ActiveSheet
+        nome = oSheet.Name
+        stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
 
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
-    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    progress.setValue(0)
-    progress.show()
-    if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        try:
-            oSheet = oDoc.Sheets.getByName(nome)
-            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1, True)
-            oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
-            last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            while row < last:
-                progress.setValue(row)
-                rigenera_voce(row)
-                # sistema_stili(row)
-                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1, True)
-        except Exception:
-            pass
-    rigenera_parziali(True)
-    Rinumera_TUTTI_Capitoli2(oSheet)
-    numera_voci()
-    fissa()
-    progress.hide()
-    # comando("CalculateHard")
-    LeenoUtils.DocumentRefresh(True)
+        # attiva la progressbar
+        progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
+        progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        progress.setValue(0)
+        progress.show()
+        if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            try:
+                oSheet = oDoc.Sheets.getByName(nome)
+                row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1, True)
+                oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
+                last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+                while row < last:
+                    progress.setValue(row)
+                    rigenera_voce(row)
+                    # sistema_stili(row)
+                    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1, True)
+            except Exception:
+                pass
+        rigenera_parziali(True)
+        Rinumera_TUTTI_Capitoli2(oSheet)
+        numera_voci()
+        fissa()
+        progress.hide()
 
 
 ########################################################################
@@ -11428,7 +11441,8 @@ def somma():
 
 def calendario():
     '''
-    Mostra un calendario da cui selezionare la data che mette nella cella
+    Mostra un calendario da cui selezionare la data e la restituisce
+    in formato gg/mm/aaaa.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -11438,14 +11452,10 @@ def calendario():
     lst = str(testo).split('-')
     try:
         testo = lst[2] + '/' + lst[1] + '/' + lst[0]
-        oSheet.getCellByPosition(x, y).Formula = '=DATEVALUE("' + testo + '")'
-        setFormatoNumeri(36)
     except:
         pass
-    comando('Copy')
-    paste_clip(insCells=0, pastevalue=True)
 
-    return
+    return testo
 
 
 def PdfDlg():
@@ -12101,17 +12111,6 @@ def trova_colore_cella():
     DLG.chi(active_cell.CellBackColor)
     return
 
-def imposta_data():
-
-    oDoc = getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    er = getLastUsedCell(oSheet).EndRow + 1
-    for el in range(0, er):
-        if oSheet.getCellByPosition(1, el).CellStyle in ('Data_bianca'):
-            oSheet.getCellByPosition(1, el).String = "18/02/2025"
-    LeenoUtils.DocumentRefresh(True)
-    return
-
 def cerca_rosso_mancante():
     """
     Trova la prima riga in cui una cella con stile 'ROSSO' 
@@ -12312,7 +12311,12 @@ def export_selected_range_to_odt():
     except Exception as e:
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
+
 def MENU_debug():
+    # DLG.chi(calendario())
+    # return
+    LeenoContab.imposta_data()
+    return
     with LeenoUtils.DocumentRefreshContext(False):
 
         oDoc = LeenoUtils.getDocument()

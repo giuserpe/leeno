@@ -7,7 +7,6 @@
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="3" dlg:font-height="11"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="0" dlg:left="16" dlg:top="87" dlg:width="95" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:valign="center" dlg:checked="false"/>
@@ -85,6 +84,6 @@
     <dlg:menuitem dlg:value="&amp;996.ComboBox1.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:checkbox dlg:style-id="5" dlg:id="CheckBox4" dlg:tab-index="25" dlg:left="16" dlg:top="102" dlg:width="97" dlg:height="10" dlg:help-text="&amp;1134.Dlg_config.CheckBox4.HelpText" dlg:value="&amp;1135.Dlg_config.CheckBox4.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox4" dlg:tab-index="25" dlg:left="16" dlg:top="102" dlg:width="97" dlg:height="10" dlg:help-text="&amp;1134.Dlg_config.CheckBox4.HelpText" dlg:value="&amp;1135.Dlg_config.CheckBox4.Label" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -2741,15 +2741,15 @@ def pickDate(curDate=None):
     btnWidth, btnHeight = getButtonSize('<<')
     dateWidth, dummy = getTextBox('88 SETTEMBRE 8888XX')
 
-    workdaysBkColor = rgb(38, 153, 153)
-    workdaysFgColor = rgb(255, 255, 255)
-    holydaysBkColor = rgb(27, 248, 250)
+    workdaysBkColor = rgb(224, 224, 224)
+    workdaysFgColor = rgb(0, 0, 0)
+    holydaysBkColor = rgb(255, 153, 153)
     holydaysFgColor = rgb(0, 0, 0)
 
     # create daynames list with spacers
     dayNamesLabels = [FixedText(
         Text=LeenoUtils.DAYNAMES[0], Align=1,
-        BackgroundColor=rgb(38, 153, 153),
+        BackgroundColor=rgb(192, 192, 192),
         TextColor=rgb(255, 255, 255),
         FixedWidth=btnWidth, FixedHeight=btnHeight
     )]

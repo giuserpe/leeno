@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# LeenoContab.py
+'''
+LeenoContab.py - Contabilità per Leeno
+'''
+
 from datetime import date
 from com.sun.star.table import CellRangeAddress
 from com.sun.star.sheet.GeneralFunction import MAX
@@ -141,6 +148,36 @@ def insertVoceContabilita(oSheet, lrow):
             return
         pesca_cod()
     '''
+
+# ###############################################################
+
+
+def imposta_data():
+    """ Imposta la data scelta nelle misure selezionate."""
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    testo = PL.calendario()
+
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    except AttributeError:
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+        Text='''La selezione deve essere contigua.''')
+        return 0
+
+    dv_start = LeenoComputo.DatiVoce(oSheet, oRangeAddress.StartRow)
+    prima_riga = dv_start._circoscrive_voce()[0]
+
+    dv_end = LeenoComputo.DatiVoce(oSheet, oRangeAddress.EndRow)
+    ultima_riga = dv_end._circoscrive_voce()[1]
+
+    for el in range(prima_riga, ultima_riga + 1):
+        cell = oSheet.getCellByPosition(1, el)  # colonna B
+        if cell.CellStyle == 'Data_bianca':
+            cell.String = testo
+    return
+
 
 # ###############################################################
 def ultimo_sal():

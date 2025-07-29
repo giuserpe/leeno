@@ -402,7 +402,7 @@ class DatiVoce:
         }
 
         while oSheet.getCellByPosition(0, lrow).CellStyle in scritte_stili:
-            DLG.chi(oSheet.getCellByPosition(0, lrow).CellStyle)
+            # DLG.chi(oSheet.getCellByPosition(0, lrow).CellStyle)
             lrow += 1
             if lrow >= oSheet.Rows.Count:
                 return None
@@ -439,7 +439,8 @@ class DatiVoce:
         else:
             return cs
 
-        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
+        # return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
+        return (start_row, end_row)
 
     def _estrai_dati(self):
         if not self.range:

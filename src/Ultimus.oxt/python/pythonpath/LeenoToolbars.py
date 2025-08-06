@@ -6,6 +6,7 @@ from com.sun.star.awt import Point
 
 import os
 import sys
+import pyleeno as PL
 import LeenoUtils
 from LeenoConfig import Config
 
@@ -19,7 +20,6 @@ _TOOLBAR_NAMES = (
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',
 )
 
-import pyleeno as PL
 
 def Vedi(arg=None):
     '''

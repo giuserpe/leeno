@@ -423,7 +423,7 @@ def invia_voce():
     lrow = LeggiPosizioneCorrente()[1]
 
 
-    DLG.chi(1)
+    # DLG.chi(1)
 
     def getAnalisi(oSheet):
         try:
@@ -485,7 +485,7 @@ def invia_voce():
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
         ddcDoc.CurrentController.setFirstVisibleRow(4)
 
-    DLG.chi(1)
+    # DLG.chi(1)
 
     # partenza
     if oSheet.Name == 'Elenco Prezzi':
@@ -2875,11 +2875,15 @@ def genera_sommario():
                     f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(M{n}="--"; 0; VALUE(M{n})); IF(s; s; "--"))',
                     '',
                     # Importi Computo
-                    f'=LET(s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; IF(s; s; ""))',
+                    # f'=LET(s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; IF(s; s; ""))',
+                    f'=LET( s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
                     # Importi Variante
-                    f'=LET(s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; IF(s; s; ""))',
+                    # f'=LET(s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; IF(s; s; ""))',
+                    f'=LET( s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
                     # Importi Contabilità
-                    f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; IF(s; s; ""))',
+                    # f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; IF(s; s; ""))',
+                    f'=LET( s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
+
                 ]
             formule.append(stringa)
         indicator.end()
@@ -7137,7 +7141,7 @@ def stileCelleElencoPrezzi(oSheet, startRow, endRow, color=None):
         'EP-a': [(1, 1)],
         'EP-mezzo': [(2, 4), (6, 7)],
         # 'EP-mezzo %': [(5, 5), (11, 11), (15, 15), (19, 19), (25, 25)],
-        'EP-mezzo %': [(23, 26)],
+        'EP-mezzo %': [(23, 25)],
         'EP-sfondo': [(8, 9)],
         # 'EP statistiche_q': [(12, 12), (16, 16), (20, 20), (23, 23)],
         'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 23)],
@@ -7273,7 +7277,7 @@ def inizializza_elenco():
             'EP-aS': [(0, 0)],
             'EP-a': [(1, 1)],
             'EP-mezzo': [(2, 4), (6, 7)],
-            'EP-mezzo %': [(23, 26)],
+            'EP-mezzo %': [(23, 25)],
             'EP-sfondo': [(8, 9)],
             'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 23)]
             # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (24, 25)]
@@ -12313,9 +12317,13 @@ def export_selected_range_to_odt():
 
 
 def MENU_debug():
-    # DLG.chi(calendario())
+    LeenoUtils.DocumentRefresh(True)
+    return
+
+    oDoc = LeenoUtils.getDocument()
+    DLG.mri(oDoc)
     # return
-    LeenoContab.imposta_data()
+    # LeenoContab.imposta_data()
     return
     with LeenoUtils.DocumentRefreshContext(False):
 

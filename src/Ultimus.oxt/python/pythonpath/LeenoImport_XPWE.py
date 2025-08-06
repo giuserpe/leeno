@@ -1058,7 +1058,8 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
                     except:
                         oSheet.getCellByPosition(1, n).String = ''
                     oSheet.getCellByPosition(2, n).String = x[2]
-                    DLG.chi(x[3])
+
+                    # DLG.chi(x[3])
                     try:
                         float(x[3].replace(',', '.'))
                         oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))

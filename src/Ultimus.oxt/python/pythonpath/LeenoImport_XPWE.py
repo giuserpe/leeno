@@ -288,7 +288,6 @@ def leggiApprossimazioni(dati):
         res['PartiUguali'] = int(partiUguali.text.split('.')[-1].split('|')[0])
     except:
         pass
-
     larghezza = PweDGConfigNumeri.find('Larghezza')
     try:
         res['Larghezza'] = int(larghezza.text.split('.')[-1].split('|')[0])
@@ -656,7 +655,7 @@ def leggiMisurazioni(misurazioni, ordina):
                     except:
                         pass
                     if partiuguali != None:
-                        if '  ' in partiuguali:
+                        if '  ' in partiuguali or partiuguali == '0.00':
                             partiuguali = None
 
                 lunghezza = el.find('Lunghezza').text
@@ -666,7 +665,7 @@ def leggiMisurazioni(misurazioni, ordina):
                     except:
                         pass
                     if lunghezza != None:
-                        if '  ' in lunghezza:
+                        if '  ' in lunghezza or lunghezza == '0.00':
                             lunghezza = None
 
                 larghezza = el.find('Larghezza').text
@@ -676,7 +675,7 @@ def leggiMisurazioni(misurazioni, ordina):
                     except:
                         pass
                     if larghezza != None:
-                        if '  ' in larghezza:
+                        if '  ' in larghezza or larghezza == '0.00':
                             larghezza = None
 
                 hpeso = el.find('HPeso').text
@@ -686,7 +685,7 @@ def leggiMisurazioni(misurazioni, ordina):
                     except:
                         pass
                     if hpeso != None:
-                        if '  ' in hpeso:
+                        if '  ' in hpeso or hpeso == '0.00':
                             hpeso = None
 
                 quantita = el.find('Quantita').text
@@ -830,7 +829,8 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=Fa
     # 3. Inserimento dati (ottimizzato per grandi blocchi)
     righe_totali = len(nuovi_dati)
     colonne = len(nuovi_dati[0])
-    oSheet.getRows().insertByIndex(3, righe_totali)
+    sRow = 4
+    oSheet.getRows().insertByIndex(sRow, righe_totali)
 
     # Inserimento a step (es. 100 righe alla volta)
     step = 100
@@ -838,9 +838,9 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=Fa
     while riga < righe_totali:
         sliced = nuovi_dati[riga:riga + step]
         num = len(sliced)
-        oRange = oSheet.getCellRangeByPosition(0, 3 + riga, colonne - 1, 3 + riga + num - 1)
+        oRange = oSheet.getCellRangeByPosition(0, sRow + riga, colonne - 1, sRow + riga + num - 1)
         oRange.setDataArray(sliced)
-        PL.stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
+        # PL.stileCelleElencoPrezzi(oSheet, sRow + riga, sRow + riga + num - 1, col)
         riga += num
 
 def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
@@ -895,112 +895,124 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
     PL.riordina_ElencoPrezzi()
 
 
-# def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
-#     ''' Compilo Analisi di prezzo '''
-#     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
-#     if numAnalisi != 0:
-
-#         # inizializza la progressbar
-#         indicator = oDoc.getCurrentController().getStatusIndicator()
-#         indicator.start("Elaborazione Analisi dei Prezzi in corso...", numAnalisi)
-
-#         val = 0
-
-#         # inizializza l'analisi dei prezzi
-#         oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
-
-#         # compila le voci dell'analisi
-#         for el in elencoPrezzi['ListaAnalisi']:
-#             prezzo_finale = el[-1]
-
-#             # circoscrive la voce di analisi corrente
-#             sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
-
-#             lrow = sStRange.RangeAddress.StartRow + 2
-#             oSheet.getCellByPosition(0, lrow).String = el[0]
-#             oSheet.getCellByPosition(1, lrow).String = el[1]
-#             oSheet.getCellByPosition(2, lrow).String = el[2]
-#             y = 0
-#             n = lrow + 2
-#             for x in el[3]:
-#                 if el[3][y][1] in (
-#                    'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
-#                    'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-#                     if el[3][y][1] != 'overflow':
-#                         n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
-#                 else:
-#                     LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
-#                     if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
-#                         oSheet.getCellByPosition(0, n).String = (
-#                            elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]).get('tariffa'))
-#                     # per gli inserimenti liberi (L)
-#                     else:
-#                         oSheet.getCellByPosition(0, n).String = ''
-#                         try:
-#                             oSheet.getCellByPosition(1, n).String = x[1]
-#                         except:
-#                             oSheet.getCellByPosition(1, n).String = ''
-#                         oSheet.getCellByPosition(2, n).String = x[2]
-#                         try:
-#                             float(x[3].replace(',', '.'))
-#                             oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
-#                         except Exception:
-#                             oSheet.getCellByPosition(3, n).Value = 0
-#                         try:
-#                             float(x[4].replace(',', '.'))
-#                             oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
-#                         except:
-#                             oSheet.getCellByPosition(4, n).Value = 0
-#                     if el[3][y][1] not in (
-#                        'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
-#                        'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-#                         if el[3][y][3] == '':
-#                             oSheet.getCellByPosition(3, n).Value = 0
-#                         else:
-#                             try:
-#                                 float(el[3][y][3])
-#                                 oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-#                             except Exception:
-#                                 oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
-#                 y += 1
-#                 n += 1
-#             sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
-#             startRow = sStRange.RangeAddress.StartRow
-#             endRow = sStRange.RangeAddress.EndRow
-#             for m in reversed(range(startRow, endRow)):
-#                 if(oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and
-#                    oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx'):
-#                     oSheet.getRows().removeByIndex(m, 1)
-#                 if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
-#                     oSheet.getCellByPosition(0, m).String = ''
-#             # ~ if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
-#                 # ~ oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
-#             oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
-
-#             # aggiorna la progressbar
-#             val += 1
-#             indicator.Value = val
-#         indicator.end()
-
-#         # siccome viene inserita una voce PRIMA di iniziare la compilazione
-#         # occorre eliminare l'ultima voce che risulta vuota
-#         LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-#         PL.tante_analisi_in_ep()
-
-
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
+    ''' Compilo Analisi di prezzo '''
+    numAnalisi = len(elencoPrezzi['ListaAnalisi'])
+    if numAnalisi == 0:
+        return
+    # inizializza la progressbar
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    indicator.start("Elaborazione Analisi dei Prezzi in corso...", numAnalisi)
+
+    # Ottieni tutti i codici già presenti nel foglio (colonna 0)
+    oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+    existing_codes = set()
+    max_row = oSheet.getRows().getCount()
+    
+    if max_row > 0:
+        # Legge i codici esistenti (prima colonna)
+        codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
+        existing_codes = {str(codice[0]).strip().lower() for codice in codici_esistenti if codice and codice[0]}
+
+    val = 0
+    skipped = 0
+
+    # inizializza l'analisi dei prezzi
+    oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+
+    # compila le voci dell'analisi
+    for el in elencoPrezzi['ListaAnalisi']:
+        codice = str(el[0]).strip().lower()
+
+        # Skip se il codice esiste già
+        if codice in existing_codes:
+            skipped += 1
+            val += 1
+            indicator.Value = val
+            continue
+
+        prezzo_finale = el[-1]
+
+        # circoscrive la voce di analisi corrente
+        sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
+
+        lrow = sStRange.RangeAddress.StartRow + 2
+        oSheet.getCellByPosition(0, lrow).String = el[0]
+        oSheet.getCellByPosition(1, lrow).String = el[1]
+        oSheet.getCellByPosition(2, lrow).String = el[2]
+        y = 0
+        n = lrow + 2
+        for x in el[3]:
+            if el[3][y][1] in (
+                'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
+                'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                if el[3][y][1] != 'overflow':
+                    n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+            else:
+                LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
+                if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
+                    oSheet.getCellByPosition(0, n).String = (
+                        elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]).get('tariffa'))
+                # per gli inserimenti liberi (L)
+                else:
+                    oSheet.getCellByPosition(0, n).String = ''
+                    try:
+                        oSheet.getCellByPosition(1, n).String = x[1]
+                    except:
+                        oSheet.getCellByPosition(1, n).String = ''
+                    oSheet.getCellByPosition(2, n).String = x[2]
+                    try:
+                        float(x[3].replace(',', '.'))
+                        oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
+                    except Exception:
+                        oSheet.getCellByPosition(3, n).Value = 0
+                    try:
+                        float(x[4].replace(',', '.'))
+                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
+                    except:
+                        oSheet.getCellByPosition(4, n).Value = 0
+                if el[3][y][1] not in (
+                    'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
+                    'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                    if el[3][y][3] == '':
+                        oSheet.getCellByPosition(3, n).Value = 0
+                    else:
+                        try:
+                            float(el[3][y][3])
+                            oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                        except Exception:
+                            oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
+            y += 1
+            n += 1
+        sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
+        startRow = sStRange.RangeAddress.StartRow
+        endRow = sStRange.RangeAddress.EndRow
+        for m in reversed(range(startRow, endRow)):
+            if(oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and
+                oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx'):
+                oSheet.getRows().removeByIndex(m, 1)
+            if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
+                oSheet.getCellByPosition(0, m).String = ''
+        # ~ if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
+            # ~ oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
+        oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+
+        # aggiorna la progressbar
+        val += 1
+        indicator.Value = val
+    indicator.end()
+
+    # siccome viene inserita una voce PRIMA di iniziare la compilazione
+    # occorre eliminare l'ultima voce che risulta vuota
+    LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    PL.tante_analisi_in_ep()
+
+
+def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
     ''' Compila Analisi di prezzo, saltando voci già esistenti '''
     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
     if numAnalisi == 0:
         return
-
-    # Configurazione logging
-    # logging.basicConfig(
-    #     level=logging.INFO,
-    #     format='%(asctime)s - %(levelname)s - %(message)s',
-    #     handlers=[logging.StreamHandler()]
-    # )
-    # logger = logging.getLogger(__name__)
 
     # Inizializza progressbar
     indicator = oDoc.getCurrentController().getStatusIndicator()
@@ -1015,8 +1027,6 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
         # Legge i codici esistenti (prima colonna)
         codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
         existing_codes = {str(codice[0]).strip().lower() for codice in codici_esistenti if codice and codice[0]}
-
-    # logger.info(f"Trovati {len(existing_codes)} codici già presenti nel foglio.")
 
     val = 0
     skipped = 0
@@ -1058,8 +1068,6 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
                     except:
                         oSheet.getCellByPosition(1, n).String = ''
                     oSheet.getCellByPosition(2, n).String = x[2]
-
-                    # DLG.chi(x[3])
                     try:
                         float(x[3].replace(',', '.'))
                         oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
@@ -1145,18 +1153,11 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     testsbcat = '0'
 
     from datetime import datetime, date
-    # ~ datarif = datetime.now()
 
     # inizializza la progressbar
     # attiva la progressbar
-    progress = Dialogs.Progress(Title=f'Compilazione {elaborato}', Text="Lettura dati")
-    # ~ n = 0
-    # progress.show()
-    # progress.setLimits(0, len(listaMisure))
-    # ~ oProgressBar = PL.create_progress_bar(f'Compilazione {elaborato}', len(listaMisure))
+
     val = 0
-    # progress.setValue(val)
-    # ~ oProgressBar.Value = val
 
     indicator = oDoc.getCurrentController().getStatusIndicator()
     indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
@@ -1221,7 +1222,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         ID = el.get('id_ep')
 
         # inserisce la tariffa dall'elenco prezzi
-        # non capisco il perchè della try..except con la PASS senza segnalazione di errore...
         try:
             oSheet.getCellByPosition(1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
         except Exception:
@@ -1377,9 +1377,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 def MENU_XPWE_import(filename = None):
     with LeenoUtils.DocumentRefreshContext(False):
         XPWE_import(filename = None)
-        # oDoc = LeenoUtils.getDocument()
-        # oSheet = oDoc.CurrentController.ActiveSheet
-        # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 def XPWE_import(filename = None):
     '''

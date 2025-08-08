@@ -6,8 +6,8 @@ from com.sun.star.awt import Point
 
 import os
 import sys
-import pyleeno as PL
 import LeenoUtils
+import pyleeno as PL
 from LeenoConfig import Config
 
 # i nome delle toolbars di LeenO

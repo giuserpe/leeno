@@ -2618,7 +2618,7 @@ def scelta_viste_run():
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 for n in range(4, ultima_voce + 2):
                     formule.append([
-                        f'=IF(N(V{n})>N(U{n}); N(U{n})-N(U{n}); "")',
+                        f'=IF(N(V{n})>N(U{n}); N(V{n})-N(U{n}); "")',
                         f'=IF(N(U{n})>N(V{n}); N(U{n})-N(V{n}); "")',
                         f'=IFERROR(LET(t;N(U{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
                     ])
@@ -2849,7 +2849,7 @@ def genera_sommario():
         ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
-        for n in range(4, ultima_voce):
+        for n in range(4, ultima_voce + 1):
             indicator.Value = n
             # Controlla lo stile della cella nella prima colonna
             cell = oSheet.getCellByPosition(0, n-1)  # -1 perché gli indici partono da 0
@@ -2887,7 +2887,7 @@ def genera_sommario():
                 ]
             formule.append(stringa)
         indicator.end()
-        oRange = oSheet.getCellRangeByPosition(11, 3, 21, LeenoSheetUtils.cercaUltimaVoce(oSheet) -1)
+        oRange = oSheet.getCellRangeByPosition(11, 3, 21, LeenoSheetUtils.cercaUltimaVoce(oSheet))
         formule = tuple(formule)
         oRange.setFormulaArray(formule)
 ########################################################################
@@ -4694,7 +4694,7 @@ def tante_analisi_in_ep():
 
         # 3. Inserisci in Elenco Prezzi
         if not lista_analisi:
-            oDoc.enableAutomaticCalculation(True)
+            # oDoc.enableAutomaticCalculation(True)
             return
             
         dest_sheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -4703,6 +4703,8 @@ def tante_analisi_in_ep():
         # Scrivi in blocco
         oRange = dest_sheet.getCellRangeByPosition(0, 4, 13, 4 + len(lista_analisi) - 1)
         oRange.setDataArray(lista_analisi)
+ 
+        oRange.clearContents(HARDATTR)
         
         # Converti formule (evitando la colonna 0)
         for y in range(4, 4 + len(lista_analisi)):
@@ -4710,7 +4712,7 @@ def tante_analisi_in_ep():
                 dest_sheet.getCellByPosition(x, y).Formula = dest_sheet.getCellByPosition(x, y).String
         
         # Finalizza
-        oDoc.enableAutomaticCalculation(True)
+        # oDoc.enableAutomaticCalculation(True)
         GotoSheet('Elenco Prezzi')
         # LeenoSheetUtils.adattaAltezzaRiga(dest_sheet)
 
@@ -6782,7 +6784,7 @@ def sistema_stili(lrow=None):
                 {'cols': (11, 13), 'rows': (start_row, end_row)},
                 {'cols': (15, 18), 'rows': (start_row, end_row)},
                 {'cols': (19, 21), 'rows': (start_row, end_row)},
-                {'cols': (23, 25), 'rows': (start_row, end_row)}
+                {'cols': (23, 24), 'rows': (start_row, end_row)}
             ],
             'Riga_rossa_Chiudi': {
                 'cols': (0, 9),  # Da colonna 0 a colonna 9
@@ -7144,8 +7146,8 @@ def stileCelleElencoPrezzi(oSheet, startRow, endRow, color=None):
         'EP-mezzo %': [(23, 25)],
         'EP-sfondo': [(8, 9)],
         # 'EP statistiche_q': [(12, 12), (16, 16), (20, 20), (23, 23)],
-        'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 23)],
-        'EP statistiche': [(13, 13), (17, 17), (21, 21), (24, 25)]
+        'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)],
+        'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
     }
     # Applica gli stili in batch
     for style_name, ranges in style_map.items():
@@ -7167,7 +7169,8 @@ def inizializza_elenco():
         chiudi_dialoghi()
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
-        
+        oSheet.Columns.removeByIndex(26, 1)
+
         # Configurazioni costanti
         STILI = {
             'intestazione': 'EP-a -Top',
@@ -7245,6 +7248,10 @@ def inizializza_elenco():
             'V2': f'=IF(SUBTOTAL(9;V3:V{y})=0;"--";SUBTOTAL(9;V3:V{y}))',
             'X2': f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             'Y2': f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
+            'N2': f'',
+            'P2': f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
+            'Q2': f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
+            'R2': f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
         }
         
         for cell, formula in FORMULE_TOTALI.items():
@@ -7258,8 +7265,18 @@ def inizializza_elenco():
             21: f'=IF(SUBTOTAL(9;V3:V{y})=0;"--";SUBTOTAL(9;V3:V{y}))',
             23: f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             24: f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
+
+
+            # 11: f'=IF(SUBTOTAL(9;L3:L{y})=0;"--";SUBTOTAL(9;L3:L{y}))',
+            # 12: f'=IF(SUBTOTAL(9;M3:M{y})=0;"--";SUBTOTAL(9;M3:M{y}))',
+            # 13: f'=IF(SUBTOTAL(9;N3:N{y})=0;"--";SUBTOTAL(9;N3:N{y}))',
+            15: f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
+            16: f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
+            17: f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
         }
-        
+        oSheet.getCellRangeByName(f'L{y+1}:N{y+1}').merge(True)
+        oSheet.getCellByPosition(11, y).String = 'TOTALI'
+
         for col, value in TOTALI_FINALI.items():
             oSheet.getCellByPosition(col, y).Formula = value if isinstance(value, str) and value.startswith('=') else value
         
@@ -7279,16 +7296,17 @@ def inizializza_elenco():
             'EP-mezzo': [(2, 4), (6, 7)],
             'EP-mezzo %': [(23, 25)],
             'EP-sfondo': [(8, 9)],
-            'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 23)]
-            # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (24, 25)]
+            'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)]
+            # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
         }
         
         for style_name, ranges in STILI_COLONNE.items():
             for col_start, col_end in ranges:
                 oSheet.getCellRangeByPosition(
                     col_start, 3, 
-                    col_end, y
+                    col_end, y - 2
                 ).CellStyle = style_name
+
 
 
 def inserisci_ElencoCosti():
@@ -7614,34 +7632,9 @@ def struttura_Elenco():
         for i in reversed(range(0, 3)):
             struct_colore(i) # attribuisce i colori
 
-        # LeenoUtils.DocumentRefresh(True)
         return
 
-
 ########################################################################
-# ns_ins moved to LeenoImport_XmlToscana.py
-########################################################################
-
-########################################################################
-# XML_toscana_import moved to LeenoImport_XmlToscana.py
-########################################################################
-
-########################################################################
-# MENU_fuf moved to LeenoImport.py
-########################################################################
-
-########################################################################
-# XML_import_ep moved to LeenoImport.py
-########################################################################
-
-########################################################################
-# XML_import_multi moved to LeenoImport.py
-########################################################################
-
-########################################################################
-# importa_listino_leeno moved to LeenoImport.py
-########################################################################
-
 
 def colora_vecchio_elenco():
     '''
@@ -8795,95 +8788,90 @@ def Menu_vSintetica():
     vSintetica(flag)
 
 def vSintetica(flag = True):
-    """
-    Vista sintetica su COMPUTO, VARIANTE o CONTABILITA.
-    Aggiorna le voci in base al foglio attivo e nasconde quelle con valori zero.
-    """
-    LeenoUtils.DocumentRefresh(False)
+    with LeenoUtils.DocumentRefreshContext(False):
+        """
+        Vista sintetica su COMPUTO, VARIANTE o CONTABILITA.
+        Aggiorna le voci in base al foglio attivo e nasconde quelle con valori zero.
+        """
 
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
-        lcol = 18
-        col_start = 29
-        col_end = 30
-    elif oSheet.Name == 'CONTABILITA':
-        uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
-        lcol = 15
-        col_start = 19
-        col_end = 30
-
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-
-    i = 0
-    uscita = False
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title=f'Elaborazione voci di {oSheet.Name}...', Text=f"Elaborazione di {uRiga} righe ")
-    progress.setLimits(0, uRiga)
-    progress.show()
-
-    while (i < uRiga):
-        i = LeenoSheetUtils.prossimaVoce(oSheet, i)
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
-        try:
-            sotto = sStRange.RangeAddress.EndRow
-            sopra = sStRange.RangeAddress.StartRow
-        except:
-            break
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)
+            uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
+            lcol = 18
+            col_start = 29
+            col_end = 30
         elif oSheet.Name == 'CONTABILITA':
-                dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)[1]
+            uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
+            lcol = 15
+            col_start = 19
+            col_end = 30
+
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+
+        i = 0
+        uscita = False
+        # attiva la progressbar
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start(f'Elaborazione voci di {oSheet.Name}...', uRiga)
+
+        while (i < uRiga):
+            i = LeenoSheetUtils.prossimaVoce(oSheet, i)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
+            try:
+                sotto = sStRange.RangeAddress.EndRow
+                sopra = sStRange.RangeAddress.StartRow
+            except:
+                break
+            if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)
+            elif oSheet.Name == 'CONTABILITA':
+                    dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)[1]
+
+            if flag:
+                for col in range(3):
+                    oSheet.getCellByPosition(col, sotto).Formula = f'{dati[col]}'
+                oSheet.getCellRangeByPosition(2, sotto, 7, sotto).merge(True)
+                oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+                oSheet.getRows().getByIndex(sotto).Rows.Height = 750
+
+                oCellRangeAddr.StartRow = sopra
+                oCellRangeAddr.EndRow = sotto -1
+                oSheet.group(oCellRangeAddr, 1)
+                oSheet.getCellRangeByPosition(lcol, sopra, lcol, sotto -1).Rows.IsVisible = False
+
+            else:
+                oSheet.getCellRangeByPosition(2, sotto, 8, sotto).merge(False)
+                if "SOMMANO [" in oSheet.getCellByPosition(8, sotto).String:
+                    break                
+                oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+                for col in range(3):
+                    oSheet.getCellByPosition(col, sotto).String = ''
+            if uscita:
+                # DLG.chi(sotto)
+                break
+            i += 1
+            indicator.Value = i
+        indicator.end()
 
         if flag:
-            for col in range(3):
-                oSheet.getCellByPosition(col, sotto).Formula = f'{dati[col]}'
-            oSheet.getCellRangeByPosition(2, sotto, 7, sotto).merge(True)
-            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
-            oSheet.getRows().getByIndex(sotto).Rows.Height = 750
+            oCellRangeAddr.StartColumn = col_start
+            oCellRangeAddr.EndColumn = col_end
+            oSheet.group(oCellRangeAddr, 0)
+            for col in range(28, 31):
+                oSheet.getColumns().getByIndex(col).Columns.IsVisible = False
+            Dialogs.Exclamation(Title='AVVISO!',
+                Text='''QUESTA È SOLO UNA MODALITÀ DI VISUALIZZAZIONE!
 
-            # if oSheet.getCellByPosition(lcol, i).CellStyle != 'comp sotto Euro Originale' or \
-            # oSheet.getCellByPosition(lcol, i).Value == 0:
-            oCellRangeAddr.StartRow = sopra
-            oCellRangeAddr.EndRow = sotto -1
-            oSheet.group(oCellRangeAddr, 1)
-            oSheet.getCellRangeByPosition(lcol, sopra, lcol, sotto -1).Rows.IsVisible = False
+    Apportare modifiche in questa modalità potrebbe
+    compromettere l'integrità dei dati contenuti in questo foglio.
 
-        else:
-            oSheet.getCellRangeByPosition(2, sotto, 8, sotto).merge(False)
-            if "SOMMANO [" in oSheet.getCellByPosition(8, sotto).String:
-                break                
-            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
-            for col in range(3):
-                oSheet.getCellByPosition(col, sotto).String = ''
-        if uscita:
-            # DLG.chi(sotto)
-            break
-        i += 1
-        progress.setValue(i)
-    progress.hide()
-
-    if flag:
-        oCellRangeAddr.StartColumn = col_start
-        oCellRangeAddr.EndColumn = col_end
-        oSheet.group(oCellRangeAddr, 0)
-        for col in range(28, 31):
-            oSheet.getColumns().getByIndex(col).Columns.IsVisible = False
-        Dialogs.Exclamation(Title='AVVISO!',
-            Text='''QUESTA È SOLO UNA MODALITÀ DI VISUALIZZAZIONE!
-
-Apportare modifiche in questa modalità potrebbe
-compromettere l'integrità dei dati contenuti in questo foglio.
-
-Si ricorda che le celle con sfondo bianco, in genere,
-non sono destinate all'inserimento di dati.''')
-
-    # LeenoUtils.DocumentRefresh(True)
-    return
+    Si ricorda che le celle con sfondo bianco, in genere,
+    non sono destinate all'inserimento di dati.''')
+        return
 
 
 ########################################################################
@@ -12315,13 +12303,11 @@ def export_selected_range_to_odt():
     except Exception as e:
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
-
 def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
+    inizializza_elenco()
     return
 
     oDoc = LeenoUtils.getDocument()
-    DLG.mri(oDoc)
     # return
     # LeenoContab.imposta_data()
     return

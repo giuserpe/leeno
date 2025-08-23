@@ -66,7 +66,7 @@ def chi(s):
             f'Nome della funzione chiamante: {function_name}()'
         )
         
-        # Apri il file con Geany e vai alla riga specificata
+        # Apri il file e vai alla riga specificata
         PL.apri_con_editor(full_file_path, line_number)
 
         # Mostra il messaggio in un dialogo

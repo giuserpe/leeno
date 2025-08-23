@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
- <library:element library:name="Dlg_input"/>
  <library:element library:name="Dialog_tabellaferri"/>
- <library:element library:name="Dlg_config"/>
+ <library:element library:name="Dlg_input"/>
  <library:element library:name="Dialog_tabelle"/>
+ <library:element library:name="Dlg_config"/>
+ <library:element library:name="DlgAttesa"/>
  <library:element library:name="DlgDonazioni"/>
  <library:element library:name="DlgTesto"/>
- <library:element library:name="DlgAttesa"/>
  <library:element library:name="DialogViste_A"/>
  <library:element library:name="Dialog_XLO"/>
  <library:element library:name="DlgMain"/>

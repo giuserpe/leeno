@@ -440,7 +440,7 @@ class DatiVoce:
             return cs
 
         # return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
-        return (start_row, end_row)
+        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
 
     def _estrai_dati(self):
         if not self.range:

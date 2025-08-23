@@ -505,8 +505,6 @@ def invia_voce():
             _gotoCella(lrow[0]+1, lrow[1]+1)
         return
  
-    DLG.chi(1)
-
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         dv = LeenoComputo.DatiVoce(oSheet, lrow)
@@ -618,9 +616,6 @@ def invia_voce():
         tante_analisi_in_ep()
     except Exception:
         pass
-
-
-    DLG.chi(1)
 
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -758,7 +753,7 @@ def MENU_copia_sorgente_per_git():
 ########################################################################
 
 def cerca_path_valido():
-    if 'giuserpe' not in os.getlogin():
+    if 'giuserpe' in os.getlogin():
         # Try multiple possible paths
         possible_paths = [
             # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",

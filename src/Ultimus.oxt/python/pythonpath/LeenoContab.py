@@ -167,10 +167,10 @@ def imposta_data():
         return 0
 
     dv_start = LeenoComputo.DatiVoce(oSheet, oRangeAddress.StartRow)
-    prima_riga = dv_start._circoscrive_voce()[0]
+    prima_riga = dv_start.SR
 
     dv_end = LeenoComputo.DatiVoce(oSheet, oRangeAddress.EndRow)
-    ultima_riga = dv_end._circoscrive_voce()[1]
+    ultima_riga = dv_end.ER
 
     for el in range(prima_riga, ultima_riga + 1):
         cell = oSheet.getCellByPosition(1, el)  # colonna B

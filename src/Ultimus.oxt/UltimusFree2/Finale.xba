@@ -189,102 +189,98 @@ SUB Impagina_N &apos; richiamata con shortcut da una tabella
 Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
-	&apos;--------------------------------------------------
-	sAttributo = Trova_Attr_Sheet &apos;Trova_Attr
-	&apos;Print sAttributo
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
-	 sSheetName= ThisComponent.currentcontroller.activesheet.name
-	 If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,329).value = 1 then 
-		If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
-	 		 sSheetName=&quot;Analisi di Prezzo&quot; or _
-	 		 sSheetName=&quot;FiltroTMP&quot; then
-	 		&apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
-	 		&apos; viene spezzato in diverse finestre...
-	 		msgbox &quot;Mi hai chiesto di impaginare questa tabella scrivendo i Totali di pagina su una tabella base (Originale)...&quot; &amp; CHR$(10)_
-	 		&amp; &quot; Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
-	 		msgbox	&quot;Se proprio vuoi rovinare il tuo computo fallo (&quot;&quot;con le tue manine&quot;&quot;)...&quot;&amp; CHR$(10)_
-	 		&amp; &quot;Io invece ti consiglio di duplicare questa tabella creandone una copia (manipolabile impunemente) Menu Top ULTIMUS_3 &gt; STAMPA &gt; 1) Prepara il doc per la stampa!&quot;
-	 		&apos; ne faccio una copia?
-	 		exit sub
-	 	end if
-	 end if
-	end If
+    &apos;--------------------------------------------------
+    sAttributo = Trova_Attr_Sheet &apos;Trova_Attr
+    &apos;Print sAttributo
+    If ThisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
+        sSheetName = ThisComponent.currentcontroller.activesheet.name
+        If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,329).value = 1 Then 
+            If sSheetName = &quot;COMPUTO&quot; Or sSheetName = &quot;Elenco Prezzi&quot; Or sSheetName = &quot;CronoP&quot; Or _
+               sSheetName = &quot;Analisi di Prezzo&quot; Or _
+               sSheetName = &quot;FiltroTMP&quot; Then
+                &apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
+                &apos; viene spezzato in diverse finestre...
+                msgbox &quot;Mi hai chiesto di impaginare questa tabella scrivendo i Totali di pagina su una tabella base (Originale)...&quot; &amp; CHR$(10) &amp; _
+                &quot; Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
+                msgbox &quot;Se proprio vuoi rovinare il tuo computo fallo (&quot;&quot;con le tue manine&quot;&quot;)...&quot; &amp; CHR$(10) &amp; _
+                &quot;Io invece ti consiglio di duplicare questa tabella creandone una copia (manipolabile impunemente) Menu Top ULTIMUS_3 &gt; STAMPA &gt; 1) Prepara il doc per la stampa!&quot;
+                &apos; ne faccio una copia?
+                exit sub
+            End If
+        End If
+    End If
 
-&apos;modulo che controlla se lo stile di pag ha pagina in altezza per pagine in lumgh.
-&apos; se è impostato in quel modo chiede se modificarlo
-	oSheet = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
-&apos;	xray oSheet
-	sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet
-&apos;	print sStile_Pag 
-	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
-	oController = oDesktop.CurrentFrame.Controller
-	oDocument = oController.Model
-&apos;	xray oDocument
-	oStyleFam = oDocument.StyleFamilies
-	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
-	oAktPage = oTablePageStyles.getByname(sStile_Pag)
-&apos;	xray oAktPage
-		
-&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
-&apos; 	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
-&apos;	End If 
-	sNomeStyle=oAktPage.DisplayName
+    &apos;modulo che controlla se lo stile di pag ha pagina in altezza per pagine in lumgh.
+    &apos; se è impostato in quel modo chiede se modificarlo
+    oSheet = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
+    &apos;xray oSheet
+    sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet
+    &apos;print sStile_Pag 
+    oDesktop = createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
+    oController = oDesktop.CurrentFrame.Controller
+    oDocument = oController.Model
+    &apos;xray oDocument
+    oStyleFam = oDocument.StyleFamilies
+    oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
+    oAktPage = oTablePageStyles.getByname(sStile_Pag)
+    &apos;xray oAktPage
+        
+    &apos;If NOT BasicLibraries.isLibraryLoaded(&quot;XrayTool&quot;) Then 
+    &apos; BasicLibraries.LoadLibrary(&quot;XrayTool&quot;) 
+    &apos;End If 
+    sNomeStyle = oAktPage.DisplayName
 
-	if oAktPage.ScaleToPagesY&lt;&gt;0 then
-		if msgbox ( &quot;Le attuali impostazioni di stampa contenute nello stile di pagina (&quot; &amp; sNomeStyle &amp;&quot;) non sono compatibili con questa macro&quot;&amp; CHR$(10)&amp; CHR$(10)_
-		 	&amp;&quot;Modifico d&apos;ufficio lo stile di stampa ?&quot; &amp; CHR$(10)_
-			&amp; CHR$(10)_
-			 	&amp; &quot;&quot; &amp; CHR$(10)_
-						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-			sScalatura = InputBox (&quot;&quot; &amp; CHR$(10)_
- 				&amp; &quot; Imposta la scala di stampa (il 70% è un buon compromesso per iniziare...)&quot; &amp; CHR$(10) &amp; CHR$(10)_
-	 			 , &quot;Se poi vorrai modificarlo lo povrai fare dalla GUI di OpenOffice &quot;, 70)
-			 	 	 If sScalatura = &quot;&quot; then
-						msgbox &quot; La macro è stata annullata!&quot; 			 
- 					exit sub
- 			 end if
-					oAktPage.ScaleToPagesY=0
-					oAktPage.ScaleToPagesx=0
-					oAktPage.PageScale=sScalatura		
-				else
-					msgbox &quot;Come desideri... la macro è stata annullata!&quot; 
-					exit sub
-		end if
-		msgbox &quot;Le impostazioni di stampa sono state modificate.&quot;&amp; CHR$(10)_
-		&amp; &quot;Ma prima di riavviare la macro occorre controllare &quot;&quot;a vista&quot;&quot; e trovare il migliore compromesso tra i diversi parametri.&quot; &amp; CHR$(10)_
-		&amp; &quot; Sopratutto controlla che stia nella larghezza della pagina&quot; &amp; CHR$(10)_
-		&amp; &quot; Sul manuale d&apos;uso le istruzioni di stampa sono state aggiornate...&quot;
-		Visualizza_PageBreak
-		exit sub
-	end sub
+    If oAktPage.ScaleToPagesY &lt;&gt; 0 Then
+        If msgbox(&quot;Le attuali impostazioni di stampa contenute nello stile di pagina (&quot; &amp; sNomeStyle &amp; &quot;) non sono compatibili con questa macro&quot; &amp; CHR$(10) &amp; CHR$(10) &amp; _
+          &quot;Modifico d&apos;ufficio lo stile di stampa ?&quot; &amp; CHR$(10) &amp; _
+          CHR$(10) &amp; _
+          &quot;&quot; &amp; CHR$(10) &amp; _
+          &quot;&quot;, 36, &quot;&quot;) = 6 Then
+            sScalatura = InputBox(&quot;&quot; &amp; CHR$(10) &amp; _
+                &quot; Imposta la scala di stampa (il 70% è un buon compromesso per iniziare...)&quot; &amp; CHR$(10) &amp; CHR$(10), _
+                &quot;Se poi vorrai modificarlo lo povrai fare dalla GUI di OpenOffice&quot;, 70)
+            If sScalatura = &quot;&quot; Then
+                msgbox &quot; La macro è stata annullata!&quot;              
+                exit sub
+            End If
+            oAktPage.ScaleToPagesY = 0
+            oAktPage.ScaleToPagesX = 0
+            oAktPage.PageScale = sScalatura        
+        Else
+            msgbox &quot;Come desideri... la macro è stata annullata!&quot; 
+            exit sub
+        End If
+        msgbox &quot;Le impostazioni di stampa sono state modificate.&quot; &amp; CHR$(10) &amp; _
+        &quot;Ma prima di riavviare la macro occorre controllare &quot;&quot;a vista&quot;&quot; e trovare il migliore compromesso tra i diversi parametri.&quot; &amp; CHR$(10) &amp; _
+        &quot; Sopratutto controlla che stia nella larghezza della pagina&quot; &amp; CHR$(10) &amp; _
+        &quot; Sul manuale d&apos;uso le istruzioni di stampa sono state aggiornate...&quot;
+        Visualizza_PageBreak
+        exit sub
+    End If
 
-&apos; fine modulo di controllo e modifica stile di pagina
-	
-	Select Case sSheetName
-&apos;		Case &quot;COMPUTO&quot;
-&apos;			Visualizza_PageBreak
-&apos;		Case &quot;CONTABILITA&quot;
-&apos;			Visualizza_PageBreak
-		Case &quot;Analisi di Prezzo&quot;
-			Visualizza_PageBreak
-			Impagina_Analisi_N
-&apos;		Case &quot;Elenco Prezzi&quot; 
-	&apos;		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
-			exit sub
-		Case &quot;&quot;
-			msgbox &quot;Non mi risulta che la tabella che vuoi impaginare sia del tipo Computo... o Analisi&quot;&amp; CHR(10) &amp; CHR(10)_
-				&amp;&quot;L&apos;informazione che cerco e&apos; scritta in modo invisibile nella cella A1&quot;&amp; CHR(10)_
-				&amp;&quot;Se sei certo che sia una tabella di Tipo Computo devi copiare la cella corrispondente da S1 e incollarla in A1 su questa tabella&quot;&amp; CHR(10)_
-				&amp;&quot;(copia da S1.E44 ed incolla in A1 su questa tabella.)&quot;&amp; CHR(10) &amp; CHR(10)_
-				&amp; &quot;Se invece ritieni sia di tipo Analisi (copia la cella S1.AL42 ed incolla in A1 su questa tabella.)&quot;
-			exit sub
-	End Select		
+    &apos; fine modulo di controllo e modifica stile di pagina
+    
+    Select Case sSheetName
+        Case &quot;Analisi di Prezzo&quot;
+            Visualizza_PageBreak
+            Impagina_Analisi_N
+        Case &quot;Elenco Prezzi&quot; 
+            msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
+            exit sub
+        Case Else
+            If sSheetName = &quot;&quot; Then
+                msgbox &quot;Non mi risulta che la tabella che vuoi impaginare sia del tipo Computo... o Analisi&quot; &amp; CHR(10) &amp; CHR(10) &amp; _
+                    &quot;L&apos;informazione che cerco e&apos; scritta in modo invisibile nella cella A1&quot; &amp; CHR(10) &amp; _
+                    &quot;Se sei certo che sia una tabella di Tipo Computo devi copiare la cella corrispondente da S1 e incollarla in A1 su questa tabella&quot; &amp; CHR$(10) &amp; _
+                    &quot;(copia da S1.E44 ed incolla in A1 su questa tabella.)&quot; &amp; CHR(10) &amp; CHR(10) &amp; _
+                    &quot;Se invece ritieni sia di tipo Analisi (copia la cella S1.AL42 ed incolla in A1 su questa tabella.)&quot;
+                exit sub
+            End If
+    End Select        
 
+    &apos;Visualizza_normale &apos; Una volta messo a punto il foglio si può togliere il Pagebreak
+    &apos; mi sembra meglio lasciarlo... per il momento
 
-
-
-&apos;Visualizza_normale &apos; Una volta messo a punto il foglio si pu� togliere il Pagebreak
-&apos; mi sembra meglio lasciarlo... per il momento
 END SUB
 
 

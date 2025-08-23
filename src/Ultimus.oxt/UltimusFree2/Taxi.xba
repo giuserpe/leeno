@@ -379,36 +379,6 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 end Function
 
-
-
-
-Sub Definisci_NomeArea (sSheetName as string, sAreaName as string, sAreaRange as string, optional irows as integer) 
-&apos;dim sDefArea as string
-&apos;dim lRow as long
-&apos;dim oSheet as object
-&apos;print &quot;dentro def 1 &quot; &amp; sSheetName
-&apos;print &quot;dentro def 2 &quot; &amp; sAreaName
-&apos;print &quot;dentro def 3 &quot; &amp; sAreaRange
-&apos;print &quot;dentro def &quot; &amp; irows
- oSheet = ThisComponent.Sheets.getByName(sSheetName) 
- oRanges = ThisComponent.NamedRanges
-if ismissing(irows) then
-	irows = 0 &apos;cautelativa per errore possibile
-end sub
- If oRanges.hasByName(sAreaName) Then
- oRanges.getByName(sAreaName)
- oRanges.removeByName(sAreaName)
- End If
-&apos;print irows
-&apos;xray oSheet.getCellRangebyPosition(0,irows,0,irows+1)
- oCellAddress = oSheet.getCellByPosition(0,irows).getCellAddress()
- &apos;oCellAddress = oSheet.getCellRangeByName(&quot;a1&quot;) .getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
- sDefArea= &quot;$&apos;&quot; &amp; sSheetName &amp; &quot;&apos;.&quot; &amp; sAreaRange &apos; gli &apos; di delimitazione servono quando ci sono spazi nel nome sheet
- &apos; sDefArea= &quot;$&quot; &amp; sSheetName &amp; &quot;.&quot; &amp; sAreaRange 
-
- oRanges.addNewByName(sAreaName, sDefArea , oCellAddress, 0)
-END SUB 
-
 Sub gina &apos; trasferisce una sheet da un doc ad un altro
 &apos; verifcando e trasferendo sino a a 3 link
 	dim sAreaNameSRC as string

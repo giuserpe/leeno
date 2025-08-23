@@ -758,25 +758,26 @@ def MENU_copia_sorgente_per_git():
 ########################################################################
 
 def cerca_path_valido():
-    # Try multiple possible paths
-    possible_paths = [
-        # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
-        os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
-        "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-        "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
-        "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-        "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-    ]
+    if 'giuserpe' not in os.getlogin():
+        # Try multiple possible paths
+        possible_paths = [
+            # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
+            os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+            "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+            "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+            "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+            "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        ]
 
-    editor_path = None
-    for path in possible_paths:
-        if os.path.exists(path):
-            editor_path = path
-            break
+        editor_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                editor_path = path
+                break
 
-    if editor_path is None:
-        raise FileNotFoundError("Could not find VS Code executable")
-    return editor_path
+        if editor_path is None:
+            raise FileNotFoundError("Impossibile trovare VS Code. Assicurati che sia installato.")
+        return editor_path
 
 def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows

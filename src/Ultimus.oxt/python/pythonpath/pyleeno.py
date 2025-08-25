@@ -386,7 +386,7 @@ la posizione di destinazione.''')
 
 ###############################################################################
 def MENU_invia_voce():
-     with LeenoUtils.DocumentRefreshContext(False):
+    with LeenoUtils.DocumentRefreshContext(False):
         invia_voce()
     
 def invia_voce():
@@ -536,7 +536,7 @@ def invia_voce():
             # DP = LeenoUtils.getGlobalVar('sUltimus')
             # ddcDoc = LeenoUtils.findOpenDocument(DP)
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet.getCellByPosition(1, SR +1).CellBackColor = 14942166
+            dccSheet.getCellByPosition(1, SR + 1).CellBackColor = 14942166
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             lrow = LeggiPosizioneCorrente()[1]
 
@@ -559,20 +559,27 @@ def invia_voce():
                 except Exception as e:
                     DLG.errore(e)
 
-            # inserisce la nuova voce con il giusto numero di righe per le misure
-            MENU_nuova_voce_scelta()
-            _gotoCella(0, lrow + 2)
-            Copia_riga_Ent(ER - SR - 3)
-            _gotoCella(0, lrow)
+            MENU_nuova_voce_scelta() # inserisce la nuova voce
 
-            range_dest = f'A{lrow+1}:AZ{lrow+1+ER-SR}'
+            _gotoCella(0, lrow + 2) # posiziona sulla prima riga delle misure della voce
 
+            if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
+                _gotoCella(0, lrow + 1) # posiziona sulla prima riga delle misure della voce
+
+            Copia_riga_Ent(ER - SR - 3) # inserisce le righe per le misure
+
+            _gotoCella(0, lrow) # posiziona sulla riga della voce
+
+            if lrow == 4:
+                range_dest = f'A{lrow}:AZ{lrow+ER-SR}'
+            else:
+                range_dest = f'A{lrow+1}:AZ{lrow+1+ER-SR}'
+            
             dccSheet.getCellRangeByName(range_dest).FormulaArray = data
 
             rigenera_voce(lrow)
             rigenera_parziali(False)
-            # return
-
+           
             # se nella voce inserita la descrizione non risulta presente
             # la voce di prezzo viene presa dal foglio di partenza
             
@@ -584,6 +591,8 @@ def invia_voce():
 
             if not cerca_in_elenco_prezzi:
                 recupera_voce(art)
+
+            Menu_adattaAltezzaRiga()
   
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -627,8 +636,12 @@ def invia_voce():
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
-        ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 14942166
-        _gotoCella(2, lrow + 1)
+        if dccSheet.getCellByPosition(0, lrow).CellStyle == 'comp progress':
+            ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow).CellBackColor = 14942166
+            _gotoCella(2, lrow)
+        else:
+            ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 14942166
+            _gotoCella(2, lrow + 1)
     try:
         oSheet = oDoc.getSheets().getByName(nSheetDCC)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -981,9 +994,9 @@ def Tutti_Subtotali(oSheet):
     oSheet.getCellByPosition(
         17, lrow).Formula = '=SUBTOTAL(9;R4:R' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
-        18, 1).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
+        18, 1).Formula = '=SUBTOTAL(9;S3:S' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
-        18, lrow).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
+        18, lrow).Formula = '=SUBTOTAL(9;S3:S' + str(lrow + 1) + ')'
 
     oSheet.getCellByPosition(
         28, lrow).Formula = '=SUBTOTAL(9;AC4:AC' + str(lrow + 1) + ')'
@@ -12300,7 +12313,7 @@ def export_selected_range_to_odt():
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
 def MENU_debug():
-    inizializza_elenco()
+    trova_colore_cella()
     return
 
     oDoc = LeenoUtils.getDocument()

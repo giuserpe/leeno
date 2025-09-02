@@ -557,6 +557,35 @@ def FixNamedArea():
 
 # ###############################################################
 
+def remove_bad_ranges():
+    '''Recupera tutti gli intervalli nominati definiti nel documento e
+    rimuove automaticamente gli intervalli corrotti o non validi.'''
+
+    oDoc = LeenoUtils.getDocument()
+    oNamedRanges = oDoc.NamedRanges
+    tNamedArea = oNamedRanges.getElementNames()
+    
+    # DLG.chi(f"Numero di intervalli: {len(tNamedArea)}")
+    
+    for i, name in enumerate(tNamedArea, 1):
+        oNamedRange = oNamedRanges.getByName(name)
+        ref_cells = oNamedRange.ReferredCells
+        try:
+            ref_cells.RangeAddress
+            # addr = ref_cells.RangeAddress
+            # DLG.chi(f'''{name}:
+            #     - Riga iniziale: {addr.StartRow + 1}
+            #     - Riga finale: {addr.EndRow + 1}
+            #     - Colonna iniziale: {addr.StartColumn + 1}
+            #     - Colonna finale: {addr.EndColumn + 1}
+            #     - Foglio: {addr.Sheet}''')
+        except Exception as e:
+            oDoc.NamedRanges.removeByName(name)
+            # DLG.chi(f"Area {name} rimossa")
+    return
+    
+# ###############################################################
+
 
 def visualizza_PageBreak(arg=True):
     '''

@@ -1260,7 +1260,6 @@ def MENU_SheetToDoc():
     oDoc.CurrentController.ZoomValue = 100
     return
 
-
 # ###############################################################
 
 

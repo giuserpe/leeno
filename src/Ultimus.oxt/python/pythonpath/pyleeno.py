@@ -386,7 +386,7 @@ la posizione di destinazione.''')
 
 ###############################################################################
 def MENU_invia_voce():
-    with LeenoUtils.DocumentRefreshContext(False):
+     with LeenoUtils.DocumentRefreshContext(False):
         invia_voce()
     
 def invia_voce():
@@ -505,6 +505,8 @@ def invia_voce():
             _gotoCella(lrow[0]+1, lrow[1]+1)
         return
  
+    DLG.chi(1)
+
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         dv = LeenoComputo.DatiVoce(oSheet, lrow)
@@ -536,7 +538,7 @@ def invia_voce():
             # DP = LeenoUtils.getGlobalVar('sUltimus')
             # ddcDoc = LeenoUtils.findOpenDocument(DP)
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet.getCellByPosition(1, SR + 1).CellBackColor = 14942166
+            dccSheet.getCellByPosition(1, SR +1).CellBackColor = 14942166
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             lrow = LeggiPosizioneCorrente()[1]
 
@@ -559,27 +561,20 @@ def invia_voce():
                 except Exception as e:
                     DLG.errore(e)
 
-            MENU_nuova_voce_scelta() # inserisce la nuova voce
+            # inserisce la nuova voce con il giusto numero di righe per le misure
+            MENU_nuova_voce_scelta()
+            _gotoCella(0, lrow + 2)
+            Copia_riga_Ent(ER - SR - 3)
+            _gotoCella(0, lrow)
 
-            _gotoCella(0, lrow + 2) # posiziona sulla prima riga delle misure della voce
+            range_dest = f'A{lrow+1}:AZ{lrow+1+ER-SR}'
 
-            if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
-                _gotoCella(0, lrow + 1) # posiziona sulla prima riga delle misure della voce
-
-            Copia_riga_Ent(ER - SR - 3) # inserisce le righe per le misure
-
-            _gotoCella(0, lrow) # posiziona sulla riga della voce
-
-            if lrow == 4:
-                range_dest = f'A{lrow}:AZ{lrow+ER-SR}'
-            else:
-                range_dest = f'A{lrow+1}:AZ{lrow+1+ER-SR}'
-            
             dccSheet.getCellRangeByName(range_dest).FormulaArray = data
 
             rigenera_voce(lrow)
             rigenera_parziali(False)
-           
+            # return
+
             # se nella voce inserita la descrizione non risulta presente
             # la voce di prezzo viene presa dal foglio di partenza
             
@@ -591,8 +586,6 @@ def invia_voce():
 
             if not cerca_in_elenco_prezzi:
                 recupera_voce(art)
-
-            Menu_adattaAltezzaRiga()
   
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -626,6 +619,9 @@ def invia_voce():
     except Exception:
         pass
 
+
+    DLG.chi(1)
+
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     _gotoDoc(fpartenza)
@@ -636,12 +632,8 @@ def invia_voce():
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
-        if dccSheet.getCellByPosition(0, lrow).CellStyle == 'comp progress':
-            ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow).CellBackColor = 14942166
-            _gotoCella(2, lrow)
-        else:
-            ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 14942166
-            _gotoCella(2, lrow + 1)
+        ddcDoc.getSheets().getByName(nSheetDCC).getCellByPosition(1, lrow + 1).CellBackColor = 14942166
+        _gotoCella(2, lrow + 1)
     try:
         oSheet = oDoc.getSheets().getByName(nSheetDCC)
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -766,26 +758,25 @@ def MENU_copia_sorgente_per_git():
 ########################################################################
 
 def cerca_path_valido():
-    if 'giuserpe' in os.getlogin():
-        # Try multiple possible paths
-        possible_paths = [
-            # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
-            os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
-            "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-            "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
-            "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-            "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-        ]
+    # Try multiple possible paths
+    possible_paths = [
+        # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
+        os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+        "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+        "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+        "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+        "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+    ]
 
-        editor_path = None
-        for path in possible_paths:
-            if os.path.exists(path):
-                editor_path = path
-                break
+    editor_path = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            editor_path = path
+            break
 
-        if editor_path is None:
-            raise FileNotFoundError("Impossibile trovare VS Code. Assicurati che sia installato.")
-        return editor_path
+    if editor_path is None:
+        raise FileNotFoundError("Could not find VS Code executable")
+    return editor_path
 
 def apri_con_editor(full_file_path, line_number):
     # Imposta il percorso di VSCodium per Windows
@@ -994,9 +985,9 @@ def Tutti_Subtotali(oSheet):
     oSheet.getCellByPosition(
         17, lrow).Formula = '=SUBTOTAL(9;R4:R' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
-        18, 1).Formula = '=SUBTOTAL(9;S3:S' + str(lrow + 1) + ')'
+        18, 1).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
-        18, lrow).Formula = '=SUBTOTAL(9;S3:S' + str(lrow + 1) + ')'
+        18, lrow).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
 
     oSheet.getCellByPosition(
         28, lrow).Formula = '=SUBTOTAL(9;AC4:AC' + str(lrow + 1) + ')'
@@ -7178,8 +7169,7 @@ def inizializza_elenco():
         chiudi_dialoghi()
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
-        oSheet.Columns.removeByIndex(26, 1)
-
+        
         # Configurazioni costanti
         STILI = {
             'intestazione': 'EP-a -Top',
@@ -7193,8 +7183,8 @@ def inizializza_elenco():
         oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         ER = oCellRangeAddr.EndRow
         EC = oCellRangeAddr.EndColumn
-        oSheet.getCellRangeByPosition(11, 3, EC, ER-1).clearContents(STRING + VALUE + FORMULA)
-        
+        oSheet.getCellRangeByPosition(11, 3, EC, ER).clearContents(STRING + VALUE + FORMULA)
+
         # 3. Configurazione base foglio
         oDoc.CurrentController.freezeAtPosition(0, 3)
         oSheet.getCellRangeByPosition(0, 0, 100, 0).CellStyle = STILI['default']
@@ -7229,7 +7219,7 @@ def inizializza_elenco():
         # Applica intestazioni in batch
         for cell, text in INTESTAZIONI.items():
             oSheet.getCellRangeByName(f"'Elenco Prezzi'.{cell}").String = text
-        
+
         # 5. Applicazione stili (ottimizzato)
         STILI_RANGE = {
             STILI['testa']: ["'Elenco Prezzi'.A2:Y2"],
@@ -7257,10 +7247,6 @@ def inizializza_elenco():
             'V2': f'=IF(SUBTOTAL(9;V3:V{y})=0;"--";SUBTOTAL(9;V3:V{y}))',
             'X2': f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             'Y2': f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
-            'N2': f'',
-            'P2': f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
-            'Q2': f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
-            'R2': f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
         }
         
         for cell, formula in FORMULE_TOTALI.items():
@@ -7275,24 +7261,20 @@ def inizializza_elenco():
             23: f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             24: f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
 
-
-            # 11: f'=IF(SUBTOTAL(9;L3:L{y})=0;"--";SUBTOTAL(9;L3:L{y}))',
-            # 12: f'=IF(SUBTOTAL(9;M3:M{y})=0;"--";SUBTOTAL(9;M3:M{y}))',
-            # 13: f'=IF(SUBTOTAL(9;N3:N{y})=0;"--";SUBTOTAL(9;N3:N{y}))',
-            15: f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
-            16: f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
-            17: f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
+            15: f'TOTALE',
+            16: f'TOTALE',
+            17: f'TOTALE',
         }
-        oSheet.getCellRangeByName(f'L{y+1}:N{y+1}').merge(True)
-        oSheet.getCellByPosition(11, y).String = 'TOTALI'
-
+        
         for col, value in TOTALI_FINALI.items():
             oSheet.getCellByPosition(col, y).Formula = value if isinstance(value, str) and value.startswith('=') else value
         
         oSheet.getCellRangeByPosition(10, y, 25, y).CellStyle = STILI['contab']
+        # oDoc.CurrentController.select(oSheet.getCellRangeByPosition(10, y, 25, y))
+        # return
         
         # 8. Pulizia finale e stili
-        y += 1
+        y -= 1
         for col in ('K', 'O', 'S', 'W'):
             oSheet.getCellRangeByName(f'{col}2:{col}{y}').CellStyle = STILI['default']
         
@@ -7308,14 +7290,13 @@ def inizializza_elenco():
             'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)]
             # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
         }
-        
+        # y += 1
         for style_name, ranges in STILI_COLONNE.items():
             for col_start, col_end in ranges:
                 oSheet.getCellRangeByPosition(
                     col_start, 3, 
-                    col_end, y - 2
+                    col_end, y
                 ).CellStyle = style_name
-
 
 
 def inserisci_ElencoCosti():
@@ -7641,9 +7622,34 @@ def struttura_Elenco():
         for i in reversed(range(0, 3)):
             struct_colore(i) # attribuisce i colori
 
+        # LeenoUtils.DocumentRefresh(True)
         return
 
+
 ########################################################################
+# ns_ins moved to LeenoImport_XmlToscana.py
+########################################################################
+
+########################################################################
+# XML_toscana_import moved to LeenoImport_XmlToscana.py
+########################################################################
+
+########################################################################
+# MENU_fuf moved to LeenoImport.py
+########################################################################
+
+########################################################################
+# XML_import_ep moved to LeenoImport.py
+########################################################################
+
+########################################################################
+# XML_import_multi moved to LeenoImport.py
+########################################################################
+
+########################################################################
+# importa_listino_leeno moved to LeenoImport.py
+########################################################################
+
 
 def colora_vecchio_elenco():
     '''
@@ -8572,6 +8578,10 @@ def autorun():
 
 ########################################################################
 def autoexec():
+    with LeenoUtils.DocumentRefreshContext(False):
+        autoexec_run()
+
+def autoexec_run():
     '''
     questa è richiamata da creaComputo()
     '''
@@ -8580,7 +8590,10 @@ def autoexec():
     LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
+    
+    SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
+
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
     bak0()
@@ -8824,6 +8837,7 @@ def vSintetica(flag = True):
         i = 0
         uscita = False
         # attiva la progressbar
+        # inizializza la progressbar
         indicator = oDoc.getCurrentController().getStatusIndicator()
         indicator.start(f'Elaborazione voci di {oSheet.Name}...', uRiga)
 
@@ -8847,6 +8861,8 @@ def vSintetica(flag = True):
                 oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
                 oSheet.getRows().getByIndex(sotto).Rows.Height = 750
 
+                # if oSheet.getCellByPosition(lcol, i).CellStyle != 'comp sotto Euro Originale' or \
+                # oSheet.getCellByPosition(lcol, i).Value == 0:
                 oCellRangeAddr.StartRow = sopra
                 oCellRangeAddr.EndRow = sotto -1
                 oSheet.group(oCellRangeAddr, 1)
@@ -8880,6 +8896,7 @@ def vSintetica(flag = True):
 
     Si ricorda che le celle con sfondo bianco, in genere,
     non sono destinate all'inserimento di dati.''')
+        # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
         return
 
 
@@ -12313,8 +12330,17 @@ def export_selected_range_to_odt():
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
 def MENU_debug():
-    trova_colore_cella()
+    inizializza_elenco()
     return
+        # DLG.chi(f"{i}. '{name}': riga {addr.StartRow + 1}, colonna {addr.StartColumn + 1}")
+    
+    # Informazioni specifiche per 'analisi'
+    
+        # oNamedRange = oNamedRanges.getByName(name)
+        # ref_cells = oNamedRange.ReferredCells
+        # addr = ref_cells.RangeAddress
+        
+        
 
     oDoc = LeenoUtils.getDocument()
     # return

@@ -2582,6 +2582,8 @@ def scelta_viste_run():
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
 
+                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(T{n});u;N(U{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+
             if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Computo - Contabilità':
                 inizializza_elenco()
                 genera_sommario()
@@ -2615,10 +2617,12 @@ def scelta_viste_run():
                                 oSheet.getCellRangeByPosition(
                                     0, el, 1, el).Rows.IsVisible = False
 
+                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(T{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
 
             if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Variante - Contabilità':
                 inizializza_elenco()
                 genera_sommario()
+                oSheet.getCellRangeByName('Z2').Formula = '=IFERROR(LET(t;N(U2);u;N(V2);IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
 
                 # oRangeAddress.StartColumn = 11
                 # oRangeAddress.EndColumn = 14
@@ -2636,15 +2640,18 @@ def scelta_viste_run():
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
 
-            if oDialog1.getControl('ComboRAFFRONTO').getText() != '&1120.DialogViste_EP.ComboRAFFRONTO.Text':
-                if DLG.DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-                    errori = ('#DIV/0!', '--')
-                    hide_error(errori, 26)
-                    oSheet.ungroup(oRangeAddress, 0)
-                    oSheet.group(oRangeAddress, 0)
-                    oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0,
-                                                  oRangeAddress.EndColumn,
-                                                  1).Columns.IsVisible = False
+                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(U{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+
+            # if oDialog1.getControl('ComboRAFFRONTO').getText() != '&1120.DialogViste_EP.ComboRAFFRONTO.Text':
+            #     if DLG.DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+            #         errori = ('#DIV/0!', '--')
+            #         hide_error(errori, 26)
+            #         oSheet.ungroup(oRangeAddress, 0)
+            #         oSheet.group(oRangeAddress, 0)
+            #         oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0,
+            #                                       oRangeAddress.EndColumn,
+            #                                       1).Columns.IsVisible = False
+
             LeenoSheetUtils.inserisciRigaRossa(oSheet)
         else:
             return oDialog1.dispose()
@@ -2690,7 +2697,9 @@ def scelta_viste_run():
         paste_format()
 
         _primaCella()
-        # LeenoUtils.DocumentRefresh(True)
+        oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = 16777175
+
+        oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -2884,13 +2893,10 @@ def genera_sommario():
                     f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(M{n}="--"; 0; VALUE(M{n})); IF(s; s; "--"))',
                     '',
                     # Importi Computo
-                    # f'=LET(s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; IF(s; s; ""))',
                     f'=LET( s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
                     # Importi Variante
-                    # f'=LET(s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; IF(s; s; ""))',
                     f'=LET( s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
                     # Importi Contabilità
-                    # f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; IF(s; s; ""))',
                     f'=LET( s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
 
                 ]
@@ -7193,7 +7199,7 @@ def inizializza_elenco():
         oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         ER = oCellRangeAddr.EndRow
         EC = oCellRangeAddr.EndColumn
-        oSheet.getCellRangeByPosition(11, 3, EC, ER-1).clearContents(STRING + VALUE + FORMULA)
+        oSheet.getCellRangeByPosition(11, 3, EC, ER).clearContents(STRING + VALUE + FORMULA)
         
         # 3. Configurazione base foglio
         oDoc.CurrentController.freezeAtPosition(0, 3)
@@ -7257,10 +7263,6 @@ def inizializza_elenco():
             'V2': f'=IF(SUBTOTAL(9;V3:V{y})=0;"--";SUBTOTAL(9;V3:V{y}))',
             'X2': f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             'Y2': f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
-            'N2': f'',
-            'P2': f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
-            'Q2': f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
-            'R2': f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
         }
         
         for cell, formula in FORMULE_TOTALI.items():
@@ -7268,23 +7270,16 @@ def inizializza_elenco():
         
         # 7. Righe di totale finali
         TOTALI_FINALI = {
-            17: 'TOTALE',
+            15: 'TOTALE',
             19: f'=IF(SUBTOTAL(9;T3:T{y})=0;"--";SUBTOTAL(9;T3:T{y}))',
             20: f'=IF(SUBTOTAL(9;U3:U{y})=0;"--";SUBTOTAL(9;U3:U{y}))',
             21: f'=IF(SUBTOTAL(9;V3:V{y})=0;"--";SUBTOTAL(9;V3:V{y}))',
             23: f'=IF(SUBTOTAL(9;X3:X{y})=0;"--";SUBTOTAL(9;X3:X{y}))',
             24: f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
-
-
-            # 11: f'=IF(SUBTOTAL(9;L3:L{y})=0;"--";SUBTOTAL(9;L3:L{y}))',
-            # 12: f'=IF(SUBTOTAL(9;M3:M{y})=0;"--";SUBTOTAL(9;M3:M{y}))',
-            # 13: f'=IF(SUBTOTAL(9;N3:N{y})=0;"--";SUBTOTAL(9;N3:N{y}))',
-            15: f'=IF(SUBTOTAL(9;P3:P{y})=0;"--";SUBTOTAL(9;P3:P{y}))',
-            16: f'=IF(SUBTOTAL(9;Q3:Q{y})=0;"--";SUBTOTAL(9;Q3:Q{y}))',
-            17: f'=IF(SUBTOTAL(9;R3:R{y})=0;"--";SUBTOTAL(9;R3:R{y}))',
+            24: f'=IF(SUBTOTAL(9;Y3:Y{y})=0;"--";SUBTOTAL(9;Y3:Y{y}))',
         }
         oSheet.getCellRangeByName(f'L{y+1}:N{y+1}').merge(True)
-        oSheet.getCellByPosition(11, y).String = 'TOTALI'
+        oSheet.getCellRangeByName(f'P{y+1}:R{y+1}').merge(True)
 
         for col, value in TOTALI_FINALI.items():
             oSheet.getCellByPosition(col, y).Formula = value if isinstance(value, str) and value.startswith('=') else value
@@ -12320,13 +12315,6 @@ def export_selected_range_to_odt():
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
 
 def MENU_debug():
-    trova_colore_cella()
-    return
-
-    oDoc = LeenoUtils.getDocument()
-    # return
-    # LeenoContab.imposta_data()
-    return
     with LeenoUtils.DocumentRefreshContext(False):
 
         oDoc = LeenoUtils.getDocument()

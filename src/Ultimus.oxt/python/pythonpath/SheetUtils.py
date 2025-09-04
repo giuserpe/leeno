@@ -559,7 +559,7 @@ def FixNamedArea():
 
 def remove_bad_ranges():
     '''Recupera tutti gli intervalli nominati definiti nel documento e
-    rimuove automaticamente gli intervalli corrotti o non validi.'''
+    rimuove gli intervalli corrotti o non validi.'''
 
     oDoc = LeenoUtils.getDocument()
     oNamedRanges = oDoc.NamedRanges

@@ -175,7 +175,10 @@ def imposta_data():
     for el in range(prima_riga, ultima_riga + 1):
         cell = oSheet.getCellByPosition(1, el)  # colonna B
         if cell.CellStyle == 'Data_bianca':
-            cell.String = testo
+            try:
+                cell.String = testo
+            except Exception as e:
+                return
     return
 
 
@@ -385,100 +388,99 @@ def svuotaContabilita(oDoc):
     svuota_contabilita
     Ricrea il foglio di contabilità partendo da zero.
     '''
-    LeenoUtils.DocumentRefresh(False)
-    for n in range(1, 100):
-        if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
-            oDoc.NamedRanges.removeByName('_Lib_' + str(n))
-            oDoc.NamedRanges.removeByName('_SAL_' + str(n))
-            oDoc.NamedRanges.removeByName('_Reg_' + str(n))
-    for el in ('Registro', 'SAL', 'CONTABILITA'):
-        if oDoc.Sheets.hasByName(el):
-            oDoc.Sheets.removeByName(el)
+    with LeenoUtils.DocumentRefreshContext(False):
+        for n in range(1, 100):
+            if oDoc.NamedRanges.hasByName('_Lib_' + str(n)):
+                oDoc.NamedRanges.removeByName('_Lib_' + str(n))
+                oDoc.NamedRanges.removeByName('_SAL_' + str(n))
+                oDoc.NamedRanges.removeByName('_Reg_' + str(n))
+        for el in ('Registro', 'SAL', 'CONTABILITA'):
+            if oDoc.Sheets.hasByName(el):
+                oDoc.Sheets.removeByName(el)
 
-    oDoc.Sheets.insertNewByName('CONTABILITA', 3)
-    PL.GotoSheet('CONTABILITA')
-    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+        oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+        PL.GotoSheet('CONTABILITA')
+        oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
-    SheetUtils.setTabColor(oSheet, 16757935)
-    oSheet.getCellRangeByName('C1').Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
-    oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
-    oSheet.getCellRangeByName('C1').CellBackColor = 16757935
-    oSheet.getCellRangeByName('A3').String = 'N.'
-    oSheet.getCellRangeByName('B3').String = 'Articolo\nData'
-    oSheet.getCellRangeByName('C3').String = 'LAVORAZIONI\nO PROVVISTE'
-    oSheet.getCellRangeByName('F3').String = 'P.U.\nCoeff.'
-    oSheet.getCellRangeByName('G3').String = 'Lung.'
-    oSheet.getCellRangeByName('H3').String = 'Larg.'
-    oSheet.getCellRangeByName('I3').String = 'Alt.\nPeso'
-    oSheet.getCellRangeByName('J3').String = 'Quantità\nPositive'
-    oSheet.getCellRangeByName('L3').String = 'Quantità\nNegative'
-    oSheet.getCellRangeByName('N3').String = 'Prezzo\nunitario'
-    oSheet.getCellRangeByName('P3').String = 'Importi'
-    oSheet.getCellRangeByName('Q3').String = 'Incidenza\nsul totale'
-    oSheet.getCellRangeByName('R3').String = 'Sicurezza\ninclusa'
-    oSheet.getCellRangeByName('S3').String = 'importo totale\nsenza errori'
-    oSheet.getCellRangeByName('T3').String = 'Lib.\nN.'
-    oSheet.getCellRangeByName('U3').String = 'Lib.\nP.'
-    oSheet.getCellRangeByName('W3').String = 'flag'
-    oSheet.getCellRangeByName('X3').String = 'SAL\nN.'
-    oSheet.getCellRangeByName('Z3').String = 'Importi\nSAL parziali'
-    oSheet.getCellRangeByName('AB3').String = 'Sicurezza\nunitaria'
-    oSheet.getCellRangeByName('AC3').String = 'Materiali\ne Noli €'
-    oSheet.getCellRangeByName('AD3').String = 'Incidenza\nMdO %'
-    oSheet.getCellRangeByName('AE3').String = 'Importo\nMdO'
-    oSheet.getCellRangeByName('AF3').String = 'Super Cat'
-    oSheet.getCellRangeByName('AG3').String = 'Cat'
-    oSheet.getCellRangeByName('AH3').String = 'Sub Cat'
-    #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
-    oSheet.getCellByPosition(35,2).String = 'tag C'
-    oSheet.getCellRangeByName('AK3').String = 'Importi\nsenza errori'
-    oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    #  colore colonne riga di intestazione
-    oSheet.getCellRangeByPosition(0, 2, 36, 2).CellStyle = 'comp Int_colonna_R'
-    oSheet.getCellByPosition(0, 2).CellStyle = 'comp Int_colonna_R_prima'
-    oSheet.getCellByPosition(18, 2).CellStyle = 'COnt_noP'
-    oSheet.getCellRangeByPosition(0, 0, 0, 3).Rows.OptimalHeight = True
-    #  riga di controllo importo
-    oSheet.getCellRangeByPosition(0, 1, 36, 1).CellStyle = 'comp In testa'
-    oSheet.getCellRangeByName('C2').String = 'QUESTA RIGA NON VIENE STAMPATA'
-    oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
-    oSheet.getCellRangeByName('N2').String = 'TOTALE:'
-    oSheet.getCellRangeByName('U2').String = 'SAL SUCCESSIVO:'
+        SheetUtils.setTabColor(oSheet, 16757935)
+        oSheet.getCellRangeByName('C1').Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
+        oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
+        oSheet.getCellRangeByName('C1').CellBackColor = 16757935
+        oSheet.getCellRangeByName('A3').String = 'N.'
+        oSheet.getCellRangeByName('B3').String = 'Articolo\nData'
+        oSheet.getCellRangeByName('C3').String = 'LAVORAZIONI\nO PROVVISTE'
+        oSheet.getCellRangeByName('F3').String = 'P.U.\nCoeff.'
+        oSheet.getCellRangeByName('G3').String = 'Lung.'
+        oSheet.getCellRangeByName('H3').String = 'Larg.'
+        oSheet.getCellRangeByName('I3').String = 'Alt.\nPeso'
+        oSheet.getCellRangeByName('J3').String = 'Quantità\nPositive'
+        oSheet.getCellRangeByName('L3').String = 'Quantità\nNegative'
+        oSheet.getCellRangeByName('N3').String = 'Prezzo\nunitario'
+        oSheet.getCellRangeByName('P3').String = 'Importi'
+        oSheet.getCellRangeByName('Q3').String = 'Incidenza\nsul totale'
+        oSheet.getCellRangeByName('R3').String = 'Sicurezza\ninclusa'
+        oSheet.getCellRangeByName('S3').String = 'importo totale\nsenza errori'
+        oSheet.getCellRangeByName('T3').String = 'Lib.\nN.'
+        oSheet.getCellRangeByName('U3').String = 'Lib.\nP.'
+        oSheet.getCellRangeByName('W3').String = 'flag'
+        oSheet.getCellRangeByName('X3').String = 'SAL\nN.'
+        oSheet.getCellRangeByName('Z3').String = 'Importi\nSAL parziali'
+        oSheet.getCellRangeByName('AB3').String = 'Sicurezza\nunitaria'
+        oSheet.getCellRangeByName('AC3').String = 'Materiali\ne Noli €'
+        oSheet.getCellRangeByName('AD3').String = 'Incidenza\nMdO %'
+        oSheet.getCellRangeByName('AE3').String = 'Importo\nMdO'
+        oSheet.getCellRangeByName('AF3').String = 'Super Cat'
+        oSheet.getCellRangeByName('AG3').String = 'Cat'
+        oSheet.getCellRangeByName('AH3').String = 'Sub Cat'
+        #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
+        oSheet.getCellByPosition(35,2).String = 'tag C'
+        oSheet.getCellRangeByName('AK3').String = 'Importi\nsenza errori'
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+        #  colore colonne riga di intestazione
+        oSheet.getCellRangeByPosition(0, 2, 36, 2).CellStyle = 'comp Int_colonna_R'
+        oSheet.getCellByPosition(0, 2).CellStyle = 'comp Int_colonna_R_prima'
+        oSheet.getCellByPosition(18, 2).CellStyle = 'COnt_noP'
+        oSheet.getCellRangeByPosition(0, 0, 0, 3).Rows.OptimalHeight = True
+        #  riga di controllo importo
+        oSheet.getCellRangeByPosition(0, 1, 36, 1).CellStyle = 'comp In testa'
+        oSheet.getCellRangeByName('C2').String = 'QUESTA RIGA NON VIENE STAMPATA'
+        oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
+        oSheet.getCellRangeByName('N2').String = 'TOTALE:'
+        oSheet.getCellRangeByName('U2').String = 'SAL SUCCESSIVO:'
 
-    oSheet.getCellRangeByName('Z2').Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
+        oSheet.getCellRangeByName('Z2').Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
 
-    oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
-    oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
-    oSheet.getCellByPosition(
-        17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
+        oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
+        oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
+        oSheet.getCellByPosition(
+            17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
 
-    oSheet.getCellByPosition(
-        28, 1).Formula = '=SUBTOTAL(9;AC3:AC4)'  # importo materiali
-    oSheet.getCellByPosition(29,
-                             1).Formula = '=AE2/Z2/100'  # Incidenza manodopera %
-    oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
-    oSheet.getCellByPosition(
-        30, 1).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
-    oSheet.getCellByPosition(
-        36, 1).Formula = '=SUBTOTAL(9;AK3:AK4)'  # importo certo
+        oSheet.getCellByPosition(
+            28, 1).Formula = '=SUBTOTAL(9;AC3:AC4)'  # importo materiali
+        oSheet.getCellByPosition(29,
+                                1).Formula = '=AE2/Z2/100'  # Incidenza manodopera %
+        oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
+        oSheet.getCellByPosition(
+            30, 1).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
+        oSheet.getCellByPosition(
+            36, 1).Formula = '=SUBTOTAL(9;AK3:AK4)'  # importo certo
 
-    # riga del totale
-    oSheet.getCellByPosition(2, 3).String = 'T O T A L E'
-    oSheet.getCellByPosition(15,
-                             3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
-    oSheet.getCellByPosition(
-        17, 3).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
-    oSheet.getCellByPosition(
-        30, 3).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
-    oSheet.getCellRangeByPosition(0, 3, 36, 3).CellStyle = 'Comp TOTALI'
-    # riga rossa
-    oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
-    oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
-    PL._gotoCella(2, 2)
-    LeenoSheetUtils.setLarghezzaColonne(oSheet)
-    LeenoUtils.DocumentRefresh(True)
+        # riga del totale
+        oSheet.getCellByPosition(2, 3).String = 'T O T A L E'
+        oSheet.getCellByPosition(15,
+                                3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
+        oSheet.getCellByPosition(
+            17, 3).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
+        oSheet.getCellByPosition(
+            30, 3).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
+        oSheet.getCellRangeByPosition(0, 3, 36, 3).CellStyle = 'Comp TOTALI'
+        # riga rossa
+        oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
+        oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
+        PL._gotoCella(2, 2)
+        LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
-    return oSheet
+        return oSheet
 
 
 # ###############################################################
@@ -605,7 +607,6 @@ def struttura_CONTAB():
                     # ~ PL.struttura_ComputoM()
                 pass
             return
-    # ~LeenoUtils.DocumentRefresh(True)
 
 def GeneraLibretto(oDoc):
     '''
@@ -697,10 +698,11 @@ def GeneraLibretto(oDoc):
     #################################
 
     # attiva la progressbar
-    progress = Dialogs.Progress(Title='Generazione Libretto delle Misure...', Text="Libretto delle Misure")
-    progress.setLimits(1, 6)
-    progress.setValue(0)
-    progress.show()
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    if indicator is not None:
+        indicator.start("Generazione Libretto delle Misure...", 6)
+    indicator.setValue(1)
+
 
     # Recupero i dati per il SAL
     # ottengo datiSAL = [art,  desc, um, quant] in cui quant è la "somma a tutto il"
@@ -762,10 +764,10 @@ def GeneraLibretto(oDoc):
         # immetti le firme
         inizioFirme = ultimariga + 1
 
-        PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
+        PL.firme_in_calce(inizioFirme) # riga di inserimento
         fineFirme = inizioFirme + 10
 
-        progress.setValue(2)
+        indicator.setValue(2)
         area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
 
         SheetUtils.NominaArea(oDoc, "CONTABILITA", area, nomearea)
@@ -806,9 +808,10 @@ def GeneraLibretto(oDoc):
         oSheet.setPrintAreas((oNamedRange,))
         oSheet.setPrintTitleRows(True)
     except Exception as e:
+        DLG.chi("ERRORE")
         DLG.errore(e)
 
-    progress.setValue(3)
+    indicator.setValue(3)
 
     # sbianco l'area di stampa
     oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
@@ -821,7 +824,7 @@ def GeneraLibretto(oDoc):
     oSheet.getCellByPosition(2, x).String = ""
     oSheet.getCellByPosition(2, x + 1).String = ""
 
-    progress.setValue(4)
+    indicator.setValue(4)
     # ----------------------------------------------------------------------
     # QUESTA DEVE DIVENTARE UN'OPZIONE A SCELTA DELL'UTENTE
     # in caso di libretto unico questo if è da attivare
@@ -849,7 +852,7 @@ def GeneraLibretto(oDoc):
 
     #inserisco i dati
     LeenoUtils.setGlobalVar('sblocca_computo', 0) #registrando gli atti contabili, bisogna inibire alcune modifiche
-    progress.setValue(5)
+    indicator.setValue(5)
     for i in range(primariga, fineFirme):
         if oSheet.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
             if primariga == 0:
@@ -863,7 +866,7 @@ def GeneraLibretto(oDoc):
                     oSheet.getCellByPosition(20, i).Value = nPag   #pagina
                     break
 
-    progress.setValue(6)
+    indicator.setValue(6)
     # annoto ultimo numero di pagina
     oSheet.getCellByPosition(20 , fineFirme).Value = nPag
     oSheet.getCellByPosition(20 , fineFirme).CellStyle = "num centro"
@@ -902,7 +905,7 @@ def GeneraLibretto(oDoc):
         )
 
     PL._gotoCella(0, daRiga)
-    progress.hide()
+    indicator.end()
 
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1, datiSAL, sic, mdo
 
@@ -924,11 +927,10 @@ def GeneraRegistro(oDoc):
         DLG.errore(e)
         return
 
-    progress = Dialogs.Progress(Title='Generazione Registro di Contabilità...', Text="Registro di Contabilità")
-    progress.setLimits(1, 5)
-    progress.setValue(0)
-    progress.show()
-    progress.setValue(1)
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    if indicator is not None:
+        indicator.start("Generazione Registro di Contabilità...", 5)
+    indicator.setValue(1)
 
 # Recupero i dati per il Registro
     oSheet = oDoc.Sheets.getByName("CONTABILITA")
@@ -989,7 +991,7 @@ def GeneraRegistro(oDoc):
         lRow = oPrevRange.EndRow
         insRow = oPrevRange.EndRow + 1
 
-    progress.setValue(2)
+    indicator.setValue(2)
 
 # compilo il Registro
     reg =[]
@@ -1043,10 +1045,10 @@ def GeneraRegistro(oDoc):
     lastRow = insRow + len(reg)
 
     inizioFirme = lastRow + 5
-    PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
+    PL.firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
 
-    progress.setValue(3)
+    indicator.setValue(3)
 
 # set area del REGISTRO
     area="$A$" + str(insRow) + ":$J$" + str(fineFirme + 1)
@@ -1109,7 +1111,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(9, lastRow + 16).CellStyle = "Comp-Bianche in mezzo bordate_R"
     oSheet.getCellByPosition(9, lastRow + 16).String = "inserisci qui il CP"
 
-    progress.setValue(4)
+    indicator.setValue(4)
 
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
@@ -1125,16 +1127,14 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(9, fineFirme).Formula = ('=IF(SUBTOTAL(9;$J$2:$J$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(fineFirme))
     oSheet.getCellRangeByPosition (0, fineFirme, 9, fineFirme).CellStyle = "Ultimus_Bordo_sotto"
 
-    progress.setValue(5)
-    progress.hide()
+    indicator.setValue(5)
+    indicator.end()
 
 # ~def GeneraSAL (oDoc):
-
-    progress = Dialogs.Progress(Title='Generazione Stato di Avanzamento Lavori...', Text="Stato di Avanzamento Lavori")
-    progress.setLimits(1, 8)
-    progress.setValue(0)
-    progress.show()
-    progress.setValue(1)
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    if indicator is not None:
+        indicator.start("Generazione Stato di Avanzamento Lavori...", 8)
+    indicator.setValue(1)
 
     try:
         oDoc.getSheets().insertNewByName('SAL',oSheet.RangeAddress.Sheet + 1)
@@ -1173,7 +1173,7 @@ def GeneraRegistro(oDoc):
         lRow = oPrevRange.EndRow
         insRow = oPrevRange.EndRow + 1
 
-    progress.setValue(2)
+    indicator.setValue(2)
 
     # compilo il SAL
     lastRow = insRow + len(datiSAL) -1
@@ -1188,7 +1188,7 @@ def GeneraRegistro(oDoc):
         formule.append(['=VLOOKUP(A' + str(x + 1) + ';elenco_prezzi;5;FALSE())',
             '=IF(C' + str(x + 1) + '="%";D' + str(x + 1) + '*E' + str(x + 1) + '/100;D' + str(x + 1) + '*E' + str(x + 1) + ')'])
 
-    progress.setValue(3)
+    indicator.setValue(3)
 
 # do gli stili al SAL
     oSheet.getCellRangeByPosition(0, insRow, 1, lastRow).CellStyle = "List-stringa-sin"
@@ -1209,7 +1209,7 @@ def GeneraRegistro(oDoc):
         nOrd += 1
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
-    progress.setValue(4)
+    indicator.setValue(4)
 
 # inserisco la prima riga GIALLA nel SAL
     oSheet.getRows().insertByIndex(insRow, 1)
@@ -1237,7 +1237,7 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(5, lastRow + 4).Formula = (
         '=SUBTOTAL(9;$F$' + str(insRow) + ':$F$' + str(lastRow + 2))
 
-    progress.setValue(5)
+    indicator.setValue(5)
 
     PL._gotoCella(0, lastRow)
 
@@ -1340,11 +1340,11 @@ def GeneraRegistro(oDoc):
     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area , nomearea)
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
-    progress.setValue(6)
+    indicator.setValue(6)
 
 # ~# le firme
     inizioFirme = lastRow + 17
-    PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
+    PL.firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 12
 
     oSheet.getCellRangeByPosition(
@@ -1364,15 +1364,15 @@ def GeneraRegistro(oDoc):
 
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
-    progress.setValue(7)
+    indicator.setValue(7)
 
     #ridefinisci area di stampa
     oSheet.setPrintAreas((oNamedRange,))
 
     #=sal===================
     # ~ insrow()
-    progress.setValue(8)
-    progress.hide()
+    indicator.setValue(8)
+    indicator.end()
 
     return
 

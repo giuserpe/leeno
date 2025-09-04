@@ -20,7 +20,6 @@ import LeenoUtils
 import LeenoSheetUtils
 import LeenoComputo
 import LeenoContab
-# ~import uno
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):
@@ -47,14 +46,6 @@ def DlgMain():
     '''
     callAlert()
     PL.DlgMain()
-
-
-# ~def attiva_contabilita():
-    # ~'''
-    # ~attiva_contabilita
-    # ~'''
-    # ~callAlert()
-    # ~LeenoContab.attiva_contabilita()
 
 
 def genera_variante():
@@ -276,19 +267,9 @@ def autoexec_off():
     PL.autoexec_off()
 
 
-# ~def struttura_off():
-    # ~callAlert()
-    # ~PL.struttura_off()
-
-
 def setTabColor(color):
     callAlert()
     PL.setTabColor(color)
-
-
-# ~def adatta_altezza_riga(nSheet=None):
-    # ~callAlert()
-    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 def paste_clip(arg=None, insCells=0):
@@ -304,31 +285,6 @@ def copy_clip():
 def ins_voce_elenco():
     callAlert()
     PL.ins_voce_elenco()
-
-
-# ~def Filtra_Computo_Cap():
-    # ~callAlert()
-    # ~PL.Filtra_Computo_Cap()
-
-
-# ~def Filtra_Computo_SottCap():
-    # ~callAlert()
-    # ~PL.Filtra_Computo_SottCap()
-
-
-# ~def Filtra_Computo_A():
-    # ~callAlert()
-    # ~PL.Filtra_Computo_A()
-
-
-# ~def Filtra_Computo_B():
-    # ~callAlert()
-    # ~PL.Filtra_Computo_B()
-
-
-# ~def Filtra_Computo_C():
-    # ~callAlert()
-    # ~PL.Filtra_Computo_C()
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -384,35 +340,9 @@ def numera_voci(bit=1):
     LeenoSheetUtils.numeraVoci(oSheet, lrow, True if bit == 1 else False)
 
 
-# ~def parziale_verifica():
-    # ~'''
-    # ~Controlla l'esattezza del calcolo del parziale quanto le righe di
-    # ~misura vengono aggiunte o cancellate.
-    # ~'''
-    # ~callAlert()
-    # ~PL.parziale_verifica()
-
-
-# ~def struttura_ComputoM():
-    # ~callAlert()
-    # ~PL.struttura_ComputoM()
-
-
-# ~def struttura_Analisi():
-    # ~callAlert()
-    # ~PL.struttura_Analisi()
-
-
 def voce_breve_ep():
     callAlert()
     PL.voce_breve_ep()
-
-
-# ~def inserisci_Riga_rossa():
-    # ~callAlert()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
 
 def Rinumera_TUTTI_Capitoli2():

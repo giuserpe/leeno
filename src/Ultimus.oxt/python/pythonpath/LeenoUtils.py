@@ -351,42 +351,6 @@ def replacePatternWithField(oTxt, pattern, oField):
 
 ########################################################################
 
-def elimina_nomi_area_errati():
-    '''
-    Rimuove i nomi di area con riferimenti non validi (#REF! o #rif!).
-    '''
-    oDoc = getDocument()
-
-    sheets = oDoc.Sheets
-    named_ranges = oDoc.NamedRanges
-    nomi_area = named_ranges.ElementNames
-    n = len(nomi_area)
-
-    # Crea o ottieni il foglio "duplicati"
-    if sheets.hasByName("duplicati"):
-        sheet = sheets.getByName("duplicati")
-    else:
-        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-        sheets.insertByName("duplicati", sheet)
-
-    # Analizza i nomi di area
-    for i, nome_area in enumerate(nomi_area):
-        cella_nome = sheet.getCellByPosition(0, i)  # Prima colonna
-        cella_nome.String = nome_area
-
-        cella_contenuto = sheet.getCellByPosition(1, i)  # Seconda colonna
-        contenuto = named_ranges.getByName(nome_area).Content
-        cella_contenuto.String = contenuto
-
-        # Rimuovi i nomi di area con riferimenti non validi
-        if "#REF!" in contenuto or "#rif!" in contenuto:
-            named_ranges.removeByName(nome_area)
-
-    # Rimuovi il foglio temporaneo
-    sheets.removeByName("duplicati")
-
-########################################################################
-
 def indirizzo_in_forma_leggibile():
     """
     Restituisce l'indirizzo leggibile della cella attualmente selezionata.

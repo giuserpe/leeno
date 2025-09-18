@@ -5195,8 +5195,9 @@ def MENU_Copia_riga_Ent():
     '''
     @@ DA DOCUMENTARE
     '''
-    Copia_riga_Ent()
-    LeenoSheetUtils.adattaAltezzaRiga()
+    with LeenoUtils.DocumentRefreshContext(False):
+        Copia_riga_Ent()
+        LeenoSheetUtils.adattaAltezzaRiga()
 
 
 # def Copia_riga_Ent(num_righe=1):
@@ -5245,7 +5246,6 @@ def Copia_riga_Ent(num_righe=1):
     Aggiunge una o più righe di misurazione.
     num_righe { int }: Numero di righe da aggiungere (default: 1).
     """
-    LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nome_sheet = oSheet.Name
@@ -5278,8 +5278,6 @@ def Copia_riga_Ent(num_righe=1):
                 dettaglio_misura_rigo()
             azioni[nome_sheet](lrow)
             lrow += 1
-
-    LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -12100,9 +12098,18 @@ def applica_barre_dati():
     except Exception as e:
         DLG.chi(f"Errore durante l'applicazione delle barre dati: {str(e)}")
 
+########################################################################
+
+def MENU_export_selected_range_to_odt():
+    with LeenoUtils.DocumentRefreshContext(False):
+        export_selected_range_to_odt()
+
+
 def export_selected_range_to_odt():
     """
     Esporta l'intervallo di celle selezionato in Calc in un nuovo documento Writer (ODT).
+    Vengono esportate solo righe e colonne visibili.
+    
     Ha la finalità di produrre il testo dei nuovi prezzi da inserire in un concordamento
     o atto di sottomissione.
 
@@ -12120,6 +12127,13 @@ def export_selected_range_to_odt():
     Non accetta parametri e non restituisce valori.
     """
     try:
+        # Configurazione separatori per le prime colonne visibili
+        SEPARATORS = {
+            0: ":",      # dopo la prima colonna visibile
+            1: " Al\t",   # dopo la seconda colonna visibile
+            2: " € ",    # dopo la terza colonna visibile
+        }
+        
         # Ottieni il documento e la selezione corrente
         oDoc = LeenoUtils.getDocument()
         selection = oDoc.getCurrentSelection()
@@ -12143,42 +12157,64 @@ def export_selected_range_to_odt():
         writer_text = writer_doc.Text
         cursor = writer_text.createTextCursor()
         
-        # Estrai i dati dal range selezionato
+        # Estrai righe e colonne dal range selezionato
         rows = selection.getRows()
         cols = selection.getColumns()
         
+        # Prepara elenco delle colonne visibili
+        visible_cols = [i for i in range(cols.getCount()) if cols.getByIndex(i).IsVisible]
+        
         for row_idx in range(rows.getCount()):
-            for col_idx in range(cols.getCount()):
+            row = rows.getByIndex(row_idx)
+            if not row.IsVisible:  # salta le righe nascoste
+                continue
+            
+            for col_pos, col_idx in enumerate(visible_cols):
                 cell = selection.getCellByPosition(col_idx, row_idx)
-                # Ottieni il valore e pulisci i caratteri speciali
-                cell_value = cell.getString() if cell.getString() else str(cell.getValue())
-                cell_value = cell_value.replace('\n', ' ').replace('\r', ' ')
                 
-                # Applica formattazione (grassetto tranne seconda colonna)
-                cursor.setPropertyValue("CharWeight", 150 if col_idx != 1 else 100)
+                # Gestione valore cella
+                raw_value = cell.getString().strip()
+                if not raw_value:
+                    if cell.getValue() != 0:
+                        raw_value = str(cell.getValue())
+                    else:
+                        raw_value = ""
                 
-                # Aggiungi i due punti dopo la prima colonna
-                if col_idx == 0:
-                    writer_text.insertString(cursor, cell_value + ":", False)
-                else:
-                    writer_text.insertString(cursor, cell_value, False)
+                cell_value = raw_value.replace('\n', ' ').replace('\r', ' ')
                 
-                # Gestione spazi/tab tra colonne
-                if col_idx == 1:  # Dopo la seconda colonna
+                # Formattazione numerica solo se la cella è numerica
+                if cell.getType().value == 2 and cell.getValue() != 0:  # 2 = Value
+                    try:
+                        cell_value = f"{cell.getValue():,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+                    except:
+                        pass
+                
+                # Applica formattazione (grassetto tranne seconda colonna visibile)
+                cursor.setPropertyValue("CharWeight", 150 if col_pos != 1 else 100)
+                
+                # Inserimento valore
+                writer_text.insertString(cursor, cell_value, False)
+                
+                # Inserisci separatore se definito e non è l'ultima colonna visibile
+                if col_pos in SEPARATORS and col_pos < len(visible_cols) - 1:
                     cursor.setPropertyValue("CharWeight", 150)
-                    writer_text.insertString(cursor, " Al ", False)
-                elif col_idx == 2:  # Dopo la terza colonna
-                    cursor.setPropertyValue("CharWeight", 150)
-                    writer_text.insertString(cursor, "\t€ ", False)
-                elif col_idx < cols.getCount() - 1:  # Altrimenti metti spazio
+                    writer_text.insertString(cursor, SEPARATORS[col_pos], False)
+                elif col_pos < len(visible_cols) - 1:
                     writer_text.insertString(cursor, " ", False)
             
-            # Aggiungi a capo dopo ogni riga
-            writer_text.insertString(cursor, "\n", False)
+            # A capo dopo ogni riga visibile
+            writer_text.insertString(cursor, "\r", False)
+            cursor.ParaTopMargin = 200
+            cursor.ParaBottomMargin = 200
         
-        # Salva e chiudi il documento
-        writer_doc.storeToURL(uno.systemPathToFileUrl(output_path), ())
-        writer_doc.close(False)
+        # Salva il documento con filtro esplicito ODT
+        from com.sun.star.beans import PropertyValue
+        writer_doc.storeToURL(
+            uno.systemPathToFileUrl(output_path),
+            (PropertyValue("FilterName", 0, "writer8", 0),)
+        )
+        
+        # NON chiudere il documento → resta aperto in Writer
         Dialogs.Info(
             Title='Informazione',
             Text=f"File creato con successo:\n{output_path}"
@@ -12338,6 +12374,8 @@ def struttura_Registro():
         oSheet.group(oRangeAddr, 1)
 
 def MENU_debug():
+    MENU_export_selected_range_to_odt()
+    return  
     with LeenoUtils.DocumentRefreshContext(False):
         struttura_Registro()
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="6" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="208" dlg:height="174" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="209" dlg:height="183" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -8,59 +8,63 @@
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="5" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="6" dlg:font-height="11" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="7" dlg:font-height="11" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBSic" dlg:tab-index="2" dlg:left="120" dlg:top="94" dlg:width="75" dlg:height="10" dlg:help-text="&amp;125.DialogViste_EP.CBSic.HelpText" dlg:value="&amp;126.DialogViste_EP.CBSic.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBMdo" dlg:tab-index="3" dlg:left="120" dlg:top="106" dlg:width="75" dlg:height="10" dlg:help-text="&amp;127.DialogViste_EP.CBMdo.HelpText" dlg:value="&amp;128.DialogViste_EP.CBMdo.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBOrig" dlg:tab-index="4" dlg:left="120" dlg:top="118" dlg:width="75" dlg:height="10" dlg:help-text="&amp;133.DialogViste_EP.CBOrig.HelpText" dlg:value="&amp;134.DialogViste_EP.CBOrig.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBSom" dlg:tab-index="5" dlg:left="120" dlg:top="131" dlg:width="75" dlg:height="10" dlg:help-text="&amp;135.DialogViste_EP.CBSom.HelpText" dlg:value="&amp;136.DialogViste_EP.CBSom.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="176" dlg:top="152" dlg:width="25" dlg:height="15" dlg:help-text="&amp;139.DialogViste_EP.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;140.DialogViste_EP.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBSic" dlg:tab-index="2" dlg:left="120" dlg:top="103" dlg:width="75" dlg:height="10" dlg:help-text="&amp;125.DialogViste_EP.CBSic.HelpText" dlg:value="&amp;126.DialogViste_EP.CBSic.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBMdo" dlg:tab-index="3" dlg:left="120" dlg:top="115" dlg:width="75" dlg:height="10" dlg:help-text="&amp;127.DialogViste_EP.CBMdo.HelpText" dlg:value="&amp;128.DialogViste_EP.CBMdo.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBOrig" dlg:tab-index="4" dlg:left="120" dlg:top="127" dlg:width="75" dlg:height="10" dlg:help-text="&amp;133.DialogViste_EP.CBOrig.HelpText" dlg:value="&amp;134.DialogViste_EP.CBOrig.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBSom" dlg:tab-index="5" dlg:left="120" dlg:top="140" dlg:width="75" dlg:height="10" dlg:help-text="&amp;135.DialogViste_EP.CBSom.HelpText" dlg:value="&amp;136.DialogViste_EP.CBSom.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="176" dlg:top="161" dlg:width="25" dlg:height="15" dlg:help-text="&amp;139.DialogViste_EP.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;140.DialogViste_EP.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="7" dlg:left="144" dlg:top="152" dlg:width="25" dlg:height="15" dlg:help-text="&amp;141.DialogViste_EP.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;142.DialogViste_EP.CommandButton3.Label" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="7" dlg:left="144" dlg:top="161" dlg:width="25" dlg:height="15" dlg:help-text="&amp;141.DialogViste_EP.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;142.DialogViste_EP.CommandButton3.Label" dlg:button-type="cancel" dlg:multiline="true"/>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="8" dlg:left="10" dlg:top="54" dlg:width="90" dlg:height="12" dlg:help-text="&amp;143.DialogViste_EP.CommandButton4.HelpText" dlg:value="&amp;144.DialogViste_EP.CommandButton4.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.struttura_Elenco?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="9" dlg:left="10" dlg:top="88" dlg:width="90" dlg:height="12" dlg:help-text="&amp;145.DialogViste_EP.CommandButton5.HelpText" dlg:value="&amp;146.DialogViste_EP.CommandButton5.Label">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="9" dlg:left="11" dlg:top="105" dlg:width="90" dlg:height="12" dlg:help-text="&amp;145.DialogViste_EP.CommandButton5.HelpText" dlg:value="&amp;146.DialogViste_EP.CommandButton5.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.cancella_voci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="2" dlg:id="CommandButton2" dlg:tab-index="6" dlg:left="10" dlg:top="16" dlg:width="90" dlg:height="12" dlg:help-text="&amp;147.DialogViste_EP.CommandButton2.HelpText" dlg:help-url="Elimina tutte le voci non utilizzate nel documento," dlg:value="&amp;148.DialogViste_EP.CommandButton2.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.inizializza_elenco?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton6" dlg:tab-index="10" dlg:left="120" dlg:top="18" dlg:width="75" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="&amp;489.DialogViste_EP.CommandButton6.Label">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton6" dlg:tab-index="10" dlg:left="120" dlg:top="16" dlg:width="75" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="&amp;489.DialogViste_EP.CommandButton6.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.richiesta_offerta?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton7" dlg:tab-index="11" dlg:left="120" dlg:top="37" dlg:width="75" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="Trova i Nuovi Prezzi">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton7" dlg:tab-index="11" dlg:left="120" dlg:top="35" dlg:width="75" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="Trova i Nuovi Prezzi">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_np?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton8" dlg:tab-index="12" dlg:left="10" dlg:top="126" dlg:width="90" dlg:height="12" dlg:help-text="&amp;928.DialogViste_EP.CommandButton8.HelpText" dlg:value="&amp;929.DialogViste_EP.CommandButton8.Label" dlg:valign="center">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton8" dlg:tab-index="12" dlg:left="11" dlg:top="143" dlg:width="90" dlg:height="12" dlg:help-text="&amp;928.DialogViste_EP.CommandButton8.HelpText" dlg:value="&amp;929.DialogViste_EP.CommandButton8.Label" dlg:valign="center">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_prefisso_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton9" dlg:tab-index="13" dlg:left="10" dlg:top="107" dlg:width="90" dlg:height="12" dlg:help-text="&amp;976.DialogViste_EP.CommandButton9.HelpText" dlg:value="&amp;977.DialogViste_EP.CommandButton9.Label">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton9" dlg:tab-index="13" dlg:left="11" dlg:top="124" dlg:width="90" dlg:height="12" dlg:help-text="&amp;976.DialogViste_EP.CommandButton9.HelpText" dlg:value="&amp;977.DialogViste_EP.CommandButton9.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.nascondi_voci_zero?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:combobox dlg:style-id="4" dlg:id="ComboRAFFRONTO" dlg:tab-index="14" dlg:left="120" dlg:top="79" dlg:width="75" dlg:height="12" dlg:help-text="&amp;1119.DialogViste_EP.ComboRAFFRONTO.HelpText" dlg:value="&amp;1120.DialogViste_EP.ComboRAFFRONTO.Text" dlg:spin="true">
+  <dlg:combobox dlg:style-id="4" dlg:id="ComboRAFFRONTO" dlg:tab-index="14" dlg:left="120" dlg:top="88" dlg:width="75" dlg:height="12" dlg:help-text="&amp;1119.DialogViste_EP.ComboRAFFRONTO.HelpText" dlg:value="&amp;1120.DialogViste_EP.ComboRAFFRONTO.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;1121.ComboRAFFRONTO.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;1122.ComboRAFFRONTO.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;1123.ComboRAFFRONTO.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl2" dlg:tab-index="15" dlg:left="5" dlg:top="6" dlg:width="100" dlg:height="66" dlg:help-text="&amp;1124.DialogViste_EP.FrameControl2.HelpText">
+  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl2" dlg:tab-index="15" dlg:left="6" dlg:top="6" dlg:width="100" dlg:height="67" dlg:help-text="&amp;1124.DialogViste_EP.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;1125.DialogViste_EP.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl3" dlg:tab-index="16" dlg:left="5" dlg:top="78" dlg:width="100" dlg:height="66" dlg:help-text="&amp;1126.DialogViste_EP.FrameControl3.HelpText">
+  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl3" dlg:tab-index="16" dlg:left="6" dlg:top="95" dlg:width="100" dlg:height="66" dlg:help-text="&amp;1126.DialogViste_EP.FrameControl3.HelpText">
    <dlg:title dlg:value="&amp;1127.DialogViste_EP.FrameControl3.Label"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl4" dlg:tab-index="17" dlg:left="115" dlg:top="6" dlg:width="85" dlg:height="50" dlg:help-text="&amp;1128.DialogViste_EP.FrameControl4.HelpText">
+  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl4" dlg:tab-index="17" dlg:left="115" dlg:top="8" dlg:width="85" dlg:height="45" dlg:help-text="&amp;1128.DialogViste_EP.FrameControl4.HelpText">
    <dlg:title dlg:value="&amp;1129.DialogViste_EP.FrameControl4.Label"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl1" dlg:tab-index="18" dlg:left="116" dlg:top="69" dlg:width="85" dlg:height="76" dlg:help-text="&amp;1130.DialogViste_EP.FrameControl1.HelpText">
+  <dlg:titledbox dlg:style-id="5" dlg:id="FrameControl1" dlg:tab-index="18" dlg:left="116" dlg:top="78" dlg:width="85" dlg:height="76" dlg:help-text="&amp;1130.DialogViste_EP.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;1131.DialogViste_EP.FrameControl1.Label"/>
   </dlg:titledbox>
   <dlg:button dlg:style-id="2" dlg:id="Titolo_COSTI" dlg:tab-index="1" dlg:left="10" dlg:top="35" dlg:width="90" dlg:height="12" dlg:help-text="&amp;1132.DialogViste_EP.Titolo_COSTI.HelpText" dlg:value="&amp;1133.DialogViste_EP.Titolo_COSTI.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.inserisci_ElencoCosti?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton10" dlg:tab-index="19" dlg:left="12" dlg:top="78" dlg:width="90" dlg:height="12" dlg:help-text="&amp;1138.DialogViste_EP.CommandButton10.HelpText" dlg:value="&amp;1139.DialogViste_EP.CommandButton10.Label">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_export_selected_range_to_odt?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

@@ -123,6 +123,10 @@ Sub nascondi_voci_zero
 	ScriptPy(&quot;pyleeno&quot;,&quot;nascondi_voci_zero&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_export_selected_range_to_odt
+	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_export_selected_range_to_odt&quot;)
+End Sub
+rem ######################################################################
 Sub richiesta_offerta
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;richiesta_offerta&quot;)
 End Sub

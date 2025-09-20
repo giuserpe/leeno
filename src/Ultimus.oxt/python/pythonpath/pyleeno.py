@@ -12101,8 +12101,8 @@ def applica_barre_dati():
 ########################################################################
 
 def MENU_export_selected_range_to_odt():
-    with LeenoUtils.DocumentRefreshContext(False):
-        export_selected_range_to_odt()
+    # with LeenoUtils.DocumentRefreshContext(False):
+    export_selected_range_to_odt()
 
 def export_selected_range_to_odt():
     """
@@ -12395,8 +12395,8 @@ def struttura_Registro():
         oSheet.group(oRangeAddr, 1)
 
 def MENU_debug():
-    # LeenoUtils.DocumentRefresh(False)
-    # return
+    LeenoUtils.DocumentRefresh(False)
+    return
     MENU_export_selected_range_to_odt()
     return  
     with LeenoUtils.DocumentRefreshContext(False):

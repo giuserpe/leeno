@@ -12104,124 +12104,145 @@ def MENU_export_selected_range_to_odt():
     with LeenoUtils.DocumentRefreshContext(False):
         export_selected_range_to_odt()
 
-
 def export_selected_range_to_odt():
     """
     Esporta l'intervallo di celle selezionato in Calc in un nuovo documento Writer (ODT).
-    Vengono esportate solo righe e colonne visibili.
-    
-    Ha la finalità di produrre il testo dei nuovi prezzi da inserire in un concordamento
-    o atto di sottomissione.
-
-    Funzionalità:
-        - Verifica che la selezione corrente sia un intervallo di celle.
-        - Chiede all'utente il percorso di salvataggio per il file ODT.
-        - Crea un nuovo documento Writer e trasferisce i dati delle celle selezionate,
-          applicando una formattazione base (grassetto, spaziature, simboli specifici).
-        - Salva il documento Writer nel percorso scelto e notifica l'utente.
-
-    Eccezioni:
-        - Se la selezione non è valida o si verifica un errore durante l'esportazione,
-          viene mostrato un messaggio di errore tramite DLG.chi.
-
-    Non accetta parametri e non restituisce valori.
+    Solo righe e colonne visibili, tabulazione a destra con puntini e paragrafi giustificati.
     """
     try:
-        # Configurazione separatori per le prime colonne visibili
+        # Configurazione separatori
         SEPARATORS = {
-            0: ":",      # dopo la prima colonna visibile
-            1: " Al\t",   # dopo la seconda colonna visibile
-            2: " € ",    # dopo la terza colonna visibile
+            0: ": ",      # dopo la prima colonna visibile
+            1: " Al \t ",     # tabulazione (puntini)
+            2: " € ",    # dopo la terza colonna
         }
-        
-        # Ottieni il documento e la selezione corrente
+
         oDoc = LeenoUtils.getDocument()
         selection = oDoc.getCurrentSelection()
-        
-        # Verifica che la selezione sia un range di celle
+
         if not selection.supportsService("com.sun.star.sheet.SheetCellRange"):
             DLG.chi("Seleziona un range di celle prima di eseguire la macro!")
             return
-        
-        # Chiedi all'utente dove salvare il file ODT
+
         output_path = Dialogs.FileSelect('Salva con nome...', '*.odt', 1)
         if not output_path:
-            return  # Utente ha annullato
-        
+            return
         if not output_path.endswith('.odt'):
             output_path += '.odt'
-        
-        # Crea un nuovo documento Writer
+
         desktop = LeenoUtils.getDesktop()
         writer_doc = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
         writer_text = writer_doc.Text
         cursor = writer_text.createTextCursor()
-        
-        # Estrai righe e colonne dal range selezionato
+
+        # --- STILE PAGINA / TABULAZIONE ---
+        try:
+            page_styles = writer_doc.getStyleFamilies().getByName("PageStyles")
+            page_style_name = writer_doc.CurrentController.ViewCursor.PageStyle
+            page_style = page_styles.getByName(page_style_name)
+            page_width = int(getattr(page_style, "Width", 21000))
+            left_margin = int(getattr(page_style, "LeftMargin", 2000))
+            right_margin = int(getattr(page_style, "RightMargin", 2000))
+        except Exception:
+            page_width = 21000
+            left_margin = 2000
+            right_margin = 2000
+
+        usable_width = page_width - left_margin - right_margin
+        tab_position = left_margin + usable_width
+
+        # Tabulazione destra con puntini
+        try:
+            tabstop = uno.createUnoStruct("com.sun.star.style.TabStop")
+            tabstop.Position = int(tab_position)
+            tabstop.Alignment = 2  # RIGHT
+            tabstop.FillChar = ord('.')
+            cursor.ParaTabStops = (tabstop,)
+        except Exception:
+            pass
+
+        # --- ESTRAZIONE E INSERIMENTO CELLE VISIBILI ---
         rows = selection.getRows()
         cols = selection.getColumns()
-        
-        # Prepara elenco delle colonne visibili
         visible_cols = [i for i in range(cols.getCount()) if cols.getByIndex(i).IsVisible]
-        
+
+        first_row = True
         for row_idx in range(rows.getCount()):
             row = rows.getByIndex(row_idx)
-            if not row.IsVisible:  # salta le righe nascoste
+            if not row.IsVisible:
                 continue
-            
+
             for col_pos, col_idx in enumerate(visible_cols):
                 cell = selection.getCellByPosition(col_idx, row_idx)
-                
-                # Gestione valore cella
-                raw_value = cell.getString().strip()
+
+                # valore cella
+                raw_value = ""
+                try:
+                    raw_value = (cell.getString() or "").strip()
+                except:
+                    raw_value = ""
                 if not raw_value:
-                    if cell.getValue() != 0:
-                        raw_value = str(cell.getValue())
-                    else:
-                        raw_value = ""
-                
-                cell_value = raw_value.replace('\n', ' ').replace('\r', ' ')
-                
-                # Formattazione numerica solo se la cella è numerica
-                if cell.getType().value == 2 and cell.getValue() != 0:  # 2 = Value
                     try:
+                        v = cell.getValue()
+                        raw_value = str(v) if v != 0 else ""
+                    except:
+                        raw_value = ""
+
+                cell_value = raw_value.replace('\n', ' ').replace('\r', ' ')
+
+                # formattazione numerica
+                try:
+                    if getattr(cell, "getType", None) and cell.getType().value == 2 and cell.getValue() != 0:
                         cell_value = f"{cell.getValue():,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+                except:
+                    pass
+
+                # grassetto tranne seconda colonna visibile
+                try:
+                    cursor.setPropertyValue("CharWeight", 150 if col_pos != 1 else 100)
+                except:
+                    pass
+
+                writer_text.insertString(cursor, cell_value, False)
+
+                # separatore o tabulazione
+                if col_pos in SEPARATORS and col_pos < len(visible_cols) - 1:
+                    try:
+                        cursor.setPropertyValue("CharWeight", 150)
                     except:
                         pass
-                
-                # Applica formattazione (grassetto tranne seconda colonna visibile)
-                cursor.setPropertyValue("CharWeight", 150 if col_pos != 1 else 100)
-                
-                # Inserimento valore
-                writer_text.insertString(cursor, cell_value, False)
-                
-                # Inserisci separatore se definito e non è l'ultima colonna visibile
-                if col_pos in SEPARATORS and col_pos < len(visible_cols) - 1:
-                    cursor.setPropertyValue("CharWeight", 150)
                     writer_text.insertString(cursor, SEPARATORS[col_pos], False)
                 elif col_pos < len(visible_cols) - 1:
                     writer_text.insertString(cursor, " ", False)
             
-            # A capo dopo ogni riga visibile
-            writer_text.insertString(cursor, "\r", False)
-            cursor.ParaTopMargin = 200
-            cursor.ParaBottomMargin = 200
-        
-        # Salva il documento con filtro esplicito ODT
-        from com.sun.star.beans import PropertyValue
+            # --- nuovo paragrafo con giustificazione ---
+            try:
+                cursor.ParaAdjust = 3  # Giustificato
+                cursor.ParaTopMargin = 200
+                cursor.ParaBottomMargin = 200
+            except:
+                pass
+                
+            writer_text.insertControlCharacter(cursor, 
+                uno.getConstantByName("com.sun.star.text.ControlCharacter.PARAGRAPH_BREAK"),
+                False)
+
+        # salva il documento (rimane aperto)
         writer_doc.storeToURL(
             uno.systemPathToFileUrl(output_path),
             (PropertyValue("FilterName", 0, "writer8", 0),)
         )
-        
-        # NON chiudere il documento → resta aperto in Writer
+
         Dialogs.Info(
             Title='Informazione',
             Text=f"File creato con successo:\n{output_path}"
         )
-        
+
     except Exception as e:
         DLG.chi(f"Errore durante l'esportazione:\n{str(e)}")
+
+
+########################################################################
 
 def struttura_Registro():
     '''
@@ -12374,6 +12395,8 @@ def struttura_Registro():
         oSheet.group(oRangeAddr, 1)
 
 def MENU_debug():
+    # LeenoUtils.DocumentRefresh(False)
+    # return
     MENU_export_selected_range_to_odt()
     return  
     with LeenoUtils.DocumentRefreshContext(False):
@@ -12383,7 +12406,6 @@ def MENU_debug():
     lrow = LeggiPosizioneCorrente()[1]
     Circoscrive_Analisi(lrow)
 
-    # LeenoUtils.DocumentRefresh(False)
     # inizializza_elenco()
     # export_selected_range_to_odt()
     # trova_np()

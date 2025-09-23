@@ -147,8 +147,8 @@ def MENU_leeno_conf():
     if cfg.read('Generale', 'pesca_auto') == '1':
         oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
 
-    if cfg.read('Generale', 'pesca_auto') == '1':
-        oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
+    # if cfg.read('Generale', 'pesca_auto') == '1':
+    #     oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
 
     if cfg.read('Generale', 'toolbar_contestuali') == '1':
         oDlg_config.getControl('CheckBox6').State = 1
@@ -387,7 +387,12 @@ la posizione di destinazione.''')
 ###############################################################################
 def MENU_invia_voce():
     with LeenoUtils.DocumentRefreshContext(False):
+        stato = cfg.read('Generale', 'pesca_auto')
+        cfg.write('Generale', 'pesca_auto', 0)
+
         invia_voce()
+
+        cfg.write('Generale', 'pesca_auto', stato)
     
 def invia_voce():
     '''
@@ -4078,9 +4083,9 @@ def firme_in_calce(lrowF=None):
             oSheet.getRows().removeByIndex(lrowF, lrowE - lrowF)
         riga_corrente = lrowF + 1
         oSheet.getRows().insertByIndex(lrowF, 15)
-        oSheet.getCellRangeByPosition(0, lrowF, 100, lrowF + 15 -
+        oSheet.getCellRangeByPosition(0, lrowF, 25, lrowF + 15 -
                                       1).CellStyle = "Ultimus_centro"
-        oSheet.getCellRangeByPosition(0, lrowF + 15 - 1, 100, lrowF + 15 -
+        oSheet.getCellRangeByPosition(0, lrowF + 15 - 1, 25, lrowF + 15 -
                                       1).CellStyle = "Comp-Bianche in mezzo Descr_R"
         # raggruppo i righi di mirura
         iSheet = oSheet.RangeAddress.Sheet

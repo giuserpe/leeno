@@ -87,6 +87,9 @@ class Config(Borg):
             #  ('Computo', 'voci_senza_numerazione', '0'),
             ('Computo', 'inizio_voci_abbreviate', '100'),
             ('Computo', 'fine_voci_abbreviate', '120'),
+            ('Computo', 'costo_medio_mdo', '28,65'),
+            ('Computo', 'addetti_mdo', '3'),
+
             ('Contabilita', 'cont_inizio_voci_abbreviate', '100'),
             ('Contabilita', 'cont_fine_voci_abbreviate', '120'),
             ('Contabilita', 'abilitaconfigparser', '0'),

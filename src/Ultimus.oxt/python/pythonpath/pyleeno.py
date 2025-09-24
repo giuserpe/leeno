@@ -203,6 +203,12 @@ def MENU_leeno_conf():
         # DLG.chi(oDlg_config.getControl('ComboBox5'))
 
 
+    sString = oDlg_config.getControl('costo_medio_mdo')
+    sString.Text = cfg.read('Computo', 'costo_medio_mdo')
+
+    sString = oDlg_config.getControl('addetti_mdo')
+    sString.Text = cfg.read('Computo', 'addetti_mdo')
+
     # MOSTRA IL DIALOGO
     oDlg_config.execute()
 
@@ -269,6 +275,9 @@ def MENU_leeno_conf():
 
     cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
     cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('ComboBox5').getText())
+
+    cfg.write('Computo', 'costo_medio_mdo', oDlg_config.getControl('costo_medio_mdo').getText())
+    cfg.write('Computo', 'addetti_mdo', oDlg_config.getControl('addetti_mdo').getText())
     autorun()
 
 ########################################################################
@@ -4168,9 +4177,18 @@ def firme_in_calce(lrowF=None):
 
         #  TITOLI PER CRONOPROGRAMMA
         oSheet.getCellByPosition(45, riga_corrente -1).CellStyle = 'comp 1-a peso'
+        costo_medio_mdo = cfg.read('Computo', 'costo_medio_mdo')
+        if costo_medio_mdo == '':
+            costo_medio_mdo = '0,00'
+
+        oSheet.getCellByPosition(45, riga_corrente -1).Value = float(costo_medio_mdo.replace(',', '.'))
+
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(45, riga_corrente -1).CellAddress,
     'Inserisci il costo orario medio della Manodopera.')
         oSheet.getCellByPosition(47, riga_corrente -1).CellStyle = 'comp 1-a peso'
+        addetti_mdo = cfg.read('Computo', 'addetti_mdo')
+        oSheet.getCellByPosition(47, riga_corrente -1).Value = addetti_mdo
+
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(47, riga_corrente -1).CellAddress,
     'Inserisci il numero di componenti della squadra di operai.')
         nOperai = "AV$" + str(riga_corrente)

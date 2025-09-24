@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="209" dlg:height="183" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="6" dlg:id="DialogViste_EP" dlg:left="176" dlg:top="132" dlg:width="209" dlg:height="183" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -8,8 +8,7 @@
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="5" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:font-height="11" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="6" dlg:font-height="11" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBSic" dlg:tab-index="2" dlg:left="120" dlg:top="103" dlg:width="75" dlg:height="10" dlg:help-text="&amp;125.DialogViste_EP.CBSic.HelpText" dlg:value="&amp;126.DialogViste_EP.CBSic.Label" dlg:valign="center" dlg:checked="false"/>
@@ -63,7 +62,7 @@
   <dlg:button dlg:style-id="2" dlg:id="Titolo_COSTI" dlg:tab-index="1" dlg:left="10" dlg:top="35" dlg:width="90" dlg:height="12" dlg:help-text="&amp;1132.DialogViste_EP.Titolo_COSTI.HelpText" dlg:value="&amp;1133.DialogViste_EP.Titolo_COSTI.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.inserisci_ElencoCosti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton10" dlg:tab-index="19" dlg:left="12" dlg:top="78" dlg:width="90" dlg:height="12" dlg:help-text="&amp;1138.DialogViste_EP.CommandButton10.HelpText" dlg:value="&amp;1139.DialogViste_EP.CommandButton10.Label">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton10" dlg:tab-index="19" dlg:left="12" dlg:top="78" dlg:width="90" dlg:height="12" dlg:help-text="&amp;1138.DialogViste_EP.CommandButton10.HelpText" dlg:value="&amp;1139.DialogViste_EP.CommandButton10.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.MENU_export_selected_range_to_odt?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

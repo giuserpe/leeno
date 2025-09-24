@@ -767,7 +767,7 @@
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_DEV" oor:op="replace">
         <!-- crea il pacchetto -->
-        <node oor:name="m001" oor:op="replace">
+        <!-- <node oor:name="m001" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -783,7 +783,7 @@
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
           </prop>
-        </node>
+        </node> -->
         <!-- DEBUG-->
         <node oor:name="m002" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">

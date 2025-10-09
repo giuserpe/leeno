@@ -299,7 +299,7 @@ SUB In_Let
 	Dim num As double
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
+&apos;	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 &apos;	 msgbox &quot;Questa macro prevede una preventiva selezione di un settore di colonna &quot; &amp; CHR$(10)_
 	 &apos;		&amp; &quot;questo renge verrà convertito IN LETTERE e scritto in una nuova colonna a destra della selezione&quot;

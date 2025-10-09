@@ -203,11 +203,11 @@ def MENU_leeno_conf():
         # DLG.chi(oDlg_config.getControl('ComboBox5'))
 
 
-    sString = oDlg_config.getControl('costo_medio_mdo')
-    sString.Text = cfg.read('Computo', 'costo_medio_mdo')
+    # sString = oDlg_config.getControl('costo_medio_mdo')
+    # sString.Text = cfg.read('Computo', 'costo_medio_mdo')
 
-    sString = oDlg_config.getControl('addetti_mdo')
-    sString.Text = cfg.read('Computo', 'addetti_mdo')
+    # sString = oDlg_config.getControl('addetti_mdo')
+    # sString.Text = cfg.read('Computo', 'addetti_mdo')
 
     # MOSTRA IL DIALOGO
     oDlg_config.execute()
@@ -276,8 +276,8 @@ def MENU_leeno_conf():
     cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
     cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('ComboBox5').getText())
 
-    cfg.write('Computo', 'costo_medio_mdo', oDlg_config.getControl('costo_medio_mdo').getText())
-    cfg.write('Computo', 'addetti_mdo', oDlg_config.getControl('addetti_mdo').getText())
+    # cfg.write('Computo', 'costo_medio_mdo', oDlg_config.getControl('costo_medio_mdo').getText())
+    # cfg.write('Computo', 'addetti_mdo', oDlg_config.getControl('addetti_mdo').getText())
     autorun()
 
 ########################################################################
@@ -869,23 +869,6 @@ def avvia_IDE():
 ########################################################################
 
 
-def MENU_Inser_SottoCapitolo():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    Inser_SottoCapitolo()
-
-
-def Inser_SottoCapitolo():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    Ins_Categorie(2)
-
-
-########################################################################
-
-
 def Ins_Categorie(n):
     '''
     n    { int } : livello della categoria
@@ -893,47 +876,49 @@ def Ins_Categorie(n):
     1 = Categoria
     2 = SubCategoria
     '''
-    oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    with LeenoUtils.DocumentRefreshContext(False):
+        oDoc = LeenoUtils.getDocument()
+        # LeenoUtils.DocumentRefresh(False)
+        oSheet = oDoc.CurrentController.ActiveSheet
 
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
+        stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+        stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+        noVoce = LeenoUtils.getGlobalVar('noVoce')
 
-    row = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(0,row).CellStyle in stili_computo + stili_contab:
-        lrow = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-    elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
-        lrow = row + 1
-    else:
-        LeenoUtils.DocumentRefresh(True)
-        return
-    sTesto = ''
-    if n == 0:
-        sTesto = 'Inserisci il titolo per la Supercategoria'
-    elif n == 1:
-        sTesto = 'Inserisci il titolo per la Categoria'
-    elif n == 2:
-        sTesto = 'Inserisci il titolo per la Sottocategoria'
-    sString = InputBox('', sTesto)
-    if sString is None or sString == '':
-        LeenoUtils.DocumentRefresh(True)
-        return
+        row = LeggiPosizioneCorrente()[1]
+        if oSheet.getCellByPosition(0,row).CellStyle in stili_computo + stili_contab:
+            lrow = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+        elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
+            lrow = row + 1
+        else:
+            # LeenoUtils.DocumentRefresh(True)
+            return
+        sTesto = ''
+        if n == 0:
+            sTesto = 'Inserisci il titolo per la Supercategoria'
+        elif n == 1:
+            sTesto = 'Inserisci il titolo per la Categoria'
+        elif n == 2:
+            sTesto = 'Inserisci il titolo per la Sottocategoria'
+        sString = InputBox('', sTesto)
+        if sString is None or sString == '':
+            # LeenoUtils.DocumentRefresh(True)
+            return
 
-    if n == 0:
-        LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, sString)
-    elif n == 1:
-        LeenoSheetUtils.inserCapitolo(oSheet, lrow, sString)
-    elif n == 2:
-        LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, sString)
+        if n == 0:
+            LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, sString)
+        elif n == 1:
+            LeenoSheetUtils.inserCapitolo(oSheet, lrow, sString)
+        elif n == 2:
+            LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, sString)
 
-    _gotoCella(2, lrow)
-    Rinumera_TUTTI_Capitoli2(oSheet)
-    oDoc.enableAutomaticCalculation(True)
-    oDoc.CurrentController.setFirstVisibleColumn(0)
-    oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
-    LeenoUtils.DocumentRefresh(True)
+        _gotoCella(2, lrow)
+        Rinumera_TUTTI_Capitoli2(oSheet)
+        oDoc.enableAutomaticCalculation(True)
+        oDoc.CurrentController.setFirstVisibleColumn(0)
+        oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
+        # LeenoUtils.DocumentRefresh(True)
+        LeenoSheetUtils.adattaAltezzaRiga()
 
 
 ########################################################################
@@ -943,13 +928,13 @@ def MENU_Inser_SuperCapitolo():
     '''
     @@ DA DOCUMENTARE
     '''
-    Inser_SuperCapitolo()
+#     Inser_SuperCapitolo()
 
 
-def Inser_SuperCapitolo():
-    '''
-    @@ DA DOCUMENTARE
-    '''
+# def Inser_SuperCapitolo():
+#     '''
+#     @@ DA DOCUMENTARE
+    # '''
     Ins_Categorie(0)
 
 ########################################################################
@@ -958,14 +943,31 @@ def MENU_Inser_Capitolo():
     '''
     @@ DA DOCUMENTARE
     '''
-    Inser_Capitolo()
+#     Inser_Capitolo()
 
 
-def Inser_Capitolo():
+# def Inser_Capitolo():
+#     '''
+#     @@ DA DOCUMENTARE
+    # '''
+    Ins_Categorie(1)
+
+
+########################################################################
+
+
+def MENU_Inser_SottoCapitolo():
     '''
     @@ DA DOCUMENTARE
     '''
-    Ins_Categorie(1)
+#     Inser_SottoCapitolo()
+
+
+# def Inser_SottoCapitolo():
+#     '''
+#     @@ DA DOCUMENTARE
+#     '''
+    Ins_Categorie(2)
 
 ########################################################################
 
@@ -4177,17 +4179,16 @@ def firme_in_calce(lrowF=None):
 
         #  TITOLI PER CRONOPROGRAMMA
         oSheet.getCellByPosition(45, riga_corrente -1).CellStyle = 'comp 1-a peso'
-        costo_medio_mdo = cfg.read('Computo', 'costo_medio_mdo')
-        if costo_medio_mdo == '':
-            costo_medio_mdo = '0,00'
-
-        oSheet.getCellByPosition(45, riga_corrente -1).Value = float(costo_medio_mdo.replace(',', '.'))
+        # costo_medio_mdo = cfg.read('Computo', 'costo_medio_mdo')
+        # if costo_medio_mdo == '':
+        #     costo_medio_mdo = '0,00'
+        # oSheet.getCellByPosition(45, riga_corrente -1).Value = float(costo_medio_mdo.replace(',', '.'))
 
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(45, riga_corrente -1).CellAddress,
     'Inserisci il costo orario medio della Manodopera.')
         oSheet.getCellByPosition(47, riga_corrente -1).CellStyle = 'comp 1-a peso'
-        addetti_mdo = cfg.read('Computo', 'addetti_mdo')
-        oSheet.getCellByPosition(47, riga_corrente -1).Value = addetti_mdo
+        # addetti_mdo = cfg.read('Computo', 'addetti_mdo')
+        # oSheet.getCellByPosition(47, riga_corrente -1).Value = addetti_mdo
 
         oSheet.Annotations.insertNew(oSheet.getCellByPosition(47, riga_corrente -1).CellAddress,
     'Inserisci il numero di componenti della squadra di operai.')
@@ -7649,17 +7650,17 @@ def MENU_parziale():
     '''
     Inserisce una riga con l'indicazione della somma parziale.
     '''
-    LeenoUtils.DocumentRefresh(False)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(1, lrow-1).CellStyle in ('comp Art-EP_R') or \
-        lrow == 0:
-        return
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        parziale_core(oSheet, lrow)
-        rigenera_parziali(False)
-    LeenoUtils.DocumentRefresh(True)
+    with LeenoUtils.DocumentRefreshContext(False):
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        lrow = LeggiPosizioneCorrente()[1]
+        if oSheet.getCellByPosition(1, lrow-1).CellStyle in ('comp Art-EP_R') or \
+            lrow == 0:
+            return
+        if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            parziale_core(oSheet, lrow)
+            rigenera_parziali(False)
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 ###
@@ -10487,9 +10488,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             LeenoSheetUtils.SbiancaCellePrintArea()
 
     oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.removeAllManualPageBreaks()
-    SheetUtils.visualizza_PageBreak()
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    SheetUtils.visualizza_PageBreak()
+    oSheet.removeAllManualPageBreaks()
 
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
@@ -12136,8 +12137,8 @@ def export_selected_range_to_odt():
         # Configurazione separatori
         SEPARATORS = {
             0: ": ",      # dopo la prima colonna visibile
-            1: " Al \t ",     # tabulazione (puntini)
-            2: " € ",    # dopo la terza colonna
+            1: "\rAl ",     # tabulazione (puntini)
+            2: "\t€ ",    # dopo la terza colonna
         }
 
         oDoc = LeenoUtils.getDocument()
@@ -12417,7 +12418,48 @@ def struttura_Registro():
         
         oSheet.group(oRangeAddr, 1)
 
+import LeenoContab as LC
 def MENU_debug():
+    # oDoc = LeenoUtils.getDocument()
+    # oSheet = oDoc.CurrentController.ActiveSheet
+    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # oSheet.removeAllManualPageBreaks()
+    # SheetUtils.visualizza_PageBreak()
+    LC.firme_contabili()
+    # LC.insrow()
+    return
+    chiudi_dialoghi()
+    GotoSheet('S2')
+    _primaCella(0, 0)
+    return
+
+    uRow = SheetUtils.getLastUsedRow(oSheet) + 1
+    
+    prezzi = [oSheet.getCellByPosition(4, el).String for el in range(1, uRow)]
+    
+    oSheetEp = oDoc.Sheets.getByName('Elenco Prezzi')
+    highlight_color = 111111  # colore RGB valido (#111111)
+
+    for el in prezzi:
+        try:
+            lrow = SheetUtils.uFindStringCol(el, 0, oSheetEp)
+            if lrow >= 0:
+                oSheetEp.getCellByPosition(0, lrow).CellBackColor = highlight_color
+        except Exception:
+            try:
+                lrow = SheetUtils.uFindStringCol(el, 4, oSheet)
+                if lrow >= 0:
+                    oSheet.getCellByPosition(0, lrow).CellBackColor = 222222
+            except Exception:
+                pass
+
+
+
+
+
+    # DLG.chi(oSheet.Name)
+    return
+
     LeenoUtils.DocumentRefresh(False)
     return
     MENU_export_selected_range_to_odt()

@@ -110,7 +110,7 @@ def assegna():
         if oDoc.getSheets().hasByName("CONTABILITA"):
             # ~ macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
             macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
-        macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
+        # macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
         # ~ macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
         macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
         # ~OnStartApp

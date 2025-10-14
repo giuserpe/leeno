@@ -565,53 +565,9 @@ def selezionaVoce(oSheet, lrow):
     # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
     return SR, ER
 
+
 # ###############################################################
 
-# def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
-#     '''
-#     oSheet { obect }
-#     lrow { double }   : riga di riferimento
-#     n    { integer }  : se 0 sposta prima della voce corrente
-#                         se 1 sposta dopo della voce corrente
-#     sposta il cursore prima o dopo la voce corrente restituendo un idrow
-#     '''
-#     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
-#     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-#     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-#     noVoce = LeenoUtils.getGlobalVar('noVoce')
-#     stili = stili_computo + stili_contab
-
-#     stile = oSheet.getCellByPosition(0, lrow).CellStyle
-
-#     if stile in stili_cat:
-#         lrow += 1
-#     elif stile in (stili_contab):
-#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-#         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
-
-#     # ~lrow = PL.LeggiPosizioneCorrente()[1]
-#     if lrow == 0: 
-#         while stile not in stili:
-#             lrow += 1
-#         return lrow
-#     fine = cercaUltimaVoce(oSheet) + 1
-#     # la parte che segue sposta il focus alla voce successiva
-#     if lrow >= fine:
-#         return lrow
-#     if saltaCat == True:
-#         if stile in stili_cat:
-#             lrow += 1
-#             return lrow
-#     if stile in stili:
-#         if n == 0:
-#             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-#             lrow = sopra
-#         elif n == 1:
-#             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-#             lrow = sotto + 1
-#     while stile in ('uuuuu', 'Ultimus_centro_bordi_lati','comp Int_colonna', 'ULTIMUS', 'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'):
-#         lrow += 1
-#     return lrow
 
 def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     """

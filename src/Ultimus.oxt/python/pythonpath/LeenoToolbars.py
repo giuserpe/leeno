@@ -6,8 +6,7 @@ from com.sun.star.awt import Point
 
 import os
 import sys
-import uno
-# import LeenoUtils
+import LeenoUtils
 import pyleeno as PL
 from LeenoConfig import Config
 
@@ -20,52 +19,6 @@ _TOOLBAR_NAMES = (
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',
 )
-#################################################################
-###  CODICE DI SUPPORTO  ########################################
-### già in LeenoUtils.py ########################################
-#################################################################
-
-def getComponentContext():
-    '''
-    Get current application's component context
-    '''
-    try:
-        if __global_context__ is not None:
-            return __global_context__
-        return uno.getComponentContext()
-    except Exception:
-        return uno.getComponentContext()
-
-
-def getDesktop():
-    '''
-    Get current application's LibreOffice desktop
-    '''
-    ctx = getComponentContext()
-    return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-
-
-def getDocument():
-    '''
-    Get active document
-    '''
-    desktop = getDesktop()
-
-    # try to activate current frame
-    # needed sometimes because UNO doesnt' find the correct window
-    # when debugging.
-    try:
-        desktop.getCurrentFrame().activate()
-    except Exception:
-        pass
-
-    return desktop.getCurrentComponent()
-##########################################################################
-##########################################################################
-##########################################################################
-
-
-
 
 
 def Vedi(arg=None):
@@ -73,7 +26,7 @@ def Vedi(arg=None):
     accende tutte le toolbars (se non sono richieste quelle contestuali)
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     if sys.platform == 'linux' or sys.platform == 'darwin':
         var = 'HOME'
@@ -123,7 +76,7 @@ def On(toolbarURL, flag):
     flag { integer } : 1 = acceso; 0 = spento
     Visualizza o nascondi una toolbar
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if flag:
         oLayout.showElement(toolbarURL)
@@ -136,7 +89,7 @@ def Ordina():
     @@ DA DOCUMENTARE
     '''
     #  https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     i = 0
     for aBar in _TOOLBAR_NAMES:
@@ -166,7 +119,7 @@ def Switch(arg):
     '''
     Nasconde o mostra le toolbar di Libreoffice.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     for el in oLayout.Elements:
         if el.ResourceURL not in _TOOLBAR_NAMES + (

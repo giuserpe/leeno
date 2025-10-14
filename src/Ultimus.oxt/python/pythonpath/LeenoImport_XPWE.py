@@ -1273,6 +1273,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     datamis.split('/')[0] + ')'
                 )
                 oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
+            # DLG.chi(lista_righe)
             for mis in lista_righe:
 
                 # descrizione
@@ -1287,39 +1288,47 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     try:
                         oSheet.getCellByPosition(5, startRow).Value = float(mis[3].replace(',', '.'))
                     except ValueError:
-                        # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(5, startRow).Formula = '=' + str(mis[3]).split('=')[-1]
+                        text = str(mis[3]).strip().replace('=-', '=')
+                        # rimuove solo gli '=' iniziali in eccesso
+                        text = '=' + text.lstrip('=')
+                        oSheet.getCellByPosition(5, startRow).Formula = text
 
                 # lunghezza
                 if mis[4] is not None:
                     try:
                         oSheet.getCellByPosition(6, startRow).Value = float(mis[4].replace(',', '.'))
                     except ValueError:
-                        # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(6, startRow).Formula = '=' + str(mis[4]).split('=')[-1]
+                        text = str(mis[4]).strip().replace('=-', '=')
+                        # rimuove solo gli '=' iniziali in eccesso
+                        text = '=' + text.lstrip('=')
+                        oSheet.getCellByPosition(6, startRow).Formula = text
 
                 # larghezza
                 if mis[5] is not None:
                     try:
                         oSheet.getCellByPosition(7, startRow).Value = float(mis[5].replace(',', '.'))
                     except ValueError:
-                        # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(7, startRow).Formula = '=' + str(mis[5]).split('=')[-1]
+                        text = str(mis[5]).strip().replace('=-', '=')
+                        # rimuove solo gli '=' iniziali in eccesso
+                        text = '=' + text.lstrip('=')
+                        oSheet.getCellByPosition(7, startRow).Formula = text
 
                 # HPESO
                 if mis[6] is not None:
                     try:
                         oSheet.getCellByPosition(8, startRow).Value = float(mis[6].replace(',', '.'))
                     except Exception:
-                        # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(8, startRow).Formula = '=' + str(mis[6]).split('=')[-1]
+                        text = str(mis[6]).strip().replace('=-', '=')
+                        # rimuove solo gli '=' iniziali in eccesso
+                        text = '=' + text.lstrip('=')
+                        oSheet.getCellByPosition(8, startRow).Formula = text
+
 
                 if mis[8] == '2':
                     PL.parziale_core(oSheet, startRow)
                     if elaborato != 'CONTABILITA':
                         oSheet.getRows().removeByIndex(startRow + 1, 1)
                     descrizione = ''
-
                 if mis[9] != '-2':
                     vedi = mappaVociRighe.get(mis[9])
                     try:
@@ -1379,7 +1388,7 @@ def MENU_XPWE_import(filename = None):
         XPWE_import(filename = None)
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 def XPWE_import(filename = None):
     '''

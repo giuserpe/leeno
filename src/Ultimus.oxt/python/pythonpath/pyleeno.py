@@ -2919,7 +2919,7 @@ def MENU_riordina_ElencoPrezzi():
                 ordina_intervallo(oSheet, costo_elem_row + 1, end_row, start_col, end_col)
         except Exception as e:
             DLG.errore(e)
-
+        Menu_adattaAltezzaRiga()
 ########################################################################
 
 
@@ -7351,52 +7351,55 @@ def inizializza_analisi():
     @@@ MODIFICA IN CORSO CON 'LeenoAnalysis.inizializzaAnalisi'
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     '''
-    chiudi_dialoghi()
-    oDoc = LeenoUtils.getDocument()
-    SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
-    if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
-        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-        oSheet.getCellRangeByPosition(0, 0, 15, 0).CellStyle = 'Analisi_Sfondo'
-        oSheet.getCellByPosition(0, 1).Value = 0
-        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-        oDoc.CurrentController.setActiveSheet(oSheet)
-        setTabColor(12189608)
-        oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-        oCellAddress = oSheet.getCellByPosition(
-            0,
-            SheetUtils.getUsedArea(oSheet).EndRow).getCellAddress()
-        oDoc.CurrentController.select(oSheet.getCellByPosition(0, 2))
-        oDoc.CurrentController.select(
-            oDoc.createInstance(
-                "com.sun.star.sheet.SheetCellRanges"))  # unselect
-        LeenoSheetUtils.setLarghezzaColonne(oSheet)
+    with LeenoUtils.DocumentRefreshContext(False):
+        chiudi_dialoghi()
+        oDoc = LeenoUtils.getDocument()
+        SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
+        if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
+            oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
+            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+            oSheet.getCellRangeByPosition(0, 0, 15, 0).CellStyle = 'Analisi_Sfondo'
+            oSheet.getCellByPosition(0, 1).Value = 0
+            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+            oDoc.CurrentController.setActiveSheet(oSheet)
+            setTabColor(12189608)
+            oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
+            oCellAddress = oSheet.getCellByPosition(
+                0,
+                SheetUtils.getUsedArea(oSheet).EndRow).getCellAddress()
+            oDoc.CurrentController.select(oSheet.getCellByPosition(0, 2))
+            oDoc.CurrentController.select(
+                oDoc.createInstance(
+                    "com.sun.star.sheet.SheetCellRanges"))  # unselect
+            LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
-        LeenoEvents.assegna()
-        LeenoSheetUtils.inserisciRigaRossa(oSheet)
-        ScriviNomeDocumentoPrincipale()
-    else:
-        GotoSheet('Analisi di Prezzo')
-        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-        oDoc.CurrentController.setActiveSheet(oSheet)
-        lrow = LeggiPosizioneCorrente()[1]
-        urow = SheetUtils.getUsedArea(oSheet).EndRow
-        if lrow >= urow:
-            lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
-        for n in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow):
-            if oSheet.getCellByPosition(
-                    0, n).CellStyle == 'An-sfondo-basso Att End':
-                break
-        oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-        oSheet.getRows().insertByIndex(n + 2, 26)
-        oCellAddress = oSheet.getCellByPosition(0, n + 2).getCellAddress()
-        oDoc.CurrentController.select(oSheet.getCellByPosition(0, n + 2 + 1))
-        oDoc.CurrentController.select(
-            oDoc.createInstance(
-                "com.sun.star.sheet.SheetCellRanges"))  # unselect
-    oSheet.copyRange(oCellAddress, oRangeAddress)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+            LeenoEvents.assegna()
+            LeenoSheetUtils.inserisciRigaRossa(oSheet)
+            ScriviNomeDocumentoPrincipale()
+        else:
+            GotoSheet('Analisi di Prezzo')
+            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+            oDoc.CurrentController.setActiveSheet(oSheet)
+            lrow = LeggiPosizioneCorrente()[1]
+            urow = SheetUtils.getUsedArea(oSheet).EndRow
+            if lrow >= urow:
+                lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
+            for n in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow):
+                if oSheet.getCellByPosition(
+                        0, n).CellStyle == 'An-sfondo-basso Att End':
+                    break
+            oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
+            oSheet.getRows().insertByIndex(n + 2, 26)
+            oCellAddress = oSheet.getCellByPosition(0, n + 2).getCellAddress()
+            oDoc.CurrentController.select(oSheet.getCellByPosition(0, n + 2 + 1))
+            oDoc.CurrentController.select(
+                oDoc.createInstance(
+                    "com.sun.star.sheet.SheetCellRanges"))  # unselect
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+    LeenoSheetUtils.memorizza_posizione()
     MENU_struttura_on()
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.ripristina_posizione()
 
 
 
@@ -8035,8 +8038,8 @@ def MENU_filtra_codice():
     #  lrow = LeggiPosizioneCorrente()[1]
     #  oSheet = oDoc.CurrentController.ActiveSheet
     #  _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow))
-
-    filtra_codice()
+    with LeenoUtils.DocumentRefreshContext(False):
+        filtra_codice()
 
 
 def filtra_codice(voce=None):
@@ -8045,8 +8048,6 @@ def filtra_codice(voce=None):
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
     oDoc = LeenoUtils.getDocument()
-    # oDoc.enableAutomaticCalculation(False)
-    LeenoUtils.DocumentRefresh(False)
 
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -8128,6 +8129,8 @@ def filtra_codice(voce=None):
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
 
+    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
@@ -8143,8 +8146,6 @@ def filtra_codice(voce=None):
         progress.hide()
         GotoSheet("Elenco Prezzi")
         Dialogs.Exclamation(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
-    # oDoc.enableAutomaticCalculation(True)
-    LeenoUtils.DocumentRefresh(True)
     progress.hide()
 
 ########################################################################
@@ -10159,6 +10160,7 @@ def clean_text(desc):
     # Rimuove caratteri non stampabili
     desc = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', desc)
     sostituzioni = {
+        # "\n":" ",
         "&Agrave;": "À",
         "&#192;": "À",
         "&Egrave;": "È",
@@ -12420,8 +12422,11 @@ def struttura_Registro():
 
 import LeenoContab as LC
 def MENU_debug():
+    sistema_cose()
     # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
+    # DLG.chi(LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    return
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     # oSheet.removeAllManualPageBreaks()
     # SheetUtils.visualizza_PageBreak()

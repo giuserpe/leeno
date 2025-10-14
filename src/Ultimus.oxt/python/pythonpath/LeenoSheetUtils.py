@@ -481,8 +481,10 @@ def cercaUltimaVoce(oSheet):
                                  'comp Int_colonna',
                                  'comp Int_colonna_R_prima',
                                  'Livello-0-scritta', 'Livello-1-scritta',
-                                 'livello2 valuta'):
+                                 'livello2 valuta',):
             break
+    if n == 0:
+        n = nRow
     return n
 
 

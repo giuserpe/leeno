@@ -791,53 +791,53 @@ def setAdatta():
     dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0,
                                    properties)
 
-def adattaAltezzaRiga(oSheet=False):
-    '''
-    Adatta l'altezza delle righe al contenuto delle celle.
-    imposta l'altezza ottimale delle celle
-    usata in PL.Menu_adattaAltezzaRiga()
-    '''
-    LeenoUtils.DocumentRefresh(True)
-    # qui il refresh manda in freeze
-    # ~LeenoUtils.DocumentRefresh(False)
+# def adattaAltezzaRiga(oSheet=False):
+#     '''
+#     Adatta l'altezza delle righe al contenuto delle celle.
+#     imposta l'altezza ottimale delle celle
+#     usata in PL.Menu_adattaAltezzaRiga()
+#     '''
+#     LeenoUtils.DocumentRefresh(True)
+#     # qui il refresh manda in freeze
+#     # ~LeenoUtils.DocumentRefresh(False)
 
-    oDoc = LeenoUtils.getDocument()
-    if not oSheet:
-        oSheet = oDoc.CurrentController.ActiveSheet
-    usedArea = SheetUtils.getUsedArea(oSheet)
-    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
-    oSheet.Rows.OptimalHeight = True
-    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
-        oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
-    # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
-    if float(PL.loVersion()[:5].replace('.', '')) >= 642:
-        return
+#     oDoc = LeenoUtils.getDocument()
+#     if not oSheet:
+#         oSheet = oDoc.CurrentController.ActiveSheet
+#     usedArea = SheetUtils.getUsedArea(oSheet)
+#     # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+#     oSheet.Rows.OptimalHeight = True
+#     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+#         oSheet.getCellByPosition(0, 2).Rows.Height = 800
+#     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
+#     # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
+#     if float(PL.loVersion()[:5].replace('.', '')) >= 642:
+#         return
 
-    # se la versione di LibreOffice è maggiore della 5.2
-    # esegue il comando agendo direttamente sullo stile
-    lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R',
-                   'Comp-Bianche in mezzo Descr', 'EP-a',
-                   'Ultimus_centro_bordi_lati')
-    # NELLE VERSIONI DA 5.4.2 A 6.4.1
-    if 520 < float(PL.loVersion()[:5].replace('.', '')) < 642:
-        for stile_cella in lista_stili:
-            try:
-                oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-            except Exception:
-                pass
+#     # se la versione di LibreOffice è maggiore della 5.2
+#     # esegue il comando agendo direttamente sullo stile
+#     lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R',
+#                    'Comp-Bianche in mezzo Descr', 'EP-a',
+#                    'Ultimus_centro_bordi_lati')
+#     # NELLE VERSIONI DA 5.4.2 A 6.4.1
+#     if 520 < float(PL.loVersion()[:5].replace('.', '')) < 642:
+#         for stile_cella in lista_stili:
+#             try:
+#                 oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+#             except Exception:
+#                 pass
 
-        test = usedArea.EndRow + 1
+#         test = usedArea.EndRow + 1
 
-        for y in range(0, test):
-            if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
-                oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+#         for y in range(0, test):
+#             if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
+#                 oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
 
-    if oSheet.Name == 'Elenco Prezzi':
-        test = usedArea.EndRow + 1
-        for y in range(0, test):
-            oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
-    return
+#     if oSheet.Name == 'Elenco Prezzi':
+#         test = usedArea.EndRow + 1
+#         for y in range(0, test):
+#             oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+#     return
 
 def adattaAltezzaRiga(oSheet=False):
     """

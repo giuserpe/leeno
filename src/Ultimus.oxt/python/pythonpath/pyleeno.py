@@ -2660,9 +2660,9 @@ def scelta_viste_run():
         paste_format()
 
         _primaCella()
-        oSheet.getCellRangeByPosition(11, 3, 13, ER).CellBackColor = 16777175
+        oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = 16777175
 
-        oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
+        oSheet.getCellRangeByName(f'A{n+1}:Z{n+1}').CharWeight = BOLD
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -7744,48 +7744,53 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
     """
     (riga d'inserimento, riga di riferimento)
     """
-    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, vRif)
-    # sStRange.RangeAddress
-    idv = sStRange.RangeAddress.StartRow + 1
-    sotto = sStRange.RangeAddress.EndRow
-    art = 'B$' + str(idv + 1)
-    idvoce = 'A$' + str(idv + 1)
-    des = 'C$' + str(idv + 1)
-    quantity = 'J$' + str(sotto + 1)
-    val = oSheet.getCellByPosition(9, sotto).String
-    um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
+    with LeenoUtils.DocumentRefreshContext(False):
+        try:
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, vRif)
+            # sStRange.RangeAddress
+            idv = sStRange.RangeAddress.StartRow + 1
+            sotto = sStRange.RangeAddress.EndRow
+            art = 'B$' + str(idv + 1)
+            idvoce = 'A$' + str(idv + 1)
+            des = 'C$' + str(idv + 1)
+            quantity = 'J$' + str(sotto + 1)
+            val = oSheet.getCellByPosition(9, sotto).String
+            um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
 
-    #  if oSheet.Name == 'CONTABILITA':
-    #  sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
-    #  else:
-    sformula = ('=CONCATENATE("";"- vedi voce n.";TEXT(' +
-                idvoce + ';"@");" - art. ";' +
-                art +
-                ';" - ";LEFT(' +
-                des +
-                ';$S1.$H$334);"... [";' +
-                um + ';" ";TEXT(' +
-                quantity + ';"0,00");"]";)')
-    oSheet.getCellByPosition(2, lrow).Formula = sformula
-    # aggiunge commento, annotazione
-    oSheet.Annotations.insertNew(oSheet.getCellByPosition(2, lrow).CellAddress,
-    'Se non usi questo rigo di misura per il "Vedi voce precedente", eliminalo ed aggiungine uno nuovo.')
-    oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
-    if '-' in val:
-        # if oSheet.Name == 'CONTABILITA':
-            # oSheet.getCellByPosition(11, lrow).Formula = (
-                # '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
-                # ')>=0;"";PRODUCT(E' + str(lrow + 1) + ':I' +
-                # str(lrow + 1) + ')*-1)')
-            # oSheet.getCellByPosition(9, lrow).String = ''
-        # if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            # oSheet.getCellByPosition(9, lrow).Formula = (
-                # '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
-                # ')=0;"";PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) + '))')
-        for x in range(2, 12):
-            oSheet.getCellByPosition(x, lrow).CellStyle = (
-            oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
-        return '-'
+            #  if oSheet.Name == 'CONTABILITA':
+            #  sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
+            #  else:
+            sformula = ('=CONCATENATE("";"- vedi voce n.";TEXT(' +
+                        idvoce + ';"@");" - art. ";' +
+                        art +
+                        ';" - ";LEFT(' +
+                        des +
+                        ';$S1.$H$334);"... [";' +
+                        um + ';" ";TEXT(' +
+                        quantity + ';"0,00");"]";)')
+            oSheet.getCellByPosition(2, lrow).Formula = sformula
+            # aggiunge commento, annotazione
+            oSheet.Annotations.insertNew(oSheet.getCellByPosition(2, lrow).CellAddress,
+            'Se non usi questo rigo di misura per il "Vedi voce precedente", eliminalo ed aggiungine uno nuovo.')
+            oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
+            if '-' in val:
+                # if oSheet.Name == 'CONTABILITA':
+                    # oSheet.getCellByPosition(11, lrow).Formula = (
+                        # '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
+                        # ')>=0;"";PRODUCT(E' + str(lrow + 1) + ':I' +
+                        # str(lrow + 1) + ')*-1)')
+                    # oSheet.getCellByPosition(9, lrow).String = ''
+                # if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                    # oSheet.getCellByPosition(9, lrow).Formula = (
+                        # '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
+                        # ')=0;"";PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) + '))')
+                for x in range(2, 12):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = (
+                    oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
+                return '-'
+        finally:
+            sStRange = None
+            return
 
 ########################################################################
 def MENU_vedi_voce():
@@ -7808,16 +7813,16 @@ def MENU_vedi_voce():
                             "Seleziona voce di riferimento o indica n. d'ordine")
             if oSheet.Name not in to:
                 to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(to, 0, oSheet))
-            try:
-                to = int(to.split('$')[-1]) - 1
-            except ValueError:
-                LeenoUtils.DocumentRefresh(True)
-                return
+            # try:
+            to = int(to.split('$')[-1]) - 1
+            # except ValueError:
+            #     LeenoUtils.DocumentRefresh(True)
+            #     return
             _gotoCella(2, lrow)
             # focus = oDoc.CurrentController.getFirstVisibleRow
             if to < lrow:
                 vedi_voce_xpwe(oSheet, lrow, to)
-        LeenoSheetUtils.adattaAltezzaRiga()
+    LeenoSheetUtils.adattaAltezzaRiga()
 
 
 def strall(el, n=3, pos=0):
@@ -12422,7 +12427,7 @@ def struttura_Registro():
 
 import LeenoContab as LC
 def MENU_debug():
-    sistema_cose()
+    trova_colore_cella()
     # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     # DLG.chi(LeenoSheetUtils.cercaUltimaVoce(oSheet))

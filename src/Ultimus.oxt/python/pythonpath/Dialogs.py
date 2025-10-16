@@ -23,6 +23,7 @@ from com.sun.star.util import MeasureUnit
 
 from LeenoConfig import Config
 import LeenoUtils
+import pyleeno as PL
 
 
 def getCurrentPath():
@@ -2549,23 +2550,43 @@ def Info(*, Title='', Text=''):
 def Ok(*, Title='', Text=''):
     return NotifyDialog(Image='Icons-Big/ok.png', Title=Title, Text=Text)
 
-def YesNoDialog(*, Title, Text):
-    dlg = Dialog(Title=Title,  Horz=False, CanClose=False,  Items=[
-        HSizer(Items=[
-            ImageControl(Image='Icons-Big/question.png'),
-            Spacer(),
-            FixedText(Text=Text)
-        ]),
-        Spacer(),
-        HSizer(Items=[
-            Spacer(),
-            Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
-            Spacer(),
-            Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
-            Spacer()
-        ])
-    ])
-    return dlg.run()
+# def YesNoDialog(*, Title, Text):
+#     dlg = Dialog(Title=Title,  Horz=False, CanClose=False,  Items=[
+#         HSizer(Items=[
+#             ImageControl(Image='Icons-Big/question.png'),
+#             Spacer(),
+#             FixedText(Text=Text)
+#         ]),
+#         Spacer(),
+#         HSizer(Items=[
+#             Spacer(),
+#             Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
+#             Spacer(),
+#             Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
+#             Spacer()
+#         ])
+#     ])
+#     return dlg.run()
+
+
+def YesNoDialog(Title=None, Text=None):
+    psm = LeenoUtils.getComponentContext().ServiceManager
+    dp = psm.createInstance('com.sun.star.awt.DialogProvider')
+    global oDlgSiNo
+    oDlgSiNo = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.DlgSiNo?language=Basic&location=application"
+    )
+    
+    Title = Title or "Debug"
+    Testo = Text or "In allestimento..."
+
+    oDlgSiNo.Title = Title
+    sString = oDlgSiNo.getControl("Testo")
+    sString.Text = Text
+    oDlgSiNo.execute()
+    
+
+
 
 def YesNoCancelDialog(*, Title, Text):
     dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[

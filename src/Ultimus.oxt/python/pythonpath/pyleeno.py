@@ -2133,88 +2133,85 @@ def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
     '''
-    # qui il refresh lascia il foglio in freeze
-    LeenoUtils.DocumentRefresh(True)
-    chiudi_dialoghi()
+    with LeenoUtils.DocumentRefreshContext(False):
+        chiudi_dialoghi()
 
-    if Dialogs.YesNoDialog(Title='AVVISO!',
-    Text='''Questo comando ripulisce l'Elenco Prezzi
-dalle voci non utilizzate in nessuno degli altri elaborati.
+        # if Dialogs.YesNoDialog(Title='AVVISO!',
+        if Dialogs.YesNoDialog(Title='AVVISO!',
+        Text='''Questo comando ripulisce l'Elenco Prezzi
+    dalle voci non utilizzate in nessuno degli altri elaborati.
 
-La procedura potrebbe richiedere del tempo.
+    La procedura potrebbe richiedere del tempo.
 
-Vuoi procedere comunque?''') == 0:
-        return
-    oDoc = LeenoUtils.getDocument()
-    oDoc.enableAutomaticCalculation(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    Vuoi procedere comunque?''') == 0:
+            return
+        oDoc = LeenoUtils.getDocument()
+        # oDoc.enableAutomaticCalculation(False)
+        oSheet = oDoc.CurrentController.ActiveSheet
 
-    oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SRep = oRange.StartRow + 1
-    ERep = oRange.EndRow
-    lista_prezzi = []
-    # prende l'elenco dal foglio Elenco Prezzi
-    for n in range(SRep, ERep):
-        lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
-    n = 0
-    progress.show()
-    progress.setValue(1)
-    # prende l'elenco da tutti gli altri fogli
-    if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
-        lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
-    lista = []
-    for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
-        try:
-            oSheet = oDoc.getSheets().getByName(tab)
-            ER = SheetUtils.getLastUsedRow(oSheet)
-            progress.setLimits(0, ER)
+        oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        SRep = oRange.StartRow + 1
+        ERep = oRange.EndRow
+        lista_prezzi = []
+        # prende l'elenco dal foglio Elenco Prezzi
+        for n in range(SRep, ERep):
+            lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
+        # attiva la progressbar
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        n = 0
+        # prende l'elenco da tutti gli altri fogli
+        if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
+            lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
+        lista = []
+        for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
+            try:
+                oSheet = oDoc.getSheets().getByName(tab)
+                ER = SheetUtils.getLastUsedRow(oSheet)
+                indicator.start("Eliminazione delle voci in corso...", ER)
 
-            if tab == 'Analisi di Prezzo':
-                stile = 'An-lavoraz-Cod-sx'
-                for n in range(0, ER):
-                    progress.setValue(n)
-                    cell = oSheet.getCellByPosition(0, n)
-                    if cell.CellStyle == stile:
-                        lista.append(cell.String)
-            else:
-                stile = 'comp Art-EP_R'
-                for n in range(0, ER):
-                    cell = oSheet.getCellByPosition(1, n)
-                    if cell.CellStyle == stile:
-                        lista.append(cell.String)
-        except Exception as e:
-            # DLG.errore(e)
-            pass
-    progress.setLimits(0, 5)
-    progress.setValue(2)
+                if tab == 'Analisi di Prezzo':
+                    stile = 'An-lavoraz-Cod-sx'
+                    for n in range(0, ER):
+                        indicator.setValue(n)
+                        cell = oSheet.getCellByPosition(0, n)
+                        if cell.CellStyle == stile:
+                            lista.append(cell.String)
+                else:
+                    stile = 'comp Art-EP_R'
+                    for n in range(0, ER):
+                        cell = oSheet.getCellByPosition(1, n)
+                        if cell.CellStyle == stile:
+                            lista.append(cell.String)
+            except Exception as e:
+                # DLG.errore(e)
+                pass
+        indicator.start("Eliminazione delle voci in corso...", 5)  # 100 = max progresso
+        indicator.setValue(2)
 
-    da_cancellare = set(lista_prezzi).difference(set(lista))
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    progress.setValue(3)
-    struttura_off()
-    struttura_off()
-    struttura_off()
-    progress.setValue(4)
+        da_cancellare = set(lista_prezzi).difference(set(lista))
+        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        indicator.setValue(3)
+        struttura_off()
+        struttura_off()
+        struttura_off()
+        indicator.setValue(4)
 
-    for n in reversed(range(SRep, ERep)):
-        cell_0 = oSheet.getCellByPosition(0, n).String
-        cell_1 = oSheet.getCellByPosition(1, n).String
-        cell_4 = oSheet.getCellByPosition(4, n).String
+        for n in reversed(range(SRep, ERep)):
+            cell_0 = oSheet.getCellByPosition(0, n).String
+            cell_1 = oSheet.getCellByPosition(1, n).String
+            cell_4 = oSheet.getCellByPosition(4, n).String
 
-        if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
-            oSheet.Rows.removeByIndex(n, 1)
+            if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
+                oSheet.Rows.removeByIndex(n, 1)
 
-    progress.setValue(5)
-    LeenoUtils.DocumentRefresh(True)
-    progress.hide()
-    _gotoCella(0, 3)
-    Dialogs.Info(Title = 'Ricerca conclusa', Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi.")
+        indicator.setValue(5)
+        indicator.end()
+        _gotoCella(0, 3)
+        Dialogs.Info(Title = 'Ricerca conclusa', Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi.")
 
 
 ########################################################################
@@ -5219,51 +5216,9 @@ def MENU_Copia_riga_Ent():
     '''
     @@ DA DOCUMENTARE
     '''
-    with LeenoUtils.DocumentRefreshContext(False):
-        Copia_riga_Ent()
-        LeenoSheetUtils.adattaAltezzaRiga()
-
-
-# def Copia_riga_Ent(num_righe=1):
-#     '''
-#     Aggiunge una o più righe di misurazione.
-#     num_righe { int }: Numero di righe da aggiungere (default: 1).
-#     '''
-#     LeenoUtils.DocumentRefresh(False)
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-
-#     # Se le colonne di misura sono nascoste, vengono visualizzate
-#     if not oSheet.getColumns().getByIndex(5).IsVisible:
-#         n = SheetUtils.getLastUsedRow(oSheet)
-#         for el in range(4, n):
-#             if oSheet.getCellByPosition(2, el).CellStyle == "comp sotto centro":
-#                 oSheet.getCellByPosition(2, el).Formula = ''
-#         for el in range(5, 8):
-#             oSheet.getColumns().getByIndex(el).IsVisible = True
-
-#     lrow = LeggiPosizioneCorrente()[1]
-#     nome_sheet = oSheet.Name
-
-#     # Ciclo per aggiungere il numero di righe specificato
-#     for _ in range(num_righe):
-#         if nome_sheet in ('COMPUTO', 'VARIANTE'):
-#             if cfg.read('Generale', 'dettaglio') == '1':
-#                 dettaglio_misura_rigo()
-#             copia_riga_computo(lrow)
-#         elif nome_sheet == 'CONTABILITA':
-#             if cfg.read('Generale', 'dettaglio') == '1':
-#                 dettaglio_misura_rigo()
-#             copia_riga_contab(lrow)
-#         elif nome_sheet == 'Analisi di Prezzo':
-#             copia_riga_analisi(lrow)
-#         elif nome_sheet == 'Elenco Prezzi':
-#             MENU_nuova_voce_scelta()
-
-#         # Aggiorna l'indice di riga per inserire la prossima riga
-#         lrow += 1
-
-#     LeenoUtils.DocumentRefresh(True)
+    # with LeenoUtils.DocumentRefreshContext(False):
+    Copia_riga_Ent()
+        # LeenoSheetUtils.adattaAltezzaRiga()
 
 def Copia_riga_Ent(num_righe=1):
     """
@@ -5302,7 +5257,7 @@ def Copia_riga_Ent(num_righe=1):
                 dettaglio_misura_rigo()
             azioni[nome_sheet](lrow)
             lrow += 1
-
+    oSheet.getCellRangeByPosition(0, lrow, 0, lrow).Rows.OptimalHeight = True
 
 ########################################################################
 def cerca_partenza():
@@ -9357,22 +9312,50 @@ def XPWE_export_run():
     # 'garantire la corretta elaborazione dei dati.')
 
 ########################################################################
+# def chiudi_dialoghi(event=None):
+#     '''
+#     @@ DA DOCUMENTARE
+#     '''
+#     try:
+#         oDialog1.endExecute()
+#     except:
+#         pass
+#     try:
+#         oDlgMain.endExecute()
+#     except:
+#         pass
+#     # return
+#     # if event:
+#         # event.Source.Context.endExecute()
+#     return
+
+
 def chiudi_dialoghi(event=None):
     '''
-    @@ DA DOCUMENTARE
+    Chiude in modo sicuro eventuali finestre di dialogo aperte.
     '''
-    try:
-        oDialog1.endExecute()
-    except:
-        pass
-    try:
-        oDlgMain.endExecute()
-    except:
-        pass
-    # return
-    # if event:
-        # event.Source.Context.endExecute()
+    def chiudi(dlg):
+        try:
+            dlg.endExecute()
+        except Exception:
+            pass
+
+    # Chiude i dialoghi globali, se presenti
+    for nome in ("oDialog1", "oDlgMain", "YesNoDialog"):
+        dlg = globals().get(nome)
+        if dlg is not None:
+            chiudi(dlg)
+
+    # Chiude il dialogo associato all'evento, se presente
+    if event:
+        try:
+            ctx = event.Source.Context
+            chiudi(ctx)
+        except Exception:
+            pass
     return
+
+
 
 
 ########################################################################
@@ -12426,8 +12409,13 @@ def struttura_Registro():
         oSheet.group(oRangeAddr, 1)
 
 import LeenoContab as LC
-def MENU_debug():
-    trova_colore_cella()
+
+def MENU_debug(Title=None, Testo=None):
+    DLG.chi(Dialogs.YesNoDialog('Debug', 'Sei sicuro di voler eseguire il debug?'))
+    
+
+    # chiudi_dialoghi()
+
     # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     # DLG.chi(LeenoSheetUtils.cercaUltimaVoce(oSheet))

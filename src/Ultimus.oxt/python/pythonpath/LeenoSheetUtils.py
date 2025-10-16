@@ -1221,8 +1221,8 @@ def MENU_SheetToDoc():
 # ###############################################################
 
 
-def memorizza_posizione():
-    """Memorizza la posizione corrente del cursore"""
+def memorizza_posizione(step=0):
+    """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
     ctx = LeenoUtils.getComponentContext()
     doc = LeenoUtils.getDocument()
     controller = doc.getCurrentController()
@@ -1238,7 +1238,7 @@ def memorizza_posizione():
             'type': 'cell',
             'sheet': cell_addr.Sheet,
             'col': cell_addr.Column,
-            'row': cell_addr.Row
+            'row': cell_addr.Row + step  # incremento opzionale
         }
     elif selection.supportsService("com.sun.star.sheet.SheetCellRange"):
         # Range di celle
@@ -1247,9 +1247,9 @@ def memorizza_posizione():
             'type': 'range',
             'sheet': range_addr.Sheet,
             'col': range_addr.StartColumn,
-            'row': range_addr.StartRow,
+            'row': range_addr.StartRow + step,      # incremento opzionale
             'end_col': range_addr.EndColumn,
-            'end_row': range_addr.EndRow
+            'end_row': range_addr.EndRow + step     # incremento opzionale
         }
     else:
         DLG.chi("Tipo di selezione non supportato")
@@ -1257,6 +1257,7 @@ def memorizza_posizione():
     
     # Memorizza i dati
     LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
+
     # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
 
 def ripristina_posizione():

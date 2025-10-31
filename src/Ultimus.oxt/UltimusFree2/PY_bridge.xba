@@ -206,4 +206,13 @@ rem ######################################################################
 Sub avvia_IDE
 	print &quot;OK per Python - Annulla per Basic&quot;
 End Sub
+rem ######################################################################
+Sub MENU_struttura_on
+	Scriptpy(&quot;pyleeno&quot;,&quot;MENU_struttura_on&quot;)
+end Sub
+rem ######################################################################
+Sub Cancel
+	Scriptpy(&quot;pyleeno&quot;,&quot;Cancel&quot;)
+end Sub
+
 </script:module>

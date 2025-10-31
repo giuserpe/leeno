@@ -3,6 +3,7 @@
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
  <library:element library:name="Dialog_tabellaferri"/>
  <library:element library:name="Dlg_input"/>
+ <library:element library:name="DlgInfo"/>
  <library:element library:name="Dialog_tabelle"/>
  <library:element library:name="Dlg_config"/>
  <library:element library:name="DlgAttesa"/>
@@ -17,4 +18,6 @@
  <library:element library:name="DlgLista"/>
  <library:element library:name="Dialog_XPWE"/>
  <library:element library:name="DlgPDF"/>
+ <library:element library:name="DlgSiNo"/>
+ <library:element library:name="DlgSiNoCancel"/>
 </library:library>

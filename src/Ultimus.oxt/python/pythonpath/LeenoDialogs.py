@@ -52,8 +52,14 @@ def chi(s):
     function_name = caller_frame.function
 
     # Verifica che il documento sia disponibile
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow if doc else None
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
+
 
     if parentwin:
         # Costruisci il messaggio
@@ -95,8 +101,14 @@ def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     Visualizza il menù di scelta sì/no
     restituisce 2 per sì e 3 per no
     '''
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
+    # Verifica che il documento sia disponibile
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
     # s = 'This a message'
     # t = 'Title of the box'
     # MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
@@ -107,8 +119,14 @@ def MsgBox(s, t=''):  # s = messaggio | t = titolo
     '''
     Visualizza una message box
     '''
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
+    # Verifica che il documento sia disponibile
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
     # s = 'This a message'
     # t = 'Title of the box'
     # res = MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO)

@@ -517,3 +517,96 @@ def torna_a_schermo_normale():
     imposta_schermo_intero(False)
 
 ########################################################################
+########################################################################
+########################################################################
+def int_to_italian(n: int) -> str:
+    if n == 0:
+        return "zero"
+    units = ["","uno","due","tre","quattro","cinque","sei","sette","otto","nove",
+             "dieci","undici","dodici","tredici","quattordici","quindici",
+             "sedici","diciassette","diciotto","diciannove"]
+    tens_names = {20:"venti",30:"trenta",40:"quaranta",50:"cinquanta",
+                  60:"sessanta",70:"settanta",80:"ottanta",90:"novanta"}
+    
+    def under_thousand(num: int) -> str:
+        res = ""
+        if num >= 100:
+            hundreds = num // 100
+            rest = num % 100
+            if rest >= 80 and rest < 90:
+                if hundreds == 1:
+                    res += "cent"
+                else:
+                    res += units[hundreds] + "cent"
+            else:
+                if hundreds == 1:
+                    res += "cento"
+                else:
+                    res += units[hundreds] + "cento"
+            num = rest
+        if num >= 20:
+            tens = (num // 10) * 10
+            unit = num % 10
+            tens_word = tens_names[tens]
+            if unit == 1 or unit == 8:
+                tens_word = tens_word[:-1]
+            res += tens_word
+            if unit:
+                res += units[unit]
+        elif num > 0:
+            res += units[num]
+        return res
+
+    parts = []
+    billions = n // 1_000_000_000
+    if billions:
+        if billions == 1:
+            parts.append("unmiliardo")
+        else:
+            parts.append(int_to_italian(billions) + "miliardi")
+        n %= 1_000_000_000
+    millions = n // 1_000_000
+    if millions:
+        if millions == 1:
+            parts.append("unmilione")
+        else:
+            parts.append(int_to_italian(millions) + "milioni")
+        n %= 1_000_000
+    thousands = n // 1000
+    if thousands:
+        if thousands == 1:
+            parts.append("mille")
+        else:
+            parts.append(int_to_italian(thousands) + "mila")
+        n %= 1000
+    if n:
+        parts.append(under_thousand(n))
+    return "".join(parts)
+
+def convert_number_string(s: str) -> str:
+    s = s.strip()
+    if not s:
+        raise ValueError("Stringa vuota.")
+    negative = s.startswith("-")
+    if negative:
+        s = s[1:].strip()
+    if ',' in s:
+        integer_part, frac_part = s.split(',', 1)
+    elif '.' in s:
+        integer_part, frac_part = s.split('.', 1)
+    else:
+        integer_part, frac_part = s, ""
+    if integer_part == "":
+        integer_value = 0
+    else:
+        if not integer_part.isdigit():
+            raise ValueError("Parte intera non valida: deve contenere solo cifre.")
+        integer_value = int(integer_part)
+    words = int_to_italian(integer_value)
+    if negative:
+        words = "meno" + words
+    if frac_part != "":
+        frac_clean = "".join(ch for ch in frac_part if ch.isdigit())
+        return f"{words}/{frac_clean}"
+    else:
+        return words

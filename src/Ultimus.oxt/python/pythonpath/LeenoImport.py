@@ -94,7 +94,7 @@ def findXmlParser(xmlText):
     # non trovato... ritorna None
     return None
 
-def compilaElencoPrezzi(oDoc, dati, progress):
+def compilaElencoPrezzi(oDoc, dati):
     '''
     Scrive la pagina dell' Elenco Prezzi di un documento LeenO
     Il documento deve essere vuoto (appena creato)
@@ -120,7 +120,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
             'articoli' : artList
         }
 
-        progress è una progressbar già visualizzata
+        indicator è una progressbar già visualizzata
 
     '''
 
@@ -194,13 +194,14 @@ def compilaElencoPrezzi(oDoc, dati, progress):
     startCol = 0
 
     # fissa i limiti della progress
-    progress.setLimits(0, numItems)
-    progress.setValue(0)
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    indicator.start("Compilazione Eleneco prezzi...", numItems)
+    indicator.setValue(0)
 
     item = 0
     step = 100
     while item < numItems:
-        progress.setValue(item)
+        indicator.setValue(item)
         sliced = artArray[item:item + step]
         num = len(sliced)
         oRange = oSheet.getCellRangeByPosition(
@@ -212,7 +213,7 @@ def compilaElencoPrezzi(oDoc, dati, progress):
         oRange.setDataArray(sliced)
 
         item += step
-
+    indicator.end()
     return True
 
 
@@ -278,13 +279,13 @@ Verrà tentata un'importazione utilizzando il formato XPWE."""
         LeenoUtils.DocumentRefresh(False)
 
         # visualizza la progressbar
-        progress = Dialogs.Progress(
-            Title="Importazione prezzario",
-            Text="Compilazione prezzario in corso")
-        progress.show()
+        # progress = Dialogs.Progress(
+        #     Title="Importazione prezzario",
+        #     Text="Compilazione prezzario in corso")
+        # progress.show()
 
         # compila l'elenco prezzi
-        compilaElencoPrezzi(oDoc, dati, progress)
+        compilaElencoPrezzi(oDoc, dati)
 
         # si posiziona sul foglio di computo appena caricato
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -297,7 +298,7 @@ Verrà tentata un'importazione utilizzando il formato XPWE."""
         PL.salva_come(dest)
 
         # nasconde la progressbar
-        progress.hide()
+        # progress.hide()
 
     try:
         oSheet
@@ -311,11 +312,17 @@ Verrà tentata un'importazione utilizzando il formato XPWE."""
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+    oSheet.getCellByPosition(1, 3).String = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
 
     # ~ if Dialogs.YesNoDialog(Title='AVVISO!',
     # ~ Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
@@ -360,12 +367,15 @@ supportato nella prossima versione del programma."""
         Title =f'Importate {len(dati["articoli"])} voci di Elenco Prezzi',
         Text = '''
 ATTENZIONE:
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
-        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''  
         )
     PL.dlg_donazioni()
 
@@ -528,25 +538,22 @@ def rimuovi_righe_ridondanti():
 
     Avvertenze: modifica irreversibilmente il documento.
     """
-
-    try:
-        LeenoUtils.DocumentRefresh(False)
-        oDoc = getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        lrow = getLastUsedCell(oSheet).EndRow
-        oProgressBar = create_progress_bar (title='Elimino le righe ridondanti', steps=lrow)
-        for el in reversed(range(lrow)):
-            oProgressBar.Value = el
-            if oSheet.getCellByPosition(0, el -1).String in oSheet.getCellByPosition(0, el).String and \
-            oSheet.getCellByPosition(1, el -1).String in oSheet.getCellByPosition(1, el).String and \
-            oSheet.getCellByPosition(4, el -1).String == '':
-                oSheet.getRows().removeByIndex(el -1, 1)
-        oProgressBar.reset()
-        oProgressBar.end()
-        LeenoUtils.DocumentRefresh(True)
-    except Exception as e:
-        DLG.errore(e)
-        LeenoUtils.DocumentRefresh(True)
+    with LeenoUtils.DocumentRefreshContext(False):
+        try:
+            oDoc = LeenoUtils.getDocument()
+            oSheet = oDoc.CurrentController.ActiveSheet
+            lrow = LeenoUtils.getLastUsedCell(oSheet).EndRow
+            indicator = oDoc.getCurrentController().getStatusIndicator()
+            indicator.start("Elimino le righe ridondanti...", lrow)
+            for el in reversed(range(lrow)):
+                indicator.Value = el
+                if oSheet.getCellByPosition(0, el -1).String in oSheet.getCellByPosition(0, el).String and \
+                oSheet.getCellByPosition(1, el -1).String in oSheet.getCellByPosition(1, el).String and \
+                oSheet.getCellByPosition(4, el -1).String == '':
+                    oSheet.getRows().removeByIndex(el -1, 1)
+            indicator.end()
+        except Exception as e:
+            DLG.errore(e)
     return
 
 def MENU_emilia_romagna():
@@ -675,12 +682,14 @@ NOTA: Questo processo di importazione richiede la selezione di un file
     dest = os.path.dirname(filename).split('.')[0].split('/')
     directory = os.path.dirname(filename).split('.')[0].replace('\\', '/') + '/'
     files = glob.glob(directory + '*.xls')
-
-    progress = Dialogs.Progress(Title='Caricamento dei dati in corso...', Text="Progressione")
+    indicator = LeenoUtils.getDocument().getCurrentController().getStatusIndicator()
+    indicator.start("Importazione prezzario Regione Piemonte...", len(files))
+    # progress = Dialogs.Progress(Title='Caricamento dei dati in corso...', Text="Progressione")
     n = 0
-    progress.setLimits(n, len(files))
-    progress.show()
-    progress.setValue(0)
+    # progress.setLimits(n, len(files))
+    # progress.show()
+    # progress.setValue(0)
+    indicator.setValue(0)
 
     for el in files:
         oDoc = DocUtils.loadDocument(el, Hidden=True)
@@ -712,8 +721,8 @@ NOTA: Questo processo di importazione richiede la selezione di un file
                 'sicurezza': ''
             }
         n += 1
-        progress.setValue(n)
-    progress.hide()
+        indicator.setValue(n)
+    indicator.end()
 
     titolo = 'Piemonte ' + oSheet.getCellRangeByName('A1').String.split('\n')[0]
     dati = {
@@ -736,13 +745,13 @@ NOTA: Questo processo di importazione richiede la selezione di un file
     LeenoUtils.DocumentRefresh(False)
 
     # visualizza la progressbar
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
-    progress.show()
+    # progress = Dialogs.Progress(
+        # Title="Importazione prezzario",
+        # Text="Compilazione prezzario in corso")
+    # progress.show()
 
     # compila l'elenco prezzi
-    compilaElencoPrezzi(oDoc, dati, progress)
+    compilaElencoPrezzi(oDoc, dati)
     # si posiziona sul foglio di computo appena caricato
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oDoc.CurrentController.setActiveSheet(oSheet)
@@ -751,19 +760,25 @@ NOTA: Questo processo di importazione richiede la selezione di un file
     Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
 
     # nasconde la progressbar
-    progress.hide()
+    # progress.hide()
     # aggiunge informazioni nel foglio
     oSheet.getCellByPosition(11, 3).String = ''
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+    oSheet.getCellByPosition(1, 3).String = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
-    if Dialogs.YesNoDialog(Title='AVVISO!',
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+
+    if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
@@ -795,12 +810,15 @@ Vuoi procedere comunque?''') == 0:
         Title = "Importazione eseguita con successo!",
         Text = '''
 ATTENZIONE:
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
-        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
         )
     return
 
@@ -914,12 +932,12 @@ def MENU_FVG():
             return
 
 
-        progress = Dialogs.Progress(
-            Title="Importazione prezzario",
-            Text="Compilazione prezzario in corso")
+        # progress = Dialogs.Progress(
+        #     Title="Importazione prezzario",
+        #     Text="Compilazione prezzario in corso")
 
         oDoc = DocUtils.loadDocument(filename, Hidden=True)
-        progress.show()
+        # progress.show()
         # ~oDoc = LeenoUtils.getDocument()
         # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -986,20 +1004,20 @@ def MENU_FVG():
         PL.shutil.copyfile(orig, dest)
         PL._gotoDoc(dest)  # vado sul nuovo file
 
-        progress.hide()
+        # progress.hide()
         oDoc = LeenoUtils.getDocument()
-        progress.show()
+        # progress.show()
         
         LeenoUtils.DocumentRefresh(False)
 
         # compila l'elenco prezzi
-        compilaElencoPrezzi(oDoc, dati, progress)
+        compilaElencoPrezzi(oDoc, dati)
 
         # si posiziona sul foglio di computo appena caricato
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         oDoc.CurrentController.setActiveSheet(oSheet)
 
-        progress.hide()
+        # progress.hide()
 
         # messaggio di ok
         Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
@@ -1010,13 +1028,19 @@ def MENU_FVG():
         oSheet.getCellByPosition(12, 3).String = ''
         oSheet.getCellByPosition(13, 3).String = ''
         oSheet.getCellByPosition(0, 3).String = '000'
-        oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
-    1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-    2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-    3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-    N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+        oSheet.getCellByPosition(1, 3).String = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
-        if Dialogs.YesNoDialog(Title='AVVISO!',
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+
+        if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
         Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
     L'operazione potrebbe richiedere del tempo e
@@ -1042,13 +1066,16 @@ def MENU_FVG():
         Dialogs.Info(
             Title = "Importazione eseguita con successo!",
             Text = '''
-    ATTENZIONE:
-    1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-    2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-    3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
-    N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
-            sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
             )
         return
 
@@ -1063,12 +1090,12 @@ def MENU_PUGLIA():
     if filename in ('Cancel', '', None):
         return
 
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario",
-        Text="Compilazione prezzario in corso")
+    # progress = Dialogs.Progress(
+    #     Title="Importazione prezzario",
+    #     Text="Compilazione prezzario in corso")
 
     oDoc = DocUtils.loadDocument(filename, Hidden=True)
-    progress.show()
+    # progress.show()
 
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) +1
@@ -1176,20 +1203,20 @@ def MENU_PUGLIA():
     PL.shutil.copyfile(orig, dest)
     PL._gotoDoc(dest)  # vado sul nuovo file
 
-    progress.hide()
+    # progress.hide()
     oDoc = LeenoUtils.getDocument()
-    progress.show()
+    # progress.show()
     
     LeenoUtils.DocumentRefresh(False)
 
     # compila l'elenco prezzi
-    compilaElencoPrezzi(oDoc, dati, progress)
+    compilaElencoPrezzi(oDoc, dati)
 
     # si posiziona sul foglio di computo appena caricato
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oDoc.CurrentController.setActiveSheet(oSheet)
 
-    progress.hide()
+    # progress.hide()
 
     # messaggio di ok
     Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
@@ -1200,13 +1227,19 @@ def MENU_PUGLIA():
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+    oSheet.getCellByPosition(1, 3).String = '''
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
-    if Dialogs.YesNoDialog(Title='AVVISO!',
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+
+    if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
@@ -1233,11 +1266,14 @@ Vuoi procedere comunque?''') == 0:
         Title = "Importazione eseguita con successo!",
         Text = '''
 ATTENZIONE:
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
+   al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari
+   sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti
+   con l'uso di questo prezzario.
 
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
-        sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
         )
     return

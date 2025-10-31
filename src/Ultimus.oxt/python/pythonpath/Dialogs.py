@@ -24,6 +24,7 @@ from com.sun.star.util import MeasureUnit
 from LeenoConfig import Config
 import LeenoUtils
 import pyleeno as PL
+import LeenoDialogs as DLG
 
 
 def getCurrentPath():
@@ -2491,7 +2492,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     try:
         oFilePicker.appendFilter(app, est)
     except Exception as e:
-        Exclamation(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
+        NotifyDialog(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
         return
     if oFilePicker.execute():
         oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
@@ -2500,55 +2501,140 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     return None
 
 
+# def FolderSelect(titolo='Scegli la cartella...', startPath=None):
+#     """
+#     titolo  { string }  : titolo del FolderPicker
+#     """
+#     oFolderPicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FolderPicker")
+
+#     # try to get path from current document, if any
+#     # if not, look into config to fetch last used one
+#     if startPath is None:
+#         oPath = getDefaultPath()
+#     else:
+#         oPath = startPath
+#     oPath = os.path.join(oPath, '')
+#     oPath = uno.systemPathToFileUrl(oPath)
+#     oFolderPicker.setDisplayDirectory(oPath)
+
+#     oFolderPicker.Title = titolo
+#     if oFolderPicker.execute():
+#         oPath = uno.fileUrlToSystemPath(oFolderPicker.getDirectory())
+#         oPath = os.path.join(oPath, '')
+#         storeLastPath(oPath)
+#         return oPath
+#     return None
+
+
 def FolderSelect(titolo='Scegli la cartella...', startPath=None):
     """
-    titolo  { string }  : titolo del FolderPicker
+    Apre un dialog per la selezione di una cartella
+    
+    Args:
+        titolo (str): titolo del FolderPicker
+        startPath (str, optional): percorso iniziale. Se None, usa il percorso predefinito
+    
+    Returns:
+        str: percorso della cartella selezionata con trailing separator, None se annullato
     """
     oFolderPicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FolderPicker")
 
-    # try to get path from current document, if any
-    # if not, look into config to fetch last used one
+    # Determina il percorso iniziale
     if startPath is None:
         oPath = getDefaultPath()
     else:
         oPath = startPath
-    oPath = os.path.join(oPath, '')
-    oPath = uno.systemPathToFileUrl(oPath)
-    oFolderPicker.setDisplayDirectory(oPath)
+
+    # Verifica che oPath sia una stringa valida e non vuota
+    if not oPath or not isinstance(oPath, str) or oPath.strip() == '':
+        oPath = os.path.expanduser("~")
+
+    # Imposta la directory di partenza con fallback
+    try:
+        oPath = os.path.join(oPath, '')  # Assicura il trailing separator
+        oFolderPicker.setDisplayDirectory(uno.systemPathToFileUrl(oPath))
+    except Exception:
+        try:
+            oFolderPicker.setDisplayDirectory(uno.systemPathToFileUrl(os.path.expanduser("~")))
+        except Exception:
+            # Se anche il fallback fallisce, non interrompiamo: il picker userà la directory di sistema
+            pass
 
     oFolderPicker.Title = titolo
-    if oFolderPicker.execute():
-        oPath = uno.fileUrlToSystemPath(oFolderPicker.getDirectory())
-        oPath = os.path.join(oPath, '')
-        storeLastPath(oPath)
-        return oPath
+
+    try:
+        if oFolderPicker.execute():
+            selected_dir = oFolderPicker.getDirectory()
+            oPath = uno.fileUrlToSystemPath(selected_dir)
+            oPath = os.path.join(oPath, '')  # Normalizza con trailing separator
+            storeLastPath(oPath)
+            return oPath
+    except Exception:
+        # Ignora errori di esecuzione e ritorna None
+        pass
+
     return None
 
 
-def NotifyDialog(*, Image, Title, Text):
-    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
-        HSizer(Items=[
-            ImageControl(Image=Image),
-            Spacer(),
-            FixedText(Text=Text)
-        ]),
-        Spacer(),
-        HSizer(Items=[
-            Spacer(),
-            Button(Label='Ok', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH, RetVal=1),
-            Spacer()
-        ])
-    ])
-    return dlg.run()
+
+def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
+    """
+    Mostra una finestra di dialogo informativa in LibreOffice.
+
+    Parametri:
+        IconType: tipo di icona ('info', 'warning', 'error', 'success')
+        Image: percorso personalizzato dell'immagine (facoltativo)
+        Title: titolo della finestra
+        Text: testo del messaggio
+    """
+
+    try:
+        ctx = LeenoUtils.getComponentContext()
+        psm = ctx.ServiceManager
+        dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+        oDlgInfo = dp.createDialog(
+            "vnd.sun.star.script:UltimusFree2.DlgInfo?language=Basic&location=application"
+        )
+
+        # Se non viene fornito un percorso personalizzato, seleziona in base al tipo
+        if not Image:
+            base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
+            icon_map = {
+                "info": "info.png",
+                "question": "question.png",
+                "warning": "exclamation.png",
+                "error": "exclamation.png",
+                "success": "ok.png",
+            }
+            Image = base_path + icon_map.get(IconType.lower(), "info.png")
+
+        # Imposta immagine, titolo e testo
+        oDlgInfo.getModel().ImageControl1.ImageURL = Image
+        oDlgInfo.Title = Title or IconType.capitalize()
+        sString = oDlgInfo.getControl("Text")
+        sString.Text = Text or "In allestimento..."
+
+        oDlgInfo.execute()
+
+    except Exception as e:
+        pass
+        # DLG.chi(f"Errore in NotifyDialog(): {e}")
+
+
+#######################################################################
 
 def Exclamation(*, Title='', Text=''):
-    return NotifyDialog(Image='Icons-Big/exclamation.png', Title=Title, Text=Text)
+    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/exclamation.png', Title=Title, Text=Text)
 
 def Info(*, Title='', Text=''):
-    return NotifyDialog(Image='Icons-Big/info.png', Title=Title, Text=Text)
+    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/info.png', Title=Title, Text=Text)
 
 def Ok(*, Title='', Text=''):
-    return NotifyDialog(Image='Icons-Big/ok.png', Title=Title, Text=Text)
+    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/ok.png', Title=Title, Text=Text)
+
+#######################################################################
+
+
 
 # def YesNoDialog(*, Title, Text):
 #     dlg = Dialog(Title=Title,  Horz=False, CanClose=False,  Items=[
@@ -2568,135 +2654,204 @@ def Ok(*, Title='', Text=''):
 #     ])
 #     return dlg.run()
 
+def YesNoDialog(IconType="info", Image=None, Title=None, Text=None):
+    """
+    Mostra una finestra di dialogo informativa in LibreOffice.
 
-def YesNoDialog(Title=None, Text=None):
-    psm = LeenoUtils.getComponentContext().ServiceManager
-    dp = psm.createInstance('com.sun.star.awt.DialogProvider')
-    global oDlgSiNo
-    oDlgSiNo = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.DlgSiNo?language=Basic&location=application"
-    )
-    
-    Title = Title or "Debug"
-    Testo = Text or "In allestimento..."
+    Parametri:
+        IconType: tipo di icona ('info', 'warning', 'error', 'success')
+        Image: percorso personalizzato dell'immagine (facoltativo)
+        Title: titolo della finestra
+        Text: testo del messaggio
+    """
 
-    oDlgSiNo.Title = Title
-    sString = oDlgSiNo.getControl("Testo")
-    sString.Text = Text
-    oDlgSiNo.execute()
-    
-
-
-
-def YesNoCancelDialog(*, Title, Text):
-    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
-        HSizer(Items=[
-            ImageControl(Image='Icons-Big/question.png'),
-            Spacer(),
-            FixedText(Text=Text)
-        ]),
-        Spacer(),
-        HSizer(Items=[
-            Spacer(),
-            Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
-            Spacer(),
-            Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
-            Spacer(),
-            Button(Label='Annulla', Icon='Icons-24x24/cancel.png', MinWidth=MINBTNWIDTH,  RetVal=-1),
-            Spacer()
-        ])
-    ])
-    return dlg.run()
-
-class Progress:
-    '''
-    Display a progress bar with some options
-    '''
-    def __init__(self, *, Title='', Closeable=False, MinVal=0, MaxVal=100, Value=0, Text=''):
-        ''' constructor '''
-        self._dlg = Dialog(
-            Title=Title, Horz=False, CanClose=Closeable,
-            Handler=lambda dialog, widgetId, widget, cmdStr :
-            self._dlgHandler(dialog, widgetId,  widget, cmdStr)
+    try:
+        ctx = LeenoUtils.getComponentContext()
+        psm = ctx.ServiceManager
+        dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+        oDlgInfo = dp.createDialog(
+            "vnd.sun.star.script:UltimusFree2.DlgSiNo?language=Basic&location=application"
         )
-        self._progress = ProgressBar(MinVal=MinVal, MaxVal=MaxVal, Value=Value)
-        self._dlg.add(self._progress)
-        self._text = Text
-        if Text is not None:
-            self._textWidget = FixedText(Text=Text)
-            self._dlg.add(self._textWidget)
 
-        if Closeable:
-            self._dlg.add(Spacer())
-            self._dlg.add(
-                HSizer(Items=[
-                    Spacer(),
-                    Button(Label='Annulla', MinWidth=MINBTNWIDTH, RetVal=-1),
-                    Spacer()
-                ])
-            )
+        # Se non viene fornito un percorso personalizzato, seleziona in base al tipo
+        if not Image:
+            base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
+            icon_map = {
+                "info": "info.png",
+                "question": "question.png",
+                "warning": "exclamation.png",
+                "error": "exclamation.png",
+                "success": "ok.png",
+            }
+            Image = base_path + icon_map.get(IconType.lower(), "info.png")
 
-    def _dlgHandler(self,  dialog,  widgetId,  widget,  cmdStr):
-        self._dlg.hide()
+        # Imposta immagine, titolo e testo
+        oDlgInfo.getModel().ImageControl1.ImageURL = Image
+        oDlgInfo.Title = Title or IconType.capitalize()
+        sString = oDlgInfo.getControl("Text")
+        sString.Text = Text or "In allestimento..."
 
-    def show(self):
-        self._dlg.show()
+        return(oDlgInfo.execute())
 
-    def hide(self):
-        LeenoUtils.DocumentRefresh(True)
-        self._dlg.hide()
+    except Exception as e:
+        # DLG.chi(f"Errore in NotifyDialog(): {e}")
+        pass
 
-    def showing(self):
-        return self._dlg.showing()
 
-    def setLimits(self,  pMin,  pMax):
-        self._progress.setLimits(pMin, pMax)
 
-    def getLimits(self):
-        return self._progress.getLimits()
+# def YesNoCancelDialog(*, Title, Text):
+#     dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
+#         HSizer(Items=[
+#             ImageControl(Image='Icons-Big/question.png'),
+#             Spacer(),
+#             FixedText(Text=Text)
+#         ]),
+#         Spacer(),
+#         HSizer(Items=[
+#             Spacer(),
+#             Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
+#             Spacer(),
+#             Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
+#             Spacer(),
+#             Button(Label='Annulla', Icon='Icons-24x24/cancel.png', MinWidth=MINBTNWIDTH,  RetVal=-1),
+#             Spacer()
+#         ])
+#     ])
+#     return dlg.run()
 
-    def setValue(self,  val):
-        self._progress.setValue(val)
-        if self._text is not None and self._textWidget is not None:
-            minVal, maxVal = self.getLimits()
-            if maxVal - minVal ==0:
-                maxVal = +1
-            percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
+
+def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
+    """
+    Mostra un dialogo Sì / No / Cancel in LibreOffice.
+    Ritorna:
+        1 -> Sì
+        0 -> No
+    """
+    ctx = LeenoUtils.getComponentContext()
+    psm = ctx.ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlgSiNoCancel = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.DlgSiNoCancel?language=Basic&location=application"
+    )
+
+    # Icona automatica
+    if not Image:
+        base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
+        icon_map = {
+            "info": "info.png",
+            "question": "question.png",
+            "warning": "exclamation.png",
+            "error": "exclamation.png",
+            "success": "ok.png",
+        }
+        Image = base_path + icon_map.get(IconType.lower(), "info.png")
+
+    oDlgSiNoCancel.getModel().ImageControl1.ImageURL = Image
+    oDlgSiNoCancel.Title = Title or IconType.capitalize()
+    oDlgSiNoCancel.getControl("Text").Text = Text or "Procedere?"
+
+    # Imposta la proprietà "Cancel" sul tasto Cancel per farlo funzionare con ESC
+    try:
+        btnCancel = oDlgSiNoCancel.getControl("Cancel")
+        btnCancel.Model.Cancel = True
+    except:
+        pass
+
+    # Esegui la dialog
+    # result = oDlgSiNoCancel.execute()
+    return oDlgSiNoCancel.execute()
+
+
+# class Progress:
+#     DLG.chi("La classe Progress è deprecata. Usare indicatori di progresso nativi di LibreOffice.")   
+#     '''
+#     Display a progress bar with some options
+#     '''
+#     def __init__(self, *, Title='', Closeable=False, MinVal=0, MaxVal=100, Value=0, Text=''):
+#         ''' constructor '''
+#         self._dlg = Dialog(
+#             Title=Title, Horz=False, CanClose=Closeable,
+#             Handler=lambda dialog, widgetId, widget, cmdStr :
+#             self._dlgHandler(dialog, widgetId,  widget, cmdStr)
+#         )
+#         self._progress = ProgressBar(MinVal=MinVal, MaxVal=MaxVal, Value=Value)
+#         self._dlg.add(self._progress)
+#         self._text = Text
+#         if Text is not None:
+#             self._textWidget = FixedText(Text=Text)
+#             self._dlg.add(self._textWidget)
+
+#         if Closeable:
+#             self._dlg.add(Spacer())
+#             self._dlg.add(
+#                 HSizer(Items=[
+#                     Spacer(),
+#                     Button(Label='Annulla', MinWidth=MINBTNWIDTH, RetVal=-1),
+#                     Spacer()
+#                 ])
+#             )
+
+#     def _dlgHandler(self,  dialog,  widgetId,  widget,  cmdStr):
+#         self._dlg.hide()
+
+#     def show(self):
+#         self._dlg.show()
+
+#     def hide(self):
+#         LeenoUtils.DocumentRefresh(True)
+#         self._dlg.hide()
+
+#     def showing(self):
+#         return self._dlg.showing()
+
+#     def setLimits(self,  pMin,  pMax):
+#         self._progress.setLimits(pMin, pMax)
+
+#     def getLimits(self):
+#         return self._progress.getLimits()
+
+#     def setValue(self,  val):
+#         self._progress.setValue(val)
+#         if self._text is not None and self._textWidget is not None:
+#             minVal, maxVal = self.getLimits()
+#             if maxVal - minVal ==0:
+#                 maxVal = +1
+#             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             
-            caller_frame = inspect.stack()[1]
-            line_number = caller_frame.lineno
-            full_file_path = caller_frame.filename  # Ottieni il percorso completo
-            file_name = os.path.basename(full_file_path)  # Solo il nome del file
-            function_name = caller_frame.function  # Nome della funzione chiamante
+#             caller_frame = inspect.stack()[1]
+#             line_number = caller_frame.lineno
+#             full_file_path = caller_frame.filename  # Ottieni il percorso completo
+#             file_name = os.path.basename(full_file_path)  # Solo il nome del file
+#             function_name = caller_frame.function  # Nome della funzione chiamante
             
-            txt = f"{self._text} ({percent})"
-            if 'giuserpe' in os.getlogin():
-                txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile: {file_name}"
+#             txt = f"{self._text} ({percent})"
+#             if 'giuserpe' in os.getlogin():
+#                 txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile: {file_name}"
 
-            self._textWidget.setText(txt)
+#             self._textWidget.setText(txt)
 
-    def getValue(self):
-        return self._progress.getValue()
+#     def getValue(self):
+#         return self._progress.getValue()
 
-    def setText(self,  txt):
-        self._text = txt
-        if self._text is not None and self._textWidget is not None:
-            minVal, maxVal = self.getLimits()
-            val = self.getValue()
-            percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
+#     def setText(self,  txt):
+#         self._text = txt
+#         if self._text is not None and self._textWidget is not None:
+#             minVal, maxVal = self.getLimits()
+#             val = self.getValue()
+#             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             
-            caller_frame = inspect.stack()[1]
-            line_number = caller_frame.lineno
-            full_file_path = caller_frame.filename  # Ottieni il percorso completo
-            function_name = caller_frame.function  # Nome della funzione chiamante
-            file_name = os.path.basename(full_file_path)  # Solo il nome del file
+#             caller_frame = inspect.stack()[1]
+#             line_number = caller_frame.lineno
+#             full_file_path = caller_frame.filename  # Ottieni il percorso completo
+#             function_name = caller_frame.function  # Nome della funzione chiamante
+#             file_name = os.path.basename(full_file_path)  # Solo il nome del file
 
             
-            txt = f"{self._text} ({percent})"
-            if 'giuserpe' in os.getlogin():
-                txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile:{file_name}"
+#             txt = f"{self._text} ({percent})"
+#             if 'giuserpe' in os.getlogin():
+#                 txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile:{file_name}"
 
-            self._textWidget.setText(txt)
+#             self._textWidget.setText(txt)
 
 def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
     if Buttons is None:
@@ -2717,35 +2872,35 @@ def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
     return dlg.run()
 
 
-def YesNo(*, Title='', Text='', CanClose=True):
-    '''
-    Yes/No dialog
-    by default (CanClose=True) dialog may be dismissed
-    closing it on topbar or pressing escape, with result 'No'
-    '''
-    res = MultiButton(
-        Icon="Icons-Big/question.png",
-        Title=Title, Text=Text, CanClose=CanClose,
-        Buttons={'Si':'si', 'No':'no'}
-    )
-    if res == -1:
-        res = 'no'
-    return res
+# def YesNo(*, Title='', Text='', CanClose=True):
+#     '''
+#     Yes/No dialog
+#     by default (CanClose=True) dialog may be dismissed
+#     closing it on topbar or pressing escape, with result 'No'
+#     '''
+#     res = MultiButton(
+#         Icon="Icons-Big/question.png",
+#         Title=Title, Text=Text, CanClose=CanClose,
+#         Buttons={'Si':'si', 'No':'no'}
+#     )
+#     if res == -1:
+#         res = 'no'
+#     return res
 
-def YesNoCancel(*, Title='', Text=''):
-    '''
-    Yes/No/Cancel dialog
-    by default (CanClose=True) dialog may be dismissed
-    closing it on topbar or pressing escape, with result 'No'
-    '''
-    res = MultiButton(
-        Icon="Icons-Big/question.png",
-        Title=Title, Text=Text, CanClose=True,
-        Buttons={'Si':'si', 'No':'no', 'Annulla':-1}
-    )
-    if res == -1:
-        res = 'annulla'
-    return res
+# def YesNoCancel(*, Title='', Text=''):
+#     '''
+#     Yes/No/Cancel dialog
+#     by default (CanClose=True) dialog may be dismissed
+#     closing it on topbar or pressing escape, with result 'No'
+#     '''
+#     res = MultiButton(
+#         Icon="Icons-Big/question.png",
+#         Title=Title, Text=Text, CanClose=True,
+#         Buttons={'Si':'si', 'No':'no', 'Annulla':-1}
+#     )
+#     if res == -1:
+#         res = 'annulla'
+#     return res
 
 
 def pickDate(curDate=None):

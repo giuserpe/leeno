@@ -645,39 +645,40 @@ def importa_stili_pagina(overwrite = False):
     Args:
         overwrite (bool): se True sovrascrive gli stili esistenti.
     """
+    with LeenoUtils.DocumentRefresh(False):
 
-    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
+        filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
-    oDoc = LeenoUtils.getDocument()
+        oDoc = LeenoUtils.getDocument()
 
-    # Creare la lista di PropertyValue per le opzioni di caricamento
-    loadOptions = [
-        PL.crea_property_value("LoadPageStyles", True),
-        PL.crea_property_value("LoadCellStyles", False),
-        PL.crea_property_value("LoadTextStyles", False),
-        PL.crea_property_value("LoadFrameStyles", False),
-        PL.crea_property_value("LoadNumberingStyles", False),
-        PL.crea_property_value("OverwriteStyles", overwrite)
-    ]
+        # Creare la lista di PropertyValue per le opzioni di caricamento
+        loadOptions = [
+            PL.crea_property_value("LoadPageStyles", True),
+            PL.crea_property_value("LoadCellStyles", False),
+            PL.crea_property_value("LoadTextStyles", False),
+            PL.crea_property_value("LoadFrameStyles", False),
+            PL.crea_property_value("LoadNumberingStyles", False),
+            PL.crea_property_value("OverwriteStyles", overwrite)
+        ]
 
-    try:
-        # Carica gli stili di pagina dal file di riferimento
-        oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(loadOptions))
-    except Exception as e:
-        DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
+        try:
+            # Carica gli stili di pagina dal file di riferimento
+            oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(loadOptions))
+        except Exception as e:
+            DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
 
-    # attiva la progressbar
-    oProgressBar = PL.create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
-    n = 1 
-    for el in oDoc.Sheets.ElementNames:
-        oProgressBar.Value = n
-        n += 1
-        oDoc.CurrentController.setActiveSheet(
-            oDoc.getSheets().getByName(el))
-        oSheet = oDoc.getSheets().getByName(el)
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    oProgressBar.reset()
-    oProgressBar.end()
+        # attiva la progressbar
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
+        n = 1 
+        for el in oDoc.Sheets.ElementNames:
+            indicator.Value = n
+            n += 1
+            oDoc.CurrentController.setActiveSheet(
+                oDoc.getSheets().getByName(el))
+            oSheet = oDoc.getSheets().getByName(el)
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        indicator.end()
 
 ########################################################################
 
@@ -686,67 +687,66 @@ def importa_stili_pagina_non_presenti():
     Importa solo gli stili di pagina non presenti nel file corrente
     dal template di LeenO.
     """
-    LeenoUtils.DocumentRefresh(False)
-    # Percorso del file di template
-    filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
+    with LeenoUtils.DocumentRefreshContext(False):
+        # Percorso del file di template
+        filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
-    oDoc = LeenoUtils.getDocument()
+        oDoc = LeenoUtils.getDocument()
 
-    # Ottieni gli stili di pagina già presenti nel documento corrente
-    existing_page_styles = oDoc.StyleFamilies.getByName('PageStyles')
-    existing_style_names = [existing_page_styles.getByIndex(i).Name for i in range(existing_page_styles.Count)]
-    lun_1 = len(existing_page_styles)
+        # Ottieni gli stili di pagina già presenti nel documento corrente
+        existing_page_styles = oDoc.StyleFamilies.getByName('PageStyles')
+        existing_style_names = [existing_page_styles.getByIndex(i).Name for i in range(existing_page_styles.Count)]
+        lun_1 = len(existing_page_styles)
 
-    # Creare la lista di PropertyValue per le opzioni di caricamento
-    loadOptions = [
-        PL.crea_property_value("LoadPageStyles", True),
-        PL.crea_property_value("LoadCellStyles", False),
-        PL.crea_property_value("LoadTextStyles", False),
-        PL.crea_property_value("LoadFrameStyles", False),
-        PL.crea_property_value("LoadNumberingStyles", False),
-        PL.crea_property_value("OverwriteStyles", False)  # Non sovrascrivere per default
-    ]
+        # Creare la lista di PropertyValue per le opzioni di caricamento
+        loadOptions = [
+            PL.crea_property_value("LoadPageStyles", True),
+            PL.crea_property_value("LoadCellStyles", False),
+            PL.crea_property_value("LoadTextStyles", False),
+            PL.crea_property_value("LoadFrameStyles", False),
+            PL.crea_property_value("LoadNumberingStyles", False),
+            PL.crea_property_value("OverwriteStyles", False)  # Non sovrascrivere per default
+        ]
 
-    try:
-        # Carica il documento di template temporaneamente in modalità nascosta
-        templateDoc = DocUtils.loadDocument(filename, Hidden=True)
+        try:
+            # Carica il documento di template temporaneamente in modalità nascosta
+            templateDoc = DocUtils.loadDocument(filename, Hidden=True)
 
-        # Ottieni gli stili di pagina dal file di template
-        template_page_styles = templateDoc.StyleFamilies.getByName('PageStyles')
+            # Ottieni gli stili di pagina dal file di template
+            template_page_styles = templateDoc.StyleFamilies.getByName('PageStyles')
 
-        # Itera sugli stili nel template
-        for i in range(template_page_styles.Count):
-            template_style = template_page_styles.getByIndex(i)
-            template_style_name = template_style.Name
+            # Itera sugli stili nel template
+            for i in range(template_page_styles.Count):
+                template_style = template_page_styles.getByIndex(i)
+                template_style_name = template_style.Name
 
-            # Importa solo gli stili di pagina non presenti
-            if template_style_name not in existing_style_names:
-                # Crea una lista di opzioni specifica per importare solo lo stile di pagina mancante
-                importOptions = [
-                    PL.crea_property_value("PageStyleName", template_style_name),
-                    PL.crea_property_value("OverwriteStyles", False)  # Non sovrascrivere
-                ]
-                # Importa lo stile specifico
-                oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(importOptions))
+                # Importa solo gli stili di pagina non presenti
+                if template_style_name not in existing_style_names:
+                    # Crea una lista di opzioni specifica per importare solo lo stile di pagina mancante
+                    importOptions = [
+                        PL.crea_property_value("PageStyleName", template_style_name),
+                        PL.crea_property_value("OverwriteStyles", False)  # Non sovrascrivere
+                    ]
+                    # Importa lo stile specifico
+                    oDoc.StyleFamilies.loadStylesFromURL(filename, tuple(importOptions))
 
-        # Chiudi il documento di template
-        templateDoc.close(True)
-        
-        # ~ DLG.chi("Stili di pagina mancanti importati correttamente.")
-    except Exception as e:
-        # ~ DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
-        pass
-    # attiva la progressbar
-    if lun_1 < len(oDoc.StyleFamilies.getByName('PageStyles')):
-        oProgressBar = PL.create_progress_bar(title = 'Importazione stili pagina in corso...', steps = len(oDoc.Sheets.ElementNames))
-        n = 1 
-        for el in oDoc.Sheets.ElementNames:
-            oProgressBar.Value = n
-            n += 1
-            oDoc.CurrentController.setActiveSheet(
-                oDoc.getSheets().getByName(el))
-            oSheet = oDoc.getSheets().getByName(el)
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-        oProgressBar.reset()
-        oProgressBar.end()
-    LeenoUtils.DocumentRefresh(True)
+            # Chiudi il documento di template
+            templateDoc.close(True)
+            
+            # ~ DLG.chi("Stili di pagina mancanti importati correttamente.")
+        except Exception as e:
+            # ~ DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
+            pass
+        # attiva la progressbar
+        if lun_1 < len(oDoc.StyleFamilies.getByName('PageStyles')):
+            indicator = oDoc.getCurrentController().getStatusIndicator()
+            indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
+            n = 1 
+            for el in oDoc.Sheets.ElementNames:
+                indicator.Value = n
+                n += 1
+                oDoc.CurrentController.setActiveSheet(
+                    oDoc.getSheets().getByName(el))
+                oSheet = oDoc.getSheets().getByName(el)
+                LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+            indicator.end()

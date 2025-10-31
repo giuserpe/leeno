@@ -894,7 +894,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
     PL.riordina_ElencoPrezzi()
 
 
-def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
+def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicaor):
     ''' Compilo Analisi di prezzo '''
     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
     if numAnalisi == 0:
@@ -1359,7 +1359,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         # aggiorna la progressbar
         # progress.setValue(val)
         # progress.hide()
-        # ~ oProgressBar.Value = val
     # ~ DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
     indicator.end()
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
@@ -1368,9 +1367,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
-    # ~ oProgressBar.reset()
-    # ~ oProgressBar.end()
-    # ~LeenoUtils.DocumentRefresh(True)
+
     PL.fissa()
 
 def MENU_XPWE_import(filename = None):

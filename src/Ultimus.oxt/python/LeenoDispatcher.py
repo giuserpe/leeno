@@ -12,8 +12,6 @@ from os.path import isfile, join
 
 import unohelper
 from com.sun.star.task import XJobExecutor
-import Dialogs
-import LeenoUtils
 
 import uno
 import traceback
@@ -132,10 +130,6 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             func = getattr(module, ModFunc[1])
             if func is None:
                 print("Function '", ModFunc[1], "' not found in Module '", ModFunc[0], "'")
-                Dialogs.Exclamation(
-                    Title="Errore interno",
-                    Text=f"Funzione '{ModFunc[1]}' non trovata nel modulo '{ModFunc[0]}'")
-                return
 
             # call the handler, depending of number of arguments
             if len(self.args) == 0:
@@ -145,7 +139,6 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         except Exception as e:
             # msg = traceback.format_exc()
-            LeenoUtils.DocumentRefresh(True) # abilita il refresh
 # Aggiunge info generiche su SO, LO e LeenO
             pir = uno.getComponentContext().getValueByName(
                 '/singletons/com.sun.star.deployment.PackageInformationProvider')
@@ -192,7 +185,6 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             if 'giuserpe' in os.getlogin():
                 msg += "+-" * 30 + "\n" + traceback.format_exc()
 
-            Dialogs.Exclamation(Title=f"Errore interno: {e} ", Text=msg)
 
 
 g_ImplementationHelper = unohelper.ImplementationHelper()

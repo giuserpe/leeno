@@ -694,7 +694,7 @@ VUOI PROCEDERE UGUALMENTE?"""
 Stai per eliminare la voce selezionata.
             Voi Procedere?\n"""
         # ~return
-        if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+        if Dialogs.YesNoDialog(IconType="warning",Title='*** A T T E N Z I O N E ! ***',
             Text= messaggio) == 1:
             try:
                 undo
@@ -845,54 +845,57 @@ def adattaAltezzaRiga(oSheet=False):
     Versione bilanciata tra velocità e manutenibilità.
     """
     # Configurazioni (modificabili)
-    STILI_CELLA = {
-        'comp 1-a', 
-        'Comp-Bianche in mezzo Descr_R',
-        'Comp-Bianche in mezzo Descr', 
-        'EP-a',
-        'Ultimus_centro_bordi_lati'
-    }
-    FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
-    RIGA_SPECIALE = 2
-    ALTEZZA_SPECIALE = 1050
+    memorizza_posizione()
+    with LeenoUtils.DocumentRefreshContext(True):
+        STILI_CELLA = {
+            'comp 1-a', 
+            'Comp-Bianche in mezzo Descr_R',
+            'Comp-Bianche in mezzo Descr', 
+            'EP-a',
+            'Ultimus_centro_bordi_lati'
+        }
+        FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
+        RIGA_SPECIALE = 2
+        ALTEZZA_SPECIALE = 1050
 
-    try:
-        # --- INIZIALIZZAZIONE VELOCE ---
-        LeenoUtils.DocumentRefresh(True)
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oSheet or oDoc.CurrentController.ActiveSheet
-        usedArea = SheetUtils.getUsedArea(oSheet)
-        versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
+        try:
+            # --- INIZIALIZZAZIONE VELOCE ---
+            LeenoUtils.DocumentRefresh(True)
+            oDoc = LeenoUtils.getDocument()
+            oSheet = oSheet or oDoc.CurrentController.ActiveSheet
+            usedArea = SheetUtils.getUsedArea(oSheet)
+            versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
 
-        # --- OPERAZIONE PRINCIPALE (velocizzata) ---
-        oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
+            # --- OPERAZIONE PRINCIPALE (velocizzata) ---
+            oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
 
-        # --- CASI SPECIALI (ottimizzati) ---
-        if oSheet.Name in FOGLI_SPECIALI:
-            # Imposta altezza fissa per riga speciale
-            oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
+            # --- CASI SPECIALI (ottimizzati) ---
+            if oSheet.Name in FOGLI_SPECIALI:
+                # Imposta altezza fissa per riga speciale
+                oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
 
-            # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
-            if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
-                oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
+                # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
+                if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
+                    oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
 
-        # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
-        if 520 < versione_lo < 642:
-            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
-            for stile in STILI_CELLA:
-                try:
-                    cell_styles.getByName(stile).IsTextWrapped = True
-                except Exception:
-                    continue  # Ignora stili mancanti senza log (più veloce)
+            # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
+            if 520 < versione_lo < 642:
+                cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+                for stile in STILI_CELLA:
+                    try:
+                        cell_styles.getByName(stile).IsTextWrapped = True
+                    except Exception:
+                        continue  # Ignora stili mancanti senza log (più veloce)
 
-            # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
-            for y in range(0, usedArea.EndRow + 1):
-                if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-                    oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
+                # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
+                for y in range(0, usedArea.EndRow + 1):
+                    if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+                        oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
 
-    except Exception as e:
-        print(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
-        raise  # Rilancia per gestione esterna
+        except Exception as e:
+            print(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
+            raise  # Rilancia per gestione esterna
+    ripristina_posizione()
 # ###############################################################
 
 
@@ -916,7 +919,7 @@ def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 38, lrow).CellStyle = 'Livello-0-scritta'
+    oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = 'Livello-0-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
     oSheet.getCellRangeByPosition( 18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-0-scritta mini %'
@@ -959,7 +962,7 @@ def inserCapitolo(oSheet, lrow, sTesto='Categoria'):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 38, lrow).CellStyle = 'Livello-1-scritta'
+    oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = 'Livello-1-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
     oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
@@ -1003,7 +1006,7 @@ def inserSottoCapitolo(oSheet, lrow, sTesto):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 38,lrow).CellStyle = 'livello2 valuta'
+    oSheet.getCellRangeByPosition(0, lrow, 36,lrow).CellStyle = 'livello2 valuta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
     oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'livello2 scritta mini'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'livello2 valuta mini %'
@@ -1146,8 +1149,8 @@ def MENU_elimina_righe_vuote():
             Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
             return
 
-        confirmation_text = f'Stai per eliminare tutte le righe vuote nell\'elaborato {oSheet.Name}.\nVuoi procedere?'
-        if Dialogs.YesNoDialog(Title='ATTENZIONE!', Text=confirmation_text) == 0:
+        confirmation_text = f'Stai per eliminare tutte le righe\ndi misura vuote nell\'elaborato {oSheet.Name}.\n\nVuoi procedere?'
+        if Dialogs.YesNoDialog(IconType="question", Title='ATTENZIONE!', Text=confirmation_text) == 0:
             return
 
         # lrow_c = PL.LeggiPosizioneCorrente()[1]
@@ -1172,7 +1175,7 @@ def MENU_elimina_righe_vuote():
 
         lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
         # PL._gotoCella(1, 4)
-        Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
+        # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
         LeenoSheetUtils.ripristina_posizione()
 
 

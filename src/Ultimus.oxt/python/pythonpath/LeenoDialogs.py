@@ -201,47 +201,134 @@ class attesa(threading.Thread):
         LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
         LeenoUtils.getGlobalVar('oDialogo_attesa').execute()
 
+# def ScegliElaborato(titolo):
+#     '''
+#     Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     psm = LeenoUtils.getComponentContext().ServiceManager
+#     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+#     oDlgXLO = dp.createDialog(
+#         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
+#     )
+#     # oDialog1Model = oDlgXLO.Model
+#     oDlgXLO.Title = titolo  # Menù import XPWE'
 
-def ScegliElaborato(titolo):
-    '''
-    Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
-    '''
+#     for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+#         try:
+#             importo = oDoc.getSheets().getByName(el).getCellRangeByName(
+#                 'A2').String
+#             if el == 'COMPUTO':
+#                 oDlgXLO.getControl(
+#                     "CME_XLO").Label = '~Computo:     ' + importo
+#             if el == 'VARIANTE':
+#                 oDlgXLO.getControl(
+#                     "VAR_XLO").Label = '~Variante:    ' + importo
+#             if el == 'CONTABILITA':
+#                 oDlgXLO.getControl(
+#                     "CON_XLO").Label = 'C~ontabilità: ' + importo
+#         except Exception:
+#             pass
+
+#     if oDlgXLO.execute() == 1:
+#         if oDlgXLO.getControl("CME_XLO").State:
+#             elaborato = 'COMPUTO'
+#         elif oDlgXLO.getControl("VAR_XLO").State:
+#             elaborato = 'VARIANTE'
+#         elif oDlgXLO.getControl("CON_XLO").State:
+#             elaborato = 'CONTABILITA'
+#         elif oDlgXLO.getControl("EP_XLO").State:
+#             elaborato = 'Elenco'
+#     return elaborato
+
+def ScegliElaborato(Titolo="Titolo", flag="export"):
+    """
+    Mostra un dialogo per scegliere l'elaborato da trattare e restituisce il nome scelto.
+    """
     oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
     )
-    # oDialog1Model = oDlgXLO.Model
-    oDlgXLO.Title = titolo  # Menù import XPWE'
+    oDlgXLO.Title = Titolo
 
-    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+    controlli = {
+        "COMPUTO": "CME_XLO",
+        "VARIANTE": "VAR_XLO",
+        "CONTABILITA": "CON_XLO",
+    }
+    
+    Image = PL.LeenO_path() + "/python/pythonpath/Icons-Big/ok.png"
+    oDlgXLO.getModel().ImageControl1.ImageURL = Image
+
+    if flag == "export":
+        for nome, ctrl in controlli.items():
+            try:
+                importo = oDoc.getSheets().getByName(nome).getCellRangeByName("A2").String
+                etichette = {
+                    "COMPUTO": f"~Computo:     {importo}",
+                    "VARIANTE": f"~Variante:    {importo}",
+                    "CONTABILITA": f"C~ontabilità: {importo}",
+                }
+                oDlgXLO.getControl(ctrl).Label = etichette[nome]
+            except Exception:
+                oDlgXLO.getControl(ctrl).Label = f"~{nome.capitalize()}: (nessun dato)"
+                oDlgXLO.getControl(ctrl).Enable = False
+    else:
+        etichette = {
+            "CME_XLO": "~Computo - Variante",
+            "VAR_XLO": "~Computo - C~ontabilità",
+            "CON_XLO": "~Variante - Contabilità",
+        }
+        for ctrl, testo in etichette.items():
+            oDlgXLO.getControl(ctrl).Label = testo
+
+    if not oDoc.getSheets().hasByName("VARIANTE"):
+        oDlgXLO.getControl("CME_XLO").Enable = False
+        oDlgXLO.getControl("VAR_XLO").State = 1
+        oDlgXLO.getControl("CON_XLO").Enable = False
+    if not oDoc.getSheets().hasByName("CONTABILITA"):
+        oDlgXLO.getControl("CME_XLO").State = 1
+        oDlgXLO.getControl("VAR_XLO").Enable = False
+        oDlgXLO.getControl("CON_XLO").Enable = False
+
+    if ( not oDoc.getSheets().hasByName("VARIANTE") and
+        not oDoc.getSheets().hasByName("CONTABILITA")
+    ):
+        if flag != "export":
+            Dialogs.Info(
+                Title="Informazione",
+                Text="Nessuna Variante o Contabilità presente per l'esportazione."
+            )
+            return
+        else:
+            oDlgXLO.getControl("CME_XLO").Enable = True
+            oDlgXLO.getControl("CME_XLO").State = 1
+
+    # Esegue il dialogo
+    if oDlgXLO.execute() != 1:
+        oDlgXLO.dispose()
+        return None
+
+    # Mappatura scelta → elaborato
+    mappa_scelte = {
+        "CME_XLO": {"export": "COMPUTO", "parallelo": "computo_variante"},
+        "VAR_XLO": {"export": "VARIANTE", "parallelo": "computo_contabilità"},
+        "CON_XLO": {"export": "CONTABILITA", "parallelo": "variante_contabilità"},
+        # "EP_XLO":  {"export": "Elenco", "parallelo": ""},
+    }
+
+    elaborato = None
+    for ctrl, mappa in mappa_scelte.items():
         try:
-            importo = oDoc.getSheets().getByName(el).getCellRangeByName(
-                'A2').String
-            if el == 'COMPUTO':
-                oDlgXLO.getControl(
-                    "CME_XLO").Label = '~Computo:     ' + importo
-            if el == 'VARIANTE':
-                oDlgXLO.getControl(
-                    "VAR_XLO").Label = '~Variante:    ' + importo
-            if el == 'CONTABILITA':
-                oDlgXLO.getControl(
-                    "CON_XLO").Label = 'C~ontabilità: ' + importo
-            #  else:
-            #  oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
+            if oDlgXLO.getControl(ctrl).State:
+                elaborato = mappa.get(flag)
+                break
         except Exception:
-            pass
+            continue
 
-    if oDlgXLO.execute() == 1:
-        if oDlgXLO.getControl("CME_XLO").State:
-            elaborato = 'COMPUTO'
-        elif oDlgXLO.getControl("VAR_XLO").State:
-            elaborato = 'VARIANTE'
-        elif oDlgXLO.getControl("CON_XLO").State:
-            elaborato = 'CONTABILITA'
-        elif oDlgXLO.getControl("EP_XLO").State:
-            elaborato = 'Elenco'
+    oDlgXLO.dispose()
     return elaborato
 
 

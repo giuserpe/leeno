@@ -212,7 +212,7 @@ Sub MENU_struttura_on
 end Sub
 rem ######################################################################
 Sub Cancel
-	Scriptpy(&quot;pyleeno&quot;,&quot;Cancel&quot;)
+	Scriptpy(&quot;pyleeno&quot;,&quot;stop_all_scripts_and_close_dialogs&quot;)
 end Sub
 
 </script:module>

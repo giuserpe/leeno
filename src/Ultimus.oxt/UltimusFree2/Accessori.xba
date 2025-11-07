@@ -246,4 +246,6 @@ End Sub
 &apos; BLOCCARE I COMANDI DURANTE L&apos;ESECUZIONE DI UNA MACRO!!!!! 
 &apos; fatto... ma non sono soddisfatto!
 
-</script:module>
+Sub Macro1
+
+End Sub</script:module>

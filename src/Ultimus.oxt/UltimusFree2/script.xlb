@@ -7,9 +7,9 @@
  <library:element library:name="Finale"/>
  <library:element library:name="Cerca_Rior"/>
  <library:element library:name="_tools"/>
- <library:element library:name="ListenerMouse"/>
  <library:element library:name="Taxi_temp"/>
  <library:element library:name="Finale_2"/>
+ <library:element library:name="ListenerMouse"/>
  <library:element library:name="Header_Footer"/>
  <library:element library:name="ListenersSelectRange"/>
  <library:element library:name="Voci_Sistema"/>
@@ -19,6 +19,7 @@
  <library:element library:name="Voci_Crea_Att"/>
  <library:element library:name="ShortC_temp"/>
  <library:element library:name="Zip"/>
+ <library:element library:name="DLG"/>
  <library:element library:name="Menu"/>
  <library:element library:name="Accessori_2"/>
  <library:element library:name="Varie"/>

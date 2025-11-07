@@ -10,7 +10,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="2" dlg:left="101" dlg:top="80" dlg:width="40" dlg:height="15" dlg:help-text="&amp;403.DlgSiNo.CommandButton4.HelpText" dlg:default="true" dlg:value="&amp;404.DlgSiNo.CommandButton4.Label" dlg:button-type="ok" dlg:multiline="true"/>
-  <dlg:text dlg:style-id="1" dlg:id="Text" dlg:tab-index="0" dlg:left="47" dlg:top="0" dlg:width="195" dlg:height="80" dlg:help-text="&amp;1177.DlgSiNo.Text.HelpText" dlg:value="&amp;1178.DlgSiNo.Text.Label" dlg:align="center" dlg:valign="center"/>
+  <dlg:text dlg:style-id="1" dlg:id="Text" dlg:tab-index="0" dlg:left="47" dlg:top="0" dlg:width="195" dlg:height="80" dlg:help-text="&amp;1177.DlgSiNo.Text.HelpText" dlg:value="&amp;1178.DlgSiNo.Text.Label" dlg:valign="center"/>
   <dlg:img dlg:style-id="0" dlg:id="ImageControl1" dlg:tab-index="3" dlg:left="11" dlg:top="24" dlg:width="30" dlg:height="30" dlg:help-text="&amp;1179.DlgSiNo.ImageControl1.HelpText"/>
  </dlg:bulletinboard>
 </dlg:window>

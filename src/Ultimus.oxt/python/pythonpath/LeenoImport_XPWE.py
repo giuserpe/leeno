@@ -1110,7 +1110,7 @@ def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
     PL.tante_analisi_in_ep()
 
 
-def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):
+def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
     ''' compila il computo '''
 
     LeenoUtils.DocumentRefresh(False)
@@ -1572,7 +1572,7 @@ def XPWE_import(filename = None):
         return
 
     # compila il computo
-    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress = None)
+    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
 
     oSheet = oDoc.getSheets().getByName(elaborato)
 

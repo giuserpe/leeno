@@ -610,3 +610,19 @@ def convert_number_string(s: str) -> str:
         return f"{words}/{frac_clean}"
     else:
         return words
+
+def wrap_path(path, max_len=72):
+    """Versione ultra-compatta per wrapping percorsi"""
+    parts = path.split('\\')
+    result = parts[0]
+    current = parts[0]
+    
+    for p in parts[1:]:
+        if len(current + '\\' + p) > max_len:
+            result += '\\\n' + p
+            current = '\\' + p
+        else:
+            result += '\\' + p
+            current += '\\' + p
+    
+    return result

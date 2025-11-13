@@ -296,15 +296,11 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
     if ( not oDoc.getSheets().hasByName("VARIANTE") and
         not oDoc.getSheets().hasByName("CONTABILITA")
     ):
-        if flag != "export":
-            Dialogs.Info(
-                Title="Informazione",
-                Text="Nessuna Variante o Contabilità presente per l'esportazione."
-            )
-            return
-        else:
-            oDlgXLO.getControl("CME_XLO").Enable = True
-            oDlgXLO.getControl("CME_XLO").State = 1
+        Dialogs.Info(
+            Title="Informazione",
+            Text="Nessuna Variante o Contabilità presente per il confronto."
+        )
+        return
 
     # Esegue il dialogo
     if oDlgXLO.execute() != 1:

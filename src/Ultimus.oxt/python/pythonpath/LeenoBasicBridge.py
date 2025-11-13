@@ -287,9 +287,9 @@ def ins_voce_elenco():
     PL.ins_voce_elenco()
 
 
-def EliminaVociDoppieElencoPrezzi():
-    callAlert()
-    PL.EliminaVociDoppieElencoPrezzi()
+# def EliminaVociDoppieElencoPrezzi():
+#     callAlert()
+#     PL.EliminaVociDoppieElencoPrezzi()
 
 
 def Tutti_Subtotali():

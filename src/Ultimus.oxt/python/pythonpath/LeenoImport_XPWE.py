@@ -894,7 +894,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
     PL.riordina_ElencoPrezzi()
 
 
-def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicaor):
+def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
     ''' Compilo Analisi di prezzo '''
     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
     if numAnalisi == 0:
@@ -1555,7 +1555,6 @@ def XPWE_import(filename = None):
     # Compilo Analisi di prezzo
     indicator.Text = "Compilazione analisi prezzi..."
     indicator.Value = 85
-
     compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress = None)
 
     # se non ci sono misurazioni di computo, finisce qui
@@ -1570,7 +1569,6 @@ def XPWE_import(filename = None):
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         return
-
     # compila il computo
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
 

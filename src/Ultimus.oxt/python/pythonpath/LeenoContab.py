@@ -40,7 +40,7 @@ def sbloccaContabilita(oSheet, lrow):
 
     partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
     if partenza[2] == '#reg':
-        res = Dialogs.YesNoCancel(
+        res = Dialogs.YesNoCancelDialog(IconType="question",
            Title="Voce già registrata",
            Text= "Lavorando in questo punto del foglio,\n"
                  "comprometterai la validità degli atti contabili già emessi.\n\n"
@@ -271,7 +271,7 @@ def MENU_AnnullaAttiContabili():
         return
     messaggio = 'Stai per eliminare gli atti del SAL n.' + \
     listaSal[-1] + '\n\nVuoi procedere?'
-    if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+    if Dialogs.YesNoDialog(IconType="warning",Title='*** A T T E N Z I O N E ! ***',
         Text= messaggio) == 1:
     #elimina libretto
         oSheet = oDoc.Sheets.getByName('CONTABILITA')
@@ -378,7 +378,7 @@ tutti gli elaborati contabili generati fino a questo momento.
 OPERAZIONE NON REVERSIBILE!
 
 VUOI PROCEDERE UGUALMENTE?"""
-    if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+    if Dialogs.YesNoDialog(IconType="warning",Title='*** A T T E N Z I O N E ! ***',
         Text= messaggio) == 1:
         svuotaContabilita(oDoc)
 
@@ -419,7 +419,7 @@ def svuotaContabilita(oDoc):
         oSheet.getCellRangeByName('P3').String = 'Importi'
         oSheet.getCellRangeByName('Q3').String = 'Incidenza\nsul totale'
         oSheet.getCellRangeByName('R3').String = 'Sicurezza\ninclusa'
-        oSheet.getCellRangeByName('S3').String = 'importo totale\nsenza errori'
+        oSheet.getCellRangeByName('S3').String = 'senza errori'
         oSheet.getCellRangeByName('T3').String = 'Lib.\nN.'
         oSheet.getCellRangeByName('U3').String = 'Lib.\nP.'
         oSheet.getCellRangeByName('W3').String = 'flag'
@@ -434,7 +434,7 @@ def svuotaContabilita(oDoc):
         oSheet.getCellRangeByName('AH3').String = 'Sub Cat'
         #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
         oSheet.getCellByPosition(35,2).String = 'tag C'
-        oSheet.getCellRangeByName('AK3').String = 'Importi\nsenza errori'
+        oSheet.getCellRangeByName('AK3').String = 'senza errori'
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
         #  colore colonne riga di intestazione
         oSheet.getCellRangeByPosition(0, 2, 36, 2).CellStyle = 'comp Int_colonna_R'
@@ -686,7 +686,6 @@ def GeneraLibretto(oDoc):
     #################################
     #################################
     #################################
-    oSheet.removeAllManualPageBreaks()
     for i in range(primariga, ultimariga):
         # ~ oDoc.CurrentController.select(oSheet.getCellByPosition(2, i))
         if "SICUREZZA" in oSheet.getCellByPosition(2, i).String:
@@ -727,9 +726,18 @@ def GeneraLibretto(oDoc):
         else:
             SAL.append(datiSAL)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
-    # DLG.chi(f"SAL = {SAL}")
-    # DLG.chi(f"SAL_VDS = {SAL_VDS}")
-    SAL = list(set(SAL))
+
+    # SAL = list(set(SAL))
+    # totale_SAL = sum(voce[6] for voce in SAL)
+
+    # SAL_VDS = list(set(SAL_VDS))
+    # totale_VDS = sum(voce[6] for voce in SAL_VDS)
+
+    # DLG.chi(f"totale_VDS = {totale_VDS}")
+    # DLG.chi(f"totale_SAL = {totale_SAL}")
+    # return
+
+
     try:
         sic = []
         mdo = []
@@ -764,8 +772,12 @@ def GeneraLibretto(oDoc):
         # immetti le firme
         inizioFirme = ultimariga + 1
 
-        PL.firme_in_calce(inizioFirme) # riga di inserimento
-        fineFirme = inizioFirme + 10
+        # DLG.chi(inizioFirme)
+        # return
+
+        fineFirme = firme_contabili(inizioFirme) # riga di inserimento
+        # fineFirme = inizioFirme + 10
+
 
         indicator.setValue(2)
         area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
@@ -817,12 +829,17 @@ def GeneraLibretto(oDoc):
     oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
 
     x = fineFirme
+
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    SheetUtils.visualizza_PageBreak()
+    oSheet.removeAllManualPageBreaks()
+
     #=lib===================
     insrow()
 
-    #cancello la prima riga per aumentare lo spazio per la firma
-    oSheet.getCellByPosition(2, x).String = ""
-    oSheet.getCellByPosition(2, x + 1).String = ""
+    # #cancello la prima riga per aumentare lo spazio per la firma
+    # oSheet.getCellByPosition(2, x).String = ""
+    # oSheet.getCellByPosition(2, x + 1).String = ""
 
     indicator.setValue(4)
     # ----------------------------------------------------------------------
@@ -1045,7 +1062,7 @@ def GeneraRegistro(oDoc):
     lastRow = insRow + len(reg)
 
     inizioFirme = lastRow + 5
-    PL.firme_in_calce (inizioFirme) # riga di inserimento
+    firme_contabili (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
 
     indicator.setValue(3)
@@ -1097,7 +1114,8 @@ def GeneraRegistro(oDoc):
         '=SUBTOTAL(9;$I$2:$I$' + str(inizioFirme))
     oSheet.getCellByPosition(8, lastRow + 2).CellStyle = "Ultimus_destra_totali"
 
-    oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ' + PL.oggi() + ' - T O T A L E   €'
+    # oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ' + PL.oggi() + ' - T O T A L E   €'
+    oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ___/___/_________ - T O T A L E   €'
     oSheet.getCellByPosition(1, lastRow + 4).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(8, lastRow + 4).Formula = (
         '=SUBTOTAL(9;$I$2:$I$' + str(inizioFirme))
@@ -1344,7 +1362,7 @@ def GeneraRegistro(oDoc):
 
 # ~# le firme
     inizioFirme = lastRow + 17
-    PL.firme_in_calce (inizioFirme) # riga di inserimento
+    firme_contabili (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 12
 
     oSheet.getCellRangeByPosition(
@@ -1435,6 +1453,124 @@ def insrow():
         if hattuale >= hpagina:
             break
     return
+def insrow():
+    """
+    Inserisce righe nel foglio attivo basandosi su ultima area nominata
+    e altezza della pagina.
+
+    Aggiunge righe finché l'altezza della pagina non viene superata.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oRanges = oDoc.NamedRanges
+
+    nSh = {
+        'CONTABILITA': '_Lib_',
+        'Registro': '_Reg_',
+        'SAL': '_SAL_'
+    }
+
+    # Costanti altezze pagina
+    hPage = {
+        'CONTABILITA': 25510,
+        'Registro': 25810,
+        'SAL': 25850
+    }
+
+    nome = nSh.get(oSheet.Name)
+    if not nome:
+        return  # foglio non gestito
+
+    nSal = ultimo_sal()[-1]
+    nomearea = nome + str(nSal)
+
+    if not oRanges.hasByName(nomearea):
+        return  # nessuna area trovata
+
+    oNamedRange = oRanges.getByName(nomearea).ReferredCells.RangeAddress
+    sRow = oNamedRange.StartRow
+    iRow = oNamedRange.EndRow
+
+    # Colonna di riferimento
+    col = 2 if oSheet.Name == 'CONTABILITA' else 1
+
+    # Altezza disponibile
+    hpagina = (len(oSheet.RowPageBreaks) - 1) * hPage[oSheet.Name]
+
+    # Linea di riempimento
+    filler = "––––––––––––––––––––––––––––––"
+
+    for _ in range(50):
+        oSheet.getRows().insertByIndex(iRow, 1)
+        oSheet.getCellByPosition(col, iRow).String = filler
+        iRow += 1
+
+        hattuale = (
+            oSheet.getCellByPosition(col, iRow).Position.Y -
+            oSheet.getCellByPosition(col, sRow).Position.Y
+        )
+
+        if hattuale >= hpagina:
+            break
+
+
+########################################################################
+def firme_contabili(lrowF=None):
+    """
+    Inserisce i dati necessari alle firme nel foglio "CONTABILITA",
+    con spaziatura uniforme tra i blocchi.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet_S2 = oDoc.getSheets().getByName("S2")
+
+    # Ricava il luogo dall'intestazione del foglio S2
+    luogo_raw = oSheet_S2.getCellRangeByName("$S2.C4").String
+    ultimo_token = luogo_raw.split(" ")[-1] if luogo_raw else ""
+    luogo = f"{ultimo_token}, " if ultimo_token else "Data, "
+
+    if oSheet.Name != "CONTABILITA":
+        return
+
+    # Se non viene passata una riga, calcola l'ultima disponibile
+    if lrowF is None:
+        lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    firme = []
+
+    # Progettista (luogo + data)
+    firme.append(f"{luogo} ___/___/_________")
+
+    # Impresa esecutrice
+    impresa = oSheet_S2.getCellRangeByName("$S2.C17").String
+    firme.append(f"L'Impresa esecutrice\n({impresa})")
+
+    # Direttore Operativo Contabile (solo se presente)
+    contabile = oSheet_S2.getCellRangeByName("$S2.C14").String
+    if contabile:
+        firme.append(f"Il Direttore Operativo Contabile\n({contabile})")
+
+    # CSE (solo se presente)
+    cse = oSheet_S2.getCellRangeByName("$S2.C15").String
+    if cse:
+        firme.append(f"Visto: il C.S.E.\n({cse})")
+
+    # Direttore Lavori
+    direttore = oSheet_S2.getCellRangeByName("$S2.C16").String
+    firme.append(f"Il Direttore dei Lavori\n({direttore})")
+
+    # Numero righe da inserire = blocchi × 3
+    oSheet.getRows().insertByIndex(lrowF, len(firme) * 3)
+
+    riga_corrente = lrowF + 1
+    for firma in firme:
+        oSheet.getCellByPosition(2, riga_corrente).Formula = firma
+        riga_corrente += 3 # avanza sempre di 3 righe
+
+    oSheet.getRows().insertByIndex(riga_corrente -2, 3)
+
+    return riga_corrente +1
+
 
 ########################################################################
 
@@ -1443,28 +1579,28 @@ def GeneraAttiContabili():
     '''
     Genera atti contabili.
     '''
-    with LeenoUtils.DocumentRefreshContext(False):
+    # with LeenoUtils.DocumentRefreshContext(False):
 
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        if oSheet.Name != "CONTABILITA":
-            return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name != "CONTABILITA":
+        return
 
-        # la generazione del libretto è inclusa in GeneraRegistro()
-        # ~ GeneraLibretto(oDoc)
-        GeneraRegistro(oDoc)
+    # la generazione del libretto è inclusa in GeneraRegistro()
+    GeneraLibretto(oDoc)
+    # GeneraRegistro(oDoc)
 
-        listaSal = ultimo_sal()
-        try:
-            nSal = int(listaSal[-1])
-            mostra_sal(nSal)
-        except Exception as e:
-            # ~ DLG.errore(e)
-            pass
-        PL.GotoSheet('CONTABILITA')
+    listaSal = ultimo_sal()
+    try:
+        nSal = int(listaSal[-1])
+        mostra_sal(nSal)
+    except Exception as e:
+        # ~ DLG.errore(e)
+        pass
+    PL.GotoSheet('CONTABILITA')
 
-        # ~Dialogs.Info(Title = 'Voci registrate!',
-            # ~Text="La generazione degli allegati contabili è stata completata.")
+    # ~Dialogs.Info(Title = 'Voci registrate!',
+        # ~Text="La generazione degli allegati contabili è stata completata.")
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

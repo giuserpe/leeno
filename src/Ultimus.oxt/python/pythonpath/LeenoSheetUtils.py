@@ -338,9 +338,9 @@ def setLarghezzaColonne(oSheet):
                 },
                 'hidden_ranges': [
                     (6, 9), (3, 3)
-                ],
-                'visible_ranges': [
-                    (6, 9), (3, 3)
+                # ],
+                # 'visible_ranges': [
+                #     (6, 9), (3, 3)
                 ]
             },
             'COMPUTO_VARIANTE': {
@@ -476,7 +476,7 @@ def cercaUltimaVoce(oSheet):
         # if oSheet.getCellByPosition(0, n).CellStyle in('Comp TOTALI'):
         if oSheet.getCellByPosition(
                 0,
-                n).CellStyle in ('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End',
+                n).CellStyle in ('EP-a -Top', 'EP-aS', 'EP-Cs', 'An-sfondo-basso Att End',
                                  'Comp End Attributo', 'Comp End Attributo_R',
                                  'comp Int_colonna',
                                  'comp Int_colonna_R_prima',
@@ -1255,7 +1255,7 @@ def memorizza_posizione(step=0):
             'end_row': range_addr.EndRow + step     # incremento opzionale
         }
     else:
-        DLG.chi("Tipo di selezione non supportato")
+        # DLG.chi("Tipo di selezione non supportato")
         return
     
     # Memorizza i dati

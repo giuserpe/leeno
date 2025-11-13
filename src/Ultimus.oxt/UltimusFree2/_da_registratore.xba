@@ -74,5 +74,11 @@ Sub AddPageNumberHeader
     &apos; Applica le modifiche
     oDefault.RightPageHeaderContent = oHeader
 End Sub
-
+Function SostituisciSpaziMultipli(cella As String) As String
+    Dim regex As Object
+    Set regex = CreateObject(&quot;VBScript.RegExp&quot;)
+    regex.Global = True
+    regex.Pattern = &quot;  +&quot;  &apos; 2 o più spazi
+    SostituisciSpaziMultipli = regex.Replace(cella, Chr(10))
+End Function
 </script:module>

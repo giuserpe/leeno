@@ -78,7 +78,31 @@ def datiVoceComputo(oSheet, lrow):
 
     return None
 
+#######################################################################
+def cambia_articolo(oSheet, lrow, nuovo_articolo):
+    """
+    Cambia il valore dell'articolo nella voce di computo/contabilità.
 
+    Parametri:
+    oSheet {Sheet} : Il foglio attivo.
+    lrow {int} : Riga di riferimento per circoscrivere la voce.
+    nuovo_articolo {str} : Il nuovo codice articolo da inserire.
+    """
+
+    # Trova il range della voce (come fa datiVoceComputo)
+    sStRange = circoscriveVoceComputo(oSheet, lrow)
+    if not sStRange:
+        return False
+
+    start_row = sStRange.RangeAddress.StartRow
+
+    # Modifica dell'articolo:
+    cell = oSheet.getCellByPosition(1, start_row + 1)
+    cell.String = nuovo_articolo
+
+    return True
+
+#######################################################################
 
 def circoscriveVoceComputo(oSheet, lrow, misure = False):
     '''

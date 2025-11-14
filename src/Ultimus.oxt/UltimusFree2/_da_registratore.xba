@@ -81,4 +81,5 @@ Function SostituisciSpaziMultipli(cella As String) As String
     regex.Pattern = &quot;  +&quot;  &apos; 2 o più spazi
     SostituisciSpaziMultipli = regex.Replace(cella, Chr(10))
 End Function
+
 </script:module>

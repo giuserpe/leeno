@@ -1969,7 +1969,7 @@ def MENU_prefisso_VDS_():
     # pref = "NP_"
 
     def vds_ep():
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         lrow = LeggiPosizioneCorrente()[1]
         if pref in  oSheet.getCellByPosition(0, lrow).String:
             #  Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
@@ -1979,8 +1979,8 @@ def MENU_prefisso_VDS_():
         comando('Copy')
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
-        oSheet.getCellRangeByName("A4").String = pref + oSheet.getCellRangeByName("A4").String
-        oSheet.getCellRangeByName("A4").CellBackColor = 14942166
+        oSheet.getCellRangeByName("A5").String = pref + oSheet.getCellRangeByName("A5").String
+        oSheet.getCellRangeByName("A5").CellBackColor = 14942166
 
         LeenoUtils.DocumentRefresh(False)
     #  oSheet = oDoc.CurrentController.ActiveSheet
@@ -2031,11 +2031,12 @@ def MENU_prefisso_VDS_():
                
                 if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
                     # voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
-                    # art = LeenoComputo.datiVoceComputo(oSheet, lrow)[1]
+                    art = LeenoComputo.datiVoceComputo(oSheet, lrow)[1]
                     pesca_cod()
                     vds_ep()
                     pesca_cod()
-
+                    if pref not in art:
+                        LeenoComputo.cambia_articolo(oSheet, lrow, pref+art)
                 elif oSheet.Name == 'Elenco Prezzi':
                     vds_ep()
 
@@ -2047,7 +2048,8 @@ def MENU_prefisso_VDS_():
         # numera_voci(1)
     except Exception:
         pass
-    #  _gotoCella(1, fine +3)
+    _gotoCella(1, lrow+1)
+
     LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
@@ -6298,27 +6300,32 @@ def ins_voce_elenco():
         _gotoCella("A5")
         oSheet.getRows().insertByIndex(4, 1)
 
-        oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
-        oSheet.getCellByPosition(11,
-                                4).Formula = '=LET(s; SUMIF(AA; A5; BB); IF(s; s; "--"))'
-        #  oSheet.getCellByPosition(11, 3).Formula = '=N4/$N$2'
-        oSheet.getCellByPosition(12, 4).Formula = '=LET(s; SUMIF(varAA; A5; varBB);IFERROR(IF(s; s; "--"); "--"))'
-        oSheet.getCellByPosition(13, 4).Formula = '=LET(s; SUMIF(GG; A5; G1G1);IFERROR(IF(s; s; "--"); "--"))'
-        oSheet.getCellByPosition(15, 4).Formula = '=LET(s; IF(M5="--"; 0; VALUE(M5)) - IF(L5="--"; 0; VALUE(L5)); IF(s; s; "--"))'
-        oSheet.getCellByPosition(16, 4).Formula = '=LET(s; IF(N5="--"; 0; VALUE(N5)) - IF(L5="--"; 0; VALUE(L5)); IF(s; s; "--"))'
-        oSheet.getCellByPosition(17, 4).Formula = '=LET(s; IF(N5="--"; 0; VALUE(N5)) - IF(M5="--"; 0; VALUE(M5)); IF(s; s; "--"))'
+        # oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
+        # oSheet.getCellByPosition(11, 4).Formula = '=LET(s; SUMIF(AA; A5; BB); IF(s; s; "--"))'
+        # oSheet.getCellByPosition(12, 4).Formula = '=LET(s; SUMIF(varAA; A5; varBB);IFERROR(IF(s; s; "--"); "--"))'
+        # oSheet.getCellByPosition(13, 4).Formula = '=LET(s; SUMIF(GG; A5; G1G1);IFERROR(IF(s; s; "--"); "--"))'
+        # oSheet.getCellByPosition(15, 4).Formula = '=LET(s; IF(M5="--"; 0; VALUE(M5)) - IF(L5="--"; 0; VALUE(L5)); IF(s; s; "--"))'
+        # oSheet.getCellByPosition(16, 4).Formula = '=LET(s; IF(N5="--"; 0; VALUE(N5)) - IF(L5="--"; 0; VALUE(L5)); IF(s; s; "--"))'
+        # oSheet.getCellByPosition(17, 4).Formula = '=LET(s; IF(N5="--"; 0; VALUE(N5)) - IF(M5="--"; 0; VALUE(M5)); IF(s; s; "--"))'
 
+        lrow = LeggiPosizioneCorrente()[1] -1
+        # comando('Copy')
+        _gotoCella("L5")
+        oDoc.CurrentController.select(oSheet.getCellRangeByName('L5:Z5'))
+        ctrl_d()
+        # paste_clip(pastevalue = False)
+        _gotoCella("A5")
         # copio le formule dalla riga sotto
-        oRangeAddress = oSheet.getCellRangeByPosition(15, 5, 26,
-                                                    5).getRangeAddress()
-        oCellAddress = oSheet.getCellByPosition(15, 3).getCellAddress()
-        oSheet.copyRange(oCellAddress, oRangeAddress)
-        oCell = oSheet.getCellByPosition(2, 3)
-        valida_cella(
-            oCell,
-            '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";""',
-            titoloInput='Scegli...',
-            msgInput='Unità di misura')
+        # oRangeAddress = oSheet.getCellRangeByPosition(15, 5, 26,
+        #                                             5).getRangeAddress()
+        # oCellAddress = oSheet.getCellByPosition(15, 3).getCellAddress()
+        # oSheet.copyRange(oCellAddress, oRangeAddress)
+        # oCell = oSheet.getCellByPosition(2, 3)
+        # valida_cella(
+        #     oCell,
+        #     '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";""',
+        #     titoloInput='Scegli...',
+        #     msgInput='Unità di misura')
 
 
 ########################################################################
@@ -7536,15 +7543,13 @@ def MENU_importa_stili():
         if Dialogs.YesNoDialog(IconType="question",
             Title='Vuoi sostituire gli stili del documento?',
             Text="""
-    ► Scegli "Sì" per sostituire gli stili del documento
-        selezionando un file di riferimento (facoltativo).
-        Se non selezioni alcun file, verranno applicati
-        gli stili predefiniti di LeenO.
+    ► Scegli "Sì" per sostituire gli stili del documento selezionando
+        un file di riferimento (facoltativo). Se non selezioni alcun
+        file, verranno applicati gli stili predefiniti di LeenO.
         ----
-        ⚠️ ATTENZIONE: l’applicazione di stili che
-        visualizzano un numero diverso di cifre decimali
-        può influire sui risultati dei calcoli, 
-        in funzione dell’opzione “Precisione come mostrato”.
+        ⚠️  ATTENZIONE: l'applicazione di stili che visualizzano un
+        numero diverso di cifre decimali può influire sui risultati
+        dei calcoli, in funzione dell'opzione “Precisione come mostrato”.
 
     ► Scegli "No" per mantenere gli stili attuali.
     """
@@ -10036,27 +10041,39 @@ def MENU_elenco_puntato_misure():
 
 
 ########################################################################
+# def ctrl_d():
+#     '''
+#     Copia il valore della prima cella superiore utile.
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     oCell = oDoc.CurrentSelection
+#     oSheet = oDoc.CurrentController.ActiveSheet
+#     x = LeggiPosizioneCorrente()[0]
+#     lrow = LeggiPosizioneCorrente()[1]
+#     y = lrow - 1
+#     try:
+#         while oSheet.getCellByPosition(x, y).Type.value == 'EMPTY':
+#             y -= 1
+#     except Exception:
+#         return
+#     oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
+#     comando('Copy')
+#     oDoc.CurrentController.select(oCell)
+#     paste_clip(insCell=0)
+#     oDoc.CurrentController.select(
+#         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+
 def ctrl_d():
-    '''
-    Copia il valore della prima cella superiore utile.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oCell = oDoc.CurrentSelection
-    oSheet = oDoc.CurrentController.ActiveSheet
-    x = LeggiPosizioneCorrente()[0]
-    lrow = LeggiPosizioneCorrente()[1]
-    y = lrow - 1
-    try:
-        while oSheet.getCellByPosition(x, y).Type.value == 'EMPTY':
-            y -= 1
-    except Exception:
-        return
-    oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
-    comando('Copy')
-    oDoc.CurrentController.select(oCell)
-    paste_clip(insCell=0)
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    ctx = LeenoUtils.getComponentContext()
+    smgr = ctx.ServiceManager
+
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    dispatcher = smgr.createInstanceWithContext("com.sun.star.frame.DispatchHelper", ctx)
+    frame = desktop.getCurrentFrame()
+
+    # Esegue il comando .uno:FillDown due volte
+    dispatcher.executeDispatch(frame, ".uno:FillDown", "", 0, ())
+    dispatcher.executeDispatch(frame, ".uno:FillDown", "", 0, ())
 
 
 ########################################################################
@@ -11922,6 +11939,8 @@ def export_selected_range_to_odt():
                         raw_value = ""
 
                 cell_value = raw_value.replace('\n', ' ').replace('\r', ' ')
+                if cell_value.startswith("VDS_"):
+                    cell_value = cell_value[4:]  # elimina i primi 4 caratteri
 
                 try:
                     if getattr(cell, "getType", None) and cell.getType().value == 2 and cell.getValue() != 0:

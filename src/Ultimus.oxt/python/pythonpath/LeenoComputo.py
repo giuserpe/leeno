@@ -62,7 +62,7 @@ def datiVoceComputo(oSheet, lrow):
             num + '\n' + art + '\n' + data, desc, Nlib, Plib, um, quantP, quantN,
             prezzo, importo
         )
-        
+
         quant = quantP if quantP != '' else quantN
 
         SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
@@ -111,7 +111,7 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
     Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
     partendo dalla posizione corrente del cursore.
     '''
-    
+
     # Inizializza le righe di inizio e fine al valore di partenza.
     start_row = lrow
     end_row = lrow
@@ -172,7 +172,7 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
         return oSheet.getCellRangeByPosition(2, start_row + 2, 8, end_row + end_offset)
 
 
-    
+
 def insertVoceComputoGrezza(oSheet, lrow):
 
     # lrow = LeggiPosizioneCorrente()[1]
@@ -235,7 +235,7 @@ def ins_voce_computo(cod=None):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     # se le colonne di misura sono nascoste, vengono viasulizzate
     if oSheet.getColumns().getByIndex(5).Columns.IsVisible == False:
         lrow = 4
@@ -245,7 +245,7 @@ def ins_voce_computo(cod=None):
                 oSheet.getCellByPosition(2, el).Formula = ''
         for el in range (5, 9):
             oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
-    
+
     noVoce = LeenoUtils.getGlobalVar('noVoce')
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
@@ -276,57 +276,153 @@ def Menu_computoSenzaPrezzi():
     e cancella i prezzi unitari dal nuovo foglio
     '''
     with LeenoUtils.DocumentRefreshContext(False):
-        PL.chiudi_dialoghi()
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        nSheet = oSheet.Name
-        if nSheet not in ('COMPUTO', 'VARIANTE'):
+        salva_senza_prezzi()
+
+
+def salva_senza_prezzi():
+    """
+    Salva il documento corrente con il suffisso '_senza_prezzi'
+    usando storeAsURL(), quindi il documento corrente diventa la copia.
+    """
+    PL.chiudi_dialoghi()
+
+    oDoc = LeenoUtils.getDocument()
+    controller = oDoc.CurrentController
+    oSheet = controller.ActiveSheet
+
+    if oSheet.Name not in ("COMPUTO", "VARIANTE"):
+        return
+
+    indicator = controller.getStatusIndicator()
+    indicator.start("Generazione COMPUTO/VARIANTE senza prezzi...", 4)
+    indicator.setValue(0.5)
+
+
+    # ---- PRECALCOLI ----
+    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+
+    import LeenoComputo
+    ultime_voci = [
+        LeenoComputo.circoscriveVoceComputo(oSheet, r).RangeAddress.EndRow
+        for r in range(3, ultima_voce)
+    ]
+
+    last_row = SheetUtils.getLastUsedRow(oSheet)
+
+    getCell = oSheet.getCellByPosition
+
+    # ---- OTTIMIZZAZIONE: RANGE B ----
+    col_B_range = oSheet.getCellRangeByPosition(1, 0, 1, last_row)
+    stili_scritta = {"Livello-1-scritta", "livello2 valuta", "Livello-0-scritta"}
+
+    for r_rel in range(last_row + 1):
+        cell = col_B_range.getCellByPosition(0, r_rel)
+        if cell.CellStyle in stili_scritta:
+            cell.String = cell.String  # refresh leggero
+
+    # ---- RIMOZIONE PREZZI E FORMULE ----
+    for r in ultime_voci:
+        getCell(11, r).String = ""
+        getCell(11, r).CellStyle = "comp 1-a"
+        getCell(18, r).Formula = (
+            f'=IF(ISERROR(FIND("%";I{r+1}));'
+            f'J{r+1}*L{r+1};'
+            f'J{r+1}*L{r+1}/100)'
+        )
+
+    getCell(0, 1).Formula = "=S2"
+    getCell(1, 1).String = ""
+
+    # ---- RIMOZIONE COLONNE ----
+    oSheet.getColumns().removeByIndex(19, 50)
+
+    indicator.setValue(2)
+
+    # ---- COPY/PASTE VALUES ----
+    rng_copia = oSheet.getCellRangeByName("A1:I1048576")
+    controller.select(rng_copia)
+    PL.comando("Copy")
+    PL.paste_clip(insCells=0, pastevalue=True)
+    controller.select(None)
+
+
+    # -------------------------------------------------
+    #   DA QUI IN POI OPERAZIONI FUORI DAI CICLI
+    # -------------------------------------------------
+
+    orig_url = oDoc.getURL()
+    if not orig_url:
+        Dialogs.NotifyDialog(
+            IconType="error",
+            Title="ATTENZIONE!",
+            Text=(
+                "Prima di procedere è meglio dare un nome al file.\n\n"
+                "Lavorando su un file senza nome potresti avere malfunzionamenti."
+            ),
+        )
+        indicator.end()
+        return
+
+    indicator.setValue(3)
+
+    import os, uno
+
+    base = os.path.basename(orig_url)
+    nome_base = ".".join(base.split(".")[:-1])
+    nuovo_nome = f"{nome_base}-{oSheet.Name}_senza_prezzi.ods"
+
+    dir_url = os.path.dirname(orig_url)
+    nuovo_url = f"{dir_url}/{nuovo_nome}"
+    sys_path = uno.fileUrlToSystemPath(nuovo_url)
+
+    # ---- CONTROLLO SOVRASCRITTURA ----
+    if os.path.exists(sys_path):
+        if Dialogs.YesNoDialog(
+            IconType="question",
+            Title="AVVISO!",
+            Text=f"Il file:\n{sys_path}\n\nesiste già.\n\nVuoi sostituirlo?",
+        ) != 1:
+            indicator.end()
             return
-        tag="_copia"
-        idSheet = oSheet.RangeAddress.Sheet + 1
-        if oDoc.getSheets().hasByName(nSheet + tag):
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text=f'La tabella di nome {nSheet}{tag} è già presente.')
-            return
-        else:
-            oDoc.Sheets.copyByName(nSheet, nSheet + tag, idSheet)
-        nSheet = nSheet + tag
-        PL.GotoSheet(nSheet)
-        # ~oSheet.protect('')  # 
-        # ~Dialogs.Info(Title = 'Ricerca conclusa', Text=f'Il foglio {nSheet} è stato protetto, ma senza password.')
 
-        oSheet = oDoc.getSheets().getByName(nSheet)
-        PL.setTabColor(10079487)
+    indicator.setValue(4)
 
-        ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-        
-        ultime_voci = set([circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow for lrow in range(6, ultima_voce)])
+    # ---- SALVATAGGIO ----
+    try:
+        oDoc.storeAsURL(nuovo_url, ())
+        Dialogs.NotifyDialog(
+            IconType="info",
+            Title="INFORMAZIONE",
+            Text=(
+                f"Salvato come:\n{sys_path}\n\n"
+                "----\n\n"
+                "NOTA:\n"
+                'Rimangono formule solo in "Quantità" e "Importo €".'
+            ),
+        )
+    except Exception as e:
+        DLG.chi(f"Errore durante il salvataggio: {e}")
+        indicator.end()
+        return
 
-        lrow = SheetUtils.getLastUsedRow(oSheet) + 1
+    # ---- MANTENERE SOLO IL FOGLIO ATTUALE ----
+    names = list(oDoc.Sheets.ElementNames)
+    for n in names:
+        if n != oSheet.Name:
+            oDoc.Sheets.removeByName(n)
 
-        oRange = oSheet.getCellRangeByPosition (1, 0, 1, lrow)
-        aSaveData = oRange.getDataArray()
-        oRange.setDataArray(aSaveData)
-
-
-        for lrow in ultime_voci:
-            oSheet.getCellByPosition(11, lrow).String = ''
-            oSheet.getCellByPosition(11, lrow).CellStyle = 'comp 1-a'
-            oSheet.getCellByPosition(18, lrow).Formula = f'=IF(ISERROR(FIND("%";I{lrow + 1}));J{lrow + 1}*L{lrow + 1};J{lrow + 1}*L{lrow + 1}/100)'
-            oSheet.getCellByPosition(0, 1).Formula = '=S2'
-
-        oSheet.getColumns().removeByIndex(19, 50)  # Rimuove le colonne inutili
+    indicator.end()
 
 
 ###############################################################################
 
 class DatiVoce:
     """
-    Classe per l'estrazione e la gestione dei dati relativi a una voce di COMPUTO o CONTABILITÀ 
+    Classe per l'estrazione e la gestione dei dati relativi a una voce di COMPUTO o CONTABILITÀ
     da un foglio di calcolo LibreOffice Calc.
 
-    Questa classe consente di accedere, in modo strutturato, ai dati associati a una voce, 
-    partendo da una riga specificata nel foglio. A seconda del tipo di foglio (COMPUTO, VARIANTE, 
+    Questa classe consente di accedere, in modo strutturato, ai dati associati a una voce,
+    partendo da una riga specificata nel foglio. A seconda del tipo di foglio (COMPUTO, VARIANTE,
     CONTABILITA), estrae e organizza le informazioni in attributi distinti.
 
     Attributi:

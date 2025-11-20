@@ -2612,7 +2612,7 @@ def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
-        sString.Text = Text or "In allestimento..."
+        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."   
 
         oDlgInfo.execute()
 
@@ -2620,6 +2620,23 @@ def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
         pass
         # DLG.chi(f"Errore in NotifyDialog(): {e}")
 
+def box_notizia(*, Image, Title, Text):
+    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
+        HSizer(Items=[
+            ImageControl(Image=Image),
+            Spacer(),
+            FixedText(Text=Text)
+        ]),
+        Spacer(),
+        HSizer(Items=[
+            Spacer(),
+            Button(Label='Ok', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH, RetVal=1),
+            Spacer()
+        ])
+    ])
+    return dlg.run()
+def notizia(*, Title='', Text=''):
+    return box_notizia(Image='Icons-Big/info.png', Title=Title, Text=Text)
 
 #######################################################################
 
@@ -2689,7 +2706,7 @@ def YesNoDialog(IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
-        sString.Text = Text or "In allestimento..."
+        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
 
         return(oDlgInfo.execute())
 

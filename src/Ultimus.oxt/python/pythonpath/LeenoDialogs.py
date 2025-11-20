@@ -115,7 +115,7 @@ def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     return MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO + DEFAULT_BUTTON_NO)
 
 
-def MsgBox(s, t=''):  # s = messaggio | t = titolo
+def MsgBox(Text, Title=''):  # s = messaggio | t = titolo
     '''
     Visualizza una message box
     '''
@@ -134,9 +134,9 @@ def MsgBox(s, t=''):  # s = messaggio | t = titolo
     # return
     # s = res
     # t = 'Titolo'
-    if t is None:
-        t = 'messaggio'
-    MessageBox(parentwin, str(s), t, 'infobox')
+    if Title is None:
+        Title = 'messaggio'
+    MessageBox(parentwin, str(Text), Title, 'infobox')
 
 
 def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTTONS_OK):

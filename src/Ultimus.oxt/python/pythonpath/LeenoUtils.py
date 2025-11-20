@@ -611,6 +611,14 @@ def convert_number_string(s: str) -> str:
     else:
         return words
 
+import textwrap
+
+def wrap_text(text: str) -> str:
+    # return "\n".join(textwrap.wrap(text, width=50))
+    lines = text.splitlines()  # mantiene il testo così com'è diviso
+    wrapped_lines = [ "\n".join(textwrap.wrap(line, width=60)) if line else "" for line in lines ]
+    return "\n".join(wrapped_lines)
+
 def wrap_path(path, max_len=72):
     """Versione ultra-compatta per wrapping percorsi"""
     parts = path.split('\\')

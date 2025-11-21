@@ -71,7 +71,7 @@ def chi(s):
             f'Numero di linea della chiamata: {line_number}\n'
             f'Nome della funzione chiamante: {function_name}()'
         )
-        
+
         # Apri il file e vai alla riga specificata
         PL.apri_con_editor(full_file_path, line_number)
 
@@ -258,7 +258,7 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
         "VARIANTE": "VAR_XLO",
         "CONTABILITA": "CON_XLO",
     }
-    
+
     Image = PL.LeenO_path() + "/python/pythonpath/Icons-Big/ok.png"
     oDlgXLO.getModel().ImageControl1.ImageURL = Image
 
@@ -272,6 +272,14 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
                     "CONTABILITA": f"C~ontabilità: {importo}",
                 }
                 oDlgXLO.getControl(ctrl).Label = etichette[nome]
+
+                if oDoc.getSheets().hasByName("COMPUTO"):
+                    oDlgXLO.getControl("CME_XLO").State = 1
+                elif oDoc.getSheets().hasByName("VARIANTE"):
+                    oDlgXLO.getControl("VAR_XLO").State = 1
+                elif oDoc.getSheets().hasByName("CONTABILITA"):
+                    oDlgXLO.getControl("CON_XLO").State = 1
+
             except Exception:
                 oDlgXLO.getControl(ctrl).Label = f"~{nome.capitalize()}: (nessun dato)"
                 oDlgXLO.getControl(ctrl).Enable = False
@@ -284,23 +292,13 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
         for ctrl, testo in etichette.items():
             oDlgXLO.getControl(ctrl).Label = testo
 
-    if not oDoc.getSheets().hasByName("VARIANTE"):
-        oDlgXLO.getControl("CME_XLO").Enable = False
-        oDlgXLO.getControl("VAR_XLO").State = 1
-        oDlgXLO.getControl("CON_XLO").Enable = False
-    if not oDoc.getSheets().hasByName("CONTABILITA"):
-        oDlgXLO.getControl("CME_XLO").State = 1
-        oDlgXLO.getControl("VAR_XLO").Enable = False
-        oDlgXLO.getControl("CON_XLO").Enable = False
-
-    if ( not oDoc.getSheets().hasByName("VARIANTE") and
-        not oDoc.getSheets().hasByName("CONTABILITA")
-    ):
-        Dialogs.Info(
-            Title="Informazione",
-            Text="Nessuna Variante o Contabilità presente per il confronto."
-        )
-        return
+        if ( not oDoc.getSheets().hasByName("VARIANTE") and
+            not oDoc.getSheets().hasByName("CONTABILITA")):
+            Dialogs.Info(
+                Title="Informazione",
+                Text="Nessuna Variante o Contabilità presente per il confronto."
+            )
+            return
 
     # Esegue il dialogo
     if oDlgXLO.execute() != 1:

@@ -3885,9 +3885,9 @@ def XPWE_out_run(elaborato, out_file):
         Dialogs.Exclamation(Title = 'INFORMAZIONE',
         Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file)}'
 '\n\n----\n'
-'Il formato XPWE è un formato XML di interscambio per Primus di ACCA.\n\n'
-'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali\n'
-'di Spese Generali e Utile d\'Impresa siano impostate correttamente,\n'
+'Il formato XPWE è un formato XML di interscambio per Primus di ACCA. '
+'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali'
+'di Spese Generali e Utile d\'Impresa siano impostate correttamente,'
 'in modo da garantire l\'esatta elaborazione dei dati.')
     except IOError:
         Dialogs.Exclamation(Title = 'E R R O R E !',

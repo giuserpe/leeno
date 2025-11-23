@@ -12,8 +12,10 @@ from os.path import isfile, join
 
 import unohelper
 from com.sun.star.task import XJobExecutor
-import Dialogs
-import LeenoUtils
+
+# ####### L'import di librerie ulteriori blocca l'installazione dell'estensione
+# import Dialogs
+# import LeenoUtils
 
 import uno
 import traceback
@@ -132,9 +134,9 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             func = getattr(module, ModFunc[1])
             if func is None:
                 print("Function '", ModFunc[1], "' not found in Module '", ModFunc[0], "'")
-                Dialogs.Exclamation(
-                    Title="Errore interno",
-                    Text=f"Funzione '{ModFunc[1]}' non trovata nel modulo '{ModFunc[0]}'")
+                # Dialogs.Exclamation(
+                    # Title="Errore interno",
+                    # Text=f"Funzione '{ModFunc[1]}' non trovata nel modulo '{ModFunc[0]}'")
                 return
 
             # call the handler, depending of number of arguments
@@ -145,7 +147,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         except Exception as e:
             # msg = traceback.format_exc()
-            LeenoUtils.DocumentRefresh(True) # abilita il refresh
+            # LeenoUtils.DocumentRefresh(True) # abilita il refresh
 # Aggiunge info generiche su SO, LO e LeenO
             pir = uno.getComponentContext().getValueByName(
                 '/singletons/com.sun.star.deployment.PackageInformationProvider')
@@ -172,10 +174,11 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             tbInfo = traceback.extract_tb(tb)[-1]
             function = tbInfo.name
             line = tbInfo.lineno
-            file = os.path.split(tbInfo.filename)[1]
+            # ~ filen = os.path.split(tbInfo.filename)[1]
+            filen = os.path.basename(tbInfo.filename)
             msg = (
                 msg +
-                "File:     '" + file + "'\n" +
+                "File:     '" + filen + "'\n" +
                 "Line:     '" + str(line) + "'\n" +
                 "Function: '" + function + "'\n")
             msg += "-" * 30 + "\n"
@@ -183,14 +186,15 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             for bkInfo in traceback.extract_tb(tb):
                 function = bkInfo.name
                 line = str(bkInfo.lineno)
-                file = os.path.split(bkInfo.filename)[1]
-                msg += f"File:{file}, Line:{line}, Function:{function}\n"
+                # ~ filen = os.path.split(bkInfo.filename)[1]
+                filen = os.path.basename(tbInfo.filename)
+                msg += f"File: {filen}, Line: {line}, Function: {function}\n"
             msg += "\n"
             # messaggi di errore solo per me
             if 'giuserpe' in os.getlogin():
-                msg += '------------------------------\n' + traceback.format_exc()
+                msg += "+-" * 30 + "\n" + traceback.format_exc()
 
-            Dialogs.Exclamation(Title="Errore interno", Text=msg)
+            # Dialogs.Exclamation(Title=f"Errore interno: {e} ", Text=msg)
 
 
 g_ImplementationHelper = unohelper.ImplementationHelper()

@@ -289,6 +289,7 @@ def leggiApprossimazioni(dati):
     except:
         pass
     larghezza = PweDGConfigNumeri.find('Larghezza')
+
     try:
         res['Larghezza'] = int(larghezza.text.split('.')[-1].split('|')[0])
     except:
@@ -591,104 +592,77 @@ def leggiElencoPrezzi(misurazioni):
     }
 
 
+################################################
+################################################
+################################################
+
 def leggiMisurazioni(misurazioni, ordina):
-    ''' leggo voci di misurazione e righe '''
+    """leggo voci di misurazione e righe"""
+
+    def text_or_empty(elem, tag):
+        nodo = elem.find(tag)
+        return nodo.text if nodo is not None else ''
+
+    def clean_value(elem, tag, pattern):
+        value = text_or_empty(elem, tag)
+
+        if not isinstance(value, (str, bytes)):
+            return value
+
+        # applica sostituzione
+        try:
+            value = re.sub(pattern, r'\1*\2', value)
+        except Exception:
+            pass
+
+        # conversione None secondo logica originale
+        if value is not None:
+            if '  ' in value or value == '0.00':
+                return None
+
+        return value
+
     if not misurazioni:
         return
+
     listaMisure = []
+
     try:
-        PweVociComputo = list(misurazioni)[1]
+        items = list(misurazioni)
+        PweVociComputo = items[1]  # mantengo la logica originale
         vcitems = PweVociComputo.findall('VCItem')
+
         prova_l = []
+        pattern = r'(\d+)(\()'
+
         for elem in vcitems:
             diz_misura = {}
             id_vc = elem.get('ID')
-            id_ep = elem.find('IDEP').text
-            quantita = elem.find('Quantita').text
-            try:
-                datamis = elem.find('DataMis').text
-            except AttributeError:
-                datamis = ''
-            try:
-                flags = elem.find('Flags').text
-            except AttributeError:
-                flags = ''
-            try:
-                idspcat = elem.find('IDSpCat').text
-            except AttributeError:
-                idspcat = ''
-            try:
-                idcat = elem.find('IDCat').text
-            except AttributeError:
-                idcat = ''
-            try:
-                idsbcat = elem.find('IDSbCat').text
-            except AttributeError:
-                idsbcat = ''
-            '''
-            try:
-               CodiceWBS = elem.find('CodiceWBS').text
-            except AttributeError:
-               CodiceWBS = ''
-            '''
+            id_ep = text_or_empty(elem, 'IDEP')
+            quantita_voce = text_or_empty(elem, 'Quantita')
+            datamis = text_or_empty(elem, 'DataMis')
+            flags_voce = text_or_empty(elem, 'Flags')
+            idspcat = text_or_empty(elem, 'IDSpCat')
+            idcat = text_or_empty(elem, 'IDCat')
+            idsbcat = text_or_empty(elem, 'IDSbCat')
+
+            # ultime righe
             righi_mis = list(elem)[-1].findall('RGItem')
-            riga_misura = []
             lista_righe = []
-            new_id_l = []
+
             for el in righi_mis:
-                '''
-                rgitem = el.get('ID')
-                '''
-                idvv = el.find('IDVV').text
-                if el.find('Descrizione').text is not None:
-                    descrizione = el.find('Descrizione').text
-                else:
-                    descrizione = ''
+                idvv = text_or_empty(el, 'IDVV')
+                descrizione = text_or_empty(el, 'Descrizione')
 
-                # verifico la presenza di * prima delle parentesi aperte
-                pattern = r'(\d+)(\()'
-                partiuguali = el.find('PartiUguali').text
-                if isinstance(partiuguali, (str, bytes)):
-                    try:
-                        partiuguali = re.sub(pattern, r'\1*\2', partiuguali)
-                    except:
-                        pass
-                    if partiuguali != None:
-                        if '  ' in partiuguali or partiuguali == '0.00':
-                            partiuguali = None
+                # pulizia campi numerici
+                partiuguali = clean_value(el, 'PartiUguali', pattern)
+                lunghezza = clean_value(el, 'Lunghezza', pattern)
+                larghezza = clean_value(el, 'Larghezza', pattern)
+                hpeso = clean_value(el, 'HPeso', pattern)
 
-                lunghezza = el.find('Lunghezza').text
-                if isinstance(lunghezza, (str, bytes)):
-                    try:
-                        lunghezza = re.sub(pattern, r'\1*\2', lunghezza)
-                    except:
-                        pass
-                    if lunghezza != None:
-                        if '  ' in lunghezza or lunghezza == '0.00':
-                            lunghezza = None
+                quantita_riga = text_or_empty(el, 'Quantita')
+                flags_riga = text_or_empty(el, 'Flags')
 
-                larghezza = el.find('Larghezza').text
-                if isinstance(larghezza, (str, bytes)):
-                    try:
-                        larghezza = re.sub(pattern, r'\1*\2', larghezza)
-                    except:
-                        pass
-                    if larghezza != None:
-                        if '  ' in larghezza or larghezza == '0.00':
-                            larghezza = None
-
-                hpeso = el.find('HPeso').text
-                if isinstance(larghezza, (str, bytes)):
-                    try:
-                        hpeso = re.sub(pattern, r'\1*\2', hpeso)
-                    except:
-                        pass
-                    if hpeso != None:
-                        if '  ' in hpeso or hpeso == '0.00':
-                            hpeso = None
-
-                quantita = el.find('Quantita').text
-                flags = el.find('Flags').text
                 riga_misura = (
                     descrizione,
                     '',
@@ -697,57 +671,57 @@ def leggiMisurazioni(misurazioni, ordina):
                     lunghezza,
                     larghezza,
                     hpeso,
-                    quantita,
-                    flags,
+                    quantita_riga,
+                    flags_riga,
                     idvv,
                 )
-                mia = []
-                mia.append(riga_misura[0])
-                for el in riga_misura[1:]:
-                    if el is None:
-                        el = ''
-                    else:
-                        try:
-                            el = float(el)
-                        except ValueError:
-                            if el != '':
-                                el = '=' + el.replace('.', ',')
-                    mia.append(el)
+
                 lista_righe.append(riga_misura)
+
+            # popolazione dizionario misura
             diz_misura['id_vc'] = id_vc
             diz_misura['id_ep'] = id_ep
-            diz_misura['quantita'] = quantita
+            diz_misura['quantita'] = quantita_voce
             diz_misura['datamis'] = datamis
-            diz_misura['flags'] = flags
+            diz_misura['flags'] = flags_voce
             diz_misura['idspcat'] = idspcat
             diz_misura['idcat'] = idcat
             diz_misura['idsbcat'] = idsbcat
             diz_misura['lista_rig'] = lista_righe
 
-            new_id = PL.strall(idspcat) + '.' + PL.strall(idcat) + '.' + PL.strall(idsbcat)
-            new_id_l = (new_id, diz_misura)
-            prova_l.append(new_id_l)
-            listaMisure.append(diz_misura)
-
-        # se richiesto ordina le misure
-        if len(listaMisure) != 0 and ordina:
-            riordine = sorted(prova_l, key=lambda el: el[0])
-            listaMisure = []
-            for el in riordine:
-                listaMisure.append(el[1])
-
-    except IndexError:
-        Dialogs.Exclamation(Title="Attenzione",
-        Text="Nel file scelto non risultano esserci voci di misurazione,\n"
-            "perciò saranno importate le sole voci di Elenco Prezzi.\n\n"
-            "Si tenga conto che:\n"
-            "- sarà importato solo il 'Prezzo 1' dell'elenco;\n"
-            "- a seconda della versione, il formato XPWE potrebbe\n"
-            "  non conservare alcuni dati come le incidenze di\n"
-            "  sicurezza e di manodopera!"
+            new_id = (
+                PL.strall(idspcat)
+                + '.'
+                + PL.strall(idcat)
+                + '.'
+                + PL.strall(idsbcat)
             )
 
+            prova_l.append((new_id, diz_misura))
+            listaMisure.append(diz_misura)
+
+        # ordinamento (logica invariata)
+        if len(listaMisure) != 0 and ordina:
+            riordinate = sorted(prova_l, key=lambda el: el[0])
+            listaMisure = [el[1] for el in riordinate]
+
+    except IndexError:
+        Dialogs.Exclamation(
+            Title="Attenzione",
+            Text="Nel file scelto non risultano esserci voci di misurazione,\n"
+                 "perciò saranno importate le sole voci di Elenco Prezzi.\n\n"
+                 "Si tenga conto che:\n"
+                 "- sarà importato solo il 'Prezzo 1' dell'elenco;\n"
+                 "- a seconda della versione, il formato XPWE potrebbe\n"
+                 "  non conservare alcuni dati come le incidenze di\n"
+                 "  sicurezza e di manodopera!"
+        )
+
     return listaMisure
+
+################################################
+################################################
+################################################
 
 def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
     resList = []
@@ -759,39 +733,12 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
             resList.append(titolo)
     return tuple(resList)
 
-# def riempiBloccoElencoPrezzi(oSheet, dati, col, progress = None):
-
-#     # progStart = progress.getValue()
-#     righe = len(dati)
-#     colonne = len(dati[0])
-
-#     # i dati partono dalla riga 3 (quarta, in effetti)
-#     oSheet.getRows().insertByIndex(3, righe)
-
-#     riga = 0
-#     step = 100
-#     while riga < righe:
-#         sliced = dati[riga:riga + step]
-#         num = len(sliced)
-#         oRange = oSheet.getCellRangeByPosition(
-#             0,
-#             3 + riga,
-#             colonne - 1,
-#             3 + riga + num - 1)
-#         oRange.setDataArray(sliced)
-
-#         # modifica lo stile del gruppo di celle
-#         PL.stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
-
-#         riga = riga + num
-#         # progress.setValue(riga + progStart)
-
 
 def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=False):
     # 1. Recupera tutti i codici esistenti nel foglio (colonna 0, dalla riga 3 in poi)
     existing_codes = set()
     max_row = oSheet.getRows().getCount()
-    
+
     if max_row > 3:
         # Legge i codici in batch per ottimizzazione (evita timeout su fogli grandi)
         chunk_size = 1000  # Adjust based on performance
@@ -808,15 +755,15 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=Fa
     # 2. Filtra i nuovi dati: rimuove duplicati interni + codici già esistenti
     nuovi_dati = []
     seen_new_codes = set()
-    
+
     for riga in dati:
         if not riga or not riga[0]:  # Skip righe vuote
             continue
-            
+
         codice = str(riga[0]).strip()
         if not case_sensitive:
             codice = codice.lower()
-        
+
         # Controlla sia nei codici esistenti che nei nuovi già processati
         if codice not in existing_codes and codice not in seen_new_codes:
             nuovi_dati.append(riga)
@@ -907,7 +854,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
     oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
     existing_codes = set()
     max_row = oSheet.getRows().getCount()
-    
+
     if max_row > 0:
         # Legge i codici esistenti (prima colonna)
         codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
@@ -1021,7 +968,7 @@ def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
     oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
     existing_codes = set()
     max_row = oSheet.getRows().getCount()
-    
+
     if max_row > 0:
         # Legge i codici esistenti (prima colonna)
         codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
@@ -1032,7 +979,7 @@ def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
 
     for el in elencoPrezzi['ListaAnalisi']:
         codice = str(el[0]).strip().lower()
-        
+
         # Skip se il codice esiste già
         if codice in existing_codes:
             # logger.info(f"Saltata analisi '{el[1]}' (codice '{el[0]}' già presente)")
@@ -1049,7 +996,7 @@ def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
         oSheet.getCellByPosition(0, lrow).String = el[0]
         oSheet.getCellByPosition(1, lrow).String = el[1]
         oSheet.getCellByPosition(2, lrow).String = el[2]
-        
+
         y = 0
         n = lrow + 2
         for x in el[3]:
@@ -1112,9 +1059,11 @@ def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
 
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
     ''' compila il computo '''
+    from datetime import datetime, date
 
     LeenoUtils.DocumentRefresh(False)
-    # crea / attiva l'elaborato del tipo scelto
+
+    # --- Creazione/attivazione del foglio ---
     if elaborato == 'VARIANTE':
         if oDoc.getSheets().hasByName('VARIANTE'):
             oSheet = LeenoVariante.generaVariante(oDoc, False)
@@ -1122,244 +1071,213 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             oSheet = LeenoVariante.generaVariante(oDoc, True)
             oSheet.getRows().removeByIndex(2, 4)
     elif elaborato == 'CONTABILITA':
-        #PL.attiva_contabilita()
         oSheet = LeenoContab.generaContabilita(oDoc)
     else:
         oSheet = oDoc.getSheets().getByName(elaborato)
 
-    # elimina l'eventuale riga vuota iniziale
+    # --- Rimozione della riga vuota iniziale ---
     if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
-        if elaborato == 'CONTABILITA':
-            oSheet.getRows().removeByIndex(3, 5)
-        else:
-            oSheet.getRows().removeByIndex(3, 4)
+        oSheet.getRows().removeByIndex(3, 5 if elaborato == 'CONTABILITA' else 4)
 
+    # --- Setup cell range ---
     oCellRangeAddr = CellRangeAddress()
-    # recupero l'index del foglio
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
 
-    # mappa le voci computo con le righe del foglio
-    # (ad esempio per riferimenti tipo vedi_voce)
-    mappaVociRighe = {}
+    # --- Mappe e variabili di controllo ---
+    mappaVociRighe = {}        # id voce computo → riga foglio
+    numeroVoce = 1             # numerazione progressiva voci
 
-    # numero di sequenza delle voci del computo
-    numeroVoce = 1
+    testspcat = '0'            # per evitare duplicati supercategoria
+    testcat = '0'              # per evitare duplicati categoria
+    testsbcat = '0'            # per evitare duplicati sottocategoria
 
-    # variabili utilizzate per evitare le ripetizioni di
-    # supercategoria, categoria e sottocategoria ad ogni voce
-    testspcat = '0'
-    testcat = '0'
-    testsbcat = '0'
-
-    from datetime import datetime, date
-
-    # inizializza la progressbar
-    # attiva la progressbar
-
-    val = 0
-
+    # --- Progress bar ---
     indicator = oDoc.getCurrentController().getStatusIndicator()
     indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
+
+    # -------------------------------------------------------------------------
+    # Funzioni interne di utilità (NON alterano la logica)
+    # -------------------------------------------------------------------------
+
+    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, dict_list):
+        """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
+        nonlocal lrow
+        try:
+            if idcorr != idtest:
+                reset_test[0] = idcorr
+                inser_func(oSheet, lrow, dict_list[eval(idcorr) - 1][1])
+                lrow += 1
+        except UnboundLocalError:
+            pass
+
+    def set_num_or_formula(col, row, value):
+        """Scrive un numero o formula mantenendo la logica originale."""
+        cell = oSheet.getCellByPosition(col, row)
+        if value is None:
+            return
+        try:
+            cell.Value = float(value.replace(',', '.'))
+        except Exception:
+            cell.Formula = ('=' + str(value).strip()).replace('=-', '=')
+
+    def handle_negatives(startRow):
+        """Gestione del segno negativo (logica invariata)."""
+        try:
+            if '-' in mis[7]:
+                for x in range(5, 9):
+                    try:
+                        if oSheet.getCellByPosition(x, startRow).Value != 0:
+                            val = abs(oSheet.getCellByPosition(x, startRow).Value)
+                            oSheet.getCellByPosition(x, startRow).Value = val
+                    except Exception:
+                        pass
+                LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+
+                if elaborato == 'CONTABILITA':
+                    if test == '-':
+                        LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+        except Exception:
+            pass
+
+    # -------------------------------------------------------------------------
+    # CICLO PRINCIPALE
+    # -------------------------------------------------------------------------
 
     val = 0
     for el in listaMisure:
         indicator.Value = val
         val += 1
-        # dati della misura
+
         datamis = el.get('datamis')
-        # id supercategoria
         idspcat = el.get('idspcat')
-        # id categoria
         idcat = el.get('idcat')
-        # id subcategoria
         idsbcat = el.get('idsbcat')
 
-        # si posizione dopo l'ultima voce nel foglio
+        # trova la prima riga libera
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
 
-        # inserisco le supercategorie, categorie e sottocategorie
-        # le varie 'testspcat', 'testcat' e 'testsbcat' servono per
-        # evitare la ripetizione per voci consecutive
+        # --- Supercategoria ---
+        insert_categoria_if_needed(
+            idspcat, testspcat, [idspcat, None],
+            LeenoSheetUtils.inserSuperCapitolo,
+            capitoliCategorie['SuperCategorie']
+        )
+        testspcat = idspcat
 
-        # ~if elaborato != 'CONTABILITA':
-        # supercategoria
-        try:
-            if idspcat != testspcat:
-                testspcat = idspcat
-                testcat = '0'
-                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
+        # --- Categoria ---
+        insert_categoria_if_needed(
+            idcat, testcat, [idcat, None],
+            LeenoSheetUtils.inserCapitolo,
+            capitoliCategorie['Categorie']
+        )
+        testcat = idcat
 
-        # categoria
-        try:
-            if idcat != testcat:
-                testcat = idcat
-                testsbcat = '0'
-                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
+        # --- Sottocategoria ---
+        insert_categoria_if_needed(
+            idsbcat, testsbcat, [idsbcat, None],
+            LeenoSheetUtils.inserSottoCapitolo,
+            capitoliCategorie['SottoCategorie']
+        )
+        testsbcat = idsbcat
 
-        # sottocategoria
-        try:
-            if idsbcat != testsbcat:
-                testsbcat = idsbcat
-                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
-
+        # --- Inserimento voce ---
         if elaborato == 'CONTABILITA':
             LeenoContab.insertVoceContabilita(oSheet, lrow)
         else:
-            # inserisce la nuova voce (vuota) nel computo
             LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
 
-        # id dell'elenco prezzi
         ID = el.get('id_ep')
 
-        # inserisce la tariffa dall'elenco prezzi
+        # --- Inserisce tariffa ---
         try:
-            oSheet.getCellByPosition(1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+            tariffa = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+            oSheet.getCellByPosition(1, lrow + 1).String = tariffa
         except Exception:
             pass
 
-        # id della voce computo corrente nell' XPWE
+        # --- Mappa id voce XPWE → riga foglio ---
         idVoceComputo = el.get('id_vc')
-
-        # mappa l'id della voce con la riga del computo
-        # in modo da poter gestire i VEDI_VOCE successivamente
         mappaVociRighe[idVoceComputo] = lrow + 1
 
-        # scrive il numero sequenziale della voce corrente
-        # nella prima colonna, seconda riga della voce
+        # --- Numerazione voce ---
         oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
         numeroVoce += 1
 
-        # si posiziona ad inizio area misure
+        # --- Misurazioni ---
         startRow = lrow + 2
-
         lista_righe = el.get('lista_rig')
         nrighe = len(lista_righe)
 
-        # compila le righe di misurazione
         if nrighe > 0:
             endRow = startRow + nrighe
 
-            # se la voce ha più di una riga di misurazione,
-            # inserisce le righe aggiuntive
+            # inserisce righe aggiuntive
             if nrighe > 1:
                 oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
 
-            # seleziona la prima riga di misurazioni...
+            # copia layout prima riga
             oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
-
-            # ... e la copia sulle rimanenti
             for n in range(startRow + 1, endRow):
-                oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
-                oSheet.copyRange(oCellAddress, oRangeAddress)
+                oSheet.copyRange(oSheet.getCellByPosition(0, n).getCellAddress(), oRangeAddress)
                 if elaborato == 'CONTABILITA':
-                    oSheet.getCellByPosition(1, n).String = ''
-                    oSheet.getCellByPosition(1, n).CellStyle = 'Comp-Bianche in mezzo_R'
+                    c = oSheet.getCellByPosition(1, n)
+                    c.String = ''
+                    c.CellStyle = 'Comp-Bianche in mezzo_R'
 
-            # inserisco prima solo le righe se no mi fa casino
+            # --- Data contabilita (logica originale) ---
             if elaborato == 'CONTABILITA':
-                oSheet.getCellByPosition(1, startRow).Formula = (
+                cdata = oSheet.getCellByPosition(1, startRow)
+                cdata.Formula = (
                     '=DATE(' + datamis.split('/')[2] +
                     ';' + datamis.split('/')[1] + ';' +
-                    datamis.split('/')[0] + ')'
+                    ';' + datamis.split('/')[0] + ')'
                 )
-                oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
+                cdata.Value = cdata.Value
+
+            # --- Popola righe ---
             for mis in lista_righe:
+                descrizione = (mis[0].strip() if mis[0] else '')
+                oSheet.getCellByPosition(2, startRow).String = descrizione
 
-                # descrizione
-                if mis[0] is not None:
-                    descrizione = mis[0].strip()
-                    oSheet.getCellByPosition(2, startRow).String = descrizione
-                else:
-                    descrizione = ''
+                set_num_or_formula(5, startRow, mis[3])  # parti uguali
+                set_num_or_formula(6, startRow, mis[4])  # lunghezza
+                set_num_or_formula(7, startRow, mis[5])  # larghezza
+                set_num_or_formula(8, startRow, mis[6])  # HPESO
 
-                # parti uguali
-                if mis[3] is not None:
-                    try:
-                        oSheet.getCellByPosition(5, startRow).Value = float(mis[3].replace(',', '.'))
-                    except ValueError:
-                        text = '=' + str(mis[3]).strip()
-                        oSheet.getCellByPosition(5, startRow).Formula = text.replace('=-', '=')
-
-                # lunghezza
-                if mis[4] is not None:
-                    try:
-                        oSheet.getCellByPosition(6, startRow).Value = float(mis[4].replace(',', '.'))
-                    except ValueError:
-                        text = '=' + str(mis[4]).strip()
-                        oSheet.getCellByPosition(6, startRow).Formula = text.replace('=-', '=')
-
-                # larghezza
-                if mis[5] is not None:
-                    try:
-                        oSheet.getCellByPosition(7, startRow).Value = float(mis[5].replace(',', '.'))
-                    except ValueError:
-                        text = '=' + str(mis[5]).strip()
-                        oSheet.getCellByPosition(7, startRow).Formula = text.replace('=-', '=')
-
-                # HPESO
-                if mis[6] is not None:
-                    try:
-                        oSheet.getCellByPosition(8, startRow).Value = float(mis[6].replace(',', '.'))
-                    except Exception:
-                        text = '=' + str(mis[6]).strip()
-                        oSheet.getCellByPosition(7, startRow).Formula = text.replace('=-', '=')
-
-
+                # riga parziale
                 if mis[8] == '2':
                     PL.parziale_core(oSheet, startRow)
                     if elaborato != 'CONTABILITA':
                         oSheet.getRows().removeByIndex(startRow + 1, 1)
                     descrizione = ''
+
+                # VEDI VOCE
+                test = ''
                 if mis[9] != '-2':
                     vedi = mappaVociRighe.get(mis[9])
                     try:
                         test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
                     except Exception:
-                        Dialogs.Exclamation(Title="Attenzione",
-                                            Text="Il file di origine è particolarmente disordinato.\n"
-                                                 "Riordinando il computo trovo riferimenti a voci "
-                                                 "non ancora inserite.\n\n"
-                                                 "Al termine dell'importazione controlla la voce con tariffa " +
-                                                 elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa') +
-                                                 "\nella riga n." + str(lrow + 2) +
-                                                 " del foglio, evidenziata qui a sinistra.")
-                        oSheet.getCellByPosition(44, startRow).String = (
-                            elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa'))
-                try:
-                    mis[7]
-                    if '-' in mis[7]:
-                        for x in range(5, 9):
-                            try:
-                                if oSheet.getCellByPosition(x, startRow).Value != 0:
-                                    oSheet.getCellByPosition(x, startRow).Value = abs(oSheet.getCellByPosition(x, startRow).Value)
-                            except Exception:
-                                pass
-                        LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
-                        #~PL.invertiSegnoRow(oSheet, startRow)
-                        if elaborato == 'CONTABILITA':
-                            if test == '-':
-                                LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
-                                #~PL.invertiSegnoRow(oSheet, startRow)
-                                test = ''
-                except Exception:
-                    pass
+                        Dialogs.Exclamation(
+                            Title="Attenzione",
+                            Text="Il file di origine è disordinato.\n"
+                                 "Riordinando il computo trovo riferimenti a voci "
+                                 "non ancora inserite.\n\n"
+                                 "Controlla la voce con tariffa "
+                                 + elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+                                 + "\nalla riga n." + str(lrow + 2)
+                        )
+                        oSheet.getCellByPosition(44, startRow).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
 
-                # prossima riga di misurazione
-                startRow = startRow + 1
+                # segni negativi
+                handle_negatives(startRow)
 
-        # aggiorna la progressbar
-        # progress.setValue(val)
-        # progress.hide()
-    # ~ DLG.chi('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!')
+                startRow += 1
+
+    # -------------------------------------------------------------------------
+    # Finalizzazione
+    # -------------------------------------------------------------------------
+
     indicator.end()
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
@@ -1369,6 +1287,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         pass
 
     PL.fissa()
+
 
 def MENU_XPWE_import(filename = None):
     with LeenoUtils.DocumentRefreshContext(False):

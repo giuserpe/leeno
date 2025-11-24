@@ -4485,10 +4485,7 @@ def MENU_analisi_in_ElencoPrezzi():
         for col, formula in formule.items():
             oSheet.getCellByPosition(col, target_row).Formula = formula
         _gotoCella("A5")
-        # oDoc.enableAutomaticCalculation(True)
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-
-
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 
@@ -5212,11 +5209,12 @@ def Copia_riga_Ent(num_righe=1):
 
     if nome_sheet in azioni:
         for _ in range(num_righe):
-            if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA','Elenco Prezzi'):
                 dettaglio_misura_rigo()
             azioni[nome_sheet](lrow)
             lrow += 1
     oSheet.getCellRangeByPosition(0, lrow, 0, lrow).Rows.OptimalHeight = True
+
 
 ########################################################################
 def cerca_partenza():
@@ -6813,6 +6811,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
             ins_voce_elenco()
         elif oDoc.getSheets().hasByName('GIORNALE_BIANCO'):
             LeenoGiornale.MENU_nuovo_giorno()
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 # nuova_voce_contab  ##################################################
@@ -11988,9 +11987,46 @@ def stop_all_scripts_and_close_dialogs():
 ########################################################################
 ########################################################################
 ########################################################################
+def count_clipboard_lines():
+        import uno
+        ctx = LeenoUtils.getComponentContext()
+        smgr = ctx.getServiceManager()
+        clip = smgr.createInstanceWithContext("com.sun.star.datatransfer.clipboard.SystemClipboard", ctx)
+
+        # Ottiene il contenuto della clipboard
+        transferable = clip.getContents()
+
+        # Cerca il formato text/plain
+        flavors = transferable.getTransferDataFlavors()
+
+        text = None
+        for flavor in flavors:
+            if "text/plain" in flavor.MimeType:
+                data = transferable.getTransferData(flavor)
+                # data è già uno str in UTF-16 → usalo direttamente
+                text = str(data)
+                break
+
+        if text is None:
+            return 0
+
+        # Conta le righe
+        num_lines = len(text.splitlines())
+
+        # Restituisce il valore
+        return num_lines
 
 def MENU_debug():
-    salva_senza_prezzi()
+    LeenoSheetUtils.memorizza_posizione()
+    nr = count_clipboard_lines()
+    Copia_riga_Ent()
+    Copia_riga_Ent(nr - 1)
+    LeenoSheetUtils.ripristina_posizione()
+    lrow = LeggiPosizioneCorrente()[1]
+    _gotoCella(2, lrow + 1)
+    paste_clip()
+    return
+
     return
     oDoc = LeenoUtils.getDocument()
     filename = oDoc.getURL()

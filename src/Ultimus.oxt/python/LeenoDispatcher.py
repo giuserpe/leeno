@@ -1,204 +1,147 @@
-'''
-    LeenO menu and basic function dispatcher
-'''
-
 import sys
 import os
 import inspect
 import importlib
-
-from os import listdir
-from os.path import isfile, join
-
+import traceback
+import uno
 import unohelper
 from com.sun.star.task import XJobExecutor
-
-# ####### L'import di librerie ulteriori blocca l'installazione dell'estensione
-# import Dialogs
-# import LeenoUtils
-
-import uno
-import traceback
 from com.sun.star.awt import MessageBoxButtons as MSG_BUTTONS
+from datetime import datetime
+
 def msgbox(*, Title='Errore interno', Message=''):
-    """ Create message box
-        type_msg: infobox, warningbox, errorbox, querybox, messbox
-        http://api.libreoffice.org/docs/idl/ref/interfacecom_1_1sun_1_1star_1_1awt_1_1XMessageBoxFactory.html
-    """
-    ctx = uno.getComponentContext()
-    sm = ctx.getServiceManager()
-    toolkit = sm.createInstance('com.sun.star.awt.Toolkit')
-    parent = toolkit.getDesktopWindow()
-    buttons=MSG_BUTTONS.BUTTONS_OK
-    type_msg='errorbox'
-    mb = toolkit.createMessageBox(parent, type_msg, buttons, Title, str(Message))
-    return mb.execute()
-
-# set this to 1 to enable debugging
-# set to 0 before deploying
-ENABLE_DEBUG = 1
-
-# set this one to 0 for deploy mode
-# leave to 1 if you want to disable python cache
-# to be able to modify and run installed extension
-DISABLE_CACHE = 1
-
-if ENABLE_DEBUG == 1:
-    pass
-
+    """ Create message box in LibreOffice """
+    try:
+        ctx = uno.getComponentContext()
+        sm = ctx.getServiceManager()
+        toolkit = sm.createInstance('com.sun.star.awt.Toolkit')
+        parent = toolkit.getDesktopWindow()
+        buttons = MSG_BUTTONS.BUTTONS_OK
+        type_msg = 'errorbox'
+        mb = toolkit.createMessageBox(parent, type_msg, buttons, Title, str(Message))
+        return mb.execute()
+    except:
+        print("Errore nella creazione del msgbox:", Message)
+        return -1
 
 def loVersion():
-    '''
-    Legge il numero di versione di LibreOffice.
-    '''
-    aConfigProvider = uno.getComponentContext().ServiceManager.createInstance("com.sun.star.configuration.ConfigurationProvider")
+    aConfigProvider = uno.getComponentContext().ServiceManager.createInstance(
+        "com.sun.star.configuration.ConfigurationProvider")
     arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
     arg.Name = "nodepath"
     arg.Value = '/org.openoffice.Setup/Product'
     return aConfigProvider.createInstanceWithArguments(
-        "com.sun.star.configuration.ConfigurationAccess",
-        (arg, )).ooSetupVersionAboutBox
+        "com.sun.star.configuration.ConfigurationAccess", (arg, )
+    ).ooSetupVersionAboutBox
 
 def fixPythonPath():
-    '''
-    This function should fix python path adding it to current sys path
-    if not already there
-    Useless here, just kept for reference
-    '''
-    # dirty trick to have pythonpath added if missing
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     myPath = os.path.join(myPath, "pythonpath")
     if myPath not in sys.path:
         sys.path.append(myPath)
 
-
 def reloadLeenoModules():
-    '''
-    This function reload all Leeno modules found in pythonpath
-    '''
-    # get our pythonpath
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     myPath = os.path.join(myPath, "pythonpath")
-
-    # we need a listing of modules. We look at pythonpath ones
-    pythonFiles = [f[: -3] for f in listdir(myPath) if isfile(join(myPath, f)) and f.endswith(".py")]
+    if not os.path.exists(myPath):
+        return
+    pythonFiles = [f[:-3] for f in os.listdir(myPath) if os.path.isfile(os.path.join(myPath, f)) and f.endswith(".py")]
     for f in pythonFiles:
-        #~ print("Loading module:", f)
-        module = importlib.import_module(f)
+        try:
+            module = importlib.import_module(f)
+            importlib.reload(module)
+        except Exception:
+            print(f"Errore ricaricando il modulo: {f}")
 
-        # reload the module
-        importlib.reload(module)
+def handle_exception(e):
+    try:
+        pir = uno.getComponentContext().getValueByName(
+            '/singletons/com.sun.star.deployment.PackageInformationProvider')
+        expath_url = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
+        expath = uno.fileUrlToSystemPath(expath_url)  # <-- CORRETTO per Windows
 
+        code_file = os.path.join(expath, 'leeno_version_code')
+        version_line = ''
+        if os.path.exists(code_file):
+            with open(code_file, 'r', encoding='utf-8') as f:
+                version_line = f.readline().strip()
 
+        msg = (
+            f"OS: {sys.platform} / LibreOffice-{loVersion()} / {version_line}\n\n"
+            f"Errore: {str(e)}\n\n"
+        )
+
+        sysinfo = sys.exc_info()
+        tb = sysinfo[2]
+        if tb:
+            tbInfo = traceback.extract_tb(tb)[-1]
+            filen = os.path.basename(tbInfo.filename)
+            msg += (
+                f"File: '{filen}'\n"
+                f"Line: '{tbInfo.lineno}'\n"
+                f"Function: '{tbInfo.name}'\n"
+            )
+
+        msg += "-"*30 + "\nBACKTRACE:\n"
+        for bk in traceback.extract_tb(tb):
+            filen = os.path.basename(bk.filename)
+            msg += f"File: {filen}, Line: {bk.lineno}, Function: {bk.name}\n"
+        msg += "\n"
+
+        log_dir = os.path.join(expath, "pythonpath")
+        os.makedirs(log_dir, exist_ok=True)
+        log_path = os.path.join(log_dir, "leeno_error.log")
+        with open(log_path, "a", encoding="utf-8") as logfile:
+            logfile.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n")
+            logfile.write(msg)
+            logfile.write("-"*60 + "\n\n")
+
+        user = os.environ.get("USERNAME", "").lower()
+        if "giuserpe" in user:
+            msg += "+--"*30 + "\n" + traceback.format_exc()
+
+        msgbox(Title="Errore interno", Message=msg)
+
+    except Exception as internal:
+        fallback = f"Errore nel gestore errori:\n{str(internal)}\n\n{traceback.format_exc()}"
+        try:
+            msgbox(Title="Errore gestore", Message=fallback)
+        except:
+            print(fallback)
+
+# Dispatcher class
 class Dispatcher(unohelper.Base, XJobExecutor):
-    '''
-    LeenO menu and basic function dispatcher
-    '''
-
     def __init__(self, ctx, *args):
-
-        # CTX is XComponentContext - we store it
         self.ComponentContext = ctx
-
-        # store any passed arg
         self.args = args
-
-        # just in case...
         fixPythonPath()
 
     def trigger(self, arg):
-        '''
-        This function gets called when a menu item is selected
-        or when a basic function calls PyScript()
-        '''
         try:
-            # reload all Leeno Modules
-            if DISABLE_CACHE != 0:
-                reloadLeenoModules()
-
-            # menu items are passed as module.function
-            # so split them in 2 strings
+            reloadLeenoModules()
             ModFunc = arg.split('.')
-
-            # locate the module from its name and check it
             module = importlib.import_module(ModFunc[0])
             if module is None:
-                print("Module '", ModFunc[0], "' not found")
+                print(f"Module '{ModFunc[0]}' not found")
                 return
 
-            # reload the module if we don't want the cache
-            # if DISABLE_CACHE != 0:
-            #     importlib.reload(module)
-
-            # locate the function from its name and check it
-            func = getattr(module, ModFunc[1])
+            func = getattr(module, ModFunc[1], None)
             if func is None:
-                print("Function '", ModFunc[1], "' not found in Module '", ModFunc[0], "'")
-                # Dialogs.Exclamation(
-                    # Title="Errore interno",
-                    # Text=f"Funzione '{ModFunc[1]}' non trovata nel modulo '{ModFunc[0]}'")
+                print(f"Function '{ModFunc[1]}' not found in Module '{ModFunc[0]}'")
                 return
 
-            # call the handler, depending of number of arguments
             if len(self.args) == 0:
                 func()
             else:
                 func(self.args)
 
         except Exception as e:
-            # msg = traceback.format_exc()
-            # LeenoUtils.DocumentRefresh(True) # abilita il refresh
-# Aggiunge info generiche su SO, LO e LeenO
-            pir = uno.getComponentContext().getValueByName(
-                '/singletons/com.sun.star.deployment.PackageInformationProvider')
-            expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
-            if os.altsep:
-                code_file = uno.fileUrlToSystemPath(expath + os.altsep +
-                                                    'leeno_version_code')
-            else:
-                code_file = uno.fileUrlToSystemPath(expath + os.sep +
-                                                    'leeno_version_code')
-            f = open(code_file, 'r')
-            msg = "OS: " + sys.platform + ' / LibreOffice-' + loVersion() +' / '+ f.readline() + "\n\n"
-#
+            handle_exception(e)
 
-            print("sys.exc_info:", sys.exc_info())
-            sysinfo = sys.exc_info()
-            exceptionClass = sysinfo[0].__name__
-            msg += str(sysinfo[1])
-            if msg == '-1' or msg == '':
-                msg += str(sysinfo[0])
-            if msg != '':
-                msg += '\n\n'
-            tb = sysinfo[2]
-            tbInfo = traceback.extract_tb(tb)[-1]
-            function = tbInfo.name
-            line = tbInfo.lineno
-            # ~ filen = os.path.split(tbInfo.filename)[1]
-            filen = os.path.basename(tbInfo.filename)
-            msg = (
-                msg +
-                "File:     '" + filen + "'\n" +
-                "Line:     '" + str(line) + "'\n" +
-                "Function: '" + function + "'\n")
-            msg += "-" * 30 + "\n"
-            msg += "BACKTRACE:\n"
-            for bkInfo in traceback.extract_tb(tb):
-                function = bkInfo.name
-                line = str(bkInfo.lineno)
-                # ~ filen = os.path.split(bkInfo.filename)[1]
-                filen = os.path.basename(tbInfo.filename)
-                msg += f"File: {filen}, Line: {line}, Function: {function}\n"
-            msg += "\n"
-            # messaggi di errore solo per me
-            if 'giuserpe' in os.getlogin():
-                msg += "+-" * 30 + "\n" + traceback.format_exc()
-
-            # Dialogs.Exclamation(Title=f"Errore interno: {e} ", Text=msg)
-
-
+# Register the implementation
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(
     Dispatcher,
     "org.giuseppe-vizziello.leeno.dispatcher",
-    ("com.sun.star.task.Job",),)
+    ("com.sun.star.task.Job",)
+)

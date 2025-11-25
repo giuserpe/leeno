@@ -104,7 +104,7 @@ def setVisibilitaColonne(oSheet, sValori):
 
 def getColumnWidths(oSheet):
     '''
-    Legge tutte le impostazioni delle colonne 
+    Legge tutte le impostazioni delle colonne
     Restituisce: dict con widths, hidden_ranges, group_levels, visible_cols, freeze
     '''
     def col_index_to_letter(n):
@@ -138,24 +138,24 @@ def getColumnWidths(oSheet):
         cols = oSheet.getColumns()
         col_count = 26
         visible_cols = []
-        
+
         for col_idx in range(col_count):
             try:
                 col = cols.getByIndex(col_idx)
                 col_letter = col_index_to_letter(col_idx)
-                
+
                 # Larghezza colonna
                 width = col.Width
                 config['widths'][col_letter] = width
-                
+
                 # Visibilità colonna (invertita in Calc)
                 visible_cols.append('T' if col.IsVisible else 'F')
-                
+
                 # Livelli di raggruppamento
                 outline_level = col.getPropertyValue("OutlineLevel")
                 if outline_level > 0:
                     config['group_levels'][col_letter] = outline_level
-                    
+
             except Exception as e:
                 print(f"Errore colonna {col_idx}: {str(e)}")
                 continue
@@ -163,10 +163,10 @@ def getColumnWidths(oSheet):
         # 3. Elabora i risultati
         config['visible_cols'] = optimize_visibility_string(''.join(visible_cols))
         config['hidden_ranges'] = find_hidden_ranges(visible_cols)
-        
+
     except Exception as e:
         print(f"Errore generale: {str(e)}")
-    
+
     return config
 
 def optimize_visibility_string(s):
@@ -185,7 +185,7 @@ def find_hidden_ranges(visible_list):
     '''Identifica range di colonne nascoste in formato (start, end)'''
     ranges = []
     start = None
-    
+
     for i, visible in enumerate(visible_list):
         if visible == 'F':
             if start is None:
@@ -193,44 +193,44 @@ def find_hidden_ranges(visible_list):
         elif start is not None:
             ranges.append((start, i-1))
             start = None
-    
+
     if start is not None:
         ranges.append((start, len(visible_list)-1))
-    
+
     return [r for r in ranges if r[1] >= r[0]]
 
 def generate_config_snippet(oSheet):
     '''Genera la configurazione pronta per l'uso'''
     config = getColumnWidths(oSheet)
-    
+
     if not any([config['widths'], config['freeze'], config['group_levels'], 'F' in config['visible_cols']]):
         return "Nessuna impostazione personalizzata trovata"
 
     snippet = [f"'{oSheet.getName()}': {{"]
-    
+
     # Widths
     if config['widths']:
         snippet.append("'widths': {")
         for col in sorted(config['widths'], key=lambda x: (len(x), x)):
             snippet.append(f"'{col}': {config['widths'][col]},")
         snippet.append("},")
-    
+
     # Visibilità
     # if 'F' in config['visible_cols']:
     #     snippet.append(f"'visible_cols': \"{config['visible_cols']}\",")
-    
+
     # Freeze
     if config['freeze']:
         snippet.append(f"'freeze': {config['freeze']},")
-    
+
     # Raggruppamenti
     if config['group_levels']:
         snippet.append(f"'group_levels': {config['group_levels']},")
-    
+
     # Nascoste
     if config['hidden_ranges']:
         snippet.append(f"'hidden_ranges': {config['hidden_ranges']},")
-    
+
     snippet.append("}")
     return ' '.join(snippet)
 
@@ -239,9 +239,9 @@ def show_config_snippet():
     try:
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
-        
+
         config = generate_config_snippet(oSheet)
-        
+
         if "Nessuna impostazione" in config:
             DLG.chi("Nessuna impostazione personalizzata trovata")
         else:
@@ -251,7 +251,7 @@ def show_config_snippet():
                 config +
                 "\n\nSostituisci nel dizionario sheet_configs"
             )
-            
+
     except Exception as e:
         DLG.chi(f"ERRORE: {str(e)}\nAssicurati che:\n1. Un foglio sia aperto\n2. Le macro siano abilitate")
 # Esempio di sheet_configs risultante
@@ -572,15 +572,15 @@ def selezionaVoce(oSheet, lrow):
 def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     """
     Sposta il cursore prima o dopo la voce corrente restituendo l'ID riga.
-    
+
     Args:
         oSheet (object): Foglio di lavoro
         lrow (int): Riga di riferimento
-        n (int, optional): 
+        n (int, optional):
             0 = sposta prima della voce corrente
             1 = sposta dopo della voce corrente (default)
         saltaCat (bool, optional): Se True salta le categorie
-    
+
     Returns:
         int: Nuova posizione di riga
     """
@@ -590,11 +590,11 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     STILI_CONTAB = set(LeenoUtils.getGlobalVar('stili_contab'))
     NO_VOCE = set(LeenoUtils.getGlobalVar('noVoce'))
     STILI_VALIDI = STILI_COMPUTO | STILI_CONTAB
-    
+
     # Stili da saltare (insieme per ricerca veloce)
     STILI_DA_SALTARE = {
         'uuuuu', 'Ultimus_centro_bordi_lati',
-        'comp Int_colonna', 'ULTIMUS', 
+        'comp Int_colonna', 'ULTIMUS',
         'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3'
     }
 
@@ -847,9 +847,9 @@ def adattaAltezzaRiga(oSheet=False):
     # Configurazioni (modificabili)
     memorizza_posizione()
     STILI_CELLA = {
-        'comp 1-a', 
+        'comp 1-a',
         'Comp-Bianche in mezzo Descr_R',
-        'Comp-Bianche in mezzo Descr', 
+        'Comp-Bianche in mezzo Descr',
         'EP-a',
         'Ultimus_centro_bordi_lati'
     }
@@ -859,7 +859,7 @@ def adattaAltezzaRiga(oSheet=False):
 
     try:
         # --- INIZIALIZZAZIONE VELOCE ---
-        
+
         oDoc = LeenoUtils.getDocument()
         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
         usedArea = SheetUtils.getUsedArea(oSheet)
@@ -1171,7 +1171,6 @@ def MENU_elimina_righe_vuote():
                 oSheet.getRows().removeByIndex(y, 1)
 
         indicator.end()
-        LeenoUtils.DocumentRefresh(True)
 
         lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
         # PL._gotoCella(1, 4)
@@ -1229,10 +1228,10 @@ def memorizza_posizione(step=0):
     ctx = LeenoUtils.getComponentContext()
     doc = LeenoUtils.getDocument()
     controller = doc.getCurrentController()
-    
+
     # Ottieni la selezione corrente
     selection = controller.getSelection()
-    
+
     # Gestione per diversi tipi di selezione
     if selection.supportsService("com.sun.star.sheet.SheetCell"):
         # Singola cella
@@ -1257,7 +1256,7 @@ def memorizza_posizione(step=0):
     else:
         # DLG.chi("Tipo di selezione non supportato")
         return
-    
+
     # Memorizza i dati
     LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
 
@@ -1269,14 +1268,14 @@ def ripristina_posizione():
     if not pos_data:
         DLG.chi("Nessuna posizione memorizzata trovata")
         return
-    
+
     doc = LeenoUtils.getDocument()
     controller = doc.getCurrentController()
     sheets = doc.getSheets()
-    
+
     try:
         sheet = sheets.getByIndex(pos_data['sheet'])
-        
+
         if pos_data['type'] == 'cell':
             # Ripristina singola cella
             cell = sheet.getCellByPosition(pos_data['col'], pos_data['row'])
@@ -1288,7 +1287,7 @@ def ripristina_posizione():
                 pos_data['end_col'], pos_data['end_row']
             )
             controller.select(cell_range)
-            
+
     except Exception as e:
         DLG.chi(f"Errore nel ripristino: {str(e)}")
     doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))

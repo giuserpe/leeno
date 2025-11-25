@@ -1,371 +1,373 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:install="http://openoffice.org/2004/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oor:name="Accelerators" oor:package="org.openoffice.Office">
-  <!-- "PrimaryKeys" -->
-  <node oor:name="PrimaryKeys">
-    <!--
-         "Global"
-    -->
-    <node oor:name="Global" />
-    <!--
-         Modules
-    -->
-    <node oor:name="Modules">
-      <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
-        <!--F3-->
-<!--
-        <node oor:name="F3" oor:op="replace">
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry"
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                    xmlns:install="http://openoffice.org/2004/installation"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    oor:name="Accelerators"
+                    oor:package="org.openoffice.Office">
+    <!-- "PrimaryKeys" -->
+    <node oor:name="PrimaryKeys">
+        <!-- "Global" -->
+        <node oor:name="Global" />
+        <!-- Modules -->
+        <node oor:name="Modules">
+            <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
+                <!-- F3 -->
+                <!-- <node oor:name="F3" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
           </prop>
-        </node>
--->
-        <!--CTRL-, virgola -->
-<!--
-        <node oor:name="COMMA_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-, virgola -->
+                <!-- <node oor:name="COMMA_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
           </prop>
-        </node>
--->
-        <!--CTRL-0-->
-        <node oor:name="0_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-1-->
-<!--
-        <node oor:name="1_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-0 -->
+                <node oor:name="0_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-1 -->
+                <!-- <node oor:name="1_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_ElencoPrezzi</value>
           </prop>
-        </node>
--->
-        <!--CTRL-2-->
-<!--
-        <node oor:name="2_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-2 -->
+                <!-- <node oor:name="2_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application</value>
           </prop>
-        </node>
--->
-        <!--CTRL-3-->
-<!--
-        <node oor:name="3_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-3 -->
+                <!-- <node oor:name="3_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Computo</value>
           </prop>
-        </node>
--->
-        <!--CTRL-4-->
-<!--
-        <node oor:name="4_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-4 -->
+                <!-- <node oor:name="4_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_M1</value>
           </prop>
-        </node>
--->
-        <!--CTRL-5-->
-<!--
-        <node oor:name="5_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-5 -->
+                <!-- <node oor:name="5_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application</value>
           </prop>
-        </node>
--->
-        <!--CTRL-6-->
-        <node oor:name="6_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <!--
-                 <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
-            -->
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_S2</value>
-          </prop>
-        </node>
-        <!--CTRL-8-->
-        <node oor:name="8_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
-          </prop>
-        </node>
-        <!--CTRL-9-->
-        <node oor:name="9_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_aggiorna?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-D-->
-        <!--
-             <node oor:name="D_MOD1" oor:op="replace">
+        </node> -->
+                <!-- CTRL-6 -->
+                <node oor:name="6_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <!-- <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value> -->
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_S2</value>
+                    </prop>
+                </node>
+                <!-- CTRL-8 -->
+                <node oor:name="8_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
+                    </prop>
+                </node>
+                <!-- CTRL-9 -->
+                <node oor:name="9_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_aggiorna?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-D -->
+                <!-- <node oor:name="D_MOD1" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_ctrl_d</value>
              </prop>
-             </node>
-        -->
-        <!--CTRL-X-->
-        <node oor:name="X_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_taglia_x</value>
-          </prop>
-        </node>
-        <!--CTRL-INS-->
-        <node oor:name="INSERT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
-          </prop>
-        </node>
-        <!--CTRL-TAB-->
-        <!--
-             <node oor:name="TAB_MOD1" oor:op="replace">
+             </node> -->
+                <!-- CTRL-X -->
+                <node oor:name="X_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_taglia_x</value>
+                    </prop>
+                </node>
+                <!-- CTRL-INS -->
+                <node oor:name="INSERT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
+                    </prop>
+                </node>
+                <!-- CTRL-TAB -->
+                <!-- <node oor:name="TAB_MOD1" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Pulizia_0.SegnaManinaVociUsat?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--SHIFT-F1-->
-        <node oor:name="F1_SHIFT" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Scorciatoie</value>
-          </prop>
-        </node>
-        <!--SHIFT-F10-->
-        <node oor:name="F10_SHIFT" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_scelta_viste</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-F3-->
-        <!--CTRL-SHIFT-F8-->
-        <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Rinumera_TUTTI_Capitoli2</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-F10-->
-        <!--CTRL-SHIFT-5-->
-        <node oor:name="5_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-DEL-->
-        <node oor:name="DELETE_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_righe</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-A-->
-        <node oor:name="A_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Copia_riga_Ent</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-B-->
-        <node oor:name="B_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-C-->
-        <node oor:name="C_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_numera_colonna</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-D-->
-        <node oor:name="D_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtro_descrizione</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-E *** VOCE AZZERATA *** -->
-        <node oor:name="E_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_azzera_voce</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-F-->
-        <node oor:name="F_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtra_codice</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-G-->
-        <node oor:name="G_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_copia_sorgente_per_git</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-K-->
-        <node oor:name="K_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-H-->
-        <node oor:name="H_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command" oor:op="fuse">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_hl</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-I-->
-        <node oor:name="I_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_inverti_segno</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-L-->
-        <node oor:name="L_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-N-->
-        <node oor:name="N_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuova_voce_scelta</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-P-->
-        <node oor:name="P_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-Q-->
-        <node oor:name="Q_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-R-->
-        <node oor:name="R_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_avvia_IDE</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-U-->
-        <node oor:name="U_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-Z-->
-        <node oor:name="Z_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--CTRL-SHIFT-9-->
-        <node oor:name="9_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_off?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--ALT-+-->
-        <node oor:name="ADD_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--ALT(-)-->
-        <node oor:name="SUBTRACT_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
-        <!--SHIFT-ALT-H-->
-        <!--ALT-0-->
-        <!--
-             <node oor:name="0_MOD2" oor:op="replace">
+             </node> -->
+                <!-- SHIFT-F1 -->
+                <node oor:name="F1_SHIFT"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Scorciatoie</value>
+                    </prop>
+                </node>
+                <!-- SHIFT-F10 -->
+                <node oor:name="F10_SHIFT"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_scelta_viste</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-F3 -->
+                <!-- CTRL-SHIFT-F8 -->
+                <node oor:name="F8_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Rinumera_TUTTI_Capitoli2</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-F10 -->
+                <!-- CTRL-SHIFT-5 -->
+                <node oor:name="5_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-DEL -->
+                <node oor:name="DELETE_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_righe</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-A -->
+                <node oor:name="A_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Copia_riga_Ent</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-B -->
+                <node oor:name="B_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-C -->
+                <node oor:name="C_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_numera_colonna</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-D -->
+                <node oor:name="D_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtro_descrizione</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-E *** VOCE AZZERATA *** -->
+                <node oor:name="E_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_azzera_voce</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-F -->
+                <node oor:name="F_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtra_codice</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-G -->
+                <node oor:name="G_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_copia_sorgente_per_git</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-K -->
+                <node oor:name="K_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-H -->
+                <node oor:name="H_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command"
+                          oor:op="fuse">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_hl</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-I -->
+                <node oor:name="I_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_inverti_segno</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-L -->
+                <node oor:name="L_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-N -->
+                <node oor:name="N_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuova_voce_scelta</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-P -->
+                <node oor:name="P_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-Q -->
+                <node oor:name="Q_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-R -->
+                <node oor:name="R_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_avvia_IDE</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-U -->
+                <node oor:name="U_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-Z -->
+                <node oor:name="Z_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-SHIFT-9 -->
+                <node oor:name="9_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_off?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- CTRL-ALT-V -->
+                <node oor:name="V_MOD1_MOD2"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.paste_smart</value>
+                    </prop>
+                </node>
+                <!-- ALT-+ -->
+                <node oor:name="ADD_MOD2"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- ALT(-) -->
+                <node oor:name="SUBTRACT_MOD2"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- SHIFT-ALT-H -->
+                <!-- ALT-0 -->
+                <!-- <node oor:name="0_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-1-->
-        <!--
-             <node oor:name="1_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-1 -->
+                <!-- <node oor:name="1_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-2-->
-        <!--
-             <node oor:name="2_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-2 -->
+                <!-- <node oor:name="2_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-3-->
-        <!--
-             <node oor:name="3_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-3 -->
+                <!-- <node oor:name="3_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-4-->
-        <!--
-             <node oor:name="4_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-4 -->
+                <!-- <node oor:name="4_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-5-->
-        <!--
-             <node oor:name="5_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-5 -->
+                <!-- <node oor:name="5_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-6-->
-        <!--
-             <node oor:name="6_MOD2" oor:op="replace">
+             </node> -->
+                <!-- ALT-6 -->
+                <!-- <node oor:name="6_MOD2" oor:op="replace">
              <prop oor:name="Command">
              <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
              </prop>
-             </node>
-        -->
-        <!--ALT-P-->
-        <node oor:name="P_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
-          </prop>
+             </node> -->
+                <!-- ALT-P -->
+                <node oor:name="P_MOD2"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+                <!-- ALT-Z -->
+                <node oor:name="Z_MOD2"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
+                    </prop>
+                </node>
+            </node>
+            <!-- end Modules -->
         </node>
-        <!--ALT-Z-->
-        <node oor:name="Z_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
-          </prop>
+    </node>
+    <!-- "SecondaryKeys" -->
+    <node oor:name="SecondaryKeys">
+        <!-- Global -->
+        <node oor:name="Global">
+            <node oor:name="DELETE_SHIFT"
+                  oor:op="replace">
+                <prop oor:name="Command">
+                    <value>.uno:Cut</value>
+                </prop>
+            </node>
         </node>
-      </node>
-      <!--
-           end Modules
-      -->
-    </node>
-  </node>
-  <!-- "SecondaryKeys" -->
-  <node oor:name="SecondaryKeys">
-    <!--
-         Global
-    -->
-    <node oor:name="Global">
-      <node oor:name="DELETE_SHIFT" oor:op="replace">
-        <prop oor:name="Command">
-          <value>.uno:Cut</value>
-        </prop>
-      </node>
-    </node>
-    <!--
-         Modules
-    -->
-    <!--
-         <node oor:name="Modules">
+        <!-- Modules -->
+        <!-- <node oor:name="Modules">
          <node oor:name="com.sun.star.text.TextDocument" oor:op="replace">
          <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
          <prop oor:name="Command">
@@ -373,7 +375,6 @@
          </prop>
          </node>
          </node>
-         </node>
-    -->
-  </node>
+         </node> -->
+    </node>
 </oor:component-data>

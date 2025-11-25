@@ -13,32 +13,34 @@
 &apos;_______________________________________________________________________________________
 &apos;Elenco delle macro che vengono avviate tramite pulsanti nei riquadri di dialogo.
 
-Dim oDialogViste_N as Object
+&apos; Dim oDialogViste_N as Object
+&apos; ---------------------------------------------------------------
+&apos; ScriptPy — richiama Python tramite dispatcher LeenO
+&apos; ---------------------------------------------------------------
+Function ScriptPy(sModulo As String, sFunzione As String, _
+    Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant
 
-Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
+    &apos; rimuove &quot;.py&quot; dal nome modulo
+    If Right(sModulo, 3) = &quot;.py&quot; Then
+        sModulo = Left(sModulo, Len(sModulo) - 3)
+    End If
 
-	&apos; questa funzione sfrutta il servizio dispatcher di LeenO per eseguire da basic
-	&apos; dele funzioni in Python, senza i problemi legati ai percorsi fissi
+	Dim args() As Variant
+	args = Array()  &apos; esplicita inizializzazione vuota
 
-	&apos; se il nome del modulo finisce in .py, elimina la parte finale
-	if Right(sModulo, 3) = &quot;.py&quot; then
-		sModulo = Left(sModulo, Len(sModulo)- 3)
-	end if
+    If Not IsMissing(arg1) Then AppendItem args, arg1
+    If Not IsMissing(arg2) Then AppendItem args, arg2
+    If Not IsMissing(arg3) Then AppendItem args, arg3
+    If Not IsMissing(arg4) Then AppendItem args, arg4
+    If Not IsMissing(arg5) Then AppendItem args, arg5
 
-	args = Array()
-	If not ismissing (arg1) Then Appenditem(args, arg1)
-	If not ismissing (arg2) Then Appenditem(args, arg2)
-	If not ismissing (arg3) Then Appenditem(args, arg3)
-	If not ismissing (arg4) Then Appenditem(args, arg4)
-	If not ismissing (arg5) Then Appenditem(args, arg5)
+    Dim bridge As Object
+    bridge = GetProcessServiceManager().createInstanceWithArguments( _
+                &quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )
 
-	Dim bridge as Object
-	bridge = GetProcessServiceManager().createInstanceWithArguments(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )
-&apos;	bridge = GetProcessServiceManager().createInstance(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;)
-&apos;	print sModulo + &quot;.&quot; + sFunzione
-	bridge.trigger(sModulo + &quot;.&quot; + sFunzione)
+    ScriptPy = bridge.trigger(sModulo &amp; &quot;.&quot; &amp; sFunzione)
 
-End Sub
+End Function
 
 rem ######################################################################
 &apos;Sub MENU_debug

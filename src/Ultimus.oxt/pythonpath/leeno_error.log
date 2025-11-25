@@ -1,0 +1,506 @@
+[2025-11-24 11:44:27]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: '(' was never closed (pyleeno.py, line 11991)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 879, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1017, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 947, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+
+------------------------------------------------------------
+
+[2025-11-24 11:45:16]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: '(' was never closed (pyleeno.py, line 11991)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 879, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1017, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 947, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+
+------------------------------------------------------------
+
+[2025-11-24 11:45:25]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: '(' was never closed (pyleeno.py, line 11991)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 879, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1017, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 947, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+
+------------------------------------------------------------
+
+[2025-11-24 11:46:09]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: '(' was never closed (pyleeno.py, line 11992)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 879, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1017, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 947, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+
+------------------------------------------------------------
+
+[2025-11-24 11:46:23]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: No module named 'tkinter'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 883, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 11989, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+
+------------------------------------------------------------
+
+[2025-11-24 11:47:47]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: No module named 'pyperclip'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 883, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 11989, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+
+------------------------------------------------------------
+
+[2025-11-24 11:49:49]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: No module named 'pyperclip'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 883, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 11989, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+
+------------------------------------------------------------
+
+[2025-11-24 11:50:45]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: No module named 'pyperclip'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 883, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 11989, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+
+------------------------------------------------------------
+
+[2025-11-24 11:52:55]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: No module named 'tkinter'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 123, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1050, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1027, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1006, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 688, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 883, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 11989, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+
+------------------------------------------------------------
+
+[2025-11-24 12:10:02]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: chi() takes 1 positional argument but 2 were given
+
+File: 'pyleeno.py'
+Line: '12030'
+Function: 'MENU_debug'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12030, Function: MENU_debug
+
+------------------------------------------------------------
+
+[2025-11-24 12:17:57]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: MENU_nuova_voce_scelta() takes 0 positional arguments but 1 was given
+
+File: 'pyleeno.py'
+Line: '5215'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 5177, Function: MENU_Copia_riga_Ent
+File: pyleeno.py, Line: 5215, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-24 12:18:01]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: MENU_nuova_voce_scelta() takes 0 positional arguments but 1 was given
+
+File: 'pyleeno.py'
+Line: '5215'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 5177, Function: MENU_Copia_riga_Ent
+File: pyleeno.py, Line: 5215, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-24 13:16:38]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: chi() missing 1 required positional argument: 's'
+
+File: 'pyleeno.py'
+Line: '4489'
+Function: 'MENU_analisi_in_ElencoPrezzi'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 4489, Function: MENU_analisi_in_ElencoPrezzi
+
+------------------------------------------------------------
+
+[2025-11-24 13:41:32]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: can only concatenate str (not "com.sun.star.datatransfer.DataFlavor") to str
+
+File: 'pyleeno.py'
+Line: '12053'
+Function: 'debug_flavors'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12059, Function: MENU_debug
+File: pyleeno.py, Line: 12053, Function: debug_flavors
+
+------------------------------------------------------------
+
+[2025-11-24 13:45:52]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: name 'XSCRIPTCONTEXT' is not defined
+
+File: 'pyleeno.py'
+Line: '11991'
+Function: 'test_clipboard_raw'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12045, Function: MENU_debug
+File: pyleeno.py, Line: 11991, Function: test_clipboard_raw
+
+------------------------------------------------------------
+
+[2025-11-24 13:46:49]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.313-TESTING-20251123
+
+Errore: name 'XSCRIPTCONTEXT' is not defined
+
+File: 'pyleeno.py'
+Line: '11991'
+Function: 'test_clipboard_raw'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12045, Function: MENU_debug
+File: pyleeno.py, Line: 11991, Function: test_clipboard_raw
+
+------------------------------------------------------------
+
+[2025-11-24 17:39:24]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.314-TESTING-20251124
+
+Errore: module 'LeenoSheetUtils' has no attribute 'rirpistina_posizione'
+
+File: 'pyleeno.py'
+Line: '5218'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12022, Function: MENU_debug
+File: pyleeno.py, Line: 5218, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:18:01]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12100, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:18:29]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12100, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:19:43]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12100, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:21:03]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12100, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:23:17]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12101, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:24:35]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5258'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12101, Function: MENU_debug
+File: pyleeno.py, Line: 5258, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:26:19]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5259'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12104, Function: MENU_debug
+File: pyleeno.py, Line: 5259, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 13:28:35]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.318-TESTING-20251125
+
+Errore: Type 0 is not supported!
+
+File: 'pyleeno.py'
+Line: '5259'
+Function: 'Copia_riga_Ent'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 12104, Function: MENU_debug
+File: pyleeno.py, Line: 5259, Function: Copia_riga_Ent
+
+------------------------------------------------------------
+
+[2025-11-25 15:42:39]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.320-TESTING-20251125
+
+Errore: any() takes exactly one argument (2 given)
+
+File: 'pyleeno.py'
+Line: '5281'
+Function: 'paste_smart'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 5281, Function: paste_smart
+
+------------------------------------------------------------
+
+[2025-11-25 15:43:13]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.320-TESTING-20251125
+
+Errore: any() takes exactly one argument (2 given)
+
+File: 'pyleeno.py'
+Line: '5281'
+Function: 'paste_smart'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 5281, Function: paste_smart
+
+------------------------------------------------------------
+
+[2025-11-25 15:43:37]
+OS: win32 / LibreOffice-25.2.6.2 / LeenO-3.24.2.320-TESTING-20251125
+
+Errore: any() takes exactly one argument (2 given)
+
+File: 'pyleeno.py'
+Line: '5281'
+Function: 'paste_smart'
+------------------------------
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 134, Function: trigger
+File: pyleeno.py, Line: 5281, Function: paste_smart
+
+------------------------------------------------------------
+

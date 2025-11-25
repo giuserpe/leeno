@@ -82,4 +82,23 @@ Function SostituisciSpaziMultipli(cella As String) As String
     SostituisciSpaziMultipli = regex.Replace(cella, Chr(10))
 End Function
 
+
+sub ctrld
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:FillDown&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:FillDown&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
 </script:module>

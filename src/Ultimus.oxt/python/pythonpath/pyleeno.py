@@ -766,6 +766,10 @@ def cerca_path_valido():
         # Try multiple possible paths
         possible_paths = [
             # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
+            # "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
+            # os.path.expanduser("~\\AppData\\Local\\Programs\\cursor\\Cursor.exe"),
+            # "C:\\Program Files\\cursor\\Cursor.exe",
+            # "C:\\Program Files (x86)\\cursor\\Cursor.exe",
             os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
             "C:\\Program Files\\Microsoft VS Code\\Code.exe",
             "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
@@ -2985,45 +2989,35 @@ def MENU_doppioni():
 def EliminaVociDoppieElencoPrezzi():
     """
     Rimuove dall'elenco prezzi:
-    1. Voci duplicate (stessa chiave fino a MAX_COMPARE_COLS, esclusa colonna 1)
+    1. Righe con formule nella colonna B
+    2. Voci duplicate (stessa chiave fino a MAX_COMPARE_COLS, esclusa colonna 1)
        - Per duplicati: mantiene righe con markup (col5) o prima riga
-    2. Tutte le voci che contengono "(AP)" nella colonna 8
-    3. Voci già presenti in Analisi
     """
     LeenoSheetUtils.memorizza_posizione()
-
     # --- CONFIGURAZIONE ---
     MARKUP_COL = 5             # Colonna markup/note
-    EXCLUDE_COL = 8            # Colonna per esclusione "(AP)"
+    FORMULA_CHECK_COL = 1      # Colonna B (indice 1)
     MAX_COMPARE_COLS = 5       # Colonne per confronto duplicati
     TOTAL_COLS = 14            # Totale colonne elenco
-    AP_FLAG = "(AP)"           # Testo da cercare per esclusione
 
     oDoc = LeenoUtils.getDocument()
-    # LeenoUtils.DocumentRefresh(False)
-
-    # Recupera dati da Elenco Prezzi
-    # if not oDoc.NamedRanges.hasByName('elenco_prezzi'):
-    #     LeenoUtils.DocumentRefresh(True)
-    #     return
-
-    # oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
     named_range = oDoc.NamedRanges.getByName('elenco_prezzi').ReferredCells.RangeAddress
     start_row, end_row = named_range.StartRow + 1, named_range.EndRow - 1
 
     if end_row <= start_row:
-        # LeenoUtils.DocumentRefresh(True)
         return
+
     # Lettura dati
     data_range = oSheet.getCellRangeByPosition(0, start_row, TOTAL_COLS - 1, end_row)
     full_data = data_range.getDataArray()
 
-    # Filtraggio dati
+    # Filtraggio: escludi righe con formule nella colonna B
     filtered_data = []
-    for row in full_data:
-        # Escludi se contiene "(AP)" nella colonna 8
-        if EXCLUDE_COL < len(row) and AP_FLAG in str(row[EXCLUDE_COL]):
+    for idx, row in enumerate(full_data):
+        cell = oSheet.getCellByPosition(FORMULA_CHECK_COL, start_row + idx)
+        # Verifica se la cella contiene una formula
+        if cell.getType().value == 'FORMULA':
             continue
         filtered_data.append(row)
 
@@ -3038,7 +3032,6 @@ def EliminaVociDoppieElencoPrezzi():
     clean_data = []
     for rows in groups.values():
         with_markup = [r for r in rows if r[MARKUP_COL] not in ('', None)]
-
         if with_markup:
             clean_data.append(with_markup[0])
         else:
@@ -3048,79 +3041,6 @@ def EliminaVociDoppieElencoPrezzi():
     if len(clean_data) != len(full_data):
         oSheet.getRows().removeByIndex(start_row, end_row - start_row + 1)
         oSheet.getRows().insertByIndex(start_row, len(clean_data))
-
-        output_range = oSheet.getCellRangeByPosition(
-            0, start_row,
-            TOTAL_COLS - 1,
-            start_row + len(clean_data) - 1
-        )
-        output_range.setDataArray(clean_data)
-    LeenoSheetUtils.ripristina_posizione()
-
-from collections import OrderedDict
-
-def EliminaVociDoppieElencoPrezzi():
-    """
-    Rimuove dall'elenco prezzi:
-    1. Voci duplicate (stessa chiave fino a MAX_COMPARE_COLS, esclusa colonna 1)
-       - Per duplicati: mantiene righe con markup (col5) o prima riga
-    2. Tutte le righe che contengono una formula nelle colonne B o C
-    3. Voci già presenti in Analisi
-    """
-    LeenoSheetUtils.memorizza_posizione()
-
-    # --- CONFIGURAZIONE ---
-    MARKUP_COL = 5             # Colonna markup/note
-    MAX_COMPARE_COLS = 5       # Colonne per confronto duplicati
-    TOTAL_COLS = 14            # Totale colonne elenco
-    FORMULA_COLS = [1, 2]      # Colonne B e C (indice base 0)
-
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    named_range = oDoc.NamedRanges.getByName('elenco_prezzi').ReferredCells.RangeAddress
-    start_row, end_row = named_range.StartRow + 1, named_range.EndRow - 1
-
-    if end_row <= start_row:
-        return
-
-    # --- Lettura dati ---
-    data_range = oSheet.getCellRangeByPosition(0, start_row, TOTAL_COLS - 1, end_row)
-    full_data = data_range.getDataArray()
-
-    # --- Lettura formule per colonne B e C ---
-    # (getCellByPosition permette di controllare se la cella contiene una formula)
-    filtered_data = []
-    for i, row in enumerate(full_data, start=start_row):
-        has_formula = False
-        for col in FORMULA_COLS:
-            cell = oSheet.getCellByPosition(col, i)
-            if cell.getFormula() and cell.getFormula().startswith('='):
-                has_formula = True
-                break
-        if not has_formula:
-            filtered_data.append(row)
-
-    # --- Eliminazione duplicati ---
-    groups = OrderedDict()
-    for row in filtered_data:
-        key = tuple(row[i] for i in range(MAX_COMPARE_COLS) if i != 1)
-        if key not in groups:
-            groups[key] = []
-        groups[key].append(row)
-
-    clean_data = []
-    for rows in groups.values():
-        with_markup = [r for r in rows if r[MARKUP_COL] not in ('', None)]
-        if with_markup:
-            clean_data.append(with_markup[0])
-        else:
-            clean_data.append(rows[0])
-
-    # --- Scrittura risultati ---
-    if len(clean_data) != len(full_data):
-        oSheet.getRows().removeByIndex(start_row, end_row - start_row + 1)
-        oSheet.getRows().insertByIndex(start_row, len(clean_data))
         output_range = oSheet.getCellRangeByPosition(
             0, start_row,
             TOTAL_COLS - 1,
@@ -3129,6 +3049,8 @@ def EliminaVociDoppieElencoPrezzi():
         output_range.setDataArray(clean_data)
 
     LeenoSheetUtils.ripristina_posizione()
+
+
 
 
 ########################################################################
@@ -12098,7 +12020,63 @@ def count_clipboard_lines():
         # Restituisce il valore
         return num_lines
 
+def ApriFileDaFormula():
+    ctx = LeenoUtils.getComponentContext()
+    smgr = ctx.getServiceManager()
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+
+    # Documento attivo
+    doc = LeenoUtils.getDocument()
+    # if not doc supportsService("com.sun.star.sheet.SpreadsheetDocument"):
+    #     return
+
+    # Cella selezionata
+    cell = doc.getCurrentSelection()
+
+    if not cell.supportsService("com.sun.star.sheet.SheetCell"):
+        msgbox("Seleziona una singola cella con formula.", "Errore")
+        return
+
+    formula = cell.getFormula()
+
+    # Cerca un URL del tipo 'file:///...'
+    match = re.search(r"'(file:///[^']+)'", formula)
+
+    if not match:
+        msgbox("Nessun percorso file trovato nella formula.", "Errore")
+        return
+
+    url = match.group(1)
+
+    # Apre il file
+    desktop.loadComponentFromURL(url, "_blank", 0, ())
+
+
+def msgbox(text, title):
+    ctx = uno.getComponentContext()
+    smgr = ctx.getServiceManager()
+    toolkit = smgr.createInstanceWithContext("com.sun.star.awt.Toolkit", ctx)
+
+    box = toolkit.createMessageBox(
+        None,
+        uno.createUnoStruct("com.sun.star.awt.Rectangle"),
+        "infobox",
+        1,
+        title,
+        text,
+    )
+    box.execute()
+
+
+
 def MENU_debug():
+    EliminaVociDoppieElencoPrezzi()
+    return
+
+
+
+    ApriFileDaFormula()
+    return
     paste_smart()
     return
 

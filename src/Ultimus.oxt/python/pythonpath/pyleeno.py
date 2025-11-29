@@ -11547,71 +11547,126 @@ def cerca_rosso_mancante():
                 pass
     return
 
-
+########################################################################
 def Main_Riordina_Analisi_Alfabetico():
-    DLG.chi('in allestimento...')
-    return
     chiudi_dialoghi()
-    articoli = []
+    struttura_off()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName("Analisi di Prezzo")
-    lLastUrow = SheetUtils.getLastUsedRow(oSheet)  # ultima riga editata
+    lLastUrow = SheetUtils.getLastUsedRow(oSheet) + 1
 
-    oDoc.CurrentController.select(oSheet.getCellByPosition(0, 3))
-
-    # Trovo il punto di inserimento
-    lrowDest = 2
-    for i in range(11):  # 0 to 10
+    # Raccogli tutte le schede con le loro posizioni
+    schede = []  # Lista di tuple: (codice, riga_inizio, riga_fine)
+    i = 0
+    while i <= lLastUrow:
         cell = oSheet.getCellByPosition(0, i)
-        if cell.CellStyle == "An.1v-Att Start" and cell.String == "COD./N.":
-            lrowDest = i - 1  # punto di inserimento prima della prima scheda
+        # Verifica se è l'inizio di una scheda
+        if cell.CellStyle == "An.1v-Att Start":
+            inizio = i
+            # La cella con il codice è sempre la seconda cella (riga successiva)
+            codice = oSheet.getCellByPosition(0, i + 1).String
+            # Trova la fine della scheda (cerca "----")
+            fine = None
+            for x in range(i + 1, lLastUrow + 1):
+                if oSheet.getCellByPosition(0, x).String == "----":
+                    fine = x
+                    break
+            if fine is None:
+                msg = f"Errore: scheda '{codice}' non ha riga di fine '----'"
+                DLG.chi(msg)
+                return
+            # Verifica doppioni
+            if any(s[0] == codice for s in schede):
+                msg = f"Mi fermo! Il codice:\n\t\t\t\t\t\t{codice}\nè presente più volte. Correggi e ripeti il comando."
+                DLG.chi(msg)
+                return
+            schede.append((codice, inizio, fine))
+            # Salta alla riga dopo la fine
+            i = fine + 1
+        else:
+            i += 1
+
+    if not schede:
+        return
+
+    # Crea una lista ordinata dei codici
+    schede_ordinate = sorted(schede, key=lambda x: x[0])
+
+    # Verifica se le schede sono già in ordine
+    gia_ordinato = True
+    for i in range(len(schede)):
+        if schede[i][0] != schede_ordinate[i][0]:
+            gia_ordinato = False
             break
 
-    # Recupero i codici presenti dalle ANALISI DI PREZZO
-    for i in range(lLastUrow + 1):
-        cell = oSheet.getCellByPosition(0, i)
-        if cell.CellStyle == "An-1_sigla":
-            art = cell.String  # articolo
+    if gia_ordinato:
+        Dialogs.Info(Title = 'Informazione', Text = "Le Analisi di Prezzo sono già in ordine alfabetico.")
+        return
 
-            # Verifica doppioni
-            if art in articoli:
-                msg = f"Mi fermo! Il codice:\n\t\t\t\t\t\t{art}\nè presente più volte. Correggi e ripeti il comando."
-                Dialogs.MessageBox(msg, "Avviso!", "OK")
-                return
+    # Sposta le schede nell'ordine corretto
+    lrowDest = schede[0][1]  # Posizione della prima scheda originale
 
-            articoli.append(art)
+    for codice_target, _, _ in schede_ordinate:
+        # Trova la scheda nella posizione attuale
+        trovata = False
+        inizio = None
+        fine = None
 
-    # Riordino la lista alfabeticamente
-    articoli.sort()
+        for i in range(lrowDest, SheetUtils.getLastUsedRow(oSheet) + 1):
+            cell = oSheet.getCellByPosition(0, i)
+            if cell.CellStyle == "An.1v-Att Start":
+                # Verifica che sia la scheda giusta controllando il codice
+                codice_trovato = oSheet.getCellByPosition(0, i + 1).String
+                if codice_trovato == codice_target:
+                    inizio = i
+                    # Trova la fine
+                    for x in range(i + 1, SheetUtils.getLastUsedRow(oSheet) + 1):
+                        if oSheet.getCellByPosition(0, x).String == "----":
+                            fine = x
+                            trovata = True
+                            break
+                    break
 
-    # Process each item in sorted order
-    for el in articoli:
-        for i in range(lLastUrow + 1):
-            if oSheet.getCellByPosition(0, i).String == el:  # trovo l'inizio della scheda
-                inizio = i - 1
+        if not trovata:
+            continue
 
-                # Trovo la fine della scheda
-                for x in range(i, i + 101):
-                    if oSheet.getCellByPosition(0, x).String == "----":
-                        fine = x + 1
-                        i = x + 1
-                        nrighe = fine - inizio  # ampiezza in righe della scheda
+        # Se la scheda è già nella posizione corretta, aggiorna solo la destinazione
+        if inizio == lrowDest:
+            # Include la riga "Analisi_Sfondo" dopo "----"
+            lrowDest = fine + 2
+            continue
 
-                        # Inserisci spazio per la scheda
-                        oSheet.getRows().insertByIndex(lrowDest, nrighe + 1)
+        # Calcola numero di righe (include "----" ma non "Analisi_Sfondo")
+        nrighe = fine - inizio + 1
 
-                        # Seleziona e copia le righe
-                        selezione = oSheet.getCellRangeByPosition(0, inizio + nrighe, 250, fine + nrighe)
-                        oDoc.CurrentController.select(selezione)
-                        oDest = oSheet.getCellByPosition(0, lrowDest).CellAddress
-                        oSheet.copyRange(oDest, selezione.RangeAddress)
+        # Inserisci spazio per la scheda nella posizione di destinazione
+        oSheet.getRows().insertByIndex(lrowDest, nrighe + 1)  # +1 per "Analisi_Sfondo"
 
-                        # Cancella la vecchia scheda
-                        oSheet.getRows().removeByIndex(inizio + nrighe, nrighe + 1)
+        # Aggiorna la posizione originale
+        inizio += nrighe + 1
+        fine += nrighe + 1
 
-                        lrowDest += nrighe + 1
-                        break
-                break
+        # Copia la scheda (include "----")
+        selezione = oSheet.getCellRangeByPosition(0, inizio, 250, fine)
+        oDest = oSheet.getCellByPosition(0, lrowDest).CellAddress
+        oSheet.copyRange(oDest, selezione.RangeAddress)
+
+        # Copia la riga "Analisi_Sfondo" se presente
+        if fine + 1 <= SheetUtils.getLastUsedRow(oSheet):
+            riga_sfondo = oSheet.getCellRangeByPosition(0, fine + 1, 250, fine + 1)
+            if oSheet.getCellByPosition(0, fine + 1).CellStyle == "Analisi_Sfondo":
+                oDest_sfondo = oSheet.getCellByPosition(0, lrowDest + nrighe).CellAddress
+                oSheet.copyRange(oDest_sfondo, riga_sfondo.RangeAddress)
+
+        # Cancella la vecchia scheda (include "----" e "Analisi_Sfondo")
+        oSheet.getRows().removeByIndex(inizio, nrighe + 1)
+
+        # Aggiorna il punto di inserimento per la prossima scheda
+        lrowDest += nrighe + 1
+    MENU_struttura_on()
+
+
+########################################################################
 def applica_barre_dati():
     try:
         # Ottieni il documento e il foglio attivo
@@ -12070,7 +12125,7 @@ def msgbox(text, title):
 
 
 def MENU_debug():
-    EliminaVociDoppieElencoPrezzi()
+    Main_Riordina_Analisi_Alfabetico()
     return
 
 

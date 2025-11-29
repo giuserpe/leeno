@@ -109,6 +109,10 @@ Sub analisi_in_ElencoPrezzi
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;analisi_in_ElencoPrezzi&quot;)
 End Sub
 rem ######################################################################
+Sub Main_Riordina_Analisi_Alfabetico
+	ScriptPy(&quot;pyleeno&quot;,&quot;Main_Riordina_Analisi_Alfabetico&quot;)
+End Sub
+rem ######################################################################
 Sub inizializza_elenco
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;inizializza_elenco&quot;)
 End Sub

@@ -36,7 +36,7 @@ from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
 
-def chi(s):
+def chi(s = 'pausa...'):
     '''
     s    { object }  : oggetto da interrogare
     Mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili.

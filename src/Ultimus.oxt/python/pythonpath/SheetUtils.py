@@ -478,7 +478,7 @@ def uFindString(sString, oSheet, up=False):
     for nRow in righe:
         for nCol in range(0, aAddress.EndColumn + 1):
             # ritocco di +Daniele Zambelli:
-            if sString == oSheet.getCellByPosition(nCol, nRow).String:
+            if sString.lower() == oSheet.getCellByPosition(nCol, nRow).String.lower():
                 return (nCol, nRow)
 
 # ###############################################################

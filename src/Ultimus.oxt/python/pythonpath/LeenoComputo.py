@@ -301,9 +301,9 @@ def salva_senza_prezzi():
     # ---- PRECALCOLI ----
     ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
-    import LeenoComputo
+    # import LeenoComputo
     ultime_voci = [
-        LeenoComputo.circoscriveVoceComputo(oSheet, r).RangeAddress.EndRow
+        circoscriveVoceComputo(oSheet, r).RangeAddress.EndRow
         for r in range(3, ultima_voce)
     ]
 

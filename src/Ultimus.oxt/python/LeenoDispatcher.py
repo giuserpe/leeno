@@ -58,7 +58,7 @@ def handle_exception(e):
         pir = uno.getComponentContext().getValueByName(
             '/singletons/com.sun.star.deployment.PackageInformationProvider')
         expath_url = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
-        expath = uno.fileUrlToSystemPath(expath_url)  # <-- CORRETTO per Windows
+        expath = uno.fileUrlToSystemPath(expath_url)
 
         code_file = os.path.join(expath, 'leeno_version_code')
         version_line = ''
@@ -82,7 +82,27 @@ def handle_exception(e):
                 f"Function: '{tbInfo.name}'\n"
             )
 
-        msg += "-"*30 + "\nBACKTRACE:\n"
+            # ==========================================================
+            # 🔥 APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
+            # ==========================================================
+            try:
+                import subprocess
+
+                full_path = tbInfo.filename
+                line = tbInfo.lineno
+
+                vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
+
+                if os.path.exists(vscode_path):
+                    subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
+                else:
+                    msg += "\n(VS Code non trovato nel percorso previsto)\n"
+
+            except Exception as opener_err:
+                msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
+            # ==========================================================
+
+        msg += "+--"*20 + "\nBACKTRACE:\n"
         for bk in traceback.extract_tb(tb):
             filen = os.path.basename(bk.filename)
             msg += f"File: {filen}, Line: {bk.lineno}, Function: {bk.name}\n"
@@ -98,7 +118,7 @@ def handle_exception(e):
 
         user = os.environ.get("USERNAME", "").lower()
         if "giuserpe" in user:
-            msg += "+--"*30 + "\n" + traceback.format_exc()
+            msg += "+--"*20 + "\n" + traceback.format_exc()
 
         msgbox(Title="Errore interno", Message=msg)
 
@@ -108,6 +128,7 @@ def handle_exception(e):
             msgbox(Title="Errore gestore", Message=fallback)
         except:
             print(fallback)
+
 
 # Dispatcher class
 class Dispatcher(unohelper.Base, XJobExecutor):

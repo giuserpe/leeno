@@ -396,13 +396,13 @@ def invia_voce_interno():
 
 ###############################################################################
 def MENU_invia_voce():
-    with LeenoUtils.DocumentRefreshContext(False):
-        stato = cfg.read('Generale', 'pesca_auto')
-        cfg.write('Generale', 'pesca_auto', 0)
+    # with LeenoUtils.DocumentRefreshContext(False):
+    stato = cfg.read('Generale', 'pesca_auto')
+    cfg.write('Generale', 'pesca_auto', 0)
 
-        invia_voce()
+    invia_voce()
 
-        cfg.write('Generale', 'pesca_auto', stato)
+    cfg.write('Generale', 'pesca_auto', stato)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -503,13 +503,15 @@ def invia_voce():
             lrow = LeggiPosizioneCorrente()
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
             dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-            dccSheet.getCellByPosition(lrow[0]+1, lrow[1]).CellBackColor = 14942166
+            dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
             _gotoCella(lrow[0]+1, lrow[1]+1)
         return
 
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        dv = LeenoComputo.DatiVoce(oSheet, lrow)
+
+        lrow = LeggiPosizioneCorrente()
+        dv = LeenoComputo.DatiVoce(oSheet, lrow[1])
         art = dv.art
         ER = dv.ER
         SR = dv.SR
@@ -2007,6 +2009,11 @@ def MENU_prefisso_VDS_():
                     pesca_cod()
                     if pref not in art:
                         LeenoComputo.cambia_articolo(oSheet, lrow, pref+art)
+                    # DLG.chi(pref)
+                    if pref in art:
+                        LeenoComputo.cambia_articolo(oSheet, lrow, art.replace(pref, ''))
+
+
                 elif oSheet.Name == 'Elenco Prezzi':
                     vds_ep()
 
@@ -2145,6 +2152,90 @@ def nascondi_voci_zero(lcol = None):
 def Cancel():
     return -1
 
+# def cancella_voci_non_usate():
+#     '''
+#     Cancella le voci di prezzo non utilizzate.
+#     '''
+#     with LeenoUtils.DocumentRefreshContext(False):
+#         chiudi_dialoghi()
+
+#         # if Dialogs.YesNoDialog(Title='AVVISO!',
+#         if Dialogs.YesNoDialog(IconType="question", Title='AVVISO!',
+#         Text='''Questo comando ripulisce l'Elenco Prezzi
+#     dalle voci non utilizzate in nessuno degli altri elaborati.
+
+#     La procedura potrebbe richiedere del tempo.
+
+#     Vuoi procedere comunque?''') == 0:
+#             return
+#         oDoc = LeenoUtils.getDocument()
+#         # oDoc.enableAutomaticCalculation(False)
+#         oSheet = oDoc.CurrentController.ActiveSheet
+
+#         oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+#         SRep = oRange.StartRow + 1
+#         ERep = oRange.EndRow
+#         lista_prezzi = []
+#         # prende l'elenco dal foglio Elenco Prezzi
+#         for n in range(SRep, ERep):
+#             lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
+#         # attiva la progressbar
+#         indicator = oDoc.getCurrentController().getStatusIndicator()
+#         n = 0
+#         # prende l'elenco da tutti gli altri fogli
+#         if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
+#             lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
+#         lista = []
+#         for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
+#             try:
+#                 oSheet = oDoc.getSheets().getByName(tab)
+#                 ER = SheetUtils.getLastUsedRow(oSheet)
+#                 indicator.start("Eliminazione delle voci in corso...", ER)
+
+#                 if tab == 'Analisi di Prezzo':
+#                     stile = 'An-lavoraz-Cod-sx'
+#                     for n in range(0, ER):
+#                         indicator.setValue(n)
+#                         cell = oSheet.getCellByPosition(0, n)
+#                         if cell.CellStyle == stile:
+#                             lista.append(cell.String)
+#                 else:
+#                     stile = 'comp Art-EP_R'
+#                     for n in range(0, ER):
+#                         cell = oSheet.getCellByPosition(1, n)
+#                         if cell.CellStyle == stile:
+#                             lista.append(cell.String)
+#             except Exception as e:
+#                 # DLG.errore(e)
+#                 pass
+#         indicator.start("Eliminazione delle voci in corso...", 5)  # 100 = max progresso
+#         indicator.setValue(2)
+
+#         da_cancellare = set(lista_prezzi).difference(set(lista))
+#         oSheet = oDoc.CurrentController.ActiveSheet
+#         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+#         iSheet = oSheet.RangeAddress.Sheet
+#         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+#         oCellRangeAddr.Sheet = iSheet
+#         indicator.setValue(3)
+#         struttura_off()
+#         struttura_off()
+#         struttura_off()
+#         indicator.setValue(4)
+
+#         for n in reversed(range(SRep, ERep)):
+#             cell_0 = oSheet.getCellByPosition(0, n).String
+#             cell_1 = oSheet.getCellByPosition(1, n).String
+#             cell_4 = oSheet.getCellByPosition(4, n).String
+
+#             if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
+#                 oSheet.Rows.removeByIndex(n, 1)
+
+#         indicator.setValue(5)
+#         indicator.end()
+#         _gotoCella(0, 3)
+#         Dialogs.Info(Title = 'Ricerca conclusa', Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi.")
+
 def cancella_voci_non_usate():
     '''
     Cancella le voci di prezzo non utilizzate.
@@ -2152,33 +2243,42 @@ def cancella_voci_non_usate():
     with LeenoUtils.DocumentRefreshContext(False):
         chiudi_dialoghi()
 
-        # if Dialogs.YesNoDialog(Title='AVVISO!',
-        if Dialogs.YesNoDialog(IconType="question", Title='AVVISO!',
-        Text='''Questo comando ripulisce l'Elenco Prezzi
-    dalle voci non utilizzate in nessuno degli altri elaborati.
+        if Dialogs.YesNoDialog(
+            IconType="question",
+            Title='AVVISO!',
+            Text='''Questo comando ripulisce l'Elenco Prezzi
+dalle voci non utilizzate in nessuno degli altri elaborati.
 
-    La procedura potrebbe richiedere del tempo.
+La procedura potrebbe richiedere del tempo.
 
-    Vuoi procedere comunque?''') == 0:
+Vuoi procedere comunque?'''
+        ) == 0:
             return
+
         oDoc = LeenoUtils.getDocument()
-        # oDoc.enableAutomaticCalculation(False)
         oSheet = oDoc.CurrentController.ActiveSheet
 
         oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         SRep = oRange.StartRow + 1
         ERep = oRange.EndRow
+
         lista_prezzi = []
         # prende l'elenco dal foglio Elenco Prezzi
         for n in range(SRep, ERep):
             lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
+
+        # case-insensitive
+        lista_prezzi_norm = [s.lower() for s in lista_prezzi]
+
         # attiva la progressbar
         indicator = oDoc.getCurrentController().getStatusIndicator()
-        n = 0
+
         # prende l'elenco da tutti gli altri fogli
         if 'ELENCO DEI COSTI ELEMENTARI' in lista_prezzi:
             lista_prezzi.remove('ELENCO DEI COSTI ELEMENTARI')
+
         lista = []
+
         for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
             try:
                 oSheet = oDoc.getSheets().getByName(tab)
@@ -2198,36 +2298,49 @@ def cancella_voci_non_usate():
                         cell = oSheet.getCellByPosition(1, n)
                         if cell.CellStyle == stile:
                             lista.append(cell.String)
-            except Exception as e:
-                # DLG.errore(e)
+
+            except Exception:
                 pass
-        indicator.start("Eliminazione delle voci in corso...", 5)  # 100 = max progresso
+
+        # normalizza anche questa lista
+        lista_norm = [s.lower() for s in lista]
+
+        indicator.start("Eliminazione delle voci in corso...", 5)
         indicator.setValue(2)
 
-        da_cancellare = set(lista_prezzi).difference(set(lista))
-        oSheet = oDoc.CurrentController.ActiveSheet
+        # calcola differenza case-insensitive
+        da_cancellare = set(lista_prezzi_norm).difference(set(lista_norm))
+
+        # torna al foglio Elenco Prezzi
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet
+
         indicator.setValue(3)
         struttura_off()
         struttura_off()
         struttura_off()
         indicator.setValue(4)
 
+        # cancella
         for n in reversed(range(SRep, ERep)):
             cell_0 = oSheet.getCellByPosition(0, n).String
             cell_1 = oSheet.getCellByPosition(1, n).String
             cell_4 = oSheet.getCellByPosition(4, n).String
 
-            if cell_0 in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
+            # confronto case-insensitive
+            if cell_0.lower() in da_cancellare or (cell_0 == '' and cell_1 == '' and cell_4 == ''):
                 oSheet.Rows.removeByIndex(n, 1)
 
         indicator.setValue(5)
         indicator.end()
+
         _gotoCella(0, 3)
-        Dialogs.Info(Title = 'Ricerca conclusa', Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi.")
+        Dialogs.Info(
+            Title='Ricerca conclusa',
+            Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi."
+        )
 
 
 ########################################################################
@@ -4619,7 +4732,7 @@ def MENU_azzera_voce():
                     oProp.Value = 15066597
                     properties = (oProp, )
                     dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-                    _gotoCella(2, fine)
+                    _gotoCella(1, fine + 3)
                     ###
                 lrow = LeggiPosizioneCorrente()[1]
                 lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
@@ -4873,7 +4986,8 @@ def MENU_elimina_righe():
         oSheet = oDoc.CurrentController.ActiveSheet
 
         if oSheet.Name == 'Elenco Prezzi':
-            DLG.chi("Per eliminare voci dall'Elenco Prezzi usa il comando nativo 'Elimina righe'.")
+            Dialogs.Exclamation(Title = 'Avviso.',
+            Text="'Per eliminare voci dall'Elenco Prezzi usa il comando nativo 'Elimina righe'.")
             return
 
         if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
@@ -7726,7 +7840,7 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
                 return '-'
         finally:
             sStRange = None
-            return
+    return
 
 ########################################################################
 def MENU_vedi_voce():
@@ -10224,7 +10338,7 @@ def clean_text(desc):
         '\n- -': '\n-',
         '\n \n': '\n',
         '\n ': '\n',
-        '': '\n',
+        '': '\n',
     }
 
     # Esegue tutte le sostituzioni
@@ -12127,7 +12241,19 @@ def msgbox(text, title):
 
 
 def MENU_debug():
-    Main_Riordina_Analisi_Alfabetico()
+    trova_colore_cella()
+
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = LeggiPosizioneCorrente()
+    DLG.chi(lrow)
+    dv = LeenoComputo.DatiVoce(oSheet, lrow)
+    DLG.chi(dv.ER)
+    art = dv.art
+    ER = dv.ER
+    SR = dv.SR
+
     return
 
 

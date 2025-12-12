@@ -82,6 +82,7 @@ class Config(Borg):
             ('Generale', 'conta_usi', '0'),
             ('Generale', 'ultimo_percorso', expanduser("~")),
             ('Generale', 'precisione_come_mostrato', '(bool)True'),
+            ('Generale', 'nuova_voce', 'True'),
 
             #  ('Computo', 'riga_bianca_categorie', '1'),
             #  ('Computo', 'voci_senza_numerazione', '0'),

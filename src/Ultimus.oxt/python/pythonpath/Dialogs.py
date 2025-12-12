@@ -2706,7 +2706,7 @@ def YesNoDialog(IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
-        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
+        sString.Text = Text or "In allestimento..."
 
         return(oDlgInfo.execute())
 

@@ -71,6 +71,8 @@ def handle_exception(e):
             f"Errore: {str(e)}\n\n"
         )
 
+        user = os.environ.get("USERNAME", "").lower()
+
         sysinfo = sys.exc_info()
         tb = sysinfo[2]
         if tb:
@@ -83,23 +85,25 @@ def handle_exception(e):
             )
 
             # ==========================================================
-            # 🔥 APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
+            # APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
+            # solo per l’utente giuserpe (Giuseppe Vizziello)
             # ==========================================================
-            try:
-                import subprocess
+            if "giuserpe" in user:
+                try:
+                    import subprocess
 
-                full_path = tbInfo.filename
-                line = tbInfo.lineno
+                    full_path = tbInfo.filename
+                    line = tbInfo.lineno
 
-                vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
+                    vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
 
-                if os.path.exists(vscode_path):
-                    subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
-                else:
-                    msg += "\n(VS Code non trovato nel percorso previsto)\n"
+                    if os.path.exists(vscode_path):
+                        subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
+                    else:
+                        msg += "\n(VS Code non trovato nel percorso previsto)\n"
 
-            except Exception as opener_err:
-                msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
+                except Exception as opener_err:
+                    msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
             # ==========================================================
 
         msg += "+--"*20 + "\nBACKTRACE:\n"
@@ -116,7 +120,6 @@ def handle_exception(e):
             logfile.write(msg)
             logfile.write("-"*60 + "\n\n")
 
-        user = os.environ.get("USERNAME", "").lower()
         if "giuserpe" in user:
             msg += "+--"*20 + "\n" + traceback.format_exc()
 

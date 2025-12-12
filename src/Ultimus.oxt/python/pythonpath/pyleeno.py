@@ -191,6 +191,9 @@ def MENU_leeno_conf():
     if cfg.read('Generale', 'torna_a_ep') == '1':
         oDlg_config.getControl('CheckBox8').State = 1
 
+    if cfg.read('Generale', 'nuova_voce') == 'True':
+        oDlg_config.getControl('CheckBox7').State = 1
+
     sString = oDlg_config.getControl('ComboBox4')
     sString.Text = cfg.read('Generale', 'copie_backup')
     if int(cfg.read('Generale', 'copie_backup')) != 0:
@@ -234,6 +237,11 @@ def MENU_leeno_conf():
     else:
         cfg.write('Generale', 'precisione_come_mostrato', 'False')
         oDoc.CalcAsShown = False
+
+    if oDlg_config.getControl('CheckBox7').State == 1:
+        cfg.write('Generale', 'nuova_voce', 'True')
+    else:
+        cfg.write('Generale', 'nuova_voce', 'False')
 
 
     ctx = LeenoUtils.getComponentContext()
@@ -499,12 +507,21 @@ def invia_voce():
             recupera_voce(voce_da_inviare)
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-            MENU_nuova_voce_scelta()
-            lrow = LeggiPosizioneCorrente()
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-            dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
-            _gotoCella(lrow[0]+1, lrow[1]+1)
+            LeenoSheetUtils.memorizza_posizione()
+            if cfg.read('Generale', 'nuova_voce') == 'True':
+                MENU_nuova_voce_scelta()
+                lrow = LeggiPosizioneCorrente()
+                dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
+                dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
+                _gotoCella(lrow[0]+1, lrow[1]+1)
+
+            else:
+                lrow = LeggiPosizioneCorrente()[1]
+                LeenoComputo.cambia_articolo(dccSheet, lrow, voce_da_inviare)
+                lrow = LeggiPosizioneCorrente()[1]
+                dccSheet.getCellByPosition(1, lrow).CellBackColor = 14942166
+            LeenoSheetUtils.ripristina_posizione()
         return
 
     # partenza
@@ -1532,12 +1549,48 @@ def GotoSheet(nSheet, fattore=100):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName(nSheet)
-    # oDoc.getCurrentSelection().getCellAddress().Sheet
-
     oSheet.IsVisible = True
     oDoc.CurrentController.setActiveSheet(oSheet)
+
     # oDoc.CurrentController.ZoomValue = fattore
     # oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+
+# import uno
+
+# def GotoSheet(sheet_name):
+#     oDoc = LeenoUtils.getDocument()
+#     sheets = oDoc.Sheets
+#     sheet = sheets.getByName(sheet_name)
+
+#     # 1) Se nascosto → renderlo visibile
+#     if not sheet.IsVisible:
+#         sheet.IsVisible = True
+
+#     # 2) Attivare logicamente il foglio
+#     oDoc.CurrentController.setActiveSheet(sheet)
+
+#     # 3) Forzare attivazione UI tramite Dispatch
+#     ctx = uno.getComponentContext()
+#     smgr = ctx.getServiceManager()
+#     dispatcher = smgr.createInstanceWithContext(
+#         "com.sun.star.frame.DispatchHelper", ctx
+#     )
+
+#     frame = oDoc.getCurrentController().getFrame()
+
+#     # Il trucco: usare .uno:JumpToTable
+#     dispatcher.executeDispatch(
+#         frame,
+#         ".uno:JumpToTable",
+#         "", 0,
+#         tuple([ uno.createUnoStruct("com.sun.star.beans.PropertyValue",
+#                                     Name="TableName", Value=sheet_name) ])
+#     )
+
+
+
+
+
 
 
 ########################################################################
@@ -2652,6 +2705,8 @@ def scelta_viste_run():
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application"
         )
+        if not oDoc.Sheets.hasByName('VARIANTE') and not oDoc.Sheets.hasByName('CONTABILITA'):
+            oDialog1.getControl('CommandButton7').setEnable(0)
 
         if oSheet.getColumns().getByIndex(3).Columns.IsVisible:
             oDialog1.getControl('CBSic').State = True
@@ -5102,16 +5157,37 @@ def copia_riga_computo(lrow, num_righe=1):
     """
     Inserisce una o più righe di misurazione nel computo.
     """
+    # Validazione preventiva
+    if lrow is None or lrow < 0:
+        return
+
+    if num_righe is None or num_righe < 1:
+        return
+
     with LeenoUtils.DocumentRefreshContext(False):
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
 
-        stile = oSheet.getCellByPosition(1, lrow).CellStyle
+        # Controllo stile
+        try:
+            stile = oSheet.getCellByPosition(1, lrow).CellStyle
+        except Exception:
+            return  # riga inesistente
+
         if stile not in ('comp Art-EP', 'comp Art-EP_R', 'Comp-Bianche in mezzo'):
             return
 
         # Inserimento blocco di righe
         lrow_ins = lrow + 1
+
+        # Controllo che lrow_ins sia nel range
+        rowcount = oSheet.Rows.getCount()
+        if lrow_ins < 0:
+            return
+        if lrow_ins > rowcount:
+            lrow_ins = rowcount  # si inserisce in fondo
+
+        # === Punto che generava l'errore ===
         oSheet.getRows().insertByIndex(lrow_ins, num_righe)
 
         # Prepara intervalli da aggiornare in blocco
@@ -5127,10 +5203,13 @@ def copia_riga_computo(lrow, num_righe=1):
             oSheet.getCellByPosition(7, r).CellStyle = 'comp 1-a LARG'
             oSheet.getCellByPosition(8, r).CellStyle = 'comp 1-a peso'
             oSheet.getCellByPosition(9, r).CellStyle = 'Blu'
-            oSheet.getCellByPosition(9, r).Formula = f'=IF(PRODUCT(E{r+1}:I{r+1})=0;"";PRODUCT(E{r+1}:I{r+1}))'
+            oSheet.getCellByPosition(9, r).Formula = (
+                f'=IF(PRODUCT(E{r+1}:I{r+1})=0;"";PRODUCT(E{r+1}:I{r+1}))'
+            )
 
         _gotoCella(2, lrow_ins)
-        return lrow_ins + num_righe - 1  # restituisce ultima riga inserita
+        return lrow_ins + num_righe - 1
+
 
 
 def copia_riga_contab(lrow, num_righe=1):
@@ -5187,7 +5266,7 @@ def copia_riga_contab(lrow, num_righe=1):
         _gotoCella(2, lrow + num_righe)
 
 
-def copia_riga_analisi(lrow):
+def copia_riga_analisi(lrow, num_righe=1):
     '''
     @@@ MODIFICA IN CORSO CON 'LeenoAnalysis.copiaRigaAnalisi'
     Inserisce una nuova riga di misurazione in analisi di prezzo
@@ -5280,11 +5359,11 @@ def Copia_riga_Ent(num_righe=1):
         'VARIANTE': copia_riga_computo,
         'CONTABILITA': copia_riga_contab,
         'Analisi di Prezzo': copia_riga_analisi,
-        'Elenco Prezzi': MENU_nuova_voce_scelta,
+        # 'Elenco Prezzi': MENU_nuova_voce_scelta,
     }
 
     if nome_sheet in azioni:
-        if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA','Elenco Prezzi'):
+        if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dettaglio_misura_rigo()
 
         # Chiamata alla funzione con gestione blocco
@@ -5296,7 +5375,8 @@ def Copia_riga_Ent(num_righe=1):
             oSheet.getRows().getByIndex(lrow).OptimalHeight = True
         except:
             pass  # Sicurezza: alcuni fogli possono avere righe protette o non ridimensionabili
-
+    if nome_sheet == "Elenco Prezzi":
+        MENU_nuova_voce_scelta()
     # Menu_adattaAltezzaRiga()
 
 
@@ -8404,8 +8484,8 @@ def struct(level, vedi = True):
         stile = 'ULTIMUS_3'
         myrange = (
             'ULTIMUS_1',
-            'ULTIMUS_2',
-            'ULTIMUS_3',
+            # 'ULTIMUS_2',
+            # 'ULTIMUS_3',
             'ULTIMUS',
         )
         Dsopra = 0
@@ -10722,28 +10802,28 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             # HEADER
             oHeader = oAktPage.RightPageHeaderContent
             # oAktPage.PageScale = 95
-            oHLText = oHeader.LeftText.Text.String = committente
-            oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt
+            oHeader.LeftText.Text.String = committente
+            oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.LeftText.Text.Text.CharHeight = htxt
 
-            oHLText = oHeader.CenterText.Text.String = oggetto
-            oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
+            oHeader.CenterText.Text.String = oggetto
+            oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.CenterText.Text.Text.CharHeight = htxt
 
-            oHRText = oHeader.RightText.Text.String = luogo
-            oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.RightText.Text.Text.CharHeight = htxt
+            oHeader.RightText.Text.String = luogo
+            oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.RightText.Text.Text.CharHeight = htxt
 
             oAktPage.RightPageHeaderContent = oHeader
             # FOOTER
             oFooter = oAktPage.RightPageFooterContent
-            oHLText = oFooter.CenterText.Text.String = ''
+            oFooter.CenterText.Text.String = ''
             nomefile = oDoc.getURL().replace('%20',' ')
-            oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + os.path.basename(nomefile)
-            oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
-            oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHLText = oFooter.RightText.Text.Text.CharHeight = htxt
+            oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + os.path.basename(nomefile)
+            oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
+            oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oFooter.RightText.Text.Text.CharHeight = htxt
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
@@ -10892,7 +10972,7 @@ def trova_np():
         elif confronto_nome == 'computo_contabilità' or confronto_nome == 'variante_contabilità':
             confronto_col = 21
         else:
-            indicator.end()
+            # indicator.end()
             return
 
 
@@ -12241,18 +12321,31 @@ def msgbox(text, title):
 
 
 def MENU_debug():
-    trova_colore_cella()
-
-    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()
-    DLG.chi(lrow)
-    dv = LeenoComputo.DatiVoce(oSheet, lrow)
+    DLG.chi(lrow[1])
+    dv = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     DLG.chi(dv.ER)
     art = dv.art
     ER = dv.ER
     SR = dv.SR
+
+    return
+    chiudi_dialoghi()
+    GotoSheet('S2')
+    _primaCella(0, 0)
+    return
+    struct(7)
+    return
+    from deep_translator import GoogleTranslator
+
+    client = translate.Client()
+    result = client.translate("Hello world!", target_language="it")
+    DLG.chi(result["translatedText"])
+
+
+    trova_colore_cella()
 
     return
 

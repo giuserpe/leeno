@@ -605,4 +605,3 @@ class DatiVoce:
             importo = oSheet.getCellByPosition(18, er).Value
 
             self._voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
-

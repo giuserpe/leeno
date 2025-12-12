@@ -450,7 +450,7 @@ def svuotaContabilita(oDoc):
 
         oSheet.getCellRangeByName('Z2').Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
 
-        oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
+        oSheet.getCellRangeByName('P2').Formula = '=SUBTOTAL(9;P:P)'  # importo lavori registrati
         oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
         oSheet.getCellByPosition(
             17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
@@ -468,7 +468,7 @@ def svuotaContabilita(oDoc):
         # riga del totale
         oSheet.getCellByPosition(2, 3).String = 'T O T A L E'
         oSheet.getCellByPosition(15,
-                                3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori registrati
+                                3).Formula = '=SUBTOTAL(9;P:P)'  # importo lavori registrati
         oSheet.getCellByPosition(
             17, 3).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
         oSheet.getCellByPosition(

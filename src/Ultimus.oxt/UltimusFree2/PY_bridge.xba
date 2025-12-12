@@ -74,7 +74,7 @@ Sub vai_a_S1
 End Sub
 rem ######################################################################
 Sub vai_a_S2
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_S2&quot;)
+	ScriptPy(&quot;pyleeno&quot;,&quot;vai_a_S2&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_variabili

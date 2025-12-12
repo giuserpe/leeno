@@ -90,5 +90,6 @@
   <dlg:titledbox dlg:id="FrameControl2" dlg:tab-index="28" dlg:left="-90" dlg:top="207" dlg:width="114" dlg:height="39" dlg:help-text="&amp;1156.Dlg_config.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;1157.Dlg_config.FrameControl2.Label"/>
   </dlg:titledbox>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CheckBox7" dlg:tab-index="29" dlg:left="12" dlg:top="116" dlg:width="89" dlg:height="12" dlg:help-text="&amp;1228.Dlg_config.CheckBox7.HelpText" dlg:value="&amp;1229.Dlg_config.CheckBox7.Label" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -186,20 +186,19 @@ def DocumentRefresh(boo):
 @contextmanager
 def DocumentRefreshContext(enable_refresh: bool):
     """
-    Context manager per gestire lo stato di refresh del documento.
-    
-    Esempio d'uso:
-    with LeenoUtils.DocumentRefreshContext(False):
-        # Operazioni veloci senza refresh
-        ...
-    # All'uscita il refresh viene riabilitato automaticamente
+    Context manager per gestire lo stato di refresh del documento,
+    evitando incompatibilità con UNO in caso di eccezione.
     """
     original_state = not enable_refresh
     DocumentRefresh(enable_refresh)
     try:
         yield
+    except Exception as e:
+        # Evita crash UNO: rimuove il traceback
+        raise Exception(str(e)) from None
     finally:
         DocumentRefresh(original_state)
+
 
 ###############################################################################
 
@@ -613,10 +612,10 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str) -> str:
+def wrap_text(text: str, width=60) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
-    wrapped_lines = [ "\n".join(textwrap.wrap(line, width=60)) if line else "" for line in lines ]
+    wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
     return "\n".join(wrapped_lines)
 
 def wrap_path(path, max_len=72):

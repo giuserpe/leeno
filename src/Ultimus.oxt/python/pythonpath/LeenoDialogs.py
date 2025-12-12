@@ -289,6 +289,25 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
             "VAR_XLO": "~Computo - C~ontabilità",
             "CON_XLO": "~Variante - Contabilità",
         }
+
+        if not oDoc.Sheets.hasByName('VARIANTE'):
+            oDlgXLO.getControl('CME_XLO').setEnable(0)
+            oDlgXLO.getControl('CON_XLO').setEnable(0)
+            oDlgXLO.getControl("VAR_XLO").State = 1
+
+        if not oDoc.Sheets.hasByName('CONTABILITA'):
+            oDlgXLO.getControl('VAR_XLO').setEnable(0)
+            oDlgXLO.getControl('CON_XLO').setEnable(0)
+            # oDlgXLO.getControl("CME_XLO").State = 1
+
+
+        # if oDoc.getSheets().hasByName("COMPUTO"):
+        #     oDlgXLO.getControl("CME_XLO").State = 1
+        # elif oDoc.getSheets().hasByName("VARIANTE"):
+        #     oDlgXLO.getControl("VAR_XLO").State = 1
+        # elif oDoc.getSheets().hasByName("CONTABILITA"):
+        #     oDlgXLO.getControl("CON_XLO").State = 1
+
         for ctrl, testo in etichette.items():
             oDlgXLO.getControl(ctrl).Label = testo
 

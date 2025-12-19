@@ -1063,6 +1063,20 @@
                   <value>_self</value>
                 </prop>
               </node>
+              <node oor:name="IE041" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoEtransmit.e_transmit_calc</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>e-Transmit di LeenO...</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
             </node>
           </node>
           <node oor:name="m03" oor:op="replace">

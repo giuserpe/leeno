@@ -418,29 +418,8 @@ def salva_senza_prezzi():
 
 class DatiVoce:
     """
-    Classe per l'estrazione e la gestione dei dati relativi a una voce di COMPUTO o CONTABILITÀ
-    da un foglio di calcolo LibreOffice Calc.
-
-    Questa classe consente di accedere, in modo strutturato, ai dati associati a una voce,
-    partendo da una riga specificata nel foglio. A seconda del tipo di foglio (COMPUTO, VARIANTE,
-    CONTABILITA), estrae e organizza le informazioni in attributi distinti.
-
-    Attributi:
-        oSheet (object): Oggetto Sheet attivo, da cui leggere i dati.
-        lrow (int): Riga iniziale di riferimento per individuare la voce.
-        range_voce (object): Oggetto CellRange corrispondente alla voce (o None se non trovata).
-        SR (int): Riga iniziale della voce.
-        ER (int): Riga finale della voce.
-        voce (tuple): Dati voce computo/variante.
-        REG (tuple): Dati registro della contabilità.
-        SAL (tuple): Dati SAL della contabilità.
-
-    Utilizzo:
-        dv = DatiVoce(oSheet, lrow)
-        print(dv.SR)       # riga di inizio voce
-        print(dv.voce)     # dati voce per COMPUTO
-        print(dv.REG)      # dati registro per CONTABILITA
-        print(dv.SAL)      # dati SAL per CONTABILITA
+    Classe per l'estrazione e la gestione dei dati relativi a una voce di COMPUTO
+    o CONTABILITÀ da un foglio LibreOffice Calc.
     """
 
     def __init__(self, oSheet, lrow):
@@ -449,9 +428,13 @@ class DatiVoce:
         self._range = None
         self._SR = None
         self._ER = None
-        self._REG = None
-        self._SAL = None
-        self._voce = None
+        self._voce = ()
+        self._REG = ()
+        self._SAL = ()
+
+    # ------------------------------------------------------------------
+    # RANGE
+    # ------------------------------------------------------------------
 
     @property
     def range(self):
@@ -471,41 +454,49 @@ class DatiVoce:
             self._ER = self.range.RangeAddress.EndRow
         return self._ER
 
+    # ------------------------------------------------------------------
+    # DATI VOCE
+    # ------------------------------------------------------------------
+
     @property
     def voce(self):
-        if self._voce is None:
+        if not self._voce:
             self._estrai_dati()
         return self._voce
 
     @property
     def num(self):
-        if self._voce is None:
+        if not self._voce:
             self._estrai_dati()
-        return self._voce[0]
+        return self._voce[0] if len(self._voce) > 0 else ""
 
     @property
     def art(self):
-        if self._voce is None:
+        if not self._voce:
             self._estrai_dati()
-        return self._voce[1]
+        return self._voce[1] if len(self._voce) > 1 else ""
 
     @property
     def desc(self):
-        if self._voce is None:
+        if not self._voce:
             self._estrai_dati()
-        return self._voce[2]
+        return self._voce[2] if len(self._voce) > 2 else ""
 
     @property
     def REG(self):
-        if self._REG is None:
+        if not self._REG:
             self._estrai_dati()
         return self._REG
 
     @property
     def SAL(self):
-        if self._SAL is None:
+        if not self._SAL:
             self._estrai_dati()
         return self._SAL
+
+    # ------------------------------------------------------------------
+    # LOGICA INTERNA
+    # ------------------------------------------------------------------
 
     def _circoscrive_voce(self):
         oSheet = self.oSheet
@@ -522,7 +513,6 @@ class DatiVoce:
         }
 
         while oSheet.getCellByPosition(0, lrow).CellStyle in scritte_stili:
-            # DLG.chi(oSheet.getCellByPosition(0, lrow).CellStyle)
             lrow += 1
             if lrow >= oSheet.Rows.Count:
                 return None
@@ -531,24 +521,28 @@ class DatiVoce:
 
         if cs in comp_stili.union(scritte_stili):
             y = lrow
-            while oSheet.getCellByPosition(0, y).CellStyle not in {'Comp End Attributo', 'Comp End Attributo_R'}:
+            while oSheet.getCellByPosition(0, y).CellStyle not in {
+                'Comp End Attributo', 'Comp End Attributo_R'
+            }:
                 y += 1
                 if y >= oSheet.Rows.Count:
                     return None
             end_row = y
 
             y = lrow
-            while y > 0 and oSheet.getCellByPosition(0, y).CellStyle not in {'Comp Start Attributo', 'Comp Start Attributo_R'}:
+            while y > 0 and oSheet.getCellByPosition(0, y).CellStyle not in {
+                'Comp Start Attributo', 'Comp Start Attributo_R'
+            }:
                 y -= 1
             start_row = y
 
         elif cs == 'Ultimus_centro_bordi_lati':
             for y in reversed(range(0, lrow)):
-                if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                if oSheet.getCellByPosition(0, y).CellStyle != cs:
                     start_row = y + 1
                     break
             for y in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
-                if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                if oSheet.getCellByPosition(0, y).CellStyle != cs:
                     end_row = y - 1
                     break
 
@@ -557,12 +551,14 @@ class DatiVoce:
             end_row = LeenoSheetUtils.rRow(oSheet) - 1
 
         else:
-            return cs
+            return None
 
-        # return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
         return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
 
+    # ------------------------------------------------------------------
+
     def _estrai_dati(self):
+        # Se non c'è una voce valida, esce lasciando tuple vuote
         if not self.range:
             return
 
@@ -573,30 +569,32 @@ class DatiVoce:
         num = oSheet.getCellByPosition(0, sr + 1).String
         art = oSheet.getCellByPosition(1, sr + 1).String
         desc = oSheet.getCellByPosition(2, sr + 1).String
+
         quantP = oSheet.getCellByPosition(9, er).Value
         mdo = oSheet.getCellByPosition(30, er).Value
         sic = oSheet.getCellByPosition(17, er).Value
 
         if oSheet.Name == 'CONTABILITA':
-            quantN = ''
+            quantN = ""
             if quantP < 0:
                 quantN = quantP
-                quantP = ''
+                quantP = ""
 
             data = oSheet.getCellByPosition(1, sr + 2).String
             um = oSheet.getCellByPosition(8, er).String.split('[')[-1].split(']')[0]
             Nlib = int(oSheet.getCellByPosition(19, sr + 1).Value)
             Plib = int(oSheet.getCellByPosition(20, sr + 1).Value)
-            flag = oSheet.getCellByPosition(22, sr + 1).String
             nSal = int(oSheet.getCellByPosition(23, sr + 1).Value)
             prezzo = oSheet.getCellByPosition(13, er).Value
             importo = oSheet.getCellByPosition(15, er).Value
 
             self._REG = (
-                num + '\n' + art + '\n' + data, desc, Nlib, Plib, um,
+                num + '\n' + art + '\n' + data,
+                desc, Nlib, Plib, um,
                 quantP, quantN, prezzo, importo
             )
-            quant = quantP if quantP != '' else quantN
+
+            quant = quantP if quantP != "" else quantN
             self._SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
 
         elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -604,4 +602,8 @@ class DatiVoce:
             prezzo = oSheet.getCellByPosition(11, er).Value
             importo = oSheet.getCellByPosition(18, er).Value
 
-            self._voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
+            self._voce = (
+                num, art, desc, um,
+                quantP, prezzo, importo, sic, mdo
+            )
+

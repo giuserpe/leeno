@@ -1,255 +1,88 @@
 '''
 Modulo di debug per LeenO
-permette il debug attraverso l' IDE Eric6 (o simili)
 '''
-import sys
 import os
-import inspect
-import subprocess
-import time
-import atexit
-
-import importlib
-
-from os import listdir
-from os.path import isfile, join
-
-import uno
-from com.sun.star.connection import NoConnectException
-
-# openoffice path
-# adapt to your system
-if sys.platform == 'linux' or sys.platform == 'darwin':
-    _sofficePath = '/usr/lib/libreoffice/program'
-    calc = 'scalc'
-else:
-    _sofficePath = 'C:\\Program Files\\LibreOffice\\program'
-    calc = 'scalc.exe'
-
-OPENOFFICE_PORT = 8100
-OPENOFFICE_PATH    = _sofficePath
-OPENOFFICE_BIN     = os.path.join(OPENOFFICE_PATH, calc)
-OPENOFFICE_LIBPATH = OPENOFFICE_PATH
-
-class OORunner:
-    """
-    Start, stop, and connect to OpenOffice.
-    """
-    def __init__(self, port=OPENOFFICE_PORT):
-        """ Create OORunner that connects on the specified port. """
-        self.port = port
-
-
-    def connect(self, no_startup=False):
-        """
-        Connect to OpenOffice.
-        If a connection cannot be established try to start OpenOffice.
-        """
-        localContext = uno.getComponentContext()
-        resolver     = localContext.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", localContext)
-        context      = None
-        did_start    = False
-
-        n = 0
-        while n < 6:
-            try:
-                context = resolver.resolve("uno:socket,host=localhost,port=%d;urp;StarOffice.ComponentContext" % self.port)
-                break
-            except NoConnectException:
-                pass
-
-            # If first connect failed then try starting OpenOffice.
-            if n == 0:
-                # Exit loop if startup not desired.
-                if no_startup:
-                     break
-                self.startup()
-                did_start = True
-
-            # Pause and try again to connect
-            time.sleep(1)
-            n += 1
-
-        if not context:
-            raise Exception("Failed to connect to OpenOffice on port %d" % self.port)
-
-        desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
-
-        if not desktop:
-            raise Exception("Failed to create OpenOffice desktop on port %d" % self.port)
-
-        if did_start:
-            _started_desktops[self.port] = desktop
-
-        return {'context': context,  'desktop':  desktop}
-
-
-    def startup(self):
-        """
-        Start a headless instance of OpenOffice.
-        """
-        args = [OPENOFFICE_BIN,
-                '--accept=socket,host=localhost,port=%d;urp;StarOffice.ServiceManager' % self.port,
-                '--norestore',
-                '--nofirststartwizard',
-                '--nologo',
-        #`        '--headless',
-                ]
-        env = os.environ.copy()
-        # env  = {'PATH'       : '/bin:/usr/bin:%s' % OPENOFFICE_PATH, 'PYTHONPATH' : OPENOFFICE_LIBPATH, }
-
-        try:
-            # Open connection to server
-            child = subprocess.Popen(args=args, env=env, start_new_session=False)
-        except Exception as e:
-            raise Exception("Failed to start OpenOffice on port %d: %s" % (self.port, e))
-
-        #if pid <= 0:
-        if child is None:
-            raise Exception("Failed to start OpenOffice on port %d" % self.port)
+import sys
+import pyleeno as PL
+import Dialogs
 
 
 
-    def shutdown(self):
-        """
-        Shutdown OpenOffice.
-        """
-        try:
-            if _started_desktops.get(self.port):
-                _started_desktops[self.port].terminate()
-                del _started_desktops[self.port]
-        except Exception:
-            pass
+def aggiorna_configurazione_leeno():
+    '''Rigenera Addons.xcu e registrymodifications.xcu senza reinstallare (Win/Linux/Mac)'''
 
+    # 1. Ottieni il percorso di LeenO installato
+    leeno_path = PL.LeenO_path()
 
+    # 2. Determina i percorsi in base al sistema operativo
+    if sys.platform == "win32":
+        user_config = os.path.expandvars(r"%APPDATA%\LibreOffice\4\user")
+        source_addons = r"W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\Addons.xcu"
+        sistema = "Windows"
+    elif sys.platform == "darwin":  # macOS
+        user_config = os.path.expanduser("~/Library/Application Support/LibreOffice/4/user")
+        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+        sistema = "macOS"
+    else:  # Linux (linux, linux2)
+        user_config = os.path.expanduser("~/.config/libreoffice/4/user")
+        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+        sistema = "Linux"
 
-# Keep track of started desktops and shut them down on exit.
-_started_desktops = {}
+    # 3. Trova e aggiorna Addons.xcu nella cache di configurazione
+    config_base = os.path.join(user_config,
+        "uno_packages/cache/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend")
 
-def _shutdown_desktops():
-    """ Shutdown all OpenOffice desktops that were started by the program. """
-    for port, desktop in _started_desktops.items():
-        try:
-            if desktop:
-                desktop.terminate()
-        except Exception:
-            pass
+    if not os.path.exists(config_base):
+        Dialogs.Info(Title="Errore", Text=f"Directory di configurazione non trovata:\n{config_base}")
+        return False
 
-atexit.register(_shutdown_desktops)
+    target_file = None
+    for root, dirs, files in os.walk(config_base):
+        if "Addons.xcu" in files:
+            target_file = os.path.join(root, "Addons.xcu")
+            break
 
-# builtins dictionary in portable way... sigh
-if type(__builtins__) == type(sys):
-    bDict = __builtins__.__dict__
-else:
-    bDict = __builtins__
+    if not target_file:
+        Dialogs.Info(Title="Errore", Text="Addons.xcu non trovato nella cache!")
+        return False
 
+    # 4. Verifica che il file sorgente esista
+    if not os.path.exists(source_addons):
+        Dialogs.Info(Title="Errore",
+                     Text=f"File sorgente non trovato:\n{source_addons}\n\nModifica il path nel codice per {sistema}")
+        return False
 
-def reloadLeenoModules():
-    '''
-    This function reload all Leeno modules found in pythonpath
-    '''
-    # get our pythonpath
-    myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    myPath = os.path.join(myPath, "pythonpath")
+    # 5. Leggi e processa Addons.xcu
+    try:
+        with open(source_addons, 'r', encoding='utf-8') as f:
+            content = f.read()
 
-    # we need a listing of modules. We look at pythonpath ones
-    pythonFiles = [f[: -3] for f in listdir(myPath) if isfile(join(myPath, f)) and f.endswith(".py")]
-    for f in pythonFiles:
-        print("Loading module:", f)
-        module = importlib.import_module(f)
+        # Sostituisci %origin% con il path reale
+        content = content.replace('%origin%', leeno_path)
 
-        # add to global dictionary, so it's available everywhere
-        bDict[f] = module
+        # 6. Scrivi il file Addons.xcu processato
+        with open(target_file, 'w', encoding='utf-8') as f:
+            f.write(content)
 
-        # reload the module
-        importlib.reload(module)
+        risultato_addons = "✓ Addons.xcu aggiornato"
+    except Exception as e:
+        Dialogs.Info(Title="Errore", Text=f"Errore nell'aggiornamento di Addons.xcu:\n{str(e)}")
+        return False
 
-###########################################################
+    # 7. Cancella registrymodifications.xcu per aggiornare il dispatcher
+    registry_file = os.path.join(user_config, "registrymodifications.xcu")
 
-# create the runner object
-runner = OORunner()
+    try:
+        if os.path.exists(registry_file):
+            os.remove(registry_file)
+            risultato_registry = "✓ registrymodifications.xcu eliminato"
+        else:
+            risultato_registry = "⚠ registrymodifications.xcu non trovato"
+    except Exception as e:
+        risultato_registry = f"✗ Errore cancellazione registrymodifications.xcu:\n{str(e)}"
 
-# start libreoffice and get its context and desktop objects
-lo = runner.connect()
-
-# add our path and pythonpath subpath to our python path
-leenoPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.append(leenoPath)
-leenoPath = os.path.join(leenoPath, "pythonpath")
-sys.path.append(leenoPath)
-
-# if we don't do so, we'll get a null current document
-frames = lo['desktop'].getFrames()
-if len(frames) > 0:
-    frames[0]. activate()
-
-'''
-Poi sembra strano quando dico che il python è stato studiato con i piedi...
-
-By default, when in the __main__ module, __builtins__ is the built-in module __builtin__ (note: no 's'); when in any other module,
-__builtins__ is an alias for the dictionary of the __builtin__ module itself.
-Note that in Python3, the module __builtin__ has been renamed to builtins to avoid some of this confusion.
-'''
-
-# setup our context for LeenO
-bDict['__global_context__'] = lo['context']
-
-# load LeenO modules
-reloadLeenoModules()
-
-desktop = lo['desktop']
-
-
-
-def loadDocument(filename):
-    url = uno.systemPathToFileUrl(filename)
-    oDoc = desktop.loadComponentFromURL(url, "_blank", 0, tuple())
-    return oDoc
-
-# ############################################################################
-from io import StringIO
-import xml.etree.ElementTree as ET
-import LeenoImport
-
-#filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/prezzario2019standardsix.xml"
-
-filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/TestPdfExport.ods"
-oDoc = loadDocument(filename)
-
-sheet = oDoc.Sheets[0]
-pageStyleName = sheet.PageStyle
-pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
-pageStyle = pageStyles.getByName(pageStyleName)
-footer = pageStyle.RightPageFooterContent
-rightText = footer.RightText
-
-pattern = '[PAGINA]'
-pos = rightText.String.find(pattern)
-cursor = rightText.createTextCursor()
-cursor.collapseToStart()
-cursor.goRight(pos, False)
-cursor.goRight(len(pattern), True)
-cursor.String = ''
-oField = oDoc.createInstance("com.sun.star.text.TextField.PageCount")
-cursor.collapseToStart()
-rightText.insertTextContent(cursor, oField, False)
-
-#fields = rightText.TextFields
-#field0 = fields[0]
-#anchor = field0.Anchor
-
-#oField = oDoc.createInstance("com.sun.star.text.TextField.DateTime")
-#oField.IsFixed = True
-#oField.NumberFormat = FindCreateNumberFormatStyle("DD. MMMM YYYY", oDoc)
-#rightText.insertTextContent(rightText.getEnd(), oField, False)
-
-pageStyle.RightPageFooterContent = footer
-
-
-
-
-
-import LeenoSettings
-LeenoSettings.MENU_PrintSettings()
-
-print("\nDONE\n")
+    # 8. Messaggio finale
+    msg = f"{risultato_addons}\n{risultato_registry}\n\nSistema: {sistema}"
+    Dialogs.Info(Title="Configurazione di LeeenO Aggiornata",
+                 Text=msg + "\n\nRiavvia LibreOffice per applicare le modifiche")
+    return True

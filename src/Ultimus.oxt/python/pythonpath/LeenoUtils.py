@@ -384,9 +384,9 @@ def indirizzo_in_forma_leggibile():
 
 ########################################################################
 
-def reset_properties(o_range, cell_formatting=False, character_formatting=False, 
-                     paragraph_formatting=False, border_and_table_formatting=False, 
-                     number_formatting=False, alignment_and_justification=False, 
+def reset_properties(o_range, cell_formatting=False, character_formatting=False,
+                     paragraph_formatting=False, border_and_table_formatting=False,
+                     number_formatting=False, alignment_and_justification=False,
                      validation=False, shadow_and_effects=False):
     """
     Ripristina le proprietà di una selezione di celle (o range) ai valori predefiniti.
@@ -413,26 +413,26 @@ def reset_properties(o_range, cell_formatting=False, character_formatting=False,
     ]
 
     character_formatting_properties = [
-        'CharColor', 'CharComplexColor', 'CharContoured', 'CharCrossedOut', 'CharEmphasis', 'CharFont', 
+        'CharColor', 'CharComplexColor', 'CharContoured', 'CharCrossedOut', 'CharEmphasis', 'CharFont',
         'CharFontCharSet', 'CharFontCharSetAsian', 'CharFontCharSetComplex', 'CharFontFamily', 'CharFontFamilyAsian',
-        'CharFontFamilyComplex', 'CharFontName', 'CharFontNameAsian', 'CharFontNameComplex', 'CharFontPitch', 
-        'CharFontPitchAsian', 'CharFontPitchComplex', 'CharFontStyleName', 'CharFontStyleNameAsian', 
-        'CharFontStyleNameComplex', 'CharHeight', 'CharHeightAsian', 'CharHeightComplex', 'CharLocale', 
-        'CharLocaleAsian', 'CharLocaleComplex', 'CharOverline', 'CharOverlineColor', 'CharOverlineHasColor', 
-        'CharPosture', 'CharPostureAsian', 'CharPostureComplex', 'CharRelief', 'CharShadowed', 'CharStrikeout', 
-        'CharUnderline', 'CharUnderlineColor', 'CharUnderlineHasColor', 'CharWeight', 'CharWeightAsian', 
+        'CharFontFamilyComplex', 'CharFontName', 'CharFontNameAsian', 'CharFontNameComplex', 'CharFontPitch',
+        'CharFontPitchAsian', 'CharFontPitchComplex', 'CharFontStyleName', 'CharFontStyleNameAsian',
+        'CharFontStyleNameComplex', 'CharHeight', 'CharHeightAsian', 'CharHeightComplex', 'CharLocale',
+        'CharLocaleAsian', 'CharLocaleComplex', 'CharOverline', 'CharOverlineColor', 'CharOverlineHasColor',
+        'CharPosture', 'CharPostureAsian', 'CharPostureComplex', 'CharRelief', 'CharShadowed', 'CharStrikeout',
+        'CharUnderline', 'CharUnderlineColor', 'CharUnderlineHasColor', 'CharWeight', 'CharWeightAsian',
         'CharWeightComplex', 'CharWordMode'
     ]
 
     paragraph_formatting_properties = [
-        'ParaAdjust', 'ParaBottomMargin', 'ParaIndent', 'ParaIsCharacterDistance', 'ParaIsForbiddenRules', 
-        'ParaIsHangingPunctuation', 'ParaIsHyphenation', 'ParaLastLineAdjust', 'ParaLeftMargin', 'ParaRightMargin', 
+        'ParaAdjust', 'ParaBottomMargin', 'ParaIndent', 'ParaIsCharacterDistance', 'ParaIsForbiddenRules',
+        'ParaIsHangingPunctuation', 'ParaIsHyphenation', 'ParaLastLineAdjust', 'ParaLeftMargin', 'ParaRightMargin',
         'ParaTopMargin'
     ]
 
     border_and_table_formatting_properties = [
-        'BottomBorder', 'BottomBorder2', 'BottomBorderComplexColor', 'LeftBorder', 'LeftBorder2', 
-        'LeftBorderComplexColor', 'RightBorder', 'RightBorder2', 'RightBorderComplexColor', 'TopBorder', 
+        'BottomBorder', 'BottomBorder2', 'BottomBorderComplexColor', 'LeftBorder', 'LeftBorder2',
+        'LeftBorderComplexColor', 'RightBorder', 'RightBorder2', 'RightBorderComplexColor', 'TopBorder',
         'TopBorder2', 'TopBorderComplexColor', 'TableBorder', 'TableBorder2'
     ]
 
@@ -479,14 +479,14 @@ def reset_properties(o_range, cell_formatting=False, character_formatting=False,
     #         o_range.setPropertyToDefault(prop)
     #     except Exception as e:
     #         pass
-    
+
 
 ########################################################################
 
 def imposta_schermo_intero(stato):
     """
     Attiva o disattiva la modalità schermo intero.
-    
+
     :param stato: Booleano, True per abilitare, False per disabilitare lo schermo intero.
     """
     ctx = uno.getComponentContext()
@@ -498,12 +498,12 @@ def imposta_schermo_intero(stato):
         controller = document.getCurrentController()
         frame = controller.getFrame()
         dispatcher = smgr.createInstanceWithContext("com.sun.star.frame.DispatchHelper", ctx)
-        
+
         # Configura i parametri per il comando FullScreen
         args = [uno.createUnoStruct("com.sun.star.beans.PropertyValue")]
         args[0].Name = "FullScreen"
         args[0].Value = stato
-        
+
         # Esegue il comando FullScreen
         dispatcher.executeDispatch(frame, ".uno:FullScreen", "", 0, tuple(args))
 
@@ -526,7 +526,7 @@ def int_to_italian(n: int) -> str:
              "sedici","diciassette","diciotto","diciannove"]
     tens_names = {20:"venti",30:"trenta",40:"quaranta",50:"cinquanta",
                   60:"sessanta",70:"settanta",80:"ottanta",90:"novanta"}
-    
+
     def under_thousand(num: int) -> str:
         res = ""
         if num >= 100:
@@ -612,7 +612,7 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str, width=60) -> str:
+def wrap_text(text: str, width=72) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
@@ -623,7 +623,7 @@ def wrap_path(path, max_len=72):
     parts = path.split('\\')
     result = parts[0]
     current = parts[0]
-    
+
     for p in parts[1:]:
         if len(current + '\\' + p) > max_len:
             result += '\\\n' + p
@@ -631,5 +631,5 @@ def wrap_path(path, max_len=72):
         else:
             result += '\\' + p
             current += '\\' + p
-    
+
     return result

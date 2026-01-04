@@ -839,13 +839,85 @@ def setAdatta():
 #             oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
 #     return
 
-def adattaAltezzaRiga(oSheet=False):
+# def adattaAltezzaRiga(oSheet=False, all=False):
+#     """
+#     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
+#     Versione bilanciata tra velocità e manutenibilità.
+#     """
+#     # Configurazioni (modificabili)
+#     memorizza_posizione()
+#     lrow = PL.LeggiPosizioneCorrente()[1]
+
+#     STILI_CELLA = {
+#         'comp 1-a',
+#         'Comp-Bianche in mezzo Descr_R',
+#         'Comp-Bianche in mezzo Descr',
+#         'EP-a',
+#         'Ultimus_centro_bordi_lati'
+#     }
+#     FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
+#     RIGA_SPECIALE = 2
+#     ALTEZZA_SPECIALE = 1050
+
+#     try:
+#         # --- INIZIALIZZAZIONE VELOCE ---
+
+#         oDoc = LeenoUtils.getDocument()
+#         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
+#         usedArea = SheetUtils.getUsedArea(oSheet)
+#         versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
+
+#         # --- OPERAZIONE PRINCIPALE (velocizzata) ---
+#         oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
+
+#         # --- CASI SPECIALI (ottimizzati) ---
+#         if oSheet.Name in FOGLI_SPECIALI:
+#             # Imposta altezza fissa per riga speciale
+#             oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
+
+#             # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
+#             if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
+#                 oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
+
+#         # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
+#         if 520 < versione_lo < 642:
+#             cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+#             for stile in STILI_CELLA:
+#                 try:
+#                     cell_styles.getByName(stile).IsTextWrapped = True
+#                 except Exception:
+#                     continue  # Ignora stili mancanti senza log (più veloce)
+
+#             # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
+#             if all:
+#             #     for y in range(0, usedArea.EndRow + 1):
+#             #         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+#             # else:
+#                 for y in range(0, usedArea.EndRow + 1):
+#                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+#                         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+#             else:
+#                 oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
+
+#             # for y in range(0, usedArea.EndRow + 1):
+#             #     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+#             #         oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
+
+#     except Exception as e:
+#         DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
+#         raise  # Rilancia per gestione esterna
+#     LeenoUtils.DocumentRefresh(True)
+#     ripristina_posizione()
+
+def adattaAltezzaRiga(oSheet=False, all=False):
     """
     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
     Versione bilanciata tra velocità e manutenibilità.
     """
-    # Configurazioni (modificabili)
+    # Presumo che queste funzioni siano definite globalmente o importate
     memorizza_posizione()
+
+    # Costanti di configurazione
     STILI_CELLA = {
         'comp 1-a',
         'Comp-Bianche in mezzo Descr_R',
@@ -858,44 +930,52 @@ def adattaAltezzaRiga(oSheet=False):
     ALTEZZA_SPECIALE = 1050
 
     try:
-        # --- INIZIALIZZAZIONE VELOCE ---
-
         oDoc = LeenoUtils.getDocument()
         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
         usedArea = SheetUtils.getUsedArea(oSheet)
-        versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
+        lrow = PL.LeggiPosizioneCorrente()[1]
 
-        # --- OPERAZIONE PRINCIPALE (velocizzata) ---
-        oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
+        # Conversione versione LO: gestisce stringhe tipo '7.5.1' -> 751
+        # Il replace('.', '') su tutta la stringa è più sicuro del slicing fisso
+        raw_version = PL.loVersion().split('.')
+        versione_lo = int("".join(raw_version[:3]))
 
-        # --- CASI SPECIALI (ottimizzati) ---
+        # --- OPERAZIONE PRINCIPALE ---
+        # Applica l'altezza ottimale a tutto il range usato (molto più veloce del loop)
+        oSheet.getRows().OptimalHeight = True
+
+        # --- CASI SPECIALI ---
         if oSheet.Name in FOGLI_SPECIALI:
-            # Imposta altezza fissa per riga speciale
+            # getCellByPosition(Colonna, Riga) -> 0, 2 è la riga 3
             oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
 
-            # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
-            if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
-                oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
-
-        # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
-        if 520 < versione_lo < 642:
-            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+        # --- GESTIONE BUG VERSIONI VECCHIE (5.2.0 - 6.4.2) ---
+        # Se la versione è nel range critico, forziamo il refresh dello stile e l'altezza
+        if 520 <= versione_lo <= 642:
+            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")
             for stile in STILI_CELLA:
-                try:
+                if cell_styles.hasByName(stile):
                     cell_styles.getByName(stile).IsTextWrapped = True
-                except Exception:
-                    continue  # Ignora stili mancanti senza log (più veloce)
 
-            # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
-            for y in range(0, usedArea.EndRow + 1):
-                if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-                    oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
+            if all:
+                # Se 'all' è True, cicla su tutta l'area usata
+                for y in range(0, usedArea.EndRow + 1):
+                    if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+                        oSheet.getRows().getByIndex(y).OptimalHeight = True
+            else:
+                # Altrimenti agisce solo intorno alla riga corrente (lrow è 1-based?)
+                # Protezione per non andare sotto riga 0
+                start_row = max(0, lrow - 2)
+                for y in range(start_row, lrow + 1):
+                    oSheet.getRows().getByIndex(y).OptimalHeight = True
 
     except Exception as e:
-        print(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
-        raise  # Rilancia per gestione esterna
-    LeenoUtils.DocumentRefresh(True)
-    ripristina_posizione()
+            DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")
+            raise  # Rilancia per gestione esterna
+    finally:
+        # Il refresh e il ripristino vanno in finally per essere eseguiti sempre
+        LeenoUtils.DocumentRefresh(True)
+        ripristina_posizione()
 # ###############################################################
 
 

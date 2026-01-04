@@ -410,17 +410,17 @@ def invia_voce_interno():
 
 ###############################################################################
 def MENU_invia_voce():
-    # with LeenoUtils.DocumentRefreshContext(False):
-    stato = cfg.read('Generale', 'pesca_auto')
-    cfg.write('Generale', 'pesca_auto', 0)
+    with LeenoUtils.DocumentRefreshContext(False):
+        stato = cfg.read('Generale', 'pesca_auto')
+        cfg.write('Generale', 'pesca_auto', 0)
 
-    invia_voce()
+        invia_voce()
 
-    cfg.write('Generale', 'pesca_auto', stato)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    LeenoUtils.DocumentRefresh(True)
+        cfg.write('Generale', 'pesca_auto', stato)
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        LeenoUtils.DocumentRefresh(True)
 
 
 def invia_voce():
@@ -479,7 +479,7 @@ def invia_voce():
         for y in lista:
             if oSheet.getCellByPosition(1, y).Type.value == 'FORMULA':
                 analisi.append(oSheet.getCellByPosition(0, y).String)
-        return (analisi, lista)
+        return (analisi)
 
     def recupera_voce (codice_da_cercare):
         '''
@@ -505,6 +505,7 @@ def invia_voce():
 
     # partenza
     if oSheet.Name == 'Elenco Prezzi':
+        analisi = getAnalisi(oSheet)
         voce_da_inviare = oSheet.getCellByPosition(0, lrow).String
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
         # verifica presenza codice in EP
@@ -519,14 +520,14 @@ def invia_voce():
                 MENU_nuova_voce_scelta()
                 lrow = LeggiPosizioneCorrente()
                 dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-                dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
+                # dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
                 _gotoCella(lrow[0]+1, lrow[1]+1)
 
             else:
                 lrow = LeggiPosizioneCorrente()[1]
                 LeenoComputo.cambia_articolo(dccSheet, lrow, voce_da_inviare)
                 lrow = LeggiPosizioneCorrente()[1]
-                dccSheet.getCellByPosition(1, lrow).CellBackColor = 14942166
+                # dccSheet.getCellByPosition(1, lrow).CellBackColor = 14942166
             LeenoSheetUtils.ripristina_posizione()
         return
 
@@ -4015,6 +4016,15 @@ def XPWE_out_run(elaborato, out_file, analisi=False):
 'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali'
 'di Spese Generali e Utile d\'Impresa siano impostate correttamente,'
 'in modo da garantire l\'esatta elaborazione dei dati.')
+
+        # Apri la cartella contenente il file ZIP
+        try:
+            apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
+            zip_url = uno.systemPathToFileUrl(str(out_file.parent))
+            apri.execute(zip_url, "", 0)
+        except Exception:
+            pass
+
     except IOError:
         Dialogs.Exclamation(Title = 'E R R O R E !',
             Text='''Esportazione non eseguita!
@@ -5182,6 +5192,7 @@ def MENU_elimina_righe():
         # --- 4) RIGENERA PARZIALI SE NECESSARIO ---
         if rigen:
             rigenera_parziali(False)
+        Rinumera_TUTTI_Capitoli2(oSheet)
 
         # --- 5) Deseleziona tutto ---
         oDoc.CurrentController.select(
@@ -5382,7 +5393,7 @@ def MENU_Copia_riga_Ent():
     '''
     # with LeenoUtils.DocumentRefreshContext(False):
     Copia_riga_Ent()
-        # LeenoSheetUtils.adattaAltezzaRiga()
+    LeenoSheetUtils.adattaAltezzaRiga()
 
 def Copia_riga_Ent(num_righe=1):
     """
@@ -11723,11 +11734,6 @@ def getLastUsedCell(oSheet):
 
 
 ########################################################################
-def trova_colore_cella():
-    oDoc = LeenoUtils.getDocument()
-    active_cell = oDoc.CurrentSelection
-    DLG.chi(active_cell.CellBackColor)
-    return
 
 def cerca_rosso_mancante():
     """
@@ -12329,10 +12335,10 @@ def msgbox(text, title):
     )
     box.execute()
 
+import Debug
 def MENU_debug():
-    import Debug
 
-    Debug.aggiorna_configurazione_leeno()
+    Debug.trova_colore_cella()
     return
     DLG.chi(LeenO_path())
     return

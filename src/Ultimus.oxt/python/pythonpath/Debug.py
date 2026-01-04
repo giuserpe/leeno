@@ -8,6 +8,9 @@ import os
 import sys
 import pyleeno as PL
 import Dialogs
+import LeenoUtils
+import LeenoDialogs as DLG
+
 
 def aggiorna_configurazione_leeno():
     '''Rigenera Addons.xcu e registrymodifications.xcu senza reinstallare (Win/Linux/Mac)'''
@@ -87,3 +90,13 @@ def aggiorna_configurazione_leeno():
     Dialogs.Info(Title="Configurazione di LeeenO Aggiornata",
                  Text=msg + "\n\nRiavvia LibreOffice per applicare le modifiche")
     return True
+
+########################################################################
+# Funzione di debug per trovare il colore di sfondo di una cella
+########################################################################
+
+def trova_colore_cella():
+    oDoc = LeenoUtils.getDocument()
+    active_cell = oDoc.CurrentSelection
+    DLG.chi(active_cell.CellBackColor)
+    return

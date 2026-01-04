@@ -195,7 +195,17 @@ def DocumentRefreshContext(enable_refresh: bool):
         yield
     except Exception as e:
         # Evita crash UNO: rimuove il traceback
-        raise Exception(str(e)) from None
+        IconType = "error"
+        Title = 'ATTENZIONE!'
+        Text='''
+Prima di procedere è meglio dare un nome al file.
+
+Lavorando su un file senza nome
+potresti avere dei malfunzionamenti.
+'''
+        import Dialogs
+        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+        # raise Exception(str(e)) from None
     finally:
         DocumentRefresh(original_state)
 

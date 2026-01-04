@@ -99,6 +99,7 @@ def cambia_articolo(oSheet, lrow, nuovo_articolo):
     # Modifica dell'articolo:
     cell = oSheet.getCellByPosition(1, start_row + 1)
     cell.String = nuovo_articolo
+    cell.CellBackColor = 14942166
 
     return True
 

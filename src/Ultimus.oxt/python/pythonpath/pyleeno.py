@@ -5395,36 +5395,110 @@ def MENU_Copia_riga_Ent():
     Copia_riga_Ent()
     LeenoSheetUtils.adattaAltezzaRiga()
 
-def Copia_riga_Ent(num_righe=1):
+# def Copia_riga_Ent(num_righe=1):
+#     """
+#     Aggiunge una o tante righe di misurazione.
+#     """
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
+#     nome_sheet = oSheet.Name
+
+#     # Se le colonne di misura sono nascoste, vengono visualizzate
+#     col_misura = oSheet.getColumns()
+#     if not col_misura.getByIndex(5).IsVisible:
+#         n = SheetUtils.getLastUsedRow(oSheet)
+#         for el in range(4, n):
+#             cell = oSheet.getCellByPosition(2, el)
+#             if cell.CellStyle == "comp sotto centro":
+#                 cell.Formula = ''
+#         for el in range(5, 8):
+#             col_misura.getByIndex(el).IsVisible = True
+
+#     lrow = LeggiPosizioneCorrente()[1]
+#     dettaglio_attivo = cfg.read('Generale', 'dettaglio') == '1'
+
+#     azioni = {
+#         'COMPUTO': copia_riga_computo,
+#         'VARIANTE': copia_riga_computo,
+#         'CONTABILITA': copia_riga_contab,
+#         'Analisi di Prezzo': copia_riga_analisi,
+#         # 'Elenco Prezzi': MENU_nuova_voce_scelta,
+#     }
+
+#     if nome_sheet in azioni:
+#         if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+#             dettaglio_misura_rigo()
+
+#         # Chiamata alla funzione con gestione blocco
+#         lrow = azioni[nome_sheet](lrow, num_righe)
+
+#         # Aggiorna altezza ultima riga inserita
+#         # oSheet.getCellRangeByPosition(0, lrow, 0, lrow).Rows.OptimalHeight = True
+#         try:
+#             oSheet.getRows().getByIndex(lrow).OptimalHeight = True
+#         except:
+#             pass  # Sicurezza: alcuni fogli possono avere righe protette o non ridimensionabili
+#     if nome_sheet == "Elenco Prezzi":
+#         MENU_nuova_voce_scelta()
+#     # Menu_adattaAltezzaRiga()
+
+
+def Copia_riga_Ent(num_righe=None):
     """
-    Aggiunge una o tante righe di misurazione.
+    Aggiunge righe di misurazione.
+    Se num_righe non è specificato, usa il numero di righe attualmente selezionate.
+
+    Args:
+        num_righe (int, optional): Numero di righe da inserire.
+                                   Se None, usa la selezione corrente.
+
+    Returns:
+        int: Indice dell'ultima riga inserita, o None se nessuna operazione
     """
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nome_sheet = oSheet.Name
 
+    # Determina il numero di righe da inserire dalla selezione
+    if num_righe is None:
+        try:
+            selection = oDoc.CurrentSelection.getRangeAddress()
+            sRow = selection.StartRow
+            eRow = selection.EndRow + 1
+            num_righe = eRow - sRow
+        except AttributeError:
+            num_righe = 1
+    # DLG.chi(num_righe)
+    # Validazione parametro
+    if not isinstance(num_righe, int) or num_righe < 1:
+        DLG.chi(f"Numero righe non valido: {num_righe}. Uso valore 1.")
+        num_righe = 1
+
     # Se le colonne di misura sono nascoste, vengono visualizzate
     col_misura = oSheet.getColumns()
     if not col_misura.getByIndex(5).IsVisible:
         n = SheetUtils.getLastUsedRow(oSheet)
-        for el in range(4, n):
+        # Pulisce le formule nelle celle con stile specifico
+        for el in range(4, n + 1):  # Corretto: aggiunto +1
             cell = oSheet.getCellByPosition(2, el)
             if cell.CellStyle == "comp sotto centro":
                 cell.Formula = ''
+        # Rende visibili le colonne di misura (5, 6, 7)
         for el in range(5, 8):
             col_misura.getByIndex(el).IsVisible = True
 
     lrow = LeggiPosizioneCorrente()[1]
     dettaglio_attivo = cfg.read('Generale', 'dettaglio') == '1'
 
+    # Dizionario delle azioni per tipo di foglio
     azioni = {
         'COMPUTO': copia_riga_computo,
         'VARIANTE': copia_riga_computo,
         'CONTABILITA': copia_riga_contab,
         'Analisi di Prezzo': copia_riga_analisi,
-        # 'Elenco Prezzi': MENU_nuova_voce_scelta,
     }
 
+    # Esegue l'azione appropriata in base al tipo di foglio
     if nome_sheet in azioni:
         if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dettaglio_misura_rigo()
@@ -5433,14 +5507,21 @@ def Copia_riga_Ent(num_righe=1):
         lrow = azioni[nome_sheet](lrow, num_righe)
 
         # Aggiorna altezza ultima riga inserita
-        # oSheet.getCellRangeByPosition(0, lrow, 0, lrow).Rows.OptimalHeight = True
         try:
             oSheet.getRows().getByIndex(lrow).OptimalHeight = True
-        except:
-            pass  # Sicurezza: alcuni fogli possono avere righe protette o non ridimensionabili
-    if nome_sheet == "Elenco Prezzi":
+        except (AttributeError, IndexError) as e:
+            # Sicurezza: alcuni fogli possono avere righe protette o non ridimensionabili
+            DLG.chi(f"Impossibile ottimizzare altezza riga {lrow}: {e}")
+
+    elif nome_sheet == "Elenco Prezzi":
         MENU_nuova_voce_scelta()
-    # Menu_adattaAltezzaRiga()
+        return None
+
+    else:
+        DLG.chi(f"Tipo di foglio '{nome_sheet}' non supportato")
+        return None
+
+    return lrow
 
 ########################################################################
 def count_clipboard_lines():
@@ -8264,10 +8345,10 @@ def MENU_filtra_codice():
     #  lrow = LeggiPosizioneCorrente()[1]
     #  oSheet = oDoc.CurrentController.ActiveSheet
     #  _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow))
+    LeenoSheetUtils.memorizza_posizione()
     with LeenoUtils.DocumentRefreshContext(False):
-        # LeenoSheetUtils.memorizza_posizione()
         filtra_codice()
-        # LeenoSheetUtils.ripristina_posizione()
+    LeenoSheetUtils.ripristina_posizione()
 
 def filtra_codice(voce=None):
     '''
@@ -12337,19 +12418,16 @@ def msgbox(text, title):
 
 import Debug
 def MENU_debug():
-
-    Debug.trova_colore_cella()
-    return
-    DLG.chi(LeenO_path())
-    return
-    import LeenoEtransmit
-    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()
-    DLG.chi(lrow[1])
     dv = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     DLG.chi(dv.ER)
+    return
+
+
+
+    DLG.chi(lrow[1])
     art = dv.art
     ER = dv.ER
     SR = dv.SR

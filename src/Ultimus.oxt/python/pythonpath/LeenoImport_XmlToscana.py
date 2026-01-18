@@ -173,6 +173,8 @@ supportato nella prossima versione del programma""")
         # per separare le migliaia OLTRE al punto per separare i decimali
         # quindi... se trovo più di un punto decimale, devo eliminare i primi
         if prezzo is not None:
+            if ',' in prezzo:
+                prezzo = prezzo.replace(',', '.')
             if '.' not in prezzo:
                 prezzo = prezzo + '.0'
             prSplit = prezzo.split('.')

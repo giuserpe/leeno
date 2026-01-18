@@ -229,6 +229,7 @@ def insertVoceComputoGrezza(oSheet, lrow):
 
 
 # TROPPO LENTA
+@LeenoUtils.no_refresh
 def ins_voce_computo(cod=None):
     '''
     cod    { string }
@@ -271,13 +272,15 @@ def ins_voce_computo(cod=None):
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 
+import Debug
+@LeenoUtils.no_refresh
 def Menu_computoSenzaPrezzi():
     '''
     Duplica il COMPUTO/VARIANTE aggiungendo il suffissio '_copia'
     e cancella i prezzi unitari dal nuovo foglio
     '''
-    with LeenoUtils.DocumentRefreshContext(False):
-        salva_senza_prezzi()
+    # with LeenoUtils.DocumentRefreshContext(False):
+    salva_senza_prezzi()
 
 
 def salva_senza_prezzi():

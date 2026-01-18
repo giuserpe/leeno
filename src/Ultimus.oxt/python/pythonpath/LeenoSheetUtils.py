@@ -838,86 +838,15 @@ def setAdatta():
 #         for y in range(0, test):
 #             oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
 #     return
-
-# def adattaAltezzaRiga(oSheet=False, all=False):
-#     """
-#     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
-#     Versione bilanciata tra velocità e manutenibilità.
-#     """
-#     # Configurazioni (modificabili)
-#     memorizza_posizione()
-#     lrow = PL.LeggiPosizioneCorrente()[1]
-
-#     STILI_CELLA = {
-#         'comp 1-a',
-#         'Comp-Bianche in mezzo Descr_R',
-#         'Comp-Bianche in mezzo Descr',
-#         'EP-a',
-#         'Ultimus_centro_bordi_lati'
-#     }
-#     FOGLI_SPECIALI = {'Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'}
-#     RIGA_SPECIALE = 2
-#     ALTEZZA_SPECIALE = 1050
-
-#     try:
-#         # --- INIZIALIZZAZIONE VELOCE ---
-
-#         oDoc = LeenoUtils.getDocument()
-#         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
-#         usedArea = SheetUtils.getUsedArea(oSheet)
-#         versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
-
-#         # --- OPERAZIONE PRINCIPALE (velocizzata) ---
-#         oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
-
-#         # --- CASI SPECIALI (ottimizzati) ---
-#         if oSheet.Name in FOGLI_SPECIALI:
-#             # Imposta altezza fissa per riga speciale
-#             oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
-
-#             # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
-#             if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
-#                 oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
-
-#         # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
-#         if 520 < versione_lo < 642:
-#             cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
-#             for stile in STILI_CELLA:
-#                 try:
-#                     cell_styles.getByName(stile).IsTextWrapped = True
-#                 except Exception:
-#                     continue  # Ignora stili mancanti senza log (più veloce)
-
-#             # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
-#             if all:
-#             #     for y in range(0, usedArea.EndRow + 1):
-#             #         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
-#             # else:
-#                 for y in range(0, usedArea.EndRow + 1):
-#                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-#                         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
-#             else:
-#                 oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
-
-#             # for y in range(0, usedArea.EndRow + 1):
-#             #     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-#             #         oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
-
-#     except Exception as e:
-#         DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
-#         raise  # Rilancia per gestione esterna
-#     LeenoUtils.DocumentRefresh(True)
-#     ripristina_posizione()
-
 def adattaAltezzaRiga(oSheet=False, all=False):
     """
     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
     Versione bilanciata tra velocità e manutenibilità.
     """
-    # Presumo che queste funzioni siano definite globalmente o importate
+    # Configurazioni (modificabili)
     memorizza_posizione()
+    lrow = PL.LeggiPosizioneCorrente()[1]
 
-    # Costanti di configurazione
     STILI_CELLA = {
         'comp 1-a',
         'Comp-Bianche in mezzo Descr_R',
@@ -930,52 +859,54 @@ def adattaAltezzaRiga(oSheet=False, all=False):
     ALTEZZA_SPECIALE = 1050
 
     try:
+        # --- INIZIALIZZAZIONE VELOCE ---
+
         oDoc = LeenoUtils.getDocument()
         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
         usedArea = SheetUtils.getUsedArea(oSheet)
-        lrow = PL.LeggiPosizioneCorrente()[1]
+        versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
 
-        # Conversione versione LO: gestisce stringhe tipo '7.5.1' -> 751
-        # Il replace('.', '') su tutta la stringa è più sicuro del slicing fisso
-        raw_version = PL.loVersion().split('.')
-        versione_lo = int("".join(raw_version[:3]))
+        # --- OPERAZIONE PRINCIPALE (velocizzata) ---
+        oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
 
-        # --- OPERAZIONE PRINCIPALE ---
-        # Applica l'altezza ottimale a tutto il range usato (molto più veloce del loop)
-        oSheet.getRows().OptimalHeight = True
-
-        # --- CASI SPECIALI ---
+        # --- CASI SPECIALI (ottimizzati) ---
         if oSheet.Name in FOGLI_SPECIALI:
-            # getCellByPosition(Colonna, Riga) -> 0, 2 è la riga 3
+            # Imposta altezza fissa per riga speciale
             oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
 
-        # --- GESTIONE BUG VERSIONI VECCHIE (5.2.0 - 6.4.2) ---
-        # Se la versione è nel range critico, forziamo il refresh dello stile e l'altezza
-        if 520 <= versione_lo <= 642:
-            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")
-            for stile in STILI_CELLA:
-                if cell_styles.hasByName(stile):
-                    cell_styles.getByName(stile).IsTextWrapped = True
+            # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
+            if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
+                oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
 
+        # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
+        if 520 < versione_lo < 642:
+            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+            for stile in STILI_CELLA:
+                try:
+                    cell_styles.getByName(stile).IsTextWrapped = True
+                except Exception:
+                    continue  # Ignora stili mancanti senza log (più veloce)
+
+            # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
             if all:
-                # Se 'all' è True, cicla su tutta l'area usata
+            #     for y in range(0, usedArea.EndRow + 1):
+            #         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+            # else:
                 for y in range(0, usedArea.EndRow + 1):
                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-                        oSheet.getRows().getByIndex(y).OptimalHeight = True
+                        oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
             else:
-                # Altrimenti agisce solo intorno alla riga corrente (lrow è 1-based?)
-                # Protezione per non andare sotto riga 0
-                start_row = max(0, lrow - 2)
-                for y in range(start_row, lrow + 1):
-                    oSheet.getRows().getByIndex(y).OptimalHeight = True
+                oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
+
+            # for y in range(0, usedArea.EndRow + 1):
+            #     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
+            #         oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
 
     except Exception as e:
-            DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")
-            raise  # Rilancia per gestione esterna
-    finally:
-        # Il refresh e il ripristino vanno in finally per essere eseguiti sempre
-        LeenoUtils.DocumentRefresh(True)
-        ripristina_posizione()
+        DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
+        raise  # Rilancia per gestione esterna
+    LeenoUtils.DocumentRefresh(True)
+    ripristina_posizione()
 # ###############################################################
 
 
@@ -1215,47 +1146,49 @@ def numeraVoci(oSheet, lrow, tutte):
 
 
 # ###############################################################
-
-
+import LeenoUtils
+from undo_utils import with_undo
+@with_undo # abilita il supporto undo
+@LeenoUtils.no_refresh # evita il refresh del documento durante l'esecuzione
 def MENU_elimina_righe_vuote():
     '''Elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
-    with LeenoUtils.DocumentRefreshContext(False):
-        LeenoSheetUtils.memorizza_posizione()
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
+    # with LeenoUtils.DocumentRefreshContext(False):
+    LeenoSheetUtils.memorizza_posizione()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
 
-        if oSheet.Name not in valid_sheets:
-            Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
-            return
+    if oSheet.Name not in valid_sheets:
+        Dialogs.Exclamation(Title='Avviso!', Text=f'Puoi usare questo comando solo nelle tabelle {", ".join(valid_sheets)}.')
+        return
 
-        confirmation_text = f'Stai per eliminare tutte le righe\ndi misura vuote nell\'elaborato {oSheet.Name}.\n\nVuoi procedere?'
-        if Dialogs.YesNoDialog(IconType="question", Title='ATTENZIONE!', Text=confirmation_text) == 0:
-            return
+    confirmation_text = f'Stai per eliminare tutte le righe\ndi misura vuote nell\'elaborato {oSheet.Name}.\n\nVuoi procedere?'
+    if Dialogs.YesNoDialog(IconType="question", Title='ATTENZIONE!', Text=confirmation_text) == 0:
+        return
 
-        # lrow_c = PL.LeggiPosizioneCorrente()[1]
-        sString = 'T O T A L E' if oSheet.Name == 'CONTABILITA' else 'TOTALI COMPUTO'
-        lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+    # lrow_c = PL.LeggiPosizioneCorrente()[1]
+    sString = 'T O T A L E' if oSheet.Name == 'CONTABILITA' else 'TOTALI COMPUTO'
+    lrow = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
 
-        indicator = oDoc.getCurrentController().getStatusIndicator()
-        indicator.start("", lrow)  # 100 = max progresso
-        indicator.Text = 'Eliminazione delle righe vuote in corso...'
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    indicator.start("", lrow)  # 100 = max progresso
+    indicator.Text = 'Eliminazione delle righe vuote in corso...'
 
-        for y in reversed(range(0, lrow)):
-            indicator.Value = y
+    for y in reversed(range(0, lrow)):
+        indicator.Value = y
 
-            if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
+        if oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            row_has_data = any(oSheet.getCellByPosition(x, y).Type.value != 'EMPTY' for x in range(0, 8 + 1))
 
-            if not row_has_data:
-                oSheet.getRows().removeByIndex(y, 1)
+        if not row_has_data:
+            oSheet.getRows().removeByIndex(y, 1)
 
-        indicator.end()
+    indicator.end()
 
-        lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
-        # PL._gotoCella(1, 4)
-        # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
-        LeenoSheetUtils.ripristina_posizione()
+    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+    # PL._gotoCella(1, 4)
+    # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
+    LeenoSheetUtils.ripristina_posizione()
 
 
 # ###############################################################

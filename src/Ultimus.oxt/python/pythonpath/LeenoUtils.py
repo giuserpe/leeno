@@ -194,22 +194,142 @@ def DocumentRefreshContext(enable_refresh: bool):
     try:
         yield
     except Exception as e:
+        
         # Evita crash UNO: rimuove il traceback
         IconType = "error"
         Title = 'ATTENZIONE!'
         Text='''
-Prima di procedere è meglio dare un nome al file.
+[1] Prima di procedere è meglio dare un nome al file. 
 
 Lavorando su un file senza nome
 potresti avere dei malfunzionamenti.
 '''
         import Dialogs
-        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+        # Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
         # raise Exception(str(e)) from None
     finally:
         DocumentRefresh(original_state)
 
+# class DocumentRefreshContext:
+#     pass
 
+#     def __init__(self, enable_refresh: bool):
+#         self.enable_refresh = enable_refresh
+#         self.original_state = not enable_refresh
+
+#     def __enter__(self):
+#         # Azione iniziale
+#         DocumentRefresh(self.enable_refresh)
+#         return self
+
+#     def __exit__(self, exc_type, exc_value, traceback):
+#         # Gestione Eccezioni (sostituisce il blocco except)
+#         if exc_type is not None:
+#             import Dialogs
+#             Dialogs.NotifyDialog(
+#                 IconType="error",
+#                 Title='ATTENZIONE!',
+#                 Text="Prima di procedere è meglio dare un nome al file.\n\n"
+#                      "Lavorando su un file senza nome potresti avere dei malfunzionamenti."
+#             )
+#             # Ritorna True se vuoi silenziare l'eccezione (come nel tuo codice originale)
+#             # Ritorna False se vuoi che l'eccezione continui a salire
+#             return True 
+
+#         # Azione finale (sempre eseguita, come il finally)
+#         DocumentRefresh(self.original_state)
+
+
+###############################################################################
+###############################################################################
+"""
+Decorator e Context Manager per disabilitare il refresh in LeenO.
+"""
+
+import functools
+import logging
+from contextlib import contextmanager
+
+logger = logging.getLogger(__name__)
+
+
+# ============================================================================
+# CONTEXT MANAGER (per uso con 'with')
+# ============================================================================
+
+@contextmanager
+def no_refresh_context():
+    """
+    Context manager per disabilitare temporaneamente il refresh.
+    
+    Uso:
+        with no_refresh_context():
+            # Il refresh è disabilitato qui
+            pass
+        # Il refresh è riattivato qui
+    """
+    # Setup: disabilita refresh
+    DocumentRefresh(False)
+    
+    try:
+        # Yield control al blocco with
+        yield
+    finally:
+        # Cleanup: riattiva sempre il refresh
+        DocumentRefresh(True)
+
+
+# ============================================================================
+# DECORATOR (per decorare funzioni)
+# ============================================================================
+
+def no_refresh(func):
+    """
+    Decorator che disabilita il refresh durante l'esecuzione della funzione.
+    
+    Uso:
+        @no_refresh
+        def mia_funzione():
+            # Il refresh è disabilitato qui
+            pass
+        # Il refresh è riattivato qui
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Usa il context manager
+        with no_refresh_context():
+            return func(*args, **kwargs)
+    
+    return wrapper
+
+# ============================================================================
+# RIEPILOGO UTILIZZO
+# ============================================================================
+
+"""
+SCELTA TRA DECORATOR E CONTEXT MANAGER:
+
+1. Usa il DECORATOR quando:
+   - Vuoi disabilitare il refresh per tutta la funzione
+   - La funzione è ben definita e riutilizzabile
+   - Vuoi codice pulito e dichiarativo
+   
+   @no_refresh
+   def mia_funzione():
+       pass
+
+2. Usa il CONTEXT MANAGER quando:
+   - Vuoi controllo granulare (solo parte della funzione)
+   - Hai logica condizionale
+   - Vuoi gestire manualmente gli scope
+   
+   with no_refresh_context():
+       # solo questa parte
+       pass
+
+ENTRAMBI garantiscono che il refresh venga riattivato, anche in caso di errori!
+"""
+###############################################################################
 ###############################################################################
 
 def getGlobalVar(name):
@@ -628,7 +748,7 @@ def wrap_text(text: str, width=72) -> str:
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
     return "\n".join(wrapped_lines)
 
-def wrap_path(path, max_len=72):
+def wrap_path(path, max_len=60):
     """Versione ultra-compatta per wrapping percorsi"""
     parts = path.split('\\')
     result = parts[0]

@@ -1288,14 +1288,14 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
     PL.fissa()
 
-
 def MENU_XPWE_import(filename = None):
-    with LeenoUtils.DocumentRefreshContext(False):
-        XPWE_import(filename = None)
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
+    # with LeenoUtils.DocumentRefreshContext(False):
+    XPWE_import(filename = None)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
+@LeenoUtils.no_refresh
 def XPWE_import(filename = None):
     '''
     Importazione dati dal formato XPWE

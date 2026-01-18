@@ -375,7 +375,7 @@ ATTENZIONE:
    con l'uso di questo prezzario.
 
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
-      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''  
+      sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
         )
     PL.dlg_donazioni()
 
@@ -559,9 +559,9 @@ def rimuovi_righe_ridondanti():
 def MENU_emilia_romagna():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Emilia Romagna
-    
+
     *** IMPRATICABILE: IL FILE DI ORIGINE È PARECCHIO DISORDINATO ***
-    
+
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
@@ -587,7 +587,7 @@ def MENU_emilia_romagna():
 def MENU_umbria():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Umbria
-    
+
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
     LeenoUtils.DocumentRefresh(False)
@@ -942,7 +942,7 @@ def MENU_FVG():
         # ~filename = uno.fileUrlToSystemPath(oDoc.getURL())
         oSheet = oDoc.CurrentController.ActiveSheet
         fine = SheetUtils.getLastUsedRow(oSheet) +1
-        
+
         oDoc.CurrentController.select(
             oSheet.getCellRangeByPosition(2, 3, 2, fine))
         PL.sistema_cose()
@@ -1007,7 +1007,7 @@ def MENU_FVG():
         # progress.hide()
         oDoc = LeenoUtils.getDocument()
         # progress.show()
-        
+
         LeenoUtils.DocumentRefresh(False)
 
         # compila l'elenco prezzi
@@ -1099,7 +1099,7 @@ def MENU_PUGLIA():
 
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = SheetUtils.getLastUsedRow(oSheet) +1
-    
+
     # ~ oDoc.CurrentController.select(
         # ~ oSheet.getCellRangeByPosition(8, 1, 8, fine))
     # ~ PL.sistema_cose()
@@ -1165,7 +1165,7 @@ def MENU_PUGLIA():
         'categorie': catList,
         'articoli' : artList
         }
-        
+
     for i in range(1, fine):
         codice = 'PUG24_' + oSheet.getCellByPosition(5, i).String
         desc = oSheet.getCellByPosition(6, i).String
@@ -1190,7 +1190,7 @@ def MENU_PUGLIA():
         'categorie': catList,
         'articoli' : artList
         }
-        
+
     # ~ DLG.chi(superCatList)
     # creo nuovo file di computo
     # ~oDoc = PL.creaComputo(0)
@@ -1206,7 +1206,7 @@ def MENU_PUGLIA():
     # progress.hide()
     oDoc = LeenoUtils.getDocument()
     # progress.show()
-    
+
     LeenoUtils.DocumentRefresh(False)
 
     # compila l'elenco prezzi

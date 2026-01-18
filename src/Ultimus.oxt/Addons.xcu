@@ -175,7 +175,7 @@
             <value>%origin%/icons/image93</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Nuova Voce</value>
+            <value>Nuova Voce scelta</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -245,7 +245,9 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+            <!-- <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value> -->
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
+
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image37</value>
@@ -1605,7 +1607,8 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+              <!-- <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value> -->
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image37</value>

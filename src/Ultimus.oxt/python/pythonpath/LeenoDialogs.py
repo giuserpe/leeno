@@ -36,7 +36,7 @@ from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
 
-def chi(s = 'pausa...'):
+def chi(s = 'pausa...', OFF=False):
     '''
     s    { object }  : oggetto da interrogare
     Mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili.
@@ -73,7 +73,10 @@ def chi(s = 'pausa...'):
         )
 
         # Apri il file e vai alla riga specificata
-        PL.apri_con_editor(full_file_path, line_number)
+        if OFF:
+            pass
+        else:
+            PL.apri_con_editor(full_file_path, line_number)
 
         # Mostra il messaggio in un dialogo
         MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')

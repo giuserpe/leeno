@@ -122,6 +122,7 @@ def highlight_missing_links(doc):
 # --------------------------------------------------
 # Comando principale e-Transmit
 # --------------------------------------------------
+@LeenoUtils.no_refresh
 def e_transmit_calc(*args):
     doc = LeenoUtils.getDocument()
     if not doc.hasLocation():

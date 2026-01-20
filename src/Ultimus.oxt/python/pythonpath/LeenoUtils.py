@@ -184,6 +184,7 @@ def DocumentRefresh(boo):
         oDoc.addActionLock()
 
 
+# import Dialogs as DLG
 @contextmanager
 def DocumentRefreshContext(enable_refresh: bool):
     """
@@ -195,8 +196,9 @@ def DocumentRefreshContext(enable_refresh: bool):
     try:
         yield
     except Exception as e:
-        import Dialogs as DLG
-        DLG.errore(str(e))
+        pass
+
+        # DLG.errore(str(e))
 
         # Evita crash UNO: rimuove il traceback
 #         IconType = "error"

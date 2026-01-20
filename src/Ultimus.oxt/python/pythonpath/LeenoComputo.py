@@ -264,10 +264,8 @@ def ins_voce_computo(cod=None):
     insertVoceComputoGrezza(oSheet, lrow)
     if cod:
         oSheet.getCellByPosition(1, lrow + 1).String = cod
-    # @@ PROVVISORIO !!!
     PL._gotoCella(1, lrow + 1)
 
-    # ~PL.numera_voci(0)
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()

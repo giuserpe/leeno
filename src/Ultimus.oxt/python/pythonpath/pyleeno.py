@@ -8114,6 +8114,8 @@ def MENU_importa_stili():
 
 
 ########################################################################
+@LeenoUtils.no_refresh
+@with_undo
 def MENU_parziale():
     '''
     Inserisce una riga con l'indicazione della somma parziale.

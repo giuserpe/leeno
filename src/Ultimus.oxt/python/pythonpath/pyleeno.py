@@ -2926,7 +2926,7 @@ Cancello le voci di misurazione?
             if SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet):
                 row = SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet)
                 _gotoCella(0, row)
-                LeenoSheetUtils.elimina_voce(row, msg = 0)
+                elimina_voce(row, msg = 0)
                 _gotoCella(1, 4)
     #  else:
     GotoSheet('VARIANTE')
@@ -5140,14 +5140,65 @@ def seleziona_voce(lrow=None):
 
 ########################################################################
 
-
+@with_undo() # abilita l'undo per l'intera funzione
+@LeenoUtils.no_refresh # evita il flickering del documento durante l'eliminazione
+@LeenoUtils.preserva_posizione(step=0)
 def MENU_elimina_voce():
-    LeenoUtils.DocumentRefresh(False)
-    LeenoSheetUtils.elimina_voce()
-    LeenoUtils.DocumentRefresh(True)
+    # LeenoUtils.DocumentRefresh(False)
+    elimina_voce()
+    # LeenoUtils.DocumentRefresh(True)
+    oDoc = LeenoUtils.getDocument()
+    oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
+def elimina_voce(lrow=None):
+    '''
+    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    lrow { long }  : numero riga
+    msg  { bit }   : 1 chiedi conferma con messaggio
+                     0 esegui senza conferma
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name == 'Elenco Prezzi':
+        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
+        return
+
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
+        return
+
+    try:
+        SR = seleziona_voce()[0]
+    except:
+        return
+    ER = seleziona_voce()[1]
+
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+        0, SR, 250, ER))
+    if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
+
+        _gotoCella(9, ER)
+        comando ('ClearArrowDependents')
+        comando ('ShowDependents')
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+            0, SR, 250, ER))
+        Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text="Da questa voce dipende almeno un Vedi Voce.\n\n"
+                    "Cancellazione interrotta per sicurezza.")
+
+        return
+
+    oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+    if oSheet.Name != 'Analisi di Prezzo':
+        numera_voci()
+    else:
+        _gotoCella(0, SR+2)
 
 ########################################################################
+
 @with_undo() # abilita l'undo per l'intera funzione
 @LeenoUtils.no_refresh # evita il flickering del documento durante l'eliminazione
 def MENU_elimina_righe():
@@ -5459,6 +5510,7 @@ def copia_riga_analisi(lrow, num_righe=1):
 ########################################################################
 
 
+@with_undo()  # abilita l'undo per l'intera funzione
 def MENU_Copia_riga_Ent():
     '''
     @@ DA DOCUMENTARE
@@ -5467,54 +5519,7 @@ def MENU_Copia_riga_Ent():
     Copia_riga_Ent()
     LeenoSheetUtils.adattaAltezzaRiga()
 
-# def Copia_riga_Ent(num_righe=1):
-#     """
-#     Aggiunge una o tante righe di misurazione.
-#     """
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-#     nome_sheet = oSheet.Name
-
-#     # Se le colonne di misura sono nascoste, vengono visualizzate
-#     col_misura = oSheet.getColumns()
-#     if not col_misura.getByIndex(5).IsVisible:
-#         n = SheetUtils.getLastUsedRow(oSheet)
-#         for el in range(4, n):
-#             cell = oSheet.getCellByPosition(2, el)
-#             if cell.CellStyle == "comp sotto centro":
-#                 cell.Formula = ''
-#         for el in range(5, 8):
-#             col_misura.getByIndex(el).IsVisible = True
-
-#     lrow = LeggiPosizioneCorrente()[1]
-#     dettaglio_attivo = cfg.read('Generale', 'dettaglio') == '1'
-
-#     azioni = {
-#         'COMPUTO': copia_riga_computo,
-#         'VARIANTE': copia_riga_computo,
-#         'CONTABILITA': copia_riga_contab,
-#         'Analisi di Prezzo': copia_riga_analisi,
-#         # 'Elenco Prezzi': MENU_nuova_voce_scelta,
-#     }
-
-#     if nome_sheet in azioni:
-#         if dettaglio_attivo and nome_sheet in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-#             dettaglio_misura_rigo()
-
-#         # Chiamata alla funzione con gestione blocco
-#         lrow = azioni[nome_sheet](lrow, num_righe)
-
-#         # Aggiorna altezza ultima riga inserita
-#         # oSheet.getCellRangeByPosition(0, lrow, 0, lrow).Rows.OptimalHeight = True
-#         try:
-#             oSheet.getRows().getByIndex(lrow).OptimalHeight = True
-#         except:
-#             pass  # Sicurezza: alcuni fogli possono avere righe protette o non ridimensionabili
-#     if nome_sheet == "Elenco Prezzi":
-#         MENU_nuova_voce_scelta()
-#     # Menu_adattaAltezzaRiga()
-
-
+@LeenoUtils.no_refresh
 def Copia_riga_Ent(num_righe=None):
     """
     Aggiunge righe di misurazione.
@@ -5606,33 +5611,36 @@ def Copia_riga_Ent(num_righe=None):
 
 ########################################################################
 def count_clipboard_lines():
-        ctx = LeenoUtils.getComponentContext()
-        smgr = ctx.getServiceManager()
-        clip = smgr.createInstanceWithContext("com.sun.star.datatransfer.clipboard.SystemClipboard", ctx)
+    ctx = LeenoUtils.getComponentContext()
+    smgr = ctx.getServiceManager()
+    clip = smgr.createInstanceWithContext("com.sun.star.datatransfer.clipboard.SystemClipboard", ctx)
 
-        # Ottiene il contenuto della clipboard
-        transferable = clip.getContents()
+    # Ottiene il contenuto della clipboard
+    transferable = clip.getContents()
 
-        # Cerca il formato text/plain
-        flavors = transferable.getTransferDataFlavors()
+    # Cerca il formato text/plain
+    flavors = transferable.getTransferDataFlavors()
 
-        text = None
-        for flavor in flavors:
-            if "text/plain" in flavor.MimeType:
-                data = transferable.getTransferData(flavor)
-                # data è già uno str in UTF-16 → usalo direttamente
-                text = str(data)
-                break
+    text = None
+    for flavor in flavors:
+        if "text/plain" in flavor.MimeType:
+            data = transferable.getTransferData(flavor)
+            # data è già uno str in UTF-16 → usalo direttamente
+            text = str(data)
+            break
 
-        if text is None:
-            return 0
+    if text is None:
+        return 0
 
-        # Conta le righe
-        num_lines = len(text.splitlines())
+    # Conta le righe
+    num_lines = len(text.splitlines())
 
-        # Restituisce il valore
-        return num_lines
+    # Restituisce il valore
+    return num_lines
 
+
+@with_undo()
+@LeenoUtils.no_refresh
 def paste_smart():
     """
     Incolla contenuti multi-riga creando automaticamente il numero
@@ -5957,8 +5965,7 @@ def MENU_inverti_segno():
     inverti_segno()
 
 @with_undo('Inverti segno delle misure')
-@LeenoUtils.no_refresh
-def inverti_segno():
+def MENU_inverti_segno():
     '''
     Inverte il segno delle formule di quantità e gestisce lo stile ROSSO tramite suffisso.
     '''
@@ -8114,7 +8121,6 @@ def MENU_importa_stili():
 
 
 ########################################################################
-@LeenoUtils.no_refresh
 @with_undo
 def MENU_parziale():
     '''
@@ -8130,7 +8136,7 @@ def MENU_parziale():
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             parziale_core(oSheet, lrow)
             rigenera_parziali(False)
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 ###
@@ -9965,7 +9971,6 @@ def DlgPDF():
 
     oDlgPDF.execute()
 
-@LeenoUtils.no_refresh
 def DlgMain():
     '''
     Visualizza il menù principale DlgMain
@@ -10091,6 +10096,7 @@ def DlgMain():
             pass
     fissa()
     LeenoUtils.ripristina_posizione()
+    LeenoUtils.DocumentRefresh(True)
     return
 
 

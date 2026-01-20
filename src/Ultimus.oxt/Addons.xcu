@@ -1147,7 +1147,7 @@
                   <value>%origin%/icons/sfera_gialla</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa Stili da altro File</value>
+                  <value>Importa Stili da altro file...</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1161,7 +1161,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?SheetUtils.MENU_unisci_fogli</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Unisci tutti i fogli del documento</value>
+                  <value>Unisci tutti i fogli</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1175,7 +1175,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_copia_celle_visibili</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Copia solo le celle visibili</value>
+                  <value>Copia solo celle visibili</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1189,7 +1189,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_inserisci_nuova_riga_con_descrizione</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Inserisci titolo all'inizio delle misure</value>
+                  <value>Inserisci riga titolo in misure</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1203,7 +1203,21 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elenco_puntato_misure</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Aggiunge il trattino (-) alle righe di misura</value>
+                  <value>Elenco puntato misure (-)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U07.7" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.somma_per_colore_nella_colonna</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value xml:lang="it">Somma per Colore</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

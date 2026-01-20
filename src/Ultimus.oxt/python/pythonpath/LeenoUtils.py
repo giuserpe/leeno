@@ -12,6 +12,7 @@ from datetime import date
 from contextlib import contextmanager
 
 import calendar
+import LeenoDialogs as DLG
 
 import PyPDF2
 '''
@@ -194,17 +195,19 @@ def DocumentRefreshContext(enable_refresh: bool):
     try:
         yield
     except Exception as e:
-        
-        # Evita crash UNO: rimuove il traceback
-        IconType = "error"
-        Title = 'ATTENZIONE!'
-        Text='''
-[1] Prima di procedere è meglio dare un nome al file. 
+        import Dialogs as DLG
+        DLG.errore(str(e))
 
-Lavorando su un file senza nome
-potresti avere dei malfunzionamenti.
-'''
-        import Dialogs
+        # Evita crash UNO: rimuove il traceback
+#         IconType = "error"
+#         Title = 'ATTENZIONE!'
+#         Text='''
+# [1] Prima di procedere è meglio dare un nome al file.
+
+# Lavorando su un file senza nome
+# potresti avere dei malfunzionamenti.
+# '''
+#         import Dialogs
         # Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
         # raise Exception(str(e)) from None
     finally:
@@ -234,7 +237,7 @@ potresti avere dei malfunzionamenti.
 #             )
 #             # Ritorna True se vuoi silenziare l'eccezione (come nel tuo codice originale)
 #             # Ritorna False se vuoi che l'eccezione continui a salire
-#             return True 
+#             return True
 
 #         # Azione finale (sempre eseguita, come il finally)
 #         DocumentRefresh(self.original_state)
@@ -261,7 +264,7 @@ logger = logging.getLogger(__name__)
 def no_refresh_context():
     """
     Context manager per disabilitare temporaneamente il refresh.
-    
+
     Uso:
         with no_refresh_context():
             # Il refresh è disabilitato qui
@@ -270,7 +273,7 @@ def no_refresh_context():
     """
     # Setup: disabilita refresh
     DocumentRefresh(False)
-    
+
     try:
         # Yield control al blocco with
         yield
@@ -286,7 +289,7 @@ def no_refresh_context():
 def no_refresh(func):
     """
     Decorator che disabilita il refresh durante l'esecuzione della funzione.
-    
+
     Uso:
         @no_refresh
         def mia_funzione():
@@ -299,7 +302,7 @@ def no_refresh(func):
         # Usa il context manager
         with no_refresh_context():
             return func(*args, **kwargs)
-    
+
     return wrapper
 
 # ============================================================================
@@ -313,7 +316,7 @@ SCELTA TRA DECORATOR E CONTEXT MANAGER:
    - Vuoi disabilitare il refresh per tutta la funzione
    - La funzione è ben definita e riutilizzabile
    - Vuoi codice pulito e dichiarativo
-   
+
    @no_refresh
    def mia_funzione():
        pass
@@ -322,7 +325,7 @@ SCELTA TRA DECORATOR E CONTEXT MANAGER:
    - Vuoi controllo granulare (solo parte della funzione)
    - Hai logica condizionale
    - Vuoi gestire manualmente gli scope
-   
+
    with no_refresh_context():
        # solo questa parte
        pass
@@ -763,3 +766,115 @@ def wrap_path(path, max_len=60):
             current += '\\' + p
 
     return result
+
+##########################################################################
+import functools
+import LeenoUtils
+
+
+
+def memorizza_posizione(step=0):
+    """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
+    ctx = LeenoUtils.getComponentContext()
+    doc = LeenoUtils.getDocument()
+    controller = doc.getCurrentController()
+
+    # Ottieni la selezione corrente
+    selection = controller.getSelection()
+
+    # Gestione per diversi tipi di selezione
+    if selection.supportsService("com.sun.star.sheet.SheetCell"):
+        # Singola cella
+        cell_addr = selection.getCellAddress()
+        pos_data = {
+            'type': 'cell',
+            'sheet': cell_addr.Sheet,
+            'col': cell_addr.Column,
+            'row': cell_addr.Row + step  # incremento opzionale
+        }
+    elif selection.supportsService("com.sun.star.sheet.SheetCellRange"):
+        # Range di celle
+        range_addr = selection.getRangeAddress()
+        pos_data = {
+            'type': 'range',
+            'sheet': range_addr.Sheet,
+            'col': range_addr.StartColumn,
+            'row': range_addr.StartRow + step,      # incremento opzionale
+            'end_col': range_addr.EndColumn,
+            'end_row': range_addr.EndRow + step     # incremento opzionale
+        }
+    else:
+        # DLG.chi("Tipo di selezione non supportato")
+        return
+
+    # Memorizza i dati
+    LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
+
+    # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
+
+def ripristina_posizione():
+    """Ripristina la posizione memorizzata"""
+    pos_data = LeenoUtils.getGlobalVar('ultima_posizione')
+    if not pos_data:
+        DLG.chi("Nessuna posizione memorizzata trovata")
+        return
+
+    doc = LeenoUtils.getDocument()
+    controller = doc.getCurrentController()
+    sheets = doc.getSheets()
+
+    try:
+        sheet = sheets.getByIndex(pos_data['sheet'])
+
+        if pos_data['type'] == 'cell':
+            # Ripristina singola cella
+            cell = sheet.getCellByPosition(pos_data['col'], pos_data['row'])
+            controller.select(cell)
+        else:
+            # Ripristina range di celle
+            cell_range = sheet.getCellRangeByPosition(
+                pos_data['col'], pos_data['row'],
+                pos_data['end_col'], pos_data['end_row']
+            )
+            controller.select(cell_range)
+
+    except Exception as e:
+        DLG.chi(f"Errore nel ripristino: {str(e)}")
+    doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+
+
+def preserva_posizione(step=0):
+    """
+    Decorator che memorizza la posizione del cursore prima della funzione
+    e la ripristina alla fine.
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Memorizza
+            memorizza_posizione(step=0) # Salviamo la posizione iniziale "vera"
+            try:
+                result = func(*args, **kwargs)
+                return result
+            finally:
+                # Ripristina (anche se la funzione va in errore)
+                # Se passi un valore a 'step', lo usiamo per spostarci DOPO l'operazione
+                if step != 0:
+                    pos = LeenoUtils.getGlobalVar('ultima_posizione')
+                    if pos:
+                        pos['row'] += step
+                        if 'end_row' in pos: pos['end_row'] += step
+                        LeenoUtils.setGlobalVar('ultima_posizione', pos)
+                ripristina_posizione()
+        return wrapper
+    return decorator
+
+from contextlib import contextmanager
+
+@contextmanager
+def CursorContext(step=0):
+    memorizza_posizione(step)
+    try:
+        yield
+    finally:
+        ripristina_posizione()

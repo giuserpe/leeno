@@ -652,71 +652,6 @@ def eliminaVoce(oSheet, lrow):
 
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
 
-def elimina_voce(lrow=None, msg=1):
-    '''
-    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
-    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
-    lrow { long }  : numero riga
-    msg  { bit }   : 1 chiedi conferma con messaggio
-                     0 esegui senza conferma
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    if oSheet.Name == 'Elenco Prezzi':
-        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
-devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
-        return
-
-    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
-        return
-
-    try:
-        SR = PL.seleziona_voce()[0]
-    except:
-        return
-    ER = PL.seleziona_voce()[1]
-    if msg == 1:
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-            0, SR, 250, ER))
-        if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
-            undo = 1
-            PL._gotoCella(9, ER)
-            PL.comando ('ClearArrowDependents')
-            PL.comando ('ShowDependents')
-            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-                0, SR, 250, ER))
-            messaggio= """
-Da questa voce dipende almeno un Vedi Voce.
-VUOI PROCEDERE UGUALMENTE?"""
-        else:
-            messaggio = """OPERAZIONE NON ANNULLABILE!\n
-Stai per eliminare la voce selezionata.
-            Voi Procedere?\n"""
-        # ~return
-        if Dialogs.YesNoDialog(IconType="warning",Title='*** A T T E N Z I O N E ! ***',
-            Text= messaggio) == 1:
-            try:
-                undo
-                PL.comando ('Undo')
-            except:
-                pass
-            oSheet.getRows().removeByIndex(SR, ER - SR + 1)
-            PL._gotoCella(0, SR+1)
-        else:
-            PL.comando ('Undo')
-            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-                0, SR, 250, ER))
-            return
-    elif msg == 0:
-        oSheet.getRows().removeByIndex(SR, ER - SR + 1)
-    if oSheet.Name != 'Analisi di Prezzo':
-        PL.numera_voci(0)
-    else:
-        PL._gotoCella(0, SR+2)
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-
 # ###############################################################
 
 def inserisciRigaRossa(oSheet):
@@ -838,13 +773,13 @@ def setAdatta():
 #         for y in range(0, test):
 #             oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
 #     return
+@LeenoUtils.preserva_posizione(step=0)
 def adattaAltezzaRiga(oSheet=False, all=False):
     """
     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
     Versione bilanciata tra velocità e manutenibilità.
     """
     # Configurazioni (modificabili)
-    memorizza_posizione()
     lrow = PL.LeggiPosizioneCorrente()[1]
 
     STILI_CELLA = {
@@ -906,7 +841,6 @@ def adattaAltezzaRiga(oSheet=False, all=False):
         DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
         raise  # Rilancia per gestione esterna
     LeenoUtils.DocumentRefresh(True)
-    ripristina_posizione()
 # ###############################################################
 
 
@@ -1153,7 +1087,7 @@ from undo_utils import with_undo
 def MENU_elimina_righe_vuote():
     '''Elimina le righe vuote negli elaborati di COMPUTO, VARIANTE o CONTABILITA'''
     # with LeenoUtils.DocumentRefreshContext(False):
-    LeenoSheetUtils.memorizza_posizione()
+    LeenoUtils.memorizza_posizione()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     valid_sheets = ('COMPUTO', 'VARIANTE', 'CONTABILITA')
@@ -1188,7 +1122,7 @@ def MENU_elimina_righe_vuote():
     lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
     # PL._gotoCella(1, 4)
     # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
-    LeenoSheetUtils.ripristina_posizione()
+    LeenoUtils.ripristina_posizione()
 
 
 # ###############################################################
@@ -1232,75 +1166,3 @@ def MENU_SheetToDoc():
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselec
     oDoc.CurrentController.ZoomValue = 100
     return
-
-# ###############################################################
-
-
-def memorizza_posizione(step=0):
-    """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
-    ctx = LeenoUtils.getComponentContext()
-    doc = LeenoUtils.getDocument()
-    controller = doc.getCurrentController()
-
-    # Ottieni la selezione corrente
-    selection = controller.getSelection()
-
-    # Gestione per diversi tipi di selezione
-    if selection.supportsService("com.sun.star.sheet.SheetCell"):
-        # Singola cella
-        cell_addr = selection.getCellAddress()
-        pos_data = {
-            'type': 'cell',
-            'sheet': cell_addr.Sheet,
-            'col': cell_addr.Column,
-            'row': cell_addr.Row + step  # incremento opzionale
-        }
-    elif selection.supportsService("com.sun.star.sheet.SheetCellRange"):
-        # Range di celle
-        range_addr = selection.getRangeAddress()
-        pos_data = {
-            'type': 'range',
-            'sheet': range_addr.Sheet,
-            'col': range_addr.StartColumn,
-            'row': range_addr.StartRow + step,      # incremento opzionale
-            'end_col': range_addr.EndColumn,
-            'end_row': range_addr.EndRow + step     # incremento opzionale
-        }
-    else:
-        # DLG.chi("Tipo di selezione non supportato")
-        return
-
-    # Memorizza i dati
-    LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
-
-    # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
-
-def ripristina_posizione():
-    """Ripristina la posizione memorizzata"""
-    pos_data = LeenoUtils.getGlobalVar('ultima_posizione')
-    if not pos_data:
-        DLG.chi("Nessuna posizione memorizzata trovata")
-        return
-
-    doc = LeenoUtils.getDocument()
-    controller = doc.getCurrentController()
-    sheets = doc.getSheets()
-
-    try:
-        sheet = sheets.getByIndex(pos_data['sheet'])
-
-        if pos_data['type'] == 'cell':
-            # Ripristina singola cella
-            cell = sheet.getCellByPosition(pos_data['col'], pos_data['row'])
-            controller.select(cell)
-        else:
-            # Ripristina range di celle
-            cell_range = sheet.getCellRangeByPosition(
-                pos_data['col'], pos_data['row'],
-                pos_data['end_col'], pos_data['end_row']
-            )
-            controller.select(cell_range)
-
-    except Exception as e:
-        DLG.chi(f"Errore nel ripristino: {str(e)}")
-    doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))

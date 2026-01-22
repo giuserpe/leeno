@@ -31,7 +31,7 @@ collegate fra loro, manipolabili anche a mano attraverso l’interfaccia
 standard di Calc senza utilizzare le macro.
 
 LibreOffice genera e gestisce file in formato OpenDocument (ODF)
-ISO/IEC 26300:2006 che è l’unico formato standard aperto riconosciuto.
+ISO/IEC 26300:2006 che è il formato standard aperto riconosciuto.
 LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo
 stesso standard. OpenDocument, in quanto standard ISO, garantisce
 interoperabilità senza barriere tecniche e legali anche tra sistemi

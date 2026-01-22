@@ -2797,64 +2797,6 @@ def scelta_viste_run():
 
 
 ########################################################################
-
-# @LeenoUtils.no_refresh
-# def genera_variante():
-#     # DLG.chi('genera_variante')
-#     # return
-#     '''
-#     Genera il foglio di VARIANTE a partire dal COMPUTO
-#     @@@ MODIFICA IN CORSO CON 'LeenoVariante.generaVariante'
-#     '''
-#     # chiudi_dialoghi()
-#     oDoc = LeenoUtils.getDocument()
-#     if not oDoc.getSheets().hasByName('VARIANTE'):
-#         if oDoc.NamedRanges.hasByName("AA"):
-#             oDoc.NamedRanges.removeByName("AA")
-#             oDoc.NamedRanges.removeByName("BB")
-#         oSheetComputo = oDoc.getSheets().getByName("COMPUTO")
-#         with LeenoUtils.ProtezioneFoglioContext("COMPUTO", oDoc=oDoc) as oSheetComputo:
-#             oSheet = oDoc.getSheets().getByName('COMPUTO')
-#             idx = oSheet.RangeAddress.Sheet + 1
-#             oDoc.Sheets.copyByName('COMPUTO', 'VARIANTE', idx)
-#         oSheet = oDoc.getSheets().getByName('COMPUTO')
-#         lrow = SheetUtils.getUsedArea(oSheet).EndRow
-#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
-#         oSheet = oDoc.getSheets().getByName('VARIANTE')
-#         GotoSheet('VARIANTE')
-#         setTabColor(16777175)
-#         oSheet.getCellByPosition(2, 0).Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
-#         oSheet.getCellByPosition(2, 0).CellStyle = "comp Int_colonna"
-#         oSheet.getCellRangeByName("C1").CellBackColor = 16777175
-#         oSheet.getCellRangeByPosition(0, 2, 42, 2).CellBackColor = 16777175
-#         if DLG.DlgSiNo(
-#                 """Vuoi svuotare la VARIANTE appena generata?
-
-# Se decidi di continuare, cancellerai tutte le voci di
-# misurazione già presenti in questo elaborato.
-# Cancello le voci di misurazione?
-#  """, 'ATTENZIONE!') == 2:
-#             lrow = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet) - 3
-#             oSheet.Rows.removeByIndex(3, lrow)
-#             _gotoCella(0, 2)
-#             LeenoComputo.ins_voce_computo()
-#             oSheet = oDoc.getSheets().getByName('VARIANTE')
-#             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-#             if SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet):
-#                 row = SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet)
-#                 _gotoCella(0, row)
-#                 elimina_voce(row, msg = 0)
-#                 _gotoCella(1, 4)
-#     #  else:
-#     GotoSheet('VARIANTE')
-#     ScriviNomeDocumentoPrincipale()
-#     Menu_adattaAltezzaRiga()
-#     LeenoEvents.assegna()
-
-
-########################################################################
 # @Debug.measure_time()
 @LeenoUtils.no_refresh
 def genera_sommario():
@@ -6338,52 +6280,6 @@ def paste_clip(insCells=0, pastevalue=False, noformat=False):
         oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
     oDoc.CurrentController.select(oDoc.createInstance(
         "com.sun.star.sheet.SheetCellRanges"))  # unselect
-
-
-# def paste_clip(insCells=0, pastevalue=False, noformat=False):
-#     '''
-#     Incolla il contenuto della clipboard con opzioni avanzate.
-#     insCells   (int)  : se 1, sposta le celle verso il basso (insert mode)
-#     pastevalue (bool) : se True, incolla solo i risultati (niente formule)
-#     noformat   (bool) : se True, non incolla la formattazione
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     ctx = LeenoUtils.getComponentContext()
-
-#     # Definizione dei flag (S: Valori, V: Testo, T: Formati, D: Date, F: Formule, A: Tutto)
-#     if pastevalue:
-#         # Solo valori (senza formule)
-#         flags = 'SVD' if noformat else 'SVDT'
-#     else:
-#         # Include formule
-#         # Se noformat è True, usiamo SVD F (Valori, Testo, Date, Formule)
-#         flags = 'SVDF' if noformat else 'A'
-
-#     # Costruiamo il dizionario delle opzioni
-#     args = {
-#         'Flags': flags,
-#         'FormulaCommand': 0,
-#         'SkipEmptyCells': False,
-#         'Transpose': False,
-#         'AsLink': False
-#     }
-
-#     # Gestione inserimento celle (MoveMode 4 inserisce righe intere, 0 sposta celle)
-#     if insCells == 1:
-#         args['MoveMode'] = 4  # In LeenO solitamente è preferibile inserire righe intere
-
-#     # Conversione rapida in PropertyValue tramite LeenoUtils
-#     properties = LeenoUtils.dictToProperties(args)
-
-#     # Esecuzione tramite il dispatcher
-#     oFrame = oDoc.CurrentController.Frame
-#     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-#         'com.sun.star.frame.DispatchHelper', ctx)
-
-#     dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
-
-#     # Deseziona per pulire l'interfaccia
-#     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
 
 ########################################################################

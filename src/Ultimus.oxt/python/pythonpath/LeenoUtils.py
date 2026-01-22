@@ -844,6 +844,7 @@ def ripristina_posizione():
         DLG.chi(f"Errore nel ripristino: {str(e)}")
     doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
+#############################################################################
 
 def preserva_posizione(step=0):
     """
@@ -880,3 +881,36 @@ def CursorContext(step=0):
         yield
     finally:
         ripristina_posizione()
+
+#############################################################################
+
+@contextmanager
+def ProtezioneFoglioContext(sheet_or_name, password="", oDoc=None):
+    """
+    Context manager che sblocca un foglio e lo riprotegge alla fine.
+    
+    :param sheet_or_name: Oggetto foglio o stringa col nome del foglio
+    :param password: Password del foglio (default vuota)
+    :param oDoc: Documento (opzionale, se sheet_or_name è una stringa)
+    """
+    # Se passiamo un nome, recuperiamo l'oggetto foglio
+    if isinstance(sheet_or_name, str):
+        if oDoc is None:
+            oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.getSheets().getByName(sheet_or_name)
+    else:
+        oSheet = sheet_or_name
+
+    # Verifichiamo se il foglio è effettivamente protetto
+    was_protected = oSheet.isProtected()
+
+    if was_protected:
+        oSheet.unprotect(password)
+
+    try:
+        # Qui il codice all'interno del blocco 'with' viene eseguito
+        yield oSheet
+    finally:
+        # Questo viene eseguito SEMPRE, anche in caso di errore
+        if was_protected:
+            oSheet.protect(password)

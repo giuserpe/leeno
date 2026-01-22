@@ -62,7 +62,7 @@ End Sub
 rem ######################################################################
 Sub genera_variante
 	chiudi_dialoghi
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;genera_variante&quot;)
+	ScriptPy(&quot;LeenoVariante&quot;,&quot;MENU_generaVariante&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_M1

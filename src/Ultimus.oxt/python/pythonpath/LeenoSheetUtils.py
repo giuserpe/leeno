@@ -385,7 +385,7 @@ def setLarghezzaColonne(oSheet):
         }
     }
     with LeenoUtils.DocumentRefreshContext(False):
-        memorizza_posizione()
+        LeenoUtils.memorizza_posizione()
 
         # Gestione speciale per Elenco Prezzi
         if oSheet.Name == 'Elenco Prezzi':
@@ -410,7 +410,7 @@ def setLarghezzaColonne(oSheet):
             config = SHEET_CONFIGS.get(oSheet.Name)
 
         if not config:
-            ripristina_posizione()
+            LeenoUtils.ripristina_posizione()
             return
 
         # Applicazione delle configurazioni
@@ -450,7 +450,7 @@ def setLarghezzaColonne(oSheet):
 
         adattaAltezzaRiga(oSheet)
         # finally:
-        ripristina_posizione()
+        LeenoUtils.ripristina_posizione()
 # ###############################################################
 def rRow(oSheet):
     '''

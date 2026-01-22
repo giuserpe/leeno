@@ -9,6 +9,9 @@ from com.sun.star.task import XJobExecutor
 from com.sun.star.awt import MessageBoxButtons as MSG_BUTTONS
 from datetime import datetime
 
+from pathlib import Path
+import subprocess
+
 def msgbox(*, Title='Errore interno', Message=''):
     """ Create message box in LibreOffice """
     try:
@@ -53,6 +56,85 @@ def reloadLeenoModules():
         except Exception:
             print(f"Errore ricaricando il modulo: {f}")
 
+# def handle_exception(e):
+#     try:
+#         pir = uno.getComponentContext().getValueByName(
+#             '/singletons/com.sun.star.deployment.PackageInformationProvider')
+#         expath_url = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
+#         expath = uno.fileUrlToSystemPath(expath_url)
+
+#         code_file = os.path.join(expath, 'leeno_version_code')
+#         version_line = ''
+#         if os.path.exists(code_file):
+#             with open(code_file, 'r', encoding='utf-8') as f:
+#                 version_line = f.readline().strip()
+
+#         msg = (
+#             f"OS: {sys.platform} / LibreOffice-{loVersion()} / {version_line}\n\n"
+#             f"Errore: {str(e)}\n\n"
+#         )
+
+#         user = os.environ.get("USERNAME", "").lower()
+
+#         sysinfo = sys.exc_info()
+#         tb = sysinfo[2]
+#         if tb:
+#             tbInfo = traceback.extract_tb(tb)[-1]
+#             filen = os.path.basename(tbInfo.filename)
+#             msg += (
+#                 f"File: '{filen}'\n"
+#                 f"Line: '{tbInfo.lineno}'\n"
+#                 f"Function: '{tbInfo.name}'\n"
+#             )
+
+#             # ==========================================================
+#             # APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
+#             # solo per l’utente giuserpe (Giuseppe Vizziello)
+#             # ==========================================================
+#             if "giuserpe" in user:
+#                 try:
+#                     import subprocess
+
+#                     full_path = tbInfo.filename
+#                     # full_path = f"W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\python\pythonpath\{filen}"
+#                     line = tbInfo.lineno
+
+#                     vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
+
+#                     if os.path.exists(vscode_path):
+#                         subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
+#                     else:
+#                         msg += "\n(VS Code non trovato nel percorso previsto)\n"
+
+#                 except Exception as opener_err:
+#                     msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
+#             # ==========================================================
+
+#         msg += "+--"*20 + "\nBACKTRACE:\n"
+#         for bk in traceback.extract_tb(tb):
+#             filen = os.path.basename(bk.filename)
+#             msg += f"File: {filen}, Line: {bk.lineno}, Function: {bk.name}\n"
+#         msg += "\n"
+
+#         log_dir = os.path.join(expath, "pythonpath")
+#         os.makedirs(log_dir, exist_ok=True)
+#         log_path = os.path.join(log_dir, "leeno_error.log")
+#         with open(log_path, "a", encoding="utf-8") as logfile:
+#             logfile.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n")
+#             logfile.write(msg)
+#             logfile.write("-"*60 + "\n\n")
+
+#         if "giuserpe" in user:
+#             msg += "+--"*20 + "\n" + traceback.format_exc()
+
+#         msgbox(Title="Errore interno", Message=msg)
+
+#     except Exception as internal:
+#         fallback = f"Errore nel gestore errori:\n{str(internal)}\n\n{traceback.format_exc()}"
+#         try:
+#             msgbox(Title="Errore gestore", Message=fallback)
+#         except:
+#             print(fallback)
 def handle_exception(e):
     try:
         pir = uno.getComponentContext().getValueByName(
@@ -88,22 +170,47 @@ def handle_exception(e):
             # APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
             # solo per l’utente giuserpe (Giuseppe Vizziello)
             # ==========================================================
+
+
+# # ... dentro handle_exception(e) ...
+
             if "giuserpe" in user:
                 try:
-                    import subprocess
-
-                    full_path = tbInfo.filename
-                    line = tbInfo.lineno
-
-                    vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
-
-                    if os.path.exists(vscode_path):
-                        subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
+                    # 1. Identifica il file dell'errore
+                    original_path = Path(tbInfo.filename)
+                    
+                    # 2. Definisci la tua "Casa dei Sorgenti" (multipiattaforma)
+                    # Anche se usi W:/ su Windows, Path lo gestisce correttamente
+                    source_root = Path(r"W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath")
+                    
+                    # 3. Mapping intelligente tramite l'ancora 'pythonpath'
+                    if "pythonpath" in original_path.parts:
+                        idx = original_path.parts.index("pythonpath")
+                        # Ricostruisce il percorso relativo dopo 'pythonpath'
+                        relative_file = Path(*original_path.parts[idx + 1:])
+                        full_path = source_root / relative_file
                     else:
-                        msg += "\n(VS Code non trovato nel percorso previsto)\n"
+                        full_path = original_path
 
-                except Exception as opener_err:
-                    msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
+                    # 4. Verifica esistenza file sorgente prima di chiamare VS Code
+                    if full_path.exists():
+                        # Trova l'eseguibile di VS Code
+                        if sys.platform == "win32":
+                            # code.cmd è preferibile per l'integrazione con istanze già aperte
+                            vscode_bin = Path(os.environ.get("LOCALAPPDATA", "")) / "Programs/Microsoft VS Code/bin/code.cmd"
+                            if not vscode_bin.exists():
+                                vscode_bin = Path(os.path.expanduser("~")) / "AppData/Local/Programs/Microsoft VS Code/Code.exe"
+                        else:
+                            vscode_bin = "code"
+
+                        # 5. Esecuzione: -g (goto) riutilizza la finestra aperta e va alla riga
+                        # Usiamo str(full_path) per passare la stringa corretta al sistema
+                        subprocess.Popen([str(vscode_bin), "-g", f"{full_path}:{tbInfo.lineno}"])
+                    else:
+                        msg += f"\n(Mapping fallito: il file non esiste in {full_path})\n"
+
+                except Exception as mapping_err:
+                    msg += f"\n(Errore durante l'apertura in VS Code: {mapping_err})\n"   
             # ==========================================================
 
         msg += "+--"*20 + "\nBACKTRACE:\n"
@@ -131,7 +238,6 @@ def handle_exception(e):
             msgbox(Title="Errore gestore", Message=fallback)
         except:
             print(fallback)
-
 
 # Dispatcher class
 class Dispatcher(unohelper.Base, XJobExecutor):

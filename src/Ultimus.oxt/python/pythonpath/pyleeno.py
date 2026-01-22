@@ -69,8 +69,10 @@ import LeenoSettings as LS
 import LeenoPdf as LPdf
 import DocUtils
 import Debug
+import LeenoVariante
 
 import LeenoConfig
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO
 cfg = LeenoConfig.Config()
 
 import Dialogs
@@ -405,6 +407,53 @@ la posizione di destinazione.''')
             LeenoComputo.ins_voce_computo(cod=el)
         lrow = SheetUtils.getLastUsedRow(oSheet)
     return
+
+@with_undo('Invia voce a Variante')
+@LeenoUtils.no_refresh
+def invia_voce_interno():
+    oDoc = LeenoUtils.getDocument()
+    oSheetEP = oDoc.CurrentController.ActiveSheet
+
+    elenco = seleziona()
+    codici = [oSheetEP.getCellByPosition(0, el).String for el in elenco]
+    meta = oSheetEP.getCellRangeByName('C2').String
+
+    if meta == 'VARIANTE':
+        # Chiamata alla nuova funzione: crea (se manca) ma NON svuota
+        LeenoVariante.generaVariante(oDoc, clear=False)
+
+    elif meta == 'CONTABILITA':
+        LeenoContab.attiva_contabilita()
+        oDoc.getSheets().getByName('CONTABILITA')
+
+    elif meta == 'COMPUTO':
+        GotoSheet('COMPUTO')
+
+    else:
+        # Messaggio di errore se C2 non è impostata correttamente
+        Dialogs.NotifyDialog(
+            IconType="warning",
+            Title='AVVISO!',
+            Text='Scegli in cella "C2" l\'elaborato di destinazione (COMPUTO, VARIANTE o CONTABILITA).'
+        )
+        _gotoCella(2, 1) # Torna sulla cella C2
+        return
+
+    # 4. Inserimento effettivo delle voci nell'elaborato scelto
+    for codice_voce in codici:
+        if meta == 'CONTABILITA':
+            # Nota: GotoSheet dentro il loop può rallentare, ma garantisce il focus
+            GotoSheet('CONTABILITA')
+            ins_voce_contab(cod=codice_voce)
+        else:
+            # Per COMPUTO e VARIANTE la logica di inserimento è identica
+            # Assicurati che ins_voce_computo inserisca nel foglio attivo
+            GotoSheet(meta)
+            LeenoComputo.ins_voce_computo(cod=codice_voce)
+
+    # Pulizia finale della selezione blu
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+
 
 ###############################################################################
 @LeenoUtils.no_refresh
@@ -2667,7 +2716,7 @@ def scelta_viste_run():
                     el).Value >= 0.2 or oSheet.getCellByPosition(
                         26, el).String == '20,00%':
                 oSheet.getCellRangeByPosition(
-                    0, el, 1, el).CellBackColor = 16777175
+                    0, el, 1, el).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
         oDoc.CurrentController.select(oSheet.getCellRangeByName('Z2'))
         comando('Copy')
@@ -2676,7 +2725,7 @@ def scelta_viste_run():
         paste_format()
 
         _primaCella()
-        oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = 16777175
+        oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
         oSheet.getCellRangeByName(f'A{n+1}:Z{n+1}').CharWeight = BOLD
 
@@ -2749,54 +2798,60 @@ def scelta_viste_run():
 
 ########################################################################
 
-@LeenoUtils.no_refresh
-def genera_variante():
-    '''
-    Genera il foglio di VARIANTE a partire dal COMPUTO
-    @@@ MODIFICA IN CORSO CON 'LeenoVariante.generaVariante'
-    '''
-    # chiudi_dialoghi()
-    oDoc = LeenoUtils.getDocument()
-    if not oDoc.getSheets().hasByName('VARIANTE'):
-        if oDoc.NamedRanges.hasByName("AA"):
-            oDoc.NamedRanges.removeByName("AA")
-            oDoc.NamedRanges.removeByName("BB")
-        oDoc.Sheets.copyByName('COMPUTO', 'VARIANTE', 4)
-        oSheet = oDoc.getSheets().getByName('COMPUTO')
-        lrow = SheetUtils.getUsedArea(oSheet).EndRow
-        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
-        oSheet = oDoc.getSheets().getByName('VARIANTE')
-        GotoSheet('VARIANTE')
-        setTabColor(16777175)
-        oSheet.getCellByPosition(2, 0).Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
-        oSheet.getCellByPosition(2, 0).CellStyle = "comp Int_colonna"
-        oSheet.getCellRangeByName("C1").CellBackColor = 16777175
-        oSheet.getCellRangeByPosition(0, 2, 42, 2).CellBackColor = 16777175
-        if DLG.DlgSiNo(
-                """Vuoi svuotare la VARIANTE appena generata?
+# @LeenoUtils.no_refresh
+# def genera_variante():
+#     # DLG.chi('genera_variante')
+#     # return
+#     '''
+#     Genera il foglio di VARIANTE a partire dal COMPUTO
+#     @@@ MODIFICA IN CORSO CON 'LeenoVariante.generaVariante'
+#     '''
+#     # chiudi_dialoghi()
+#     oDoc = LeenoUtils.getDocument()
+#     if not oDoc.getSheets().hasByName('VARIANTE'):
+#         if oDoc.NamedRanges.hasByName("AA"):
+#             oDoc.NamedRanges.removeByName("AA")
+#             oDoc.NamedRanges.removeByName("BB")
+#         oSheetComputo = oDoc.getSheets().getByName("COMPUTO")
+#         with LeenoUtils.ProtezioneFoglioContext("COMPUTO", oDoc=oDoc) as oSheetComputo:
+#             oSheet = oDoc.getSheets().getByName('COMPUTO')
+#             idx = oSheet.RangeAddress.Sheet + 1
+#             oDoc.Sheets.copyByName('COMPUTO', 'VARIANTE', idx)
+#         oSheet = oDoc.getSheets().getByName('COMPUTO')
+#         lrow = SheetUtils.getUsedArea(oSheet).EndRow
+#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
+#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
+#         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
+#         oSheet = oDoc.getSheets().getByName('VARIANTE')
+#         GotoSheet('VARIANTE')
+#         setTabColor(16777175)
+#         oSheet.getCellByPosition(2, 0).Formula = '=RIGHT(CELL("FILENAME"; A1); LEN(CELL("FILENAME"; A1)) - FIND("$"; CELL("FILENAME"; A1)))'
+#         oSheet.getCellByPosition(2, 0).CellStyle = "comp Int_colonna"
+#         oSheet.getCellRangeByName("C1").CellBackColor = 16777175
+#         oSheet.getCellRangeByPosition(0, 2, 42, 2).CellBackColor = 16777175
+#         if DLG.DlgSiNo(
+#                 """Vuoi svuotare la VARIANTE appena generata?
 
-Se decidi di continuare, cancellerai tutte le voci di
-misurazione già presenti in questo elaborato.
-Cancello le voci di misurazione?
- """, 'ATTENZIONE!') == 2:
-            lrow = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet) - 3
-            oSheet.Rows.removeByIndex(3, lrow)
-            _gotoCella(0, 2)
-            LeenoComputo.ins_voce_computo()
-            oSheet = oDoc.getSheets().getByName('VARIANTE')
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-            if SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet):
-                row = SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet)
-                _gotoCella(0, row)
-                elimina_voce(row, msg = 0)
-                _gotoCella(1, 4)
-    #  else:
-    GotoSheet('VARIANTE')
-    ScriviNomeDocumentoPrincipale()
-    Menu_adattaAltezzaRiga()
-    LeenoEvents.assegna()
+# Se decidi di continuare, cancellerai tutte le voci di
+# misurazione già presenti in questo elaborato.
+# Cancello le voci di misurazione?
+#  """, 'ATTENZIONE!') == 2:
+#             lrow = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet) - 3
+#             oSheet.Rows.removeByIndex(3, lrow)
+#             _gotoCella(0, 2)
+#             LeenoComputo.ins_voce_computo()
+#             oSheet = oDoc.getSheets().getByName('VARIANTE')
+#             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+#             if SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet):
+#                 row = SheetUtils.uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet)
+#                 _gotoCella(0, row)
+#                 elimina_voce(row, msg = 0)
+#                 _gotoCella(1, 4)
+#     #  else:
+#     GotoSheet('VARIANTE')
+#     ScriviNomeDocumentoPrincipale()
+#     Menu_adattaAltezzaRiga()
+#     LeenoEvents.assegna()
 
 
 ########################################################################
@@ -5505,41 +5560,41 @@ def count_clipboard_lines():
 
 
 @with_undo()
-@LeenoUtils.no_refresh
 def paste_smart():
     """
     Incolla contenuti multi-riga creando automaticamente il numero
     necessario di righe di misurazione, rigenerando i parziali.
     """
+    with LeenoUtils.no_refresh_context():
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        lrow1 = LeggiPosizioneCorrente()[1]
 
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = LeggiPosizioneCorrente()[1]
+        cell_style = oSheet.getCellByPosition(2, lrow1).CellStyle
+        cell_8_str = oSheet.getCellByPosition(8, lrow1).String
 
-    cell_style = oSheet.getCellByPosition(2, lrow).CellStyle
-    cell_8_str = oSheet.getCellByPosition(8, lrow).String
-
-    # STOP se almeno una delle due condizioni NON è soddisfatta
-    # Definisci condizioni chiare con nomi significativi
+        # STOP se almeno una delle due condizioni NON è soddisfatta
+        # Definisci condizioni chiare con nomi significativi
 
 
-    if any(["comp 1" in cell_style, "Comp-Bianche in mezzo Descr" in cell_style, "Parziale" in cell_8_str]):
+        if any(["comp 1" in cell_style, "Comp-Bianche in mezzo Descr" in cell_style, "Parziale" in cell_8_str]):
 
-        with LeenoUtils.DocumentRefreshContext(False):
-            LeenoUtils.memorizza_posizione()
+            # with LeenoUtils.DocumentRefreshContext(False):
+            LeenoUtils.memorizza_posizione(step=0)
             nr = count_clipboard_lines()
+            if nr == 0:
+                DLG.chi("Nessun dato di testo rilevato negli appunti.")
+                return
             Copia_riga_Ent()   # prima riga sempre
             if nr > 1:
                 Copia_riga_Ent(nr - 1)   # aggiungi le restanti
-
             LeenoUtils.ripristina_posizione()
-
             lrow = LeggiPosizioneCorrente()[1]
             _gotoCella(2, lrow + 1)
-
             paste_clip()
-            rigenera_parziali(True)
+            rigenera_parziali(False)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, 0, 1, fine))
 
     return
 
@@ -6243,92 +6298,92 @@ def delete_cells(direction='up'):
 
     dispatchHelper.executeDispatch(oFrame, ".uno:DeleteCell", "", 0, properties)
 ########################################################################
-# def paste_clip(insCells=0, pastevalue=False, noformat=False):
-#     '''
-#     Incolla il contenuto della clipboard.
-#     insCells       { bit }  : con 1 inserisce nuove righe
-#     pastevalue     { boolean }  : con True non incolla le formule
-#     noformat       { boolean }  : con True non incolla i formati
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     ctx = LeenoUtils.getComponentContext()
-#     desktop = LeenoUtils.getDesktop()
-#     oFrame = desktop.getCurrentFrame()
-#     oProp = []
-
-#     if pastevalue:
-#         if noformat:
-#             oProp.append(crea_property_value('Flags', 'SV'))  # Solo Numeri e Testo (senza formato)
-#         else:
-#             oProp.append(crea_property_value('Flags', 'SVTD'))  # Numeri, Testo, Data e ora, Formati
-#     else:
-#         if noformat:
-#             oProp.append(crea_property_value('Flags', 'SV'))  # Solo Numeri e Testo (senza formato)
-#         else:
-#             oProp.append(crea_property_value('Flags', 'A'))  # Tutto
-
-#     oProp.append(crea_property_value('FormulaCommand', 0))
-#     oProp.append(crea_property_value('SkipEmptyCells', False))
-#     oProp.append(crea_property_value('Transpose', False))
-#     oProp.append(crea_property_value('AsLink', False))
-
-#     # insert mode ON
-#     if insCells == 1:
-#         oProp.append(crea_property_value('MoveMode', 0))
-#         #  oProp.append(crea_property_value('MoveMode', 4))  # per inserire intere righe
-
-#     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-#         'com.sun.star.frame.DispatchHelper', ctx)
-#     dispatchHelper.executeDispatch(
-#         oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
-#     oDoc.CurrentController.select(oDoc.createInstance(
-#         "com.sun.star.sheet.SheetCellRanges"))  # unselect
-
-
 def paste_clip(insCells=0, pastevalue=False, noformat=False):
     '''
-    Incolla il contenuto della clipboard con opzioni avanzate.
-    insCells   (int)  : se 1, sposta le celle verso il basso (insert mode)
-    pastevalue (bool) : se True, incolla solo i risultati (niente formule)
-    noformat   (bool) : se True, non incolla la formattazione
+    Incolla il contenuto della clipboard.
+    insCells       { bit }  : con 1 inserisce nuove righe
+    pastevalue     { boolean }  : con True non incolla le formule
+    noformat       { boolean }  : con True non incolla i formati
     '''
     oDoc = LeenoUtils.getDocument()
     ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = []
 
-    # Definizione dei flag (S: Valori, V: Testo, T: Formati, D: Date, F: Formule, A: Tutto)
     if pastevalue:
-        # Solo valori (senza formule)
-        flags = 'SVD' if noformat else 'SVDT'
+        if noformat:
+            oProp.append(crea_property_value('Flags', 'SV'))  # Solo Numeri e Testo (senza formato)
+        else:
+            oProp.append(crea_property_value('Flags', 'SVTD'))  # Numeri, Testo, Data e ora, Formati
     else:
-        # Include formule
-        # Se noformat è True, usiamo SVD F (Valori, Testo, Date, Formule)
-        flags = 'SVDF' if noformat else 'A'
+        if noformat:
+            oProp.append(crea_property_value('Flags', 'SV'))  # Solo Numeri e Testo (senza formato)
+        else:
+            oProp.append(crea_property_value('Flags', 'A'))  # Tutto
 
-    # Costruiamo il dizionario delle opzioni
-    args = {
-        'Flags': flags,
-        'FormulaCommand': 0,
-        'SkipEmptyCells': False,
-        'Transpose': False,
-        'AsLink': False
-    }
+    oProp.append(crea_property_value('FormulaCommand', 0))
+    oProp.append(crea_property_value('SkipEmptyCells', False))
+    oProp.append(crea_property_value('Transpose', False))
+    oProp.append(crea_property_value('AsLink', False))
 
-    # Gestione inserimento celle (MoveMode 4 inserisce righe intere, 0 sposta celle)
+    # insert mode ON
     if insCells == 1:
-        args['MoveMode'] = 4  # In LeenO solitamente è preferibile inserire righe intere
+        oProp.append(crea_property_value('MoveMode', 0))
+        #  oProp.append(crea_property_value('MoveMode', 4))  # per inserire intere righe
 
-    # Conversione rapida in PropertyValue tramite LeenoUtils
-    properties = LeenoUtils.dictToProperties(args)
-
-    # Esecuzione tramite il dispatcher
-    oFrame = oDoc.CurrentController.Frame
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper.executeDispatch(
+        oFrame, '.uno:InsertContents', '', 0, tuple(oProp))
+    oDoc.CurrentController.select(oDoc.createInstance(
+        "com.sun.star.sheet.SheetCellRanges"))  # unselect
 
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
 
-    # Deseziona per pulire l'interfaccia
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+# def paste_clip(insCells=0, pastevalue=False, noformat=False):
+#     '''
+#     Incolla il contenuto della clipboard con opzioni avanzate.
+#     insCells   (int)  : se 1, sposta le celle verso il basso (insert mode)
+#     pastevalue (bool) : se True, incolla solo i risultati (niente formule)
+#     noformat   (bool) : se True, non incolla la formattazione
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     ctx = LeenoUtils.getComponentContext()
+
+#     # Definizione dei flag (S: Valori, V: Testo, T: Formati, D: Date, F: Formule, A: Tutto)
+#     if pastevalue:
+#         # Solo valori (senza formule)
+#         flags = 'SVD' if noformat else 'SVDT'
+#     else:
+#         # Include formule
+#         # Se noformat è True, usiamo SVD F (Valori, Testo, Date, Formule)
+#         flags = 'SVDF' if noformat else 'A'
+
+#     # Costruiamo il dizionario delle opzioni
+#     args = {
+#         'Flags': flags,
+#         'FormulaCommand': 0,
+#         'SkipEmptyCells': False,
+#         'Transpose': False,
+#         'AsLink': False
+#     }
+
+#     # Gestione inserimento celle (MoveMode 4 inserisce righe intere, 0 sposta celle)
+#     if insCells == 1:
+#         args['MoveMode'] = 4  # In LeenO solitamente è preferibile inserire righe intere
+
+#     # Conversione rapida in PropertyValue tramite LeenoUtils
+#     properties = LeenoUtils.dictToProperties(args)
+
+#     # Esecuzione tramite il dispatcher
+#     oFrame = oDoc.CurrentController.Frame
+#     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+#         'com.sun.star.frame.DispatchHelper', ctx)
+
+#     dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
+
+#     # Deseziona per pulire l'interfaccia
+#     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
 
 ########################################################################
@@ -6909,11 +6964,11 @@ def rigenera_voce(lrow=None):
 
 ########################################################################
 @LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
+@LeenoUtils.preserva_posizione(step=0)
 def rigenera_tutte(arg=None, ):
     '''
     Ripristina le formule in tutto il foglio
     '''
-    LeenoUtils.memorizza_posizione()
     # with LeenoUtils.DocumentRefreshContext(False):
 
     chiudi_dialoghi()
@@ -6948,7 +7003,6 @@ def rigenera_tutte(arg=None, ):
     numera_voci()
     fissa()
     indicator.end()
-    LeenoUtils.ripristina_posizione()
 
 
 ########################################################################
@@ -7900,7 +7954,6 @@ def crea_property_value(name, value):
     name : string : Nome della proprietà
     value : any : Valore della proprietà
     """
-    from com.sun.star.beans import PropertyValue
     prop = PropertyValue()
     prop.Name = name
     prop.Value = value
@@ -12397,7 +12450,6 @@ def stop_all_scripts_and_close_dialogs():
 ########################################################################
 ########################################################################
 def count_clipboard_lines():
-        import uno
         ctx = LeenoUtils.getComponentContext()
         smgr = ctx.getServiceManager()
         clip = smgr.createInstanceWithContext("com.sun.star.datatransfer.clipboard.SystemClipboard", ctx)
@@ -12531,12 +12583,19 @@ def somma_per_colore_nella_colonna():
 
 
 
-
-
 from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
 # @measure_time(show_popup=True)
 def MENU_debug():
-    catalogo_stili_cella()
+    import LeenoTheme
+    LeenoTheme.applica_nuovo_colore_tematico()
+    return
+    # catalogo_stili_cella()
+    # return
+    oDoc = LeenoUtils.getDocument()
+    active_cell = oDoc.CurrentSelection
+    DLG.chi(active_cell.CellBackColor)
+
+    # DLG.chi(active_cell.CellBackColor)
     return
 
     somma_per_colore_nella_colonna()

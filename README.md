@@ -6,40 +6,22 @@ distribuita con licenza LGPL.
 Cos’è LeenO
 ===========
 
-Fare architettura è divertente, gestire la parte finanziaria molto
-meno!
+LeenO è l’estensione per LibreOffice Calc specifica per la redazione di computi metrici e contabilità tecnica di cantiere. È un fork derivato da Ultimus che fu ideato e scritto da Bartolomeo Aimar, è coperto da Licenza LGPL  perciò se ne può fare un uso personale e professionale libero. E’ distribuito con nome LeenO.oxt.
+LeenO lavora con LibreOffice, quindi sotto tutte le piattaforme su cui è possibile installare questa office suite.
 
-Ma avere il controllo del budget, sia a monte che durante la gestione
-di un progetto, può rendere la cosa piacevole.
+LeenO, che eredita da LibreOffice tutte le sue funzionalità, ne completa l’offerta, proponendo all’ufficio tecnico un sistema integrato per la gestione delle progettazioni e degli appalti, a partire dalla organizzazione della documentazione a base di gara, fino alla gestione dell’appalto in fase di esecuzione dell’opera ed alla sua conclusione. Lavorando in ambiente Calc, LeenO consente un’ampia manovrabilità e personalizzazione degli elaborati.
 
-In commercio ci sono diversi programmi orientati allo scopo, ma li
-trovo poco flessibili e – in genere – specifici per un solo sistema
-operativo.
+LibreOffice genera e gestisce file in formato OpenDocument (ODF) che è lo Standard aperto ISO/IEC 26300:2015. LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo stesso standard. OpenDocument garantisce:
 
-Per questo ho messo a punto UltimusFree (LeenO), un applicativo per
-LibreOffice per la stesura e la gestione dei Computi Metrici
-Estimativi e della Contabilità Lavori.
+    interoperabilità senza barriere tecniche e legali anche tra sistemi operativi diversi,
+    scambio dei dati corretto e sicuro,
+    accesso agli stessi a lungo termine.
 
-LeenO può “girare” su piattaforme diverse (GNU/Linux, MS Windows e
-Mac) e i documenti contabili prodotti (normali tabelle di calcolo)
-possono essere aperti, manipolati e stampati anche con programmi
-diversi da LibreOffice.
+Le sue specifiche tecniche sono di pubblico dominio, per cui favorisce la concorrenza impedendo che queste siano detenute da un singolo produttore di software.
 
-Ho cercato il massimo della flessibilità e della potenza, talvolta a
-scapito della semplicità... Il risultato è una serie di tabelle
-collegate fra loro, manipolabili anche a mano attraverso l’interfaccia
-standard di Calc senza utilizzare le macro.
+Per queste peculiarità LeenO è perfettamente in linea con le prescrizioni dettate dal comma 1. dell’art. 15 (Strumenti elettronici di contabilità e contabilità semplificata) del DM 7 marzo 2018 n.49 – Regolamento recante: «Approvazione delle linee guida sulle modalità di svolgimento delle funzioni del direttore dei lavori e del direttore dell’esecuzione».
 
-LibreOffice genera e gestisce file in formato OpenDocument (ODF)
-ISO/IEC 26300:2006 che è il formato standard aperto riconosciuto.
-LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo
-stesso standard. OpenDocument, in quanto standard ISO, garantisce
-interoperabilità senza barriere tecniche e legali anche tra sistemi
-operativi diversi, assicurando la scambio dei dati corretto e sicuro
-oltre che l’accesso agli stessi a lungo termine. Le sue specifiche
-tecniche sono di pubblico dominio, per cui favorisce la concorrenza
-impedendo che dette specifiche siano detenute da un singolo produttore
-di software.
+LeenO è destinato ad utenti di LibreOffice Calc che vogliono guadagnare velocità nella compilazione dei documenti contabili tecnici senza perdere margini di controllo degli elaborati preferendo, proprio per questo, l’utilizzo di fogli di calcolo.
 
 Installazione
 =============

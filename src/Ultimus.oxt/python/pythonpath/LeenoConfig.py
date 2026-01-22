@@ -11,6 +11,9 @@ from datetime import date
 import LeenoUtils
 import PersistUtils
 
+COLORE_COLONNE_RAFFRONTO = 16645616
+COLORE_ROSA_INPUT = 16773375
+
 class Borg:
     '''
     Singleton/BorgSingleton.py

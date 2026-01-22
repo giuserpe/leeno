@@ -96,7 +96,7 @@ def errore(e):
     error_type = type(e).__name__
     stack_trace = traceback.format_exc()
 
-    chi(f'Errore di tipo "{error_type}": {str(e)}\n\nTraccia dello stack:\n{stack_trace}')
+    chi(f'Errore di tipo "{error_type}": {str(e)}\n\nTraccia dello stack:\n{stack_trace}', OFF=True)
 
 
 def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo

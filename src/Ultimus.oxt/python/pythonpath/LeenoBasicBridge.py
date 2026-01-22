@@ -48,14 +48,6 @@ def DlgMain():
     PL.DlgMain()
 
 
-def genera_variante():
-    '''
-    genera_variante
-    '''
-    callAlert()
-    PL.genera_variante()
-
-
 def vai_a_M1():
     '''
     vai_a_M1

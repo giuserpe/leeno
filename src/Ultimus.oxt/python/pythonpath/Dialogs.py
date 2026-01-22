@@ -2529,11 +2529,11 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
 def FolderSelect(titolo='Scegli la cartella...', startPath=None):
     """
     Apre un dialog per la selezione di una cartella
-    
+
     Args:
         titolo (str): titolo del FolderPicker
         startPath (str, optional): percorso iniziale. Se None, usa il percorso predefinito
-    
+
     Returns:
         str: percorso della cartella selezionata con trailing separator, None se annullato
     """
@@ -2612,7 +2612,7 @@ def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
-        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."   
+        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
 
         oDlgInfo.execute()
 
@@ -2706,7 +2706,7 @@ def YesNoDialog(IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
-        sString.Text = Text or "In allestimento..."
+        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
 
         return(oDlgInfo.execute())
 
@@ -2780,7 +2780,7 @@ def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
 
 
 # class Progress:
-#     DLG.chi("La classe Progress è deprecata. Usare indicatori di progresso nativi di LibreOffice.")   
+#     DLG.chi("La classe Progress è deprecata. Usare indicatori di progresso nativi di LibreOffice.")
 #     '''
 #     Display a progress bar with some options
 #     '''
@@ -2834,13 +2834,13 @@ def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
 #             if maxVal - minVal ==0:
 #                 maxVal = +1
 #             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
-            
+
 #             caller_frame = inspect.stack()[1]
 #             line_number = caller_frame.lineno
 #             full_file_path = caller_frame.filename  # Ottieni il percorso completo
 #             file_name = os.path.basename(full_file_path)  # Solo il nome del file
 #             function_name = caller_frame.function  # Nome della funzione chiamante
-            
+
 #             txt = f"{self._text} ({percent})"
 #             if 'giuserpe' in os.getlogin():
 #                 txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile: {file_name}"
@@ -2856,14 +2856,14 @@ def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
 #             minVal, maxVal = self.getLimits()
 #             val = self.getValue()
 #             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
-            
+
 #             caller_frame = inspect.stack()[1]
 #             line_number = caller_frame.lineno
 #             full_file_path = caller_frame.filename  # Ottieni il percorso completo
 #             function_name = caller_frame.function  # Nome della funzione chiamante
 #             file_name = os.path.basename(full_file_path)  # Solo il nome del file
 
-            
+
 #             txt = f"{self._text} ({percent})"
 #             if 'giuserpe' in os.getlogin():
 #                 txt = txt + f"\nFunzione: {function_name}()\nLinea: {line_number}\nFile:{file_name}"

@@ -279,10 +279,6 @@ def ins_voce_elenco():
     PL.ins_voce_elenco()
 
 
-# def EliminaVociDoppieElencoPrezzi():
-#     callAlert()
-#     PL.EliminaVociDoppieElencoPrezzi()
-
 
 def Tutti_Subtotali():
     callAlert()
@@ -315,21 +311,6 @@ def bak0(arg=None):
     '''
     callAlert()
     PL.bak0()
-
-
-# def numera_voci(bit=1):
-#     '''
-#     bit { integer }  : 1 rinumera tutto
-#                        0 rinumera dalla voce corrente in giù
-#     '''
-#     callAlert()
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-#     if bit == 0:
-#         lrow = PL.LeggiPosizioneCorrente()[1]
-#     else:
-#         lrow = 0
-#     LeenoSheetUtils.numeraVoci(oSheet, lrow, True if bit == 1 else False)
 
 
 def voce_breve_ep():

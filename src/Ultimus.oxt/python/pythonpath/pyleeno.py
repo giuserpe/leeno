@@ -68,11 +68,12 @@ import LeenoEvents
 import LeenoSettings as LS
 import LeenoPdf as LPdf
 import DocUtils
-import Debug
+# import Debug
 import LeenoVariante
 
 import LeenoConfig
-from LeenoConfig import COLORE_COLONNE_RAFFRONTO
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
+      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
 cfg = LeenoConfig.Config()
 
 import Dialogs
@@ -80,7 +81,7 @@ import Dialogs
 from undo_utils import with_undo, with_undo_batch, no_undo
 
 # cos'e' il namespace:
-# http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
+# http://www.html.it/articol\i/il-misterioso-mondo-dei-namespaces-1/
 
 # from com.sun.star.lang import Locale
 from com.sun.star.beans import PropertyValue
@@ -568,14 +569,14 @@ def invia_voce():
                 MENU_nuova_voce_scelta()
                 lrow = LeggiPosizioneCorrente()
                 dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-                # dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = 14942166
+                # dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = COLORE_VERDE_SPUNTA
                 _gotoCella(lrow[0]+1, lrow[1]+1)
 
             else:
                 lrow = LeggiPosizioneCorrente()[1]
                 LeenoComputo.cambia_articolo(dccSheet, lrow, voce_da_inviare)
                 lrow = LeggiPosizioneCorrente()[1]
-                # dccSheet.getCellByPosition(1, lrow).CellBackColor = 14942166
+                # dccSheet.getCellByPosition(1, lrow).CellBackColor = COLORE_VERDE_SPUNTA
             LeenoUtils.ripristina_posizione()
         return
 
@@ -593,7 +594,7 @@ def invia_voce():
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         # oSheet.getCellRangeByPosition(30, SR, 30, ER).CellBackColor = 15757935
-        oSheet.getCellByPosition(1, SR +1).CellBackColor = 14942166
+        oSheet.getCellByPosition(1, SR +1).CellBackColor = COLORE_VERDE_SPUNTA
 
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
@@ -612,7 +613,7 @@ def invia_voce():
             # DP = LeenoUtils.getGlobalVar('sUltimus')
             # ddcDoc = LeenoUtils.findOpenDocument(DP)
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet.getCellByPosition(1, SR + 1).CellBackColor = 14942166
+            dccSheet.getCellByPosition(1, SR + 1).CellBackColor = COLORE_VERDE_SPUNTA
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             lrow = LeggiPosizioneCorrente()[1]
 
@@ -713,10 +714,10 @@ def invia_voce():
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         if dccSheet.getCellByPosition(0, lrow).CellStyle == 'comp progress':
-            dccSheet.getCellByPosition(1, lrow).CellBackColor = 14942166
+            dccSheet.getCellByPosition(1, lrow).CellBackColor = COLORE_VERDE_SPUNTA
             _gotoCella(2, lrow)
         else:
-            dccSheet.getCellByPosition(1, lrow + 1).CellBackColor = 14942166
+            dccSheet.getCellByPosition(1, lrow + 1).CellBackColor = COLORE_VERDE_SPUNTA
             _gotoCella(2, lrow + 1)
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
@@ -1965,7 +1966,7 @@ def MENU_prefisso_VDS_():
         MENU_nuova_voce_scelta()
         paste_clip(pastevalue = False)
         oSheet.getCellRangeByName("A5").String = pref + oSheet.getCellRangeByName("A5").String
-        oSheet.getCellRangeByName("A5").CellBackColor = 14942166
+        oSheet.getCellRangeByName("A5").CellBackColor = COLORE_VERDE_SPUNTA
 
         LeenoUtils.DocumentRefresh(False)
     #  oSheet = oDoc.CurrentController.ActiveSheet
@@ -2009,7 +2010,7 @@ def MENU_prefisso_VDS_():
                 sStRange.RangeAddress
                 inizio = sStRange.RangeAddress.StartRow
                 fine = sStRange.RangeAddress.EndRow
-                oSheet.getCellByPosition(1, inizio + 1).CellBackColor = 14942166
+                oSheet.getCellByPosition(1, inizio + 1).CellBackColor = COLORE_VERDE_SPUNTA
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
                 _gotoCella(2, fine - 1)
@@ -4767,7 +4768,7 @@ def MENU_azzera_voce():
                         'com.sun.star.frame.DispatchHelper', ctx)
                     oProp = PropertyValue()
                     oProp.Name = 'BackgroundColor'
-                    oProp.Value = 15066597
+                    oProp.Value = COLORE_GRIGIO_INATTIVA
                     properties = (oProp, )
                     dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
                     _gotoCella(1, fine + 3)
@@ -5013,52 +5014,123 @@ def MENU_elimina_voce():
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
+# def elimina_voce(lrow=None):
+#     '''
+#     @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
+#     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+#     lrow { long }  : numero riga
+#     msg  { bit }   : 1 chiedi conferma con messaggio
+#                      0 esegui senza conferma
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
+
+#     if oSheet.Name == 'Elenco Prezzi':
+#         Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+# devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
+#         return
+
+#     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
+#         return
+
+#     try:
+#         SR = seleziona_voce()[0]
+#     except:
+#         return
+#     ER = seleziona_voce()[1]
+
+#     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+#         0, SR, 250, ER))
+#     if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
+
+#         _gotoCella(9, ER)
+#         comando ('ClearArrowDependents')
+#         comando ('ShowDependents')
+#         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+#             0, SR, 250, ER))
+#         Dialogs.Exclamation(Title = 'ATTENZIONE!',
+#             Text="Da questa voce dipende almeno un Vedi Voce.\n\n"
+#                     "Cancellazione interrotta per sicurezza.")
+
+#         return
+
+#     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+#     if oSheet.Name != 'Analisi di Prezzo':
+#         numera_voci()
+#     else:
+#         _gotoCella(0, SR+2)
+
+@with_undo("Elimina Voci Selezionate")
 def elimina_voce(lrow=None):
     '''
-    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
-    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
-    lrow { long }  : numero riga
-    msg  { bit }   : 1 chiedi conferma con messaggio
-                     0 esegui senza conferma
+    Elimina una o più voci selezionate in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo.
+    Gestisce selezioni estese identificando i blocchi completi.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
+    # --- 1. CONTROLLI PRELIMINARI ---
     if oSheet.Name == 'Elenco Prezzi':
-        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+        Dialogs.Info(Title='Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
 devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
         return
 
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
         return
 
+    # --- 2. IDENTIFICAZIONE DEL RANGE DI VOCI ---
+    oSel = oDoc.CurrentController.getSelection()
+    if not oSel.supportsService("com.sun.star.table.CellRange"):
+        return
+
     try:
-        SR = seleziona_voce()[0]
+        # Identifica l'inizio della prima voce e la fine dell'ultima voce nella selezione
+        SR = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().StartRow).RangeAddress.StartRow
+        ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
     except:
         return
-    ER = seleziona_voce()[1]
 
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-        0, SR, 250, ER))
-    if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
+    # Seleziona visivamente l'area che sta per essere eliminata
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
 
-        _gotoCella(9, ER)
-        comando ('ClearArrowDependents')
-        comando ('ShowDependents')
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-            0, SR, 250, ER))
-        Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text="Da questa voce dipende almeno un Vedi Voce.\n\n"
-                    "Cancellazione interrotta per sicurezza.")
+    # --- 3. CONTROLLO DIPENDENZE (VEDI VOCE) ---
+    # Controlliamo se qualche cella nel range selezionato ha dipendenti critici
+    # Verifichiamo la colonna dei totali (J, indice 9) per l'intero intervallo
+    area_totali = oSheet.getCellRangeByPosition(9, SR, 9, ER)
+    try:
+        if '$C$' in area_totali.queryDependents(False).AbsoluteName:
+            # Mostra graficamente le frecce delle dipendenze per aiutare l'utente
+            _gotoCella(9, ER)
+            comando('ClearArrowDependents')
+            comando('ShowDependents')
 
-        return
+            # Ri-seleziona l'area
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
 
-    oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+            Dialogs.Exclamation(Title='ATTENZIONE!',
+                Text="In questo blocco sono presenti voci da cui dipende almeno un 'Vedi Voce'.\n\n"
+                     "Cancellazione interrotta per sicurezza.")
+            return
+    except:
+        # Se queryDependents fallisce, significa che non ci sono dipendenti
+        pass
+
+    # --- 4. ESECUZIONE ELIMINAZIONE ---
+    # Chiediamo conferma solo se la selezione coinvolge più di una riga o per sicurezza
+    # (Opzionale: puoi aggiungere un Dialogs.Ask qui)
+
+    num_rows = ER - SR + 1
+    oSheet.getRows().removeByIndex(SR, num_rows)
+
+    # --- 5. RICALCOLO E POSIZIONAMENTO ---
     if oSheet.Name != 'Analisi di Prezzo':
         numera_voci()
     else:
-        _gotoCella(0, SR+2)
+        # In Analisi di Prezzo, ci posizioniamo dove è avvenuta l'eliminazione
+        _gotoCella(0, max(0, SR - 1))
 
+    # Pulizia selezione
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 ########################################################################
 
 @with_undo() # abilita l'undo per l'intera funzione
@@ -5797,7 +5869,7 @@ def MENU_ricicla_misure():
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8,
                                              sotto).getRangeAddress()
-        oSheet.getCellByPosition(2, sopra - 1).CellBackColor = 14942166
+        oSheet.getCellByPosition(2, sopra - 1).CellBackColor = COLORE_VERDE_SPUNTA
         partenza = LeenoUtils.getGlobalVar('partenza')
         if partenza is None:
             return
@@ -5813,7 +5885,7 @@ def MENU_ricicla_misure():
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(
             1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
-        oDest.getCellByPosition(2, partenza[1]).CellBackColor = 14942166
+        oDest.getCellByPosition(2, partenza[1]).CellBackColor = COLORE_VERDE_SPUNTA
         rigenera_voce(partenza[1])
 
         _gotoCella(2, partenza[1] + 1)
@@ -6454,7 +6526,7 @@ def numera_voci():
             '''
             Se è una voce di computo, numeriamo
             '''
-            # if color == 15066597: # Grigio (voce non numerata/computata)
+            # if color == COLORE_GRIGIO_INATTIVA: # Grigio (voce non numerata/computata)
             #     '''
             #     La voce non è numerata/computata
             #     ️ Imposta la colonna A a stringa vuota
@@ -8326,129 +8398,110 @@ def SubSum(lrow, sub=False):
 ########################################################################
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
-# @Debug.measure_time()
-@LeenoUtils.no_refresh # Decoratore per disabilitare l'aggiornamento del documento
+@with_undo
 def MENU_filtra_codice():
-    '''
-    Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
-    Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
-    '''
+
     # per filtrare la prossima voce
-    # oDoc = LeenoUtils.getDocument()
-    # lrow = LeggiPosizioneCorrente()[1]
-    # oSheet = oDoc.CurrentController.ActiveSheet
-    # _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True))
+    oDoc = LeenoUtils.getDocument()
+    lrow = LeggiPosizioneCorrente()[1]
+    oSheet = oDoc.CurrentController.ActiveSheet
+    _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True))
     filtra_codice()
 
+# @LeenoUtils.no_refresh
 def filtra_codice(voce=None):
     '''
-    Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
-    Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
+    Applica un filtro di visualizzazione basato sul raggruppamento (outline).
+    Il cursore si posiziona sulla prima occorrenza della voce trovata.
     '''
     oDoc = LeenoUtils.getDocument()
-
     oSheet = oDoc.CurrentController.ActiveSheet
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_totali = stili_computo + stili_contab
 
+    # --- 1. IDENTIFICAZIONE DELLA VOCE E DEL FOGLIO ---
     if oSheet.Name == "Elenco Prezzi":
-        oCell = oSheet.getCellRangeByName('C2')
-        voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
-            0, LeggiPosizioneCorrente()[1]).String
+        oCell_C2 = oSheet.getCellRangeByName('C2')
+        lrow_ep = LeggiPosizioneCorrente()[1]
+        voce = oSheet.getCellByPosition(0, lrow_ep).String
 
-        # colora la descrizione scelta
-        # oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
-            # 1, LeggiPosizioneCorrente()[1]).CellBackColor = 16777120
-
-        if oCell.String == '<DIALOGO>' or oCell.String == '':
+        if oCell_C2.String in ('<DIALOGO>', ''):
             try:
-                elaborato = DLG.ScegliElaborato(Titolo ='Ricerca di ' + voce)
+                elaborato = DLG.ScegliElaborato(Titolo='Ricerca di ' + voce)
                 GotoSheet(elaborato)
             except Exception:
                 return
         else:
-            elaborato = oSheet.getCellByPosition(2, 1).String
+            elaborato = oCell_C2.String
             try:
                 GotoSheet(elaborato)
             except Exception:
                 return
-        oSheet = oDoc.Sheets.getByName(elaborato)
+
+        oSheet = oDoc.CurrentController.ActiveSheet
         _gotoCella(0, 6)
-        LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1, saltaCat=True)
-    oSheet.clearOutline()
-    lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_contab):
-        iSheet = oSheet.RangeAddress.Sheet
-        oCellRangeAddr = uno.createUnoStruct(
-            'com.sun.star.table.CellRangeAddress')
-        oCellRangeAddr.Sheet = iSheet
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        sopra = sStRange.RangeAddress.StartRow
-        if not voce:
-            voce = LeenoComputo.datiVoceComputo(oSheet, lrow)[1][1]
-            # DLG.chi(f'Filtro applicato alla voce: {voce}')
-            # voce = oSheet.getCellByPosition(1, sopra + 1).String
-    # else:
-    #     Dialogs.Exclamation(Title = 'ATTENZIONE!',
-    #     Text='''Devi prima selezionare una voce di misurazione.''')
-    #     return
-    fine = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+        LeenoSheetUtils.prossimaVoce(oSheet, 6, 1, saltaCat=True)
 
-    # indicator = oDoc.getCurrentController().getStatusIndicator()
-    # indicator.start('Applicazione filtro...', fine)
-    # indicator.setValue(0)
+    # Posizione di partenza per fallback
+    lrow_originale = LeggiPosizioneCorrente()[1]
 
-    # qui = None
-    lista_pt = []
-    # _gotoCella(0, 0)
-    for n in range(0, fine):
-        # indicator.setValue(n)
-        if oSheet.getCellByPosition(0,
-                                    n).CellStyle in ('Comp Start Attributo',
-                                                     'Comp Start Attributo_R'):
-            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+    if not voce:
+        try:
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow_originale)
             sopra = sStRange.RangeAddress.StartRow
-            sotto = sStRange.RangeAddress.EndRow
-            if oSheet.getCellByPosition(1, sopra + 1).String != voce:
-                lista_pt.append((sopra, sotto))
-            # else:
+            voce = oSheet.getCellByPosition(1, sopra + 1).String
+        except Exception:
+            try:
+                if oSheet.getCellByPosition(0, lrow_originale).CellStyle in stili_totali:
+                    voce = LeenoComputo.datiVoceComputo(oSheet, lrow_originale)[1][1]
+            except:
+                pass
 
-                # # colora lo sfondo della voce filtrata
-                # oSheet.getCellRangeByPosition(0, sopra, 40, sotto).CellBackColor = 16777120
+    if not voce:
+        Dialogs.Exclamation(Title='ATTENZIONE!', Text='Seleziona una voce o una misurazione.')
+        return
 
-                # if qui == None:
-                #     qui = sopra + 1
-    # indicator.setValue(fine)
-    try:
-        for el in lista_pt:
-            oCellRangeAddr.StartRow = el[0]
-            oCellRangeAddr.EndRow = el[1]
-            oSheet.group(oCellRangeAddr, 1)
-            oSheet.getCellRangeByPosition(0, el[0], 0,
-                                        el[1]).Rows.IsVisible = False
-    except Exception:
-        pass
-
-    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # --- 2. APPLICAZIONE DEL FILTRO ---
+    oSheet.clearOutline()
+    fine = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
 
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
+
+    n = 0
+    prima_riga_trovata = None
+
+    while n < fine:
+        cell_style = oSheet.getCellByPosition(0, n).CellStyle
+
+        if cell_style in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+
+            codice_corrente = oSheet.getCellByPosition(1, sopra + 1).String
+
+            if codice_corrente != voce:
+                oCellRangeAddr.StartRow = sopra
+                oCellRangeAddr.EndRow = sotto
+                oSheet.group(oCellRangeAddr, 1)
+                oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = False
+            else:
+                oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = True
+                oSheet.getCellByPosition(1, sopra + 1).CellBackColor = COLORE_VERDE_SPUNTA
+
+            n = sotto + 1
+        else:
+            n += 1
+
+    # --- 3. COLONNE E CHIUSURA ---
     oCellRangeAddr.StartColumn = 29
     oCellRangeAddr.EndColumn = 30
     oSheet.group(oCellRangeAddr, 0)
     oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
-
-    try:
-        # _gotoCella(1, qui)
-        _gotoCella(1, lrow)
-    except:
-        struttura_off()
-        # indicator.end()
-        GotoSheet("Elenco Prezzi")
-        Dialogs.Exclamation(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
-    # indicator.end()
 
 ########################################################################
 @LeenoUtils.no_refresh
@@ -10499,7 +10552,7 @@ def calendario_liste():
     Colora le colonne del sabato e della domenica
     nel foglio LISTA ore del file di computo
     0 = nero
-    16777215 = bianco
+    COLORE_BIANCO_SFONDO = bianco
     12632256 = grigio chiaro
     14277081 = azzurro chiaro
     13434777 = giallo
@@ -11755,22 +11808,23 @@ def celle_colorate(flag = False):
 
 import LeenoTabelle
 
-
-
 ########################################################################
 
-@with_undo("Sposta Voce")
-# @LeenoUtils.no_refresh
+@with_undo("Sposta Voci Selezionate")
 def sposta_voce(lrow=None, msg=1):
-
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    # Identifica sorgente
-    SR, ER = seleziona_voce()
+    # 1. Identifica sorgente (Multivocale o Singola)
+    oSel = oDoc.CurrentController.getSelection()
+    if not oSel.supportsService("com.sun.star.table.CellRange"):
+        return
+
+    SR = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().StartRow).RangeAddress.StartRow
+    ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
     num_rows = ER - SR + 1
 
-    # Identifica destinazione
+    # 2. Identifica destinazione
     to = basic_LeenO('ListenersSelectRange.getRange', "Seleziona destinazione")
     if not to: return
 
@@ -11780,26 +11834,52 @@ def sposta_voce(lrow=None, msg=1):
 
     dest_row = LeenoSheetUtils.prossimaVoce(oSheet, to_row, 1, saltaCat=False)
 
-    # Logica di spostamento sicura
-    oSheet.getRows().insertByIndex(dest_row, num_rows)
-    actual_SR = SR + num_rows if dest_row <= SR else SR
+    if SR <= dest_row <= ER + 1:
+        Dialogs.Exclamation(Title="Errore", Text="Destinazione non valida.")
+        return
 
-    oRangeAddress = oSheet.getCellRangeByPosition(0, actual_SR, 250, actual_SR + num_rows - 1).getRangeAddress()
-    oCellAddress = oSheet.getCellByPosition(0, dest_row).getCellAddress()
+    # --- OTTIMIZZAZIONE MASSIMA ---
+    oDoc.addActionLock()
+    oDoc.lockControllers()
+    # Sospende il calcolo automatico delle formule (fondamentale in file pesanti)
+    # oDoc.calculateAll()
+    # oDoc.enableAutomaticCalculation(False)
+    with LeenoUtils.DocumentRefreshContext(False):
+    # try:
+        # Inserimento righe vuote a destinazione
+        oSheet.getRows().insertByIndex(dest_row, num_rows)
 
-    # Spostamento
-    oSheet.moveRange(oCellAddress, oRangeAddress)
-    oSheet.getRows().removeByIndex(actual_SR, num_rows)
+        # Ricalcolo posizione sorgente se slittata
+        actual_SR = SR + num_rows if dest_row <= SR else SR
 
-    # --- CORREZIONE APPLICAZIONE ALTEZZA OTTIMALE ---
-    # Accediamo alle righe tramite il range di celle appena spostato
+        # Definiamo gli indirizzi per lo spostamento
+        oRangeAddress = oSheet.getCellRangeByPosition(0, actual_SR, 250, actual_SR + num_rows - 1).getRangeAddress()
+        oCellAddress = oSheet.getCellByPosition(0, dest_row).getCellAddress()
+
+        # Spostamento fisico dei dati
+        oSheet.moveRange(oCellAddress, oRangeAddress)
+
+        # Rimozione vecchie righe
+        oSheet.getRows().removeByIndex(actual_SR, num_rows)
+
+    # finally:
+        # Riattiviamo il motore di calcolo e il layout
+        # oDoc.enableAutomaticCalculation(True)
+        # oDoc.unlockControllers()
+        # oDoc.removeActionLock()
+
+    # 3. Altezza ottimale (eseguita DOPO lo sblocco del controller)
+    # Applichiamo l'altezza ottimale solo alle righe coinvolte nello spostamento
     dest_range = oSheet.getCellRangeByPosition(0, dest_row, 250, dest_row + num_rows - 1)
     dest_range.getRows().OptimalHeight = True
-    # -----------------------------------------------
 
+    # Ripristino visivo
     oDoc.CurrentController.setFirstVisibleRow(max(0, dest_row - 8))
-    numera_voci()
+    _gotoCella(1, dest_row + 1)
 
+    # Ricalcolo finale necessario dopo aver riabilitato il calcolo automatico
+    oDoc.calculateAll()
+    numera_voci()
 
 def copia_stili_celle(sheet_src, range_src, sheet_dest, range_dest):
     '''
@@ -12482,47 +12562,11 @@ def somma_per_colore_nella_colonna():
 from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
 # @measure_time(show_popup=True)
 def MENU_debug():
-    import LeenoTheme
-    LeenoTheme.applica_nuovo_colore_tematico()
-    return
-    # catalogo_stili_cella()
-    # return
-    oDoc = LeenoUtils.getDocument()
-    active_cell = oDoc.CurrentSelection
-    DLG.chi(active_cell.CellBackColor)
+    DLG.chi(8)
+    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
 
-    # DLG.chi(active_cell.CellBackColor)
-    return
-
-    somma_per_colore_nella_colonna()
-    return
-    # oDoc = LeenoUtils.getDocument()
-    # active_cell = oDoc.CurrentSelection
-    # from com.sun.star.sheet.CellFlags import FORMATTED
-    # DLG.chi(active_cell.getPropertySetInfo().getProperties())
-    # return
-    ()
-
-    return
-    Debug.mostra_statistiche_performance()
-    return
-    oDoc = LeenoUtils.getDocument()
-    active_cell.Value = 473.51
-
-    DLG.chi(active_cell.Type.value)
-    return
-    return
-    oDoc = LeenoUtils.getDocument()
-    filename = oDoc.getURL()
-
-    dest = os.path.split(filename)[0] + '_senza_prezzi.ods'
-    DLG.chi(dest)
-
-
-    # ~dest = filename[0:-4]+ '.ods'
-    # salva il file col nome del titolo
-    salva_come(uno.fileUrlToSystemPath(dest))
-    return
+    '''Debug function - placeholder for development'''
+    pass
 
 
 ########################################################################

@@ -85,3 +85,10 @@ def applica_nuovo_colore_tematico():
         # DLG.chi(f"Aggiornamento completato!\n\nStili modificati: {count}")
     except Exception as e:
         DLG.errore(f"Errore durante l'applicazione del tema: {str(e)}")
+
+######################################################################
+def trova_colore_cella():
+    oDoc = LeenoUtils.getDocument()
+    active_cell = oDoc.CurrentSelection
+    DLG.chi(active_cell.CellBackColor)
+    return

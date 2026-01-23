@@ -14,6 +14,8 @@ import LeenoAnalysis
 import LeenoComputo
 import Dialogs
 import LeenoDialogs as DLG
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
+      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -63,7 +65,7 @@ def SbiancaCellePrintArea():
     oSheet.getCellRangeByPosition(
         oPrintArea[0].StartColumn, oPrintArea[0].StartRow,
         oPrintArea[0].EndColumn, oPrintArea[0].EndRow
-        ).CellBackColor = 16777215 #sbianca
+        ).CellBackColor = COLORE_BIANCO_SFONDO #sbianca
 
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     for y in range(0, oPrintArea[0].EndRow):
@@ -1063,11 +1065,11 @@ def numeraVoci(oSheet, lrow, tutte):
         for x in reversed(range(0, lrow)):
             if(
                oSheet.getCellByPosition(1, x).CellStyle in ('comp Art-EP', 'comp Art-EP_R') and
-               oSheet.getCellByPosition(1, x).CellBackColor != 15066597):
+               oSheet.getCellByPosition(1, x).CellBackColor != COLORE_GRIGIO_INATTIVA):
                 n = oSheet.getCellByPosition(0, x).Value + 1
                 break
         for row in range(lrow, lastRow):
-            if oSheet.getCellByPosition(1, row).CellBackColor == 15066597:
+            if oSheet.getCellByPosition(1, row).CellBackColor == COLORE_GRIGIO_INATTIVA:
                 oSheet.getCellByPosition(0, row).String = ''
             elif oSheet.getCellByPosition(1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
                 oSheet.getCellByPosition(0, row).Value = n

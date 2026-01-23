@@ -91,15 +91,6 @@ def aggiorna_configurazione_leeno():
                  Text=msg + "\n\nRiavvia LibreOffice per applicare le modifiche")
     return True
 
-########################################################################
-# Funzione di debug per trovare il colore di sfondo di una cella
-########################################################################
-
-def trova_colore_cella():
-    oDoc = LeenoUtils.getDocument()
-    active_cell = oDoc.CurrentSelection
-    DLG.chi(active_cell.CellBackColor)
-    return
 
 ########################################################################
 # funzioni per misurare performance delle funzioni LeenO
@@ -331,7 +322,6 @@ def measure_time_simple(func):
 
     return wrapper
 
-
 class PerformanceMonitor:
     """
     Context manager per misurare blocchi di codice.
@@ -485,4 +475,3 @@ def pulisci_log_performance():
     except Exception as e:
         import LeenoDialogs as DLG
         DLG.chi(f"Errore nell'eliminazione del log: {e}")
-

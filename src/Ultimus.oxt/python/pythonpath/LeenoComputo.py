@@ -3,11 +3,15 @@ import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
 import LeenoConfig
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
+      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
+
 import Dialogs
 
 import LeenoDialogs as DLG
 
 import pyleeno as PL
+
 
 def datiVoceComputo(oSheet, lrow):
     '''
@@ -99,7 +103,7 @@ def cambia_articolo(oSheet, lrow, nuovo_articolo):
     # Modifica dell'articolo:
     cell = oSheet.getCellByPosition(1, start_row + 1)
     cell.String = nuovo_articolo
-    cell.CellBackColor = 14942166
+    cell.CellBackColor = COLORE_VERDE_SPUNTA
 
     return True
 

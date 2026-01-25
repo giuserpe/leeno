@@ -837,20 +837,63 @@ def MENU_copia_sorgente_per_git():
 ########################################################################
 
 def cerca_path_valido():
+    """
+    Cerca il percorso di un editor di codice installato sul sistema.
+    Priorità: Antigravity > VS Code
+    Supporta Windows, Linux e macOS.
+
+    Returns:
+        str: Percorso completo dell'editor trovato
+
+    Raises:
+        FileNotFoundError: Se nessun editor viene trovato
+    """
     if 'giuserpe' in os.getlogin():
-        # Try multiple possible paths
-        possible_paths = [
-            # "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
-            # "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\cursor\\Cursor.exe",
-            # os.path.expanduser("~\\AppData\\Local\\Programs\\cursor\\Cursor.exe"),
-            # "C:\\Program Files\\cursor\\Cursor.exe",
-            # "C:\\Program Files (x86)\\cursor\\Cursor.exe",
-            os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
-            "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-            "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
-            "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-            "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-        ]
+        import platform
+        system = platform.system()
+
+        possible_paths = []
+
+        # === ANTIGRAVITY (Priorità 1) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
+                "C:\\Program Files\\Antigravity\\Antigravity.exe",
+                "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/antigravity",
+                "/usr/local/bin/antigravity",
+                os.path.expanduser("~/.local/bin/antigravity"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
+                os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
+            ])
+
+        # === VS CODE (Fallback) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+                "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+                "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/code",
+                "/usr/local/bin/code",
+                "/snap/bin/code",
+                os.path.expanduser("~/.local/bin/code"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
+                "/usr/local/bin/code",
+            ])
 
         editor_path = None
         for path in possible_paths:
@@ -859,21 +902,21 @@ def cerca_path_valido():
                 break
 
         if editor_path is None:
-            raise FileNotFoundError("Impossibile trovare VS Code. Assicurati che sia installato.")
+            raise FileNotFoundError(
+                f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
+                "Assicurati che almeno uno sia installato."
+            )
         return editor_path
 
 def apri_con_editor(full_file_path, line_number):
-    # Imposta il percorso di VSCodium per Windows
-    # if os.path.exists("C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"):
-    #     editor_path = "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-    # else:
-    #     editor_path = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+    """
+    Apre un file nell'editor di codice alla riga specificata.
+    Riutilizza la finestra già aperta dell'editor se disponibile.
 
-    # if os.path.exists("C:\\Users\\giuserpe\\AppData\\Local\\Programs\\cursor\\Cursor.exe"):
-    #     editor_path = "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\cursor\\Cursor.exe"
-    # else:
-    #     editor_path = "C:\\Users\\DELL\\AppData\\Local\\Programs\\cursor\\Cursor.exe"
-
+    Args:
+        full_file_path (str): Percorso completo del file da aprire
+        line_number (int): Numero di riga da visualizzare
+    """
     editor_path = cerca_path_valido()
 
     # Controlla se il file esiste
@@ -886,16 +929,16 @@ def apri_con_editor(full_file_path, line_number):
         DLG.chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
         return
 
-    # Costruisci il comando per aprire il file con VSCodium alla linea specifica
-    comando = f'"{editor_path}" --goto "{full_file_path}:{line_number}"'
+    # Costruisci il comando per aprire il file alla riga specifica
+    # --reuse-window: riutilizza la finestra già aperta invece di crearne una nuova
+    # --goto: apre il file alla riga:colonna specificata
+    comando = f'"{editor_path}" --reuse-window --goto "{full_file_path}:{line_number}"'
 
-    # dest = LeenoGlobals.dest()
-
-    # Prova ad aprire il file con VSCodium
+    # Apri il file nell'editor
     try:
         subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception as e:
-        DLG.chi(f"Errore durante l'apertura del file con VSCodium: {e}")
+        DLG.chi(f"Errore durante l'apertura del file con l'editor: {e}")
 
 
 def MENU_avvia_IDE():

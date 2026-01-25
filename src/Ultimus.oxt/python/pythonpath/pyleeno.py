@@ -9174,122 +9174,6 @@ def vSintetica(flag = True):
         return
 
 
-########################################################################
-
-@LeenoUtils.no_refresh
-def catalogo_stili_cella():
-    '''
-    Apre un nuovo foglio e vi inserisce tutti gli stili di cella
-    con relativo esempio
-    '''
-    oDoc = LeenoUtils.getDocument()
-    sty = oDoc.StyleFamilies.getByName("CellStyles").getElementNames()
-    if oDoc.Sheets.hasByName("stili"):
-        oSheet = oDoc.Sheets.getByName("stili")
-    else:
-        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-        oDoc.Sheets.insertByName('stili', sheet)
-        oSheet = oDoc.Sheets.getByName("stili")
-    GotoSheet("stili")
-    # attiva la progressbar
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    indicator.start('Creazione catalogo stili di cella in corso...', len(sty))
-    i = 0
-    sty = sorted(sty)
-    for el in sty:
-        oSheet.getCellByPosition( 0, i).String = el
-        oSheet.getCellByPosition( 1, i).CellStyle = el
-        oSheet.getCellByPosition( 3, i).CellStyle = el
-        oSheet.getCellByPosition( 1, i).Value = -2000
-        oSheet.getCellByPosition( 3, i).String = "LeenO"
-        i += 1
-        indicator.setValue(i)
-    indicator.end()
-
-
-@LeenoUtils.no_refresh
-def elimina_stili_cella():
-    '''
-    Elimina gli stili di cella non utilizzati.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
-
-    # Crea una lista di stili non utilizzati
-    stili_da_elim = [el for el in stili if not oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse()]
-    #  stili_da_elim = stili # RIMUOVI TUTTI!!!
-
-    # Rimuovi gli stili non utilizzati
-    n = 0
-    for el in stili_da_elim:
-        oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
-        n += 1
-    Dialogs.Exclamation(Title = 'ATTENZIONE!', Text=f'Eliminati {n} stili di cella!')
-
-
-def elenca_stili_foglio():
-    '''
-    Restituisce l'elenco di tutti gli stili di cella applicati alle celle nel foglio corrente.
-    '''
-    try:
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-
-        # Set per tenere traccia degli stili unici applicati
-        stili_applicati = set()
-
-        # Ottieni l'area utilizzata nel foglio
-        area_utilizzata = SheetUtils.getUsedArea(oSheet)
-        row = area_utilizzata.EndRow
-        col = area_utilizzata.EndColumn
-
-        # Itera sulle celle dell'area utilizzata
-        for riga in range(row + 1):  # Includi l'ultima riga
-            for colonna in range(col + 1):  # Includi l'ultima colonna
-                cella = oSheet.getCellByPosition(colonna, riga)
-                stile = cella.CellStyle
-                if stile:  # Controlla se lo stile non è vuoto
-                    stili_applicati.add(stile)
-
-        # Converti il set in una lista
-        lista_stili_applicati = list(stili_applicati)
-
-        # Mostra o restituisci la lista degli stili applicati
-        #  DLG.chi(f'Stili di cella applicati: {", ".join(lista_stili_applicati)}')
-        return lista_stili_applicati
-
-    except Exception as e:
-        DLG.errore(e)
-        return []
-
-
-def elimina_stile():
-    '''
-    Elimina lo stile della cella selezionata.
-    '''
-    stili_utili = elenca_stili_foglio().append('Default')
-    try:
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        selezione = oDoc.getCurrentSelection()
-        stile = selezione.CellStyle
-        DLG.chi(stile)
-        selezione.CellStyle = 'Default' # Assegna lo stile predefinito alla cella
-        # Rimuovi lo stile
-        if stile not in stili_utili:
-            oDoc.StyleFamilies.getByName('CellStyles').removeByName(stile)
-    except Exception as e:
-        DLG.errore(e)
-        pass
-
-    # Ottieni la posizione attuale del cursore
-    cella_corrente = selezione.getCellAddress()
-    nuova_riga = cella_corrente.Row + 1  # Sposta di una riga in basso
-
-    # Assicurati di non uscire dall'intervallo delle righe del foglio
-    if nuova_riga < oSheet.Rows.Count:
-        # Sposta il cursore alla cella nella stessa colonna ma una riga sotto
-        oDoc.CurrentController.select(oSheet.getCellByPosition(cella_corrente.Column, nuova_riga))
 
 ########################################################################
 # def inizializza():
@@ -12561,7 +12445,17 @@ def somma_per_colore_nella_colonna():
 
 from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
 # @measure_time(show_popup=True)
+@LeenoUtils.no_refresh
 def MENU_debug():
+    import LeenoTheme
+    # mappa = {
+    # 'parti_uguali': 2, 'lunghezza': 2, 'larghezza': 2,
+    # 'pesi': 2, 'quantità': 2, 'sommano': 2
+    # }
+    # LeenoTheme.imposta_decimali_differenziati(mappa)
+    LeenoTheme.dialogo_gestione_decimali()
+    # LeenoTheme.catalogo_stili_cella()
+    return
     DLG.chi(8)
     DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
 

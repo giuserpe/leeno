@@ -1910,7 +1910,8 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>service:it.leeno.pyleeno?MENU_imposta_precisione</value>
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoTheme.dialogo_gestione_decimali</value>
+
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/decimali</value>

@@ -138,6 +138,13 @@ class Config(Borg):
             ('ImpostazioniExport', 'cbCostiManodopera', '(bool)True'),
             ('ImpostazioniExport', 'cbQuadroEconomico', '(bool)True'),
 
+            # In LeenoConfig.py -> _initDefaults()
+            ('DecimaliStili', 'parti_uguali', '2'),
+            ('DecimaliStili', 'lunghezza', '2'),
+            ('DecimaliStili', 'larghezza', '2'),
+            ('DecimaliStili', 'pesi', '3'),
+            ('DecimaliStili', 'quantità', '2'),
+            ('DecimaliStili', 'sommano', '2'),
         )
 
         for param in parametri:

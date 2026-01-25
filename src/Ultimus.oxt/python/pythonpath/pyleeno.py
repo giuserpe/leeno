@@ -8755,7 +8755,13 @@ def struct(level, vedi = True):
 ########################################################################
 def MENU_apri_manuale():
     '''
-    @@ DA DOCUMENTARE
+    Apre il manuale utente di LeenO in formato PDF.
+
+    Utilizza il gestore di sistema predefinito per aprire il file MANUALE_LeenO.pdf
+    situato nella directory di installazione di LeenO.
+
+    Returns:
+        None
     '''
     apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
     apri.execute(LeenO_path() + '/MANUALE_LeenO.pdf', "", 0)
@@ -12448,19 +12454,12 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 @LeenoUtils.no_refresh
 def MENU_debug():
     import LeenoTheme
-    # mappa = {
-    # 'parti_uguali': 2, 'lunghezza': 2, 'larghezza': 2,
-    # 'pesi': 2, 'quantità': 2, 'sommano': 2
-    # }
-    # LeenoTheme.imposta_decimali_differenziati(mappa)
-    LeenoTheme.dialogo_gestione_decimali()
-    # LeenoTheme.catalogo_stili_cella()
-    return
     DLG.chi(8)
     DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
-
-    '''Debug function - placeholder for development'''
-    pass
+    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
+    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
+    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
+    return
 
 
 ########################################################################

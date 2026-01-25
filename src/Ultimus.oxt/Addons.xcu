@@ -10,9 +10,9 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-<!--
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.DlgMain</value>
--->
+            <!--
+                 <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.DlgMain</value>
+            -->
             <value>vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
@@ -84,7 +84,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ma30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -102,7 +101,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ma35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -120,7 +118,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ma36" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -138,7 +135,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ma40" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -247,7 +243,6 @@
           <prop oor:name="URL" oor:type="xs:string">
             <!-- <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value> -->
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
-
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image37</value>
@@ -348,10 +343,10 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image21B</value>
+            <value>%origin%/icons/image21B</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-              <value>Elimina codici doppi in Elenco Prezzi</value>
+            <value>Elimina codici doppi in Elenco Prezzi</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -571,7 +566,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ca26" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -589,7 +583,6 @@
             <value>_self</value>
           </prop>
         </node>
-
         <node oor:name="Ca45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
@@ -770,22 +763,22 @@
       <node oor:name="ULTIMUS_3.OfficeToolBar_DEV" oor:op="replace">
         <!-- crea il pacchetto -->
         <!-- <node oor:name="m001" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_make_pack</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/zip</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>pack.OXT</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node> -->
+             <prop oor:name="Context" oor:type="xs:string">
+             <value>com.sun.star.sheet.SpreadsheetDocument</value>
+             </prop>
+             <prop oor:name="URL" oor:type="xs:string">
+             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_make_pack</value>
+             </prop>
+             <prop oor:name="ImageIdentifier" oor:type="xs:string">
+             <value>%origin%/icons/zip</value>
+             </prop>
+             <prop oor:name="Title" oor:type="xs:string">
+             <value>pack.OXT</value>
+             </prop>
+             <prop oor:name="Target" oor:type="xs:string">
+             <value>_self</value>
+             </prop>
+             </node> -->
         <!-- DEBUG-->
         <node oor:name="m002" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
@@ -848,7 +841,6 @@
         </node>
       </node>
     </node>
-
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -873,9 +865,9 @@
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuovo_computo</value>
-<!--
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.DlgMain</value>
--->
+                  <!--
+                       <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.DlgMain</value>
+                  -->
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image15</value>
@@ -887,6 +879,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="N015" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
@@ -918,6 +911,7 @@
               </node>
             </node>
           </node>
+
           <node oor:name="m01" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -940,6 +934,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="IE005" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -948,6 +943,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+
               <node oor:name="IE006" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -962,6 +958,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="IE010" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -976,6 +973,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="IE020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1068,6 +1066,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="IE040" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1106,9 +1105,9 @@
                   <value>_self</value>
                 </prop>
               </node>
-
             </node>
           </node>
+
           <node oor:name="m03" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1128,6 +1127,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+
               <node oor:name="m2U06" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1136,23 +1136,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <node oor:name="m2U07.2" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_importa_stili</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/sfera_gialla</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa Stili da altro file...</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
+
               <node oor:name="m2U07.3" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1167,6 +1151,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U07.4" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1181,6 +1166,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U07.5" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1195,6 +1181,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U07.6" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1209,6 +1196,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U07.7" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1218,21 +1206,6 @@
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="it">Somma per Colore</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-
-              <node oor:name="m2U07.8" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoTheme.applica_nuovo_colore_tematico</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value xml:lang="it">Cambia Colore al Tema (da cella attiva)...</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1256,6 +1229,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U08b" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1264,6 +1238,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+
               <node oor:name="m2U09a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1281,6 +1256,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U09z" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1289,6 +1265,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+
               <node oor:name="m2U11" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1324,6 +1301,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m2U14" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1341,63 +1319,63 @@
                   <value>_self</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m2U15" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.tante_voci_insieme?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image300</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Inserisci gruppi di nuove voci (Analisi / Computo)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
-<!--
-              <node oor:name="m2U16" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Varie.vai_ed_esegui?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image300</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Nuovi prezzi da gruppi di Analisi (ESPERTI)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
-<!--
-              <node oor:name="m2U17" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.X_TMP.popi_serva?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image300</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>popi_serva (ESPERTI)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
+              <!--
+                   <node oor:name="m2U15" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.tante_voci_insieme?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/image300</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>Inserisci gruppi di nuove voci (Analisi / Computo)</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
+              <!--
+                   <node oor:name="m2U16" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Varie.vai_ed_esegui?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/image300</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>Nuovi prezzi da gruppi di Analisi (ESPERTI)</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
+              <!--
+                   <node oor:name="m2U17" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.X_TMP.popi_serva?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/image300</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>popi_serva (ESPERTI)</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
               <node oor:name="m2U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1445,9 +1423,9 @@
                   <value>_self</value>
                 </prop>
               </node>
-
             </node>
           </node>
+
           <node oor:name="m04" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1456,6 +1434,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m05" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1484,6 +1463,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m3U02" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1501,6 +1481,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m3U03" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1515,6 +1496,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+
               <node oor:name="m3U04" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1531,6 +1513,7 @@
               </node>
             </node>
           </node>
+
           <node oor:name="m06" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1548,6 +1531,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m07" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1565,6 +1549,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m08" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1582,6 +1567,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m09" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1590,12 +1576,13 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m10" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-                <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image8</value>
@@ -1607,6 +1594,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m11" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1624,6 +1612,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m12" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1632,6 +1621,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m15" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1650,6 +1640,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m16" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1667,6 +1658,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m19" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1675,6 +1667,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m20" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1692,6 +1685,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m21" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1700,6 +1694,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m22" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1717,6 +1712,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m23" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1734,6 +1730,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
@@ -1742,6 +1739,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m26" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1759,6 +1757,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m27" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1776,27 +1775,13 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m28" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
               <value>private:separator</value>
-            </prop>
-          </node>
-
-          <node oor:name="m29" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Descrizione abbreviata ON/OFF</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
             </prop>
           </node>
 
@@ -1852,8 +1837,8 @@
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/print_ok</value>
             </prop>
-
           </node>
+
           <node oor:name="m40" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1871,7 +1856,71 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m50" oor:op="replace">
+
+          <node oor:name="m41" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Descrizione abbreviata ON/OFF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="m42" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_importa_stili</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/sfera_gialla</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Importa Stili da altro file...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="m43" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoTheme.applica_nuovo_colore_tematico</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value xml:lang="it">Cambia Colore al Tema (da cella attiva)...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="m44" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:it.leeno.pyleeno?MENU_imposta_precisione</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/decimali</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value xml:lang="it">Arrotondamenti e Decimali...</value>
+            </prop>
+          </node>
+
+          <node oor:name="m45" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
@@ -1879,6 +1928,7 @@
               <value>private:separator</value>
             </prop>
           </node>
+
           <node oor:name="m60" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1896,6 +1946,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m70" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1913,6 +1964,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m81" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1930,6 +1982,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m82" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1947,6 +2000,7 @@
               <value>_self</value>
             </prop>
           </node>
+
           <node oor:name="m83" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>

@@ -68,21 +68,38 @@ def getDesktop():
     return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
 
+# def getDocument():
+#     '''
+#     Get active document
+#     '''
+#     desktop = getDesktop()
+
+#     # try to activate current frame
+#     # needed sometimes because UNO doesnt' find the correct window
+#     # when debugging.
+#     try:
+#         desktop.getCurrentFrame().activate()
+#     except Exception:
+#         pass
+
+#     return desktop.getCurrentComponent()
+
 def getDocument():
-    '''
-    Get active document
-    '''
-    desktop = getDesktop()
+    ctx = getComponentContext()
+    smgr = ctx.ServiceManager
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    oDoc = desktop.getCurrentComponent()
 
-    # try to activate current frame
-    # needed sometimes because UNO doesnt' find the correct window
-    # when debugging.
-    try:
-        desktop.getCurrentFrame().activate()
-    except Exception:
-        pass
+    # Se il componente corrente non è un documento (es. è un dialogo)
+    # cerchiamo l'ultimo documento attivo che sia un foglio di calcolo
+    if not hasattr(oDoc, "getSheets"):
+        components = desktop.getComponents().createEnumeration()
+        while components.hasMoreElements():
+            comp = components.nextElement()
+            if hasattr(comp, "getSheets"): # È un file Calc
+                return comp
+    return oDoc
 
-    return desktop.getCurrentComponent()
 
 
 def getServiceManager():
@@ -169,19 +186,32 @@ def DocumentRefresh(boo):
     Abilita / disabilita il refresh per accelerare le procedure
     '''
     oDoc = getDocument()
-    # L'ordine che segue non va cambiato!!!
-    if boo:
-        oDoc.IsAdjustHeightEnabled = True
-        oDoc.enableAutomaticCalculation(True)
-        oDoc.removeActionLock()
-        oDoc.resetActionLocks()
-        oDoc.unlockControllers()
-        oDoc.calculateAll()
-    else:
-        oDoc.IsAdjustHeightEnabled = False
-        oDoc.enableAutomaticCalculation(False)
-        oDoc.lockControllers()
-        oDoc.addActionLock()
+
+    # 1. Controllo esistenza
+    if oDoc is None:
+        return
+
+    # 2. Controllo se è un documento Calc (supporta IsAdjustHeightEnabled)
+    # Se è un altro tipo di componente, IsAdjustHeightEnabled solleva AttributeError
+    try:
+        if boo:
+            # L'ordine che segue non va cambiato!!!
+            if hasattr(oDoc, 'IsAdjustHeightEnabled'):
+                oDoc.IsAdjustHeightEnabled = True
+            oDoc.enableAutomaticCalculation(True)
+            oDoc.removeActionLock()
+            oDoc.resetActionLocks()
+            oDoc.unlockControllers()
+            oDoc.calculateAll()
+        else:
+            if hasattr(oDoc, 'IsAdjustHeightEnabled'):
+                oDoc.IsAdjustHeightEnabled = False
+            oDoc.enableAutomaticCalculation(False)
+            oDoc.lockControllers()
+            oDoc.addActionLock()
+    except Exception:
+        # Se il documento è in uno stato transitorio o non supporta i lock
+        pass
 
 
 # import Dialogs as DLG
@@ -888,7 +918,7 @@ def CursorContext(step=0):
 def ProtezioneFoglioContext(sheet_or_name, password="", oDoc=None):
     """
     Context manager che sblocca un foglio e lo riprotegge alla fine.
-    
+
     :param sheet_or_name: Oggetto foglio o stringa col nome del foglio
     :param password: Password del foglio (default vuota)
     :param oDoc: Documento (opzionale, se sheet_or_name è una stringa)

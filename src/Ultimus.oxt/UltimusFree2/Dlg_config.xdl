@@ -14,7 +14,7 @@
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="2" dlg:left="129" dlg:top="111" dlg:width="50" dlg:height="12" dlg:help-text="&amp;224.Dlg_config.Label3.HelpText" dlg:value="&amp;225.Dlg_config.Label3.Label" dlg:valign="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="3" dlg:left="12" dlg:top="13" dlg:width="95" dlg:height="10" dlg:help-text="&amp;226.Dlg_config.CheckBox1.HelpText" dlg:value="&amp;227.Dlg_config.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="4" dlg:left="12" dlg:top="58" dlg:width="95" dlg:height="10" dlg:help-text="&amp;230.Dlg_config.CheckBox3.HelpText" dlg:value="&amp;231.Dlg_config.CheckBox3.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="180" dlg:top="139" dlg:width="25" dlg:height="15" dlg:help-text="&amp;274.Dlg_config.CommandButton1.HelpText" dlg:value="&amp;275.Dlg_config.CommandButton1.Label" dlg:multiline="true">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="142" dlg:top="138" dlg:width="40" dlg:height="15" dlg:help-text="&amp;274.Dlg_config.CommandButton1.HelpText" dlg:value="&amp;275.Dlg_config.CommandButton1.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_default?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:style-id="1" dlg:id="Label7" dlg:tab-index="6" dlg:left="129" dlg:top="12" dlg:width="47" dlg:height="12" dlg:help-text="&amp;278.Dlg_config.Label7.HelpText" dlg:value="&amp;279.Dlg_config.Label7.Label" dlg:valign="center"/>
@@ -52,7 +52,7 @@
   <dlg:titledbox dlg:id="FrameControl5" dlg:tab-index="17" dlg:left="125" dlg:top="7" dlg:width="115" dlg:height="123" dlg:help-text="&amp;771.Dlg_config.FrameControl5.HelpText">
    <dlg:title dlg:value="&amp;772.Dlg_config.FrameControl5.Label"/>
   </dlg:titledbox>
-  <dlg:button dlg:id="CommandButton2" dlg:tab-index="18" dlg:left="215" dlg:top="139" dlg:width="25" dlg:height="15" dlg:help-text="&amp;773.Dlg_config.CommandButton2.HelpText" dlg:value="&amp;774.Dlg_config.CommandButton2.Label" dlg:button-type="ok"/>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="18" dlg:left="198" dlg:top="138" dlg:width="40" dlg:height="15" dlg:help-text="&amp;773.Dlg_config.CommandButton2.HelpText" dlg:value="&amp;774.Dlg_config.CommandButton2.Label" dlg:button-type="ok"/>
   <dlg:combobox dlg:style-id="4" dlg:id="ComboBox5" dlg:tab-index="19" dlg:left="207" dlg:top="91" dlg:width="28" dlg:height="12" dlg:help-text="&amp;834.Dlg_config.ComboBox5.HelpText" dlg:value="&amp;835.Dlg_config.ComboBox5.Text" dlg:align="center" dlg:autocomplete="false" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;855.ComboBox5.StringItemList"/>

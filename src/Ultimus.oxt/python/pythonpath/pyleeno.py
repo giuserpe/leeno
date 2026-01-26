@@ -8436,94 +8436,108 @@ def SubSum(lrow, sub=False):
 ########################################################################
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
+
+import unohelper
+from com.sun.star.awt import XKeyHandler
+
+class LeenoKeyHandler(unohelper.Base, XKeyHandler):
+    def __init__(self):
+        self.ctrl_pressed = False
+        self.shift_pressed = False
+
+    def keyPressed(self, event):
+        # Modifiers: 2 = CTRL, 1 = SHIFT
+        if event.Modifiers == 2:
+            self.ctrl_pressed = True
+        elif event.Modifiers == 1:
+            self.shift_pressed = True
+        return False # Permette a LO di processare il tasto normalmente
+
+    def keyReleased(self, event):
+        self.ctrl_pressed = False
+        self.shift_pressed = False
+        return False
+
+    def disposing(self, event):
+        pass
+
+# Istanza globale del gestore
+KEY_HANDLER = None
+
+def register_key_handler():
+    global KEY_HANDLER
+    if KEY_HANDLER is None:
+        oDoc = LeenoUtils.getDocument()
+        KEY_HANDLER = LeenoKeyHandler()
+        oDoc.CurrentController.addKeyHandler(KEY_HANDLER)
+
+
+
 @with_undo
 def MENU_filtra_codice():
-
+    import sys
     is_ctrl = False
     is_shift = False
 
-    try:
-        ctx = uno.getComponentContext()
-        sm = ctx.ServiceManager
-        desktop = sm.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-
-        # Tentativo 1: Accesso via CurrentEvent (non sempre disponibile in tutti i contesti)
-        # In molti casi d'uso di macro, non c'è un modo diretto "globale" sincrono per leggere lo stato della tastiera
-        # come GetAsyncKeyState su Windows. Tuttavia, possiamo provare a leggere dallo stato dei modificatori
-        # dell'evento corrente se la macro è scatenata da un evento UI (es. click toolbar).
-        # Ma qui siamo in una funzione chiamata da menu/toolbar.
-
-        # Metodo alternativo robusto multipiattaforma per i modificatori in UNO:
-        # Purtroppo UNO non espone un "GetKeyState" globale semplice.
-        # L'approccio standard richiederebbe un KeyHandler, ma quello è asincrono.
-
-        # Per ora manteniamo il supporto Windows tramite ctypes e aggiungiamo un fallback
-        # che prova a leggere i modificatori dall'evento corrente se disponibile (es. selection change),
-        # anche se per una chiamata da toolbar è complesso.
-
-        # Dato che l'utente chiede esplicitamente multipiattaforma,
-        # e dato che Python in LO non ha accesso diretto a X11/Cocoa senza librerie esterne,
-        # su Linux/Mac spesso si accetta che questa feature "avanzata" (modificatori su click)
-        # potrebbe non funzionare o richiedere un listener persistente (KeyHandler).
-
-        # TUTTAVIA, un trucco comune è usare `Accessibility` o verificare se esiste un evento corrente.
-        # Un'altra via è usare `awt.Toolkit` per getLockingKeyState ma verifica solo Caps/Num lock.
-
-        # Se siamo su Windows, usiamo ctypes.
-        if sys.platform == 'win32':
-             # VK_SHIFT = 0x10, VK_CONTROL = 0x11
+    # --- Rilevamento Tasti Modificatori ---
+    if sys.platform == 'win32':
+        try:
+            import ctypes
+            # GetAsyncKeyState legge lo stato fisico del tasto in tempo reale
+            # 0x10 = Shift, 0x11 = Control
+            # Il bit 0x8000 indica se il tasto è attualmente premuto
             is_shift = (ctypes.windll.user32.GetAsyncKeyState(0x10) & 0x8000) != 0
             is_ctrl = (ctypes.windll.user32.GetAsyncKeyState(0x11) & 0x8000) != 0
+        except Exception as e:
+            # In caso di errore ctypes, procediamo come click normale
+            pass
+    else:
+        # Per Linux/Mac: verifica se il KEY_HANDLER (XKeyHandler) è attivo
+        if 'KEY_HANDLER' in globals() and KEY_HANDLER:
+            is_ctrl = KEY_HANDLER.ctrl_pressed
+            is_shift = KEY_HANDLER.shift_pressed
 
-        # Su Linux/Mac, al momento non c'è una one-line solution affidabile senza dipendenze esterne
-        # all'interno del contesto di uno script sincrono.
-        # Possiamo però tentare un approccio basato sull'ultimo evento di input processato dalla finestra
-        # se accessibile, ma è rischioso.
-
-        # Per ora, lascio il codice Windows e aggiungo un commento TODO per Linux/Mac
-        # o implemento un check fittizio se non siamo su Windows per evitare crash.
-
-    except:
-        pass
+    # --- Logica di Navigazione ---
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    # Otteniamo la riga corrente una sola volta
+    lrow = LeggiPosizioneCorrente()[1]
 
     if not is_ctrl and not is_shift:
+        # Comportamento standard: filtra la riga corrente
         filtra_codice()
         return
 
-    oDoc = LeenoUtils.getDocument()
-    lrow = LeggiPosizioneCorrente()[1]
-    oSheet = oDoc.CurrentController.ActiveSheet
-
     if is_ctrl:
-        # NEXT
-        _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True))
+        # VAI ALLA PROSSIMA VOCE (Ctrl + Click)
+        target_next = LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True)
+        _gotoCella(2, target_next)
         filtra_codice()
 
     elif is_shift:
-        # PREVIOUS
-        # Trova l'inizio della voce corrente
+        # VAI ALLA VOCE PRECEDENTE (Shift + Click)
+        # 1. Trova l'inizio della voce in cui ti trovi
         curr_start = LeenoSheetUtils.prossimaVoce(oSheet, lrow, n=0, saltaCat=True)
         search_row = curr_start - 1
 
-        stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-        stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-        stili_validi = stili_computo + stili_contab
+        # 2. Risali finché non trovi uno stile di computo o contabilità
+        stili_validi = LeenoUtils.getGlobalVar('stili_computo') + LeenoUtils.getGlobalVar('stili_contab')
 
-        found = False
-        while search_row > 0:
+        found_row = -1
+        while search_row >= 0:
             try:
                 style = oSheet.getCellByPosition(0, search_row).CellStyle
                 if style in stili_validi:
-                    found = True
+                    found_row = search_row
                     break
             except:
                 pass
             search_row -= 1
 
-        if found:
-            # Trovata una riga di una voce precedente, andiamo all'inizio di quella voce
-            target_row = LeenoSheetUtils.prossimaVoce(oSheet, search_row, n=0, saltaCat=True)
-            _gotoCella(2, target_row)
+        if found_row != -1:
+            # 3. Vai all'inizio della voce precedente trovata
+            target_prev = LeenoSheetUtils.prossimaVoce(oSheet, found_row, n=0, saltaCat=True)
+            _gotoCella(2, target_prev)
             filtra_codice()
 
 def filtra_codice(voce=None):

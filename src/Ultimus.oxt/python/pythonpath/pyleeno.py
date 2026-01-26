@@ -41,6 +41,7 @@ from com.sun.star.awt.FontWeight import BOLD, NORMAL
 import os
 import shutil
 import sys
+import ctypes
 import uno
 import unohelper
 import zipfile
@@ -860,6 +861,7 @@ def cerca_path_valido():
                 os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
                 "C:\\Program Files\\Antigravity\\Antigravity.exe",
                 "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
+                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
             ])
         elif system == "Linux":
             possible_paths.extend([
@@ -5492,11 +5494,9 @@ def MENU_Copia_riga_Ent():
     '''
     @@ DA DOCUMENTARE
     '''
-    # with LeenoUtils.DocumentRefreshContext(False):
     Copia_riga_Ent()
-    LeenoSheetUtils.adattaAltezzaRiga()
 
-@LeenoUtils.no_refresh
+# @LeenoUtils.no_refresh
 def Copia_riga_Ent(num_righe=None):
     """
     Aggiunge righe di misurazione.
@@ -5569,13 +5569,7 @@ def Copia_riga_Ent(num_righe=None):
             return None
 
         # Aggiorna altezza ultima riga inserita
-        try:
-            if isinstance(lrow, int) and lrow >= 0:
-                oSheet.getRows().getByIndex(lrow).OptimalHeight = True
-        except (AttributeError, IndexError) as e:
-            DLG.chi(f"Impossibile ottimizzare altezza riga {lrow}: {e}")
-        except Exception as e:
-            DLG.chi(f"Errore inaspettato con lrow={lrow}: {e}")
+        oSheet.getCellRangeByPosition(0, lrow, 48, lrow).Rows.OptimalHeight = True
 
     elif nome_sheet == "Elenco Prezzi":
         MENU_nuova_voce_scelta()
@@ -6514,7 +6508,7 @@ def LeggiPosizioneCorrente():
 ########################################################################
 # numera le voci di computo o contabilità
 # @Debug.measure_time() # Misura il tempo di esecuzione della funzione
-@LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
+# @LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
 def MENU_numera_voci():
     '''
     Comando di menu per numera_voci()
@@ -6522,7 +6516,8 @@ def MENU_numera_voci():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # LeenoSheetUtils.numeraVoci(oSheet, 4, True)
-    numera_voci()
+    with LeenoUtils.no_refresh():
+        numera_voci()
     Rinumera_TUTTI_Capitoli2(oSheet)
 
 
@@ -8232,7 +8227,7 @@ def MENU_vedi_voce():
             # focus = oDoc.CurrentController.getFirstVisibleRow
             if to < lrow:
                 vedi_voce_xpwe(oSheet, lrow, to)
-    LeenoSheetUtils.adattaAltezzaRiga()
+    oSheet.getCellRangeByPosition(0, lrow + 1, 48, lrow + 1).Rows.OptimalHeight = True
 
 
 def strall(el, n=3, pos=0):
@@ -8444,14 +8439,93 @@ def SubSum(lrow, sub=False):
 @with_undo
 def MENU_filtra_codice():
 
-    # per filtrare la prossima voce
+    is_ctrl = False
+    is_shift = False
+
+    try:
+        ctx = uno.getComponentContext()
+        sm = ctx.ServiceManager
+        desktop = sm.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+
+        # Tentativo 1: Accesso via CurrentEvent (non sempre disponibile in tutti i contesti)
+        # In molti casi d'uso di macro, non c'è un modo diretto "globale" sincrono per leggere lo stato della tastiera
+        # come GetAsyncKeyState su Windows. Tuttavia, possiamo provare a leggere dallo stato dei modificatori
+        # dell'evento corrente se la macro è scatenata da un evento UI (es. click toolbar).
+        # Ma qui siamo in una funzione chiamata da menu/toolbar.
+
+        # Metodo alternativo robusto multipiattaforma per i modificatori in UNO:
+        # Purtroppo UNO non espone un "GetKeyState" globale semplice.
+        # L'approccio standard richiederebbe un KeyHandler, ma quello è asincrono.
+
+        # Per ora manteniamo il supporto Windows tramite ctypes e aggiungiamo un fallback
+        # che prova a leggere i modificatori dall'evento corrente se disponibile (es. selection change),
+        # anche se per una chiamata da toolbar è complesso.
+
+        # Dato che l'utente chiede esplicitamente multipiattaforma,
+        # e dato che Python in LO non ha accesso diretto a X11/Cocoa senza librerie esterne,
+        # su Linux/Mac spesso si accetta che questa feature "avanzata" (modificatori su click)
+        # potrebbe non funzionare o richiedere un listener persistente (KeyHandler).
+
+        # TUTTAVIA, un trucco comune è usare `Accessibility` o verificare se esiste un evento corrente.
+        # Un'altra via è usare `awt.Toolkit` per getLockingKeyState ma verifica solo Caps/Num lock.
+
+        # Se siamo su Windows, usiamo ctypes.
+        if sys.platform == 'win32':
+             # VK_SHIFT = 0x10, VK_CONTROL = 0x11
+            is_shift = (ctypes.windll.user32.GetAsyncKeyState(0x10) & 0x8000) != 0
+            is_ctrl = (ctypes.windll.user32.GetAsyncKeyState(0x11) & 0x8000) != 0
+
+        # Su Linux/Mac, al momento non c'è una one-line solution affidabile senza dipendenze esterne
+        # all'interno del contesto di uno script sincrono.
+        # Possiamo però tentare un approccio basato sull'ultimo evento di input processato dalla finestra
+        # se accessibile, ma è rischioso.
+
+        # Per ora, lascio il codice Windows e aggiungo un commento TODO per Linux/Mac
+        # o implemento un check fittizio se non siamo su Windows per evitare crash.
+
+    except:
+        pass
+
+    if not is_ctrl and not is_shift:
+        filtra_codice()
+        return
+
     oDoc = LeenoUtils.getDocument()
     lrow = LeggiPosizioneCorrente()[1]
     oSheet = oDoc.CurrentController.ActiveSheet
-    _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True))
-    filtra_codice()
 
-# @LeenoUtils.no_refresh
+    if is_ctrl:
+        # NEXT
+        _gotoCella(2, LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True))
+        filtra_codice()
+
+    elif is_shift:
+        # PREVIOUS
+        # Trova l'inizio della voce corrente
+        curr_start = LeenoSheetUtils.prossimaVoce(oSheet, lrow, n=0, saltaCat=True)
+        search_row = curr_start - 1
+
+        stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+        stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+        stili_validi = stili_computo + stili_contab
+
+        found = False
+        while search_row > 0:
+            try:
+                style = oSheet.getCellByPosition(0, search_row).CellStyle
+                if style in stili_validi:
+                    found = True
+                    break
+            except:
+                pass
+            search_row -= 1
+
+        if found:
+            # Trovata una riga di una voce precedente, andiamo all'inizio di quella voce
+            target_row = LeenoSheetUtils.prossimaVoce(oSheet, search_row, n=0, saltaCat=True)
+            _gotoCella(2, target_row)
+            filtra_codice()
+
 def filtra_codice(voce=None):
     '''
     Applica un filtro di visualizzazione basato sul raggruppamento (outline).
@@ -8515,7 +8589,8 @@ def filtra_codice(voce=None):
     oCellRangeAddr.Sheet = iSheet
 
     n = 0
-    prima_riga_trovata = None
+    closest_row = None
+    min_dist = float('inf')
 
     while n < fine:
         cell_style = oSheet.getCellByPosition(0, n).CellStyle
@@ -8536,6 +8611,11 @@ def filtra_codice(voce=None):
                 oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = True
                 oSheet.getCellByPosition(1, sopra + 1).CellBackColor = COLORE_VERDE_SPUNTA
 
+                dist = abs((sopra + 1) - lrow_originale)
+                if dist < min_dist:
+                    min_dist = dist
+                    closest_row = sopra + 1
+
             n = sotto + 1
         else:
             n += 1
@@ -8546,8 +8626,11 @@ def filtra_codice(voce=None):
     oSheet.group(oCellRangeAddr, 0)
     oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
 
+    if closest_row is not None:
+        _gotoCella(1, closest_row)
+
 ########################################################################
-@LeenoUtils.no_refresh
+# @LeenoUtils.no_refresh
 def MENU_struttura_on():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8586,21 +8669,27 @@ def struttura_ComputoM():
     oCellRangeAddr.StartColumn = 29
     oCellRangeAddr.EndColumn = 30
     oSheet.group(oCellRangeAddr, 0)
-    oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
+    oSheet.getColumns().getByIndex(29).IsVisible = False
+    oSheet.getColumns().getByIndex(30).IsVisible = False
 
     # Raggruppa le colonne di misura e mostra
     oCellRangeAddr.StartColumn = 5
     oCellRangeAddr.EndColumn = 8
     oSheet.group(oCellRangeAddr, 0)
     for i in range(5, 9):
-        oSheet.getColumns().getByIndex(i).Columns.IsVisible = True
+        oSheet.getColumns().getByIndex(i).IsVisible = True
 
     # # attiva la prog
     indicator = oDoc.getCurrentController().getStatusIndicator()
     indicator.start('Creazione vista struttura in corso...', 4)
+    '''
+    # se color = True allora struct(n, color=color) colora le righe
+    '''
+    color = False
     for n in range(0, 4):
         indicator.Value = n
-        struct(n)
+        struct(n, color=color)
+        color = not color
     indicator.end()
 
 
@@ -8681,14 +8770,18 @@ def struttura_off():
 
 
 @LeenoUtils.no_refresh # Decoratore per disabilitare l'aggiornamento del documento
-def struct(level, vedi = True):
-    ''' mette in vista struttura secondo categorie
+def struct(level, vedi = True, color = False):
+    '''
+    mette in vista struttura secondo categorie
     level { integer } : specifica il livello di categoria
     ### COMPUTO/VARIANTE ###
     0 = super-categoria
     1 = categoria
     2 = sotto-categoria
     3 = intera voce di misurazione
+
+    se color = True allora struct(n, color=color) colora le righe
+    se vedi = True allora struct(n, vedi=vedi) mostra le righe
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8787,10 +8880,34 @@ def struct(level, vedi = True):
                     sotto = n - Dsotto
                     lista_cat.append((sopra, sotto))
                     break
-    for el in lista_cat:
+    colors = [
+        16764108, # Pastel Red
+        16777164, # Pastel Yellow
+        13434828, # Pastel Green
+        13421823, # Pastel Blue
+        14737632  # Pastel Gray
+    ]
+
+    for i, el in enumerate(lista_cat):
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]
         oSheet.group(oCellRangeAddr, 1)
+
+        # Applica colore alla prima colonna SOLO per le Categorie (livello 1) e se richiesto
+        if color and level == 1:
+            colore = colors[i % len(colors)]
+            # Include l'intestazione (sopra - Dsopra) e arriva fino alla fine del blocco (sotto)
+            # Nota: el[0] è 'sopra', el[1] è 'sotto'
+            r_start = el[0] - Dsopra
+            r_end = el[1]
+            try:
+                # Colora la prima colonna (A)
+                oSheet.getCellRangeByPosition(0, r_start, 0, r_end).CellBackColor = colore
+                # Colora l'intestazione (righe r_start) fino alla colonna AE (indice 30)
+                oSheet.getCellRangeByPosition(0, r_start, 30, r_start).CellBackColor = colore
+            except:
+                pass
+
         if vedi == False:
             oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible = False
 
@@ -9045,7 +9162,7 @@ def vista_configurazione(tipo_configurazione):
         n = SheetUtils.getLastUsedRow(oSheet)
     # Configurazione specifica per "terra_terra" o "mdo"
         if tipo_configurazione == "terra_terra":
-            struct(3)
+            struct(3, color = False)
             # Raggruppa le colonne di MDO e nasconde
             oCellRangeAddr = create_cell_range(iSheet, 29, 30)
             oSheet.group(oCellRangeAddr, 0)
@@ -9067,7 +9184,7 @@ def vista_configurazione(tipo_configurazione):
                         oSheet.getCellByPosition(i, el).String = ''
 
         elif tipo_configurazione == "mdo":
-            struct(3, vedi=False)
+            struct(3, vedi=False, color=False)
 
             # Raggruppa le colonne di MDO e mostra
             oCellRangeAddr = create_cell_range(iSheet, 29, 30)

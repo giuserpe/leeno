@@ -827,6 +827,7 @@ def MENU_copia_sorgente_per_git():
 
     if os.name == 'nt':
         subprocess.Popen(f'w: && cd {dest} && "W:/programmi/PortableGit/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen(f'w: && cd {dest} && gitk &', shell=True, stdout=subprocess.PIPE)
     else:
         comandi = f'cd {dest} && mate-terminal && gitk &'
         if not processo('wish'):
@@ -1907,8 +1908,6 @@ def loVersion():
 ########################################################################
 
 def Menu_adattaAltezzaRiga():
-    # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga()
 
 ########################################################################
@@ -8143,7 +8142,7 @@ def parziale_core(oSheet, lrow):
 
 
 ########################################################################
-@LeenoUtils.no_refresh # decoratore per disabilitare il refresh automatico
+# @LeenoUtils.no_refresh # decoratore per disabilitare il refresh automatico
 def vedi_voce_xpwe(oSheet, lrow, vRif):
     """
     (riga d'inserimento, riga di riferimento)
@@ -8202,10 +8201,12 @@ def MENU_vedi_voce():
     '''
     Inserisce un riferimento a voce precedente sulla riga corrente.
     '''
-    with LeenoUtils.DocumentRefreshContext(False):
+    # Usiamo il context manager per velocizzare le operazioni pesanti
+    with LeenoUtils.no_refresh_context():
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         lrow = LeggiPosizioneCorrente()[1]
+
         if oSheet.getCellByPosition(2, lrow).String not in ('#N/A', '#RIF!'):
             if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
                 if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -8213,22 +8214,26 @@ def MENU_vedi_voce():
                 elif oSheet.Name in ('CONTABILITA'):
                     copia_riga_contab(lrow)
                 lrow += 1
+
         if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
             to = basic_LeenO('ListenersSelectRange.getRange',
                             "Seleziona voce di riferimento o indica n. d'ordine")
+
             if oSheet.Name not in to:
                 to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(to, 0, oSheet))
-            # try:
-            to = int(to.split('$')[-1]) - 1
-            # except ValueError:
-            #     LeenoUtils.DocumentRefresh(True)
-            #     return
-            _gotoCella(2, lrow)
-            # focus = oDoc.CurrentController.getFirstVisibleRow
-            if to < lrow:
-                vedi_voce_xpwe(oSheet, lrow, to)
-    oSheet.getCellRangeByPosition(0, lrow + 1, 48, lrow + 1).Rows.OptimalHeight = True
 
+            try:
+                to_row_index = int(to.split('$')[-1]) - 1
+                _gotoCella(2, lrow)
+
+                if to_row_index < lrow:
+                    vedi_voce_xpwe(oSheet, lrow, to_row_index)
+
+            except Exception:
+                pass
+    oSheet.getRows().getByIndex(lrow).OptimalHeight = True
+    # Fuori dal context manager il refresh è già attivo,
+    # ma se Calc fosse pigro, puoi forzare un aggiornamento finale qui.
 
 def strall(el, n=3, pos=0):
     '''
@@ -8472,7 +8477,6 @@ def register_key_handler():
         oDoc.CurrentController.addKeyHandler(KEY_HANDLER)
 
 
-
 @with_undo
 def MENU_filtra_codice():
     import sys
@@ -8540,6 +8544,7 @@ def MENU_filtra_codice():
             _gotoCella(2, target_prev)
             filtra_codice()
 
+@LeenoUtils.no_refresh
 def filtra_codice(voce=None):
     '''
     Applica un filtro di visualizzazione basato sul raggruppamento (outline).
@@ -8700,10 +8705,11 @@ def struttura_ComputoM():
     # se color = True allora struct(n, color=color) colora le righe
     '''
     color = False
+    # color = True
     for n in range(0, 4):
         indicator.Value = n
-        struct(n, color=color)
-        color = not color
+        struct(n, color = color)
+        # color = not color
     indicator.end()
 
 
@@ -11183,7 +11189,7 @@ def fissa():
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
-    elif oSheet.Name in ('Registro', 'SAL'):
+    elif oSheet.Name in ('Registro', 'SAL', 'S2'):
         oDoc.CurrentController.freezeAtPosition(0, 1)
 
 ########################################################################

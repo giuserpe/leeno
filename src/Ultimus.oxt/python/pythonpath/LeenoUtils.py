@@ -186,32 +186,21 @@ def DocumentRefresh(boo):
     Abilita / disabilita il refresh per accelerare le procedure
     '''
     oDoc = getDocument()
-
-    # 1. Controllo esistenza
     if oDoc is None:
-        return
-
-    # 2. Controllo se è un documento Calc (supporta IsAdjustHeightEnabled)
-    # Se è un altro tipo di componente, IsAdjustHeightEnabled solleva AttributeError
-    try:
-        if boo:
-            # L'ordine che segue non va cambiato!!!
-            if hasattr(oDoc, 'IsAdjustHeightEnabled'):
-                oDoc.IsAdjustHeightEnabled = True
-            oDoc.enableAutomaticCalculation(True)
-            oDoc.removeActionLock()
-            oDoc.resetActionLocks()
-            oDoc.unlockControllers()
-            oDoc.calculateAll()
-        else:
-            if hasattr(oDoc, 'IsAdjustHeightEnabled'):
-                oDoc.IsAdjustHeightEnabled = False
-            oDoc.enableAutomaticCalculation(False)
-            oDoc.lockControllers()
-            oDoc.addActionLock()
-    except Exception:
-        # Se il documento è in uno stato transitorio o non supporta i lock
-        pass
+        return  # Esci silenziosamente se non c'è un documento attivo
+    # L'ordine che segue non va cambiato!!!
+    if boo:
+        oDoc.IsAdjustHeightEnabled = True
+        oDoc.enableAutomaticCalculation(True)
+        oDoc.removeActionLock()
+        oDoc.resetActionLocks()
+        oDoc.unlockControllers()
+        oDoc.calculateAll()
+    else:
+        oDoc.lockControllers()
+        oDoc.addActionLock()
+        oDoc.IsAdjustHeightEnabled = False
+        oDoc.enableAutomaticCalculation(False)
 
 
 # import Dialogs as DLG

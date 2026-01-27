@@ -9,9 +9,6 @@ from com.sun.star.task import XJobExecutor
 from com.sun.star.awt import MessageBoxButtons as MSG_BUTTONS
 from datetime import datetime
 
-from pathlib import Path
-import subprocess
-
 def msgbox(*, Title='Errore interno', Message=''):
     """ Create message box in LibreOffice """
     try:
@@ -56,25 +53,137 @@ def reloadLeenoModules():
         except Exception:
             print(f"Errore ricaricando il modulo: {f}")
 
+def cerca_path_valido():
+    """
+    Cerca il percorso di un editor di codice installato sul sistema.
+    Priorità: Antigravity > VS Code
+    Supporta Windows, Linux e macOS.
+
+    Returns:
+        str: Percorso completo dell'editor trovato
+
+    Raises:
+        FileNotFoundError: Se nessun editor viene trovato
+    """
+    if 'giuserpe' in os.getlogin():
+        import platform
+        system = platform.system()
+
+        possible_paths = []
+
+        # === ANTIGRAVITY (Priorità 1) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
+                "C:\\Program Files\\Antigravity\\Antigravity.exe",
+                "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
+                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/antigravity",
+                "/usr/local/bin/antigravity",
+                os.path.expanduser("~/.local/bin/antigravity"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
+                os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
+            ])
+
+        # === VS CODE (Fallback) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+                "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+                "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/code",
+                "/usr/local/bin/code",
+                "/snap/bin/code",
+                os.path.expanduser("~/.local/bin/code"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
+                "/usr/local/bin/code",
+            ])
+
+        editor_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                editor_path = path
+                break
+
+        if editor_path is None:
+            raise FileNotFoundError(
+                f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
+                "Assicurati che almeno uno sia installato."
+            )
+        return editor_path
+
+def dest():
+    '''Definisce il percorso di destinazione basato sul sistema operativo'''
+
+    # Per sistema Windows
+    if os.name == 'nt':
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+            try:
+                os.makedirs(
+                    os.getenv("HOMEPATH") + '\\' + src_oxt +
+                    '\\leeno\\src\\Ultimus.oxt\\')
+            except FileExistsError:
+                pass
+            return os.getenv("HOMEDRIVE") + os.getenv(
+                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+        else:
+            return 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+
+    # Per sistemi Linux o macOS
+    else:
+        dest_path = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        if not os.path.exists(dest_path):
+            try:
+                dest_path = os.getenv(
+                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
+                os.makedirs(dest_path)
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
+            except FileExistsError:
+                pass
+        return dest_path
+
+
 # def handle_exception(e):
 #     try:
+#         # Recupero informazioni sul pacchetto LeenO
 #         pir = uno.getComponentContext().getValueByName(
 #             '/singletons/com.sun.star.deployment.PackageInformationProvider')
 #         expath_url = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
 #         expath = uno.fileUrlToSystemPath(expath_url)
 
+#         # Lettura versione interna dal file code
 #         code_file = os.path.join(expath, 'leeno_version_code')
 #         version_line = ''
 #         if os.path.exists(code_file):
 #             with open(code_file, 'r', encoding='utf-8') as f:
 #                 version_line = f.readline().strip()
 
+#         # Messaggio base
 #         msg = (
 #             f"OS: {sys.platform} / LibreOffice-{loVersion()} / {version_line}\n\n"
 #             f"Errore: {str(e)}\n\n"
 #         )
 
+#         # Identificazione utente per debug
 #         user = os.environ.get("USERNAME", "").lower()
+#         if not user: # Fallback per sistemi non-Windows
+#             import getpass
+#             user = getpass.getuser().lower()
 
 #         sysinfo = sys.exc_info()
 #         tb = sysinfo[2]
@@ -88,44 +197,58 @@ def reloadLeenoModules():
 #             )
 
 #             # ==========================================================
-#             # APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
-#             # solo per l’utente giuserpe (Giuseppe Vizziello)
+#             # AZIONI AUTOMATICHE DI DEBUG (Solo per utente: giuserpe)
 #             # ==========================================================
 #             if "giuserpe" in user:
+#                 # 1. Apertura dell'Editor (VS Code/Antigravity) alla riga esatta
 #                 try:
 #                     import subprocess
-
 #                     full_path = tbInfo.filename
-#                     # full_path = f"W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\python\pythonpath\{filen}"
 #                     line = tbInfo.lineno
+#                     editor_path = cerca_path_valido()
 
-#                     vscode_path = os.path.expanduser(r"~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe")
-
-#                     if os.path.exists(vscode_path):
-#                         subprocess.Popen([vscode_path, "-g", f"{full_path}:{line}"])
+#                     if os.path.exists(editor_path):
+#                         subprocess.Popen([editor_path, "-g", f"{full_path}:{line}"])
 #                     else:
-#                         msg += "\n(VS Code non trovato nel percorso previsto)\n"
-
+#                         msg += "\n(Nessun editor trovato per l'apertura automatica)\n"
 #                 except Exception as opener_err:
-#                     msg += f"\n(Impossibile aprire VS Code: {opener_err})\n"
+#                     msg += f"\n(Impossibile aprire l'editor: {opener_err})\n"
+
+#                 # 2. Apertura della destinazione restituita da dest()
+#                 try:
+#                     path_dest = dest()
+#                     if os.path.exists(path_dest):
+#                         if sys.platform == 'win32':
+#                             os.startfile(path_dest)
+#                         elif sys.platform == 'darwin': # macOS
+#                             subprocess.Popen(['open', path_dest])
+#                         else: # Linux
+#                             subprocess.Popen(['xdg-open', path_dest])
+#                     else:
+#                         msg += f"\n(Percorso dest non trovato: {path_dest})\n"
+#                 except Exception as dest_err:
+#                     msg += f"\n(Impossibile aprire il percorso dest(): {dest_err})\n"
 #             # ==========================================================
 
-#         msg += "+--"*20 + "\nBACKTRACE:\n"
+#         # Aggiunta Backtrace al messaggio
+#         msg += "+--" * 20 + "\nBACKTRACE:\n"
 #         for bk in traceback.extract_tb(tb):
 #             filen = os.path.basename(bk.filename)
 #             msg += f"File: {filen}, Line: {bk.lineno}, Function: {bk.name}\n"
 #         msg += "\n"
 
+#         # Scrittura nel log fisico
 #         log_dir = os.path.join(expath, "pythonpath")
 #         os.makedirs(log_dir, exist_ok=True)
 #         log_path = os.path.join(log_dir, "leeno_error.log")
 #         with open(log_path, "a", encoding="utf-8") as logfile:
 #             logfile.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n")
 #             logfile.write(msg)
-#             logfile.write("-"*60 + "\n\n")
+#             logfile.write("-" * 60 + "\n\n")
 
+#         # Mostra il Traceback completo nel box solo se sei tu
 #         if "giuserpe" in user:
-#             msg += "+--"*20 + "\n" + traceback.format_exc()
+#             msg += "+--" * 20 + "\n" + traceback.format_exc()
 
 #         msgbox(Title="Errore interno", Message=msg)
 
@@ -135,102 +258,94 @@ def reloadLeenoModules():
 #             msgbox(Title="Errore gestore", Message=fallback)
 #         except:
 #             print(fallback)
+
 def handle_exception(e):
+    ''' Gestisce gli errori e mostra un messaggio diagnostico '''
     try:
+        # Recupero informazioni sul pacchetto installato (Provider)
         pir = uno.getComponentContext().getValueByName(
             '/singletons/com.sun.star.deployment.PackageInformationProvider')
         expath_url = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
         expath = uno.fileUrlToSystemPath(expath_url)
 
+        # Lettura versione interna dal file code
         code_file = os.path.join(expath, 'leeno_version_code')
         version_line = ''
         if os.path.exists(code_file):
             with open(code_file, 'r', encoding='utf-8') as f:
                 version_line = f.readline().strip()
 
+        # Messaggio diagnostico base
         msg = (
             f"OS: {sys.platform} / LibreOffice-{loVersion()} / {version_line}\n\n"
             f"Errore: {str(e)}\n\n"
         )
 
         user = os.environ.get("USERNAME", "").lower()
-
         sysinfo = sys.exc_info()
         tb = sysinfo[2]
+
         if tb:
             tbInfo = traceback.extract_tb(tb)[-1]
-            filen = os.path.basename(tbInfo.filename)
+            full_path_provider = tbInfo.filename # Percorso nella cache di LO
+            line = tbInfo.lineno
+
             msg += (
-                f"File: '{filen}'\n"
-                f"Line: '{tbInfo.lineno}'\n"
+                f"File: '{os.path.basename(full_path_provider)}'\n"
+                f"Line: '{line}'\n"
                 f"Function: '{tbInfo.name}'\n"
             )
 
             # ==========================================================
-            # APERTURA AUTOMATICA DEL FILE IN VS CODE SULLA RIGA DELL’ERRORE
-            # solo per l’utente giuserpe (Giuseppe Vizziello)
+            # DEBUG AUTOMATICO PER GIUSEPPE (giuserpe)
             # ==========================================================
-
-
-# # ... dentro handle_exception(e) ...
-
             if "giuserpe" in user:
                 try:
-                    # 1. Identifica il file dell'errore
-                    original_path = Path(tbInfo.filename)
-                    
-                    # 2. Definisci la tua "Casa dei Sorgenti" (multipiattaforma)
-                    # Anche se usi W:/ su Windows, Path lo gestisce correttamente
-                    source_root = Path(r"W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath")
-                    
-                    # 3. Mapping intelligente tramite l'ancora 'pythonpath'
-                    if "pythonpath" in original_path.parts:
-                        idx = original_path.parts.index("pythonpath")
-                        # Ricostruisce il percorso relativo dopo 'pythonpath'
-                        relative_file = Path(*original_path.parts[idx + 1:])
-                        full_path = source_root / relative_file
+                    import subprocess
+
+                    # Ottengo la radice dei sorgenti (workspace)
+                    src_root = dest()
+
+                    # Calcolo il percorso relativo del file rispetto all'estensione installata
+                    # e lo rimappo sul percorso dei sorgenti in W:
+                    rel_path = os.path.relpath(full_path_provider, expath)
+                    target_file = os.path.join(src_root, rel_path)
+
+                    # Se il file nei sorgenti non esiste, fallback sul file del provider
+                    if not os.path.exists(target_file):
+                        target_file = full_path_provider
+
+                    editor_path = cerca_path_valido() #
+                    if os.path.exists(editor_path):
+                        # COMANDO: [Editor] [Cartella Workspace] -g [File]:[Riga]
+                        # Questo apre la cartella W:\... come workspace e il file sorgente
+                        subprocess.Popen([editor_path, src_root, "-g", f"{target_file}:{line}"])
                     else:
-                        full_path = original_path
+                        msg += "\n(Editor non trovato per l'apertura automatica)\n"
 
-                    # 4. Verifica esistenza file sorgente prima di chiamare VS Code
-                    if full_path.exists():
-                        # Trova l'eseguibile di VS Code
-                        if sys.platform == "win32":
-                            # code.cmd è preferibile per l'integrazione con istanze già aperte
-                            vscode_bin = Path(os.environ.get("LOCALAPPDATA", "")) / "Programs/Microsoft VS Code/bin/code.cmd"
-                            if not vscode_bin.exists():
-                                vscode_bin = Path(os.path.expanduser("~")) / "AppData/Local/Programs/Microsoft VS Code/Code.exe"
-                        else:
-                            vscode_bin = "code"
-
-                        # 5. Esecuzione: -g (goto) riutilizza la finestra aperta e va alla riga
-                        # Usiamo str(full_path) per passare la stringa corretta al sistema
-                        subprocess.Popen([str(vscode_bin), "-g", f"{full_path}:{tbInfo.lineno}"])
-                    else:
-                        msg += f"\n(Mapping fallito: il file non esiste in {full_path})\n"
-
-                except Exception as mapping_err:
-                    msg += f"\n(Errore durante l'apertura in VS Code: {mapping_err})\n"   
+                except Exception as dbg_err:
+                    msg += f"\n(Errore automazione debug: {dbg_err})\n"
             # ==========================================================
 
-        msg += "+--"*20 + "\nBACKTRACE:\n"
+        # Generazione Backtrace per il log
+        msg += "+--" * 20 + "\nBACKTRACE:\n"
         for bk in traceback.extract_tb(tb):
-            filen = os.path.basename(bk.filename)
-            msg += f"File: {filen}, Line: {bk.lineno}, Function: {bk.name}\n"
-        msg += "\n"
+            msg += f"File: {os.path.basename(bk.filename)}, Line: {bk.lineno}, Function: {bk.name}\n"
 
+        # Scrittura del log nel profilo dell'estensione
         log_dir = os.path.join(expath, "pythonpath")
         os.makedirs(log_dir, exist_ok=True)
         log_path = os.path.join(log_dir, "leeno_error.log")
         with open(log_path, "a", encoding="utf-8") as logfile:
             logfile.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n")
             logfile.write(msg)
-            logfile.write("-"*60 + "\n\n")
+            logfile.write("-" * 60 + "\n\n")
 
+        # Mostra dettagli estesi nel messaggio solo per giuserpe
         if "giuserpe" in user:
-            msg += "+--"*20 + "\n" + traceback.format_exc()
+            msg += "+--" * 20 + "\n" + traceback.format_exc()
 
-        msgbox(Title="Errore interno", Message=msg)
+        msgbox(Title="Errore interno", Message=msg) #
 
     except Exception as internal:
         fallback = f"Errore nel gestore errori:\n{str(internal)}\n\n{traceback.format_exc()}"
@@ -238,6 +353,7 @@ def handle_exception(e):
             msgbox(Title="Errore gestore", Message=fallback)
         except:
             print(fallback)
+
 
 # Dispatcher class
 class Dispatcher(unohelper.Base, XJobExecutor):

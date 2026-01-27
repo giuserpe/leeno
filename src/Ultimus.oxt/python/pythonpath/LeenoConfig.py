@@ -91,6 +91,10 @@ class Config(Borg):
             ('Generale', 'ultimo_percorso', expanduser("~")),
             ('Generale', 'precisione_come_mostrato', '(bool)True'),
             ('Generale', 'nuova_voce', 'True'),
+            
+            ('Generale', 'colora_super_categoria', 'False'),
+            ('Generale', 'colora_categoria', 'False'),
+            ('Generale', 'colora_sotto_categoria', 'False'),
 
             #  ('Computo', 'riga_bianca_categorie', '1'),
             #  ('Computo', 'voci_senza_numerazione', '0'),

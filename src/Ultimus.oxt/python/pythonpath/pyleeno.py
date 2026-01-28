@@ -826,7 +826,7 @@ def MENU_copia_sorgente_per_git():
     dest = LeenoGlobals.dest()
 
     if os.name == 'nt':
-        subprocess.Popen(f'w: && cd {dest} && "W:/programmi/PortableGit/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+        # subprocess.Popen(f'w: && cd {dest} && "W:/programmi/PortableGit/git-bash.exe" && gitk &', shell=True, stdout=subprocess.PIPE)
         subprocess.Popen(f'w: && cd {dest} && gitk &', shell=True, stdout=subprocess.PIPE)
     else:
         comandi = f'cd {dest} && mate-terminal && gitk &'
@@ -8705,7 +8705,7 @@ def struttura_ComputoM():
     # se color = True allora struct(n, color=color) colora le righe
     '''
     color = False
-    # color = True
+    color = True
     for n in range(0, 4):
         indicator.Value = n
         struct(n, color = color)
@@ -8900,13 +8900,8 @@ def struct(level, vedi = True, color = False):
                     sotto = n - Dsotto
                     lista_cat.append((sopra, sotto))
                     break
-    colors = [
-        16764108, # Pastel Red
-        16777164, # Pastel Yellow
-        13434828, # Pastel Green
-        13421823, # Pastel Blue
-        14737632  # Pastel Gray
-    ]
+
+    colors = LeenoConfig.PASTEL_COLORS
 
     for i, el in enumerate(lista_cat):
         oCellRangeAddr.StartRow = el[0]
@@ -12633,12 +12628,8 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 # @measure_time(show_popup=True)
 @LeenoUtils.no_refresh
 def MENU_debug():
-    import LeenoTheme
-    DLG.chi(8)
-    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
-    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
-    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
-    DLG.chi(f"COLORE_VERDE_SPUNTA {COLORE_VERDE_SPUNTA}")
+    DLG.chi(LeenoConfig.PASTEL_COLORS)
+
     return
 
 

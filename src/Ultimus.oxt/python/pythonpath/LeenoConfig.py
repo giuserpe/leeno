@@ -18,6 +18,26 @@ COLORE_VERDE_SPUNTA = 14942166
 COLORE_GRIGIO_INATTIVA = 15066597
 COLORE_BIANCO_SFONDO = 16777215
 
+PASTEL_COLORS = [
+    16764108,  # Pastel Red
+    16777164,  # Pastel Yellow
+    13434828,  # Pastel Green
+    13421823,  # Pastel Blue
+    14737632,  # Pastel Gray
+
+    16751052,  # Pastel Pink
+    16770790,  # Pastel Orange
+    13430526,  # Pastel Mint
+    13421772,  # Pastel Cyan
+    15132390,  # Pastel Lavender
+
+    15527148,  # Pastel Beige
+    14540253,  # Pastel Olive
+    14079702,  # Pastel Teal
+    15128749,  # Pastel Purple
+    15987699   # Pastel Light Gray
+]
+
 
 class Borg:
     '''

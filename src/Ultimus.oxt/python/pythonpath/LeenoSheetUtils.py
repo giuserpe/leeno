@@ -826,18 +826,12 @@ def adattaAltezzaRiga(oSheet=False, all=False):
 
             # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
             if all:
-            #     for y in range(0, usedArea.EndRow + 1):
-            #         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
-            # else:
+
                 for y in range(0, usedArea.EndRow + 1):
                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
                         oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
             else:
                 oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
-
-            # for y in range(0, usedArea.EndRow + 1):
-            #     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-            #         oSheet.getRows().getByIndex(y).OptimalHeight = True  # Più veloce di getCellRangeByPosition
 
     except Exception as e:
         DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale

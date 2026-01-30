@@ -111,10 +111,8 @@ class Config(Borg):
             ('Generale', 'ultimo_percorso', expanduser("~")),
             ('Generale', 'precisione_come_mostrato', '(bool)True'),
             ('Generale', 'nuova_voce', 'True'),
-            
-            ('Generale', 'colora_super_categoria', 'False'),
-            ('Generale', 'colora_categoria', 'False'),
-            ('Generale', 'colora_sotto_categoria', 'False'),
+
+            ('Generale', 'colorazione_categorie', 'Nessuno'),
 
             #  ('Computo', 'riga_bianca_categorie', '1'),
             #  ('Computo', 'voci_senza_numerazione', '0'),
@@ -256,3 +254,151 @@ class Config(Borg):
                     continue
             self._parser.set(section, key, val)
         self._store()
+
+#################################################################################
+
+def MENU_leeno_conf():
+    '''
+    Visualizza il menù di configurazione
+    '''
+    cfg = Config()
+    oDoc = LeenoUtils.getDocument()
+    if not oDoc.getSheets().hasByName('S1'):
+        Toolbars.AllOff()
+        return
+    psm = LeenoUtils.getServiceManager()
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlg_config = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application"
+    )
+
+    oSheets = list(oDoc.getSheets().getElementNames())
+    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+        if nome in oSheets:
+            oSheets.remove(nome)
+
+    for nome in oSheets:
+        oSheet = oDoc.getSheets().getByName(nome)
+        if not oSheet.IsVisible:
+            oDlg_config.getControl('CheckBox2').State = 0
+            test = 0
+            break
+        oDlg_config.getControl('CheckBox2').State = 1
+        test = 1
+
+    if oDoc.getSheets().getByName("copyright_LeenO").IsVisible:
+        oDlg_config.getControl('CheckBox2').State = 1
+
+    # precisione come mostrato
+    if cfg.read('Generale', 'precisione_come_mostrato') == 'True':
+        oDoc.CalcAsShown = True
+        oDlg_config.getControl('CheckBox4').State = 1
+
+    if cfg.read('Generale', 'pesca_auto') == '1':
+        oDlg_config.getControl('CheckBox1').State = 1
+
+    if cfg.read('Generale', 'toolbar_contestuali') == '1':
+        oDlg_config.getControl('CheckBox6').State = 1
+
+    # --- NUOVA GESTIONE COLORI CATEGORIA (ComboBox3) ---
+    sComboColori = oDlg_config.getControl('ComboBox3')
+    val_colori = cfg.read('Generale', 'colorazione_categorie')
+    # Default a "Nessuno" se non presente nel file conf
+    sComboColori.Text = val_colori if val_colori else "Nessuno"
+    # ----------------------------------------------------
+
+    oSheet = oDoc.getSheets().getByName('S5')
+    if not oSheet.getCellRangeByName('C9').IsMerged:
+        oDlg_config.getControl('CheckBox5').State = 1
+    else:
+        oDlg_config.getControl('CheckBox5').State = 0
+
+    oDlg_config.getControl('ComboBox6').Text = cfg.read('Generale', 'altezza_celle')
+
+    sString = oDlg_config.getControl("ComboBox2")
+    if cfg.read('Generale', 'movedirection') == '1':
+        sString.Text = 'A DESTRA'
+    elif cfg.read('Generale', 'movedirection') == '0':
+        sString.Text = 'IN BASSO'
+
+    oSheet = oDoc.getSheets().getByName('S1')
+
+    # fullscreen
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    if not oLayout.isElementVisible('private:resource/toolbar/standardbar'):
+        oDlg_config.getControl('CheckBox3').State = 1
+
+    sString = oDlg_config.getControl('TextField14')
+    sString.Text = oSheet.getCellRangeByName('S1.H334').String
+
+    if oDoc.NamedRanges.hasByName("_Lib_1"):
+        sString.setEnable(False)
+
+    if cfg.read('Generale', 'torna_a_ep') == '1':
+        oDlg_config.getControl('CheckBox8').State = 1
+
+    if cfg.read('Generale', 'nuova_voce') == 'True':
+        oDlg_config.getControl('CheckBox7').State = 1
+
+    oDlg_config.getControl('ComboBox4').Text = cfg.read('Generale', 'copie_backup')
+    if int(cfg.read('Generale', 'copie_backup')) != 0:
+        oDlg_config.getControl('ComboBox5').Text = cfg.read('Generale', 'pausa_backup')
+
+    # --- MOSTRA IL DIALOGO ---
+    if oDlg_config.execute() != 1: # 1 solitamente è il tasto OK/Esegui
+        return
+
+    # --- SALVATAGGIO IMPOSTAZIONI ---
+    import pyleeno as PL
+    if oDlg_config.getControl('CheckBox2').State != test:
+        PL.show_sheets(True if oDlg_config.getControl('CheckBox2').State == 1 else False)
+
+    if oDlg_config.getControl('ComboBox1').getText() == 'Chiaro':
+        PL.nuove_icone(True)
+    elif oDlg_config.getControl('ComboBox1').getText() == 'Scuro':
+        PL.nuove_icone(False)
+
+    Toolbars.Switch(False if oDlg_config.getControl('CheckBox3').State == 1 else True)
+
+    if oDlg_config.getControl('CheckBox4').State == 1:
+        cfg.write('Generale', 'precisione_come_mostrato', 'True')
+        oDoc.CalcAsShown = True
+    else:
+        cfg.write('Generale', 'precisione_come_mostrato', 'False')
+        oDoc.CalcAsShown = False
+
+    cfg.write('Generale', 'nuova_voce', 'True' if oDlg_config.getControl('CheckBox7').State == 1 else 'False')
+
+    ctx = LeenoUtils.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
+        cfg.write('Generale', 'movedirection', '0')
+        oGSheetSettings.MoveDirection = 0
+    else:
+        cfg.write('Generale', 'movedirection', '1')
+        oGSheetSettings.MoveDirection = 1
+
+    # --- SALVATAGGIO PREFERENZA COLORI ---
+    cfg.write('Generale', 'colorazione_categorie', oDlg_config.getControl('ComboBox3').getText())
+    # --------------------------------------
+
+    cfg.write('Generale', 'altezza_celle', oDlg_config.getControl('ComboBox6').getText())
+    cfg.write('Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+    cfg.write('Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
+    cfg.write('Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
+
+    Toolbars.Vedi()
+    descrizione_in_una_colonna(False if oDlg_config.getControl('CheckBox5').State == 1 else True)
+
+    cfg.write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
+
+    if oDlg_config.getControl('TextField14').getText() != '10000':
+        cfg.write('Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
+    oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
+
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
+    cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
+    cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('ComboBox5').getText())
+
+    PL.autorun()

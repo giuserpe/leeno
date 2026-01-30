@@ -1844,7 +1844,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_leeno_conf</value>
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoConfig.MENU_leeno_conf</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/config</value>

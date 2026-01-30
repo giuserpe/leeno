@@ -17,9 +17,9 @@
   <dlg:checkbox dlg:style-id="2" dlg:id="COMPUTO" dlg:tab-index="3" dlg:left="15" dlg:top="50" dlg:width="111" dlg:height="10" dlg:help-text="&amp;579.Dialog_XPWE.COMPUTO.HelpText" dlg:value="&amp;580.Dialog_XPWE.COMPUTO.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="2" dlg:id="VARIANTE" dlg:tab-index="4" dlg:left="15" dlg:top="65" dlg:width="111" dlg:height="10" dlg:help-text="&amp;581.Dialog_XPWE.VARIANTE.HelpText" dlg:value="&amp;582.Dialog_XPWE.VARIANTE.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="2" dlg:id="CONTABILITA" dlg:tab-index="5" dlg:left="15" dlg:top="80" dlg:width="111" dlg:height="10" dlg:help-text="&amp;583.Dialog_XPWE.CONTABILITA.HelpText" dlg:value="&amp;584.Dialog_XPWE.CONTABILITA.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="2" dlg:id="Elenco Prezzi" dlg:tab-index="6" dlg:left="15" dlg:top="20" dlg:width="111" dlg:height="10" dlg:help-text="&amp;983.Dialog_XPWE.Elenco Prezzi.HelpText" dlg:value="Elenco Prezzi" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="2" dlg:id="Elenco Prezzi" dlg:tab-index="6" dlg:left="15" dlg:top="20" dlg:width="111" dlg:height="10" dlg:help-text="&amp;983.Dialog_XPWE.Elenco Prezzi.HelpText" dlg:value="Elenco Prezzi" dlg:valign="center" dlg:checked="false"/>
   <dlg:filecontrol dlg:id="FileControl1" dlg:tab-index="8" dlg:left="-18" dlg:top="-72" dlg:width="157" dlg:height="29" dlg:help-text="&amp;1232.Dialog_XPWE.FileControl1.HelpText"/>
   <dlg:textfield dlg:id="TextField1" dlg:tab-index="9" dlg:left="103" dlg:top="-99" dlg:width="106" dlg:height="17" dlg:help-text="&amp;1234.Dialog_XPWE.TextField1.HelpText" dlg:value="&amp;1235.Dialog_XPWE.TextField1.Text"/>
-  <dlg:checkbox dlg:style-id="2" dlg:id="Analisi di Prezzo" dlg:tab-index="7" dlg:left="15" dlg:top="35" dlg:width="111" dlg:height="9" dlg:help-text="&amp;1236.Dialog_XPWE.Analisi di Prezzo.HelpText" dlg:value="&amp;1237.Dialog_XPWE.Analisi di Prezzo.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="2" dlg:id="Analisi di Prezzo" dlg:tab-index="7" dlg:left="15" dlg:top="35" dlg:width="111" dlg:height="9" dlg:help-text="&amp;1236.Dialog_XPWE.Analisi di Prezzo.HelpText" dlg:value="&amp;1237.Dialog_XPWE.Analisi di Prezzo.Label" dlg:valign="center" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

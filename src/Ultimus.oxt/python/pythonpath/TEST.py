@@ -39,47 +39,6 @@ def debug_errore():
         #  ". Messaggio: " + str(e) + " args " + str(e.args) +
         #  traceback.format_exc());
         DLG.MsgBox("Eccezione " + str(type(e)) + "\nMessaggio: " + str(e.args) + '\n' + traceback.format_exc())
-########################################################################
-# def debug_():
-#     '''
-#     @@ DA DOCUMENTARE
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-#     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-#         try:
-#             sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
-#             eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
-#         except Exception:
-#             sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
-#             eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
-#     DLG.chi((sRow, eRow))
-
-
-# def debug_():
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-#     try:
-#         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-#     except AttributeError:
-#         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-#     el_y = []
-#     try:
-#         len(oRangeAddress)
-#         for el in oRangeAddress:
-#             el_y.append((el.StartRow, el.EndRow))
-#     except TypeError:
-#         el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
-#     lista = []
-#     for y in el_y:
-#         for el in range(y[0], y[1] + 1):
-#             lista.append(el)
-#     for el in lista:
-#         oSheet.getCellByPosition(
-#             7, el).Formula = '=' + oSheet.getCellByPosition(
-#                 6, el).Formula + '*' + oSheet.getCellByPosition(7, el).Formula
-#         oSheet.getCellByPosition(6, el).String = ''
-
 
 
 ########################################################################
@@ -93,82 +52,12 @@ def debug_syspath():
     for i in sys.path:
         somestring = somestring + i + "\n"
     DLG.chi(somestring)
-########################################################################
-# def debug_():
-    # '''cambio data contabilità'''
-    # oDoc = LeenoUtils.getDocument()
-    # #  DLG.mri(oDoc)
-    # oSheet = oDoc.CurrentController.ActiveSheet
-    # DLG.chi(oDoc.getCurrentSelection().CellBackColor)
-    # # ~return
-    # fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
-    # for i in range(0, fine):
-    #     if oSheet.getCellByPosition(1, i).String == 'Data_bianca':
-    #         oSheet.getCellByPosition(1, i).Value = 43861.0
+
 ########################################################################
 import itertools
 import operator
 import functools
 import LeenoImport as LI
-
-def MENU_debug():
-    # ~import LeenoPdf
-    # ~LeenoPdf.MENU_Pdf()
-    # ~sistema_cose()
-    # ~MENU_nasconde_voci_azzerate()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~lrow = LeggiPosizioneCorrente()[1]
-
-    # ~raggruppa_righe_voce(lrow, 1)
-    return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lr = SheetUtils.getLastUsedRow(oSheet) + 1
-    for el in reversed(range (1, lr)):
-        if oSheet.getCellByPosition(2, el).CellStyle == 'comp 1-a' and \
-            "'" in oSheet.getCellByPosition(2, el).Formula:
-            ff = oSheet.getCellByPosition(2, el).Formula.split("'")
-            oSheet.getCellByPosition(2, el).Formula = ff[0] + ff[-1][1:]
-
-    return
-    # ~LeenoSheetUtils.setAdatta()
-    # ~sistema_cose()
-    # ~return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    usedArea = SheetUtils.getUsedArea(oSheet)
-    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = False
-    oSheet.getCellRangeByPosition(0, 0, 1023, 1048575).Rows.OptimalHeight = False
-    oSheet.getCellRangeByPosition(0, 0, 1023, 1048575).Rows.Height = 1576
-    DLG.mri(oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows)
-    return
-    lr = SheetUtils.getLastUsedRow(oSheet) + 1
-    for el in reversed(range (1, lr)):
-        if oSheet.getCellByPosition(2, el).CellStyle == 'comp 1-a' and \
-            oSheet.getCellByPosition(2, el).String == '' and \
-            oSheet.getCellByPosition(9, el).String == '':
-            oSheet.getRows().removeByIndex(el, 1)
-        elif oSheet.getCellByPosition(2, el).Type.value == 'TEXT':
-            oSheet.getCellByPosition(2, el).String = '- ' + oSheet.getCellByPosition(2, el).String
-    return
-
-def MENU_debug():
-
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheets = oDoc.Sheets.ElementNames
-    set_area_stampa()
-    orig = oDoc.getURL()
-
-    dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.pdf'
-    orig = uno.fileUrlToSystemPath(orig)
-    dir_bak = os.path.dirname(oDoc.getURL())
-    # ~DelPrintArea()
-    oDoc.storeToURL(dir_bak + '/' + dest, [])
-
-    # ~DLG.chi(dir_bak)
-    return
 
 
 def MENU_debug():
@@ -211,13 +100,13 @@ def MENU_debug():
     filterProps1.Value = tuple(filterData)
     filterProps.append(filterProps0)
     filterProps.append(filterProps1)
-    
+
     properties = tuple(filterProps)
 
     sUrl = "file:///W:/test.pdf"
     oDoc.storeToURL(sUrl, properties)
 def MENU_debug():
-    
+
     # ~DlgPDF()
     # ~return
     oDoc = LeenoUtils.getDocument()
@@ -235,10 +124,10 @@ def MENU_debug():
     import LeenoPdf
     # ~LeenoPdf.MENU_Pdf()
     # ~return
-    
+
     oDoc = LeenoUtils.getDocument()
     es = LeenoPdf.loadExportSettings(oDoc)
-    
+
     # ~DLG.chi(es)
     # ~return
 
@@ -256,7 +145,7 @@ def MENU_debug():
     # estrae la path
     # ~destFolder = dlg['pathEdit'].getPath()
     destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
-    
+
     # ~import LeenoDialogs as DLG
     # ~DLG.chi(destFolder)
     # ~return
@@ -282,7 +171,7 @@ def MENU_debug():
     # ~nWidth, hItems = Dialogs.getEditBox('aa')
     Dialogs.ListBox.setList(self, oSheets)
     return
-    
+
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -304,7 +193,7 @@ def MENU_debug():
             # ~If     oSh.Name = oActiveSheet Then
                 # ~ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
                 # ~if msgbox (CHR$(10) &"Preferisci nascondere i colori?",36, "") = 6 Then ScriptPy("LeenoSheetUtils.py","SbiancaCellePrintArea")
-                # ~unSelect 'unselect ranges 
+                # ~unSelect 'unselect ranges
             # ~Else
             # ~End If
         # ~End If
@@ -315,7 +204,7 @@ def MENU_debug():
     # ~document   = ThisComponent.CurrentController.Frame
     # ~dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")
 
-    
+
     # ~rem ----------------------------------------------------------------------
 import LeenoUtils
 import LeenoEvents
@@ -371,7 +260,7 @@ def MENU_debug():
 
     return
 
-    
+
     oColumn = oSheet.getColumns().getByIndex(23)
     DLG.chi(int(oColumn.computeFunction(MAX)))
         # ~i= LeenoSheetUtils.prossimaVoce(oSheet, i, saltaCat=True)
@@ -379,7 +268,7 @@ def MENU_debug():
     return
     lrow = LeggiPosizioneCorrente()[1]
 
-    DLG.chi(oSheet.getCellRangeByName("A1").CellBackColor) 
+    DLG.chi(oSheet.getCellRangeByName("A1").CellBackColor)
     return
     sistema_cose()
     return
@@ -396,7 +285,7 @@ def MENU_debug():
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = SheetUtils.getUsedArea(oSheet).EndRow + 1
-    lCol = SheetUtils.getUsedArea(oSheet).EndColumn 
+    lCol = SheetUtils.getUsedArea(oSheet).EndColumn
     for y in reversed(range(1, lrow)):
         if oSheet.getCellByPosition(1, y).String ==  "CAM":
             oSheet.getCellByPosition(2, y).String = "CAM - " + oSheet.getCellByPosition(2, y).String
@@ -432,7 +321,7 @@ def MENU_debug():
 # ~'ACCODA PIù FILE DI CALC IN UNO SOLO
 	# ~Dim DocName as object, DocUlr as string, dummy()
 	# ~Doc = ThisComponent
-	# ~Sheet = Doc.Sheets(0) 
+	# ~Sheet = Doc.Sheets(0)
 	# ~sPath ="W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/2022_luglio/"  ' cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
 	# ~sFileName = Dir(sPath & "*.ods", 0)
 # ~'	Barra_Apri_Chiudi_5(".......................Sto lavorando su "& sFileName, 0)

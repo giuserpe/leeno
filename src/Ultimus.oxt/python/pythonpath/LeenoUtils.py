@@ -68,22 +68,6 @@ def getDesktop():
     return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
 
-# def getDocument():
-#     '''
-#     Get active document
-#     '''
-#     desktop = getDesktop()
-
-#     # try to activate current frame
-#     # needed sometimes because UNO doesnt' find the correct window
-#     # when debugging.
-#     try:
-#         desktop.getCurrentFrame().activate()
-#     except Exception:
-#         pass
-
-#     return desktop.getCurrentComponent()
-
 def getDocument():
     ctx = getComponentContext()
     smgr = ctx.ServiceManager
@@ -234,36 +218,6 @@ def DocumentRefreshContext(enable_refresh: bool):
     finally:
         DocumentRefresh(original_state)
 
-# class DocumentRefreshContext:
-#     pass
-
-#     def __init__(self, enable_refresh: bool):
-#         self.enable_refresh = enable_refresh
-#         self.original_state = not enable_refresh
-
-#     def __enter__(self):
-#         # Azione iniziale
-#         DocumentRefresh(self.enable_refresh)
-#         return self
-
-#     def __exit__(self, exc_type, exc_value, traceback):
-#         # Gestione Eccezioni (sostituisce il blocco except)
-#         if exc_type is not None:
-#             import Dialogs
-#             Dialogs.NotifyDialog(
-#                 IconType="error",
-#                 Title='ATTENZIONE!',
-#                 Text="Prima di procedere è meglio dare un nome al file.\n\n"
-#                      "Lavorando su un file senza nome potresti avere dei malfunzionamenti."
-#             )
-#             # Ritorna True se vuoi silenziare l'eccezione (come nel tuo codice originale)
-#             # Ritorna False se vuoi che l'eccezione continui a salire
-#             return True
-
-#         # Azione finale (sempre eseguita, come il finally)
-#         DocumentRefresh(self.original_state)
-
-
 ###############################################################################
 ###############################################################################
 """
@@ -392,20 +346,15 @@ def dictToProperties(values, unoAny=False):
         ps = uno.Any('[]com.sun.star.beans.PropertyValue', ps)
     return ps
 
-
+import calendar
 def daysInMonth(dat):
     '''
-    returns days in month of date dat
+    Restituisce il numero di giorni nel mese della data passata.
+    Gestisce correttamente anni bisestili e mesi di diversa durata.
     '''
-    month = dat.month + 1
-    year = dat.year
-    if month > 12:
-        month = 1
-        year += 1
-    dat2 = date(year=year, month=month, day=dat.day)
-    t = dat2 - dat
-    return t.days
-
+    # calendar.monthrange restituisce una tupla (giorno_settimana_inizio, numero_giorni)
+    # Prendiamo l'indice [1] per avere il numero totale di giorni.
+    return calendar.monthrange(dat.year, dat.month)[1]
 
 def firstWeekDay(dat):
     '''

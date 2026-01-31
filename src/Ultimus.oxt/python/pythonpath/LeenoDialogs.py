@@ -204,45 +204,6 @@ class attesa(threading.Thread):
         LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
         LeenoUtils.getGlobalVar('oDialogo_attesa').execute()
 
-# def ScegliElaborato(titolo):
-#     '''
-#     Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     psm = LeenoUtils.getComponentContext().ServiceManager
-#     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-#     oDlgXLO = dp.createDialog(
-#         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
-#     )
-#     # oDialog1Model = oDlgXLO.Model
-#     oDlgXLO.Title = titolo  # Menù import XPWE'
-
-#     for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
-#         try:
-#             importo = oDoc.getSheets().getByName(el).getCellRangeByName(
-#                 'A2').String
-#             if el == 'COMPUTO':
-#                 oDlgXLO.getControl(
-#                     "CME_XLO").Label = '~Computo:     ' + importo
-#             if el == 'VARIANTE':
-#                 oDlgXLO.getControl(
-#                     "VAR_XLO").Label = '~Variante:    ' + importo
-#             if el == 'CONTABILITA':
-#                 oDlgXLO.getControl(
-#                     "CON_XLO").Label = 'C~ontabilità: ' + importo
-#         except Exception:
-#             pass
-
-#     if oDlgXLO.execute() == 1:
-#         if oDlgXLO.getControl("CME_XLO").State:
-#             elaborato = 'COMPUTO'
-#         elif oDlgXLO.getControl("VAR_XLO").State:
-#             elaborato = 'VARIANTE'
-#         elif oDlgXLO.getControl("CON_XLO").State:
-#             elaborato = 'CONTABILITA'
-#         elif oDlgXLO.getControl("EP_XLO").State:
-#             elaborato = 'Elenco'
-#     return elaborato
 
 def ScegliElaborato(Titolo="Titolo", flag="export"):
     """

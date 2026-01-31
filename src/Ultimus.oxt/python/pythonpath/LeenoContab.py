@@ -151,13 +151,15 @@ def insertVoceContabilita(oSheet, lrow):
 
 # ###############################################################
 
+import Calendario
 
 def imposta_data():
     """ Imposta la data scelta nelle misure selezionate."""
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    testo = PL.calendario()
+    import datetime
+    testo = Calendario.calendario()
 
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
@@ -682,7 +684,7 @@ def GeneraLibretto(oDoc):
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     ultimariga = sStRange.RangeAddress.EndRow
-        
+
     #################################
     #################################
     #################################
@@ -795,7 +797,7 @@ def GeneraLibretto(oDoc):
         aRiga = oNamedRange.EndRow
         daColonna = oNamedRange.StartColumn
         aColonna = oNamedRange.EndColumn
-        
+
         LS.importa_stili_pagina_non_presenti()
         LS.setPageStyle()
         oSheet.PageStyle = "Page_Style_Libretto_Misure2"
@@ -1088,7 +1090,7 @@ def GeneraRegistro(oDoc):
     '\nRegistro di Contabilità n.' + str(nSal)
     LS.set_header(oAktPage, committente, '', '')
     LS.npagina()
-    
+
     iSheet = oSheet.RangeAddress.Sheet
 
     # imposta riga da ripetere
@@ -1269,7 +1271,7 @@ def GeneraRegistro(oDoc):
     "\nStato di Avanzamento Lavori n." + str(nSal) + " a tutto il " + PL.oggi()
     LS.set_header(oAktPage, committente, '', '')
     LS.npagina()
-    
+
     # ~ oHeader = oAktPage.RightPageHeaderContent
     # ~oAktPage.PageScale = 95
     # ~ oHLText = oHeader.LeftText.Text.String = committente
@@ -1431,7 +1433,7 @@ def insrow():
         col = 1
     hattuale = oSheet.getCellByPosition(col, iRow).Position.Y - \
     oSheet.getCellByPosition(col, sRow).Position.Y
-    
+
     if oSheet.Name == 'CONTABILITA':
         hpagina = (len(oSheet.RowPageBreaks) - 1) * 25510
     elif oSheet.Name == 'Registro':

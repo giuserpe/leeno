@@ -2147,7 +2147,7 @@ def voce_breve_ep():
 
 ########################################################################
 
-@LeenoUtils.no_refresh
+# @LeenoUtils.no_refresh
 def scelta_viste():
     scelta_viste_run()
 
@@ -8361,21 +8361,21 @@ def struttura_ComputoM():
     '''
     Configura la struttura del foglio di computo metrico nascondendo e raggruppando
     colonne specifiche per una visualizzazione ottimizzata.
-    
-    La colorazione dei livelli (SuperCategoria, Categoria o SottoCategoria) 
-    verrà applicata automaticamente da applica_livelli() in base alle impostazioni 
+
+    La colorazione dei livelli (SuperCategoria, Categoria o SottoCategoria)
+    verrà applicata automaticamente da applica_livelli() in base alle impostazioni
     scelte nel MENU di configurazione (leeno.conf).
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     # Pulisce eventuali strutture esistenti per evitare sovrapposizioni
     oSheet.clearOutline()
 
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
-    
+
     # 1. Nasconde e raggruppa colonne AC e AD (indici 29-30)
     oCellRangeAddr.StartColumn = 29
     oCellRangeAddr.EndColumn = 30
@@ -8403,8 +8403,8 @@ def struttura_ComputoM():
     # 4. Esegue la funzione applica_livelli() per i 4 livelli (0, 1, 2, 3)
     for n in range(0, 4):
         indicator.Value = n
-        applica_livelli(n, vedi = False) 
-        
+        applica_livelli(n, vedi = False)
+
     indicator.end()
 
 def struttura_Analisi():
@@ -8497,14 +8497,14 @@ def applica_livelli(level, vedi = True):
     # --- Lettura Configurazione Colori ---
     # Legge cosa è stato scelto nel MENU (Nessuno, Categoria, ecc.)
     conf_color = cfg.read('Generale', 'colorazione_categorie')
-    
+
     # Mappatura Testo -> Livello
     color_map_config = {
         "Super Categoria": 0,
         "Categoria": 1,
         "Sotto Categoria": 2
     }
-    
+
     # Determina se il livello corrente deve essere colorato
     deve_colorare = False
     if conf_color in color_map_config:
@@ -8549,13 +8549,13 @@ def applica_livelli(level, vedi = True):
 
     # --- Applicazione Raggruppamento e Colori ---
     colors = LeenoConfig.PASTEL_COLORS
-    mappa_descrizioni = {} 
+    mappa_descrizioni = {}
     colore_index = 0
 
     for i, el in enumerate(lista_cat):
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]
-        
+
         try:
             oSheet.group(oCellRangeAddr, 1)
         except:
@@ -8572,7 +8572,7 @@ def applica_livelli(level, vedi = True):
                 if descrizione not in mappa_descrizioni:
                     mappa_descrizioni[descrizione] = colors[colore_index % len(colors)]
                     colore_index += 1
-                
+
                 colore_scelto = mappa_descrizioni[descrizione]
 
                 try:
@@ -11213,24 +11213,6 @@ def somma():
 
 
 ########################################################################
-
-def calendario():
-    '''
-    Mostra un calendario da cui selezionare la data e la restituisce
-    in formato gg/mm/aaaa.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    x = LeggiPosizioneCorrente()[0]
-    y = LeggiPosizioneCorrente()[1]
-    testo = Dialogs.pickDate()
-    lst = str(testo).split('-')
-    try:
-        testo = lst[2] + '/' + lst[1] + '/' + lst[0]
-    except:
-        pass
-
-    return testo
 
 
 def PdfDlg():

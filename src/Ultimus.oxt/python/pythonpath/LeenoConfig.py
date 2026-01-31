@@ -358,6 +358,7 @@ def MENU_leeno_conf():
     elif oDlg_config.getControl('ComboBox1').getText() == 'Scuro':
         PL.nuove_icone(False)
 
+    import LeenoToolbars as Toolbars
     Toolbars.Switch(False if oDlg_config.getControl('CheckBox3').State == 1 else True)
 
     if oDlg_config.getControl('CheckBox4').State == 1:
@@ -388,7 +389,8 @@ def MENU_leeno_conf():
     cfg.write('Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
 
     Toolbars.Vedi()
-    descrizione_in_una_colonna(False if oDlg_config.getControl('CheckBox5').State == 1 else True)
+    import pyleeno as PL
+    PL.descrizione_in_una_colonna(False if oDlg_config.getControl('CheckBox5').State == 1 else True)
 
     cfg.write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
 
@@ -396,6 +398,7 @@ def MENU_leeno_conf():
         cfg.write('Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
 
+    import LeenoSheetUtils
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())

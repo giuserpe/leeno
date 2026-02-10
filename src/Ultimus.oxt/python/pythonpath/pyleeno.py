@@ -957,8 +957,9 @@ def SubSum_SuperCap(lrow):
         oSheet.getCellByPosition(30,
                                  lrow).CellStyle = 'Livello-0-scritta mini val'
     if oSheet.Name in ('CONTABILITA'):
-        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(
-            lrow + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
+        # oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(
+        #     lrow + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
+        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P:P)'  # IMPORTO
         oSheet.getCellByPosition(
             16, lrow).Formula = '=P' + str(lrow + 1) + '/P' + str(
                 lrowE)  # incidenza sul totale
@@ -3826,46 +3827,46 @@ def firme_in_calce(lrowF=None):
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
 
-    if oSheet.Name in ("Registro", "SAL"):
-        if lrowF == None:
-            lrowF = SheetUtils.getLastUsedRow(oSheet)
+    # if oSheet.Name in ("Registro", "SAL"):
+    #     if lrowF == None:
+    #         lrowF = SheetUtils.getLastUsedRow(oSheet)
 
-        oSheet.getRows().insertByIndex(lrowF, 13)
-        riga_corrente = lrowF + 1
-        oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
-        comando('CalculateHard')
-        oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
-        aSaveData = oRange.getDataArray()
-        oRange.setDataArray(aSaveData)
+    #     oSheet.getRows().insertByIndex(lrowF, 13)
+    #     riga_corrente = lrowF + 1
+    #     oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
+    #     comando('CalculateHard')
+    #     oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
+    #     aSaveData = oRange.getDataArray()
+    #     oRange.setDataArray(aSaveData)
 
-        oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
-            "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName(
-                '$S2.C17').String + ")")
+    #     oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
+    #         "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName(
+    #             '$S2.C17').String + ")")
 
-        oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
-            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
-            '$S2.C16').String + ")")
-        oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
-        if oSheet.Name == "SAL":
-            return
-        nSal = 1
-        for i in reversed(range(2, 50)):
-            if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
-                nSal = i
-                break
-        oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
-            # '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
-            '=CONCATENATE("In data __/__/____ è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
-        comando('CalculateHard')
+    #     oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
+    #         "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
+    #         '$S2.C16').String + ")")
+    #     oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
+    #     if oSheet.Name == "SAL":
+    #         return
+    #     nSal = 1
+    #     for i in reversed(range(2, 50)):
+    #         if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
+    #             nSal = i
+    #             break
+    #     oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
+    #         # '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+    #         '=CONCATENATE("In data __/__/____ è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+    #     comando('CalculateHard')
 
-        oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
+    #     oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
 
-        aSaveData = oRange.getDataArray()
-        oRange.setDataArray(aSaveData)
+    #     aSaveData = oRange.getDataArray()
+    #     oRange.setDataArray(aSaveData)
 
-        oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
-            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
-                '$S2.C16').String + ")")
+    #     oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
+    #         "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
+    #             '$S2.C16').String + ")")
 
     # if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
     #     # Configurazione iniziale
@@ -11857,7 +11858,7 @@ def MENU_export_selected_range_to_odt():
 
     Dialogs.Info(
         Title='Informazione',
-        Text=f"File creato con successo:\\n{output_path}"
+        Text=f"File creato con successo:\n{output_path}"
         )
 
     # except Exception as e:
@@ -12203,10 +12204,15 @@ def somma_per_colore_nella_colonna():
 
 from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
 # @measure_time(show_popup=True)
+
+
+
 @LeenoUtils.no_refresh
 def MENU_debug():
-    DLG.chi(LeenoConfig.PASTEL_COLORS)
-
+    Inserisci_Utili()
+    return
+    import LeenoContab
+    LeenoContab.insrow()
     return
 
 

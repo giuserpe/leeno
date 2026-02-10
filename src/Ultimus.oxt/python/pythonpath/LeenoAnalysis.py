@@ -8,6 +8,115 @@ import SheetUtils
 import LeenoSheetUtils
 import LeenoEvents
 
+import LeenoDialogs as DLG
+from undo_utils import with_undo
+
+@with_undo("Inserimento Oneri Sicurezza")
+def Inserisci_Utili():
+    oDoc = LeenoUtils.getDocument()
+    oSheets = oDoc.getSheets()
+    oRanges = oDoc.NamedRanges
+
+    oSheetAP = oSheets.getByName("Analisi di Prezzo")
+
+    # 1. Gestione del Range Nominato "oneri_sicurezza"
+    if not oRanges.hasByName("oneri_sicurezza"):
+        oCellAddress = oSheetAP.getCellRangeByName("B10").getCellAddress()
+        oRanges.addNewByName("oneri_sicurezza", "$S5.$B$93:$P$93", oCellAddress, 0)
+
+        # if oSheets.hasByName("S5"):
+        #     oSheetS5 = oSheets.getByName("S5")
+        #     r = 92 # Riga 93
+
+        #     # Applica stili e contenuti
+        #     oSheetS5.getCellByPosition(1, r).CellStyle = "An-lavoraz-desc-CEN"
+        #     oSheetS5.getCellByPosition(2, r).CellStyle = "An-lavoraz-Utili"
+        #     oSheetS5.getCellByPosition(3, r).CellStyle = "An-lavoraz-Utili"
+
+        #     oCellDesc = oSheetS5.getCellByPosition(4, r)
+        #     oCellDesc.CellStyle = "An-lavoraz-Utili desc"
+        #     oCellDesc.String = "di cui Sicurezza afferenti l'Impresa"
+
+        #     # Formule in inglese (compatibili Calc)
+        #     oCellPerc = oSheetS5.getCellByPosition(5, r)
+        #     oDoc.CurrentController.select(oCellPerc)
+        #     oCellPerc.CellStyle = "An-lavoraz-%"
+
+        #     oCellPerc.Formula = (
+        #         "=IF(OR(E93=\"Spese Generali\";E93=\"Spese Generali (calcolate su F)\"); $S1.$H$320;"
+        #         "IF(OR(E93=\"utili d'impresa\";E93=\"Utili d'Impresa (calcolata su F+G)\");$S1.$H$321;"
+        #         "IF(E93=\"Spese Generali e Utili (sulle voci precedenti)\";$S1.$H$322;"
+        #         "IF(OR(E93=\"Di cui sicurezza afferenti l'impresa\";LEFT(E93;18)=\"Oneri di Sicurezza\");$S1.$H$319;"
+        #         "IF(E93=\"Sconto\";$S1.$H$324;"
+        #         "IF(E93=\"Maggiorazione\";$S1.$H$326;\"\"))))))"
+        #     )
+
+        #     oSheetS5.getCellByPosition(6, r).Formula = "=SUM(H77:H89)*F93"
+        #     oSheetS5.getCellByPosition(6, r).CellStyle = "An-lavoraz-Utili-num sin"
+
+        #     oCellSafe = oSheetS5.getCellByPosition(11, r)
+        #     oCellSafe.CellStyle = "An-lavoraz-dx"
+        #     oCellSafe.Formula = '=IF(ISERROR(SEARCH("sicurezza";E93));"";G93)'
+
+        #     # Altri stili
+        #     styles = {7: "An-senza", 8: "An-senza-DX", 9: "An-lavoraz-dx%", 10: "An-lavoraz-generica"}
+        #     for col, style in styles.items():
+        #         oSheetS5.getCellByPosition(col, r).CellStyle = style
+        #     oSheetS5.getCellRangeByPosition(12, r, 15, r).CellStyle = "Analisi_Sfondo"
+
+    # 2. Correzione Cursore (Calc Style)
+    # Prendiamo la cella attiva dalla selezione corrente
+    oSel = oDoc.CurrentController.getSelection()
+    if hasattr(oSel, "CellAddress"):
+        lrow = oSel.CellAddress.Row
+    elif hasattr(oSel, "RangeAddress"):
+        lrow = oSel.RangeAddress.StartRow
+    else:
+        lrow = 0
+
+    # Trova "Fine ANALISI"
+    search_desc = oSheetAP.createSearchDescriptor()
+    search_desc.SearchString = "Fine ANALISI"
+    found = oSheetAP.findFirst(search_desc)
+
+    if found:
+        lrowFine = found.RangeAddress.EndRow
+        if lrow > lrowFine:
+            lrow = lrowFine - 5
+
+    # Ricerca punto di inserimento (Riga 'I')
+    target_row = -1
+    for i in range(lrow, min(lrow + 51, oSheetAP.Rows.Count)):
+        cell_a = oSheetAP.getCellByPosition(0, i).String
+        cell_d = oSheetAP.getCellByPosition(3, i).String
+
+        if cell_a == "L" or "Sicurezza" in cell_d or cell_a == "----":
+            DLG.chi("Riprova partendo almeno dalla riga 'I' o riga già inserita.")
+            return
+
+        if cell_a == "H" and oSheetAP.getCellByPosition(0, i+1).String == "" and \
+           "Sicurezza" in oSheetAP.getCellByPosition(3, i+1).String:
+            DLG.chi("La riga degli oneri per la sicurezza è già inserita!")
+            oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, i+1))
+            return
+
+        if cell_a == "I":
+            target_row = i
+            break
+
+    # 3. Esecuzione
+    oSheetAP.getRows().insertByIndex(target_row, 1)
+
+    oNamedRange = oRanges.getByName("oneri_sicurezza")
+    oRangeAddress = oNamedRange.ReferredCells.getRangeAddress()
+    oDestAddress = oSheetAP.getCellByPosition(0, target_row).getCellAddress()
+
+    oSheetAP.copyRange(oDestAddress, oRangeAddress)
+
+    # Seleziona la cella di descrizione appena inserita
+    oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, target_row))
+
+
 def inizializzaAnalisi(oDoc):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
@@ -134,7 +243,7 @@ def copiaRigaAnalisi(oSheet, lrow):
             oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
 
-import LeenoDialogs as DLG
+
 def MENU_impagina_analisi():
     '''
     PL.set_area_stampa()

@@ -12,9 +12,115 @@ import LeenoUtils
 import LeenoDialogs as DLG
 
 
+# def aggiorna_configurazione_leeno():
+#     '''Rigenera Addons.xcu e registrymodifications.xcu senza reinstallare (Win/Linux/Mac)'''
+
+#     # 1. Ottieni il percorso di LeenO installato
+#     leeno_path = PL.LeenO_path()
+
+#     # 2. Determina i percorsi in base al sistema operativo
+#     if sys.platform == "win32":
+#         user_config = os.path.expandvars(r"%APPDATA%\LibreOffice\4\user")
+#         source_addons = r"W:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\Addons.xcu"
+#         sistema = "Windows"
+#     elif sys.platform == "darwin":  # macOS
+#         user_config = os.path.expanduser("~/Library/Application Support/LibreOffice/4/user")
+#         source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+#         sistema = "macOS"
+#     else:  # Linux (linux, linux2)
+#         user_config = os.path.expanduser("~/.config/libreoffice/4/user")
+#         source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+#         sistema = "Linux"
+
+#     # 3. Trova e aggiorna Addons.xcu nella cache di configurazione
+#     config_base = os.path.join(user_config,
+#         "uno_packages/cache/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend")
+
+#     if not os.path.exists(config_base):
+#         Dialogs.Info(Title="Errore", Text=f"Directory di configurazione non trovata:\n{config_base}")
+#         return False
+
+#     target_file = None
+#     for root, dirs, files in os.walk(config_base):
+#         if "Addons.xcu" in files:
+#             target_file = os.path.join(root, "Addons.xcu")
+#             break
+
+#     if not target_file:
+#         Dialogs.Info(Title="Errore", Text="Addons.xcu non trovato nella cache!")
+#         return False
+
+#     # 4. Verifica che il file sorgente esista
+#     if not os.path.exists(source_addons):
+#         Dialogs.Info(Title="Errore",
+#                      Text=f"File sorgente non trovato:\n{source_addons}\n\nModifica il path nel codice per {sistema}")
+#         return False
+
+#     # 5. Leggi e processa Addons.xcu
+#     try:
+#         with open(source_addons, 'r', encoding='utf-8') as f:
+#             content = f.read()
+
+#         # Sostituisci %origin% con il path reale
+#         content = content.replace('%origin%', leeno_path)
+
+#         # 6. Scrivi il file Addons.xcu processato
+#         with open(target_file, 'w', encoding='utf-8') as f:
+#             f.write(content)
+
+#         risultato_addons = "✓ Addons.xcu aggiornato"
+#     except Exception as e:
+#         Dialogs.Info(Title="Errore", Text=f"Errore nell'aggiornamento di Addons.xcu:\n{str(e)}")
+#         return False
+
+#     # 7. Cancella registrymodifications.xcu per aggiornare il dispatcher
+#     registry_file = os.path.join(user_config, "registrymodifications.xcu")
+
+#     try:
+#         if os.path.exists(registry_file):
+#             os.remove(registry_file)
+#             risultato_registry = "✓ registrymodifications.xcu eliminato"
+#         else:
+#             risultato_registry = "⚠ registrymodifications.xcu non trovato"
+#     except Exception as e:
+#         risultato_registry = f"✗ Errore cancellazione registrymodifications.xcu:\n{str(e)}"
+
+#     # 8. Messaggio finale
+#     msg = f"{risultato_addons}\n{risultato_registry}\n\nSistema: {sistema}"
+#     Dialogs.Info(Title="Configurazione di LeeenO Aggiornata",
+#                  Text=msg + "\n\nRiavvia LibreOffice per applicare le modifiche")
+    # return True
+
+
+import uno
+
+import uno
+import os
+import sys
+
+import uno
+import os
+import sys
+
+def force_restart():
+    """Tenta una chiusura pulita di LibreOffice tramite API UNO"""
+    try:
+        # Ottieni il contesto (funziona sia in macro che in script Python-UNO)
+        local_context = uno.getComponentContext()
+        smgr = local_context.ServiceManager
+        desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", local_context)
+        
+        # terminate() restituisce True se la chiusura è stata accettata
+        chiuso = desktop.terminate()
+        return chiuso
+    except Exception as e:
+        # In caso di errore (es. servizio non disponibile)
+        Dialogs.Info(Title="Errore chiusura", Text=f"Impossibile usare terminate():\n{str(e)}")
+        return False
+
+
 def aggiorna_configurazione_leeno():
     '''Rigenera Addons.xcu e registrymodifications.xcu senza reinstallare (Win/Linux/Mac)'''
-
     # 1. Ottieni il percorso di LeenO installato
     leeno_path = PL.LeenO_path()
 
@@ -25,17 +131,17 @@ def aggiorna_configurazione_leeno():
         sistema = "Windows"
     elif sys.platform == "darwin":  # macOS
         user_config = os.path.expanduser("~/Library/Application Support/LibreOffice/4/user")
-        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # ← MODIFICA
         sistema = "macOS"
-    else:  # Linux (linux, linux2)
+    else:  # Linux
         user_config = os.path.expanduser("~/.config/libreoffice/4/user")
-        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # Modifica questo path
+        source_addons = os.path.expanduser("~/path/to/dev/Ultimus.oxt/Addons.xcu")  # ← MODIFICA
         sistema = "Linux"
 
-    # 3. Trova e aggiorna Addons.xcu nella cache di configurazione
+    # 3. Trova Addons.xcu nella cache
     config_base = os.path.join(user_config,
         "uno_packages/cache/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend")
-
+    
     if not os.path.exists(config_base):
         Dialogs.Info(Title="Errore", Text=f"Directory di configurazione non trovata:\n{config_base}")
         return False
@@ -50,46 +156,78 @@ def aggiorna_configurazione_leeno():
         Dialogs.Info(Title="Errore", Text="Addons.xcu non trovato nella cache!")
         return False
 
-    # 4. Verifica che il file sorgente esista
+    # 4. Verifica sorgente
     if not os.path.exists(source_addons):
         Dialogs.Info(Title="Errore",
                      Text=f"File sorgente non trovato:\n{source_addons}\n\nModifica il path nel codice per {sistema}")
         return False
 
-    # 5. Leggi e processa Addons.xcu
+    # 5. Aggiorna Addons.xcu
     try:
         with open(source_addons, 'r', encoding='utf-8') as f:
             content = f.read()
-
-        # Sostituisci %origin% con il path reale
         content = content.replace('%origin%', leeno_path)
-
-        # 6. Scrivi il file Addons.xcu processato
+        
         with open(target_file, 'w', encoding='utf-8') as f:
             f.write(content)
-
+        
         risultato_addons = "✓ Addons.xcu aggiornato"
     except Exception as e:
         Dialogs.Info(Title="Errore", Text=f"Errore nell'aggiornamento di Addons.xcu:\n{str(e)}")
         return False
 
-    # 7. Cancella registrymodifications.xcu per aggiornare il dispatcher
+    # 6. Elimina registrymodifications.xcu
     registry_file = os.path.join(user_config, "registrymodifications.xcu")
-
     try:
         if os.path.exists(registry_file):
             os.remove(registry_file)
             risultato_registry = "✓ registrymodifications.xcu eliminato"
         else:
-            risultato_registry = "⚠ registrymodifications.xcu non trovato"
+            risultato_registry = "⚠ registrymodifications.xcu non trovato (non grave)"
     except Exception as e:
         risultato_registry = f"✗ Errore cancellazione registrymodifications.xcu:\n{str(e)}"
 
-    # 8. Messaggio finale
-    msg = f"{risultato_addons}\n{risultato_registry}\n\nSistema: {sistema}"
-    Dialogs.Info(Title="Configurazione di LeeenO Aggiornata",
-                 Text=msg + "\n\nRiavvia LibreOffice per applicare le modifiche")
+    # 7. Messaggio di riepilogo + richiesta riavvio
+    msg = (
+        f"{risultato_addons}\n"
+        f"{risultato_registry}\n\n"
+        f"Sistema: {sistema}\n\n"
+        "Per applicare le modifiche è necessario riavviare LibreOffice.\n"
+        "Vuoi chiuderlo adesso?"
+    )
+
+    risposta = Dialogs.YesNoDialog(
+        Title="Chiusura LibreOffice?",
+        Text=msg
+    )
+
+    if risposta:  # Sì → tenta chiusura pulita
+        Dialogs.Info(
+            Title="Chiusura in corso",
+            Text="Sto chiudendo LibreOffice...\n\n"
+                 "Riaprilo manualmente per applicare le modifiche a LeenO.\n"
+                 "(doppio clic su un file .ods o su soffice.exe / LibreOffice.app / libreoffice)"
+        )
+
+        chiuso = force_restart()
+
+        if not chiuso:
+            Dialogs.Info(
+                Title="Chiusura non completata",
+                Text="La chiusura automatica è stata bloccata.\n"
+                     "Probabilmente hai documenti aperti con modifiche non salvate.\n\n"
+                     "Salva tutto, chiudi LibreOffice manualmente e riaprilo."
+            )
+
+    else:
+        Dialogs.Info(
+            Title="Modifiche completate",
+            Text="Ok, hai scelto di non chiudere ora.\n"
+                 "Ricorda di chiudere e riaprire LibreOffice quando vuoi applicare le modifiche."
+        )
+
     return True
+
 
 
 ########################################################################

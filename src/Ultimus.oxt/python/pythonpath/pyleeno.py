@@ -6208,7 +6208,6 @@ def LeggiPosizioneCorrente():
 ########################################################################
 # numera le voci di computo o contabilità
 # @Debug.measure_time() # Misura il tempo di esecuzione della funzione
-# @LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
 def MENU_numera_voci():
     '''
     Comando di menu per numera_voci()
@@ -6216,11 +6215,10 @@ def MENU_numera_voci():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # LeenoSheetUtils.numeraVoci(oSheet, 4, True)
-    with LeenoUtils.no_refresh():
-        numera_voci()
+    numera_voci()
     Rinumera_TUTTI_Capitoli2(oSheet)
 
-
+@LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
 def numera_voci():
     '''
     Rinumera tutte le voci dalla riga 4 alla fine del foglio.
@@ -8487,11 +8485,9 @@ def struttura_off():
     Cancella la vista in struttura
     '''
     with LeenoUtils.DocumentRefreshContext(False):
-        # LeenoUtils.memorizza_posizione()
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         oSheet.clearOutline()
-        # LeenoUtils.ripristina_posizione()
 
 
 # def applica_livelli(level, vedi = True):
@@ -8600,78 +8596,464 @@ def struttura_off():
 #         for el in lista_cat:
 #             oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible = True
 
+# def applica_livelli(level, vedi=True):
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
+#     iSheet = oSheet.RangeAddress.Sheet
+
+#     # --- 1. Ottimizzazione: Ricerca massiva degli stili (SearchDescriptor) ---
+#     # Questo sostituisce il ciclo 'for n in range(0, test)'
+#     def trova_righe_per_stile(foglio, nome_stile):
+#         search = foglio.createSearchDescriptor()
+#         search.SearchStyles = True
+#         search.SearchString = nome_stile
+#         found = foglio.findAll(search)
+#         righe = []
+#         if found:
+#             for i in range(found.Count):
+#                 rng = found.getByIndex(i)
+#                 # findAll può restituire blocchi di celle, noi prendiamo l'inizio di ogni blocco
+#                 righe.append(rng.RangeAddress.StartRow)
+#         return sorted(righe)
+
+#     # --- Configurazione (Invariata nella logica) ---
+#     conf_color = cfg.read('Generale', 'colorazione_categorie')
+#     color_map_config = {"Super Categoria": 0, "Categoria": 1, "Sotto Categoria": 2}
+#     deve_colorare = (color_map_config.get(conf_color) == level)
+
+#     # Definizione stili (Ridotta per brevità, tieni la tua logica completa)
+#     if level == 0:
+#         stile, myrange = 'Livello-0-scritta', ('Livello-0-scritta', 'Comp TOTALI')
+#         Dsopra, Dsotto = 1, 1
+#     elif level == 1:
+#         stile, myrange = 'Livello-1-scritta', ('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+#         Dsopra, Dsotto = 1, 1
+#     # ... tieni gli altri rami elif level == 2, 3, ecc. ...
+#     else:
+#         if level not in (5, 6, 7): return
+#         stile, myrange = 'tuo_stile_default', ('tuoi_range_default') # aggiungi i mancanti
+#         Dsopra, Dsotto = 1, 1
+
+#     # --- 2. Trova le posizioni delle categorie senza loop manuale ---
+#     righe_start = trova_righe_per_stile(oSheet, stile)
+#     righe_stop = []
+#     for s in myrange:
+#         righe_stop.extend(trova_righe_per_stile(oSheet, s))
+#     righe_stop = sorted(list(set(righe_stop))) # Lista unica e ordinata di possibili "punti di stop"
+
+#     lista_cat = []
+#     for rs in righe_start:
+#         sopra = rs + Dsopra
+#         # Trova la prima riga di stop che sia dopo 'sopra'
+#         for r_stop in righe_stop:
+#             if r_stop > sopra:
+#                 sotto = r_stop - Dsotto
+#                 if sotto >= sopra:
+#                     lista_cat.append((sopra, sotto, rs)) # rs serve per il colore
+#                 break
+
+#     # --- 3. Applicazione massiva ---
+#     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+#     oCellRangeAddr.Sheet = iSheet
+#     colors = LeenoConfig.PASTEL_COLORS
+#     mappa_descrizioni = {}
+#     colore_index = 0
+
+#     # Disabilitiamo il refresh (se non già fatto dal decoratore)
+#     oDoc.lockControllers()
+#     try:
+#         for sopra, sotto, r_testa in lista_cat:
+#             oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto
+
+#             # Raggruppamento
+#             try: oSheet.group(oCellRangeAddr, 1)
+#             except: pass
+
+#             # Colorazione
+#             if deve_colorare:
+#                 descrizione = oSheet.getCellByPosition(2, r_testa).String.strip()
+#                 if descrizione:
+#                     if descrizione not in mappa_descrizioni:
+#                         mappa_descrizioni[descrizione] = colors[colore_index % len(colors)]
+#                         colore_index += 1
+
+#                     colore = mappa_descrizioni[descrizione]
+#                     # Operazione massiva sui range di celle
+#                     oSheet.getCellRangeByPosition(0, r_testa, 0, sotto).CellBackColor = colore
+#                     oSheet.getCellRangeByPosition(1, r_testa, 30, r_testa).CellBackColor = colore
+
+#             # Visibilità (massiva per riga)
+#             if not vedi:
+#                 oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = False
+#             else:
+#                 oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = True
+#     finally:
+#         oDoc.unlockControllers()
+
+
+
+# def applica_livelli(level, vedi=True):
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
+#     iSheet = oSheet.RangeAddress.Sheet
+
+#     # --- 1. CONFIGURAZIONE STILI E LIVELLI ---
+#     stile = None
+#     myrange = []
+#     Dsopra, Dsotto = 1, 1
+
+#     # Mapping per determinare se dobbiamo colorare in base alla configurazione
+#     conf_color = cfg.read('Generale', 'colorazione_categorie')
+#     color_map_config = {"Super Categoria": 0, "Categoria": 1, "Sotto Categoria": 2}
+#     deve_colorare = (color_map_config.get(conf_color) == level)
+
+#     if level == 0:
+#         stile, myrange = 'Livello-0-scritta', ('Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 1:
+#         stile, myrange = 'Livello-1-scritta', ('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 2:
+#         stile, myrange = 'livello2 valuta', ('livello2 valuta', 'Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 3:
+#         stile = 'Comp Start Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp Start Attributo'
+#         r1 = 'Comp End Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp End Attributo'
+#         myrange = (r1, 'Comp TOTALI')
+#         Dsopra, Dsotto = 2, 1
+
+#     # Se il livello non è gestito, esci
+#     if not stile: return
+
+#     # --- 2. FASE DI ANALISI (Ricerca massiva coordinate) ---
+#     def trova_righe_per_stile(nome_stile):
+#         search = oSheet.createSearchDescriptor()
+#         search.SearchStyles = True
+#         search.SearchString = nome_stile
+#         found = oSheet.findAll(search)
+#         if not found: return []
+#         # Restituisce una lista ordinata di indici di riga univoci
+#         return sorted(list(set([found.getByIndex(i).RangeAddress.StartRow for i in range(found.Count)])))
+
+#     righe_start = trova_righe_per_stile(stile)
+
+#     # Raccoglie tutti i possibili punti di interruzione
+#     righe_stop = []
+#     for s in myrange:
+#         righe_stop.extend(trova_righe_per_stile(s))
+#     righe_stop = sorted(list(set(righe_stop)))
+
+#     # Costruzione della tupla di lavoro (sopra, sotto, riga_testata)
+#     # rs = riga dove inizia lo stile (usata per leggere la descrizione per il colore)
+#     coppie_lavoro = []
+#     ultima_riga_gestita = -1
+
+#     for rs in righe_start:
+#         if rs <= ultima_riga_gestita: continue
+
+#         sopra = rs + Dsopra
+#         for r_stop in righe_stop:
+#             if r_stop > sopra:
+#                 sotto = r_stop - Dsotto
+#                 if sotto >= sopra:
+#                     coppie_lavoro.append((sopra, sotto, rs))
+#                     ultima_riga_gestita = sotto
+#                 break
+
+#     if not coppie_lavoro: return
+
+#     # --- 3. FASE DI ESECUZIONE (Azione massiva) ---
+#     indicator = oDoc.getCurrentController().getStatusIndicator()
+#     indicator.start("Applicazione livelli e colori...", 5)
+#     step_size = max(1, len(coppie_lavoro) // 5)
+
+#     # Preparazione colori
+#     colors = LeenoConfig.PASTEL_COLORS
+#     mappa_descrizioni = {}
+#     colore_index = 0
+
+#     oDoc.lockControllers()
+#     oDoc.enableAutomaticCalculation(False)
+
+#     try:
+#         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+#         oCellRangeAddr.Sheet = iSheet
+
+#         for idx, (sopra, sotto, r_testa) in enumerate(coppie_lavoro):
+#             # Aggiornamento indicatore (5 step totali)
+#             if idx % step_size == 0:
+#                 indicator.setValue(idx // step_size + 1)
+
+#             # A. Raggruppamento (Outline)
+#             oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto
+#             try:
+#                 oSheet.group(oCellRangeAddr, 1)
+#             except:
+#                 pass
+
+#             # B. Visibilità (Massiva)
+#             oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = vedi
+
+#             # C. Colorazione (se prevista per questo livello)
+#             if deve_colorare:
+#                 # Legge la descrizione in colonna C (indice 2)
+#                 descrizione = oSheet.getCellByPosition(2, r_testa).String.strip()
+#                 if descrizione:
+#                     if descrizione not in mappa_descrizioni:
+#                         mappa_descrizioni[descrizione] = colors[colore_index % len(colors)]
+#                         colore_index += 1
+
+#                     colore_scelto = mappa_descrizioni[descrizione]
+
+#                     # Colora colonna A (da r_testa a sotto)
+#                     oSheet.getCellRangeByPosition(0, r_testa, 0, sotto).CellBackColor = colore_scelto
+#                     # Colora l'intestazione (da riga_testa, colonne A a AE/30)
+#                     oSheet.getCellRangeByPosition(0, r_testa, 30, r_testa).CellBackColor = colore_scelto
+
+#     finally:
+#         oDoc.enableAutomaticCalculation(True)
+#         oDoc.unlockControllers()
+#         indicator.end()
+
+# def applica_livelli(level, vedi=True):
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
+#     iSheet = oSheet.RangeAddress.Sheet
+
+#     # --- 1. CONFIGURAZIONE STILI E LIVELLI ---
+#     stile = None
+#     myrange = []
+#     Dsopra, Dsotto = 1, 1
+
+#     # Mapping colori (aggiungiamo "Nuovo Livello" o il nome che preferisci per uuuuu)
+#     conf_color = cfg.read('Generale', 'colorazione_categorie')
+#     color_map_config = {
+#         "Super Categoria": 0,
+#         "Categoria": 1,
+#         "Sotto Categoria": 2,
+#         "Livello U": 4  # Associa il nuovo livello alla config se vuoi colorarlo
+#     }
+#     deve_colorare = (color_map_config.get(conf_color) == level)
+
+#     if level == 0:
+#         stile, myrange = 'Livello-0-scritta', ('Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 1:
+#         stile, myrange = 'Livello-1-scritta', ('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 2:
+#         stile, myrange = 'livello2 valuta', ('livello2 valuta', 'Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+#     elif level == 3: # Misure
+#         stile = 'Comp Start Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp Start Attributo'
+#         r1 = 'Comp End Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp End Attributo'
+#         myrange = (r1, 'Comp TOTALI')
+#         Dsopra, Dsotto = 2, 1
+#     elif level == 4: # --- NUOVO LIVELLO UUUUU ---
+#         stile = 'uuuuu'
+#         # Lo stop è definito dallo stile stesso (prossimo uuuuu) o dai livelli superiori
+#         myrange = ('uuuuu', 'Comp TOTALI')
+#         Dsopra, Dsotto = 1, 1
+
+#     if not stile: return
+
+#     # --- 2. FASE DI ANALISI (Ricerca massiva coordinate) ---
+#     def trova_righe_per_stile(nome_stile):
+#         search = oSheet.createSearchDescriptor()
+#         search.SearchStyles = True
+#         search.SearchString = nome_stile
+#         found = oSheet.findAll(search)
+#         if not found: return []
+#         return sorted(list(set([found.getByIndex(i).RangeAddress.StartRow for i in range(found.Count)])))
+
+#     righe_start = trova_righe_per_stile(stile)
+
+#     righe_stop = []
+#     for s in myrange:
+#         righe_stop.extend(trova_righe_per_stile(s))
+#     righe_stop = sorted(list(set(righe_stop)))
+
+#     coppie_lavoro = []
+#     ultima_riga_gestita = -1
+
+#     for rs in righe_start:
+#         if rs <= ultima_riga_gestita: continue
+
+#         sopra = rs + Dsopra
+#         for r_stop in righe_stop:
+#             if r_stop > sopra:
+#                 sotto = r_stop - Dsotto
+#                 if sotto >= sopra:
+#                     coppie_lavoro.append((sopra, sotto, rs))
+#                     ultima_riga_gestita = sotto
+#                 break
+
+#     if not coppie_lavoro: return
+
+#     # --- 3. FASE DI ESECUZIONE (Azione massiva) ---
+#     indicator = oDoc.getCurrentController().getStatusIndicator()
+#     indicator.start("Applicazione livelli e colori...", 5)
+#     step_size = max(1, len(coppie_lavoro) // 5)
+
+#     colors = LeenoConfig.PASTEL_COLORS
+#     mappa_descrizioni = {}
+#     colore_index = 0
+
+#     oDoc.lockControllers()
+#     oDoc.enableAutomaticCalculation(False)
+
+#     try:
+#         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+#         oCellRangeAddr.Sheet = iSheet
+
+#         for idx, (sopra, sotto, r_testa) in enumerate(coppie_lavoro):
+#             if idx % step_size == 0:
+#                 indicator.setValue(idx // step_size + 1)
+
+#             # A. Raggruppamento (Livello 1 è il default di annidamento)
+#             oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto
+#             try:
+#                 # Nota: LibreOffice incrementa automaticamente il livello visivo (+ / -)
+#                 oSheet.group(oCellRangeAddr, 1)
+#             except:
+#                 pass
+
+#             # B. Visibilità
+#             oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = vedi
+
+#             # C. Colorazione
+#             if deve_colorare:
+#                 descrizione = oSheet.getCellByPosition(2, r_testa).String.strip()
+#                 if descrizione:
+#                     if descrizione not in mappa_descrizioni:
+#                         mappa_descrizioni[descrizione] = colors[colore_index % len(colors)]
+#                         colore_index += 1
+
+#                     colore_scelto = mappa_descrizioni[descrizione]
+#                     oSheet.getCellRangeByPosition(0, r_testa, 0, sotto).CellBackColor = colore_scelto
+#                     oSheet.getCellRangeByPosition(0, r_testa, 30, r_testa).CellBackColor = colore_scelto
+
+#     finally:
+#         oDoc.enableAutomaticCalculation(True)
+#         oDoc.unlockControllers()
+#         indicator.end()
+
+
 def applica_livelli(level, vedi=True):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet
-    
-    # --- 1. Ottimizzazione: Ricerca massiva degli stili (SearchDescriptor) ---
-    # Questo sostituisce il ciclo 'for n in range(0, test)'
-    def trova_righe_per_stile(foglio, nome_stile):
-        search = foglio.createSearchDescriptor()
-        search.SearchStyles = True
-        search.SearchString = nome_stile
-        found = foglio.findAll(search)
-        righe = []
-        if found:
-            for i in range(found.Count):
-                rng = found.getByIndex(i)
-                # findAll può restituire blocchi di celle, noi prendiamo l'inizio di ogni blocco
-                righe.append(rng.RangeAddress.StartRow)
-        return sorted(righe)
 
-    # --- Configurazione (Invariata nella logica) ---
+    # --- 1. CONFIGURAZIONE STILI E LIVELLI ---
+    stile = None
+    myrange = []
+    Dsopra, Dsotto = 1, 1
+
+    # Lista per raccogliere i range nominati se siamo nel livello specifico
+    range_nominati_lib = []
+
+    # Mapping colori
     conf_color = cfg.read('Generale', 'colorazione_categorie')
-    color_map_config = {"Super Categoria": 0, "Categoria": 1, "Sotto Categoria": 2}
+    color_map_config = {
+        "Super Categoria": 0,
+        "Categoria": 1,
+        "Sotto Categoria": 2,
+        "Livello Lib": 4  # Associa il livello dei range _Lib_ alla config colori
+    }
     deve_colorare = (color_map_config.get(conf_color) == level)
 
-    # Definizione stili (Ridotta per brevità, tieni la tua logica completa)
     if level == 0:
         stile, myrange = 'Livello-0-scritta', ('Livello-0-scritta', 'Comp TOTALI')
-        Dsopra, Dsotto = 1, 1
     elif level == 1:
         stile, myrange = 'Livello-1-scritta', ('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
-        Dsopra, Dsotto = 1, 1
-    # ... tieni gli altri rami elif level == 2, 3, ecc. ...
-    else:
-        if level not in (5, 6, 7): return
-        stile, myrange = 'tuo_stile_default', ('tuoi_range_default') # aggiungi i mancanti
-        Dsopra, Dsotto = 1, 1
+    elif level == 2:
+        stile, myrange = 'livello2 valuta', ('livello2 valuta', 'Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI')
+    elif level == 3: # Misure
+        stile = 'Comp Start Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp Start Attributo'
+        r1 = 'Comp End Attributo_R' if oSheet.Name == 'CONTABILITA' else 'Comp End Attributo'
+        myrange = (r1, 'Comp TOTALI')
+        Dsopra, Dsotto = 2, 1
 
-    # --- 2. Trova le posizioni delle categorie senza loop manuale ---
-    righe_start = trova_righe_per_stile(oSheet, stile)
-    righe_stop = []
-    for s in myrange:
-        righe_stop.extend(trova_righe_per_stile(oSheet, s))
-    righe_stop = sorted(list(set(righe_stop))) # Lista unica e ordinata di possibili "punti di stop"
+    elif level == 4: # --- LIVELLO RANGE NOMINATI _Lib_# ---
+        all_named_ranges = oDoc.NamedRanges
+        for name in all_named_ranges.getElementNames():
+            if name.startswith("_Lib_"):
+                oNamed = all_named_ranges.getByName(name)
+                try:
+                    # In Calc, si accede alle celle riferite per ottenere l'indirizzo
+                    oCells = oNamed.getReferredCells()
+                    addr = oCells.getRangeAddress()
 
-    lista_cat = []
-    for rs in righe_start:
-        sopra = rs + Dsopra
-        # Trova la prima riga di stop che sia dopo 'sopra'
-        for r_stop in righe_stop:
-            if r_stop > sopra:
-                sotto = r_stop - Dsotto
-                if sotto >= sopra:
-                    lista_cat.append((sopra, sotto, rs)) # rs serve per il colore
-                break
+                    # Filtriamo per il foglio attivo
+                    if addr.Sheet == iSheet:
+                        # (sopra, sotto, riga_testata)
+                        range_nominati_lib.append((addr.StartRow, addr.EndRow, addr.StartRow))
+                except:
+                    # Salta i range che puntano a errori (#REF!) o non sono celle
+                    continue
 
-    # --- 3. Applicazione massiva ---
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
+        if range_nominati_lib:
+            # Ordiniamo i range per riga di inizio per evitare sovrapposizioni
+            coppie_lavoro = sorted(range_nominati_lib, key=lambda x: x[0])
+        else:
+            return
+
+    # --- 2. FASE DI ANALISI (Solo per i livelli 0, 1, 2, 3) ---
+    if level != 4:
+        if not stile: return
+
+        def trova_righe_per_stile(foglio, nome_stile):
+            search = foglio.createSearchDescriptor()
+            search.SearchStyles = True
+            search.SearchString = nome_stile
+            found = foglio.findAll(search)
+            if not found: return []
+            return sorted(list(set([found.getByIndex(i).RangeAddress.StartRow for i in range(found.Count)])))
+
+        righe_start = trova_righe_per_stile(oSheet, stile)
+        righe_stop = []
+        for s in myrange:
+            righe_stop.extend(trova_righe_per_stile(oSheet, s))
+        righe_stop = sorted(list(set(righe_stop)))
+
+        coppie_lavoro = []
+        ultima_riga_gestita = -1
+        for rs in righe_start:
+            if rs <= ultima_riga_gestita: continue
+            sopra = rs + Dsopra
+            for r_stop in righe_stop:
+                if r_stop > sopra:
+                    sotto = r_stop - Dsotto
+                    if sotto >= sopra:
+                        coppie_lavoro.append((sopra, sotto, rs))
+                        ultima_riga_gestita = sotto
+                    break
+
+    if not coppie_lavoro: return
+
+    # --- 3. FASE DI ESECUZIONE (Azione massiva) ---
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    indicator.start("Applicazione raggruppamenti...", 5)
+    step_size = max(1, len(coppie_lavoro) // 5)
+
     colors = LeenoConfig.PASTEL_COLORS
     mappa_descrizioni = {}
     colore_index = 0
 
-    # Disabilitiamo il refresh (se non già fatto dal decoratore)
     oDoc.lockControllers()
+    oDoc.enableAutomaticCalculation(False)
+
     try:
-        for sopra, sotto, r_testa in lista_cat:
-            oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto
-            
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+
+        for idx, (sopra, sotto, r_testa) in enumerate(coppie_lavoro):
+            if idx % step_size == 0:
+                indicator.setValue(idx // step_size + 1)
+
             # Raggruppamento
-            try: oSheet.group(oCellRangeAddr, 1)
-            except: pass
+            oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto
+            try:
+                oSheet.group(oCellRangeAddr, 1)
+            except:
+                pass
+
+            # Visibilità
+            oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = vedi
 
             # Colorazione
             if deve_colorare:
@@ -8680,19 +9062,17 @@ def applica_livelli(level, vedi=True):
                     if descrizione not in mappa_descrizioni:
                         mappa_descrizioni[descrizione] = colors[colore_index % len(colors)]
                         colore_index += 1
-                    
-                    colore = mappa_descrizioni[descrizione]
-                    # Operazione massiva sui range di celle
-                    oSheet.getCellRangeByPosition(0, r_testa, 0, sotto).CellBackColor = colore
-                    oSheet.getCellRangeByPosition(1, r_testa, 30, r_testa).CellBackColor = colore
 
-            # Visibilità (massiva per riga)
-            if not vedi:
-                oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = False
-            else:
-                oSheet.getCellRangeByPosition(0, sopra, 0, sotto).Rows.IsVisible = True
+                    colore_scelto = mappa_descrizioni[descrizione]
+                    oSheet.getCellRangeByPosition(0, r_testa, 0, sotto).CellBackColor = colore_scelto
+                    oSheet.getCellRangeByPosition(0, r_testa, 30, r_testa).CellBackColor = colore_scelto
+
     finally:
+        oDoc.enableAutomaticCalculation(True)
         oDoc.unlockControllers()
+        indicator.end()
+
+
 
 ########################################################################
 def MENU_apri_manuale():
@@ -9002,18 +9382,18 @@ def vista_mdo():
 def Menu_vSintetica():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     flag = True
     # Prendiamo il range delle prime 1000 celle della colonna A
     oRange = oSheet.getCellRangeByPosition(0, 0, 0, 1000)
-    
+
     for i in range(1001):
         oCell = oRange.getCellByPosition(0, i)
         # Se la cella non è vuota e ha lo stile cercato, flag = False
         if oCell.String != "" and oCell.CellStyle == "Comp End Attributo":
             flag = False
             break
-    
+
     # Chiamata alla funzione core
     # NOTA: Qui passiamo alla funzione "vera" senza decoratore se vogliamo la massima velocità
     _vSintetica_core(oDoc, oSheet, flag)
@@ -9023,7 +9403,7 @@ def _vSintetica_core(oDoc, oSheet, flag):
     Logica pura di vSintetica senza decoratori per evitare ricorsione
     """
     struttura_off()
-    
+
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
         lcol, col_start, col_end = 18, 29, 30
@@ -9979,7 +10359,7 @@ def description_upd():
     of.close()
     return
 
-
+\
 
 ########################################################################
 def MENU_grid_switch():
@@ -12294,6 +12674,16 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 
 @LeenoUtils.no_refresh
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    selezione = oDoc.getCurrentSelection()
+    stile = selezione.CellStyle
+    selezione.String = stile
+    # applica_livelli(0, vedi = False)
+    # applica_livelli(1, vedi = False)
+    # applica_livelli(2, vedi = False)
+    # applica_livelli(3, vedi = False)
+    # applica_livelli(4, vedi = False)
     return
 
 

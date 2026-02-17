@@ -359,11 +359,11 @@ def MENU_PrintSettings():
 
 ########################################################################
 
-def setPageStyle():
+def setPageStyle(silent = False):
     '''
     Attribuisce ad ogni foglio il suo specifico stile di pagina.
     '''
-    importa_stili_pagina_non_presenti()
+    importa_stili_pagina_non_presenti(silent=silent)
 
     stili = {
         'cP_Cop': 'Page_Style_COPERTINE',
@@ -637,13 +637,14 @@ def impostazioni_pagina():
 
 ########################################################################
 
-def importa_stili_pagina(overwrite = False):
+def importa_stili_pagina(overwrite = False, silent = False):
     """
     Importa solo gli stili di pagina dal template di LeenO,
     con la possibilità di sovrascrivere quelli esistenti.
 
     Args:
         overwrite (bool): se True sovrascrive gli stili esistenti.
+        silent (bool): se True non avvia l'indicatore di progresso.
     """
     with LeenoUtils.DocumentRefresh(False):
 
@@ -668,8 +669,9 @@ def importa_stili_pagina(overwrite = False):
             DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
 
         # attiva la progressbar
-        indicator = oDoc.getCurrentController().getStatusIndicator()
-        indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
+        if not silent:
+            indicator = oDoc.getCurrentController().getStatusIndicator()
+            indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
         n = 1 
         for el in oDoc.Sheets.ElementNames:
             indicator.Value = n
@@ -678,14 +680,18 @@ def importa_stili_pagina(overwrite = False):
                 oDoc.getSheets().getByName(el))
             oSheet = oDoc.getSheets().getByName(el)
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-        indicator.end()
+        if not silent:
+            indicator.end()
 
 ########################################################################
 
-def importa_stili_pagina_non_presenti():
+def importa_stili_pagina_non_presenti(silent = False):
     """
     Importa solo gli stili di pagina non presenti nel file corrente
     dal template di LeenO.
+
+    Args:
+        silent (bool): se True non avvia l'indicatore di progresso.
     """
     with LeenoUtils.DocumentRefreshContext(False):
         # Percorso del file di template
@@ -738,7 +744,7 @@ def importa_stili_pagina_non_presenti():
             # ~ DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
             pass
         # attiva la progressbar
-        if lun_1 < len(oDoc.StyleFamilies.getByName('PageStyles')):
+        if not silent and lun_1 < len(oDoc.StyleFamilies.getByName('PageStyles')):
             indicator = oDoc.getCurrentController().getStatusIndicator()
             indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
             n = 1 

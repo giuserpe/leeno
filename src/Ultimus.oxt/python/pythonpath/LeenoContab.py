@@ -28,6 +28,72 @@ import LeenoConfig
 cfg = LeenoConfig.Config()
 
 from collections import defaultdict
+from functools import wraps
+
+
+class ProgressIndicatorManager:
+    """
+    Context manager e decorator per gestire il ciclo di vita dell'indicatore di progresso
+    e prevenire l'hijacking da parte di operazioni interne di Calc.
+    """
+    def __init__(self, oDoc, total_steps=4):
+        self.oDoc = oDoc
+        self.indicator = oDoc.getCurrentController().getStatusIndicator()
+        self.total_steps = total_steps
+        self.current_step = 0
+        self.current_message = "In corso..."
+
+    def start(self, message="In corso...", steps=None):
+        """Avvia l'indicatore con un messaggio"""
+        if steps is not None:
+            self.total_steps = steps
+        self.current_message = message
+        self.indicator.start(message, self.total_steps)
+
+    def update(self, step, message=None):
+        """Aggiorna step e messaggio, reclamando l'indicatore"""
+        self.current_step = step
+        if message:
+            self.current_message = message
+            self.indicator.start(self.current_message, self.total_steps)
+        self.indicator.setValue(step)
+
+    def reclaim(self):
+        """Reclama l'indicatore dopo operazioni che potrebbero averlo hijackato"""
+        self.indicator.start(self.current_message, self.total_steps)
+        self.indicator.setValue(self.current_step)
+
+    def end(self):
+        """Termina l'indicatore"""
+        self.indicator.end()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.end()
+        return False
+
+
+def with_progress_reclaim(manager_attr='progress'):
+    """
+    Decorator che reclama automaticamente l'indicatore dopo l'esecuzione della funzione.
+    Utile per funzioni che potrebbero triggerare operazioni interne di Calc.
+
+    Args:
+        manager_attr: nome dell'attributo che contiene il ProgressIndicatorManager
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            # Cerca il manager negli argomenti o nel primo argomento (self/cls)
+            if args and hasattr(args[0], manager_attr):
+                manager = getattr(args[0], manager_attr)
+                manager.reclaim()
+            return result
+        return wrapper
+    return decorator
 
 
 def sbloccaContabilita(oSheet, lrow):
@@ -258,7 +324,7 @@ def mostra_sal(uSal):
 
     return
 
-
+@with_progress_reclaim(manager_attr='progress')
 def MENU_AnnullaAttiContabili():
     '''
     Annulla gli atti dell'ultimo SAL rgistrato.
@@ -277,6 +343,8 @@ def MENU_AnnullaAttiContabili():
     listaSal[-1] + '\n\nVuoi procedere?'
     if Dialogs.YesNoDialog(IconType="warning",Title='*** A T T E N Z I O N E ! ***',
         Text= messaggio) == 1:
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start("Annullamento atti in corso...", 4)
     #elimina libretto
         oSheet = oDoc.Sheets.getByName('CONTABILITA')
         nome_area = "_Lib_" + listaSal[-1]
@@ -296,6 +364,7 @@ def MENU_AnnullaAttiContabili():
         # cancella firme
         firma = PL.seleziona_voce(aRiga)
         oSheet.Rows.removeByIndex(firma[0] , firma[1] - firma[0] + 1)
+        indicator.setValue(1)
 
         # --- CANCELLA TITOLI E FILLER (in ordine inverso per non sballare gli indici) ---
         for i in reversed(range(daRiga, aRiga + 1)):
@@ -317,6 +386,7 @@ def MENU_AnnullaAttiContabili():
         oSheet.getCellRangeByName('Z2').Formula = (
         "=$P$2-SUBTOTAL(9;$P$2:$P$" + str(daRiga - 1) + ")"
         )
+        indicator.setValue(2)
 
         try:
             [oDoc.Sheets.removeByName(el)   #select
@@ -361,6 +431,8 @@ def MENU_AnnullaAttiContabili():
                 #cancella area di stampa
                 LeenoSheetUtils.DelPrintSheetArea()
             oDoc.NamedRanges.removeByName(nome_area)
+        indicator.setValue(3)
+        indicator.end()
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
@@ -695,7 +767,7 @@ def GeneraLibretto(oDoc):
     yS2, xS2 = markerS2[0], markerS2[1]
 
     if nSal == 1:
-        start_nPage = 1
+        start_nPage = 0
     else:
         last_sal_page = oS2.getCellByPosition(yS2 + (nSal - 1), xS2 + 25).Value
         start_nPage = int(last_sal_page) + 1
@@ -738,14 +810,23 @@ def GeneraLibretto(oDoc):
     except: return
     ultimariga = LeenoComputo.circoscriveVoceComputo(oSheet, lrow_end).RangeAddress.EndRow
 
-    # 4. RACCOLTA DATI ECONOMICI (LOGICA ORIGINALE ADATTATA)
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    if indicator: indicator.start("Generazione Libretto delle Misure...", 7)
 
     SAL = []
     SAL_VDS = [] # Nuova lista per voci della sicurezza
+    voci_elaborate = set() # Per evitare duplicazioni durante gli shift di riga
     curr_i = primariga
     current_section_type = None
+
+    # Eseguiamo l'adattamento delle altezze prima del calcolo dei filler
+    # per avere coordinate Y corrette
+    PL.comando('CalculateHard')
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    PL.comando('CalculateHard')
+
+    last_hard_break_y = 0.0
+    if nSal > 1:
+        # Per i SAL successivi al primo, il punto zero è l'inizio della sezione
+        last_hard_break_y = oSheet.getCellByPosition(0, primariga).Position.Y
 
     while curr_i <= ultimariga:
         # Recupera dati voce: (num, art, desc, um, quant, prezzo, importo, sic, mdo)
@@ -753,6 +834,14 @@ def GeneraLibretto(oDoc):
         if res is None:
             curr_i += 1
             continue
+
+        # Salvaguardia contro il doppio conteggio
+        num_voce = str(res[1][0]).strip()
+        if num_voce in voci_elaborate:
+            curr_i = LeenoSheetUtils.prossimaVoce(oSheet, curr_i, saltaCat=True)
+            continue
+        voci_elaborate.add(num_voce)
+
         datiVoce = res[1]
 
         is_vds = 'VDS_' in str(datiVoce[1])
@@ -765,25 +854,42 @@ def GeneraLibretto(oDoc):
                 # 1. Calcolo filler per finire la pagina
                 PL.comando('CalculateHard')
                 h_pagina_std = 25510 # Altezza Libretto
-                y_pos = oSheet.getCellByPosition(2, curr_i - 1).Position.Y
-                ingombro_pag = y_pos % h_pagina_std
-                spazio_da_coprire = h_pagina_std - ingombro_pag - 1500 # margine
+                oCellPrev = oSheet.getCellByPosition(2, curr_i - 1)
+                y_pos = oCellPrev.Position.Y
+                h_prev = oSheet.getRows().getByIndex(curr_i - 1).Height
 
-                if spazio_da_coprire > 500:
+                # Calcola spazio partendo dalla FINE della riga precedente
+                current_y = y_pos + h_prev
+
+                # Calcolo relatvo all'ultimo Hard Break
+                dist_from_break = current_y - last_hard_break_y
+                ingombro_pag = dist_from_break % h_pagina_std
+
+                spazio_da_coprire = h_pagina_std - ingombro_pag - 1500 # margine sicuro (1.5 cm)
+
+                if spazio_da_coprire > 1000 and (ingombro_pag > 3000):
                     num_righe_filler = int(spazio_da_coprire // 500)
                     for _ in range(num_righe_filler):
                         oSheet.getRows().insertByIndex(curr_i, 1)
                         oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
                         oSheet.getCellByPosition(2, curr_i).String = "––––––––––––––––––––––––––––––"
+                        # Forza altezza riga filler
+                        oSheet.getRows().getByIndex(curr_i).Height = 500
                         curr_i += 1
                         ultimariga += 1
 
                 oSheet.getRows().insertByIndex(curr_i, 1)
                 oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
+
+                # Aggiorna il punto zero per la nuova pagina (Hard Break)
+                # Attenzione: la nuova pagina inizia a curr_i (titolo sezione)
+                last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             else:
                 oSheet.getRows().insertByIndex(curr_i, 1)
-
-            # Stile e testo
+                # Forza il salto pagina se è un nuovo SAL
+                if nSal > 1:
+                    oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
+                    last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
             titolo = "SICUREZZA (CALCOLO ANALITICO)" if is_vds else "LAVORI A MISURA"
             oSheet.getCellByPosition(2, curr_i).String = titolo # Colonna C descrizione
@@ -811,33 +917,43 @@ def GeneraLibretto(oDoc):
         # Raggruppamento per datiSAL (Lavori) e datiSAL_VDS (Sicurezza) con N. ord. sequenziale e raggruppamento per Articolo
         def raggruppa_voci(dati_lista):
             # Raggruppa per solo Articolo per garantire l'univocità
-            gruppi = defaultdict(float)
-            gruppo_dati = {} # Mappa articolo -> [desc, um, prezzo]
-            for row in dati_lista:
-                art = str(row[1]).strip()
-                gruppi[art] += float(row[4])
-                if art not in gruppo_dati:
-                    gruppo_dati[art] = [row[2], row[3], float(row[5])]
-            return gruppi, gruppo_dati
+            gruppi_quant = defaultdict(float)
+            gruppi_importo = defaultdict(float)
+            gruppo_dati = {} # Mappa articolo -> [desc, um, prezzo, first_appearance_index]
 
-        gruppi_lavori, dati_lavori = raggruppa_voci(SAL)
-        gruppi_vds, dati_vds = raggruppa_voci(SAL_VDS)
+            for i, row in enumerate(dati_lista):
+                art = str(row[1]).strip()
+                gruppi_quant[art] += float(row[4])
+                gruppi_importo[art] += float(row[6]) # Importo (indice 6)
+                if art not in gruppo_dati:
+                    gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
+
+            # Restituiamo una lista ordinata per Codice Articolo
+            articoli_ordinati = sorted(gruppo_dati.keys())
+
+            res_list = []
+            for art in articoli_ordinati:
+                desc, um, prezzo, _ = gruppo_dati[art]
+                res_list.append([art, desc, um, gruppi_quant[art], prezzo, gruppi_importo[art]])
+
+            return res_list
+
+        raggruppati_lavori = raggruppa_voci(SAL)
+        raggruppati_vds = raggruppa_voci(SAL_VDS)
 
         # Creazione dati finali con numerazione sequenziale da 1
         n_ord_global = 1
 
         datiSAL = []
-        for art in sorted(gruppi_lavori.keys()):
-            desc, um, prezzo = dati_lavori[art]
-            quant = gruppi_lavori[art]
-            datiSAL.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, quant * prezzo])
+        for row in raggruppati_lavori:
+            art, desc, um, quant, prezzo, importo = row
+            datiSAL.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
             n_ord_global += 1
 
         datiSAL_VDS = []
-        for art in sorted(gruppi_vds.keys()):
-            desc, um, prezzo = dati_vds[art]
-            quant = gruppi_vds[art]
-            datiSAL_VDS.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, quant * prezzo])
+        for row in raggruppati_vds:
+            art, desc, um, quant, prezzo, importo = row
+            datiSAL_VDS.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
             n_ord_global += 1
 
         PL.comando('DeletePrintArea')
@@ -853,7 +969,6 @@ def GeneraLibretto(oDoc):
         fineFirme = firme_libretto(inizioFirme)
 
         # 6. CREAZIONE AREA NOMINALE
-        indicator.setValue(2)
         nomearea = f"_Lib_{nSal}"
         area_str = f"$A${primariga + 1}:$AJ${fineFirme + 1}"
         SheetUtils.NominaArea(oDoc, "CONTABILITA", area_str, nomearea)
@@ -877,53 +992,78 @@ def GeneraLibretto(oDoc):
         oPrintRange.EndColumn = 11
         oSheet.setPrintAreas((oPrintRange,))
 
+        # --- BUGFIX: Imposta intestazione di stampa alla riga 2 (indice 2, terza riga) ---
+        oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oTitles.Sheet = oSheet.RangeAddress.Sheet
+        oTitles.StartRow = 2
+        oTitles.EndRow = 2
+        oSheet.setTitleRows(oTitles)
+        oSheet.setPrintTitleRows(True)
+
     except Exception as e:
         DLG.errore(e)
         return
 
-    indicator.setValue(4)
     oSheet.getCellRangeByPosition(0, daRiga, 11, aRiga).CellBackColor = -1
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     SheetUtils.visualizza_PageBreak()
 
-    # --- 9. MARCATURA E CALCOLO PAGINE PROGRESSIVE ---
-    indicator.setValue(6)
-    row_breaks = oSheet.RowPageBreaks
-    nPagFinale = start_nPage
-
-    for i in range(primariga, aRiga + 1):
-        if oSheet.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
-            oSheet.getCellByPosition(19, i).Value = nSal
-            oSheet.getCellByPosition(22, i).String = "#reg"
-            oSheet.getCellByPosition(23, i).Value = nSal
-
-            offset_interno = 0
-            for pb in row_breaks:
-                if primariga < pb.Position <= i:
-                    offset_interno += 1
-            nPagCorrente = start_nPage + offset_interno
-            oSheet.getCellByPosition(20, i).Value = nPagCorrente
-            nPagFinale = nPagCorrente
-
-    # --- 10. RIGA DI RINVIO (Omissis logica inserimento daRiga) ---
+    # --- 9. RIGA DI RINVIO E MARCATURA (Metodo a due passaggi) ---
+    # Inseriamo prima la riga di rinvio per far sì che Calc ricalcoli i salti con essa presente
     oSheet.getRows().insertByIndex(daRiga, 1)
-    oSheet.getCellRangeByPosition(0, daRiga, 36, daRiga).CellStyle = "uuuuu"
-    oSheet.getCellByPosition(2, daRiga).String = f"segue Libretto delle Misure n.{nSal} - {daVoce}÷{aVoce}"
-    oSheet.getCellByPosition(20, daRiga).Value = nPagFinale
-    oSheet.getCellByPosition(19, daRiga).Value = nSal
-    oSheet.getCellByPosition(23, daRiga).Value = nSal
+    aRiga += 1 # Slittamento indici dovuto all'inserimento della riga di rinvio
+    primariga += 1
+    ultimariga += 1
 
-    formula_sum = f"=SUBTOTAL(9;$P${primariga + 2}:$P${ultimariga + 2})"
-    for c in (15, 25):
-        cell = oSheet.getCellByPosition(c, daRiga)
-        cell.Formula, cell.CellStyle = formula_sum, "comp sotto Euro 3_R"
+    # Forza Calc a ricalcolare i salti pagina rinfrescando la vista
+    SheetUtils.visualizza_PageBreak(False)
+    SheetUtils.visualizza_PageBreak(True)
+
+    # Estrai i salti di pagina orizzontali (righe) da Calc
+    breaks = sorted([b.Position for b in oSheet.getRowPageBreaks()])
+
+    nPagFinale = start_nPage # Valore di fallback
+
+    # Ciclo di annotazione su tutto il blocco del SAL (inclusa la nuova riga 'daRiga')
+    for i in range(daRiga, aRiga + 1):
+        # Il numero di pagina è start_nPage + numero di salti che avvengono DOPO daRiga e PRIMA/SULLA riga i
+        num_breaks_between = len([b for b in breaks if daRiga < b <= i])
+        nPagCorrente = start_nPage + num_breaks_between
+
+        if i == daRiga:
+            # Configura riga di rinvio (segue Libretto...)
+            oSheet.getCellRangeByPosition(0, daRiga, 36, daRiga).CellStyle = "uuuuu"
+            oSheet.getCellByPosition(2, daRiga).String = f"segue Libretto delle Misure n.{nSal} - {daVoce}÷{aVoce}"
+            oSheet.getCellByPosition(20, daRiga).Value = nPagCorrente
+            oSheet.getCellByPosition(19, daRiga).Value = nSal
+            oSheet.getCellByPosition(23, daRiga).Value = nSal
+
+            # Subtotale nella riga di rinvio (corretto per lo slittamento riga)
+            formula_sum = f"=SUBTOTAL(9;$P${primariga + 1}:$P${ultimariga + 1})"
+            for c in (15, 25):
+                cell = oSheet.getCellByPosition(c, daRiga)
+                cell.Formula, cell.CellStyle = formula_sum, "comp sotto Euro 3_R"
+            continue
+
+        # Verifica se la riga è una riga di 'voce' (misura) che richiede la marcatura della pagina
+        style = oSheet.getCellByPosition(1, i).CellStyle
+        if style == "comp Art-EP_R":
+             # Annotazione SAL, Registro e Pagina
+             oSheet.getCellByPosition(19, i).Value = nSal
+             oSheet.getCellByPosition(22, i).String = "#reg"
+             oSheet.getCellByPosition(23, i).Value = nSal
+             oSheet.getCellByPosition(20, i).Value = nPagCorrente
+             nPagFinale = nPagCorrente
+
+    # Scrive l'ultimo numero di pagina annotato nella riga gialla di riepilogo (daRiga)
+    oSheet.getCellByPosition(20, daRiga).Value = nPagFinale
+
     # --- 11. AGGIORNAMENTO S2 ---
     oS2.getCellByPosition(yS2 + nSal, xS2 + 1).Value = nSal
     oS2.getCellByPosition(yS2 + nSal, xS2 + 2).Value = date.today().toordinal() - 693594
     oS2.getCellByPosition(yS2 + nSal, xS2 + 24).Value = int(aVoce)
     oS2.getCellByPosition(yS2 + nSal, xS2 + 25).Value = nPagFinale
 
-    if indicator: indicator.end()
     PL._gotoCella(0, daRiga)
 
     # RESTITUZIONE 9 PARAMETRI
@@ -1221,7 +1361,12 @@ def GeneraRegistro(oDoc, dati):
             oRegSheet.getCellByPosition(1, r).String = "––––––––––––––––––––––––––––––"
         riga_riportare += num_righe_filler
 
-    # 9. AREA NOMINALE E STAMPA
+    # 9. OTTIMIZZAZIONE E LAYOUT
+    PL.comando('CalculateHard') # Forza ricalcolo layout
+    LeenoSheetUtils.adattaAltezzaRiga(oRegSheet)
+    SheetUtils.visualizza_PageBreak(True)
+
+    # 10. AREA NOMINALE E STAMPA
     area_rif = f"$A${insRow+2}:$J${riga_riportare+1}"
     nome_area = f"_Reg_{nSal_corrente}"
     SheetUtils.NominaArea(oDoc, "Registro", area_rif, nome_area)
@@ -1955,20 +2100,9 @@ def GeneraSAL(oDoc, dati):
         # RIEMPIMENTO PAGINA (filler) tra sezioni (solo se ne seguono altre)
         is_last_section = (title == sections[-1][0])
         if not is_last_section:
-            PL.comando('CalculateHard')
-            h_pagina_std = 25850
-            y_pos = oSalSheet.getCellByPosition(1, current_row - 1).Position.Y
-            ingombro_pag = y_pos % h_pagina_std
-            spazio_da_coprire = h_pagina_std - ingombro_pag - 2000
+            num_filler = _riempi_pagina(oSalSheet, current_row, col=1, last_col=5, h_pagina=25850)
+            current_row += num_filler
 
-            if spazio_da_coprire > 500:
-                num_righe_filler = int(spazio_da_coprire // 500)
-                if num_righe_filler > 0:
-                    oSalSheet.getRows().insertByIndex(current_row, num_righe_filler)
-                    oSalSheet.getCellRangeByPosition(0, current_row, 5, current_row + num_righe_filler - 1).CellStyle = "Ultimus_centro_bordi_lati"
-                    for i in range(num_righe_filler):
-                        oSalSheet.getCellByPosition(1, current_row + i).String = "––––––––––––––––––––––––––––––"
-                    current_row += num_righe_filler
 
     lastDataRow = current_row - 1
 
@@ -2025,31 +2159,9 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     h_pagina_std = 25850  # Altezza pagina SAL in 1/100 mm
 
     # --- 1. FILLER DINAMICO (riempimento bordi fino a fine pagina) ---
-    # Forza il ricalcolo del layout per ottenere posizioni Y corrette
-    PL.comando('CalculateHard')
-
     currRow = startRow
-    # Inseriamo una riga di stacco
-    oSheet.getRows().insertByIndex(currRow, 1)
-    oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_centro_bordi_lati"
-    currRow += 1
-
-    # Calcolo spazio residuo nella pagina corrente (approccio posizionale)
-    y_pos = oSheet.getCellByPosition(fcol + 1, currRow - 1).Position.Y
-    ingombro_pag = y_pos % h_pagina_std
-    spazio_da_coprire = h_pagina_std - ingombro_pag - 1500  # margine sicurezza
-
-    if spazio_da_coprire > 500:
-        altezza_riga = oSheet.getRows().getByIndex(currRow - 1).Height
-        if altezza_riga <= 0:
-            altezza_riga = 500
-        num_righe_filler = int(spazio_da_coprire // altezza_riga)
-        if num_righe_filler > 0:
-            oSheet.getRows().insertByIndex(currRow, num_righe_filler)
-            oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow + num_righe_filler - 1).CellStyle = "Ultimus_centro_bordi_lati"
-            for i in range(num_righe_filler):
-                oSheet.getCellByPosition(fcol + 1, currRow + i).String = "––––––––––––––––––––––––––––––"
-            currRow += num_righe_filler
+    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)
+    currRow += num_filler
 
     # Riga di chiusura con stile "comp Descr" come nel VBasic originale
     oSheet.getRows().insertByIndex(currRow, 1)
@@ -2057,12 +2169,13 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     currRow += 1
 
     # --- 2. PAGINA DI RIEPILOGO ---
-    # Il riepilogo inizia sulla nuova pagina (dopo il filler)
+    # Il riepilogo inizia sulla nuova pagina
     insRow = currRow  # Salviamo il punto di partenza del riepilogo
-    oSheet.getRows().getByIndex(insRow).IsStartOfNewPage = True
 
     # Inseriamo le righe necessarie per il riepilogo (16 righe)
     oSheet.getRows().insertByIndex(currRow, 16)
+    # Impostiamo il salto pagina DOPO l'inserimento per evitare che venga spostato
+    oSheet.getRows().getByIndex(insRow).IsStartOfNewPage = True
     oSheet.getCellRangeByPosition(fcol, insRow, fcol + 5, insRow + 15).CellStyle = "Ultimus_centro_bordi_lati"
 
     # Titolo
@@ -2093,7 +2206,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Detrazione Manodopera (negativa)
     oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
-    oSheet.getCellByPosition(5, insRow + 8).CellStyle = "Ultimus_"
+    oSheet.getCellByPosition(5, insRow + 8).CellStyle = "ULTIMUS"
     oSheet.getCellByPosition(5, insRow + 8).Value = mdo * -1
 
     # Base Ribasso = somma delle 3 righe precedenti
@@ -2112,7 +2225,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     oSheet.getCellByPosition(5, insRow + 11).Value = sic
 
     oSheet.getCellByPosition(fcol + 1, insRow + 12).String = "Importo per la Manodopera"
-    oSheet.getCellByPosition(5, insRow + 12).CellStyle = "Ultimus_"
+    oSheet.getCellByPosition(5, insRow + 12).CellStyle = "ULTIMUS"
     oSheet.getCellByPosition(5, insRow + 12).Value = mdo
 
     # Totale Parziale Lavori a Misura
@@ -2127,20 +2240,11 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     oSheet.getCellByPosition(5, insRow + 15).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 13})"
 
     currRow = insRow + 16
-    # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
-    PL.comando('CalculateHard')
-    y_pos = oSheet.getCellByPosition(fcol + 1, currRow - 1).Position.Y
-    ingombro_pag = y_pos % h_pagina_std
-    spazio_da_coprire = h_pagina_std - ingombro_pag - 2000
 
-    if spazio_da_coprire > 1000: # Almeno 500 per filler + 500 per riga finale
-        num_righe_filler = int((spazio_da_coprire - 500) // 500)
-        if num_righe_filler > 0:
-            oSheet.getRows().insertByIndex(currRow, num_righe_filler)
-            oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow + num_righe_filler - 1).CellStyle = "Ultimus_centro_bordi_lati"
-            for i in range(num_righe_filler):
-                oSheet.getCellByPosition(fcol + 1, currRow + i).String = "––––––––––––––––––––––––––––––"
-            currRow += num_righe_filler
+    # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
+    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)
+    currRow += num_filler
+
 
     # Riga finale di chiusura (senza tratteggio, con bordi) richiesto dall'utente
     oSheet.getRows().insertByIndex(currRow, 1)
@@ -2153,26 +2257,56 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
 ########################################################################
 
+def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=10):
+    """
+    Riempie lo spazio residuo nella pagina corrente con righe tratteggiate.
+    Usa la stessa logica del Registro: calcolo posizionale Y con cap massimo.
+
+    Ritorna il numero di righe filler effettivamente inserite.
+    """
+    PL.comando('CalculateHard')
+
+    filler = "––––––––––––––––––––––––––––––"
+    y_pos = oSheet.getCellByPosition(col, insertAt - 1).Position.Y
+    h_row = oSheet.getRows().getByIndex(insertAt - 1).Height
+    ingombro_pag = (y_pos + h_row) % h_pagina
+    spazio_da_coprire = h_pagina - ingombro_pag - margine
+
+    if spazio_da_coprire <= 500:
+        return 0
+
+    num_righe = min(max_filler, int(spazio_da_coprire // 500))
+    if num_righe <= 0:
+        return 0
+
+    oSheet.getRows().insertByIndex(insertAt, num_righe)
+    for r in range(insertAt, insertAt + num_righe):
+        oSheet.getCellRangeByPosition(0, r, last_col, r).CellStyle = "Ultimus_centro_bordi_lati"
+        oSheet.getCellByPosition(col, r).String = filler
+
+    return num_righe
+
 
 def insrow():
     """
-    Riempie la pagina calcolando lo spazio residuo.
-    Funziona per CONTABILITA (Libretto) e Registro.
+    Riempie l'ultima pagina con righe tratteggiate.
+    Usa il metodo VBasic collaudato: inserisce righe una alla volta finché
+    Calc non segnala un salto pagina sulla riga appena inserita.
+    Funziona per CONTABILITA (Libretto), Registro e SAL.
     """
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oRanges = oDoc.NamedRanges
 
-    # Mappatura prefissi e altezze pagina (espresse in centesimi di mm)
     nSh = {'CONTABILITA': '_Lib_', 'Registro': '_Reg_', 'SAL': '_SAL_'}
-    hPage = {'CONTABILITA': 25510, 'Registro': 25810, 'SAL': 25850}
 
     prefix = nSh.get(oSheet.Name)
     if not prefix: return
 
     try:
-        # Recupera l'ultimo SAL generato
-        nSal = ultimo_sal()[-1]
+        last_indices = ultimo_sal()
+        if not last_indices: return
+        nSal = last_indices[-1]
         nomearea = prefix + str(nSal)
     except: return
 
@@ -2181,50 +2315,16 @@ def insrow():
     oNamedRange = oRanges.getByName(nomearea).ReferredCells.RangeAddress
     sRow = oNamedRange.StartRow
     iRow = oNamedRange.EndRow
-
-    # Nel Registro vogliamo inserire PRIMA dell'ultima riga (A RIPORTARE)
-    # per far sì che la chiusura finisca a fondo pagina
     insertAt = iRow
 
     col = 2 if oSheet.Name == 'CONTABILITA' else 1
-    filler = "––––––––––––––––––––––––––––––"
-    h_pagina_std = hPage[oSheet.Name]
+    last_col = 9  # Colonne A-J per CONTABILITA
 
-    # 1. Calcolo posizione Y assoluta
-    y_inizio = oSheet.getCellByPosition(col, sRow).Position.Y
-    y_fine = oSheet.getCellByPosition(col, iRow).Position.Y
-    altezza_occupata = y_fine - y_inizio
-
-    # 2. Calcolo ingombro nell'ultima pagina
-    ingombro_ultima_pagina = altezza_occupata % h_pagina_std
-
-    # 3. Calcolo spazio da coprire
-    # Aumentiamo il margine di sicurezza per il Registro a 2000 per gestire meglio i bordi
-    margine = 2000 if oSheet.Name == 'Registro' else 1500
-    spazio_da_coprire = (h_pagina_std - ingombro_ultima_pagina) - margine
-
-    if spazio_da_coprire <= 800: # Evitiamo righe troppo sottili
-        return
-
-    # 4. Determinazione altezza riga e numero righe
-    altezza_riga = oSheet.getRows().getByIndex(insertAt).Height
-    if altezza_riga <= 0: altezza_riga = 500
-
-    num_righe = int(spazio_da_coprire // altezza_riga)
+    num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col)
 
     if num_righe > 0:
-        # Inserimento righe
-        oSheet.getRows().insertByIndex(insertAt, num_righe)
-
-        # Formattazione e riempimento
-        for r in range(insertAt, insertAt + num_righe):
-            # Applica lo stile dei bordi laterali
-            oSheet.getCellRangeByPosition(0, r, 9, r).CellStyle = "Ultimus_centro_bordi_lati"
-            oSheet.getCellByPosition(col, r).String = filler
-
-        # 5. IMPORTANTE: Aggiorna l'area nominale per includere le nuove righe
-        # Se non lo facciamo, l'area di stampa rimane quella vecchia (corta)
-        area_rif = f"$A${sRow+1}:$J${iRow + num_righe + 1}"
+        # Aggiorna l'area nominale per includere le nuove righe
+        area_rif = f"$A${sRow+1}:$AJ${iRow + num_righe + 1}"
         SheetUtils.NominaArea(oDoc, oSheet.Name, area_rif, nomearea)
 
 
@@ -2304,36 +2404,60 @@ def firme_libretto(lrowF=None, oSheet=None):
 
 
 ########################################################################
+@with_progress_reclaim(manager_attr='progress')
 def GeneraAttiContabili():
     oDoc = LeenoUtils.getDocument()
     EseguiContabilita(oDoc)
     return
 
 def EseguiContabilita(oDoc):
-    ''' Coordina la generazione degli atti contabili (Libretto, Registro, SAL) '''
+    ''' Coordina la generazione degli atti contabili con barra di stato visibile '''
+    indicator = oDoc.getCurrentController().getStatusIndicator()
     try:
-        # 1. Genera il Libretto e recupera gli 8 parametri fondamentali
+        # Blocca l'interfaccia per evitare sfarfallio e velocizzare
+        oDoc.lockControllers()
+
+        # Avvia l'indicatore (totale passi: 4)
+        indicator.start("Inizializzazione contabilità...", 4)
+        indicator.setValue(1)
+
+        # 1. Genera il Libretto
         PL.struttura_off()
+        indicator.setText("Generazione Libretto delle Misure...")
         dati = GeneraLibretto(oDoc)
-        if not dati: return
+        if not dati:
+            indicator.end()
+            return
+
+        indicator.setValue(2)
 
         # 2. Passa i dati al Registro
+        indicator.setText("Aggiornamento Registro di Contabilità...")
         GeneraRegistro(oDoc, dati)
+        indicator.setValue(3)
 
         # 3. Passa i dati al SAL
+        indicator.setText("Compilazione Stato Avanzamento Lavori (SAL)...")
         GeneraSAL(oDoc, dati)
+        indicator.setValue(4)
 
+        # Mostra l'ultimo SAL generato
         listaSal = ultimo_sal()
         try:
             nSal = int(listaSal[-1])
             mostra_sal(nSal)
-        except Exception as e:
-            DLG.errore(e)
+        except:
+            pass
 
         Dialogs.Info(Text="Atti contabili (Libretto, Registro e SAL) aggiornati con successo.")
 
     except Exception as e:
-        DLG.errore(e)
+        DLG.errore(f"Errore durante l'esecuzione: {str(e)}")
+    finally:
+        # Molto importante: sblocca sempre i controller e chiudi l'indicatore
+        indicator.end()
+        if oDoc.hasControllersLocked():
+            oDoc.unlockControllers()
 
 
 

@@ -2390,12 +2390,13 @@ def scelta_viste_run():
             pass
 
         if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
-            vSintetica(False)
+            _vSintetica_core(oDoc, oSheet, False)
             vista_configurazione('terra_terra')
         elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
             vista_configurazione('Semplificata')
         elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
-            vSintetica(True)
+            _vSintetica_core(oDoc, oSheet, True)
+
 
 #Elenco Prezzi
     elif oSheet.Name in ('Elenco Prezzi'):
@@ -12675,10 +12676,8 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 @LeenoUtils.no_refresh
 def MENU_debug():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    selezione = oDoc.getCurrentSelection()
-    stile = selezione.CellStyle
-    selezione.String = stile
+
+    
     # applica_livelli(0, vedi = False)
     # applica_livelli(1, vedi = False)
     # applica_livelli(2, vedi = False)

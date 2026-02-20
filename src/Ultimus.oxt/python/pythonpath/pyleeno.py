@@ -365,8 +365,8 @@ def invia_voce():
         dccSheet.getRows().insertByIndex(4, 1)
         range_dest = f'A5:G5'
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
-        ddcDoc.CurrentController.setFirstVisibleRow(3)
-        _gotoCella(0, 4)
+        # ddcDoc.CurrentController.setFirstVisibleRow(3)
+        # _gotoCella(0, 4)
 
     # DLG.chi(1)
 
@@ -374,28 +374,33 @@ def invia_voce():
     if oSheet.Name == 'Elenco Prezzi':
         analisi = getAnalisi(oSheet)
         voce_da_inviare = oSheet.getCellByPosition(0, lrow).String
-        dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
-        # verifica presenza codice in EP
-        cerca_in_elenco_prezzi = SheetUtils.uFindString(voce_da_inviare, dccSheet)
-        if not cerca_in_elenco_prezzi:
+
+        # 1. Focus su DP e verifica presenza codice in EP del DP
+        _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+        dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
+        if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
             recupera_voce(voce_da_inviare)
+
+        # 2. Gestione foglio di destinazione
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-            dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            LeenoUtils.memorizza_posizione()
+            dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
+            pos_dest = LeggiPosizioneCorrente()
+            if pos_dest[1] > SheetUtils.getLastUsedRow(dccSheetDest):
+                Dialogs.Exclamation(Title='ATTENZIONE!',
+                    Text="La posizione di destinazione non è corretta.")
+                return
+
             if cfg.read('Generale', 'nuova_voce') == 'True':
                 MENU_nuova_voce_scelta()
-                lrow = LeggiPosizioneCorrente()
-                dccSheet.getCellByPosition(lrow[0], lrow[1]).String = voce_da_inviare
-                # dccSheet.getCellByPosition(lrow[0], lrow[1]).CellBackColor = COLORE_VERDE_SPUNTA
-                _gotoCella(lrow[0]+1, lrow[1]+1)
-
+                pos_dest = LeggiPosizioneCorrente()
+                dccSheetDest.getCellByPosition(pos_dest[0], pos_dest[1]).String = voce_da_inviare
+                _gotoCella(pos_dest[0] + 1, pos_dest[1] + 1)
             else:
-                lrow = LeggiPosizioneCorrente()[1]
-                LeenoComputo.cambia_articolo(dccSheet, lrow, voce_da_inviare)
-                lrow = LeggiPosizioneCorrente()[1]
-                # dccSheet.getCellByPosition(1, lrow).CellBackColor = COLORE_VERDE_SPUNTA
-            LeenoUtils.ripristina_posizione()
+                row_dest = LeggiPosizioneCorrente()[1]
+                LeenoComputo.cambia_articolo(dccSheetDest, row_dest, voce_da_inviare)
+        elif nSheetDCC == 'Elenco Prezzi':
+            ddcDoc.CurrentController.setFirstVisibleRow(3)
+            _gotoCella(1, 4)
         return
 
     # partenza
@@ -11544,7 +11549,11 @@ def MENU_hl():
     lcol = LeggiPosizioneCorrente()[0]
     lrow= LeggiPosizioneCorrente()[1]
 
-    if oSheet.getCellByPosition(lcol, lrow).Type.value == 'EMPTY':
+    # Ottieni la stringa nella cella corrente
+    cell_string = oSheet.getCellByPosition(lcol, lrow).String
+
+    # Se la stringa non rappresenta un indirizzo (manca : e @), sovrascrivi con incolla
+    if ':' not in cell_string and '@' not in cell_string:
         comando("Paste")
 
     # Itera sulle righe del foglio, partendo dall'ultima e andando verso l'alto

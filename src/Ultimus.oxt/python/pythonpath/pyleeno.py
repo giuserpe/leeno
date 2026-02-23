@@ -347,13 +347,15 @@ def invia_voce():
                 analisi.append(oSheet.getCellByPosition(0, y).String)
         return (analisi)
 
-    def recupera_voce (codice_da_cercare):
+    def recupera_voce (codice_da_cercare, lrow_src=None):
         '''
         recupra la voce di prezzo dal foglio di partenza
         e la inserisce nel foglio di destinazione
         '''
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        if SheetUtils.getLastUsedRow(oDoc.getSheets().getByName('COMPUTO')) > 20:
+        if lrow_src is not None:
+            row = lrow_src
+        elif SheetUtils.getLastUsedRow(oDoc.getSheets().getByName('COMPUTO')) > 20:
             row = SheetUtils.uFindString(codice_da_cercare, oSheet)[1]
         else:
             row = LeggiPosizioneCorrente()[1]
@@ -379,7 +381,7 @@ def invia_voce():
         _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
         if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
-            recupera_voce(voce_da_inviare)
+            recupera_voce(voce_da_inviare, lrow_src=lrow)
 
         # 2. Gestione foglio di destinazione
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):

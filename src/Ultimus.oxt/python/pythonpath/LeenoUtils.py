@@ -85,6 +85,43 @@ def getDocument():
     return oDoc
 
 
+def isPasswordProtected(oDoc=None):
+    '''
+    Verifica se il documento ha protezioni attive (fogli o struttura).
+    Ignora la password di apertura del file perché gestita da LibreOffice.
+    '''
+    if oDoc is None:
+        oDoc = getDocument()
+
+    if oDoc is None:
+        return False
+
+    try:
+        # 1. Verifica la protezione della struttura del documento
+        if hasattr(oDoc, "isProtected") and oDoc.isProtected():
+            return True
+
+        # 2. Verifica se almeno un foglio è protetto
+        if hasattr(oDoc, "getSheets"):
+            sheets = oDoc.getSheets()
+            for i in range(sheets.getCount()):
+                if sheets.getByIndex(i).isProtected():
+                    return True
+
+        # 3. Verifica se il documento è in sola lettura (spesso dovuto a opzioni di condivisione)
+        # Note: oDoc.isReadOnly() non è sempre affidabile su tutti gli oggetti doc
+        # ma possiamo controllare gli Args
+        args = oDoc.getArgs()
+        for arg in args:
+            if arg.Name == "ReadOnly" and arg.Value:
+                return True
+
+    except Exception:
+        pass
+
+    return False
+
+
 
 def getServiceManager():
     '''

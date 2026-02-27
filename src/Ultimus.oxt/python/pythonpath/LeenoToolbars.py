@@ -21,37 +21,91 @@ _TOOLBAR_NAMES = (
 )
 
 
+# def Vedi(arg=None):
+#     '''
+#     accende tutte le toolbars (se non sono richieste quelle contestuali)
+#     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+
+#     if sys.platform == 'linux' or sys.platform == 'darwin':
+#         var = 'HOME'
+#     else:
+#         var = 'HOMEPATH'
+#     try:
+#         if 'giuserpe' in os.getlogin():
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 1)
+#         else:
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 0)
+#     except:
+#         pass
+#     try:
+#         oLayout = oDoc.CurrentController.getFrame().LayoutManager
+
+#         if Config().read('Generale', 'toolbar_contestuali') == '0':
+#             # toolbar sempre visibili
+#             AllOn()
+#         else:
+#             # toolbar contestualizzate
+#             AllOff()
+#         Ordina()
+#         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
+#         nSheet = oDoc.CurrentController.ActiveSheet.Name
+
+#         if nSheet == 'Elenco Prezzi':
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO', 1)
+#         elif nSheet == 'Analisi di Prezzo':
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI', 1)
+#         elif nSheet in ('COMPUTO', 'VARIANTE'):
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+#         elif nSheet == 'CONTABILITA':
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
+#             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+
+#     except Exception:
+#         pass
+#     PL.dp()
+#     # PL.fissa()
+
+import time
+import LeenoDialogs as DLG
 def Vedi(arg=None):
     '''
     accende tutte le toolbars (se non sono richieste quelle contestuali)
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
     '''
+    import time
+    t0 = time.time()
+
     oDoc = LeenoUtils.getDocument()
 
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        var = 'HOME'
-    else:
-        var = 'HOMEPATH'
     try:
-        if 'giuserpe' in os.getlogin():
-            On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 1)
-        else:
-            On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 0)
+        user = os.environ.get('USERNAME') or os.environ.get('USER') or ''
+        On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV',
+           1 if 'giuserpe' in user else 0)
     except:
         pass
+    # DLG.chi(f"checkpoint 1 (user/toolbar DEV): {time.time()-t0:.3f}s")
+
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
+        # DLG.chi(f"checkpoint 2 (LayoutManager): {time.time()-t0:.3f}s")
 
         if Config().read('Generale', 'toolbar_contestuali') == '0':
-            # toolbar sempre visibili
             AllOn()
         else:
-            # toolbar contestualizzate
             AllOff()
-        Ordina()
-        oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
-        nSheet = oDoc.CurrentController.ActiveSheet.Name
+        # DLG.chi(f"checkpoint 3 (dopo AllOn/AllOff): {time.time()-t0:.3f}s")
 
+        Ordina()
+        # DLG.chi(f"checkpoint 4 (dopo Ordina): {time.time()-t0:.3f}s")
+
+        oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
+        # DLG.chi(f"checkpoint 5 (dopo showElement): {time.time()-t0:.3f}s")
+
+        nSheet = oDoc.CurrentController.ActiveSheet.Name
         if nSheet == 'Elenco Prezzi':
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO', 1)
         elif nSheet == 'Analisi di Prezzo':
@@ -63,11 +117,15 @@ def Vedi(arg=None):
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 1)
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
+        # DLG.chi(f"checkpoint 6 (dopo toolbar sheet): {time.time()-t0:.3f}s")
 
-    except Exception:
-        pass
+    except Exception as e:
+        DLG.chi(f"Eccezione nel blocco toolbar: {e} — a {time.time()-t0:.3f}s")
+
+    # DLG.chi(f"checkpoint 7 (prima di PL.dp): {time.time()-t0:.3f}s")
     PL.dp()
-    # PL.fissa()
+    # DLG.chi(f"checkpoint 8 (fine Vedi): {time.time()-t0:.3f}s")
+
 
 
 def On(toolbarURL, flag):

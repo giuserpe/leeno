@@ -9,6 +9,15 @@ import LeenoBasicBridge
 import pyleeno as PL
 import LeenoDialogs as DLG
 
+
+def avvisoPassword():
+    '''
+    Mostra un avviso se il documento è protetto da password.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    if LeenoUtils.isPasswordProtected(oDoc):
+        DLG.MsgBox("ATTENZIONE: Questo documento è protetto da password.", "Sicurezza")
+
 def macro_SHEET(nSheet, nEvento, miamacro):
     '''
     Attribuisce specifica macro ad evento di un foglio
@@ -119,6 +128,19 @@ def assegna():
         macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
         # ~OnLoadFinished
         macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        
+        # Aggiunge l'avviso password all'apertura
+        # NOTA: OnLoad può essere sovrascritto, verifichiamo se possiamo accodare o usare un altro evento
+        # Se OnLoad è già usato da Basic, potremmo dover chiamare il nostro avviso da lì 
+        # o usare OnFocus se vogliamo che appaia ogni volta che prende il focus (forse troppo)
+        # Proviamo ad assegnare avvisoPassword
+        try:
+            # macro_DOC ("OnLoad", macro_URL("LeenoEvents", "avvisoPassword"))
+            # Per non sovrascrivere il controllo esistente, chiamiamo la funzione direttamente 
+            # se assegna() viene chiamata all'apertura.
+            avvisoPassword()
+        except:
+            pass
         macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
         macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
         macro_DOC ("OnSave", macro_URL("LeenoBasicBridge", "bak0"))

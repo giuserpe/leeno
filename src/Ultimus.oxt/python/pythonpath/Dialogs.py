@@ -2473,6 +2473,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
                   '*.xpwe': 'Primus(*.xpwe)',
                   '*.xml': 'XML(*.xml)',
                   '*.svg': 'SVG(*.svg)',
+                  '*.dcf': 'DCF(*.dcf)',
                   '*.dat': 'dat(*.dat)', }
     oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))

@@ -12741,7 +12741,7 @@ def MENU_debug():
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = (MENU_debug, MENU_importa_da_dcf)
+g_exportedScripts = (MENU_debug,)
 ########################################################################
 ########################################################################
 # ... here is the python script code

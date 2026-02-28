@@ -21,8 +21,6 @@
 # from scriptforge import CreateScriptService
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
-import xml.etree.ElementTree as ET
-
 from collections import OrderedDict
 # from com.sun.star.task import XStatusIndicator
 
@@ -3487,144 +3485,146 @@ def XPWE_out_run(elaborato, out_file):
     # Analisi di prezzo
     if indicator:
         indicator.Value = 5
-    lista_AP = list(set(lista_AP))
-    oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-    k = n + 1
-    for el in lista_AP:
-        try:
-            m = SheetUtils.uFindStringCol(el, 0, oSheet)
-            EPItem = SubElement(PweElencoPrezzi, 'EPItem')
-            EPItem.set('ID', str(k))
-            TipoEP = SubElement(EPItem, 'TipoEP')
-            TipoEP.text = '0'
-            Tariffa = SubElement(EPItem, 'Tariffa')
-            id_tar = str(k)
-            Tariffa.text = oSheet.getCellByPosition(0, m).String
-            diz_ep[oSheet.getCellByPosition(0, m).String] = id_tar
-            Articolo = SubElement(EPItem, 'Articolo')
-            Articolo.text = ''
-            DesRidotta = SubElement(EPItem, 'DesRidotta')
-            DesEstesa = SubElement(EPItem, 'DesEstesa')
-            DesEstesa.text = oSheet.getCellByPosition(1, m).String
-            if len(DesEstesa.text) > 120:
-                DesRidotta.text = DesEstesa.text[:
-                                                    60] + ' ... ' + DesEstesa.text[
-                                                        -60:]
-            else:
-                DesRidotta.text = DesEstesa.text
-            DesBreve = SubElement(EPItem, 'DesBreve')
-            if len(DesEstesa.text) > 60:
-                DesBreve.text = DesEstesa.text[:
-                                                30] + ' ... ' + DesEstesa.text[
-                                                    -30:]
-            else:
-                DesBreve.text = DesEstesa.text
-            UnMisura = SubElement(EPItem, 'UnMisura')
-            UnMisura.text = oSheet.getCellByPosition(2, m).String
-            Prezzo1 = SubElement(EPItem, 'Prezzo1')
-            Prezzo1.text = str(oSheet.getCellByPosition(6, m).Value)
-            Prezzo2 = SubElement(EPItem, 'Prezzo2')
-            Prezzo2.text = '0'
-            Prezzo3 = SubElement(EPItem, 'Prezzo3')
-            Prezzo3.text = '0'
-            Prezzo4 = SubElement(EPItem, 'Prezzo4')
-            Prezzo4.text = '0'
-            Prezzo5 = SubElement(EPItem, 'Prezzo5')
-            Prezzo5.text = '0'
-            IDSpCap = SubElement(EPItem, 'IDSpCap')
-            IDSpCap.text = '0'
-            IDCap = SubElement(EPItem, 'IDCap')
-            IDCap.text = '0'
-            IDSbCap = SubElement(EPItem, 'IDSbCap')
-            IDSbCap.text = '0'
-            Flags = SubElement(EPItem, 'Flags')
-            Flags.text = '131072'
-            Data = SubElement(EPItem, 'Data')
-            Data.text = '30/12/1899'
-            AdrInternet = SubElement(EPItem, 'AdrInternet')
-            AdrInternet.text = ''
-            PweEPAnalisi = SubElement(EPItem, 'PweEPAnalisi')
-            PweEPAR = SubElement(PweEPAnalisi, 'PweEPAR')
-            nEPARItem = 2
-            for x in range(m, m + 100):
-                if oSheet.getCellByPosition(
-                        0, x).CellStyle == 'An-lavoraz-desc':
-                    EPARItem = SubElement(PweEPAR, 'EPARItem')
-                    EPARItem.set('ID', str(nEPARItem))
-                    nEPARItem += 1
-                    Tipo = SubElement(EPARItem, 'Tipo')
-                    Tipo.text = '0'
-                    IDEP = SubElement(EPARItem, 'IDEP')
-                    IDEP.text = diz_ep.get(
-                        oSheet.getCellByPosition(0, x).String)
-                    if IDEP.text is None:
-                        IDEP.text = '-2'
-                    Descrizione = SubElement(EPARItem, 'Descrizione')
-                    if '=IF(' in oSheet.getCellByPosition(1, x).String:
-                        Descrizione.text = ''
-                    else:
-                        Descrizione.text = oSheet.getCellByPosition(
-                            1, x).String
-                    Misura = SubElement(EPARItem, 'Misura')
-                    Misura.text = ''
-                    Qt = SubElement(EPARItem, 'Qt')
-                    Qt.text = ''
-                    Prezzo = SubElement(EPARItem, 'Prezzo')
-                    Prezzo.text = ''
-                    FieldCTL = SubElement(EPARItem, 'FieldCTL')
-                    FieldCTL.text = '0'
-                if(oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-Cod-sx' and
-                    oSheet.getCellByPosition(1, x).String != ''):
-                    EPARItem = SubElement(PweEPAR, 'EPARItem')
-                    EPARItem.set('ID', str(nEPARItem))
-                    nEPARItem += 1
-                    Tipo = SubElement(EPARItem, 'Tipo')
-                    Tipo.text = '1'
-                    IDEP = SubElement(EPARItem, 'IDEP')
-                    IDEP.text = diz_ep.get(
-                        oSheet.getCellByPosition(0, x).String)
-                    if IDEP.text is None:
-                        IDEP.text = '-2'
-                    Descrizione = SubElement(EPARItem, 'Descrizione')
-                    if '=IF(' in oSheet.getCellByPosition(1, x).String:
-                        Descrizione.text = ''
-                    else:
-                        Descrizione.text = oSheet.getCellByPosition(
-                            1, x).String
-                    Misura = SubElement(EPARItem, 'Misura')
-                    Misura.text = oSheet.getCellByPosition(2, x).String
-                    Qt = SubElement(EPARItem, 'Qt')
-                    Qt.text = oSheet.getCellByPosition(3,
-                                                        x).String.replace(
-                                                            ',', '.')
-                    Prezzo = SubElement(EPARItem, 'Prezzo')
-                    Prezzo.text = str(
-                        oSheet.getCellByPosition(4, x).Value).replace(
-                            ',', '.')
-                    FieldCTL = SubElement(EPARItem, 'FieldCTL')
-                    FieldCTL.text = '0'
-                elif oSheet.getCellByPosition(
-                        0, x).CellStyle == 'An-sfondo-basso Att End':
-                    break
+    try:
+        lista_AP = list(set(lista_AP))
+        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        k = n + 1
+        for el in lista_AP:
+            try:
+                m = SheetUtils.uFindStringCol(el, 0, oSheet)
+                EPItem = SubElement(PweElencoPrezzi, 'EPItem')
+                EPItem.set('ID', str(k))
+                TipoEP = SubElement(EPItem, 'TipoEP')
+                TipoEP.text = '0'
+                Tariffa = SubElement(EPItem, 'Tariffa')
+                id_tar = str(k)
+                Tariffa.text = oSheet.getCellByPosition(0, m).String
+                diz_ep[oSheet.getCellByPosition(0, m).String] = id_tar
+                Articolo = SubElement(EPItem, 'Articolo')
+                Articolo.text = ''
+                DesRidotta = SubElement(EPItem, 'DesRidotta')
+                DesEstesa = SubElement(EPItem, 'DesEstesa')
+                DesEstesa.text = oSheet.getCellByPosition(1, m).String
+                if len(DesEstesa.text) > 120:
+                    DesRidotta.text = DesEstesa.text[:
+                                                        60] + ' ... ' + DesEstesa.text[
+                                                            -60:]
+                else:
+                    DesRidotta.text = DesEstesa.text
+                DesBreve = SubElement(EPItem, 'DesBreve')
+                if len(DesEstesa.text) > 60:
+                    DesBreve.text = DesEstesa.text[:
+                                                    30] + ' ... ' + DesEstesa.text[
+                                                        -30:]
+                else:
+                    DesBreve.text = DesEstesa.text
+                UnMisura = SubElement(EPItem, 'UnMisura')
+                UnMisura.text = oSheet.getCellByPosition(2, m).String
+                Prezzo1 = SubElement(EPItem, 'Prezzo1')
+                Prezzo1.text = str(oSheet.getCellByPosition(6, m).Value)
+                Prezzo2 = SubElement(EPItem, 'Prezzo2')
+                Prezzo2.text = '0'
+                Prezzo3 = SubElement(EPItem, 'Prezzo3')
+                Prezzo3.text = '0'
+                Prezzo4 = SubElement(EPItem, 'Prezzo4')
+                Prezzo4.text = '0'
+                Prezzo5 = SubElement(EPItem, 'Prezzo5')
+                Prezzo5.text = '0'
+                IDSpCap = SubElement(EPItem, 'IDSpCap')
+                IDSpCap.text = '0'
+                IDCap = SubElement(EPItem, 'IDCap')
+                IDCap.text = '0'
+                IDSbCap = SubElement(EPItem, 'IDSbCap')
+                IDSbCap.text = '0'
+                Flags = SubElement(EPItem, 'Flags')
+                Flags.text = '131072'
+                Data = SubElement(EPItem, 'Data')
+                Data.text = '30/12/1899'
+                AdrInternet = SubElement(EPItem, 'AdrInternet')
+                AdrInternet.text = ''
+                PweEPAnalisi = SubElement(EPItem, 'PweEPAnalisi')
+                PweEPAR = SubElement(PweEPAnalisi, 'PweEPAR')
+                nEPARItem = 2
+                for x in range(m, m + 100):
+                    if oSheet.getCellByPosition(
+                            0, x).CellStyle == 'An-lavoraz-desc':
+                        EPARItem = SubElement(PweEPAR, 'EPARItem')
+                        EPARItem.set('ID', str(nEPARItem))
+                        nEPARItem += 1
+                        Tipo = SubElement(EPARItem, 'Tipo')
+                        Tipo.text = '0'
+                        IDEP = SubElement(EPARItem, 'IDEP')
+                        IDEP.text = diz_ep.get(
+                            oSheet.getCellByPosition(0, x).String)
+                        if IDEP.text is None:
+                            IDEP.text = '-2'
+                        Descrizione = SubElement(EPARItem, 'Descrizione')
+                        if '=IF(' in oSheet.getCellByPosition(1, x).String:
+                            Descrizione.text = ''
+                        else:
+                            Descrizione.text = oSheet.getCellByPosition(
+                                1, x).String
+                        Misura = SubElement(EPARItem, 'Misura')
+                        Misura.text = ''
+                        Qt = SubElement(EPARItem, 'Qt')
+                        Qt.text = ''
+                        Prezzo = SubElement(EPARItem, 'Prezzo')
+                        Prezzo.text = ''
+                        FieldCTL = SubElement(EPARItem, 'FieldCTL')
+                        FieldCTL.text = '0'
+                    if(oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-Cod-sx' and
+                        oSheet.getCellByPosition(1, x).String != ''):
+                        EPARItem = SubElement(PweEPAR, 'EPARItem')
+                        EPARItem.set('ID', str(nEPARItem))
+                        nEPARItem += 1
+                        Tipo = SubElement(EPARItem, 'Tipo')
+                        Tipo.text = '1'
+                        IDEP = SubElement(EPARItem, 'IDEP')
+                        IDEP.text = diz_ep.get(
+                            oSheet.getCellByPosition(0, x).String)
+                        if IDEP.text is None:
+                            IDEP.text = '-2'
+                        Descrizione = SubElement(EPARItem, 'Descrizione')
+                        if '=IF(' in oSheet.getCellByPosition(1, x).String:
+                            Descrizione.text = ''
+                        else:
+                            Descrizione.text = oSheet.getCellByPosition(
+                                1, x).String
+                        Misura = SubElement(EPARItem, 'Misura')
+                        Misura.text = oSheet.getCellByPosition(2, x).String
+                        Qt = SubElement(EPARItem, 'Qt')
+                        Qt.text = oSheet.getCellByPosition(3,
+                                                            x).String.replace(
+                                                                ',', '.')
+                        Prezzo = SubElement(EPARItem, 'Prezzo')
+                        Prezzo.text = str(
+                            oSheet.getCellByPosition(4, x).Value).replace(
+                                ',', '.')
+                        FieldCTL = SubElement(EPARItem, 'FieldCTL')
+                        FieldCTL.text = '0'
+                    elif oSheet.getCellByPosition(
+                            0, x).CellStyle == 'An-sfondo-basso Att End':
+                        break
 
-            IncSIC = SubElement(EPItem, 'IncSIC')
-            if oSheet.getCellByPosition(10, m).Value == 0.0:
-                IncSIC.text = ''
-            else:
-                IncSIC.text = str(oSheet.getCellByPosition(10, m).Value)
+                IncSIC = SubElement(EPItem, 'IncSIC')
+                if oSheet.getCellByPosition(10, m).Value == 0.0:
+                    IncSIC.text = ''
+                else:
+                    IncSIC.text = str(oSheet.getCellByPosition(10, m).Value)
 
-            IncMDO = SubElement(EPItem, 'IncMDO')
-            # oDoc.CurrentController.select(oSheet.getCellByPosition(8, m))
-            # DLG.chi(oSheet.getCellByPosition(8, m).AbsoluteName)
-            if oSheet.getCellByPosition(8, m).Value == 0.0:
-                IncMDO.text = ''
-            else:
-                IncMDO.text = str(
-                    oSheet.getCellByPosition(8, m).Value * 100)
-            k += 1
-        except Exception:
-            pass
-
+                IncMDO = SubElement(EPItem, 'IncMDO')
+                # oDoc.CurrentController.select(oSheet.getCellByPosition(8, m))
+                # DLG.chi(oSheet.getCellByPosition(8, m).AbsoluteName)
+                if oSheet.getCellByPosition(8, m).Value == 0.0:
+                    IncMDO.text = ''
+                else:
+                    IncMDO.text = str(
+                        oSheet.getCellByPosition(8, m).Value * 100)
+                k += 1
+            except Exception:
+                pass
+    except Exception:
+        pass
     # if elaborato == 'Elenco_Prezzi':
     #     pass
     # else:
@@ -3637,7 +3637,6 @@ def XPWE_out_run(elaborato, out_file):
     if indicator:
         indicator.Value = 6
         indicator.start(f'Esportazione di {elaborato} in corso...', LeenoSheetUtils.cercaUltimaVoce(oSheet))  # max progresso
-
     for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet)):
         if indicator:
             indicator.Value = n
@@ -12704,44 +12703,21 @@ def somma_per_colore_nella_colonna():
 
     Dialogs.Info(Title="Risultato Calcolo", Text=messaggio)
 
-####################################################################################
 
-def check_ods(percorso):
-    try:
-        with zipfile.ZipFile(percorso, 'r') as z:
-            # Verifica integrità archivio
-            bad = z.testzip()
-            if bad:
-                print(f"File corrotto: {bad}")
-                return
 
-            # Parsing XML di content.xml
-            with z.open("content.xml") as f:
-                try:
-                    ET.parse(f)
-                    print("content.xml OK")
-                except ET.ParseError as e:
-                    print(f"XML corrotto: {e}")
+from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
+# @measure_time(show_popup=True)
 
-            # Lista tutti i file nell'archivio
-            print("\nFile nell'archivio:")
-            for info in z.infolist():
-                print(f"  {info.filename} ({info.file_size} bytes)")
 
-    except zipfile.BadZipFile:
-        DLG.chi("Non è un archivio ZIP valido!")
-    except Exception as e:
-        DLG.chi(f"Errore: {e}")
 
 import LeenoTheme
 
 def MENU_debug():
     LeenoTheme.trova_colore_cella()
-    # check_ods(r"D:\2023_01_PNRR-VIA_LUCREZIO\@DL\SAL\2023_01_PNRR-VIA_LUCREZIO_GE_ADEGUAMENTO.ods")
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = (MENU_debug,)
+# g_exportedScripts = (MENU_debug)
 ########################################################################
 ########################################################################
 # ... here is the python script code

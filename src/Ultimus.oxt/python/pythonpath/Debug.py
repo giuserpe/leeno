@@ -109,7 +109,7 @@ def force_restart():
         local_context = uno.getComponentContext()
         smgr = local_context.ServiceManager
         desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", local_context)
-        
+
         # terminate() restituisce True se la chiusura è stata accettata
         chiuso = desktop.terminate()
         return chiuso
@@ -141,7 +141,7 @@ def aggiorna_configurazione_leeno():
     # 3. Trova Addons.xcu nella cache
     config_base = os.path.join(user_config,
         "uno_packages/cache/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend")
-    
+
     if not os.path.exists(config_base):
         Dialogs.Info(Title="Errore", Text=f"Directory di configurazione non trovata:\n{config_base}")
         return False
@@ -167,10 +167,10 @@ def aggiorna_configurazione_leeno():
         with open(source_addons, 'r', encoding='utf-8') as f:
             content = f.read()
         content = content.replace('%origin%', leeno_path)
-        
+
         with open(target_file, 'w', encoding='utf-8') as f:
             f.write(content)
-        
+
         risultato_addons = "✓ Addons.xcu aggiornato"
     except Exception as e:
         Dialogs.Info(Title="Errore", Text=f"Errore nell'aggiornamento di Addons.xcu:\n{str(e)}")
@@ -613,3 +613,32 @@ def pulisci_log_performance():
     except Exception as e:
         import LeenoDialogs as DLG
         DLG.chi(f"Errore nell'eliminazione del log: {e}")
+
+
+
+def check_ods(percorso):
+    try:
+        with zipfile.ZipFile(percorso, 'r') as z:
+            # Verifica integrità archivio
+            bad = z.testzip()
+            if bad:
+                print(f"File corrotto: {bad}")
+                return
+
+            # Parsing XML di content.xml
+            with z.open("content.xml") as f:
+                try:
+                    Element.parse(f)
+                    print("content.xml OK")
+                except ET.ParseError as e:
+                    print(f"XML corrotto: {e}")
+
+            # Lista tutti i file nell'archivio
+            print("\nFile nell'archivio:")
+            for info in z.infolist():
+                print(f"  {info.filename} ({info.file_size} bytes)")
+
+    except zipfile.BadZipFile:
+        DLG.chi("Non è un archivio ZIP valido!")
+    except Exception as e:
+        DLG.chi(f"Errore: {e}")

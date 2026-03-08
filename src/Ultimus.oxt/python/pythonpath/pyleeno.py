@@ -186,46 +186,46 @@ def MENU_nuovo_usobollo():
 
 
 ########################################################################
-@LeenoUtils.no_refresh
-def invia_voce_interno():
-    '''
-    Invia le voci di Elenco Prezzi verso uno degli altri elaborati.
-    Richiede comunque la scelta del DP
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+# @LeenoUtils.no_refresh
+# def invia_voce_interno():
+#     '''
+#     Invia le voci di Elenco Prezzi verso uno degli altri elaborati.
+#     Richiede comunque la scelta del DP
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
 
-    elenco = seleziona()
-    codici = [oSheet.getCellByPosition(0, el).String for el in elenco]
-    meta = oSheet.getCellRangeByName('C2').String
+#     elenco = seleziona()
+#     codici = [oSheet.getCellByPosition(0, el).String for el in elenco]
+#     meta = oSheet.getCellRangeByName('C2').String
 
-    if meta == 'VARIANTE':
-        genera_variante()
-    elif meta == 'CONTABILITA':
-        LeenoContab.attiva_contabilita()
-        # ins_voce_contab()
-    elif meta == 'COMPUTO':
-        GotoSheet(meta)
-    else:
-        Dialogs.NotifyDialog(IconType="warning",Title='AVVISO!',
-    Text='''Per procedere devi prima scegliere,
-dalla cella "C2", l'elaborato a cui
-inviare le voci di prezzo selezionate.
+#     if meta == 'VARIANTE':
+#         genera_variante()
+#     elif meta == 'CONTABILITA':
+#         LeenoContab.attiva_contabilita()
+#         # ins_voce_contab()
+#     elif meta == 'COMPUTO':
+#         GotoSheet(meta)
+#     else:
+#         Dialogs.NotifyDialog(IconType="warning",Title='AVVISO!',
+#     Text='''Per procedere devi prima scegliere,
+# dalla cella "C2", l'elaborato a cui
+# inviare le voci di prezzo selezionate.
 
-Se l'elaborato è già esistente,
-assicurati di aver scelto anche
-la posizione di destinazione.''')
-        _gotoCella(2, 1)
-        return
-    oSheet = oDoc.getSheets().getByName(meta)
-    for el in codici:
-        if oSheet.Name == 'CONTABILITA':
-            GotoSheet(meta)
-            ins_voce_contab(cod=el)
-        else:
-            LeenoComputo.ins_voce_computo(cod=el)
-        lrow = SheetUtils.getLastUsedRow(oSheet)
-    return
+# Se l'elaborato è già esistente,
+# assicurati di aver scelto anche
+# la posizione di destinazione.''')
+#         _gotoCella(2, 1)
+#         return
+#     oSheet = oDoc.getSheets().getByName(meta)
+#     for el in codici:
+#         if oSheet.Name == 'CONTABILITA':
+#             GotoSheet(meta)
+#             ins_voce_contab(cod=el)
+#         else:
+#             LeenoComputo.ins_voce_computo(cod=el)
+#         lrow = SheetUtils.getLastUsedRow(oSheet)
+#     return
 
 @with_undo('Invia voce a Variante')
 @LeenoUtils.no_refresh
@@ -292,7 +292,9 @@ def MENU_invia_voce():
     cfg.write('Generale', 'pesca_auto', stato)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # Non adattare l'altezza quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     LeenoUtils.DocumentRefresh(True)
 
 
@@ -504,7 +506,13 @@ def invia_voce(ctrl_override=False):
             if not cerca_in_elenco_prezzi:
                 recupera_voce(art)
 
-            Menu_adattaAltezzaRiga()
+            # Non adattare l'altezza delle righe quando il foglio di arrivo
+            # è COMPUTO, VARIANTE o CONTABILITA
+            # Menu_adattaAltezzaRiga()
+            # riga = dccSheet.getRows().getByIndex(lrow)
+            # if not riga.OptimalHeight:
+
+            #     riga.OptimalHeight = True
 
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -4955,8 +4963,7 @@ def MENU_elimina_righe():
     oSheet = oDoc.CurrentController.ActiveSheet
 
     if oSheet.Name == 'Elenco Prezzi':
-        Dialogs.Exclamation(Title = 'Avviso.',
-        Text="'Per eliminare voci dall'Elenco Prezzi usa il comando nativo 'Elimina righe'.")
+        delete('R')
         return
 
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
@@ -11964,9 +11971,11 @@ def sposta_voce(lrow=None, msg=1):
     oSel = oDoc.CurrentController.getSelection()
     if not oSel.supportsService("com.sun.star.table.CellRange"):
         return
-
-    SR = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().StartRow).RangeAddress.StartRow
-    ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
+    try:
+        SR = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().StartRow).RangeAddress.StartRow
+        ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
+    except:
+        return
     num_rows = ER - SR + 1
 
     # 2. Identifica destinazione

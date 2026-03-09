@@ -474,8 +474,11 @@ def invia_voce(ctrl_override=False):
                     DLG.errore(e)
 
             MENU_nuova_voce_scelta() # inserisce la nuova voce
+            # if nSheetDCC == 'CONTABILITA':
+            #     return
 
             _gotoCella(0, lrow + 2) # posiziona sulla prima riga delle misure della voce
+            # return
 
             if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
                 _gotoCella(0, lrow + 1) # posiziona sulla prima riga delle misure della voce
@@ -982,9 +985,8 @@ def SubSum_SuperCap(lrow):
         oSheet.getCellByPosition(30,
                                  lrow).CellStyle = 'Livello-0-scritta mini val'
     if oSheet.Name in ('CONTABILITA'):
-        # oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(
-        #     lrow + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
-        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P:P)'  # IMPORTO
+        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(
+            lrow + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
         oSheet.getCellByPosition(
             16, lrow).Formula = '=P' + str(lrow + 1) + '/P' + str(
                 lrowE)  # incidenza sul totale
@@ -3802,12 +3804,12 @@ def XPWE_out_run(elaborato, out_file):
         of.write(riga)
         of.close()
         Dialogs.Exclamation(Title = 'INFORMAZIONE',
-        Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file)}'
+        Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file, max_len=60)}'
 '\n\n----\n'
-'Il formato XPWE è un formato XML di interscambio per Primus di ACCA. '
-'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali'
-'di Spese Generali e Utile d\'Impresa siano impostate correttamente,'
-'in modo da garantire l\'esatta elaborazione dei dati.')
+'XPWE è un formato XML di interscambio per Primus di ACCA.\n'
+'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali \
+di Spese Generali e Utile d\'Impresa siano impostate correttamente, \
+in modo da garantire l\'esatta elaborazione dei dati.')
 
         # Apri la cartella contenente il file ZIP
         try:
@@ -5653,7 +5655,7 @@ def MENU_ricicla_misure():
         lrow = LeggiPosizioneCorrente()[1]
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True)
 
-        stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+        stili_contab = LeenoUtils.getGlobalVar('stili_contab') + LeenoUtils.getGlobalVar('stili_cat')
 
         if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + (
                 'comp Int_colonna_R_prima', ):
@@ -9229,6 +9231,10 @@ def sistema_aree():
 ########################################################################
 def autoexec():
     autoexec_run()
+    # oDoc = LeenoUtils.getDocument()
+    # if oDoc.isProtected():
+    #     DLG.chi("Il documento è protetto da password")
+    #     return True
 
 @LeenoUtils.no_refresh
 def autoexec_run():

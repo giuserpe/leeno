@@ -389,6 +389,11 @@ def invia_voce(ctrl_override=False):
         # 1. Focus su DP e verifica presenza codice in EP del DP
         _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
+
+        # Cattura il codice articolo selezionato nel DP prima di qualsiasi inserimento
+        pos_dp = LeggiPosizioneCorrente()[1]
+        codice_selezionato_dp = dccSheetEP.getCellByPosition(0, pos_dp).String
+
         if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
             recupera_voce(voce_da_inviare, lrow_src=lrow)
 
@@ -414,8 +419,25 @@ def invia_voce(ctrl_override=False):
                 start_row = sStRange.RangeAddress.StartRow
                 dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
         elif nSheetDCC == 'Elenco Prezzi':
-            ddcDoc.CurrentController.setFirstVisibleRow(3)
-            _gotoCella(1, 4)
+            if ctrl_override and codice_selezionato_dp:
+                # Con CTRL: sostituisce tutte le occorrenze del codice selezionato nel DP
+                # (nei fogli COMPUTO, VARIANTE e CONTABILITÀ) con il codice della voce di partenza
+                for nome_foglio in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                    try:
+                        foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
+                    except Exception:
+                        continue
+                    last_row = SheetUtils.getLastUsedRow(foglio_dp)
+                    for r in range(last_row + 1):
+                        cell = foglio_dp.getCellByPosition(1, r)
+                        if cell.String.lower() == codice_selezionato_dp.lower():
+                            cell.String = voce_da_inviare
+                            cell.CellBackColor = COLORE_ROSSO_AVVISO
+                ddcDoc.CurrentController.setFirstVisibleRow(3)
+                _gotoCella(1, 4)
+            else:
+                ddcDoc.CurrentController.setFirstVisibleRow(3)
+                _gotoCella(1, 4)
         return
 
     # partenza
@@ -570,7 +592,6 @@ def invia_voce(ctrl_override=False):
         _gotoDoc(fpartenza)
 
 
-########################################################################
 
 
 def codice_voce(lrow, cod=None):
@@ -4629,7 +4650,9 @@ def MENU_azzera_voce():
                     oProp.Value = COLORE_GRIGIO_INATTIVA
                     properties = (oProp, )
                     dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-                    _gotoCella(1, fine + 3)
+                    # oDoc.CurrentController.select(
+                    #     oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+                    _gotoCella(1, inizio + 1)
                     ###
                 lrow = LeggiPosizioneCorrente()[1]
                 lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
@@ -5628,12 +5651,34 @@ def pesca_cod():
 
 ########################################################################
 @no_undo
-@LeenoUtils.no_refresh # evita il flickering del documento durante l'operazione
+# @LeenoUtils.no_refresh # evita il flickering del documento durante l'operazione
 def MENU_ricicla_misure():
     '''
     In CONTABILITA consente l'inserimento di nuove voci di misurazione
     partendo da voci già inserite in COMPUTO o VARIANTE.
     '''
+
+    is_ctrl = False
+    is_shift = False
+
+    # --- Rilevamento Tasti Modificatori ---
+    if sys.platform == 'win32':
+        try:
+            import ctypes
+            # GetAsyncKeyState legge lo stato fisico del tasto in tempo reale
+            # 0x10 = Shift, 0x11 = Control
+            # Il bit 0x8000 indica se il tasto è attualmente premuto
+            is_shift = (ctypes.windll.user32.GetAsyncKeyState(0x10) & 0x8000) != 0
+            is_ctrl = (ctypes.windll.user32.GetAsyncKeyState(0x11) & 0x8000) != 0
+        except Exception as e:
+            # In caso di errore ctypes, procediamo come click normale
+            pass
+    else:
+        # Per Linux/Mac: verifica se il KEY_HANDLER (XKeyHandler) è attivo
+        if 'KEY_HANDLER' in globals() and KEY_HANDLER:
+            is_ctrl = KEY_HANDLER.ctrl_pressed
+            is_shift = KEY_HANDLER.shift_pressed
+
     LeenoUtils.DocumentRefresh(False)
     oDoc = LeenoUtils.getDocument()
 
@@ -5662,11 +5707,16 @@ def MENU_ricicla_misure():
             return
         ins_voce_contab(arg=0)
         partenza = cerca_partenza()
-        try:
-            GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
-        except:
-            cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
-            GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
+        if is_ctrl:
+            GotoSheet('COMPUTO')
+        elif is_shift:
+            GotoSheet('VARIANTE')
+        else:
+            try:
+                GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
+            except:
+                cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
+                GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
         LeenoUtils.DocumentRefresh(True)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
@@ -5698,11 +5748,11 @@ def MENU_ricicla_misure():
         oDest.getCellByPosition(2, partenza[1]).CellBackColor = COLORE_VERDE_SPUNTA
         rigenera_voce(partenza[1])
 
-        _gotoCella(2, partenza[1] + 1)
+        _gotoCella(2, partenza[1])
+        LeenoUtils.DocumentRefresh(True)
+        oDest.getRows().getByIndex(partenza[1]).OptimalHeight = True
 
-    LeenoUtils.DocumentRefresh(True)
 
-    LeenoSheetUtils.adattaAltezzaRiga(oDoc.CurrentController.ActiveSheet)
 
 ########################################################################
 def MENU_inverti_segno():
@@ -8249,6 +8299,11 @@ def MENU_filtra_codice():
     # Otteniamo la riga corrente una sola volta
     lrow = LeggiPosizioneCorrente()[1]
 
+    # Se siamo in "Elenco Prezzi", i modificatori scelgono l'elaborato di destinazione
+    if oSheet.Name == "Elenco Prezzi" and (is_ctrl or is_shift):
+        filtra_codice(is_ctrl=is_ctrl, is_shift=is_shift)
+        return
+
     if not is_ctrl and not is_shift:
         # Comportamento standard: filtra la riga corrente
         filtra_codice()
@@ -8287,7 +8342,7 @@ def MENU_filtra_codice():
             filtra_codice()
 
 @LeenoUtils.no_refresh
-def filtra_codice(voce=None):
+def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     '''
     Applica un filtro di visualizzazione basato sul raggruppamento (outline).
     Il cursore si posiziona sulla prima occorrenza della voce trovata.
@@ -8305,18 +8360,25 @@ def filtra_codice(voce=None):
         lrow_ep = LeggiPosizioneCorrente()[1]
         voce = oSheet.getCellByPosition(0, lrow_ep).String
 
-        if oCell_C2.String in ('<DIALOGO>', ''):
+        # Logica Modificatori (CTRL -> COMPUTO, SHIFT -> VARIANTE, CTRL+SHIFT -> CONTABILITA)
+        if is_ctrl and is_shift:
+            elaborato = "CONTABILITA"
+        elif is_ctrl:
+            elaborato = "COMPUTO"
+        elif is_shift:
+            elaborato = "VARIANTE"
+        elif oCell_C2.String in ('<DIALOGO>', ''):
             try:
                 elaborato = DLG.ScegliElaborato(Titolo='Ricerca di ' + voce)
-                GotoSheet(elaborato)
             except Exception:
                 return
         else:
             elaborato = oCell_C2.String
-            try:
-                GotoSheet(elaborato)
-            except Exception:
-                return
+
+        try:
+            GotoSheet(elaborato)
+        except Exception:
+            return
 
         oSheet = oDoc.CurrentController.ActiveSheet
         _gotoCella(0, 6)
@@ -10081,6 +10143,7 @@ def DlgMain():
     oDoc.unlockControllers()
     psm = LeenoUtils.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.inserisciRigaRossa(oSheet)
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
         if(len(oDoc.getURL()) == 0 and
@@ -12728,7 +12791,8 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
-    LeenoTheme.trova_colore_cella()
+    MENU_trova_duplicati()
+    # LeenoTheme.trova_colore_cella()
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

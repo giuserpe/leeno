@@ -13,6 +13,10 @@ from contextlib import contextmanager
 
 import calendar
 import LeenoDialogs as DLG
+import pyleeno as PL
+import Dialogs
+from LeenoConfig import COLORE_ROSSO_AVVISO
+
 
 import PyPDF2
 '''
@@ -958,3 +962,150 @@ def ProtezioneFoglioContext(sheet_or_name, password="", oDoc=None):
         # Questo viene eseguito SEMPRE, anche in caso di errore
         if was_protected:
             oSheet.protect(password)
+
+########################################################################
+
+
+def _fingerprint_voce(oSheet, SR, ER):
+    '''
+    Calcola una chiave univoca (hashable) per una voce di computo/contabilità.
+    La chiave è basata su: codice articolo, righe di misura (colonne C-I), totale quantità.
+
+    Parametri:
+    oSheet  {Sheet} : foglio di lavoro
+    SR      {int}   : StartRow della voce (Comp Start Attributo)
+    ER      {int}   : EndRow della voce (Comp End Attributo)
+
+    Ritorna una tupla hashable o None se la voce non è valida.
+    '''
+    try:
+        art = oSheet.getCellByPosition(1, SR + 1).String.strip()
+        if not art:
+            return None
+        # righe di misura: da SR+2 a ER-1 (escluso), colonne C-I (indici 2-8)
+        misure = []
+        for r in range(SR + 2, ER):
+            riga = tuple(
+                oSheet.getCellByPosition(c, r).getString().strip()
+                for c in range(2, 9)
+            )
+            misure.append(riga)
+        quant = round(oSheet.getCellByPosition(9, ER).Value, 6)
+        return (art, tuple(misure), quant)
+    except Exception:
+        return None
+
+
+########################################################################
+
+
+@LeenoUtils.no_refresh
+def MENU_trova_duplicati():
+    '''
+    Scansiona il foglio attivo (COMPUTO, VARIANTE o CONTABILITA) e individua
+    le voci duplicate: stesso codice articolo, stesse righe di misura, stesso totale.
+
+    - Le voci NON duplicate vengono raggruppate e chiuse (outline).
+    - Le voci duplicate vengono evidenziate con COLORE_ROSSO_AVVISO sulla cella A del SR.
+    - Viene mostrato un dialogo riepilogativo.
+    '''
+    PL.struttura_off()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        Dialogs.Exclamation(
+            Title='ATTENZIONE!',
+            Text='Funzione disponibile solo nei fogli COMPUTO, VARIANTE e CONTABILITA.')
+        return
+
+    stili_computo = set(LeenoUtils.getGlobalVar('stili_computo'))
+    stili_contab  = set(LeenoUtils.getGlobalVar('stili_contab'))
+    stili_validi  = stili_computo | stili_contab
+    stili_cat     = set(LeenoUtils.getGlobalVar('stili_cat'))
+    stili_skip    = stili_cat | {'uuuuu', 'Ultimus_centro_bordi_lati',
+                                  'comp Int_colonna', 'ULTIMUS',
+                                  'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3', ''}
+
+    last_row = SheetUtils.getLastUsedRow(oSheet)
+    iSheet   = oSheet.RangeAddress.Sheet
+
+    # --- Passata 1: raccolta fingerprint ---
+    # fingerprint -> lista di (SR, ER)
+    fp_map = {}
+    lrow = 3  # le prime righe sono intestazione
+    while lrow <= last_row:
+        stile = oSheet.getCellByPosition(0, lrow).CellStyle
+        if stile in stili_skip:
+            lrow += 1
+            continue
+        if stile not in stili_validi:
+            lrow += 1
+            continue
+
+        vrange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        if not vrange:
+            lrow += 1
+            continue
+
+        SR = vrange.RangeAddress.StartRow
+        ER = vrange.RangeAddress.EndRow
+
+        fp = _fingerprint_voce(oSheet, SR, ER)
+        if fp is not None:
+            fp_map.setdefault(fp, []).append((SR, ER))
+
+        lrow = ER + 1  # salta alla voce successiva
+
+    # --- Separazione duplicati / non duplicati ---
+    duplicati   = {fp: lst for fp, lst in fp_map.items() if len(lst) > 1}
+    singole     = {fp: lst for fp, lst in fp_map.items() if len(lst) == 1}
+
+    sr_duplicati = set()
+    for lst in duplicati.values():
+        for SR, ER in lst:
+            sr_duplicati.add(SR)
+
+    # --- Passata 2: evidenziazione e raggruppamento ---
+    def _make_range_addr(start, end):
+        addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        addr.Sheet       = iSheet
+        addr.StartColumn = 0
+        addr.EndColumn   = 0
+        addr.StartRow    = start
+        addr.EndRow      = end
+        return addr
+
+    for lst in duplicati.values():
+        for SR, ER in lst:
+            oSheet.getCellByPosition(0, SR).CellBackColor = COLORE_ROSSO_AVVISO
+
+    for lst in singole.values():
+        SR, ER = lst[0]
+        if SR <= ER and SR >= 3:
+            try:
+                oSheet.group(_make_range_addr(SR, ER), 1)
+                oSheet.getCellRangeByPosition(0, SR, 0, ER).Rows.IsVisible = False
+            except Exception:
+                pass
+
+    # Chiude tutti i gruppi (livello 1) tramite dispatch
+    if singole:
+        try:
+            dispatcher = LeenoUtils.getDispatcher()
+            frame = oDoc.getCurrentController().Frame
+            dispatcher.executeDispatch(frame, '.uno:HideDetail', '', 0, ())
+        except Exception:
+            pass
+
+    # --- Dialogo riepilogativo ---
+    if duplicati:
+        righe = []
+        for (art, misure, quant), lst in sorted(duplicati.items(), key=lambda x: x[0][0]):
+            righe.append(f'  {art}  ({len(lst)} volte, q.tà = {quant})')
+        testo = 'Voci duplicate trovate:\n\n' + '\n'.join(righe)
+    else:
+        struttura_off()
+        testo = 'Nessuna voce duplicata trovata.'
+
+    Dialogs.notizia(Title='Duplicati', Text=testo)

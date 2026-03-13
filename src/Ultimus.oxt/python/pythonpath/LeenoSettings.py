@@ -10,6 +10,10 @@ import SheetUtils
 import LeenoDialogs as DLG
 import pyleeno as PL
 
+def get_my_doc():
+    return LeenoUtils.getDocument()
+get_my_doc()
+
 _JOBSETTINGSITEMS = (
     'progetto',
     'committente',
@@ -32,7 +36,6 @@ _PRINTSETTINGSITEMS = (
     'ppDx',
 )
 
-oDoc = LeenoUtils.getDocument()
 _DOCSTRINGS = (
     '[COMMITTENTE]',
     '[DATA]',
@@ -76,7 +79,7 @@ def loadPageReplacements(oDoc):
 
     Returns:
         dict: Un dizionario con le sostituzioni di pagina, dove le chiavi sono i segnaposto e i valori sono i testi da inserire.
-    """    
+    """
     repl = loadJobSettings(oDoc)
     res = {}
     for key, val in repl.items():
@@ -188,7 +191,7 @@ def MENU_JobSettings():
     """
     oDoc = LeenoUtils.getDocument()
     js = loadJobSettings(oDoc)
-    
+
     DLG.chi(f'js: {js}')
 
     dlg = JobSettingsDialog()
@@ -283,7 +286,7 @@ def PrintSettingsDialog():
                         Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
                     ]),
             ]),
-            
+
             # ~ Dialogs.Spacer(MinSize = 10),
             Dialogs.Spacer(MinSize = 30),
             Dialogs.HSizer(Items=[
@@ -292,7 +295,7 @@ def PrintSettingsDialog():
                 # ~ Dialogs.Spacer(),
             ]),
             Dialogs.Spacer(MinSize = 30),
-            
+
                 Dialogs.FixedText(Text='Piè di pagina:'),
                 # ~ Dialogs.Spacer(),
             Dialogs.HSizer(Items=[
@@ -428,7 +431,7 @@ def npagina ():
     oDoc = LeenoUtils.getDocument()
     # Ottieni la famiglia di stili di pagina
     page_styles = oDoc.StyleFamilies.getByName("PageStyles")
-    
+
     stili = {
         # ~ 'cP_Cop': 'Page_Style_COPERTINE',
         'COMPUTO': 'PageStyle_COMPUTO_A4',
@@ -440,7 +443,7 @@ def npagina ():
         'Registro': 'PageStyle_REGISTRO_A4',
         'SAL': 'PageStyle_SAL_A4',
     }
-    
+
     for el in (stili.keys()):
         try:
             default_style = page_styles.getByName(stili[el])
@@ -461,7 +464,7 @@ def npagina ():
             text_cursor.String = "pag. "
             text_cursor.gotoEnd(False)
             header.RightText.insertTextContent(text_cursor, page_number, True)
-            
+
             if stili[el] in ('PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
 
                 # Inserisci il testo " di " e il conteggio totale delle pagine
@@ -509,8 +512,8 @@ def set_page_margins(oAktPage):
 
 def set_page_borders(oAktPage):
     """
-    Rimuove i bordi superiore, inferiore, sinistro e destro 
-    dell'oggetto pagina fornito, impostando sia la larghezza della linea 
+    Rimuove i bordi superiore, inferiore, sinistro e destro
+    dell'oggetto pagina fornito, impostando sia la larghezza della linea
     che la larghezza della linea esterna a zero.
 
     Args:
@@ -529,8 +532,8 @@ def set_page_borders(oAktPage):
 
 def set_header(oAktPage, str1='', str2='', str3=''):
     """
-    Imposta il testo dell'intestazione a destra, al centro e a sinistra 
-    dell'oggetto pagina fornito. Ogni parte dell'intestazione può essere 
+    Imposta il testo dell'intestazione a destra, al centro e a sinistra
+    dell'oggetto pagina fornito. Ogni parte dell'intestazione può essere
     personalizzata tramite i parametri della funzione.
 
     Args:
@@ -554,8 +557,8 @@ def set_header(oAktPage, str1='', str2='', str3=''):
 
 def set_footer(oAktPage, str1 = '', str2 = '', str3 = ''):
     """
-    Imposta il testo del pié di pagina a destra, al centro e a sinistra 
-    dell'oggetto pagina fornito. Ogni parte del pié di pagina può essere 
+    Imposta il testo del pié di pagina a destra, al centro e a sinistra
+    dell'oggetto pagina fornito. Ogni parte del pié di pagina può essere
     personalizzata tramite i parametri della funzione.
 
     Args:
@@ -672,7 +675,7 @@ def importa_stili_pagina(overwrite = False, silent = False):
         if not silent:
             indicator = oDoc.getCurrentController().getStatusIndicator()
             indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
-        n = 1 
+        n = 1
         for el in oDoc.Sheets.ElementNames:
             indicator.Value = n
             n += 1
@@ -738,7 +741,7 @@ def importa_stili_pagina_non_presenti(silent = False):
 
             # Chiudi il documento di template
             templateDoc.close(True)
-            
+
             # ~ DLG.chi("Stili di pagina mancanti importati correttamente.")
         except Exception as e:
             # ~ DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
@@ -747,7 +750,7 @@ def importa_stili_pagina_non_presenti(silent = False):
         if not silent and lun_1 < len(oDoc.StyleFamilies.getByName('PageStyles')):
             indicator = oDoc.getCurrentController().getStatusIndicator()
             indicator.start('Adattamento altezze righe in corso...', len(oDoc.Sheets.ElementNames))
-            n = 1 
+            n = 1
             for el in oDoc.Sheets.ElementNames:
                 indicator.Value = n
                 n += 1

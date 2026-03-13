@@ -16,7 +16,7 @@ def avvisoPassword():
     '''
     oDoc = LeenoUtils.getDocument()
     if LeenoUtils.isPasswordProtected(oDoc):
-        DLG.MsgBox("ATTENZIONE: Questo documento è protetto da password.", "Sicurezza")
+        DLG.MsgBox("ATTENZIONE: Questo documento o parte di esso è protetto da password.", "Sicurezza")
 
 def macro_SHEET(nSheet, nEvento, miamacro):
     '''

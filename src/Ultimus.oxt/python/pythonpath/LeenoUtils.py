@@ -68,21 +68,60 @@ def getDesktop():
     return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
 
-def getDocument():
-    ctx = getComponentContext()
-    smgr = ctx.ServiceManager
-    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-    oDoc = desktop.getCurrentComponent()
+# def getDocument():
+#     ctx = getComponentContext()
+#     smgr = ctx.ServiceManager
+#     desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+#     oDoc = desktop.getCurrentComponent()
 
-    # Se il componente corrente non è un documento (es. è un dialogo)
-    # cerchiamo l'ultimo documento attivo che sia un foglio di calcolo
-    if not hasattr(oDoc, "getSheets"):
+#     # Se il componente corrente non è un documento (es. è un dialogo)
+#     # cerchiamo l'ultimo documento attivo che sia un foglio di calcolo
+#     if not hasattr(oDoc, "getSheets"):
+#         components = desktop.getComponents().createEnumeration()
+#         while components.hasMoreElements():
+#             comp = components.nextElement()
+#             if hasattr(comp, "getSheets"): # È un file Calc
+#                 return comp
+#     return oDoc
+
+def getDocument():
+    try:
+        ctx = getComponentContext()
+        if ctx is None:
+            DLG.chi("Errore: Contesto UNO non trovato.")
+            return None
+
+        desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+
+        def is_valid_calc(comp):
+            if comp is None: return False
+            # Verifichiamo le proprietà base senza far crashare il processo
+            try:
+                # Verifica che abbia i fogli e non sia stato eliminato
+                return hasattr(comp, "getSheets") and not getattr(comp, "isDisposed", False)
+            except:
+                return False
+
+        # Tenta il recupero diretto
+        oDoc = desktop.getCurrentComponent()
+        if is_valid_calc(oDoc):
+            return oDoc
+
+        # Fallback: Scansione dei componenti attivi
         components = desktop.getComponents().createEnumeration()
         while components.hasMoreElements():
             comp = components.nextElement()
-            if hasattr(comp, "getSheets"): # È un file Calc
+            if is_valid_calc(comp):
                 return comp
-    return oDoc
+
+        # Se arriviamo qui, non abbiamo trovato nulla
+        # DLG.chi("DEBUG: Nessun documento Calc valido individuato dal Desktop.")
+        return None
+
+    except Exception as e:
+        DLG.chi(f"Errore critico in getDocument: {str(e)}")
+        DLG.chi(f"Debug: il desktop vede {desktop.getComponents().getCount()} componenti")
+        return None
 
 
 def isPasswordProtected(oDoc=None):

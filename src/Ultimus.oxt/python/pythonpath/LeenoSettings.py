@@ -12,7 +12,6 @@ import pyleeno as PL
 
 def get_my_doc():
     return LeenoUtils.getDocument()
-get_my_doc()
 
 _JOBSETTINGSITEMS = (
     'progetto',

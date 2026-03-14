@@ -16,6 +16,7 @@ import LeenoDialogs as DLG
 import pyleeno as PL
 import Dialogs
 from LeenoConfig import COLORE_ROSSO_AVVISO
+import LeenoGlobals
 
 
 import PyPDF2
@@ -390,29 +391,29 @@ ENTRAMBI garantiscono che il refresh venga riattivato, anche in caso di errori!
 ###############################################################################
 ###############################################################################
 
-def getGlobalVar(name):
-    if type(__builtins__) == type(sys):
-        bDict = __builtins__.__dict__
-    else:
-        bDict = __builtins__
-    return bDict.get('LEENO_GLOBAL_' + name)
+# def getGlobalVar(name):
+#     if type(__builtins__) == type(sys):
+#         bDict = __builtins__.__dict__
+#     else:
+#         bDict = __builtins__
+#     return bDict.get('LEENO_GLOBAL_' + name)
 
 
-def setGlobalVar(name, value):
-    if type(__builtins__) == type(sys):
-        bDict = __builtins__.__dict__
-    else:
-        bDict = __builtins__
-    bDict['LEENO_GLOBAL_' + name] = value
+# def setGlobalVar(name, value):
+#     if type(__builtins__) == type(sys):
+#         bDict = __builtins__.__dict__
+#     else:
+#         bDict = __builtins__
+#     bDict['LEENO_GLOBAL_' + name] = value
 
 
-def initGlobalVars(dict):
-    if type(__builtins__) == type(sys):
-        bDict = __builtins__.__dict__
-    else:
-        bDict = __builtins__
-    for key, value in dict.items():
-        bDict['LEENO_GLOBAL_' + key] = value
+# def initGlobalVars(dict):
+#     if type(__builtins__) == type(sys):
+#         bDict = __builtins__.__dict__
+#     else:
+#         bDict = __builtins__
+#     for key, value in dict.items():
+#         bDict['LEENO_GLOBAL_' + key] = value
 
 
 def dictToProperties(values, unoAny=False):
@@ -864,7 +865,7 @@ def memorizza_posizione(step=0):
 
 def ripristina_posizione():
     """Ripristina la posizione memorizzata"""
-    pos_data = LeenoUtils.getGlobalVar('ultima_posizione')
+    pos_data = LeenoGlobals.getGlobalVar('ultima_posizione')
     if not pos_data:
         DLG.chi("Nessuna posizione memorizzata trovata")
         return
@@ -911,11 +912,11 @@ def preserva_posizione(step=0):
                 # Ripristina (anche se la funzione va in errore)
                 # Se passi un valore a 'step', lo usiamo per spostarci DOPO l'operazione
                 if step != 0:
-                    pos = LeenoUtils.getGlobalVar('ultima_posizione')
+                    pos = LeenoGlobals.getGlobalVar('ultima_posizione')
                     if pos:
                         pos['row'] += step
                         if 'end_row' in pos: pos['end_row'] += step
-                        LeenoUtils.setGlobalVar('ultima_posizione', pos)
+                        LeenoGlobals.setGlobalVar('ultima_posizione', pos)
                 ripristina_posizione()
         return wrapper
     return decorator
@@ -1019,10 +1020,10 @@ def MENU_trova_duplicati():
             Text='Funzione disponibile solo nei fogli COMPUTO, VARIANTE e CONTABILITA.')
         return
 
-    stili_computo = set(LeenoUtils.getGlobalVar('stili_computo'))
-    stili_contab  = set(LeenoUtils.getGlobalVar('stili_contab'))
+    stili_computo = set(LeenoGlobals.getGlobalVar('stili_computo'))
+    stili_contab  = set(LeenoGlobals.getGlobalVar('stili_contab'))
     stili_validi  = stili_computo | stili_contab
-    stili_cat     = set(LeenoUtils.getGlobalVar('stili_cat'))
+    stili_cat     = set(LeenoGlobals.getGlobalVar('stili_cat'))
     stili_skip    = stili_cat | {'uuuuu', 'Ultimus_centro_bordi_lati',
                                   'comp Int_colonna', 'ULTIMUS',
                                   'ULTIMUS_1', 'ULTIMUS_2', 'ULTIMUS_3', ''}

@@ -1,6 +1,7 @@
 from com.sun.star.table import CellRangeAddress
 import SheetUtils
 import LeenoUtils
+import LeenoGlobals
 import LeenoSheetUtils
 import LeenoConfig
 from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
@@ -252,9 +253,9 @@ def ins_voce_computo(cod=None):
         for el in range (5, 9):
             oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
 
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    noVoce = LeenoGlobals.getGlobalVar('noVoce')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
     lrow = PL.LeggiPosizioneCorrente()[1]
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     if stile in stili_cat:

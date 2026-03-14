@@ -174,7 +174,7 @@ def dlg_attesa(msg=''):
     dlg_attesa()
     attesa().start() #mostra il dialogo
     ...
-    LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute() #chiude il dialogo
+    LeenoGlobals.getGlobalVar('oDialogo_attesa').endExecute() #chiude il dialogo
     '''
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
@@ -201,8 +201,8 @@ class attesa(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
-        LeenoUtils.getGlobalVar('oDialogo_attesa').execute()
+        LeenoGlobals.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
+        LeenoGlobals.getGlobalVar('oDialogo_attesa').execute()
 
 
 def ScegliElaborato(Titolo="Titolo", flag="export"):

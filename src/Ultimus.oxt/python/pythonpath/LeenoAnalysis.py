@@ -4,6 +4,7 @@ Funzioni relative alla gestione delle analisi di prezzi
 
 import pyleeno as PL
 import LeenoUtils
+import LeenoGlobals
 import SheetUtils
 import LeenoSheetUtils
 import LeenoEvents
@@ -28,7 +29,7 @@ def Inserisci_Utili():
     sStRange = circoscriveAnalisi(oSheetAP, lrow)
     srow = sStRange.RangeAddress.StartRow
     endRow = sStRange.RangeAddress.EndRow
-    
+
     target_row = -1
     for i in range(srow, endRow):
         cell_a = oSheetAP.getCellByPosition(0, i).String
@@ -115,7 +116,7 @@ def circoscriveAnalisi(oSheet, lrow):
         object: Intervallo di celle che rappresenta l'analisi
     '''
     # Pre-carica gli stili necessari
-    stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
+    stili_analisi = LeenoGlobals.getGlobalVar('stili_analisi')
     cell_style = oSheet.getCellByPosition(0, lrow).CellStyle
 
     # Variabili per i limiti

@@ -12,6 +12,7 @@ from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
 import LeenoUtils
+import LeenoGlobals
 import SheetUtils
 import LeenoSheetUtils
 import LeenoSettings as LS
@@ -101,7 +102,7 @@ def sbloccaContabilita(oSheet, lrow):
     Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
     Ritorna True se il consenso è stato dato, False altrimenti
     '''
-    if LeenoUtils.getGlobalVar('sblocca_computo') == 1:
+    if LeenoGlobals.getGlobalVar('sblocca_computo') == 1:
         return True
     if oSheet.Name != 'CONTABILITA':
         return True
@@ -134,7 +135,7 @@ def insertVoceContabilita(oSheet, lrow):
     if not sbloccaContabilita(oSheet, lrow):
         return False
 
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
     if stile == 'comp Int_colonna_R_prima':

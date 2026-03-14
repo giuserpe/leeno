@@ -8,8 +8,8 @@ from com.sun.star.beans import PropertyValue
 
 import pyleeno as PL
 import LeenoUtils
+import LeenoGlobals
 import SheetUtils
-import LeenoSheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import Dialogs
@@ -24,7 +24,7 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     nell'apposita area del foglio corrente
     '''
     # legge il percorso del documento principale
-    sUltimus = LeenoUtils.getGlobalVar('sUltimus')
+    sUltimus = LeenoGlobals.getGlobalVar('sUltimus')
 
     # dal foglio risale al documento proprietario
     oDoc = SheetUtils.getDocumentFromSheet(oSheet)
@@ -67,7 +67,7 @@ def SbiancaCellePrintArea():
         oPrintArea[0].EndColumn, oPrintArea[0].EndRow
         ).CellBackColor = COLORE_BIANCO_SFONDO #sbianca
 
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
     for y in range(0, oPrintArea[0].EndRow):
         if oSheet.getCellByPosition(0, y).CellStyle in stili_cat:
             # conserva il colore di sfondo delle categorie
@@ -501,8 +501,8 @@ def cercaPartenza(oSheet, lrow):
     il flag '#reg' solo per la contabilità.
     partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
 
     # COMPUTO, VARIANTE
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
@@ -553,7 +553,7 @@ def selezionaVoce(oSheet, lrow):
         partenza = cercaPartenza(oSheet, lrow)
         if partenza[2] == '#reg':
             PL.sblocca_cont()
-            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                 return
             pass
         else:
@@ -587,10 +587,10 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
         int: Nuova posizione di riga
     """
     # Precaricamento stili (più efficiente)
-    STILI_CAT = set(LeenoUtils.getGlobalVar('stili_cat'))
-    STILI_COMPUTO = set(LeenoUtils.getGlobalVar('stili_computo'))
-    STILI_CONTAB = set(LeenoUtils.getGlobalVar('stili_contab'))
-    NO_VOCE = set(LeenoUtils.getGlobalVar('noVoce'))
+    STILI_CAT = set(LeenoGlobals.getGlobalVar('stili_cat'))
+    STILI_COMPUTO = set(LeenoGlobals.getGlobalVar('stili_computo'))
+    STILI_CONTAB = set(LeenoGlobals.getGlobalVar('stili_contab'))
+    NO_VOCE = set(LeenoGlobals.getGlobalVar('noVoce'))
     STILI_VALIDI = STILI_COMPUTO | STILI_CONTAB
 
     # Stili da saltare (insieme per ricerca veloce)

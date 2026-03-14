@@ -1,8 +1,34 @@
 import os
-import LeenoUtils
+import sys
 
-if LeenoUtils.getGlobalVar('Lmajor') is None:
-    LeenoUtils.initGlobalVars({
+
+def getGlobalVar(name):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    return bDict.get('LEENO_GLOBAL_' + name)
+
+
+def setGlobalVar(name, value):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    bDict['LEENO_GLOBAL_' + name] = value
+
+
+def initGlobalVars(d):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    for key, value in d.items():
+        bDict['LEENO_GLOBAL_' + key] = value
+
+
+if getGlobalVar('Lmajor') is None:
+    initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
         'Lminor': 24,       # NUOVE FUNZIONALITA'
         'Lsubv': "2.dev",       # CORREZIONE BUGS

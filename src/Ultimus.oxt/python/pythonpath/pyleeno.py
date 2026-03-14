@@ -307,13 +307,13 @@ def invia_voce(ctrl_override=False):
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
 
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
-    if fpartenza == LeenoUtils.getGlobalVar('sUltimus'):
+    if fpartenza == LeenoGlobals.getGlobalVar('sUltimus'):
         if nSheet == 'Elenco Prezzi':
             invia_voce_interno()
             return
@@ -321,13 +321,13 @@ def invia_voce(ctrl_override=False):
             Dialogs.Exclamation(Title='ATTENZIONE!',
                 Text="Questo file coincide con il Documento Principale (DP).")
         return
-    elif LeenoUtils.getGlobalVar('sUltimus') == '':
+    elif LeenoGlobals.getGlobalVar('sUltimus') == '':
         Dialogs.Exclamation(Title='ATTENZIONE!',
             Text="E' necessario impostare il Documento Principale (DP).")
         return
     nSheetDCC = getDCCSheet()
     # arrivo - Documento Principale
-    DP = LeenoUtils.getGlobalVar('sUltimus')
+    DP = LeenoGlobals.getGlobalVar('sUltimus')
     ddcDoc = LeenoUtils.findOpenDocument(DP)
     lrow = LeggiPosizioneCorrente()[1]
 
@@ -387,7 +387,7 @@ def invia_voce(ctrl_override=False):
         voce_da_inviare = oSheet.getCellByPosition(0, lrow).String
 
         # 1. Focus su DP e verifica presenza codice in EP del DP
-        _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+        _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
 
         # Cattura il codice articolo selezionato nel DP prima di qualsiasi inserimento
@@ -463,17 +463,17 @@ def invia_voce(ctrl_override=False):
                 oDoc.createInstance(
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
             return
-        noVoce = LeenoUtils.getGlobalVar('noVoce')
+        noVoce = LeenoGlobals.getGlobalVar('noVoce')
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             comando('Copy')
             prossima = LeenoSheetUtils.prossimaVoce(oSheet, ER, 1)
             _gotoCella(0, prossima)
     # arrivo
-            # DP = LeenoUtils.getGlobalVar('sUltimus')
+            # DP = LeenoGlobals.getGlobalVar('sUltimus')
             # ddcDoc = LeenoUtils.findOpenDocument(DP)
             dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
             dccSheet.getCellByPosition(1, SR + 1).CellBackColor = COLORE_VERDE_SPUNTA
-            _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+            _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
             lrow = LeggiPosizioneCorrente()[1]
 
             # dccv = LeenoComputo.DatiVoce(dccSheet, lrow)
@@ -563,7 +563,7 @@ def invia_voce(ctrl_override=False):
 
         comando('Copy')
 
-        _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+        _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
         inizializza_analisi()
         _gotoCella(0, 0)
         paste_clip(insCells=1)
@@ -575,7 +575,7 @@ def invia_voce(ctrl_override=False):
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     _gotoDoc(fpartenza)
     GotoSheet(nSheet)
-    _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+    _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
@@ -652,10 +652,10 @@ def getDCCSheet():
     '''
     oDoc = LeenoUtils.getDocument()
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
-    _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
+    _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
     sUltimus_sheet = LeenoUtils.getDocument().CurrentController.ActiveSheet.Name
     _gotoDoc(fpartenza)
-    LeenoUtils.setGlobalVar('sUltimus_sheet', sUltimus_sheet)
+    LeenoGlobals.setGlobalVar('sUltimus_sheet', sUltimus_sheet)
     return sUltimus_sheet
 
 
@@ -852,9 +852,9 @@ def Ins_Categorie(n):
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
 
-        stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-        stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-        noVoce = LeenoUtils.getGlobalVar('noVoce')
+        stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+        stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
+        noVoce = LeenoGlobals.getGlobalVar('noVoce')
 
         row = LeggiPosizioneCorrente()[1]
         if oSheet.getCellByPosition(0,row).CellStyle in stili_computo + stili_contab:
@@ -3156,9 +3156,9 @@ def XPWE_out_run(elaborato, out_file):
     Versione.text = ''
     SourceVersione = SubElement(top, 'SourceVersione')
     release = (
-       str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
-       str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
-       LeenoUtils.getGlobalVar('Lsubv')
+       str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+       str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
+       LeenoGlobals.getGlobalVar('Lsubv')
     )
     SourceVersione.text = release
     SourceNome = SubElement(top, 'SourceNome')
@@ -4524,7 +4524,7 @@ def Circoscrive_Analisi(lrow):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
+    stili_analisi = LeenoGlobals.getGlobalVar('stili_analisi')
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         for el in reversed(range(0, lrow)):
             # DLG.chi(oSheet.getCellByPosition(0, el).CellStyle)
@@ -4812,7 +4812,7 @@ def seleziona(lrow=None):
         partenza = cerca_partenza()
         if partenza[2] == '#reg':
             sblocca_cont()
-            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                 return
             pass
         else:
@@ -4864,7 +4864,7 @@ def seleziona_voce(lrow=None):
             partenza = cerca_partenza()
             if partenza[2] == '#reg':
                 sblocca_cont()
-                if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+                if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                     return
                 pass
             else:
@@ -5467,14 +5467,14 @@ def sblocca_cont():
     @@@ MODIFICA IN CORSO CON 'LeenoContab.sbloccaContabilita'
     Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
     '''
-    partenza = LeenoUtils.getGlobalVar('partenza')
+    partenza = LeenoGlobals.getGlobalVar('partenza')
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('CONTABILITA'):
         partenza = cerca_partenza()
         # DLG.chi(partenza[2])
-        # DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
-        if LeenoUtils.getGlobalVar('sblocca_computo') == 1:
+        # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
+        if LeenoGlobals.getGlobalVar('sblocca_computo') == 1:
             pass
         else:
             if partenza[2] == '':
@@ -5491,7 +5491,7 @@ SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""") == 0:
                     pass
                 else:
                     LeenoUtils.setGlobalVar('sblocca_computo', 1)
-        # DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
+        # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
 
 
 ########################################################################
@@ -5561,7 +5561,7 @@ def pesca_cod():
     Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
     Capisce quando la voce nel libretto delle misure è già registrata o nel documento ci sono già atti contabili emessi.
     '''
-    partenza = LeenoUtils.getGlobalVar('partenza')
+    partenza = LeenoGlobals.getGlobalVar('partenza')
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.isProtected():
@@ -5570,10 +5570,10 @@ def pesca_cod():
         return
     lrow = LeggiPosizioneCorrente()[1]
 
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-    stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
-    stili_elenco = LeenoUtils.getGlobalVar('stili_elenco')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_analisi = LeenoGlobals.getGlobalVar('stili_analisi')
+    stili_elenco = LeenoGlobals.getGlobalVar('stili_elenco')
 
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
@@ -5599,7 +5599,7 @@ def pesca_cod():
         partenza = cerca_partenza()
         if partenza[2] == '#reg':
             sblocca_cont()
-            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                 return
             pass
         else:
@@ -5608,7 +5608,7 @@ def pesca_cod():
 ###
     if oSheet.Name in ('COMPUTO', 'VARIANTE') or 'LISTA' in oSheet.Name.upper():
         if oDoc.NamedRanges.hasByName("_Lib_1"):
-            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                 DLG.chi("Controllo atti contabili non eseguito: verificate di non avere atti registrati prima di procedere.")
                 # if DLG.DlgSiNo(
                 #         "Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",
@@ -5689,7 +5689,7 @@ def MENU_ricicla_misure():
             partenza = cerca_partenza()
             if partenza[2] == '#reg':
                 sblocca_cont()
-                if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+                if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                     return
                 pass
             else:
@@ -5700,7 +5700,7 @@ def MENU_ricicla_misure():
         lrow = LeggiPosizioneCorrente()[1]
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, saltaCat=True)
 
-        stili_contab = LeenoUtils.getGlobalVar('stili_contab') + LeenoUtils.getGlobalVar('stili_cat')
+        stili_contab = LeenoGlobals.getGlobalVar('stili_contab') + LeenoGlobals.getGlobalVar('stili_cat')
 
         if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + (
                 'comp Int_colonna_R_prima', ):
@@ -5730,7 +5730,7 @@ def MENU_ricicla_misure():
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8,
                                              sotto).getRangeAddress()
         oSheet.getCellByPosition(2, sopra - 1).CellBackColor = COLORE_VERDE_SPUNTA
-        partenza = LeenoUtils.getGlobalVar('partenza')
+        partenza = LeenoGlobals.getGlobalVar('partenza')
         if partenza is None:
             return
         oDest = oDoc.getSheets().getByName('CONTABILITA')
@@ -6774,7 +6774,7 @@ def rigenera_tutte(arg=None, ):
 
     oSheet = oDoc.CurrentController.ActiveSheet
     nome = oSheet.Name
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
 
 
     # attiva la progressbar
@@ -7079,8 +7079,8 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
     # oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
 
     if lrow == 0:
         lrow = LeggiPosizioneCorrente()[1]
@@ -7092,7 +7092,7 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
         partenza = cerca_partenza()
         if partenza[2] == '#reg':
             sblocca_cont()
-            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
+            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
                 return
         else:
             pass
@@ -8117,7 +8117,7 @@ def ssUltimus():
     if not oDoc.getSheets().hasByName('M1'):
         return
     try:
-        LeenoUtils.getGlobalVar('oDlgMain').endExecute()
+        LeenoGlobals.getGlobalVar('oDlgMain').endExecute()
     except NameError:
         pass
     if len(oDoc.getURL()) == 0:
@@ -8322,7 +8322,7 @@ def MENU_filtra_codice():
         search_row = curr_start - 1
 
         # 2. Risali finché non trovi uno stile di computo o contabilità
-        stili_validi = LeenoUtils.getGlobalVar('stili_computo') + LeenoUtils.getGlobalVar('stili_contab')
+        stili_validi = LeenoGlobals.getGlobalVar('stili_computo') + LeenoGlobals.getGlobalVar('stili_contab')
 
         found_row = -1
         while search_row >= 0:
@@ -8350,8 +8350,8 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
     stili_totali = stili_computo + stili_contab
 
     # --- 1. IDENTIFICAZIONE DELLA VOCE E DEL FOGLIO ---
@@ -9375,7 +9375,7 @@ def dp():
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+            if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
                 oSheet.getCellRangeByName(
                     "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
                 oSheet.getCellRangeByName(
@@ -9384,7 +9384,7 @@ def dp():
                 oSheet.getCellRangeByName(
                     "A1:AT1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
-                    d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
+                    d[el]).String = 'DP:' + LeenoGlobals.getGlobalVar('sUltimus')
 
         except Exception as e:
             #  DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
@@ -9597,9 +9597,9 @@ def inizializza():
     v_sub   = v_parts[2] if len(v_parts) > 2 else "0"
 
     # Scrittura su S1 (usando i valori globali caricati all'avvio)
-    oSheetS1.getCellRangeByName('I194').Value = LeenoUtils.getGlobalVar('Lmajor')
-    oSheetS1.getCellRangeByName('J194').Value = LeenoUtils.getGlobalVar('Lminor')
-    oSheetS1.getCellRangeByName('K194').String = LeenoUtils.getGlobalVar('Lsubv')
+    oSheetS1.getCellRangeByName('I194').Value = LeenoGlobals.getGlobalVar('Lmajor')
+    oSheetS1.getCellRangeByName('J194').Value = LeenoGlobals.getGlobalVar('Lminor')
+    oSheetS1.getCellRangeByName('K194').String = LeenoGlobals.getGlobalVar('Lsubv')
 
     # Sincronizzazione con proprietà utente
     oSheetS1.getCellRangeByName('H291').Value = oUDP.Versione
@@ -9785,8 +9785,8 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
             oUDP.removeProperty('Versione_LeenO')
         oUDP.addProperty('Versione_LeenO',
                          MAYBEVOID + REMOVEABLE + MAYBEDEFAULT,
-                         str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
-                         str(LeenoUtils.getGlobalVar('Lminor')) + '.x')
+                         str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+                         str(LeenoGlobals.getGlobalVar('Lminor')) + '.x')
         indicator.setValue(5)
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el):
@@ -10025,7 +10025,7 @@ def ScriviNomeDocumentoPrincipale():
     return
 
     # legge il percorso del documento principale
-    sUltimus = LeenoUtils.getGlobalVar('sUltimus')
+    sUltimus = LeenoGlobals.getGlobalVar('sUltimus')
 
     oDoc = LeenoUtils.getDocument()
 
@@ -10054,7 +10054,7 @@ def ScriviNomeDocumentoPrincipale():
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            oSheet.getCellRangeByName(d[el]).String = 'DP: ' + LeenoUtils.getGlobalVar('sUltimus')
+            oSheet.getCellRangeByName(d[el]).String = 'DP: ' + LeenoGlobals.getGlobalVar('sUltimus')
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
 
         except Exception:
@@ -10166,7 +10166,7 @@ def DlgMain():
 
     sString = oDlgMain.getControl("CommandButton13")
     try:
-        if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+        if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
             sString.setEnable(False)
         else:
             sString.setEnable(True)
@@ -10177,15 +10177,15 @@ def DlgMain():
     sString.Text = version_code.read()[6:]
 
     sString = oDlgMain.getControl("Label_DDC")
-    sString.Text = LeenoUtils.getGlobalVar('sUltimus')
+    sString.Text = LeenoGlobals.getGlobalVar('sUltimus')
 
     sString = oDlgMain.getControl("Label1")
     sString.Text = version_code.read()[6:]
 
     # sString.Text = (
-    #     str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
-    #     str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
-    #     LeenoUtils.getGlobalVar('Lsubv'))
+    #     str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+    #     str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
+    #     LeenoGlobals.getGlobalVar('Lsubv'))
 
     sString = oDlgMain.getControl("Label2")
     try:
@@ -10241,7 +10241,7 @@ def DlgMain():
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+            if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
                 oSheet.getCellRangeByName(
                     "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
                 oSheet.getCellRangeByName(
@@ -10250,7 +10250,7 @@ def DlgMain():
                 oSheet.getCellRangeByName(
                     "A1:AT1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
-                    d[el]).String = 'DP:' + LeenoUtils.getGlobalVar('sUltimus')
+                    d[el]).String = 'DP:' + LeenoGlobals.getGlobalVar('sUltimus')
 
         except Exception:
             pass
@@ -10433,9 +10433,9 @@ class version_code:
 
         new = (
             'LeenO-' +
-            str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
-            str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
-            LeenoUtils.getGlobalVar('Lsubv').split('.')[0] + '.' +
+            str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+            str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
+            LeenoGlobals.getGlobalVar('Lsubv').split('.')[0] + '.' +
             Ldev + '-TESTING-' +
             tempo[:-6])
         of.write(new)

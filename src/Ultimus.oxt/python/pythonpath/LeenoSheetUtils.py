@@ -3,10 +3,11 @@ Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
 import uno
-from com.sun.star.sheet.CellFlags import HARDATTR, EDITATTR, FORMATTED
+from com.sun.star.sheet.CellFlags import \
+    VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 from com.sun.star.beans import PropertyValue
+from com.sun.star.table import CellContentType
 
-import pyleeno as PL
 import LeenoUtils
 import LeenoGlobals
 import SheetUtils
@@ -586,7 +587,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     Returns:
         int: Nuova posizione di riga
     """
-    # Precaricamento stili (più efficiente)
+    import pyleeno as PL
     STILI_CAT = set(LeenoGlobals.getGlobalVar('stili_cat'))
     STILI_COMPUTO = set(LeenoGlobals.getGlobalVar('stili_computo'))
     STILI_CONTAB = set(LeenoGlobals.getGlobalVar('stili_contab'))
@@ -736,6 +737,7 @@ def adattaAltezzaRiga(oSheet=False, all=False):
     Versione bilanciata tra velocità e manutenibilità.
     """
     # Configurazioni (modificabili)
+    import pyleeno as PL
     lrow = PL.LeggiPosizioneCorrente()[1]
 
     STILI_CELLA = {
@@ -1108,6 +1110,7 @@ def MENU_SheetToDoc():
     oSheet = oDoc.CurrentController.ActiveSheet
 
     if "COMPUTO" in oSheet.Name or "VARIANTE" in oSheet.Name:
+        import pyleeno as PL
         oDoc.CurrentController.select(oSheet.getCellRangeByName('A1:I1048576'))
         PL.comando('Copy')
         #oDoc.CurrentController.select(oCell)
@@ -1116,3 +1119,51 @@ def MENU_SheetToDoc():
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselec
     oDoc.CurrentController.ZoomValue = 100
     return
+
+def cerca_errori():
+    """
+    Cerca celle contenenti errori (#N/D, #DIV/0!, ecc.) in Calc
+    partendo dalla selezione corrente fino alla fine del foglio.
+    """
+    from com.sun.star.table.CellContentType import FORMULA
+    oDoc = LeenoUtils.getDocument()
+    oController = oDoc.getCurrentController()
+    oSheet = oController.getActiveSheet()
+    oSelezione = oController.getSelection()
+
+    # Identificazione cella di partenza (gestione singola cella o range)
+    if oSelezione.supportsService("com.sun.star.sheet.SheetCell"):
+        start_row = oSelezione.getCellAddress().Row
+        start_col = oSelezione.getCellAddress().Column
+    elif oSelezione.supportsService("com.sun.star.sheet.SheetCellRange"):
+        start_row = oSelezione.getRangeAddress().StartRow
+        start_col = oSelezione.getRangeAddress().StartColumn
+    else:
+        DLG.errore("Selezionare una cella o un range valido.")
+        return
+
+    # Ottieni i limiti del foglio per l'iterazione
+    oCursor = oSheet.createCursor()
+    oCursor.gotoEndOfUsedArea(False)
+    last_row = oCursor.getRangeAddress().EndRow
+    last_col = oCursor.getRangeAddress().EndColumn
+
+    trovato_errore = False
+
+    # Iterazione efficiente
+    for row in range(start_row, last_row + 1):
+        for col in range(start_col, last_col + 1):
+            cell = oSheet.getCellByPosition(col, row)
+
+            # Controlla se il contenuto è un errore (Formula che restituisce errore)
+            if cell.getType() == FORMULA:
+                if cell.Error != 0:
+                    oController.select(cell)
+                    # Estrazione indirizzo leggibile (es. A1 invece di $Foglio1.$A$1)
+                    address = cell.AbsoluteName.split('.')[-1].replace('$', '')
+                    Dialogs.Info(Title="Errore trovato", Text=f"Errore trovato alla cella {address}")
+                    trovato_errore = True
+                    return # Si ferma al primo errore trovato per permettere all'utente di correggere
+
+    if not trovato_errore:
+        Dialogs.Info(Title="Ricerca completata", Text="Nessun errore trovato.")

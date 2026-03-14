@@ -2,7 +2,6 @@
 Funzioni relative alla gestione delle analisi di prezzi
 '''
 
-import pyleeno as PL
 import LeenoUtils
 import LeenoGlobals
 import SheetUtils
@@ -25,6 +24,7 @@ def Inserisci_Utili():
         oCellAddress = oSheetAP.getCellRangeByName("B10").getCellAddress()
         oRanges.addNewByName("oneri_sicurezza", "$S5.$B$93:$P$93", oCellAddress, 0)
 
+    import pyleeno as PL
     lrow = PL.LeggiPosizioneCorrente()[1]
     sStRange = circoscriveAnalisi(oSheetAP, lrow)
     srow = sStRange.RangeAddress.StartRow

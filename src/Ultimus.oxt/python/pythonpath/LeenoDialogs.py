@@ -188,7 +188,7 @@ def dlg_attesa(msg=''):
     oDialogo_attesa.Title = 'Operazione in corso...'
     sUrl = PL.LeenO_path() + '/icons/attendi.png'
     oDialogo_attesa.getModel().ImageControl1.ImageURL = sUrl
-    LeenoUtils.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
+    LeenoGlobals.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
     return oDialogo_attesa
 
 

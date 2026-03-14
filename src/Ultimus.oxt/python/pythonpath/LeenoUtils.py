@@ -859,7 +859,7 @@ def memorizza_posizione(step=0):
         return
 
     # Memorizza i dati
-    LeenoUtils.setGlobalVar('ultima_posizione', pos_data)
+    LeenoGlobals.setGlobalVar('ultima_posizione', pos_data)
 
     # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
 

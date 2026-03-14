@@ -2,11 +2,11 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
+from pyleeno import _gotoCella
 import uno
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 from com.sun.star.beans import PropertyValue
-from com.sun.star.table import CellContentType
 
 import LeenoUtils
 import LeenoGlobals
@@ -1125,7 +1125,10 @@ def cerca_errori():
     Cerca celle contenenti errori (#N/D, #DIV/0!, ecc.) in Calc
     partendo dalla selezione corrente fino alla fine del foglio.
     """
-    from com.sun.star.table.CellContentType import FORMULA
+    import uno
+    # Utilizzo uno.Enum per evitare problemi di importazione diretta di com.sun.star.table
+    ENUM_FORMULA = uno.Enum("com.sun.star.table.CellContentType", "FORMULA")
+
     oDoc = LeenoUtils.getDocument()
     oController = oDoc.getCurrentController()
     oSheet = oController.getActiveSheet()
@@ -1133,35 +1136,40 @@ def cerca_errori():
 
     # Identificazione cella di partenza (gestione singola cella o range)
     if oSelezione.supportsService("com.sun.star.sheet.SheetCell"):
-        start_row = oSelezione.getCellAddress().Row
-        start_col = oSelezione.getCellAddress().Column
+        start_row = oSelezione.getCellAddress().Row + 1
+        # start_col = oSelezione.getCellAddress().Column + 1
     elif oSelezione.supportsService("com.sun.star.sheet.SheetCellRange"):
-        start_row = oSelezione.getRangeAddress().StartRow
-        start_col = oSelezione.getRangeAddress().StartColumn
+        start_row = oSelezione.getRangeAddress().StartRow + 1
+        # start_col = oSelezione.getRangeAddress().StartColumn + 1
     else:
         DLG.errore("Selezionare una cella o un range valido.")
         return
-
+    start_col = 0
     # Ottieni i limiti del foglio per l'iterazione
     oCursor = oSheet.createCursor()
     oCursor.gotoEndOfUsedArea(False)
     last_row = oCursor.getRangeAddress().EndRow
     last_col = oCursor.getRangeAddress().EndColumn
-
-    trovato_errore = False
-
     # Iterazione efficiente
     for row in range(start_row, last_row + 1):
+        # Salta righe nascoste
+        if not oSheet.getRows().getByIndex(row).IsVisible:
+            continue
+
         for col in range(start_col, last_col + 1):
+            # Salta colonne nascoste
+            if not oSheet.getColumns().getByIndex(col).IsVisible:
+                continue
+
             cell = oSheet.getCellByPosition(col, row)
 
             # Controlla se il contenuto è un errore (Formula che restituisce errore)
-            if cell.getType() == FORMULA:
+            if cell.getType() == ENUM_FORMULA:
                 if cell.Error != 0:
                     oController.select(cell)
                     # Estrazione indirizzo leggibile (es. A1 invece di $Foglio1.$A$1)
                     address = cell.AbsoluteName.split('.')[-1].replace('$', '')
-                    Dialogs.Info(Title="Errore trovato", Text=f"Errore trovato alla cella {address}")
+                    # Dialogs.Info(Title="Errore trovato", Text=f"Errore trovato alla cella {address}")
                     trovato_errore = True
                     return # Si ferma al primo errore trovato per permettere all'utente di correggere
 

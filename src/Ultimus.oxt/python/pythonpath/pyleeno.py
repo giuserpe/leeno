@@ -5458,7 +5458,7 @@ def cerca_partenza():
     lrow = LeggiPosizioneCorrente()[1]
 
     partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
-    LeenoUtils.setGlobalVar('partenza', partenza)
+    LeenoGlobals.setGlobalVar('partenza', partenza)
     return partenza
 
 
@@ -5490,7 +5490,7 @@ Vuoi procedere?
 SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""") == 0:
                     pass
                 else:
-                    LeenoUtils.setGlobalVar('sblocca_computo', 1)
+                    LeenoGlobals.setGlobalVar('sblocca_computo', 1)
         # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
 
 
@@ -5619,7 +5619,7 @@ def pesca_cod():
                     "Vuoi procedere comunque?") == 0:
                     return
                 else:
-                    LeenoUtils.setGlobalVar('sblocca_computo', 1)
+                    LeenoGlobals.setGlobalVar('sblocca_computo', 1)
         partenza = cerca_partenza()
     try:
         if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
@@ -8127,7 +8127,7 @@ Provvedi subito a dare un nome al file.''')
         salva_come()
         autoexec()
     try:
-        LeenoUtils.setGlobalVar('sUltimus', uno.fileUrlToSystemPath(oDoc.getURL()))
+        LeenoGlobals.setGlobalVar('sUltimus', uno.fileUrlToSystemPath(oDoc.getURL()))
     except Exception:
         pass
     # DlgMain()
@@ -10157,7 +10157,7 @@ def DlgMain():
     oDlgMain = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application"
     )
-    LeenoUtils.setGlobalVar('oDlgMain', oDlgMain)
+    LeenoGlobals.setGlobalVar('oDlgMain', oDlgMain)
 
     oDlgMain.Title = 'Menù Principale (Ctrl+0)'
 
@@ -11400,7 +11400,7 @@ def trova_ricorrenze():
     #  lista_ricorrenze
     #  except Exception:
     lista_ricorrenze = ricorrenze()
-    LeenoUtils.setGlobalVar('lista_ricorrenze', lista_ricorrenze)
+    LeenoGlobals.setGlobalVar('lista_ricorrenze', lista_ricorrenze)
     if len(lista_ricorrenze) == 0:
         # DLG.MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
         Dialogs.Info(Title = 'Informazione',
@@ -12791,7 +12791,8 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
-    MENU_trova_duplicati()
+    # MENU_trova_duplicati()
+    LeenoSheetUtils.cerca_errori()
     # LeenoTheme.trova_colore_cella()
 
 ########################################################################

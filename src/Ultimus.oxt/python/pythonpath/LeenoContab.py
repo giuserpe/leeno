@@ -117,7 +117,7 @@ def sbloccaContabilita(oSheet, lrow):
                  "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
         )
         if res == 1:
-            LeenoUtils.setGlobalVar('sblocca_computo', 1)
+            LeenoGlobals.setGlobalVar('sblocca_computo', 1)
             return True
         return False
     return True

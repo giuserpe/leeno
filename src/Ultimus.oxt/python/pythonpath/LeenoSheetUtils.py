@@ -2,7 +2,6 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
-from pyleeno import _gotoCella
 import uno
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
@@ -1173,5 +1172,10 @@ def cerca_errori():
                     trovato_errore = True
                     return # Si ferma al primo errore trovato per permettere all'utente di correggere
 
-    if not trovato_errore:
+    try:
+        if trovato_errore:
+            # Dialogs.Info(Title="Errore trovato", Text=f"Errore trovato alla cella {address}")
+            pass
+    except:
         Dialogs.Info(Title="Ricerca completata", Text="Nessun errore trovato.")
+

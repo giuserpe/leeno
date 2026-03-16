@@ -333,6 +333,13 @@ def no_refresh_context():
     try:
         # Yield control al blocco with
         yield
+    except Exception as e:
+        # Se l'eccezione è un oggetto UNO (ha il metodo getTypes), 
+        # lo trasformiamo in una Exception Python standard per evitare 
+        # che contextlib crashi cercando di impostare __traceback__
+        if hasattr(e, "getTypes"):
+            raise Exception(f"Errore UNO: {str(e)}") from None
+        raise
     finally:
         # Cleanup: riattiva sempre il refresh
         DocumentRefresh(True)

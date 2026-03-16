@@ -2704,25 +2704,25 @@ def genera_sommario():
         else:
             stringa = [
                 # Quantità Computo
-                f"=LET(s; SUMIF(AA; A{n}; BB); IF(s; s; \"--\"))",
+                f"=LET(_s; SUMIF(AA; A{n}; BB); IF(_s; _s; \"--\"))",
                 # Quantità Variante
-                f'=LET(s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(s; s; "--"); "--"))',
+                f'=LET(_s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))',
                 # Quantità Contabilità
-                f'=LET(s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(s; s; "--"); "--"))',
+                f'=LET(_s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))',
                 '',
                 # Scostamento Variante Computo
-                f'=LET(s; IF(M{n}="--"; 0; VALUE(M{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(s; s; "--"))',
+                f'=LET(_s; IF(M{n}="--"; 0; VALUE(M{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(_s; _s; "--"))',
                 # Scostamento Contabilità Computo
-                f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(s; s; "--"))',
+                f'=LET(_s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(_s; _s; "--"))',
                 # Scostamento Variante Computo
-                f'=LET(s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(M{n}="--"; 0; VALUE(M{n})); IF(s; s; "--"))',
+                f'=LET(_s; IF(N{n}="--"; 0; VALUE(N{n})) - IF(M{n}="--"; 0; VALUE(M{n})); IF(_s; _s; "--"))',
                 '',
                 # Importi Computo
-                f'=LET( s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
+                f'=LET(_s; IF(L{n}="--"; 0; VALUE(L{n}))*E{n}; _risultato; IF(C{n}="%"; _s/100; _s);IF(_risultato; _risultato; "") )',
                 # Importi Variante
-                f'=LET( s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
+                f'=LET(_s; IF(M{n}="--"; 0; VALUE(M{n}))*E{n}; _risultato; IF(C{n}="%"; _s/100; _s);IF(_risultato; _risultato; "") )',
                 # Importi Contabilità
-                f'=LET( s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; risultato; IF(C{n}="%"; s/100; s);IF(risultato; risultato; "") )',
+                f'=LET(_s; IF(N{n}="--"; 0; VALUE(N{n}))*E{n}; _risultato; IF(C{n}="%"; _s/100; _s);IF(_risultato; _risultato; "") )',
 
             ]
         formule.append(stringa)
@@ -4430,9 +4430,9 @@ def MENU_analisi_in_ElencoPrezzi():
             4: f"=$'Analisi di Prezzo'.G{riga}",
             5: f"=$'Analisi di Prezzo'.I{riga}",
             6: f"=$'Analisi di Prezzo'.J{riga}",
-            11: '=LET(s; SUMIF(AA; A5; BB); IF(s <> 0; s; "--"))',
-            12: '=LET(s; SUMIF(varAA; A5; varBB); IFERROR(IF(s; s; "--"); "--"))',
-            13: '=LET(s; SUMIF(GG; A5; G1G1); IFERROR(IF(s; s; "--"); "--"))'
+            11: '=LET(_s; SUMIF(AA; A5; BB); IF(_s <> 0; _s; "--"))',
+            12: '=LET(_s; SUMIF(varAA; A5; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+            13: '=LET(_s; SUMIF(GG; A5; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
         }
 
         for col, formula in formule.items():
@@ -4483,9 +4483,9 @@ def tante_analisi_in_ep():
                     '',
                     '',
                     '',
-                    f'=LET(s; SUMIF(AA; A{target_row}; BB); IF(s <> 0; s; "--"))',
-                    f'=LET(s; SUMIF(varAA; A{target_row}; varBB); IFERROR(IF(s; s; "--"); "--"))',
-                    f'=LET(s; SUMIF(GG; A{target_row}; G1G1); IFERROR(IF(s; s; "--"); "--"))'
+                    f'=LET(_s; SUMIF(AA; A{target_row}; BB); IF(_s <> 0; _s; "--"))',
+                    f'=LET(_s; SUMIF(varAA; A{target_row}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+                    f'=LET(_s; SUMIF(GG; A{target_row}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
                 ])
                 target_row += 1
 

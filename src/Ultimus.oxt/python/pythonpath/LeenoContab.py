@@ -2126,7 +2126,8 @@ def GeneraSAL(oDoc, dati):
     r += 1
 
     # Lavori a tutto il __/__/____ - TOTALE
-    oSalSheet.getCellByPosition(1, r).String = "Lavori a tutto il ___/___/_________ - T O T A L E  €"
+    # oSalSheet.getCellByPosition(1, r).String = "Lavori a tutto il ___/___/_________ - T O T A L E  €"
+    oSalSheet.getCellByPosition(1, r).String = "T O T A L E  €"
     oSalSheet.getCellByPosition(1, r).CellStyle = "Ultimus_destra"
     oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;$F$2:$F${r})"
     oSalSheet.getCellByPosition(5, r).CellStyle = "Ultimus_destra_totali"
@@ -2206,41 +2207,41 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     oSheet.getCellByPosition(5, insRow + 7).Value = sic * -1
 
     # Detrazione Manodopera (negativa)
-    oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
-    oSheet.getCellByPosition(5, insRow + 8).CellStyle = "ULTIMUS"
-    oSheet.getCellByPosition(5, insRow + 8).Value = mdo * -1
+    # oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
+    # oSheet.getCellByPosition(5, insRow + 8).CellStyle = "ULTIMUS"
+    # oSheet.getCellByPosition(5, insRow + 8).Value = mdo * -1
 
     # Base Ribasso = somma delle 3 righe precedenti
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 9, fcol + 1, insRow + 10).CellStyle = "Ultimus_destra"
-    oSheet.getCellByPosition(fcol + 1, insRow + 9).String = "Importo dei Lavori a Misura su cui applicare il ribasso"
-    oSheet.getCellByPosition(5, insRow + 9).Formula = f"=SUM({ncol}{insRow + 7}:{ncol}{insRow + 9})"
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 8, fcol + 1, insRow + 9).CellStyle = "Ultimus_destra"
+    oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Importo dei Lavori a Misura su cui applicare il ribasso"
+    oSheet.getCellByPosition(5, insRow + 8).Formula = f"=SUM({ncol}{insRow + 7}:{ncol}{insRow + 8})"
 
     # Ribasso (testo dinamico + calcolo)
-    oSheet.getCellByPosition(fcol + 1, insRow + 10).Formula = \
+    oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
         '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")'
-    oSheet.getCellByPosition(5, insRow + 10).Formula = f"=-{ncol}{insRow + 10}*$S2.$C$78"
+    oSheet.getCellByPosition(5, insRow + 9).Formula = f"=-{ncol}{insRow + 9}*$S2.$C$78"
 
     # Re-integro Sicurezza e Manodopera (positivi)
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 11, fcol + 1, insRow + 12).CellStyle = "Ultimus_sx"
-    oSheet.getCellByPosition(fcol + 1, insRow + 11).String = "Importo per la Sicurezza"
-    oSheet.getCellByPosition(5, insRow + 11).Value = sic
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx"
+    oSheet.getCellByPosition(fcol + 1, insRow + 10).String = "Importo per la Sicurezza"
+    oSheet.getCellByPosition(5, insRow + 10).Value = sic
 
-    oSheet.getCellByPosition(fcol + 1, insRow + 12).String = "Importo per la Manodopera"
-    oSheet.getCellByPosition(5, insRow + 12).CellStyle = "ULTIMUS"
-    oSheet.getCellByPosition(5, insRow + 12).Value = mdo
+    # oSheet.getCellByPosition(fcol + 1, insRow + 12).String = "Importo per la Manodopera"
+    # oSheet.getCellByPosition(5, insRow + 12).CellStyle = "ULTIMUS"
+    # oSheet.getCellByPosition(5, insRow + 12).Value = mdo
 
     # Totale Parziale Lavori a Misura
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 13, fcol + 1, insRow + 13).CellStyle = "Ultimus_destra_bold"
-    oSheet.getCellByPosition(fcol + 1, insRow + 13).String = "PER I LAVORI A MISURA €"
-    oSheet.getCellByPosition(5, insRow + 13).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 13})"
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 11, fcol + 1, insRow + 11).CellStyle = "Ultimus_destra_bold"
+    oSheet.getCellByPosition(fcol + 1, insRow + 11).String = "PER I LAVORI A MISURA €"
+    oSheet.getCellByPosition(5, insRow + 11).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 11})"
 
     # TOTALE GENERALE
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 15, fcol + 1, insRow + 15).CellStyle = "Ultimus_destra_bold"
-    oSheet.getCellByPosition(fcol + 1, insRow + 15).String = "T O T A L E  €"
-    oSheet.getCellByPosition(5, insRow + 15).CellStyle = "Ultimus_destra_totali"
-    oSheet.getCellByPosition(5, insRow + 15).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 13})"
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 13, fcol + 1, insRow + 13).CellStyle = "Ultimus_destra_bold"
+    oSheet.getCellByPosition(fcol + 1, insRow + 13).String = "T O T A L E  €"
+    oSheet.getCellByPosition(5, insRow + 13).CellStyle = "Ultimus_destra_totali"
+    oSheet.getCellByPosition(5, insRow + 13).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 13})"
 
-    currRow = insRow + 16
+    currRow = insRow + 14
 
     # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
     num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)

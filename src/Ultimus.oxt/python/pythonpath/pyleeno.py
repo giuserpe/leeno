@@ -7372,12 +7372,13 @@ def inizializza_elenco():
         'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)]
         # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
     }
-    for style_name, ranges in STILI_COLONNE.items():
-        for col_start, col_end in ranges:
-            oSheet.getCellRangeByPosition(
-                col_start, 3,
-                col_end, y - 3
-            ).CellStyle = style_name
+    if y is not None and y > 3:
+        for style_name, ranges in STILI_COLONNE.items():
+            for col_start, col_end in ranges:
+                oSheet.getCellRangeByPosition(
+                    col_start, 3,
+                    col_end, y - 1
+                ).CellStyle = style_name
 
 
 
@@ -12791,8 +12792,10 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
+    inizializza_elenco()
+    return
     # MENU_trova_duplicati()
-    LeenoSheetUtils.cerca_errori()
+    # LeenoSheetUtils.cerca_errori()
     # LeenoTheme.trova_colore_cella()
 
 ########################################################################

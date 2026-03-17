@@ -124,7 +124,7 @@ def catalogo_stili_cella():
         oSheet.getCellByPosition( 3, i).CellStyle = el
         oSheet.getCellByPosition( 1, i).Value = -2000
         oSheet.getCellByPosition( 3, i).String = "LeenO"
-        i += 1
+        i += 2
         indicator.setValue(i)
     indicator.end()
 

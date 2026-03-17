@@ -812,11 +812,34 @@ def GeneraLibretto(oDoc):
     ultimariga = LeenoComputo.circoscriveVoceComputo(oSheet, lrow_end).RangeAddress.EndRow
 
 
+    # --- RACCOLTA DATI CUMULATIVA PER IL SAL ---
     SAL = []
-    SAL_VDS = [] # Nuova lista per voci della sicurezza
-    voci_elaborate = set() # Per evitare duplicazioni durante gli shift di riga
-    curr_i = primariga
-    current_section_type = None
+    SAL_VDS = []
+    
+    # Cerchiamo la riga della prima voce assoluta (1)
+    try:
+        if oRanges.hasByName("_Lib_1"):
+            r_start_abs = oRanges.getByName("_Lib_1").ReferredCells.RangeAddress.StartRow
+        else:
+            r_start_abs = int(SheetUtils.uFindStringCol("1", 0, oSheet, equal=1))
+    except:
+        r_start_abs = primariga
+        
+    c_i = r_start_abs
+    voci_coll = set()
+    while c_i <= ultimariga:
+        resp = LeenoComputo.datiVoceComputo(oSheet, c_i)
+        if resp:
+            d_v = resp[1]
+            num_v = str(d_v[0]).strip()
+            if num_v not in voci_coll:
+                if 'VDS_' in str(d_v[1]):
+                    SAL_VDS.append(d_v)
+                else:
+                    SAL.append(d_v)
+                voci_coll.add(num_v)
+        c_i = LeenoSheetUtils.prossimaVoce(oSheet, c_i, saltaCat=True)
+    # -------------------------------------------
 
     # Eseguiamo l'adattamento delle altezze prima del calcolo dei filler
     # per avere coordinate Y corrette
@@ -829,14 +852,17 @@ def GeneraLibretto(oDoc):
         # Per i SAL successivi al primo, il punto zero è l'inizio della sezione
         last_hard_break_y = oSheet.getCellByPosition(0, primariga).Position.Y
 
+    voci_elaborate = set() # Per evitare duplicazioni durante gli shift di riga
+    curr_i = primariga
+    current_section_type = None
+
     while curr_i <= ultimariga:
-        # Recupera dati voce: (num, art, desc, um, quant, prezzo, importo, sic, mdo)
+        # In questo loop gestiamo solo la formattazione del Libretto (Titoli e Filler)
         res = LeenoComputo.datiVoceComputo(oSheet, curr_i)
         if res is None:
             curr_i += 1
             continue
 
-        # Salvaguardia contro il doppio conteggio
         num_voce = str(res[1][0]).strip()
         if num_voce in voci_elaborate:
             curr_i = LeenoSheetUtils.prossimaVoce(oSheet, curr_i, saltaCat=True)
@@ -844,7 +870,6 @@ def GeneraLibretto(oDoc):
         voci_elaborate.add(num_voce)
 
         datiVoce = res[1]
-
         is_vds = 'VDS_' in str(datiVoce[1])
         voce_type = 'VDS' if is_vds else 'LAVORI'
 
@@ -883,29 +908,23 @@ def GeneraLibretto(oDoc):
                 oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
 
                 # Aggiorna il punto zero per la nuova pagina (Hard Break)
-                # Attenzione: la nuova pagina inizia a curr_i (titolo sezione)
                 last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             else:
                 oSheet.getRows().insertByIndex(curr_i, 1)
-                # Forza il salto pagina se è un nuovo SAL
                 if nSal > 1:
                     oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
                     last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
             titolo = "SICUREZZA (CALCOLO ANALITICO)" if is_vds else "LAVORI A MISURA"
-            oSheet.getCellByPosition(2, curr_i).String = titolo # Colonna C descrizione
+            oSheet.getCellByPosition(2, curr_i).String = titolo 
 
             current_section_type = voce_type
             curr_i += 1
             ultimariga += 1
-            # Ricarichiamo i dati della riga corrente dopo lo shift
-            datiVoce = LeenoComputo.datiVoceComputo(oSheet, curr_i)[1]
-
-        # Smistamento basato sul prefisso "VDS_"
-        if voce_type == 'VDS':
-            SAL_VDS.append(datiVoce)
-        else:
-            SAL.append(datiVoce)
+            # Ricarichiamo i dati dopo lo shift
+            res_after = LeenoComputo.datiVoceComputo(oSheet, curr_i)
+            if res_after:
+                datiVoce = res_after[1]
 
         curr_i = LeenoSheetUtils.prossimaVoce(oSheet, curr_i, saltaCat=True)
 
@@ -924,8 +943,18 @@ def GeneraLibretto(oDoc):
 
             for i, row in enumerate(dati_lista):
                 art = str(row[1]).strip()
-                gruppi_quant[art] += float(row[4])
-                gruppi_importo[art] += float(row[6]) # Importo (indice 6)
+                if not art or art == "LAVORI": # Filtra voci senza articolo o placeholder
+                    continue
+                
+                q = float(row[4]) if row[4] else 0.0
+                imp = float(row[6]) if row[6] else 0.0
+                
+                # Salta se sia quantità che importo sono zero (voce non eseguita/fantasma)
+                if q == 0.0 and imp == 0.0:
+                    continue
+
+                gruppi_quant[art] += q
+                gruppi_importo[art] += imp 
                 if art not in gruppo_dati:
                     gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
 
@@ -1448,165 +1477,6 @@ def setup_intestazioni_registro(oSheet, nSal, oDoc):
     oSheet.setPrintTitleRows(True)
 
 
-# def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, rigaMisura):
-#     fcol = 0  # Colonna A
-#     insRow = startRow
-
-#     # --- 1. GESTIONE SALTO PAGINA E RIEMPIMENTO RIGHE VUOTE ---
-#     currRow = insRow
-#     try:
-#         # Mentre non siamo all'inizio di una nuova pagina...
-#         while not oSheet.getRows().getByIndex(currRow).IsStartOfNewPage:
-#             oSheet.getRows().insertByIndex(currRow, 1)
-
-#             # Applichiamo lo stile con i bordi laterali alla riga appena creata
-#             # Questo crea l'effetto "tabella continua" fino a fine pagina
-#             oRangeVuoto = oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow)
-#             oRangeVuoto.CellStyle = "Ultimus_centro_bordi_lati"
-
-#             if currRow > insRow + 60: break # Sicurezza per evitare loop infiniti
-#             currRow += 1
-
-#         # Se abbiamo inserito righe, puliamo l'eccesso per far spazio al titolo
-#         if currRow > insRow:
-#             oSheet.getRows().removeByIndex(currRow - 1, 1)
-#             currRow -= 1
-#     except:
-#         pass
-
-#     # --- 2. RIEPILOGO SAL (Titolo e Info) ---
-#     # Il titolo del riepilogo viene posto subito dopo le righe con i bordi
-#     oSheet.getCellByPosition(fcol + 1, currRow + 1).String = "R I E P I L O G O   S A L"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 1).CellStyle = "Ultimus_centro_Dsottolineato"
-
-#     # Info Appalto
-#     oSheet.getCellByPosition(fcol + 1, currRow + 3).String = "Appalto: a misura"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 4).String = "Offerta: unico ribasso"
-#     oSheet.getCellRangeByPosition(fcol + 1, currRow + 3, fcol + 1, currRow + 4).CellStyle = "Ultimus_sx_italic"
-
-#     # --- 3. LOGICA ECONOMICA (Valori e Formule) ---
-#     # Prepariamo la colonna degli importi (F = indice 5)
-#     oSheet.getCellRangeByPosition(5, currRow + 6, 5, currRow + 15).CellStyle = "ULTIMUS"
-#     ncol = "F"
-
-#     # Lavori a Misura
-#     oSheet.getCellByPosition(fcol + 1, currRow + 6).String = "Lavori a Misura €"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 6).CellStyle = "Ultimus_sx_bold"
-#     # Punta alla riga del totale calcolato in precedenza (rigaMisura + 1 per indice umano)
-#     oSheet.getCellByPosition(5, currRow + 6).Formula = f"=${ncol}${rigaMisura + 1}"
-
-#     # Detrazioni Sicurezza e Manodopera (per calcolo base ribasso)
-#     oSheet.getCellByPosition(fcol + 1, currRow + 7).String = "Di cui importo per la Sicurezza"
-#     oSheet.getCellByPosition(5, currRow + 7).Value = sic * -1
-
-#     oSheet.getCellByPosition(fcol + 1, currRow + 8).String = "Di cui importo per la Manodopera"
-#     oSheet.getCellByPosition(5, currRow + 8).Value = mdo * -1
-#     oSheet.getCellRangeByPosition(fcol + 1, currRow + 7, fcol + 1, currRow + 8).CellStyle = "Ultimus_sx"
-
-#     # Base Ribasso
-#     oSheet.getCellByPosition(fcol + 1, currRow + 9).String = "Importo dei Lavori a Misura su cui applicare il ribasso"
-#     oSheet.getCellByPosition(5, currRow + 9).Formula = f"=SUM({ncol}{currRow + 7}:{ncol}{currRow + 9})"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 9).CellStyle = "Ultimus_destra"
-
-#     # Calcolo Ribasso (Testo e Valore)
-#     # Nota: $S2.$C$78 è il riferimento standard LeenO per il ribasso d'asta
-#     oSheet.getCellByPosition(fcol + 1, currRow + 10).Formula = \
-#         '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")'
-#     oSheet.getCellByPosition(5, currRow + 10).Formula = f"=-{ncol}{currRow + 10}*$S2.$C$78"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 10).CellStyle = "Ultimus_destra"
-
-#     # Re-integro Sicurezza e Manodopera
-#     oSheet.getCellByPosition(fcol + 1, currRow + 11).String = "Importo per la Sicurezza"
-#     oSheet.getCellByPosition(5, currRow + 11).Value = sic
-
-#     oSheet.getCellByPosition(fcol + 1, currRow + 12).String = "Importo per la Manodopera"
-#     oSheet.getCellByPosition(5, currRow + 12).Value = mdo
-#     oSheet.getCellRangeByPosition(fcol + 1, currRow + 11, fcol + 1, currRow + 12).CellStyle = "Ultimus_sx"
-
-#     # Totale Parziale Lavori
-#     oSheet.getCellByPosition(fcol + 1, currRow + 13).String = "PER I LAVORI A MISURA €"
-#     oSheet.getCellByPosition(5, currRow + 13).Formula = f"=SUM({ncol}{currRow + 11}:{ncol}{currRow + 14})"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 13).CellStyle = "Ultimus_destra_bold"
-
-#     # TOTALE GENERALE SAL
-#     oSheet.getCellByPosition(fcol + 1, currRow + 15).String = "T O T A L E  €"
-#     oSheet.getCellByPosition(5, currRow + 15).Formula = f"={ncol}{currRow + 14}"
-#     oSheet.getCellByPosition(fcol + 1, currRow + 15).CellStyle = "Ultimus_destra_bold"
-#     oSheet.getCellByPosition(5, currRow + 15).CellStyle = "Ultimus_destra_totali"
-
-#     # Ritorna l'ultima riga utilizzata per definire il NamedRange nel chiamante
-#     return currRow + 16
-
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei 9 valori passati da GeneraLibretto
-#     nSal, _, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-
-#     # Il riepilogo SAL comprende sia le voci Lavori sia quelle di Sicurezza
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento (Risoluzione Errore) ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc) # Crea testata se nSal=1
-#     else:
-#         # Tenta di recuperare dal NamedRange, altrimenti cerca l'ultima riga libera
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).ReferredCells.RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             # Fallback: trova l'ultima riga che contiene dati
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento Righe di Intestazione ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - 1÷{aVoce}"
-#     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu" # Riga gialla
-
-#     # --- 3. Scrittura Dati (DataArray) ---
-#     dataStartRow = insRow + 1
-#     lastDataRow = dataStartRow + len(datiSAL_Riepilogo) - 1
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # --- 4. Inserimento Formule (Prezzi e Importi) ---
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         # VLOOKUP su elenco_prezzi e calcolo prodotto
-#         formule.append([
-#             f'=VLOOKUP(A{r};elenco_prezzi;5;0)',
-#             f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'
-#         ])
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # --- 5. Riepilogo Economico (Sotto le voci) ---
-#     r = lastDataRow + 2
-#     oSalSheet.getCellByPosition(1, r).String = "PARZIALE LAVORI A MISURA €"
-#     oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRow+1})"
-
-#     oSalSheet.getCellByPosition(1, r+1).String = "di cui SICUREZZA (non soggetta a ribasso) €"
-#     oSalSheet.getCellByPosition(5, r+1).Value = sic
-
-#     oSalSheet.getCellByPosition(1, r+2).String = "RIBASSO D'ASTA (da Situazione Contabile)"
-#     # Formula LeenO: -(Importo - Sicurezza) * Ribasso
-#     oSalSheet.getCellByPosition(5, r+2).Formula = f"=-(F{r+1}-F{r+2}) * $S2.$C$78"
-
-#     oSalSheet.getCellByPosition(1, r+4).String = "TOTALE NETTO SAL €"
-#     oSalSheet.getCellByPosition(5, r+4).Formula = f"=F{r+1}+F{r+3}"
-#     oSalSheet.getCellByPosition(5, r+4).CellStyle = "Ultimus_destra_totali"
-
-#     # --- 6. Firme e NamedRange ---
-#     fineFirme = firme_contabili(r + 6)
-#     area_sal = f"$A${insRow+1}:$F${fineFirme+1}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
 
 def setup_intestazioni_sal(oSheet, nSal, oDoc):
     ''' Configura colonne e intestazioni specifiche per il foglio SAL '''
@@ -1627,397 +1497,6 @@ def setup_intestazioni_sal(oSheet, nSal, oDoc):
         oCell.String = titolo
         oCell.Columns.Width = width
 
-#     # Configurazione testata SAL
-#     style_name = 'PageStyle_SAL_A4'
-#     if oDoc.StyleFamilies.getByName('PageStyles').hasByName(style_name):
-#         oSheet.PageStyle = style_name
-#         oStyle = oDoc.StyleFamilies.getByName('PageStyles').getByName(style_name)
-
-#         try:
-#             committente = oDoc.Sheets.getByName('S2').getCellRangeByName("C6").String
-#         except: committente = ""
-
-#         testo_header = f"Committente: {committente}\nSTATO AVANZAMENTO LAVORI n. {nSal}"
-#         LS.set_header(oStyle, testo_header, '', '')
-
-#     # Righe da ripetere
-#     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-#     oTitles.Sheet = oSheet.RangeAddress.Sheet
-#     oTitles.StartRow = 0
-#     oTitles.EndRow = 0
-#     oSheet.setTitleRows(oTitles)
-#     oSheet.setPrintTitleRows(True)
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei 9 valori passati da GeneraLibretto
-#     nSal, _, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-
-#     # Il riepilogo SAL comprende sia le voci Lavori sia quelle di Sicurezza
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc)
-#     else:
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).getReferredCells().RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento e Stile Riga Intestazione (Gialla) ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oRangeGiallo = oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow)
-#     oRangeGiallo.CellStyle = "uuuuu"
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - 1÷{aVoce}"
-
-# # --- 3. Scrittura Dati e Applicazione Stili Specifici per Colonna ---
-#     dataStartRow = insRow + 1
-#     numVoci = len(datiSAL_Riepilogo)
-#     lastDataRow = dataStartRow + numVoci - 1
-
-#     # Scrittura dei valori (colonne 0-3)
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # Definizione dello schema stili richiesto
-#     # 0: List-stringa-sin | 1: List-stringa-sin | 2: List-num-centro
-#     # 3: List-num-euro    | 4: List-num-euro    | 5: List-num-euro
-#     stili_colonne = [
-#         "List-stringa-sin", "List-stringa-sin", "List-num-centro",
-#         "List-num-euro",    "List-num-euro",    "List-num-euro"
-#     ]
-
-#     # Applicazione massiva degli stili per colonna
-#     for col_idx, nome_stile in enumerate(stili_colonne):
-#         oRangeCol = oSalSheet.getCellRangeByPosition(col_idx, dataStartRow, col_idx, lastDataRow)
-#         oRangeCol.CellStyle = nome_stile
-
-#     # --- 4. Inserimento Formule (Prezzi e Importi) ---
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         formule.append([
-#             f'=VLOOKUP(A{r};elenco_prezzi;5;0)',
-#             f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'
-#         ])
-
-#     # Inserimento formule nelle colonne 4 e 5 (Prezzo e Importo)
-#     # Gli stili sono già stati applicati nel ciclo precedente
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # Affiniamo gli stili per le colonne numeriche (allineamento e decimali)
-#     oSalSheet.getCellRangeByPosition(3, dataStartRow, 5, lastDataRow).CellStyle = "comp sotto destra"
-
-#     # --- 5. Riepilogo Economico e Stili Totali ---
-#     r = lastDataRow + 2
-#     # Applichiamo uno stile più marcato per le etichette del riepilogo
-#     oSalSheet.getCellRangeByPosition(1, r, 1, r+4).CellStyle = "comp_testa_R"
-
-#     oSalSheet.getCellByPosition(1, r).String = "PARZIALE LAVORI A MISURA €"
-#     oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRow+1})"
-#     oSalSheet.getCellByPosition(5, r).CellStyle = "Ultimus_destra_totali"
-
-#     oSalSheet.getCellByPosition(1, r+1).String = "di cui SICUREZZA (non soggetta a ribasso) €"
-#     oSalSheet.getCellByPosition(5, r+1).Value = sic
-#     oSalSheet.getCellByPosition(5, r+1).CellStyle = "comp sotto destra"
-
-#     oSalSheet.getCellByPosition(1, r+2).String = "RIBASSO D'ASTA (da Situazione Contabile)"
-#     # Recupero ribasso da S2
-#     oSalSheet.getCellByPosition(5, r+2).Formula = f"=-(F{r+1}-F{r+2}) * $S2.$C$78"
-#     oSalSheet.getCellByPosition(5, r+2).CellStyle = "comp sotto destra"
-
-#     oSalSheet.getCellByPosition(1, r+4).String = "TOTALE NETTO SAL €"
-#     oSalSheet.getCellByPosition(5, r+4).Formula = f"=F{r+1}+F{r+3}"
-#     oSalSheet.getCellByPosition(5, r+4).CellStyle = "Ultimus_destra_totali"
-
-#     # --- 6. Firme e NamedRange ---
-#     # fineFirme = firme_contabili(r + 6)
-#     # area_sal = f"$A${insRow+1}:$F${fineFirme+1}"
-#     # # Creazione del range nominato per gestire l'accodamento del SAL successivo
-#     # LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
-# # ... (parte precedente di GeneraSAL) ...
-
-#     # r è la riga dove hai inserito "PARZIALE LAVORI A MISURA €" nel punto 5
-#     riga_totale_precedente = r
-
-#     # Chiamata alla nuova funzione (passando sic e mdo ricevuti nell'unpack iniziale)
-#     fineFirme = firme_contabili_sal(oDoc, oSalSheet, r + 6, sic, mdo, riga_totale_precedente)
-
-#     # Definizione area finale
-#     area_sal = f"$A${insRow+1}:$F${fineFirme}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
-
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei 9 valori passati da GeneraLibretto
-#     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc)
-#     else:
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).getReferredCells().RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento Riga Intestazione (Gialla) ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
-
-#     # --- 3. Scrittura Dati e Stili Colonne ---
-#     dataStartRow = insRow + 1
-#     numVoci = len(datiSAL_Riepilogo)
-#     lastDataRow = dataStartRow + numVoci - 1
-
-#     # Inseriamo le righe necessarie per i dati
-#     oSalSheet.getRows().insertByIndex(dataStartRow, numVoci)
-
-#     # Scrittura DataArray (colonne 0-3)
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # Applicazione stili granulari come da schema richiesto
-#     stili_colonne = [
-#         "List-stringa-sin", "List-stringa-sin", "List-num-centro",
-#         "List-num-euro",    "List-num-euro",    "List-num-euro"
-#     ]
-#     for col_idx, nome_stile in enumerate(stili_colonne):
-#         oSalSheet.getCellByPosition(col_idx, dataStartRow).Columns.Width # (opzionale)
-#         oSalSheet.getCellRangeByPosition(col_idx, dataStartRow, col_idx, lastDataRow).CellStyle = nome_stile
-
-#     # --- 4. Formule Prezzi e Importi ---
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         formule.append([
-#             f'=VLOOKUP(A{r};elenco_prezzi;5;0)',
-#             f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'
-#         ])
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # --- 5. Applicazione stili "a tappeto" e Firme ---
-#     # riga_inizio_riepilogo è subito dopo i dati
-#     r_inizio_firme = lastDataRow + 1
-
-#     # Chiamata alla funzione che gestisce il riempimento bordi, riepilogo e firme
-#     fineFirme = firme_contabili_sal(oDoc, oSalSheet, r_inizio_firme, sic, mdo, lastDataRow)
-
-#     # --- 6. Chiusura NamedRange ---
-#     area_sal = f"$A${insRow+1}:$F${fineFirme}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
-#     oSalSheet.getRows().OptimalHeight = True
-
-
-
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei dati
-#     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc)
-#     else:
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).getReferredCells().RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento Intestazione "segue SAL" ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
-
-#     # --- 3. Scrittura Voci SAL ---
-#     dataStartRow = insRow + 1
-#     numVoci = len(datiSAL_Riepilogo)
-#     lastDataRow = dataStartRow + numVoci - 1
-
-#     oSalSheet.getRows().insertByIndex(dataStartRow, numVoci)
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # Stili per colonna
-#     stili_colonne = ["List-stringa-sin", "List-stringa-sin", "List-num-centro", "List-num-euro", "List-num-euro", "List-num-euro"]
-#     for col_idx, nome_stile in enumerate(stili_colonne):
-#         oSalSheet.getCellRangeByPosition(col_idx, dataStartRow, col_idx, lastDataRow).CellStyle = nome_stile
-
-#     # Formule Prezzi/Importi
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         formule.append([f'=VLOOKUP(A{r};elenco_prezzi;5;0)', f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'])
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # --- 4. CHIUSURA: BORDURA A TAPPETO, RIEPILOGO E FIRME ---
-#     # r_inizio_chiusura è la riga subito dopo l'ultima voce dati
-#     r_inizio_chiusura = lastDataRow + 1
-
-#     # Chiamata alla funzione di chiusura
-#     fineFirme = firme_contabili_sal(oDoc, oSalSheet, r_inizio_chiusura, sic, mdo, lastDataRow)
-
-#     # --- 5. NamedRange ---
-#     area_sal = f"$A${insRow+1}:$F${fineFirme}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
-#     oSalSheet.getRows().OptimalHeight = True
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei dati
-#     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc)
-#     else:
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).getReferredCells().RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento Intestazione "segue SAL" ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
-
-#     # --- 3. Scrittura Voci SAL ---
-#     dataStartRow = insRow + 1
-#     numVoci = len(datiSAL_Riepilogo)
-#     lastDataRow = dataStartRow + numVoci - 1
-
-#     oSalSheet.getRows().insertByIndex(dataStartRow, numVoci)
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # Schema stili richiesto per colonna
-#     stili_colonne = ["List-stringa-sin", "List-stringa-sin", "List-num-centro", "List-num-euro", "List-num-euro", "List-num-euro"]
-#     for col_idx, nome_stile in enumerate(stili_colonne):
-#         oSalSheet.getCellRangeByPosition(col_idx, dataStartRow, col_idx, lastDataRow).CellStyle = nome_stile
-
-#     # Formule Prezzi/Importi
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         formule.append([f'=VLOOKUP(A{r};elenco_prezzi;5;0)', f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'])
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # --- 4. CHIUSURA: RIEPILOGO E FIRME ---
-#     # Gestione altezza ottimale per la tabella dati
-#     oSalSheet.getRows().getByIndex(dataStartRow).OptimalHeight = True
-
-#     # Chiamata alla funzione di chiusura
-#     fineFirme = firme_contabili_sal(oDoc, oSalSheet, lastDataRow + 1, sic, mdo, lastDataRow)
-
-#     # --- 5. NamedRange ---
-#     area_sal = f"$A${insRow+1}:$F${fineFirme}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_str=area_sal, nomearea=f"_SAL_{nSal}")
-
-#     # Altezza ottimale finale per tutto il blocco
-#     oSalSheet.getRows().getByIndex(insRow, fineFirme).OptimalHeight = True
-
-
-
-# def GeneraSAL(oDoc, dati):
-#     # Unpack dei dati
-#     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
-#     datiSAL_Riepilogo = datiSAL + datiSAL_VDS
-
-#     if not datiSAL_Riepilogo:
-#         return
-
-#     oSalSheet = setup_foglio(oDoc, "SAL")
-#     PL.GotoSheet('SAL')
-
-#     # --- 1. Calcolo riga di inserimento ---
-#     if nSal == 1:
-#         insRow = 1
-#         setup_intestazioni_sal(oSalSheet, nSal, oDoc)
-#     else:
-#         nome_precedente = f"_SAL_{nSal-1}"
-#         if oDoc.NamedRanges.hasByName(nome_precedente):
-#             oPrevRange = oDoc.NamedRanges.getByName(nome_precedente).getReferredCells().RangeAddress
-#             insRow = oPrevRange.EndRow + 1
-#         else:
-#             insRow = SheetUtils.getLastUsedRow(oSalSheet) + 1
-
-#     # --- 2. Inserimento Intestazione "segue SAL" ---
-#     oSalSheet.getRows().insertByIndex(insRow, 1)
-#     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-#     oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
-
-#     # --- 3. Scrittura Voci SAL ---
-#     dataStartRow = insRow + 1
-#     numVoci = len(datiSAL_Riepilogo)
-#     lastDataRow = dataStartRow + numVoci - 1
-
-#     oSalSheet.getRows().insertByIndex(dataStartRow, numVoci)
-#     oSalSheet.getCellRangeByPosition(0, dataStartRow, 3, lastDataRow).setDataArray(tuple(datiSAL_Riepilogo))
-
-#     # Schema stili richiesto per colonna
-#     stili_colonne = ["List-stringa-sin", "List-stringa-sin", "List-num-centro", "List-num-euro", "List-num-euro", "List-num-euro"]
-#     for col_idx, nome_stile in enumerate(stili_colonne):
-#         oSalSheet.getCellRangeByPosition(col_idx, dataStartRow, col_idx, lastDataRow).CellStyle = nome_stile
-
-#     # Formule Prezzi/Importi
-#     formule = []
-#     for x in range(dataStartRow, lastDataRow + 1):
-#         r = x + 1
-#         formule.append([f'=VLOOKUP(A{r};elenco_prezzi;5;0)', f'=IF(C{r}="%";D{r}*E{r}/100;D{r}*E{r})'])
-#     oSalSheet.getCellRangeByPosition(4, dataStartRow, 5, lastDataRow).setFormulaArray(tuple(formule))
-
-#     # Applica OptimalHeight alle voci inserite
-#     oSalSheet.getRows().getByIndex(dataStartRow, lastDataRow).OptimalHeight = True
-
-#     # --- 4. CHIUSURA CON FILLER (insrow dinamico) ---
-#     # Passiamo lastDataRow + 1 come punto di partenza per il riempimento
-#     fineFirme = firme_contabili_sal(oDoc, oSalSheet, lastDataRow + 1, sic, mdo, lastDataRow)
-
-#     # --- 5. NamedRange ---
-#     area_sal = f"$A${insRow+1}:$F${fineFirme}"
-#     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
-
-#     # Altezza ottimale finale per il blocco chiusura
-#     oSalSheet.getRows().getByIndex(lastDataRow + 1, fineFirme).OptimalHeight = True
 
 def GeneraSAL(oDoc, dati):
     # Unpack dei dati
@@ -2050,7 +1529,7 @@ def GeneraSAL(oDoc, dati):
     current_row = insRow + 1
     stili_colonne = ["List-stringa-sin", "List-stringa-sin", "List-num-centro", "List-num-euro", "List-num-euro", "List-num-euro"]
 
-    subtotalStartRow = current_row
+    subtotalStartRow = current_row + 1
     foundFirstData = False
 
     sections = [
@@ -2072,6 +1551,7 @@ def GeneraSAL(oDoc, dati):
         # Voci
         numVoci = len(data)
         dataStartRow = current_row
+        totaltStartRow = current_row
         lastDataRowSec = dataStartRow + numVoci - 1
 
         if not foundFirstData:
@@ -2096,6 +1576,17 @@ def GeneraSAL(oDoc, dati):
         oSalSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra"
         oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
         oSalSheet.getCellByPosition(5, current_row).CellStyle = "Ultimus_destra_totali"
+
+        if partial_label == "Parziale dei Lavori a Misura €":
+            current_row += 1
+            oSalSheet.getRows().insertByIndex(current_row, 1)
+            oSalSheet.getCellRangeByPosition(0, current_row, 5, current_row).CellStyle = "Ultimus_centro_bordi_lati"
+            oSalSheet.getCellByPosition(1, current_row).Formula = '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"% da applicare su €")'
+            oSalSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra_1"
+
+            oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
+            oSalSheet.getCellByPosition(5, current_row).CellStyle = "Ultimus_destra_totali"
+
         current_row += 1
 
         # RIEMPIMENTO PAGINA (filler) tra sezioni (solo se ne seguono altre)
@@ -2116,20 +1607,21 @@ def GeneraSAL(oDoc, dati):
     r += 1
 
     # Parziale complessivo (Rapporto tra Lavori e Sicurezza)
-    oSalSheet.getCellByPosition(1, r).String = "Parziale dei Lavori a Misura €"
-    oSalSheet.getCellByPosition(1, r).CellStyle = "Ultimus_destra"
+    # oSalSheet.getCellByPosition(1, r).String = "Parziale dei Lavori a Misura €"
+    # oSalSheet.getCellByPosition(1, r).CellStyle = "Ultimus_destra"
     # SUBTOTAL(9;...) ignora le righe che contengono a loro volta SUBTOTAL,
     # quindi la somma finale su tutto il range è corretta.
-    oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;F{subtotalStartRow+1}:F{lastDataRow+1})"
-    oSalSheet.getCellByPosition(5, r).CellStyle = "Ultimus_destra_totali"
+    # oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;F{subtotalStartRow+1}:F{lastDataRow+1})"
+    # oSalSheet.getCellByPosition(5, r).CellStyle = "Ultimus_destra_totali"
     riga_parziale = r  # Salva per passarla al riepilogo
-    r += 1
+    # r += 1
 
     # Lavori a tutto il __/__/____ - TOTALE
     # oSalSheet.getCellByPosition(1, r).String = "Lavori a tutto il ___/___/_________ - T O T A L E  €"
     oSalSheet.getCellByPosition(1, r).String = "T O T A L E  €"
     oSalSheet.getCellByPosition(1, r).CellStyle = "Ultimus_destra"
-    oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;$F$2:$F${r})"
+    # oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;$F$2:$F${r})"
+    oSalSheet.getCellByPosition(5, r).Formula = f"=SUBTOTAL(9;$F${subtotalStartRow}:$F${r})"
     oSalSheet.getCellByPosition(5, r).CellStyle = "Ultimus_destra_totali"
     r += 1
 
@@ -2174,11 +1666,11 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     # Il riepilogo inizia sulla nuova pagina
     insRow = currRow  # Salviamo il punto di partenza del riepilogo
 
-    # Inseriamo le righe necessarie per il riepilogo (16 righe)
-    oSheet.getRows().insertByIndex(currRow, 16)
+    # Inseriamo le righe necessarie per il riepilogo (14 righe)
+    oSheet.getRows().insertByIndex(currRow, 14)
     # Impostiamo il salto pagina DOPO l'inserimento per evitare che venga spostato
     oSheet.getRows().getByIndex(insRow).IsStartOfNewPage = True
-    oSheet.getCellRangeByPosition(fcol, insRow, fcol + 5, insRow + 15).CellStyle = "Ultimus_centro_bordi_lati"
+    oSheet.getCellRangeByPosition(fcol, insRow, fcol + 5, insRow + 13).CellStyle = "Ultimus_centro_bordi_lati"
 
     # Titolo
     oSheet.getCellByPosition(fcol + 1, insRow + 1).String = "R I E P I L O G O   S A L"
@@ -2198,13 +1690,13 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Lavori a Misura
     oSheet.getCellByPosition(fcol + 1, insRow + 6).String = "Lavori a Misura €"
-    oSheet.getCellByPosition(fcol + 1, insRow + 6).CellStyle = "Ultimus_sx_bold"
+    oSheet.getCellByPosition(fcol + 1, insRow + 6).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(5, insRow + 6).Formula = f"=${ncol}${Row_Misura + 1}"
 
     # Detrazione Sicurezza (negativa)
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 7, fcol + 1, insRow + 8).CellStyle = "Ultimus_sx"
-    oSheet.getCellByPosition(fcol + 1, insRow + 7).String = "Di cui importo per la Sicurezza"
-    oSheet.getCellByPosition(5, insRow + 7).Value = sic * -1
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 7, fcol + 1, insRow + 8).CellStyle = "Ultimus_destra_1"
+    oSheet.getCellByPosition(fcol + 1, insRow + 7).String = "Di cui importo per la Sicurezza €"
+    oSheet.getCellByPosition(5, insRow + 7).Value = sic
 
     # Detrazione Manodopera (negativa)
     # oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
@@ -2213,33 +1705,33 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Base Ribasso = somma delle 3 righe precedenti
     oSheet.getCellRangeByPosition(fcol + 1, insRow + 8, fcol + 1, insRow + 9).CellStyle = "Ultimus_destra"
-    oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Importo dei Lavori a Misura su cui applicare il ribasso"
-    oSheet.getCellByPosition(5, insRow + 8).Formula = f"=SUM({ncol}{insRow + 7}:{ncol}{insRow + 8})"
+    oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Importo dei Lavori a Misura su cui applicare il ribasso €"
+    oSheet.getCellByPosition(5, insRow + 8).Formula = f"={ncol}{insRow + 7}-{ncol}{insRow + 8}"
 
     # Ribasso (testo dinamico + calcolo)
     oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
         '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")'
-    oSheet.getCellByPosition(5, insRow + 9).Formula = f"=-{ncol}{insRow + 9}*$S2.$C$78"
+    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-$S2.$C$78"
 
     # Re-integro Sicurezza e Manodopera (positivi)
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx"
-    oSheet.getCellByPosition(fcol + 1, insRow + 10).String = "Importo per la Sicurezza"
-    oSheet.getCellByPosition(5, insRow + 10).Value = sic
+    # oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx_bold"
+    # oSheet.getCellByPosition(fcol + 1, insRow + 10).String = "Importo per la Sicurezza €"
+    # oSheet.getCellByPosition(5, insRow + 10).Value = sic
 
     # oSheet.getCellByPosition(fcol + 1, insRow + 12).String = "Importo per la Manodopera"
     # oSheet.getCellByPosition(5, insRow + 12).CellStyle = "ULTIMUS"
     # oSheet.getCellByPosition(5, insRow + 12).Value = mdo
 
     # Totale Parziale Lavori a Misura
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 11, fcol + 1, insRow + 11).CellStyle = "Ultimus_destra_bold"
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 11, fcol + 1, insRow + 11).CellStyle = "Ultimus_destra_1"
     oSheet.getCellByPosition(fcol + 1, insRow + 11).String = "PER I LAVORI A MISURA €"
-    oSheet.getCellByPosition(5, insRow + 11).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 11})"
+    oSheet.getCellByPosition(5, insRow + 11).Formula = f"=SUM({ncol}{insRow + 9}:{ncol}{insRow + 10})"
 
     # TOTALE GENERALE
-    oSheet.getCellRangeByPosition(fcol + 1, insRow + 13, fcol + 1, insRow + 13).CellStyle = "Ultimus_destra_bold"
+    oSheet.getCellRangeByPosition(fcol + 1, insRow + 13, fcol + 1, insRow + 13).CellStyle = "Ultimus_destra_1"
     oSheet.getCellByPosition(fcol + 1, insRow + 13).String = "T O T A L E  €"
     oSheet.getCellByPosition(5, insRow + 13).CellStyle = "Ultimus_destra_totali"
-    oSheet.getCellByPosition(5, insRow + 13).Formula = f"=SUM({ncol}{insRow + 10}:{ncol}{insRow + 13})"
+    oSheet.getCellByPosition(5, insRow + 13).Formula = f"={ncol}{insRow + 8}+{ncol}{insRow + 12}"
 
     currRow = insRow + 14
 
@@ -2250,7 +1742,8 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Riga finale di chiusura (senza tratteggio, con bordi) richiesto dall'utente
     oSheet.getRows().insertByIndex(currRow, 1)
-    oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_centro_bordi_lati"
+    # oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_centro_bordi_lati"
+    oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_"
     currRow += 1
 
     # Restituisce l'ultima riga del blocco per il NamedRange

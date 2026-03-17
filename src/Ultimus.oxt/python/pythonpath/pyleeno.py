@@ -12792,7 +12792,6 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
-    DLG.chi(888)
     LeenoTheme.catalogo_stili_cella()
 
     return

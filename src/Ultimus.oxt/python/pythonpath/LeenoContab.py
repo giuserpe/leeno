@@ -662,6 +662,20 @@ def struttura_CONTAB():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     PL.struttura_off()
+    is_ctrl, is_shift = PL.GetModifiers()
+
+    force_color_level = -1
+    if is_ctrl and is_shift:
+        force_color_level = 2 # Sotto Categoria
+    elif is_ctrl:
+        force_color_level = 0 # Super Categoria
+    elif is_shift:
+        force_color_level = 1 # Categoria
+
+    if force_color_level != -1:
+        for n in range(0, 4):
+            PL.applica_livelli(n, vedi=False, force_color_level=force_color_level)
+
     oRanges = oDoc.NamedRanges
 
     if oSheet.Name == 'CONTABILITA':

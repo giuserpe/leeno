@@ -8309,8 +8309,9 @@ def MENU_filtra_codice():
     # Otteniamo la riga corrente una sola volta
     lrow = LeggiPosizioneCorrente()[1]
 
-    # Se siamo in "Elenco Prezzi", i modificatori scelgono l'elaborato di destinazione
-    if oSheet.Name == "Elenco Prezzi" and (is_ctrl or is_shift):
+    # Se siamo in "Elenco Prezzi", o se usiamo entrambi i modificatori, 
+    # la logica di salto/foglio è gestita da filtra_codice
+    if (is_ctrl and is_shift) or (oSheet.Name == "Elenco Prezzi" and (is_ctrl or is_shift)):
         filtra_codice(is_ctrl=is_ctrl, is_shift=is_shift)
         return
 
@@ -8408,6 +8409,16 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
                     voce = LeenoComputo.datiVoceComputo(oSheet, lrow_originale)[1][1]
             except:
                 pass
+
+    # --- 1bis. ROTAZIONE FOGLI (COMPUTO -> VARIANTE -> CONTABILITA) ---
+    if is_ctrl and is_shift and oSheet.Name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+        ordine = ["COMPUTO", "VARIANTE", "CONTABILITA"]
+        try:
+            nuovo = ordine[(ordine.index(oSheet.Name) + 1) % 3]
+            GotoSheet(nuovo)
+            oSheet = oDoc.CurrentController.ActiveSheet
+        except ValueError:
+            pass
 
     if not voce:
         Dialogs.Exclamation(Title='ATTENZIONE!', Text='Seleziona una voce o una misurazione.')

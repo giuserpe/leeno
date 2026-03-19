@@ -3111,6 +3111,155 @@ def XPWE_out(elaborato, out_file):
     XPWE_out_run(elaborato, out_file)
 
 
+########################################################################
+
+
+def MENU_trasferimento_onfly():
+    '''
+    Trasferisce i dati da COMPUTO/VARIANTE a CONTABILITA on-the-fly.
+    '''
+    import LeenoImport_XPWE
+    oDoc = LeenoUtils.getDocument()
+
+    # Scegli elaborato sorgente
+    try:
+        source_name = DLG.ScegliElaborato(Titolo='Scegli foglio sorgente',
+                                         flag='export')
+    except Exception:
+        return
+
+    if source_name == 'CONTABILITA':
+        Dialogs.Exclamation(Title='ATTENZIONE!',
+                            Text='Il foglio sorgente non può essere la CONTABILITA.')
+        return
+
+    if not oDoc.getSheets().hasByName(source_name):
+        return
+
+    # Raccolta dati
+    data = get_transfer_data(source_name)
+
+    # Preparazione CONTABILITA
+    LeenoContab.generaContabilita(oDoc)
+
+    # Importazione
+    LeenoImport_XPWE.compilaComputo(
+        oDoc,
+        'CONTABILITA',
+        data['capitoliCategorie'],
+        data['elencoPrezzi'],
+        data['listaMisure']
+    )
+
+    # Finalizzazione
+    GotoSheet('CONTABILITA')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Ok(Text='Trasferimento completato con successo!')
+
+
+def get_transfer_data(source_sheet_name):
+    ''' Scansiona il foglio sorgente e restituisce le strutture dati per l'import '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(source_sheet_name)
+    lastRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    capitoliCategorie = {
+        'SuperCategorie': [],
+        'Categorie': [],
+        'SottoCategorie': []
+    }
+    listaspcat, listacat, listasbcat = [], [], []
+    listaMisure = []
+    diz_articoli = {}
+
+    # 1. Ricostruzione categorie per mapping
+    for n in range(0, lastRow):
+        cell_1 = oSheet.getCellByPosition(1, n)
+        cell_2 = oSheet.getCellByPosition(2, n)
+
+        if cell_1.CellStyle == 'Livello-0-scritta':
+            desc = cell_2.String
+            if desc not in listaspcat:
+                listaspcat.append(desc)
+                capitoliCategorie['SuperCategorie'].append(
+                    (str(len(listaspcat)), desc, '0'))
+        elif cell_2.CellStyle == 'Livello-1-scritta mini':
+            desc = cell_2.String
+            if desc not in listacat:
+                listacat.append(desc)
+                capitoliCategorie['Categorie'].append(
+                    (str(len(listacat)), desc, '0'))
+        elif cell_2.CellStyle == 'livello2_':
+            desc = cell_2.String
+            if desc not in listasbcat:
+                listasbcat.append(desc)
+                capitoliCategorie['SottoCategorie'].append(
+                    (str(len(listasbcat)), desc, '0'))
+
+    # 2. Scansione voci e misure
+    nVCItem = 2
+    for n in range(0, lastRow):
+        if oSheet.getCellByPosition(0,
+                                    n).CellStyle in ('Comp Start Attributo',
+                                                     'Comp Start Attributo_R'):
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+
+            # Voce
+            v_data = LeenoComputo.datiVoceComputo(oSheet, sopra)
+            tariffa = v_data[1]
+            diz_articoli[tariffa] = {'tariffa': tariffa}
+
+            # Misure
+            lista_righe = []
+            for m in range(sopra + 2, sotto):
+                desc_riga = oSheet.getCellByPosition(2, m).String
+                idvv = '-2'
+                if '- vedi voce n.' in desc_riga:
+                    try:
+                        idvv = str(int(desc_riga.split('- vedi voce n.')[1].split(' ')[0]) + 1)
+                        desc_riga = ''
+                    except:
+                        pass
+
+                riga = (
+                    desc_riga,
+                    '',
+                    '',
+                    valuta_cella(oSheet.getCellByPosition(5, m)),
+                    valuta_cella(oSheet.getCellByPosition(6, m)),
+                    valuta_cella(oSheet.getCellByPosition(7, m)),
+                    valuta_cella(oSheet.getCellByPosition(8, m)),
+                    str(oSheet.getCellByPosition(9, m).Value),
+                    '0',
+                    idvv,
+                )
+                lista_righe.append(riga)
+
+            listaMisure.append({
+                'id_vc': str(nVCItem),
+                'id_ep': tariffa,
+                'quantita': str(oSheet.getCellByPosition(9, sotto).Value),
+                'datamis': oggi(),
+                'flags': '134217728' if 'VDS_' in tariffa else '0',
+                'idspcat': oSheet.getCellByPosition(31, sotto).String or '0',
+                'idcat': oSheet.getCellByPosition(32, sotto).String or '0',
+                'idsbcat': oSheet.getCellByPosition(33, sotto).String or '0',
+                'lista_rig': lista_righe
+            })
+            nVCItem += 1
+
+    return {
+        'listaMisure': listaMisure,
+        'capitoliCategorie': capitoliCategorie,
+        'elencoPrezzi': {
+            'DizionarioArticoli': diz_articoli
+        }
+    }
+
+
 def XPWE_out_run(elaborato, out_file):
     '''
     esporta il documento in formato XPWE
@@ -8309,7 +8458,7 @@ def MENU_filtra_codice():
     # Otteniamo la riga corrente una sola volta
     lrow = LeggiPosizioneCorrente()[1]
 
-    # Se siamo in "Elenco Prezzi", o se usiamo entrambi i modificatori, 
+    # Se siamo in "Elenco Prezzi", o se usiamo entrambi i modificatori,
     # la logica di salto/foglio è gestita da filtra_codice
     if (is_ctrl and is_shift) or (oSheet.Name == "Elenco Prezzi" and (is_ctrl or is_shift)):
         filtra_codice(is_ctrl=is_ctrl, is_shift=is_shift)
@@ -8360,6 +8509,7 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    start_sheet_name = oSheet.Name
 
     stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
     stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
@@ -8411,7 +8561,7 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
                 pass
 
     # --- 1bis. ROTAZIONE FOGLI (COMPUTO -> VARIANTE -> CONTABILITA) ---
-    if is_ctrl and is_shift and oSheet.Name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+    if is_ctrl and is_shift and start_sheet_name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         ordine = ["COMPUTO", "VARIANTE", "CONTABILITA"]
         try:
             nuovo = ordine[(ordine.index(oSheet.Name) + 1) % 3]
@@ -8633,7 +8783,7 @@ def struttura_off():
             if lrow > 2:
                 # 1. Reset colonna 0 (prima colonna)
                 oSheet.getCellRangeByPosition(0, 0, 0, lrow).clearContents(HARDATTR)
-            
+
             # 2. Reset righe di testata (SuperCat, Cat, SubCat)
             stili_testata = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta')
             search = oSheet.createSearchDescriptor()
@@ -12404,9 +12554,10 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
+    MENU_trasferimento_onfly()
+    return
     LeenoTheme.catalogo_stili_cella()
 
-    return
     # MENU_trova_duplicati()
     # LeenoSheetUtils.cerca_errori()
     # LeenoTheme.trova_colore_cella()

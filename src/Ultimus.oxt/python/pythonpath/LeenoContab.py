@@ -328,7 +328,7 @@ def mostra_sal(uSal):
 @with_progress_reclaim(manager_attr='progress')
 def MENU_AnnullaAttiContabili():
     '''
-    Annulla gli atti dell'ultimo SAL rgistrato.
+    Annulla gli atti dell'ultimo SAL registrato.
     '''
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
@@ -432,6 +432,19 @@ def MENU_AnnullaAttiContabili():
                 #cancella area di stampa
                 LeenoSheetUtils.DelPrintSheetArea()
             oDoc.NamedRanges.removeByName(nome_area)
+        # --- Pulizia SITUAZIONE CONTABILE in S2 ---
+        try:
+            oS2 = oDoc.getSheets().getByName('S2')
+            markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+            yS2, xS2 = markerS2[0], markerS2[1]
+            nSalDel = int(listaSal[-1])
+            col_del = yS2 + nSalDel
+            # Cancella tutta la colonna del SAL (righe da +1 a +25)
+            oS2.getCellRangeByPosition(col_del, xS2 + 1, col_del, xS2 + 25).clearContents(
+                VALUE + DATETIME + STRING + FORMULA)
+        except:
+            pass
+
         indicator.setValue(3)
         indicator.end()
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -1545,6 +1558,7 @@ def GeneraSAL(oDoc, dati):
 
     subtotalStartRow = current_row + 1
     foundFirstData = False
+    riga_sic_partial = None
 
     sections = [
         ("LAVORI A MISURA", datiSAL, "Parziale dei Lavori a Misura €"),
@@ -1591,6 +1605,9 @@ def GeneraSAL(oDoc, dati):
         oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
         oSalSheet.getCellByPosition(5, current_row).CellStyle = "Ultimus_destra_totali"
 
+        if partial_label == "Parziale della Sicurezza €":
+            riga_sic_partial = current_row
+
         if partial_label == "Parziale dei Lavori a Misura €":
             current_row += 1
             oSalSheet.getRows().insertByIndex(current_row, 1)
@@ -1614,7 +1631,7 @@ def GeneraSAL(oDoc, dati):
 
     # --- 4. Riepilogo dopo le voci ---
     r = current_row
-    oSalSheet.getRows().insertByIndex(r, 4)  # 4 righe: vuota + parziale + totale + vuota
+    oSalSheet.getRows().insertByIndex(r, 3)  # 3 righe: vuota + totale + chiusura
 
     # Riga vuota di separazione
     oSalSheet.getCellRangeByPosition(0, r, 5, r).CellStyle = "Ultimus_centro_bordi_lati"
@@ -1644,7 +1661,7 @@ def GeneraSAL(oDoc, dati):
 
     # --- 5. CHIUSURA CON FILLER E RIEPILOGO ---
     oDoc.calculate()
-    fineFirme = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale)
+    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial)
 
     # --- 5. NamedRange ---
     # Escludiamo la riga "segue SAL" (insRow) dall'area del NamedRange
@@ -1653,10 +1670,13 @@ def GeneraSAL(oDoc, dati):
     area_sal = f"$A${insRow+2}:$F${fineFirme+1}"
     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
 
+    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 ---
+    aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo)
+
     # Altezza ottimale finale per la chiusura
     oSalSheet.getCellRangeByPosition(0, lastDataRow + 1, 0, fineFirme).Rows.OptimalHeight = True
 
-def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
+def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None):
     '''
     Genera la pagina di riepilogo del SAL con filler dinamico.
     Traduzione dal VBasic originale: usa calcolo posizionale Y
@@ -1697,7 +1717,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # --- 3. LOGICA ECONOMICA (Valori e Formule) ---
     # Stile colonna importi
-    oSheet.getCellRangeByPosition(5, insRow + 6, 5, insRow + 15).CellStyle = "ULTIMUS"
+    oSheet.getCellRangeByPosition(5, insRow + 6, 5, insRow + 13).CellStyle = "ULTIMUS"
 
     # Riga del subtotale dei dati (riga_subtotale è 0-indexed)
     Row_Misura = riga_subtotale  # riga 0-indexed dove finiscono i dati
@@ -1710,7 +1730,10 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     # Detrazione Sicurezza (negativa)
     oSheet.getCellRangeByPosition(fcol + 1, insRow + 7, fcol + 1, insRow + 8).CellStyle = "Ultimus_destra_1"
     oSheet.getCellByPosition(fcol + 1, insRow + 7).String = "Di cui importo per la Sicurezza €"
-    oSheet.getCellByPosition(5, insRow + 7).Value = sic
+    if riga_sic is not None:
+        oSheet.getCellByPosition(5, insRow + 7).Formula = f"={ncol}${riga_sic + 1}"
+    else:
+        oSheet.getCellByPosition(5, insRow + 7).Value = sic
 
     # Detrazione Manodopera (negativa)
     # oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
@@ -1724,7 +1747,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Ribasso (testo dinamico + calcolo)
     oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
-        '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")'
+        '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,000");"%")'
     oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-$S2.$C$78"
 
     # Re-integro Sicurezza e Manodopera (positivi)
@@ -1760,8 +1783,63 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_"
     currRow += 1
 
-    # Restituisce l'ultima riga del blocco per il NamedRange
-    return currRow - 1
+    # Restituisce (ultima riga del blocco, inizio riepilogo) per NamedRange e S2
+    return currRow - 1, insRow
+
+
+def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
+    '''
+    Popola la SITUAZIONE CONTABILE nel foglio S2 con formule
+    che puntano alle celle del riepilogo SAL.
+
+    Parametri
+    ---------
+    oDoc : documento
+    nSal : int – numero del SAL corrente
+    insRowRiepilogo : int – riga 0-indexed di inizio del riepilogo SAL
+    mdo : float – totale manodopera
+    '''
+    try:
+        oS2 = oDoc.getSheets().getByName('S2')
+        markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+        yS2, xS2 = markerS2[0], markerS2[1]
+        col = yS2 + nSal  # Colonna del SAL corrente (F per SAL1, G per SAL2, …)
+
+        # Riga 1-indexed del riepilogo SAL per le formule Calc
+        R = insRowRiepilogo + 1  # conversione 0-indexed → 1-indexed
+
+        # Mappatura: (offset da xS2, formula o valore)
+        # Le formule cross-sheet usano il formato $SAL.F$XX
+        dati = [
+            # (+8)  Lavori e somministrazioni a MISURA = Riepilogo insRow+6
+            (8,  f"=$SAL.$F${R + 6}"),
+            # (+4)  Quota sicurezza non soggetta a ribasso = Riepilogo insRow+7
+            (4,  f"=$SAL.$F${R + 7}"),
+            # (+9)  Quota sicurezza (ripetuta) = Riepilogo insRow+7
+            (9,  f"=$SAL.$F${R + 7}"),
+            # (+12) Importo su cui applicare il ribasso = Riepilogo insRow+8
+            (12, f"=$SAL.$F${R + 8}"),
+            # (+13) Ribasso = Riepilogo insRow+9
+            (13, f"=$SAL.$F${R + 9}"),
+            # (+14) Importo ribassato (PER I LAVORI A MISURA) = Riepilogo insRow+11
+            (14, f"=$SAL.$F${R + 11}"),
+            # (+20) Importo Certificato di pagamento = Riepilogo insRow+13 (TOTALE)
+            (20, f"=$SAL.$F${R + 13}"),
+        ]
+
+        for offset, formula in dati:
+            oS2.getCellByPosition(col, xS2 + offset).Formula = formula
+
+        # Quota MDO (valore diretto, non presente nel riepilogo SAL)
+        oS2.getCellByPosition(col, xS2 + 5).Value = mdo   # Quota MDO non sogg.
+        oS2.getCellByPosition(col, xS2 + 10).Value = mdo  # Quota MDO (ripetuta)
+
+    except Exception as e:
+        # Non bloccante: errore nel popolamento S2 non deve interrompere il SAL
+        try:
+            DLG.errore(f"Errore aggiornamento S2: {e}")
+        except:
+            pass
 
 
 ########################################################################

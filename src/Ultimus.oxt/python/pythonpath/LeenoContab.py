@@ -500,7 +500,18 @@ def svuotaContabilita(oDoc):
             if oDoc.Sheets.hasByName(el):
                 oDoc.Sheets.removeByName(el)
 
-        oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+        # Trova l'indice per CONTABILITA (a destra di COMPUTO e VARIANTE)
+        try:
+            # COMPUTO è sempre presente
+            nIdx = oDoc.Sheets.getByName('COMPUTO').RangeAddress.Sheet + 1
+            if oDoc.Sheets.hasByName('VARIANTE'):
+                idx_v = oDoc.Sheets.getByName('VARIANTE').RangeAddress.Sheet
+                if idx_v >= nIdx:
+                    nIdx = idx_v + 1
+        except:
+            nIdx = 3
+
+        oDoc.Sheets.insertNewByName('CONTABILITA', nIdx)
         PL.GotoSheet('CONTABILITA')
         oSheet = oDoc.Sheets.getByName('CONTABILITA')
 

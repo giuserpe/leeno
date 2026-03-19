@@ -8444,6 +8444,9 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
 
+            # Annulla il colore precedente (formattazione diretta)
+            oSheet.getCellByPosition(1, sopra + 1).clearContents(HARDATTR)
+
             codice_corrente = oSheet.getCellByPosition(1, sopra + 1).String
 
             if codice_corrente != voce:

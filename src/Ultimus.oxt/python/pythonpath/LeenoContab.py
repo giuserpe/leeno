@@ -853,7 +853,7 @@ def GeneraLibretto(oDoc):
     # --- RACCOLTA DATI CUMULATIVA PER IL SAL ---
     SAL = []
     SAL_VDS = []
-    
+
     # Cerchiamo la riga della prima voce assoluta (1)
     try:
         if oRanges.hasByName("_Lib_1"):
@@ -862,7 +862,7 @@ def GeneraLibretto(oDoc):
             r_start_abs = int(SheetUtils.uFindStringCol("1", 0, oSheet, equal=1))
     except:
         r_start_abs = primariga
-        
+
     c_i = r_start_abs
     voci_coll = set()
     while c_i <= ultimariga:
@@ -954,7 +954,7 @@ def GeneraLibretto(oDoc):
                     last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
             titolo = "SICUREZZA (CALCOLO ANALITICO)" if is_vds else "LAVORI A MISURA"
-            oSheet.getCellByPosition(2, curr_i).String = titolo 
+            oSheet.getCellByPosition(2, curr_i).String = titolo
 
             current_section_type = voce_type
             curr_i += 1
@@ -983,16 +983,16 @@ def GeneraLibretto(oDoc):
                 art = str(row[1]).strip()
                 if not art or art == "LAVORI": # Filtra voci senza articolo o placeholder
                     continue
-                
+
                 q = float(row[4]) if row[4] else 0.0
                 imp = float(row[6]) if row[6] else 0.0
-                
+
                 # Salta se sia quantità che importo sono zero (voce non eseguita/fantasma)
                 if q == 0.0 and imp == 0.0:
                     continue
 
                 gruppi_quant[art] += q
-                gruppi_importo[art] += imp 
+                gruppi_importo[art] += imp
                 if art not in gruppo_dati:
                     gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
 
@@ -1623,7 +1623,7 @@ def GeneraSAL(oDoc, dati):
             current_row += 1
             oSalSheet.getRows().insertByIndex(current_row, 1)
             oSalSheet.getCellRangeByPosition(0, current_row, 5, current_row).CellStyle = "Ultimus_centro_bordi_lati"
-            oSalSheet.getCellByPosition(1, current_row).Formula = '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"% da applicare su €")'
+            oSalSheet.getCellByPosition(1, current_row).Formula = '=CONCATENATE("RIBASSO del ";TEXT(VLOOKUP("Ribasso:";$S2.$B$1:$C$1000;2;0)*100;"#.##0,000");"% da applicare su €")'
             oSalSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra_1"
 
             oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
@@ -1758,8 +1758,8 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
 
     # Ribasso (testo dinamico + calcolo)
     oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
-        '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,000");"%")'
-    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-$S2.$C$78"
+        '=CONCATENATE("RIBASSO del ";TEXT(VLOOKUP("Ribasso:";$S2.$B$1:$C$1000;2;0)*100;"#.##0,000");"%")'
+    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-VLOOKUP(\"Ribasso:\";$S2.$B$1:$C$1000;2;0)"
 
     # Re-integro Sicurezza e Manodopera (positivi)
     # oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx_bold"

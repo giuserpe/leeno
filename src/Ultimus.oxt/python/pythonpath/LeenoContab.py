@@ -26,6 +26,7 @@ import uno
 # import itertools
 # import operator
 import LeenoConfig
+import LeenoImport_XPWE
 cfg = LeenoConfig.Config()
 
 from collections import defaultdict
@@ -2063,3 +2064,148 @@ def EseguiContabilita(oDoc):
 ########################################################################
 ########################################################################
 # g_exportedScripts = GeneraAttiContabili
+@LeenoUtils.no_refresh
+def MENU_trasferimento_onfly():
+    '''
+    Trasferisce i dati da COMPUTO/VARIANTE a CONTABILITA on-the-fly.
+    '''
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+
+    # Scegli elaborato sorgente
+    try:
+        source_name = DLG.ScegliElaborato(Titolo='Scegli foglio sorgente',
+                                         flag='export')
+    except Exception:
+        return
+
+    if source_name == 'CONTABILITA':
+        Dialogs.Exclamation(Title='ATTENZIONE!',
+                            Text='Il foglio sorgente non può essere la CONTABILITA.')
+        return
+
+    if not oDoc.getSheets().hasByName(source_name):
+        return
+
+    # Raccolta dati
+    data = get_transfer_data(source_name)
+
+    # Preparazione CONTABILITA
+    generaContabilita(oDoc)
+
+    # Importazione
+    LeenoImport_XPWE.compilaComputo(
+        oDoc,
+        'CONTABILITA',
+        data['capitoliCategorie'],
+        data['elencoPrezzi'],
+        data['listaMisure']
+    )
+
+    # Finalizzazione
+    PL.GotoSheet('CONTABILITA')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Ok(Text='Trasferimento completato con successo!')
+
+
+def get_transfer_data(source_sheet_name):
+    ''' Scansiona il foglio sorgente e restituisce le strutture dati per l'import '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(source_sheet_name)
+    lastRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    capitoliCategorie = {
+        'SuperCategorie': [],
+        'Categorie': [],
+        'SottoCategorie': []
+    }
+    listaspcat, listacat, listasbcat = [], [], []
+    listaMisure = []
+    diz_articoli = {}
+
+    # 1. Ricostruzione categorie per mapping
+    for n in range(0, lastRow):
+        cell_1 = oSheet.getCellByPosition(1, n)
+        cell_2 = oSheet.getCellByPosition(2, n)
+
+        if cell_1.CellStyle == 'Livello-0-scritta':
+            desc = cell_2.String
+            if desc not in listaspcat:
+                listaspcat.append(desc)
+                capitoliCategorie['SuperCategorie'].append(
+                    (str(len(listaspcat)), desc, '0'))
+        elif cell_2.CellStyle == 'Livello-1-scritta mini':
+            desc = cell_2.String
+            if desc not in listacat:
+                listacat.append(desc)
+                capitoliCategorie['Categorie'].append(
+                    (str(len(listacat)), desc, '0'))
+        elif cell_2.CellStyle == 'livello2_':
+            desc = cell_2.String
+            if desc not in listasbcat:
+                listasbcat.append(desc)
+                capitoliCategorie['SottoCategorie'].append(
+                    (str(len(listasbcat)), desc, '0'))
+
+    # 2. Scansione voci e misure
+    nVCItem = 2
+    for n in range(0, lastRow):
+        if oSheet.getCellByPosition(0,
+                                    n).CellStyle in ('Comp Start Attributo',
+                                                     'Comp Start Attributo_R'):
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+
+            # Voce
+            v_data = LeenoComputo.datiVoceComputo(oSheet, sopra)
+            tariffa = v_data[1]
+            diz_articoli[tariffa] = {'tariffa': tariffa}
+
+            # Misure
+            lista_righe = []
+            for m in range(sopra + 2, sotto):
+                desc_riga = oSheet.getCellByPosition(2, m).String
+                idvv = '-2'
+                if '- vedi voce n.' in desc_riga:
+                    try:
+                        idvv = str(int(desc_riga.split('- vedi voce n.')[1].split(' ')[0]) + 1)
+                        desc_riga = ''
+                    except:
+                        pass
+
+                riga = (
+                    desc_riga,
+                    '',
+                    '',
+                    PL.valuta_cella(oSheet.getCellByPosition(5, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(6, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(7, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(8, m)),
+                    str(oSheet.getCellByPosition(9, m).Value),
+                    '0',
+                    idvv,
+                )
+                lista_righe.append(riga)
+
+            listaMisure.append({
+                'id_vc': str(nVCItem),
+                'id_ep': tariffa,
+                'quantita': str(oSheet.getCellByPosition(9, sotto).Value),
+                'datamis': PL.oggi(),
+                'flags': '134217728' if 'VDS_' in tariffa else '0',
+                'idspcat': oSheet.getCellByPosition(31, sotto).String or '0',
+                'idcat': oSheet.getCellByPosition(32, sotto).String or '0',
+                'idsbcat': oSheet.getCellByPosition(33, sotto).String or '0',
+                'lista_rig': lista_righe
+            })
+            nVCItem += 1
+
+    return {
+        'listaMisure': listaMisure,
+        'capitoliCategorie': capitoliCategorie,
+        'elencoPrezzi': {
+            'DizionarioArticoli': diz_articoli
+        }
+    }

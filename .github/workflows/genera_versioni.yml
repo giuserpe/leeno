@@ -25,9 +25,14 @@ jobs:
         id: webdav_files
         run: |
           # Configurazione da secret
-          WEBDAV_URL="${{ secrets.MEDDAV_URL }}"
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
           WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
-          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+          AUTH="$(echo -n ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }} | base64)"
+
+          if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_PATH" ]; then
+            echo "❌ Errore: WEBDAV_URL o STTP_REMOTE_PATH non impostati."
+            exit 1
+          fi
 
           echo "=== Connessione a ${WEBDAV_URL}/${WEBDAV_PATH} ==="
           
@@ -64,8 +69,8 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
-          OXT_BASE_URL: "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
-          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOMNLOAD_BASE }}"  # Nota: correggi typo nel secret se possibile
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
+          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
         run: |
@@ -77,17 +82,29 @@ jobs:
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+          AUTH="$(echo -n ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }} | base64)"
           for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
             curl -X PUT \
               -H "Authorization: Basic $AUTH" \
               -T "$file" \
-              "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/$(basename $file)"
+              "${{ secrets.WEBDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/$(basename $file)"
           done
           
       - name: Debug WebDAV
         run: |
-          echo "URL: ${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_USER="${{ secrets.WEBDAV_USER }}"
+          WEBDAV_PASS="${{ secrets.WEBDAV_PASS }}"
+          WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
+
+          if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_USER" ] || [ -z "$WEBDAV_PASS" ] || [ -z "$WEBDAV_PATH" ]; then
+            echo "❌ Errore: Variabili WebDAV (URL, User, Pass, Path) non impostate per il debug."
+            exit 1
+          fi
+
+          AUTH="$(echo -n "$WEBDAV_USER:$WEBDAV_PASS" | base64)"
+
+          echo "URL: $WEBDAV_URL/$WEBDAV_PATH"
           echo "File list:"
-          curl -s -X PROPFIND -H "Authorization: Basic $(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)" \
-            "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/" | grep -Eo '<d:href>[^<]*</d:href>'
+          curl -s -X PROPFIND -H "Authorization: Basic $AUTH" \
+            "$WEBDAV_URL/$WEBDAV_PATH/" | grep -Eo '<d:href>[^<]*</d:href>'

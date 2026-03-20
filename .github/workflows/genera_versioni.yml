@@ -31,21 +31,38 @@ jobs:
 
           if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_PATH" ]; then
             echo "❌ Errore: WEBDAV_URL o STTP_REMOTE_PATH non impostati."
+            echo "  WEBDAV_URL vuoto: $([ -z \"$WEBDAV_URL\" ] && echo 'sì' || echo 'no')"
+            echo "  WEBDAV_PATH vuoto: $([ -z \"$WEBDAV_PATH\" ] && echo 'sì' || echo 'no')"
             exit 1
           fi
 
           echo "=== Connessione a ${WEBDAV_URL}/${WEBDAV_PATH} ==="
           
           # 1. Lista file via PROPFIND
-          curl -s -X PROPFIND \
+          HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
             -H "Authorization: Basic $AUTH" \
             -H "Depth: 1" \
             "${WEBDAV_URL}/${WEBDAV_PATH}/" \
-            -o webdav.xml
+            -o webdav.xml)
 
-          # 2. Estrai solo file .oxt
+          echo "=== HTTP response code: $HTTP_CODE ==="
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
+            echo "❌ Errore: WebDAV ha risposto con codice $HTTP_CODE"
+            cat webdav.xml || true
+            exit 1
+          fi
+
+          # 2. Estrai solo file .oxt (|| true per evitare exit 1 se nessun match)
           grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml | 
-            sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt
+            sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt || true
+
+          if [ ! -s oxt_urls.txt ]; then
+            echo "⚠️ Nessun file .oxt trovato su WebDAV. Creazione file vuoto."
+            touch oxt_list.txt
+            echo "count=0" >> $GITHUB_OUTPUT
+            echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
+            exit 0
+          fi
 
           # 3. Recupera metadati
           echo "=== Metadati file ==="

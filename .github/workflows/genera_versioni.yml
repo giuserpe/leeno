@@ -21,8 +21,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y curl
           pip install requests
-          mkdir -p src/Ultimus.oxt include tools/version
-
+                mkdir -p src/Ultimus.oxt include tools/version
+      - name: Debug URL WebDAV
+        run: |
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_PATH="${{ secrets.SFTP_REMOTE_PATH }}"
+          echo "URL finale: ${WEBDAV_URL}/${WEBDAV_PATH}/"
+          echo "Lunghezza WEBDAV_URL: ${#WEBDAV_URL}"
+          echo "Lunghezza WEBDAV_PATH: ${#WEBDAV_PATH}"
+          # Test curl diretto
+          curl -v -X PROPFIND \
+            -H "Authorization: Basic $(echo -n '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' | base64)" \
+            -H "Depth: 1" \
+            "${WEBDAV_URL}/${WEBDAV_PATH}/" 2>&1 | head -30
       - name: Recupera elenco .oxt da WebDAV
         id: webdav_files
         run: |

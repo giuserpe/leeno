@@ -28,11 +28,11 @@ jobs:
         run: |
           # Configurazione da secret
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
+          WEBDAV_PATH="${{ secrets.SFTP_REMOTE_PATH }}"
           AUTH="$(echo -n ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }} | base64)"
 
           if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_PATH" ]; then
-            echo "❌ Errore: WEBDAV_URL o STTP_REMOTE_PATH non impostati."
+            echo "❌ Errore: WEBDAV_URL o SFTP_REMOTE_PATH non impostati."
             echo "  WEBDAV_URL vuoto: $([ -z \"$WEBDAV_URL\" ] && echo 'sì' || echo 'no')"
             echo "  WEBDAV_PATH vuoto: $([ -z \"$WEBDAV_PATH\" ] && echo 'sì' || echo 'no')"
             exit 1
@@ -88,7 +88,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
-          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/${{ secrets.SFTP_REMOTE_PATH }}"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
@@ -106,7 +106,7 @@ jobs:
             curl -X PUT \
               -H "Authorization: Basic $AUTH" \
               -T "$file" \
-              "${{ secrets.WEBDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/$(basename $file)"
+              "${{ secrets.WEBDAV_URL }}/${{ secrets.SFTP_REMOTE_PATH }}/$(basename $file)"
           done
           
       - name: Debug WebDAV
@@ -114,7 +114,7 @@ jobs:
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
           WEBDAV_USER="${{ secrets.WEBDAV_USER }}"
           WEBDAV_PASS="${{ secrets.WEBDAV_PASS }}"
-          WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
+          WEBDAV_PATH="${{ secrets.SFTP_REMOTE_PATH }}"
 
           if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_USER" ] || [ -z "$WEBDAV_PASS" ] || [ -z "$WEBDAV_PATH" ]; then
             echo "❌ Errore: Variabili WebDAV (URL, User, Pass, Path) non impostate per il debug."

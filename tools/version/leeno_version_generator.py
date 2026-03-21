@@ -33,24 +33,41 @@ class VersionManager:
 
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
         oxt_list = []
-        base_url = os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')
+        # base_url es: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB#
+        base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
         try:
-            with open(os.getenv('OXT_LIST_PATH', ''), 'r') as f:
+            oxt_list_path = os.getenv('OXT_LIST_PATH', '')
+            if not oxt_list_path:
+                raise ValueError("OXT_LIST_PATH non impostato")
+            with open(oxt_list_path, 'r') as f:
                 for line in f:
-                    if '.oxt' in line.lower():
-                        parts = line.strip().split()
-                        if len(parts) >= 4:
-                            oxt_list.append({
-                                'name': parts[-1],
-                                'size': parts[-2],
-                                'date': ' '.join(parts[:3]),
-                                'url': f"{base_url}/{parts[-1]}"
-                            })
+                    line = line.strip()
+                    if not line or '.oxt' not in line.lower():
+                        continue
+                    parts = line.split()
+                    if len(parts) >= 4:
+                        name = parts[-1]
+                        size = parts[-2]
+                        date = ' '.join(parts[:3])
+                        url = f"{base_url}/download?path=&files={name}" if base_url else '#'
+                        oxt_list.append({
+                            'name': name,
+                            'size': size,
+                            'date': date,
+                            'url': url,
+                        })
+                    else:
+                        logger.warning(f"Riga non parsabile in oxt_list: {line!r}")
         except Exception as e:
             logger.error(f"Errore lettura lista file: {str(e)}")
 
-        return oxt_list[:5] or [{
+        if oxt_list:
+            logger.info(f"Trovati {len(oxt_list)} file .oxt, uso i primi 5")
+            return oxt_list[:5]
+
+        logger.warning("Nessun file .oxt trovato nella lista")
+        return [{
             'name': 'Nessun file disponibile',
             'size': '0KB',
             'date': datetime.now().strftime('%Y-%m-%d'),
@@ -98,7 +115,7 @@ class VersionManager:
         for i, file in enumerate(oxt_files):
             name = file['name']
             badge = '<span class="badge badge-latest">ULTIMA</span>' if i == 0 else ''
-            url = f"{base_url}/{name}" if base_url else '#'
+            url = file.get('url', '#')
             sha256 = file.get('sha256', '')
             rows.append(f"""
             <tr>

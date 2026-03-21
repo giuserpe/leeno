@@ -32,8 +32,12 @@ class VersionManager:
         self.web_dir.mkdir(exist_ok=True)
 
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
+        """
+        Legge oxt_list.txt generato dal workflow.
+        Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
+        parts[0] = data, parts[1] = ora, parts[2] = size, parts[3] = nome
+        """
         oxt_list = []
-        # base_url es: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB#
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
         try:
@@ -46,19 +50,27 @@ class VersionManager:
                     if not line or '.oxt' not in line.lower():
                         continue
                     parts = line.split()
+                    # Formato atteso: data ora size nome
+                    # es: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
                     if len(parts) >= 4:
-                        name = parts[-1]
-                        size = parts[-2]
-                        date = ' '.join(parts[:3])
-                        url = f"{base_url}/download?path=&files={name}" if base_url else '#'
-                        oxt_list.append({
-                            'name': name,
-                            'size': size,
-                            'date': date,
-                            'url': url,
-                        })
+                        date = f"{parts[0]} {parts[1]}"
+                        size = parts[2]
+                        name = parts[3]
+                    elif len(parts) == 3:
+                        # fallback: data size nome
+                        date = parts[0]
+                        size = parts[1]
+                        name = parts[2]
                     else:
-                        logger.warning(f"Riga non parsabile in oxt_list: {line!r}")
+                        logger.warning(f"Riga non parsabile: {line!r}")
+                        continue
+                    url = f"{base_url}/download?path=&files={name}" if base_url else '#'
+                    oxt_list.append({
+                        'name': name,
+                        'size': size,
+                        'date': date,
+                        'url': url,
+                    })
         except Exception as e:
             logger.error(f"Errore lettura lista file: {str(e)}")
 
@@ -109,7 +121,7 @@ class VersionManager:
         """Genera la pagina HTML con le ultime 5 versioni"""
         oxt_files = self._parse_oxt_list()
         now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
-        base_url = os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')
+        base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
         rows = []
         for i, file in enumerate(oxt_files):

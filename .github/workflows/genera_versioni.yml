@@ -51,28 +51,49 @@ jobs:
             exit 1
           fi
 
-          grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml | \
-            sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt || true
+          # Estrai data, dimensione e nome da webdav.xml
+          python3 - <<'EOF'
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
 
-          if [ ! -s oxt_urls.txt ]; then
-            echo "⚠️ Nessun file .oxt trovato su WebDAV. Creazione file vuoto."
-            touch oxt_list.txt
-            echo "count=0" >> $GITHUB_OUTPUT
-            echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+NS = {
+    'd': 'DAV:',
+    'oc': 'http://owncloud.org/ns',
+    'nc': 'http://nextcloud.org/ns',
+}
 
-          echo "=== Metadati file ==="
-          while read -r path; do
-            filename=$(basename "$path")
-            headers=$(curl -s -I \
-              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
-              "${WEBDAV_URL}${path}")
-            date=$(echo "$headers" | grep -i "last-modified:" | awk '{print $3" "$4" "$5}')
-            size=$(echo "$headers" | grep -i "content-length:" | awk '{printf "%.1fMB", $2/1048576}')
-            echo "${date:-N/A} ${size:-N/A} $filename"
-          done < oxt_urls.txt | sort -r | head -10 > oxt_list.txt
-          
+tree = ET.parse('webdav.xml')
+root = tree.getroot()
+
+entries = []
+for resp in root.findall('d:response', NS):
+    href = resp.findtext('d:href', '', NS)
+    if not href.lower().endswith('.oxt'):
+        continue
+    prop = resp.find('.//d:prop', NS)
+    name = href.rstrip('/').split('/')[-1]
+    size_b = prop.findtext('d:getcontentlength', '0', NS)
+    date_raw = prop.findtext('d:getlastmodified', '', NS)
+    try:
+        dt = parsedate_to_datetime(date_raw)
+        date = dt.strftime('%Y-%m-%d %H:%M')
+    except Exception:
+        date = date_raw[:10] if date_raw else 'N/A'
+    try:
+        size_mb = f"{int(size_b) / 1048576:.1f}MB"
+    except Exception:
+        size_mb = 'N/A'
+    entries.append((date, size_mb, name))
+
+entries.sort(reverse=True)
+
+with open('oxt_list.txt', 'w') as f:
+    for date, size, name in entries[:10]:
+        f.write(f"{date} {size} {name}\n")
+
+print(f"Scritti {min(len(entries), 10)} file in oxt_list.txt")
+EOF
+
           echo "=== oxt_list.txt ==="
           cat oxt_list.txt
 
@@ -114,14 +135,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Checkout branch master in una worktree separata
           git fetch origin master
           git worktree add /tmp/master-pages origin/master
 
-          # Copia versions.html nella root di master
           cp tools/version/versions.html /tmp/master-pages/versions.html
 
-          # Commit e push solo se ci sono modifiche
           cd /tmp/master-pages
           git add versions.html
           if git diff --cached --quiet; then

@@ -21,48 +21,35 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y curl
           pip install requests
-                mkdir -p src/Ultimus.oxt include tools/version
-      - name: Debug URL WebDAV
-        run: |
-          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_PATH="${{ secrets.SFTP_REMOTE_PATH }}"
-          echo "URL finale: ${WEBDAV_URL}/${WEBDAV_PATH}/"
-          echo "Lunghezza WEBDAV_URL: ${#WEBDAV_URL}"
-          echo "Lunghezza WEBDAV_PATH: ${#WEBDAV_PATH}"
-          # Test curl diretto
-          curl -v -X PROPFIND \
-            -H "Authorization: Basic $(echo -n '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' | base64)" \
-            -H "Depth: 1" \
-            "${WEBDAV_URL}/${WEBDAV_PATH}/" 2>&1 | head -30
+          mkdir -p src/Ultimus.oxt include tools/version
+
       - name: Recupera elenco .oxt da WebDAV
         id: webdav_files
         run: |
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}"  # rimuovi trailing slash
-      
+          WEBDAV_URL="${WEBDAV_URL%/}"
+
           if [ -z "$WEBDAV_URL" ]; then
             echo "❌ Errore: WEBDAV_URL non impostato."
             exit 1
           fi
-      
+
           echo "=== Connessione a ${WEBDAV_URL}/ ==="
-      
+
           HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
             -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
             -H "Depth: 1" \
             "${WEBDAV_URL}/" \
             -o webdav.xml)
-      
+
           echo "=== HTTP response code: $HTTP_CODE ==="
-          cat webdav.xml
-            if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
-              echo "❌ Errore: WebDAV ha risposto con codice $HTTP_CODE"
-              cat webdav.xml || true
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
+            echo "❌ Errore: WebDAV ha risposto con codice $HTTP_CODE"
+            cat webdav.xml || true
             exit 1
           fi
 
-          # 2. Estrai solo file .oxt (|| true per evitare exit 1 se nessun match)
-          grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml |
+          grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml | \
             sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt || true
 
           if [ ! -s oxt_urls.txt ]; then
@@ -73,16 +60,16 @@ jobs:
             exit 0
           fi
 
-          # 3. Recupera metadati
           echo "=== Metadati file ==="
           while read -r path; do
             filename=$(basename "$path")
-            curl -s -I -H "Authorization: Basic $AUTH" "${WEBDAV_URL}${path}" | \
+            curl -s -I \
+              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
+              "${WEBDAV_URL}${path}" | \
               awk -v fn="$filename" \
               '/Last-Modified:/ {date=$3" "$4" "$5} /Content-Length:/ {size=$2/1024} END {print date, size"KB", fn}'
           done < oxt_urls.txt | sort -r | head -10 > oxt_list.txt
 
-          # Output
           OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
@@ -95,7 +82,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
-          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/${{ secrets.SFTP_REMOTE_PATH }}"
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
@@ -108,29 +95,11 @@ jobs:
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          AUTH="$(echo -n ${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }} | base64)"
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_URL="${WEBDAV_URL%/}"
           for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
             curl -X PUT \
-              -H "Authorization: Basic $AUTH" \
+              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
               -T "$file" \
-              "${{ secrets.WEBDAV_URL }}/${{ secrets.SFTP_REMOTE_PATH }}/$(basename $file)"
+              "${WEBDAV_URL}/$(basename $file)"
           done
-
-      - name: Debug WebDAV
-        run: |
-          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_USER="${{ secrets.WEBDAV_USER }}"
-          WEBDAV_PASS="${{ secrets.WEBDAV_PASS }}"
-          WEBDAV_PATH="${{ secrets.SFTP_REMOTE_PATH }}"
-
-          if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_USER" ] || [ -z "$WEBDAV_PASS" ] || [ -z "$WEBDAV_PATH" ]; then
-            echo "❌ Errore: Variabili WebDAV (URL, User, Pass, Path) non impostate per il debug."
-            exit 1
-          fi
-
-          AUTH="$(echo -n "$WEBDAV_USER:$WEBDAV_PASS" | base64)"
-
-          echo "URL: $WEBDAV_URL/$WEBDAV_PATH"
-          echo "File list:"
-          curl -s -X PROPFIND -H "Authorization: Basic $AUTH" \
-            "$WEBDAV_URL/$WEBDAV_PATH/" | grep -Eo '<d:href>[^<]*</d:href>'

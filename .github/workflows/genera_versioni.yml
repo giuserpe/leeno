@@ -65,13 +65,14 @@ jobs:
           echo "=== Metadati file ==="
           while read -r path; do
             filename=$(basename "$path")
-            curl -s -I \
+            headers=$(curl -s -I \
               -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
-              "${WEBDAV_URL}${path}" | \
-              awk -v fn="$filename" \
-              '/Last-Modified:/ {date=$3" "$4" "$5} /Content-Length:/ {size=$2/1024} END {print date, size"KB", fn}'
+              "${WEBDAV_URL}${path}")
+            date=$(echo "$headers" | grep -i "last-modified:" | awk '{print $3" "$4" "$5}')
+            size=$(echo "$headers" | grep -i "content-length:" | awk '{printf "%.1fMB", $2/1048576}')
+            echo "${date:-N/A} ${size:-N/A} $filename"
           done < oxt_urls.txt | sort -r | head -10 > oxt_list.txt
-
+          
           echo "=== oxt_list.txt ==="
           cat oxt_list.txt
 

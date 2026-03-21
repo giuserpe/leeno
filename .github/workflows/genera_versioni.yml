@@ -75,6 +75,15 @@ jobs:
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
           cat oxt_list.txt
+      
+      - name: Debug oxt_list
+        run: |
+          echo "=== oxt_urls.txt ==="
+          cat oxt_urls.txt || echo "(vuoto o assente)"
+          echo "=== oxt_list.txt ==="
+          cat oxt_list.txt || echo "(vuoto o assente)"
+          echo "=== webdav.xml (prime 50 righe) ==="
+          head -50 webdav.xml || echo "(vuoto o assente)"
 
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py

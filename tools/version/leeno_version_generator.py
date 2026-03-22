@@ -123,17 +123,19 @@ class VersionManager:
         now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
+        has_sha256 = any(file.get('sha256') for file in oxt_files)
+
         rows = []
         for i, file in enumerate(oxt_files):
             name = file['name']
             badge = '<span class="badge badge-latest">ULTIMA</span>' if i == 0 else ''
             url = file.get('url', '#')
-            sha256 = file.get('sha256', '')
+            sha256_cell = f'<td class="hash">{file.get("sha256", "")}</td>' if has_sha256 else ''
             rows.append(f"""
             <tr>
                 <td>{name} {badge}</td>
                 <td><a href="{url}" download>Scarica</a></td>
-                <td class="hash">{sha256}</td>
+                {sha256_cell}
                 <td>{file['date']}</td>
                 <td>{file['size']}</td>
             </tr>""")
@@ -226,7 +228,7 @@ class VersionManager:
             <tr>
                 <th>Versione</th>
                 <th>Download</th>
-                <th>SHA256</th>
+                {"<th>SHA256</th>" if has_sha256 else ""}
                 <th>Data</th>
                 <th>Dimensione</th>
             </tr>

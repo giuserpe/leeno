@@ -10127,7 +10127,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
-    description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
+    # description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -12415,8 +12415,6 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 import LeenoTheme
 
 def MENU_debug():
-    LeenoContab.MENU_trasferimento_onfly()
-    return
     LeenoTheme.catalogo_stili_cella()
 
     # MENU_trova_duplicati()

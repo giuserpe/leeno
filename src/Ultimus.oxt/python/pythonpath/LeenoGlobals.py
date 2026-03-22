@@ -30,8 +30,8 @@ def initGlobalVars(d):
 if getGlobalVar('Lmajor') is None:
     initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
-        'Lminor': 24,       # NUOVE FUNZIONALITA'
-        'Lsubv': "2.dev",       # CORREZIONE BUGS
+        'Lminor': 25,       # NUOVE FUNZIONALITA'
+        'Lsubv': "0",       # CORREZIONE BUGS
         # ~'Lmajor': 3,        # INCOMPATIBILITA'
         # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
         # ~'Lsubv': "0",       # CORREZIONE BUGS
@@ -40,7 +40,7 @@ if getGlobalVar('Lmajor') is None:
                    'comp Int_colonna', 'Ultimus_centro_bordi_lati',
                    'comp Int_colonna_R_prima'),
 
-        'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 
+        'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta',
                     'comp Int_colonna_R_prima', 'comp Int_colonna'),
 
         'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',

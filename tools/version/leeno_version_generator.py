@@ -33,9 +33,12 @@ class VersionManager:
 
     def _parse_oxt_list(self) -> List[Dict[str, str]]:
         """
-        Legge oxt_list.txt generato dal workflow.
+        Legge oxt_list.txt generato da parse_webdav.py.
         Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
-        parts[0] = data, parts[1] = ora, parts[2] = size, parts[3] = nome
+          parts[0] = data (YYYY-MM-DD)
+          parts[1] = ora  (HH:MM)
+          parts[2] = dimensione (es. 4.4MB)
+          parts[3] = nome file
         """
         oxt_list = []
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
@@ -50,14 +53,11 @@ class VersionManager:
                     if not line or '.oxt' not in line.lower():
                         continue
                     parts = line.split()
-                    # Formato atteso: data ora size nome
-                    # es: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
                     if len(parts) >= 4:
                         date = f"{parts[0]} {parts[1]}"
                         size = parts[2]
                         name = parts[3]
                     elif len(parts) == 3:
-                        # fallback: data size nome
                         date = parts[0]
                         size = parts[1]
                         name = parts[2]

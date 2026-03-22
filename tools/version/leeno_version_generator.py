@@ -219,7 +219,8 @@ class VersionManager:
 
     <div class="info-box">
         <h2>Informazioni</h2>
-        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.
+        ATTENZIONE: le versioni di sviluppo non sono destinate alla produzione e possono causare la perdita di dati!</p>
     </div>
 
     <h2>Download disponibili</h2>

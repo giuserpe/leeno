@@ -9,10 +9,14 @@ jobs:
   generate_version:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Setup ambiente
         run: |
@@ -24,39 +28,38 @@ jobs:
       - name: Recupera elenco .oxt da WebDAV
         id: webdav_files
         run: |
-          # Configurazione da secret
-          WEBDAV_URL="${{ secrets.MEDDAV_URL }}"
-          WEBDAV_PATH="${{ secrets.STTP_REMOTE_PATH }}"
-          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_URL="${WEBDAV_URL%/}"
 
-          echo "=== Connessione a ${WEBDAV_URL}/${WEBDAV_PATH} ==="
-          
-          # 1. Lista file via PROPFIND
-          curl -s -X PROPFIND \
-            -H "Authorization: Basic $AUTH" \
+          if [ -z "$WEBDAV_URL" ]; then
+            echo "❌ Errore: WEBDAV_URL non impostato."
+            exit 1
+          fi
+
+          echo "=== Connessione a ${WEBDAV_URL}/ ==="
+
+          HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
+            -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
             -H "Depth: 1" \
-            "${WEBDAV_URL}/${WEBDAV_PATH}/" \
-            -o webdav.xml
+            "${WEBDAV_URL}/" \
+            -o webdav.xml)
 
-          # 2. Estrai solo file .oxt
-          grep -Eo '<d:href>[^<]*\.oxt</d:href>' webdav.xml | 
-            sed 's|<d:href>\(.*\)</d:href>|\1|' > oxt_urls.txt
+          echo "=== HTTP response code: $HTTP_CODE ==="
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
+            echo "❌ Errore: WebDAV ha risposto con codice $HTTP_CODE"
+            cat webdav.xml || true
+            exit 1
+          fi
 
-          # 3. Recupera metadati
-          echo "=== Metadati file ==="
-          while read -r path; do
-            filename=$(basename "$path")
-            curl -s -I -H "Authorization: Basic $AUTH" "${WEBDAV_URL}${path}" | \
-              awk -v fn="$filename" \
-              '/Last-Modified:/ {date=$3" "$4" "$5} /Content-Length:/ {size=$2/1024} END {print date, size"KB", fn}'
-          done < oxt_urls.txt | sort -r | head -10 > oxt_list.txt
+          python3 tools/version/parse_webdav.py
 
-          # Output
+          echo "=== oxt_list.txt ==="
+          cat oxt_list.txt
+
           OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
-          cat oxt_list.txt
 
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
@@ -64,30 +67,43 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
-          OXT_BASE_URL: "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
-          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOMNLOAD_BASE }}"  # Nota: correggi typo nel secret se possibile
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
+          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
         run: |
           echo "=== File generati ==="
           ls -la src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html
           echo "=== Anteprima HTML ==="
-          grep -A 15 "Archivio Versioni" tools/version/versions.html || true
+          grep -A 5 "Ultima versione" tools/version/versions.html || true
 
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          AUTH="$(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)"
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_URL="${WEBDAV_URL%/}"
           for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
             curl -X PUT \
-              -H "Authorization: Basic $AUTH" \
+              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
               -T "$file" \
-              "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/$(basename $file)"
+              "${WEBDAV_URL}/$(basename $file)"
           done
-          
-      - name: Debug WebDAV
+
+      - name: Pubblica versions.html su GitHub Pages
         run: |
-          echo "URL: ${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}"
-          echo "File list:"
-          curl -s -X PROPFIND -H "Authorization: Basic $(echo -n ${{ secrets.MEDDAV_USER }}:${{ secrets.MEDDAV_PASS }} | base64)" \
-            "${{ secrets.MEDDAV_URL }}/${{ secrets.STTP_REMOTE_PATH }}/" | grep -Eo '<d:href>[^<]*</d:href>'
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin master
+          git worktree add /tmp/master-pages origin/master
+
+          cp tools/version/versions.html /tmp/master-pages/versions.html
+
+          cd /tmp/master-pages
+          git add versions.html
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica a versions.html, skip push."
+          else
+            git commit -m "chore: aggiorna versions.html [skip ci]"
+            git push origin HEAD:master
+          fi

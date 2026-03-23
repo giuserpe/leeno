@@ -189,6 +189,10 @@ Sub svuotaContabilita
 	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
 End Sub
 rem ######################################################################
+Sub trasferimento_onfly
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_trasferimento_onfly&quot;)
+End Sub
+rem ######################################################################
 Sub MENU_prefisso_codice
 	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_prefisso_codice&quot;)
 End Sub

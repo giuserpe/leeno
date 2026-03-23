@@ -26,6 +26,7 @@ import uno
 # import itertools
 # import operator
 import LeenoConfig
+import LeenoImport_XPWE
 cfg = LeenoConfig.Config()
 
 from collections import defaultdict
@@ -328,7 +329,7 @@ def mostra_sal(uSal):
 @with_progress_reclaim(manager_attr='progress')
 def MENU_AnnullaAttiContabili():
     '''
-    Annulla gli atti dell'ultimo SAL rgistrato.
+    Annulla gli atti dell'ultimo SAL registrato.
     '''
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
@@ -432,6 +433,19 @@ def MENU_AnnullaAttiContabili():
                 #cancella area di stampa
                 LeenoSheetUtils.DelPrintSheetArea()
             oDoc.NamedRanges.removeByName(nome_area)
+        # --- Pulizia SITUAZIONE CONTABILE in S2 ---
+        try:
+            oS2 = oDoc.getSheets().getByName('S2')
+            markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+            yS2, xS2 = markerS2[0], markerS2[1]
+            nSalDel = int(listaSal[-1])
+            col_del = yS2 + nSalDel
+            # Cancella tutta la colonna del SAL (righe da +1 a +25)
+            oS2.getCellRangeByPosition(col_del, xS2 + 1, col_del, xS2 + 25).clearContents(
+                VALUE + DATETIME + STRING + FORMULA)
+        except:
+            pass
+
         indicator.setValue(3)
         indicator.end()
     # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -487,7 +501,18 @@ def svuotaContabilita(oDoc):
             if oDoc.Sheets.hasByName(el):
                 oDoc.Sheets.removeByName(el)
 
-        oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+        # Trova l'indice per CONTABILITA (a destra di COMPUTO e VARIANTE)
+        try:
+            # COMPUTO è sempre presente
+            nIdx = oDoc.Sheets.getByName('COMPUTO').RangeAddress.Sheet + 1
+            if oDoc.Sheets.hasByName('VARIANTE'):
+                idx_v = oDoc.Sheets.getByName('VARIANTE').RangeAddress.Sheet
+                if idx_v >= nIdx:
+                    nIdx = idx_v + 1
+        except:
+            nIdx = 3
+
+        oDoc.Sheets.insertNewByName('CONTABILITA', nIdx)
         PL.GotoSheet('CONTABILITA')
         oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
@@ -662,6 +687,20 @@ def struttura_CONTAB():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     PL.struttura_off()
+    is_ctrl, is_shift = PL.GetModifiers()
+
+    force_color_level = -1
+    if is_ctrl and is_shift:
+        force_color_level = 2 # Sotto Categoria
+    elif is_ctrl:
+        force_color_level = 0 # Super Categoria
+    elif is_shift:
+        force_color_level = 1 # Categoria
+
+    if force_color_level != -1:
+        for n in range(0, 4):
+            PL.applica_livelli(n, vedi=False, force_color_level=force_color_level)
+
     oRanges = oDoc.NamedRanges
 
     if oSheet.Name == 'CONTABILITA':
@@ -815,7 +854,7 @@ def GeneraLibretto(oDoc):
     # --- RACCOLTA DATI CUMULATIVA PER IL SAL ---
     SAL = []
     SAL_VDS = []
-    
+
     # Cerchiamo la riga della prima voce assoluta (1)
     try:
         if oRanges.hasByName("_Lib_1"):
@@ -824,7 +863,7 @@ def GeneraLibretto(oDoc):
             r_start_abs = int(SheetUtils.uFindStringCol("1", 0, oSheet, equal=1))
     except:
         r_start_abs = primariga
-        
+
     c_i = r_start_abs
     voci_coll = set()
     while c_i <= ultimariga:
@@ -916,7 +955,7 @@ def GeneraLibretto(oDoc):
                     last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
             oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
             titolo = "SICUREZZA (CALCOLO ANALITICO)" if is_vds else "LAVORI A MISURA"
-            oSheet.getCellByPosition(2, curr_i).String = titolo 
+            oSheet.getCellByPosition(2, curr_i).String = titolo
 
             current_section_type = voce_type
             curr_i += 1
@@ -945,16 +984,16 @@ def GeneraLibretto(oDoc):
                 art = str(row[1]).strip()
                 if not art or art == "LAVORI": # Filtra voci senza articolo o placeholder
                     continue
-                
+
                 q = float(row[4]) if row[4] else 0.0
                 imp = float(row[6]) if row[6] else 0.0
-                
+
                 # Salta se sia quantità che importo sono zero (voce non eseguita/fantasma)
                 if q == 0.0 and imp == 0.0:
                     continue
 
                 gruppi_quant[art] += q
-                gruppi_importo[art] += imp 
+                gruppi_importo[art] += imp
                 if art not in gruppo_dati:
                     gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
 
@@ -1531,6 +1570,7 @@ def GeneraSAL(oDoc, dati):
 
     subtotalStartRow = current_row + 1
     foundFirstData = False
+    riga_sic_partial = None
 
     sections = [
         ("LAVORI A MISURA", datiSAL, "Parziale dei Lavori a Misura €"),
@@ -1577,11 +1617,14 @@ def GeneraSAL(oDoc, dati):
         oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
         oSalSheet.getCellByPosition(5, current_row).CellStyle = "Ultimus_destra_totali"
 
+        if partial_label == "Parziale della Sicurezza €":
+            riga_sic_partial = current_row
+
         if partial_label == "Parziale dei Lavori a Misura €":
             current_row += 1
             oSalSheet.getRows().insertByIndex(current_row, 1)
             oSalSheet.getCellRangeByPosition(0, current_row, 5, current_row).CellStyle = "Ultimus_centro_bordi_lati"
-            oSalSheet.getCellByPosition(1, current_row).Formula = '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"% da applicare su €")'
+            oSalSheet.getCellByPosition(1, current_row).Formula = '=CONCATENATE("RIBASSO del ";TEXT(VLOOKUP("Ribasso:";$S2.$B$1:$C$1000;2;0)*100;"#.##0,000");"% da applicare su €")'
             oSalSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra_1"
 
             oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
@@ -1600,7 +1643,7 @@ def GeneraSAL(oDoc, dati):
 
     # --- 4. Riepilogo dopo le voci ---
     r = current_row
-    oSalSheet.getRows().insertByIndex(r, 4)  # 4 righe: vuota + parziale + totale + vuota
+    oSalSheet.getRows().insertByIndex(r, 3)  # 3 righe: vuota + totale + chiusura
 
     # Riga vuota di separazione
     oSalSheet.getCellRangeByPosition(0, r, 5, r).CellStyle = "Ultimus_centro_bordi_lati"
@@ -1630,7 +1673,7 @@ def GeneraSAL(oDoc, dati):
 
     # --- 5. CHIUSURA CON FILLER E RIEPILOGO ---
     oDoc.calculate()
-    fineFirme = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale)
+    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial)
 
     # --- 5. NamedRange ---
     # Escludiamo la riga "segue SAL" (insRow) dall'area del NamedRange
@@ -1639,10 +1682,13 @@ def GeneraSAL(oDoc, dati):
     area_sal = f"$A${insRow+2}:$F${fineFirme+1}"
     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
 
+    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 ---
+    aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo)
+
     # Altezza ottimale finale per la chiusura
     oSalSheet.getCellRangeByPosition(0, lastDataRow + 1, 0, fineFirme).Rows.OptimalHeight = True
 
-def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
+def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None):
     '''
     Genera la pagina di riepilogo del SAL con filler dinamico.
     Traduzione dal VBasic originale: usa calcolo posizionale Y
@@ -1683,7 +1729,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # --- 3. LOGICA ECONOMICA (Valori e Formule) ---
     # Stile colonna importi
-    oSheet.getCellRangeByPosition(5, insRow + 6, 5, insRow + 15).CellStyle = "ULTIMUS"
+    oSheet.getCellRangeByPosition(5, insRow + 6, 5, insRow + 13).CellStyle = "ULTIMUS"
 
     # Riga del subtotale dei dati (riga_subtotale è 0-indexed)
     Row_Misura = riga_subtotale  # riga 0-indexed dove finiscono i dati
@@ -1696,7 +1742,10 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     # Detrazione Sicurezza (negativa)
     oSheet.getCellRangeByPosition(fcol + 1, insRow + 7, fcol + 1, insRow + 8).CellStyle = "Ultimus_destra_1"
     oSheet.getCellByPosition(fcol + 1, insRow + 7).String = "Di cui importo per la Sicurezza €"
-    oSheet.getCellByPosition(5, insRow + 7).Value = sic
+    if riga_sic is not None:
+        oSheet.getCellByPosition(5, insRow + 7).Formula = f"={ncol}${riga_sic + 1}"
+    else:
+        oSheet.getCellByPosition(5, insRow + 7).Value = sic
 
     # Detrazione Manodopera (negativa)
     # oSheet.getCellByPosition(fcol + 1, insRow + 8).String = "Di cui importo per la Manodopera"
@@ -1710,8 +1759,8 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
 
     # Ribasso (testo dinamico + calcolo)
     oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
-        '=CONCATENATE("RIBASSO del ";TEXT($S2.$C$78*100;"#.##0,00");"%")'
-    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-$S2.$C$78"
+        '=CONCATENATE("RIBASSO del ";TEXT(VLOOKUP("Ribasso:";$S2.$B$1:$C$1000;2;0)*100;"#.##0,000");"%")'
+    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-VLOOKUP(\"Ribasso:\";$S2.$B$1:$C$1000;2;0)"
 
     # Re-integro Sicurezza e Manodopera (positivi)
     # oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx_bold"
@@ -1746,8 +1795,63 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale):
     oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_"
     currRow += 1
 
-    # Restituisce l'ultima riga del blocco per il NamedRange
-    return currRow - 1
+    # Restituisce (ultima riga del blocco, inizio riepilogo) per NamedRange e S2
+    return currRow - 1, insRow
+
+
+def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
+    '''
+    Popola la SITUAZIONE CONTABILE nel foglio S2 con formule
+    che puntano alle celle del riepilogo SAL.
+
+    Parametri
+    ---------
+    oDoc : documento
+    nSal : int – numero del SAL corrente
+    insRowRiepilogo : int – riga 0-indexed di inizio del riepilogo SAL
+    mdo : float – totale manodopera
+    '''
+    try:
+        oS2 = oDoc.getSheets().getByName('S2')
+        markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+        yS2, xS2 = markerS2[0], markerS2[1]
+        col = yS2 + nSal  # Colonna del SAL corrente (F per SAL1, G per SAL2, …)
+
+        # Riga 1-indexed del riepilogo SAL per le formule Calc
+        R = insRowRiepilogo + 1  # conversione 0-indexed → 1-indexed
+
+        # Mappatura: (offset da xS2, formula o valore)
+        # Le formule cross-sheet usano il formato $SAL.F$XX
+        dati = [
+            # (+8)  Lavori e somministrazioni a MISURA = Riepilogo insRow+6
+            (8,  f"=$SAL.$F${R + 6}"),
+            # (+4)  Quota sicurezza non soggetta a ribasso = Riepilogo insRow+7
+            (4,  f"=$SAL.$F${R + 7}"),
+            # (+9)  Quota sicurezza (ripetuta) = Riepilogo insRow+7
+            (9,  f"=$SAL.$F${R + 7}"),
+            # (+12) Importo su cui applicare il ribasso = Riepilogo insRow+8
+            (12, f"=$SAL.$F${R + 8}"),
+            # (+13) Ribasso = Riepilogo insRow+9
+            (13, f"=$SAL.$F${R + 9}"),
+            # (+14) Importo ribassato (PER I LAVORI A MISURA) = Riepilogo insRow+11
+            (14, f"=$SAL.$F${R + 11}"),
+            # (+20) Importo Certificato di pagamento = Riepilogo insRow+13 (TOTALE)
+            (20, f"=$SAL.$F${R + 13}"),
+        ]
+
+        for offset, formula in dati:
+            oS2.getCellByPosition(col, xS2 + offset).Formula = formula
+
+        # Quota MDO (valore diretto, non presente nel riepilogo SAL)
+        oS2.getCellByPosition(col, xS2 + 5).Value = mdo   # Quota MDO non sogg.
+        oS2.getCellByPosition(col, xS2 + 10).Value = mdo  # Quota MDO (ripetuta)
+
+    except Exception as e:
+        # Non bloccante: errore nel popolamento S2 non deve interrompere il SAL
+        try:
+            DLG.errore(f"Errore aggiornamento S2: {e}")
+        except:
+            pass
 
 
 ########################################################################
@@ -1960,3 +2064,148 @@ def EseguiContabilita(oDoc):
 ########################################################################
 ########################################################################
 # g_exportedScripts = GeneraAttiContabili
+@LeenoUtils.no_refresh
+def MENU_trasferimento_onfly():
+    '''
+    Trasferisce i dati da COMPUTO/VARIANTE a CONTABILITA on-the-fly.
+    '''
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+
+    # Scegli elaborato sorgente
+    try:
+        source_name = DLG.ScegliElaborato(Titolo='Scegli foglio sorgente',
+                                         flag='export')
+    except Exception:
+        return
+
+    if source_name == 'CONTABILITA':
+        Dialogs.Exclamation(Title='ATTENZIONE!',
+                            Text='Il foglio sorgente non può essere la CONTABILITA.')
+        return
+
+    if not oDoc.getSheets().hasByName(source_name):
+        return
+
+    # Raccolta dati
+    data = get_transfer_data(source_name)
+
+    # Preparazione CONTABILITA
+    generaContabilita(oDoc)
+
+    # Importazione
+    LeenoImport_XPWE.compilaComputo(
+        oDoc,
+        'CONTABILITA',
+        data['capitoliCategorie'],
+        data['elencoPrezzi'],
+        data['listaMisure']
+    )
+
+    # Finalizzazione
+    PL.GotoSheet('CONTABILITA')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Dialogs.Ok(Text='Trasferimento completato con successo!')
+
+
+def get_transfer_data(source_sheet_name):
+    ''' Scansiona il foglio sorgente e restituisce le strutture dati per l'import '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(source_sheet_name)
+    lastRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    capitoliCategorie = {
+        'SuperCategorie': [],
+        'Categorie': [],
+        'SottoCategorie': []
+    }
+    listaspcat, listacat, listasbcat = [], [], []
+    listaMisure = []
+    diz_articoli = {}
+
+    # 1. Ricostruzione categorie per mapping
+    for n in range(0, lastRow):
+        cell_1 = oSheet.getCellByPosition(1, n)
+        cell_2 = oSheet.getCellByPosition(2, n)
+
+        if cell_1.CellStyle == 'Livello-0-scritta':
+            desc = cell_2.String
+            if desc not in listaspcat:
+                listaspcat.append(desc)
+                capitoliCategorie['SuperCategorie'].append(
+                    (str(len(listaspcat)), desc, '0'))
+        elif cell_2.CellStyle == 'Livello-1-scritta mini':
+            desc = cell_2.String
+            if desc not in listacat:
+                listacat.append(desc)
+                capitoliCategorie['Categorie'].append(
+                    (str(len(listacat)), desc, '0'))
+        elif cell_2.CellStyle == 'livello2_':
+            desc = cell_2.String
+            if desc not in listasbcat:
+                listasbcat.append(desc)
+                capitoliCategorie['SottoCategorie'].append(
+                    (str(len(listasbcat)), desc, '0'))
+
+    # 2. Scansione voci e misure
+    nVCItem = 2
+    for n in range(0, lastRow):
+        if oSheet.getCellByPosition(0,
+                                    n).CellStyle in ('Comp Start Attributo',
+                                                     'Comp Start Attributo_R'):
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+
+            # Voce
+            v_data = LeenoComputo.datiVoceComputo(oSheet, sopra)
+            tariffa = v_data[1]
+            diz_articoli[tariffa] = {'tariffa': tariffa}
+
+            # Misure
+            lista_righe = []
+            for m in range(sopra + 2, sotto):
+                desc_riga = oSheet.getCellByPosition(2, m).String
+                idvv = '-2'
+                if '- vedi voce n.' in desc_riga:
+                    try:
+                        idvv = str(int(desc_riga.split('- vedi voce n.')[1].split(' ')[0]) + 1)
+                        desc_riga = ''
+                    except:
+                        pass
+
+                riga = (
+                    desc_riga,
+                    '',
+                    '',
+                    PL.valuta_cella(oSheet.getCellByPosition(5, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(6, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(7, m)),
+                    PL.valuta_cella(oSheet.getCellByPosition(8, m)),
+                    str(oSheet.getCellByPosition(9, m).Value),
+                    '0',
+                    idvv,
+                )
+                lista_righe.append(riga)
+
+            listaMisure.append({
+                'id_vc': str(nVCItem),
+                'id_ep': tariffa,
+                'quantita': str(oSheet.getCellByPosition(9, sotto).Value),
+                'datamis': PL.oggi(),
+                'flags': '134217728' if 'VDS_' in tariffa else '0',
+                'idspcat': oSheet.getCellByPosition(31, sotto).String or '0',
+                'idcat': oSheet.getCellByPosition(32, sotto).String or '0',
+                'idsbcat': oSheet.getCellByPosition(33, sotto).String or '0',
+                'lista_rig': lista_righe
+            })
+            nVCItem += 1
+
+    return {
+        'listaMisure': listaMisure,
+        'capitoliCategorie': capitoliCategorie,
+        'elencoPrezzi': {
+            'DizionarioArticoli': diz_articoli
+        }
+    }

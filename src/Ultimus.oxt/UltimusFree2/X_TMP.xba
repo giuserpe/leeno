@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="X_TMP" script:language="StarBasic">rem ***** BASIC *****
-Sub createButton
- 	oSheet=ThisComponent.currentController.activeSheet 
- oCell = oSheet.getCellByPosition( 0, 0 )
- oCursor = oSheet.createCursorByRange(oCell)
-createButton(&quot;untesto&quot;, &quot;suonome&quot;, &quot;sTag1&quot;, oCursor, 4)
-end sub
-
 
 Sub createButton_exe (sText, sName, sTag, oCursor, way, optional macro, optional oDocument)
  if isMissing(oDocument) Then
@@ -16,7 +9,7 @@ Sub createButton_exe (sText, sName, sTag, oCursor, way, optional macro, optional
  Dim button, shape, drawpage
  Dim oSize as new com.sun.star.awt.Size
  Dim oPosition as new com.sun.star.awt.Point
-
+ 
  button = createUnoService(&quot;com.sun.star.form.component.CommandButton&quot;)
  button.Label = sText
  button.Enabled = True
@@ -79,42 +72,6 @@ Sub createButton_exe (sText, sName, sTag, oCursor, way, optional macro, optional
  end if
 End Sub
 
-
-
-&apos; by Villeroy
-&apos;http://user.services.openoffice.org/en/forum/viewtopic.php?f=45&amp;t=4958&amp;p=22959&amp;hilit=copy+sheets#p22959
-rem copy first sheet of this document to position 2 of a new one
-Sub copia_foglio &apos;NON copia gli oggetti e i pulsanti (rapida)
-
-
-rem source document
-Dim sURL$, sLinkSheetName$
- sURL = thisComponent.getURL()
- 
- 	oSheet=ThisComponent.currentController.activeSheet 
-	iSheet_num = oSheet.RangeAddress.sheet 
- 
- sLinkSheetName = thisComponent.Sheets.getByIndex(iSheet_num).getName()
- 
-rem target document
-Dim doc, sheets, sName$, pos%
- doc = StarDesktop.loadComponentFromURL(&quot;private:factory/scalc&quot;, &quot;_default&quot;,0, Array())
- sheets = doc.getSheets()
- sName = getUniqueName(sheets, &quot;Copied&quot;)
- pos = 1
-
-rem new sheet
-Dim sh
- sheets.insertNewByName(sName, pos)
- sh = sheets.getByName(sName)
- 
-rem link the new sheet
- sh.link(sURL, sLinkSheetName, &quot;calc8&quot;, &quot;&quot;, com.sun.star.sheet.SheetLinkMode.NORMAL)
- 
-rem break link
- sh.setLinkMode(com.sun.star.sheet.SheetLinkMode.NONE)
-End Sub
-
 Function getUniqueName(oContainer,sName$)
 Dim i%,sNew$
  sNew = sName
@@ -124,40 +81,6 @@ Dim i%,sNew$
  loop
  getUniqueName = sNew
 End Function
-
-&apos;_____________________________________________________________________
-
-
-SUB Property2default(oRange as object) &apos;FUNZIONA
-	&apos; queste sono solo alcune delle proprietà... :-(
-	&apos;aggiungere man mano che si trovano 
-	&apos; ci dovrebbe essere il modo, recuperare le proprietà (un array)
-	&apos; e reimpostarle tutte in automatico
-	&apos;xray oRange
-	oRange.setPropertyToDefault(&quot;CellBackColor&quot;)
-	oRange.setPropertyToDefault(&quot;CharFontName&quot;)
-	oRange.setPropertyToDefault(&quot;CharHeight&quot;)
-	oRange.setPropertyToDefault(&quot;IsTextWrapped&quot;)
-	oRange.setPropertyToDefault(&quot;NumberFormat&quot;)
-	oRange.setPropertyToDefault(&quot;HoriJustify&quot;)
-	oRange.setPropertyToDefault(&quot;VertJustify&quot;)
-	oRange.setPropertyToDefault(&quot;ParaLeftMargin&quot;)
-	oRange.setPropertyToDefault(&quot;ParaRightMargin &quot;)
-	oRange.setPropertyToDefault(&quot;ParaTopMargin&quot;)
-	oRange.setPropertyToDefault(&quot;ParaBottomMargin&quot;)
-	oRange.setPropertyToDefault(&quot;CharWeight&quot;)
-	oRange.setPropertyToDefault(&quot;CharFontStyleName&quot;)	
-	oRange.setPropertyToDefault(&quot;CharUnderline&quot;) 
-	oRange.setPropertyToDefault(&quot;ValidationLocal&quot;)
- 	oRange.setPropertyToDefault(&quot;Validation&quot;) 
-	oRange.setPropertyToDefault(&quot;ShadowFormat&quot;) 
-	oRange.setPropertyToDefault(&quot;ShrinkToFit&quot;) 
-	oRange.setPropertyToDefault(&quot;Charemphasis&quot;)
-	oRange.setPropertyToDefault(&quot;CharPosture&quot;)
-	oRange.setPropertyToDefault(&quot;CharWeight&quot;)
-End sub
-
-
 
 Sub popi_serva &apos;accrocchio solo per giuserpe...
 	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
@@ -217,16 +140,4 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 	&apos;	print lLastUrow &amp; &quot; &quot; &amp; lrow
 	loop
 End Sub
-
-Function Verifica_chiudi_preview &apos;(optional sPrima as string)
-	dim document as object
-	dim dispatcher as object
-	 if ThisComponent.getCurrentController.getFrame.LayoutManager.isElementVisible _
-	 ( &quot;private:resource/toolbar/previewbar&quot; ) Then &apos; controlla se si è in preview 
- Verifica_chiudi_preview = &quot;Attiva&quot;
- 	 document = ThisComponent.CurrentController.Frame 
- 	 dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
- 	 dispatcher.executeDispatch(document, &quot;.uno:ClosePreview&quot;, &quot;&quot;, 0, Array()) 
-	 End If 
-End Function
 </script:module>

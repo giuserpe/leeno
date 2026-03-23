@@ -2,11 +2,59 @@
 Funzioni relative alla gestione delle analisi di prezzi
 '''
 
-import pyleeno as PL
 import LeenoUtils
+import LeenoGlobals
 import SheetUtils
 import LeenoSheetUtils
 import LeenoEvents
+
+import LeenoDialogs as DLG
+from undo_utils import with_undo
+
+@with_undo("Inserimento Oneri Sicurezza")
+def Inserisci_Utili():
+    oDoc = LeenoUtils.getDocument()
+    oSheets = oDoc.getSheets()
+    oRanges = oDoc.NamedRanges
+
+    oSheetAP = oSheets.getByName("Analisi di Prezzo")
+
+    # 1. Gestione del Range Nominato "oneri_sicurezza"
+    if not oRanges.hasByName("oneri_sicurezza"):
+        oCellAddress = oSheetAP.getCellRangeByName("B10").getCellAddress()
+        oRanges.addNewByName("oneri_sicurezza", "$S5.$B$93:$P$93", oCellAddress, 0)
+
+    import pyleeno as PL
+    lrow = PL.LeggiPosizioneCorrente()[1]
+    sStRange = circoscriveAnalisi(oSheetAP, lrow)
+    srow = sStRange.RangeAddress.StartRow
+    endRow = sStRange.RangeAddress.EndRow
+
+    target_row = -1
+    for i in range(srow, endRow):
+        cell_a = oSheetAP.getCellByPosition(0, i).String
+        cell_d = oSheetAP.getCellByPosition(3, i).String
+
+        if "sicurezza" in cell_d:
+            # DLG.chi("La riga degli oneri per la sicurezza è già inserita!")
+            return
+
+        if cell_a == "I":
+            target_row = i
+            break
+
+    # 3. Esecuzione
+    oSheetAP.getRows().insertByIndex(target_row, 1)
+
+    oNamedRange = oRanges.getByName("oneri_sicurezza")
+    oRangeAddress = oNamedRange.ReferredCells.getRangeAddress()
+    oDestAddress = oSheetAP.getCellByPosition(0, target_row).getCellAddress()
+
+    oSheetAP.copyRange(oDestAddress, oRangeAddress)
+
+    # Seleziona la cella di descrizione appena inserita
+    oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, target_row))
+
 
 def inizializzaAnalisi(oDoc):
     '''
@@ -58,25 +106,39 @@ def inizializzaAnalisi(oDoc):
 
 def circoscriveAnalisi(oSheet, lrow):
     '''
-    lrow    { int }  : riga di riferimento per
-                        la selezione dell'intera voce
-    Circoscrive una voce di analisi
-    partendo dalla posizione corrente del cursore
-    '''
-    stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
-        for el in reversed(range(0, lrow)):
-            #  chi(oSheet.getCellByPosition(0, el).CellStyle)
-            if oSheet.getCellByPosition(0, el).CellStyle == 'Analisi_Sfondo':
-                SR = el
-                break
-        for el in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
-            if oSheet.getCellByPosition(0, el).CellStyle == 'An-sfondo-basso Att End':
-                ER = el
-                break
-    celle = oSheet.getCellRangeByPosition(0, SR, 250, ER)
-    return celle
+    Circoscrive una voce di analisi partendo dalla posizione corrente del cursore
 
+    Args:
+        oSheet (object): Foglio di lavoro
+        lrow (int): Riga di riferimento per la selezione dell'intera voce
+
+    Returns:
+        object: Intervallo di celle che rappresenta l'analisi
+    '''
+    # Pre-carica gli stili necessari
+    stili_analisi = LeenoGlobals.getGlobalVar('stili_analisi')
+    cell_style = oSheet.getCellByPosition(0, lrow).CellStyle
+
+    # Variabili per i limiti
+    start_row = 0
+    end_row = SheetUtils.getLastUsedRow(oSheet)
+
+    # Trova inizio analisi (cerca all'indietro)
+    if cell_style in stili_analisi:
+        # Ottimizzazione: usa xrange in Python 2 o range in Python 3
+        for row in reversed(range(lrow)):
+            if oSheet.getCellByPosition(0, row).CellStyle == 'Analisi_Sfondo':
+                start_row = row
+                break
+
+        # Trova fine analisi (cerca in avanti)
+        for row in range(lrow, end_row + 1):
+            if oSheet.getCellByPosition(0, row).CellStyle == 'An-sfondo-basso Att End':
+                end_row = row
+                break
+
+    # Restituisci l'intervallo trovato (250 colonne è un valore arbitrario)
+    return oSheet.getCellRangeByPosition(0, start_row, 250, end_row)
 
 def copiaRigaAnalisi(oSheet, lrow):
     '''
@@ -120,7 +182,9 @@ def copiaRigaAnalisi(oSheet, lrow):
             oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
 
+
 def MENU_impagina_analisi():
+    '''
     PL.set_area_stampa()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -132,3 +196,26 @@ def MENU_impagina_analisi():
         if oSheet.getCellByPosition(0, el).String == '----':
             if oSheet.getCellByPosition(0, el + 2).CellStyle != 'Ultimus_centro':
                 oSheet.getCellByPosition(0, el + 2).Rows.IsStartOfNewPage = True
+    '''
+
+    PL.set_area_stampa()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    # Esegui solo se il foglio attivo è 'Analisi di Prezzo'
+    if oSheet.Name != 'Analisi di Prezzo':
+        return
+
+    # Calcola l'ultima riga utilizzata
+    last_row = SheetUtils.getLastUsedRow(oSheet) + 1
+
+    # Rimuovi tutte le interruzioni di pagina manuali
+    oSheet.removeAllManualPageBreaks()
+
+    # Imposta una nuova interruzione di pagina dopo ogni sezione individuata
+    for row in range(1, last_row):
+        cell = oSheet.getCellByPosition(0, row)
+        if cell.String == '----':
+            next_cell = oSheet.getCellByPosition(0, row + 2)
+            if next_cell.CellStyle != 'Ultimus_centro':
+                next_cell.Rows.IsStartOfNewPage = True

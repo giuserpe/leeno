@@ -49,7 +49,7 @@ def creaGiornale():
     opz.Name = 'AsTemplate'
     opz.Value = True
     document = desktop.loadComponentFromURL(
-        PL.LeenO_path() + '/template/leeno/Giornale_Lavori.ots', "_blank", 0,
+        PL.LeenO_path() + '/template/leeno/Giornale_Lavori.ods', "_blank", 0,
         (opz, ))
     return document
     

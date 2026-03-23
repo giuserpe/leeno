@@ -1,0 +1,109 @@
+name: Genera versioni LeenO con WebDAV
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  generate_version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+      - name: Setup ambiente
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          pip install requests
+          mkdir -p src/Ultimus.oxt include tools/version
+
+      - name: Recupera elenco .oxt da WebDAV
+        id: webdav_files
+        run: |
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_URL="${WEBDAV_URL%/}"
+
+          if [ -z "$WEBDAV_URL" ]; then
+            echo "❌ Errore: WEBDAV_URL non impostato."
+            exit 1
+          fi
+
+          echo "=== Connessione a ${WEBDAV_URL}/ ==="
+
+          HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
+            -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
+            -H "Depth: 1" \
+            "${WEBDAV_URL}/" \
+            -o webdav.xml)
+
+          echo "=== HTTP response code: $HTTP_CODE ==="
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 400 ]; then
+            echo "❌ Errore: WebDAV ha risposto con codice $HTTP_CODE"
+            cat webdav.xml || true
+            exit 1
+          fi
+
+          python3 tools/version/parse_webdav.py
+
+          echo "=== oxt_list.txt ==="
+          cat oxt_list.txt
+
+          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
+          echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
+          echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
+          echo "=== Trovati $OXT_COUNT file ==="
+
+      - name: Genera file versione
+        run: python tools/version/leeno_version_generator.py
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          BUILD_NUMBER: ${{ github.run_number }}
+          OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
+          PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
+
+      - name: Verifica output
+        run: |
+          echo "=== File generati ==="
+          ls -la src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html
+          echo "=== Anteprima HTML ==="
+          grep -A 5 "Ultima versione" tools/version/versions.html || true
+
+      - name: Upload a WebDAV
+        if: steps.webdav_files.outputs.count > 0
+        run: |
+          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
+          WEBDAV_URL="${WEBDAV_URL%/}"
+          for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
+            curl -X PUT \
+              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
+              -T "$file" \
+              "${WEBDAV_URL}/$(basename $file)"
+          done
+
+      - name: Pubblica versions.html su GitHub Pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin master
+          git worktree add /tmp/master-pages origin/master
+
+          cp tools/version/versions.html /tmp/master-pages/versions.html
+
+          cd /tmp/master-pages
+          git add versions.html
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica a versions.html, skip push."
+          else
+            git commit -m "chore: aggiorna versions.html [skip ci]"
+            git push origin HEAD:master
+          fi

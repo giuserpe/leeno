@@ -9,8 +9,8 @@ from com.sun.star.xml import AttributeData
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
 import LeenoUtils
-import LeenoSettings
 import DocUtils
+import Dialogs
 import LeenoDialogs as DLG
 
 from datetime import date
@@ -420,11 +420,22 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0, up=False):
     righe = range(start, aAddress.EndRow + 1)
     if up==True:
         righe = reversed (righe)
+
+    # progress = Dialogs.Progress(Title='Preparazione in corso...', Text='Rimane il')
+    # progress.setLimits(0, aAddress.EndRow)
+    # progress.setValue(0)
+    # progress.show()
+
     for nRow in righe:
-        if equal == 1 and oSheet.getCellByPosition(nCol, nRow).String == sString:
+        # progress.setValue(nRow)  # Aggiorna progresso
+        cell_value = oSheet.getCellByPosition(nCol, nRow).String
+        if (equal == 1 and cell_value == sString) or (equal == 0 and sString in cell_value):
+            # progress.hide()  # Chiude la barra di progresso
             return nRow
-        if equal == 0 and sString in oSheet.getCellByPosition(nCol, nRow).String:
-            return nRow
+    # progress.hide()  # Chiude la barra di progresso
+    return None
+
+        
 
 def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
     '''
@@ -467,7 +478,7 @@ def uFindString(sString, oSheet, up=False):
     for nRow in righe:
         for nCol in range(0, aAddress.EndColumn + 1):
             # ritocco di +Daniele Zambelli:
-            if sString == oSheet.getCellByPosition(nCol, nRow).String:
+            if sString.lower() == oSheet.getCellByPosition(nCol, nRow).String.lower():
                 return (nCol, nRow)
 
 # ###############################################################
@@ -546,6 +557,35 @@ def FixNamedArea():
 
 # ###############################################################
 
+def remove_bad_ranges():
+    '''Recupera tutti gli intervalli nominati definiti nel documento e
+    rimuove gli intervalli corrotti o non validi.'''
+
+    oDoc = LeenoUtils.getDocument()
+    oNamedRanges = oDoc.NamedRanges
+    tNamedArea = oNamedRanges.getElementNames()
+    
+    # DLG.chi(f"Numero di intervalli: {len(tNamedArea)}")
+    
+    for i, name in enumerate(tNamedArea, 1):
+        oNamedRange = oNamedRanges.getByName(name)
+        ref_cells = oNamedRange.ReferredCells
+        try:
+            ref_cells.RangeAddress
+            # addr = ref_cells.RangeAddress
+            # DLG.chi(f'''{name}:
+            #     - Riga iniziale: {addr.StartRow + 1}
+            #     - Riga finale: {addr.EndRow + 1}
+            #     - Colonna iniziale: {addr.StartColumn + 1}
+            #     - Colonna finale: {addr.EndColumn + 1}
+            #     - Foglio: {addr.Sheet}''')
+        except Exception as e:
+            oDoc.NamedRanges.removeByName(name)
+            # DLG.chi(f"Area {name} rimossa")
+    return
+    
+# ###############################################################
+
 
 def visualizza_PageBreak(arg=True):
     '''
@@ -600,5 +640,24 @@ def MENU_unisci_fogli():
         DLG.MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.', 'Avviso!')
     oDoc.CurrentController.setActiveSheet(unione)
 
+
+# ###############################################################
+
+def column_name_of(nColumnNumber):
+    """
+    Converte un numero di colonna in un nome alfanumerico (es. 0 -> "A", 1 -> "B", 26 -> "AA").
+    
+    Args:
+        nColumnNumber (int): Numero della colonna (0-based).
+    
+    Returns:
+        str: Nome della colonna in formato alfanumerico.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByIndex(0)  # Deve esserci sempre un foglio con indice 0
+    lcolumns = oSheet.Columns
+    lcolumn = lcolumns.getByIndex(nColumnNumber)
+    cColumnName = lcolumn.Name
+    return cColumnName
 
 # ###############################################################

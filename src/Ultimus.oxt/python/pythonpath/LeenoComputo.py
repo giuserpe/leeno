@@ -1,123 +1,184 @@
 from com.sun.star.table import CellRangeAddress
 import SheetUtils
 import LeenoUtils
+import LeenoGlobals
 import LeenoSheetUtils
 import LeenoConfig
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
+      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
+
 import Dialogs
 
 import LeenoDialogs as DLG
 
 import pyleeno as PL
 
-def datiVoceComputo (oSheet, lrow):
+
+def datiVoceComputo(oSheet, lrow):
     '''
-    Ricava i dati dalla voce di COMPUTO / CONTABILITA
+    Ricava i dati dalla voce di COMPUTO o CONTABILITA.
+
+    Parametri:
+    oSheet {Sheet} : Il foglio attivo da cui estrarre i dati.
+    lrow {int} : La riga di riferimento da cui iniziare.
+
+    Restituisce:
+    - Se CONTABILITA: Una tupla (REG, SAL)
+    - Se COMPUTO o VARIANTE: Una tupla (voce)
     '''
 
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~lrow = PL.LeggiPosizioneCorrente()[1]
-
+    # Circoscrive la voce di computo.
     sStRange = circoscriveVoceComputo(oSheet, lrow)
-    i = sStRange.RangeAddress.StartRow
-    f = sStRange.RangeAddress.EndRow
-    # ~DLG.chi((i, f))
-    # ~return
-    num      = oSheet.getCellByPosition(0,  i+1).String
-    art      = oSheet.getCellByPosition(1,  i+1).String 
-    desc     = oSheet.getCellByPosition(2,  i+1).String
-    quantP   = oSheet.getCellByPosition(9,    f).Value
-    mdo      = oSheet.getCellByPosition(30,   f).Value
-    sic      = oSheet.getCellByPosition(17,   f).Value
+    if not sStRange:
+        return None
+
+    start_row = sStRange.RangeAddress.StartRow
+    end_row = sStRange.RangeAddress.EndRow
+
+    # Ricava i dati di base
+    num = oSheet.getCellByPosition(0, start_row + 1).String
+    art = oSheet.getCellByPosition(1, start_row + 1).String
+    desc = oSheet.getCellByPosition(2, start_row + 1).String
+    quantP = oSheet.getCellByPosition(9, end_row).Value
+    mdo = oSheet.getCellByPosition(30, end_row).Value
+    sic = oSheet.getCellByPosition(17, end_row).Value
+
     voce = []
     REG = []
     SAL = []
-    if oSheet.Name in ('CONTABILITA'):
+
+    if oSheet.Name == 'CONTABILITA':
+        # Gestione quantità negativa.
         quantN = ''
         if quantP < 0:
             quantN = quantP
             quantP = ''
-        data     = oSheet.getCellByPosition(1,  i+2).String
-        um       = oSheet.getCellByPosition(9,  i+1).String
-        Nlib     = int(oSheet.getCellByPosition(19, i+1).Value)
-        Plib     = int(oSheet.getCellByPosition(20, i+1).Value)
-        flag     = oSheet.getCellByPosition(22, i+1).String
-        nSal     = int(oSheet.getCellByPosition(23, i+1).Value)
-        prezzo   = oSheet.getCellByPosition(13,   f).Value
-        importo  = oSheet.getCellByPosition(15,   f).Value
-        sic  = oSheet.getCellByPosition(17,   f).Value
-        mdo  = oSheet.getCellByPosition(30,   f).Value
 
-        REG = ((num + '\n' + art + '\n' + data), desc, Nlib, Plib, um, quantP,
-            quantN, prezzo, importo)#, sic, mdo, flag, nSal)
-        if quantP != '':
-            quant = quantP
-        else:
-            quant = quantN
-        SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
+        data = oSheet.getCellByPosition(1, start_row + 2).String
+        um = oSheet.getCellByPosition(8, end_row).String.split('[')[-1].split(']')[0]
+        Nlib = int(oSheet.getCellByPosition(19, start_row + 1).Value)
+        Plib = int(oSheet.getCellByPosition(20, start_row + 1).Value)
+        flag = oSheet.getCellByPosition(22, start_row + 1).String
+        nSal = int(oSheet.getCellByPosition(23, start_row + 1).Value)
+        prezzo = oSheet.getCellByPosition(13, end_row).Value
+        importo = oSheet.getCellByPosition(15, end_row).Value
+
+        REG = (
+            num + '\n' + art + '\n' + data, desc, Nlib, Plib, um, quantP, quantN,
+            prezzo, importo
+        )
+
+        quant = quantP if quantP != '' else quantN
+
+        SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
         return REG, SAL
+
     elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        um = oSheet.getCellByPosition(8, f).String.split('[')[-1].split('[')[0]
-        prezzo   = oSheet.getCellByPosition(11,   f).Value
-        importo  = oSheet.getCellByPosition(18,   f).Value
+        um = oSheet.getCellByPosition(8, end_row).String.split('[')[-1].split(']')[0]
+        prezzo = oSheet.getCellByPosition(11, end_row).Value
+        importo = oSheet.getCellByPosition(18, end_row).Value
+
         voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
         return voce
 
+    return None
 
-def circoscriveVoceComputo(oSheet, lrow):
+#######################################################################
+def cambia_articolo(oSheet, lrow, nuovo_articolo):
+    """
+    Cambia il valore dell'articolo nella voce di computo/contabilità.
+
+    Parametri:
+    oSheet {Sheet} : Il foglio attivo.
+    lrow {int} : Riga di riferimento per circoscrivere la voce.
+    nuovo_articolo {str} : Il nuovo codice articolo da inserire.
+    """
+
+    # Trova il range della voce (come fa datiVoceComputo)
+    sStRange = circoscriveVoceComputo(oSheet, lrow)
+    if not sStRange:
+        return False
+
+    start_row = sStRange.RangeAddress.StartRow
+
+    # Modifica dell'articolo:
+    cell = oSheet.getCellByPosition(1, start_row + 1)
+    cell.String = nuovo_articolo
+    cell.CellBackColor = COLORE_VERDE_SPUNTA
+
+    return True
+
+#######################################################################
+
+def circoscriveVoceComputo(oSheet, lrow, misure = False):
     '''
-    lrow    { int }  : riga di riferimento per
-                        la selezione dell'intera voce
+    lrow { int } : Riga di riferimento per la selezione dell'intera voce.
 
     Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
-    partendo dalla posizione corrente del cursore
+    partendo dalla posizione corrente del cursore.
     '''
-    # li predefinisco... @@@
-    lrowS = lrow
-    lrowE = lrow
 
-    #  lrow = LeggiPosizioneCorrente()[1]
-    #  if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
+    # Inizializza le righe di inizio e fine al valore di partenza.
+    start_row = lrow
+    end_row = lrow
 
-    while oSheet.getCellByPosition(0, lrow).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
-        lrow +=1
+    # Definisci stili per evitare ripetizioni.
+    scritte_stili = {'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'}
+    comp_stili = {
+        'comp progress', 'comp 10 s',
+        'Comp Start Attributo', 'Comp End Attributo',
+        'Comp Start Attributo_R', 'comp 10 s_R',
+        'Comp End Attributo_R'
+    }
 
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (
-       'comp progress', 'comp 10 s',
-       'Comp Start Attributo', 'Comp End Attributo',
-       'Comp Start Attributo_R', 'comp 10 s_R',
-       'Comp End Attributo_R', 'Livello-0-scritta',
-       'Livello-1-scritta', 'livello2 valuta'):
-        y = lrow
-        while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
-            y += 1
-        lrowE = y
-        y = lrow
-        try:
-            while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                y -= 1
-        except:
+    # Cerca la fine della voce.
+    while oSheet.getCellByPosition(0, lrow).CellStyle in scritte_stili:
+        lrow += 1
+        if lrow >= oSheet.Rows.Count:  # Verifica se lrow supera il numero di righe del foglio.
             return
-        lrowS = y
-    #trova il range di firme in CONTABILITA
+
+    if oSheet.getCellByPosition(0, lrow).CellStyle in comp_stili.union(scritte_stili):
+        y = lrow
+        # Cerca l'inizio e la fine della voce.
+        while oSheet.getCellByPosition(0, y).CellStyle not in {'Comp End Attributo', 'Comp End Attributo_R'}:
+            y += 1
+            if y >= oSheet.Rows.Count:
+                return
+        end_row = y
+
+        y = lrow
+        while y > 0 and oSheet.getCellByPosition(0, y).CellStyle not in {'Comp Start Attributo', 'Comp Start Attributo_R'}:
+            y -= 1
+        start_row = y
+
+    # Trova il range di firme in CONTABILITA.
     elif oSheet.getCellByPosition(0, lrow).CellStyle == 'Ultimus_centro_bordi_lati':
-        for y in reversed (range(0, lrow)):
+        for y in reversed(range(0, lrow)):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
-                lrowS = y + 1
+                start_row = y + 1
                 break
         for y in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
-                lrowE = y - 1 
+                end_row = y - 1
                 break
+
+    # Caso specifico per ULTIMUS.
     elif 'ULTIMUS' in oSheet.getCellByPosition(0, lrow).CellStyle:
-        lrowS = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
-        lrowE = LeenoSheetUtils.rRow(oSheet) -1
+        start_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+        end_row = LeenoSheetUtils.rRow(oSheet) - 1
+
     else:
         return
-    celle = oSheet.getCellRangeByPosition(0, lrowS, 250, lrowE)
-    return celle
 
-    
+    # Restituisce il range di celle individuato.
+    if not misure:
+        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
+    else:
+        end_offset = -2 if oSheet.Name == 'CONTABILITA' else -1
+        return oSheet.getCellRangeByPosition(2, start_row + 2, 8, end_row + end_offset)
+
+
+
 def insertVoceComputoGrezza(oSheet, lrow):
 
     # lrow = LeggiPosizioneCorrente()[1]
@@ -173,6 +234,7 @@ def insertVoceComputoGrezza(oSheet, lrow):
 
 
 # TROPPO LENTA
+@LeenoUtils.no_refresh
 def ins_voce_computo(cod=None):
     '''
     cod    { string }
@@ -180,7 +242,7 @@ def ins_voce_computo(cod=None):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     # se le colonne di misura sono nascoste, vengono viasulizzate
     if oSheet.getColumns().getByIndex(5).Columns.IsVisible == False:
         lrow = 4
@@ -190,10 +252,10 @@ def ins_voce_computo(cod=None):
                 oSheet.getCellByPosition(2, el).Formula = ''
         for el in range (5, 9):
             oSheet.getColumns().getByIndex(el).Columns.IsVisible = True
-    
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
+    noVoce = LeenoGlobals.getGlobalVar('noVoce')
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
     lrow = PL.LeggiPosizioneCorrente()[1]
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     if stile in stili_cat:
@@ -207,46 +269,348 @@ def ins_voce_computo(cod=None):
     insertVoceComputoGrezza(oSheet, lrow)
     if cod:
         oSheet.getCellByPosition(1, lrow + 1).String = cod
-    # @@ PROVVISORIO !!!
     PL._gotoCella(1, lrow + 1)
 
-    # ~PL.numera_voci(0)
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 
+import Debug
+@LeenoUtils.no_refresh
 def Menu_computoSenzaPrezzi():
     '''
     Duplica il COMPUTO/VARIANTE aggiungendo il suffissio '_copia'
     e cancella i prezzi unitari dal nuovo foglio
     '''
+    # with LeenoUtils.DocumentRefreshContext(False):
+    salva_senza_prezzi()
+
+
+def salva_senza_prezzi():
+    """
+    Salva il documento corrente con il suffisso '_senza_prezzi'
+    usando storeAsURL(), quindi il documento corrente diventa la copia.
+    """
     PL.chiudi_dialoghi()
+
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    nSheet = oSheet.Name
-    if nSheet not in ('COMPUTO', 'VARIANTE'):
-        return
-    tag="_copia"
-    idSheet = oSheet.RangeAddress.Sheet + 1
-    if oDoc.getSheets().hasByName(nSheet + tag):
-        Dialogs.Exclamation(Title = 'ATTENZIONE!',
-        Text=f'La tabella di nome {nSheet}{tag} è già presente.')
-        return
-    else:
-        oDoc.Sheets.copyByName(nSheet, nSheet + tag, idSheet)
-    nSheet = nSheet + tag
-    PL.GotoSheet(nSheet)
-    # ~oSheet.protect('')  # 
-    # ~Dialogs.Info(Title = 'Ricerca conclusa', Text=f'Il foglio {nSheet} è stato protetto, ma senza password.')
+    controller = oDoc.CurrentController
+    oSheet = controller.ActiveSheet
 
-    oSheet = oDoc.getSheets().getByName(nSheet)
-    PL.setTabColor(10079487)
+    if oSheet.Name not in ("COMPUTO", "VARIANTE"):
+        return
 
+    indicator = controller.getStatusIndicator()
+    indicator.start("Generazione COMPUTO/VARIANTE senza prezzi...", 4)
+    indicator.setValue(0.5)
+
+
+    # ---- PRECALCOLI ----
     ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-    
-    ultime_voci = set([circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow for lrow in range(6, ultima_voce)])
 
-    for lrow in ultime_voci:
-        oSheet.getCellByPosition(11, lrow).String = ''
-        oSheet.getCellByPosition(11, lrow).CellStyle = 'comp 1-a'
-    LeenoUtils.DocumentRefresh(True)
+    # import LeenoComputo
+    ultime_voci = [
+        circoscriveVoceComputo(oSheet, r).RangeAddress.EndRow
+        for r in range(3, ultima_voce)
+    ]
+
+    last_row = SheetUtils.getLastUsedRow(oSheet)
+
+    getCell = oSheet.getCellByPosition
+
+    # ---- OTTIMIZZAZIONE: RANGE B ----
+    col_B_range = oSheet.getCellRangeByPosition(1, 0, 1, last_row)
+    stili_scritta = {"Livello-1-scritta", "livello2 valuta", "Livello-0-scritta"}
+
+    for r_rel in range(last_row + 1):
+        cell = col_B_range.getCellByPosition(0, r_rel)
+        if cell.CellStyle in stili_scritta:
+            cell.String = cell.String  # refresh leggero
+
+    # ---- RIMOZIONE PREZZI E FORMULE ----
+    for r in ultime_voci:
+        getCell(11, r).String = ""
+        getCell(11, r).CellStyle = "comp 1-a"
+        getCell(18, r).Formula = (
+            f'=IF(ISERROR(FIND("%";I{r+1}));'
+            f'J{r+1}*L{r+1};'
+            f'J{r+1}*L{r+1}/100)'
+        )
+
+    getCell(0, 1).Formula = "=S2"
+    getCell(1, 1).String = ""
+
+    # ---- RIMOZIONE COLONNE ----
+    oSheet.getColumns().removeByIndex(19, 50)
+
+    indicator.setValue(2)
+
+    # ---- COPY/PASTE VALUES ----
+    rng_copia = oSheet.getCellRangeByName("A1:I1048576")
+    controller.select(rng_copia)
+    PL.comando("Copy")
+    PL.paste_clip(insCells=0, pastevalue=True)
+    controller.select(None)
+
+
+    # -------------------------------------------------
+    #   DA QUI IN POI OPERAZIONI FUORI DAI CICLI
+    # -------------------------------------------------
+
+    orig_url = oDoc.getURL()
+    if not orig_url:
+        Dialogs.NotifyDialog(
+            IconType="error",
+            Title="ATTENZIONE!",
+            Text=(
+                "Prima di procedere è meglio dare un nome al file.\n\n"
+                "Lavorando su un file senza nome potresti avere malfunzionamenti."
+            ),
+        )
+        indicator.end()
+        return
+
+    indicator.setValue(3)
+
+    import os, uno
+
+    base = os.path.basename(orig_url)
+    nome_base = ".".join(base.split(".")[:-1])
+    nuovo_nome = f"{nome_base}-{oSheet.Name}_senza_prezzi.ods"
+
+    dir_url = os.path.dirname(orig_url)
+    nuovo_url = f"{dir_url}/{nuovo_nome}"
+    sys_path = uno.fileUrlToSystemPath(nuovo_url)
+
+    # ---- CONTROLLO SOVRASCRITTURA ----
+    if os.path.exists(sys_path):
+        if Dialogs.YesNoDialog(
+            IconType="question",
+            Title="AVVISO!",
+            Text=f"Il file:\n{sys_path}\n\nesiste già.\n\nVuoi sostituirlo?",
+        ) != 1:
+            indicator.end()
+            return
+
+    indicator.setValue(4)
+
+    # ---- SALVATAGGIO ----
+    try:
+        oDoc.storeAsURL(nuovo_url, ())
+        Dialogs.NotifyDialog(
+            IconType="info",
+            Title="INFORMAZIONE",
+            Text=(
+                f"Salvato come:\n{sys_path}\n\n"
+                "----\n\n"
+                "NOTA:\n"
+                'Rimangono formule solo in "Quantità" e "Importo €".'
+            ),
+        )
+    except Exception as e:
+        DLG.chi(f"Errore durante il salvataggio: {e}")
+        indicator.end()
+        return
+
+    # ---- MANTENERE SOLO IL FOGLIO ATTUALE ----
+    names = list(oDoc.Sheets.ElementNames)
+    for n in names:
+        if n != oSheet.Name:
+            oDoc.Sheets.removeByName(n)
+
+    indicator.end()
+
+
+###############################################################################
+
+class DatiVoce:
+    """
+    Classe per l'estrazione e la gestione dei dati relativi a una voce di COMPUTO
+    o CONTABILITÀ da un foglio LibreOffice Calc.
+    """
+
+    def __init__(self, oSheet, lrow):
+        self.oSheet = oSheet
+        self.lrow = lrow
+        self._range = None
+        self._SR = None
+        self._ER = None
+        self._voce = ()
+        self._REG = ()
+        self._SAL = ()
+
+    # ------------------------------------------------------------------
+    # RANGE
+    # ------------------------------------------------------------------
+
+    @property
+    def range(self):
+        if self._range is None:
+            self._range = self._circoscrive_voce()
+        return self._range
+
+    @property
+    def SR(self):
+        if self._SR is None and self.range:
+            self._SR = self.range.RangeAddress.StartRow
+        return self._SR
+
+    @property
+    def ER(self):
+        if self._ER is None and self.range:
+            self._ER = self.range.RangeAddress.EndRow
+        return self._ER
+
+    # ------------------------------------------------------------------
+    # DATI VOCE
+    # ------------------------------------------------------------------
+
+    @property
+    def voce(self):
+        if not self._voce:
+            self._estrai_dati()
+        return self._voce
+
+    @property
+    def num(self):
+        if not self._voce:
+            self._estrai_dati()
+        return self._voce[0] if len(self._voce) > 0 else ""
+
+    @property
+    def art(self):
+        if not self._voce:
+            self._estrai_dati()
+        return self._voce[1] if len(self._voce) > 1 else ""
+
+    @property
+    def desc(self):
+        if not self._voce:
+            self._estrai_dati()
+        return self._voce[2] if len(self._voce) > 2 else ""
+
+    @property
+    def REG(self):
+        if not self._REG:
+            self._estrai_dati()
+        return self._REG
+
+    @property
+    def SAL(self):
+        if not self._SAL:
+            self._estrai_dati()
+        return self._SAL
+
+    # ------------------------------------------------------------------
+    # LOGICA INTERNA
+    # ------------------------------------------------------------------
+
+    def _circoscrive_voce(self):
+        oSheet = self.oSheet
+        lrow = self.lrow
+        start_row = lrow
+        end_row = lrow
+
+        scritte_stili = {'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'}
+        comp_stili = {
+            'comp progress', 'comp 10 s',
+            'Comp Start Attributo', 'Comp End Attributo',
+            'Comp Start Attributo_R', 'comp 10 s_R',
+            'Comp End Attributo_R'
+        }
+
+        while oSheet.getCellByPosition(0, lrow).CellStyle in scritte_stili:
+            lrow += 1
+            if lrow >= oSheet.Rows.Count:
+                return None
+
+        cs = oSheet.getCellByPosition(0, lrow).CellStyle
+
+        if cs in comp_stili.union(scritte_stili):
+            y = lrow
+            while oSheet.getCellByPosition(0, y).CellStyle not in {
+                'Comp End Attributo', 'Comp End Attributo_R'
+            }:
+                y += 1
+                if y >= oSheet.Rows.Count:
+                    return None
+            end_row = y
+
+            y = lrow
+            while y > 0 and oSheet.getCellByPosition(0, y).CellStyle not in {
+                'Comp Start Attributo', 'Comp Start Attributo_R'
+            }:
+                y -= 1
+            start_row = y
+
+        elif cs == 'Ultimus_centro_bordi_lati':
+            for y in reversed(range(0, lrow)):
+                if oSheet.getCellByPosition(0, y).CellStyle != cs:
+                    start_row = y + 1
+                    break
+            for y in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
+                if oSheet.getCellByPosition(0, y).CellStyle != cs:
+                    end_row = y - 1
+                    break
+
+        elif 'ULTIMUS' in cs:
+            start_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+            end_row = LeenoSheetUtils.rRow(oSheet) - 1
+
+        else:
+            return None
+
+        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
+
+    # ------------------------------------------------------------------
+
+    def _estrai_dati(self):
+        # Se non c'è una voce valida, esce lasciando tuple vuote
+        if not self.range:
+            return
+
+        sr = self.SR
+        er = self.ER
+        oSheet = self.oSheet
+
+        num = oSheet.getCellByPosition(0, sr + 1).String
+        art = oSheet.getCellByPosition(1, sr + 1).String
+        desc = oSheet.getCellByPosition(2, sr + 1).String
+
+        quantP = oSheet.getCellByPosition(9, er).Value
+        mdo = oSheet.getCellByPosition(30, er).Value
+        sic = oSheet.getCellByPosition(17, er).Value
+
+        if oSheet.Name == 'CONTABILITA':
+            quantN = ""
+            if quantP < 0:
+                quantN = quantP
+                quantP = ""
+
+            data = oSheet.getCellByPosition(1, sr + 2).String
+            um = oSheet.getCellByPosition(8, er).String.split('[')[-1].split(']')[0]
+            Nlib = int(oSheet.getCellByPosition(19, sr + 1).Value)
+            Plib = int(oSheet.getCellByPosition(20, sr + 1).Value)
+            nSal = int(oSheet.getCellByPosition(23, sr + 1).Value)
+            prezzo = oSheet.getCellByPosition(13, er).Value
+            importo = oSheet.getCellByPosition(15, er).Value
+
+            self._REG = (
+                num + '\n' + art + '\n' + data,
+                desc, Nlib, Plib, um,
+                quantP, quantN, prezzo, importo
+            )
+
+            quant = quantP if quantP != "" else quantN
+            self._SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
+
+        elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            um = oSheet.getCellByPosition(8, er).String.split('[')[-1].split(']')[0]
+            prezzo = oSheet.getCellByPosition(11, er).Value
+            importo = oSheet.getCellByPosition(18, er).Value
+
+            self._voce = (
+                num, art, desc, um,
+                quantP, prezzo, importo, sic, mdo
+            )
+

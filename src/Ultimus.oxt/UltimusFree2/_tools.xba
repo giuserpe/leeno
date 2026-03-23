@@ -7,60 +7,6 @@ Sub unSelect
 	ThisComponent.currentController.Select(ThisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;))
 End Sub
 
-Sub ReadDataFromProgeCAD()
-    Dim pCad As Object
-    Dim pCadDoc As Object
-    Dim ent As Object
-    Dim i As Integer
-    Dim model As Object
-    Dim entType As String
-    Dim entLayer As String
-    Dim entHandle As String
-    Dim iLine as Integer
-    Dim iColumn as Integer
-    Dim Doc As Object
-    Dim Sheet As Object
-    Dim CellRange As Object
-    Dim Cell As Object
-    Dim DwgFileName as String
-
-    DwgFileName = &quot;W:\_dwg\amenta1.dwg&quot;
-
-    Doc = ThisComponent
-    Sheet = Doc.Sheets(0)
-    iLine = 1
-    iColumn = 1
-
-    pCad = CreateObject(&quot;autocad.Application&quot;)
-    pCadDoc = pCad.Documents.Open(DwgFileName, True)
-    model = pCadDoc.ModelSpace
-
-    While (i &lt; model.Count)
-        ent = model.Item(i)
-
-        entType = ent.EntityName
-        entLayer = ent.Layer
-        entHandle = ent.Handle
-
-        Cell = Sheet.getCellByPosition(iColumn, iLine)
-        Cell.String = entType
-        Cell = Sheet.getCellByPosition(iColumn + 1, iLine)
-        Cell.String = entLayer
-        Cell = Sheet.getCellByPosition(iColumn + 2, iLine)
-        Cell.String = entHandle
-        On Error GoTo procedi:
-         Sheet.getCellByPosition(iColumn + 3, iLine).String = ent.Area
-        procedi:
-        iLine = iLine + 1
-
-        i = i + 1
-    Wend
-  &apos;  pCad.Documents.CloseAll(false)
-    pCad.Quit()
-
-    MsgBox(&quot;Procedura Conclusa&quot;)
-End Sub
-
 Function SpeechEngine()as string     
   select case getGUIType
   case 1: SpeechEngine=iif(fileExists (fsProgramDirectory &amp; &quot;eSpeak\command_line\espeak.exe&quot;),&quot;ESPEAK&quot;,&quot;SAPI&quot;) &apos;Win
@@ -127,44 +73,6 @@ Function LeenO_Path
 	LeenO_Path = extensionLocation &apos; full path
 End Function
 rem ----------------------------------------------------------------------
-Sub _accoda_files_in_unico
-&apos;ACCODA PIù FILE DI CALC IN UNO SOLO
-	Dim DocName as object, DocUlr as string, dummy()
-	Doc = ThisComponent
-	Sheet = Doc.Sheets(0) 
-	sPath =&quot;W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/2023/&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
-	sFileName = Dir(sPath &amp; &quot;*.xls&quot;, 0)
-&apos;	Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
-	Do While (sFileName &lt;&gt; &quot;&quot;)
-		c = Sheet.createCursor
-		c.gotoEndOfUsedArea(false)
-		LastRow = c.RangeAddress.EndRow + 1
-		DocUrl = ConvertToURL(sPath &amp; sFileName)
-&apos;on error goto errore
-		DocName = StarDesktop.loadComponentFromURL (DocUrl, &quot;_blank&quot;,0, Dummy() )
-		Sheet1 = DocName.Sheets(0) &apos; questo indica l&apos;index del foglio da copiare
-		c = Sheet1.createCursor
-		c.gotoEndOfUsedArea(false)
-		LastRow1 = c.RangeAddress.EndRow
-	&apos;	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet1)
-	&apos;	Srow=oStart.RangeAddress.EndRow+1
-	Srow = 2
-		Range = Sheet1.getCellRangeByPosition(0, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
-		DocName.dispose
-		dRange  = Sheet.getCellRangeByPosition(0, LastRow, 12, LastRow1 + LastRow-Srow)
-		dRange.setDataArray(Range)
-		sFileName = Dir()
-	Loop
-	print &quot;fatto!&quot;
-	errore:
-End Sub
-
-Sub inseriscirighe
-	Dim oSheet, oRangeAddress
-	oSheet = ThisComponent.Sheets(0)
-	oRangeAddress = oSheet.getCellRangeByName(&quot;A2:A14&quot;).getRangeAddress()
-	oSheet.insertCells(oRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
-End Sub
 
 Sub Protezione_area (foglio as string, nomearea as string) &apos;usato in annota_pagina_libretto
 	Dim rngClear As Object
@@ -189,95 +97,8 @@ rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
 &apos;	oSheet1.Protect &quot;&quot;
 End Sub
 
-SUB Elimina_Nomi_Area_errati &apos;nome eloquente
-	Dim Doc As Object
-	Dim Sheet As Object
-	Dim Cell As Object
 
-	Doc = ThisComponent
 
-	If Doc.Sheets.hasByName(&quot;duplicati&quot;) Then
-		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)
-		Else
-		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
-		Doc.Sheets.insertByName(&quot;duplicati&quot;, Sheet)
-	End If
-	dim n as integer
- 	oDoc = ThisComponent
- 	oAree=oDoc.NamedRanges
- 		oNomiArea() = oAree.ElementNames()
-		n = oAree.Count - 1
-		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
- For i = 0 to n
-		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
-		Cell.String = oNomiArea(i)							&apos;inserisce nome area
-		Cell = Sheet.getCellByPosition(1, i)				&apos;seconda colonna
-		Contenuto=oAree.getbyname(oNomiArea(i)).content
-		Cell.String = Contenuto								&apos;inserisce il contenuto
-ELIMINA_I_NOMI_DI_AREA_ERRATI:
- 	if InStr(Contenuto, &quot;#REF!&quot;) or _
-			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
-&apos;print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
-			oAree.removeByName(oNomiArea(i))
- 	end if
- Next
-	Doc.Sheets.removeByName(&quot;duplicati&quot;)
-END SUB
-
-sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lLastUrow = getLastUsedRow(oSheet)
-	&apos;print lLastUrow
-	conta_a = 0
-	for i = 10184 to lLastUrow
-		if oSheet.getCellByPosition( 0, i ).string = &quot;A&quot; then 
-&apos;			inizio =i+2
-			inizio =i
-	&apos;	print inizio
-		&apos;	conta_a = conta_a +1
-		end if
-		if oSheet.getCellByPosition( 0, i ).string = &quot;F&quot; then 
-			fine =i
-			&apos;print fine
-			Barra_Apri_Chiudi_5(&quot; #&quot;&amp; inizio &amp; &quot; di &quot; &amp; lLastUrow, 0)
-			print oSheet.getCellByPosition(3 , inizio-3).value()*1.2
-			Print oSheet.getCellByPosition(3 , inizio-2).value()
-			print oSheet.getCellByPosition(3 , inizio-1).value()
-								
-&apos;			oSheet.getCellByPosition(5 , fine+1).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine &amp;&quot;)*E&quot;&amp; fine+2 rem SPESE GENERALI
-&apos;			oSheet.getCellByPosition(5 , fine+2).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine+2 &amp;&quot;)*E&quot;&amp; fine+3 rem UTILI D&apos;IMPRESA
-&apos;		oSheet.getCellByPosition(11 , inizio-7).setformula(conta_a)
-&apos;		oSheet.getCellByPosition(12 , inizio-7).setformula(&quot;=vlookup(A&quot;&amp; inizio-6 &amp;&quot;;base;3;)&quot;
-&apos;		oSheet.getCellByPosition(13 , inizio-7).setformula(&quot;=(G&quot;&amp; inizio-6 &amp;&quot;-M&quot;&amp; inizio-6 &amp;&quot;)/M&quot;&amp; inizio-6
-&apos;		oSheet.getCellByPosition(14 , inizio-7).setformula(&quot;=G&quot;&amp; inizio-1 &amp; &quot;/M&quot;&amp; inizio-6 &apos;ribasso vecchio
-&apos;		oSheet.getCellByPosition(15 , inizio-7).setformula(&quot;=vlookup(A&quot;&amp; inizio-6 &amp;&quot;;base;4;)&quot;
-&apos;		oSheet.getCellByPosition(16 , inizio-7).setformula(&quot;=P&quot;&amp; inizio-6 &amp;&quot;*G&quot;&amp; inizio-6
-&apos;		oSheet.getCellByPosition(17 , inizio-7).setformula(&quot;=P&quot;&amp; inizio-6 &amp;&quot;*M&quot;&amp; inizio-6
-&apos;		oSheet.getCellByPosition(18 , inizio-7).setformula(&quot;=A&quot; &amp; inizio-6)
-&apos;	oSheet.getCellByPosition(19 , inizio-7).setformula(&quot;=M&quot; &amp; inizio-6 &amp;&quot;*U&quot; &amp; inizio-6
-&apos;	oSheet.getCellByPosition(20 , inizio-7).setvalue(&quot;0.00327696945864465&quot;)
-			
-		end if
-	next
-	Barra_chiudi_sempre_4
-&apos;	fine:
-end Sub
-
-sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazioni
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lLastUrow = getLastUsedRow(oSheet)
-	i = 0
-	for i = 1 to lLastUrow
-	if oSheet.getCellByPosition( 0, i).cellstyle = &quot;An-lavoraz-Cod-sx&quot; and 	oSheet.getCellByPosition( 0, i ).string = &quot;&quot; then 
-			&apos;print fine
-			Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrow, 0)
-			oSheet.getCellByPosition(0 , i).setstring(&quot; &quot;)
-			
-	end if
-	next
-	Barra_chiudi_sempre_4
-	fine:
-end Sub
 
 sub paste_format
 rem ----------------------------------------------------------------------
@@ -307,16 +128,4 @@ args1(5).Value = 4
 dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
 
 end Sub
-Sub numeri_computo
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	lLastUrow = getLastUsedRow(oSheet)
-&apos;	print lLastUrow
-
-	test = &quot;&quot;
-	for i = lLastUrow To 0 -1 step -1
-		IF oSheet.getCellByPosition(36 , I).CellStyle = &quot;compTagRiservato&quot; Then test = oSheet.getCellByPosition(36 , I).String
-	&apos;	Print test
-		oSheet.getCellByPosition(36 , I).String = test
-	next
-End Sub
 </script:module>

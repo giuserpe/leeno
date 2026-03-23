@@ -41,7 +41,8 @@ def parseXML(data, defaultTitle=None):
         }
     '''
     #ripulisce il testo da caratteri non stampabili
-    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    # data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    data = PL.clean_text(data)
     
     # alcuni files sono degli XML-SIX con un bug
     # consistente nella mancata dichiarazione del namespace
@@ -163,13 +164,7 @@ supportato nella prossima versione del programma""")
         # ~desc = LeenoImport.fixParagraphSize(desc)
 
         # un po' di pulizia nel testo
-        desc = desc.replace(
-            '\t', ' ').replace('\n', ' ').replace('\n\n', '\n').replace('Ã¨', 'è').replace(
-                'Â°', '°').replace('Ã', 'à').replace(' $', '')
-        while '  ' in desc:
-            desc = desc.replace('  ', ' ')
-        while '\n\n' in desc:
-            desc = desc.replace('\n\n', '\n')
+        # desc = PL.clean_text (desc)
 
         um = articolo.find('um').text
         prezzo = articolo.find('prezzo').text
@@ -178,6 +173,8 @@ supportato nella prossima versione del programma""")
         # per separare le migliaia OLTRE al punto per separare i decimali
         # quindi... se trovo più di un punto decimale, devo eliminare i primi
         if prezzo is not None:
+            if ',' in prezzo:
+                prezzo = prezzo.replace(',', '.')
             if '.' not in prezzo:
                 prezzo = prezzo + '.0'
             prSplit = prezzo.split('.')

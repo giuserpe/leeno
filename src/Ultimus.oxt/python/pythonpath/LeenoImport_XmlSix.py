@@ -3,6 +3,7 @@
 """
 import re
 import Dialogs
+import pyleeno as PL
 import LeenoImport
 import LeenoDialogs as DLG
 
@@ -32,7 +33,8 @@ def parseXML(data, defaultTitle):
         }
     '''
     #ripulisce il testo da caratteri non stampabili
-    data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    # data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    data = PL.clean_text(data)
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
@@ -282,15 +284,7 @@ def parseXML(data, defaultTitle):
         # ~desc = LeenoImport.fixParagraphSize(desc)
         
         #sistema_cose
-        desc.replace('\t', ' ').replace('Ã¨', 'è').replace('','').replace(
-            'Â°', '°').replace('Ã', 'à').replace(' $', '').replace('Ó', 'à').replace(
-            'Þ', 'é').replace('&#x13;','').replace('&#xD;&#xA;','').replace(
-            '&#xA;','').replace('&apos;',"'").replace('&#x3;&#x1;','').replace('\n \n','\n')
-        while '  ' in desc:
-            desc = desc.replace('  ', ' ')
-        while '\n\n' in desc:
-            desc = desc.replace('\n\n', '\n')
-        desc = desc.strip()
+        desc = PL.clean_text (desc)
 
         # gruppo, nel caso ci sia
         try:

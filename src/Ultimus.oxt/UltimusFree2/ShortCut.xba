@@ -79,18 +79,23 @@ Function removeZipFileContent( sZipURL As String, _
 End Function
 
 &apos; select a file
-Function GetFileURL( sTitle As String )
- Dim oFilePicker As Object
- Dim sFileURL As String
- oFilePicker = CreateUnoService( _
- &quot;com.sun.star.ui.dialogs.FilePicker&quot;)
- oFilePicker.setTitle(sTitle)
- If oFilePicker.execute() = 1 Then
- sFileNames = oFilePicker.getFiles()
- sFileURL = sFileNames(0)
- End Function
- GetFileURL = sFileURL
-End Function 
+Function GetFileURL(sTitle As String) As String
+    Dim oFilePicker As Object
+    Dim sFileNames() As String
+    Dim sFileURL As String
+    
+    oFilePicker = CreateUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+    oFilePicker.setTitle(sTitle)
+    
+    If oFilePicker.execute() = 1 Then
+        sFileNames = oFilePicker.getFiles()
+        If UBound(sFileNames) &gt;= 0 Then
+            sFileURL = sFileNames(0)
+        End If
+    End If
+    
+    GetFileURL = sFileURL
+End Function
 
 Sub SetUpKeyBinding&apos;(sModifier as string, sChiave as string, sAzione as string)
 &apos; copyright Paolo Mantovani

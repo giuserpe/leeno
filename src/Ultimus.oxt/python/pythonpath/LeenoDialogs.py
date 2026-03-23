@@ -5,8 +5,14 @@
 import threading
 
 import LeenoUtils
+import LeenoGlobals
 import pyleeno as PL
 import Dialogs
+
+import inspect
+import os
+import traceback
+import subprocess
 
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK_CANCEL
@@ -30,27 +36,67 @@ from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
 
-def barra_di_stato(testo='', valore=0):
-    '''Informa l'utente sullo stato progressivo dell'elaborazione.'''
-    oDoc = LeenoUtils.getDocument()
-    oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
-    oProgressBar.start('', 100)
-    oProgressBar.Value = valore
-    oProgressBar.Text = testo
-    oProgressBar.reset()
-    oProgressBar.end()
-
-
-def chi(s):
+def chi(s = 'pausa...', OFF=False):
     '''
     s    { object }  : oggetto da interrogare
     Mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili.
     '''
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
-    s1 = str(s) + '\n\n' + str(dir(s).__str__())
-    # ~MsgBox(parentwin, s1, str(type(s)), 'infobox')
-    MessageBox(parentwin, s1, str(type(s)), 'infobox')
+
+    # Ottieni il frame del chiamante per recuperare il numero di linea, il nome del file e il nome della funzione
+    caller_frame = inspect.stack()[1]
+    line_number = caller_frame.lineno
+    full_file_path = caller_frame.filename  # Ottieni il percorso completo
+    full_file_path = LeenoGlobals.dest() + full_file_path.split('LeenO.oxt')[-1]
+
+    file_name = os.path.basename(full_file_path)  # Solo il nome del file
+    function_name = caller_frame.function
+
+    # Verifica che il documento sia disponibile
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
+
+
+    if parentwin:
+        # Costruisci il messaggio
+        s1 = (
+
+            f'Rappresentazione dell\'oggetto:\n{str(s)}\n\n'
+            f'Metodi e attributi disponibili:\n{str(dir(s))}\n\n'
+            f'Nome del file chiamante: {file_name}\n'
+            f'Numero di linea della chiamata: {line_number}\n'
+            f'Nome della funzione chiamante: {function_name}()'
+        )
+
+        # Apri il file e vai alla riga specificata
+        if OFF:
+            pass
+        else:
+            PL.apri_con_editor(full_file_path, line_number)
+
+        # Mostra il messaggio in un dialogo
+        MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
+
+
+def errore(e):
+    '''
+    Mostra un messaggio dettagliato dell'errore, includendo il tipo di eccezione,
+    il messaggio e la traccia dello stack per facilitare il debug.
+
+    Args:
+        e (Exception): L'eccezione catturata.
+
+    Comportamento:
+        Visualizza un dialogo con il tipo di errore, il messaggio e la traccia completa dello stack.
+    '''
+    error_type = type(e).__name__
+    stack_trace = traceback.format_exc()
+
+    chi(f'Errore di tipo "{error_type}": {str(e)}\n\nTraccia dello stack:\n{stack_trace}', OFF=True)
 
 
 def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
@@ -58,20 +104,32 @@ def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     Visualizza il menù di scelta sì/no
     restituisce 2 per sì e 3 per no
     '''
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
+    # Verifica che il documento sia disponibile
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
     # s = 'This a message'
     # t = 'Title of the box'
     # MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
     return MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO + DEFAULT_BUTTON_NO)
 
 
-def MsgBox(s, t=''):  # s = messaggio | t = titolo
+def MsgBox(Text, Title=''):  # s = messaggio | t = titolo
     '''
     Visualizza una message box
     '''
-    doc = LeenoUtils.getDocument()
-    parentwin = doc.CurrentController.Frame.ContainerWindow
+    # Verifica che il documento sia disponibile
+    try:
+        doc = LeenoUtils.getDocument()
+        if not doc:
+            return
+        parentwin = doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        return
     # s = 'This a message'
     # t = 'Title of the box'
     # res = MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO)
@@ -79,9 +137,9 @@ def MsgBox(s, t=''):  # s = messaggio | t = titolo
     # return
     # s = res
     # t = 'Titolo'
-    if t is None:
-        t = 'messaggio'
-    MessageBox(parentwin, str(s), t, 'infobox')
+    if Title is None:
+        Title = 'messaggio'
+    MessageBox(parentwin, str(Text), Title, 'infobox')
 
 
 def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTTONS_OK):
@@ -116,7 +174,7 @@ def dlg_attesa(msg=''):
     dlg_attesa()
     attesa().start() #mostra il dialogo
     ...
-    LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute() #chiude il dialogo
+    LeenoGlobals.getGlobalVar('oDialogo_attesa').endExecute() #chiude il dialogo
     '''
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
@@ -130,7 +188,7 @@ def dlg_attesa(msg=''):
     oDialogo_attesa.Title = 'Operazione in corso...'
     sUrl = PL.LeenO_path() + '/icons/attendi.png'
     oDialogo_attesa.getModel().ImageControl1.ImageURL = sUrl
-    LeenoUtils.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
+    LeenoGlobals.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
     return oDialogo_attesa
 
 
@@ -143,50 +201,111 @@ class attesa(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
-        LeenoUtils.getGlobalVar('oDialogo_attesa').execute()
+        LeenoGlobals.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
+        LeenoGlobals.getGlobalVar('oDialogo_attesa').execute()
 
 
-def ScegliElaborato(titolo):
-    '''
-    Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
-    '''
+def ScegliElaborato(Titolo="Titolo", flag="export"):
+    """
+    Mostra un dialogo per scegliere l'elaborato da trattare e restituisce il nome scelto.
+    """
     oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
     )
-    # oDialog1Model = oDlgXLO.Model
-    oDlgXLO.Title = titolo  # Menù import XPWE'
+    oDlgXLO.Title = Titolo
 
-    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+    controlli = {
+        "COMPUTO": "CME_XLO",
+        "VARIANTE": "VAR_XLO",
+        "CONTABILITA": "CON_XLO",
+    }
+
+    Image = PL.LeenO_path() + "/python/pythonpath/Icons-Big/ok.png"
+    oDlgXLO.getModel().ImageControl1.ImageURL = Image
+
+    if flag == "export":
+        for nome, ctrl in controlli.items():
+            try:
+                importo = oDoc.getSheets().getByName(nome).getCellRangeByName("A2").String
+                etichette = {
+                    "COMPUTO": f"~Computo:     {importo}",
+                    "VARIANTE": f"~Variante:    {importo}",
+                    "CONTABILITA": f"C~ontabilità: {importo}",
+                }
+                oDlgXLO.getControl(ctrl).Label = etichette[nome]
+
+                if oDoc.getSheets().hasByName("COMPUTO"):
+                    oDlgXLO.getControl("CME_XLO").State = 1
+                elif oDoc.getSheets().hasByName("VARIANTE"):
+                    oDlgXLO.getControl("VAR_XLO").State = 1
+                elif oDoc.getSheets().hasByName("CONTABILITA"):
+                    oDlgXLO.getControl("CON_XLO").State = 1
+
+            except Exception:
+                oDlgXLO.getControl(ctrl).Label = f"~{nome.capitalize()}: (nessun dato)"
+                oDlgXLO.getControl(ctrl).Enable = False
+    else:
+        etichette = {
+            "CME_XLO": "~Computo - Variante",
+            "VAR_XLO": "~Computo - C~ontabilità",
+            "CON_XLO": "~Variante - Contabilità",
+        }
+
+        if not oDoc.Sheets.hasByName('VARIANTE'):
+            oDlgXLO.getControl('CME_XLO').setEnable(0)
+            oDlgXLO.getControl('CON_XLO').setEnable(0)
+            oDlgXLO.getControl("VAR_XLO").State = 1
+
+        if not oDoc.Sheets.hasByName('CONTABILITA'):
+            oDlgXLO.getControl('VAR_XLO').setEnable(0)
+            oDlgXLO.getControl('CON_XLO').setEnable(0)
+            # oDlgXLO.getControl("CME_XLO").State = 1
+
+
+        # if oDoc.getSheets().hasByName("COMPUTO"):
+        #     oDlgXLO.getControl("CME_XLO").State = 1
+        # elif oDoc.getSheets().hasByName("VARIANTE"):
+        #     oDlgXLO.getControl("VAR_XLO").State = 1
+        # elif oDoc.getSheets().hasByName("CONTABILITA"):
+        #     oDlgXLO.getControl("CON_XLO").State = 1
+
+        for ctrl, testo in etichette.items():
+            oDlgXLO.getControl(ctrl).Label = testo
+
+        if ( not oDoc.getSheets().hasByName("VARIANTE") and
+            not oDoc.getSheets().hasByName("CONTABILITA")):
+            Dialogs.Info(
+                Title="Informazione",
+                Text="Nessuna Variante o Contabilità presente per il confronto."
+            )
+            return
+
+    # Esegue il dialogo
+    if oDlgXLO.execute() != 1:
+        oDlgXLO.dispose()
+        return None
+
+    # Mappatura scelta → elaborato
+    mappa_scelte = {
+        "CME_XLO": {"export": "COMPUTO", "parallelo": "computo_variante"},
+        "VAR_XLO": {"export": "VARIANTE", "parallelo": "computo_contabilità"},
+        "CON_XLO": {"export": "CONTABILITA", "parallelo": "variante_contabilità"},
+        # "EP_XLO":  {"export": "Elenco", "parallelo": ""},
+    }
+
+    elaborato = None
+    for ctrl, mappa in mappa_scelte.items():
         try:
-            importo = oDoc.getSheets().getByName(el).getCellRangeByName(
-                'A2').String
-            if el == 'COMPUTO':
-                oDlgXLO.getControl(
-                    "CME_XLO").Label = '~Computo:     ' + importo
-            if el == 'VARIANTE':
-                oDlgXLO.getControl(
-                    "VAR_XLO").Label = '~Variante:    ' + importo
-            if el == 'CONTABILITA':
-                oDlgXLO.getControl(
-                    "CON_XLO").Label = 'C~ontabilità: ' + importo
-            #  else:
-            #  oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
+            if oDlgXLO.getControl(ctrl).State:
+                elaborato = mappa.get(flag)
+                break
         except Exception:
-            pass
+            continue
 
-    if oDlgXLO.execute() == 1:
-        if oDlgXLO.getControl("CME_XLO").State:
-            elaborato = 'COMPUTO'
-        elif oDlgXLO.getControl("VAR_XLO").State:
-            elaborato = 'VARIANTE'
-        elif oDlgXLO.getControl("CON_XLO").State:
-            elaborato = 'CONTABILITA'
-        elif oDlgXLO.getControl("EP_XLO").State:
-            elaborato = 'Elenco'
+    oDlgXLO.dispose()
     return elaborato
 
 

@@ -79,6 +79,7 @@ END SUB
 
 Sub cerca_errori &apos; trova gli errori (valori #N/D) in una tabella Calc
 &apos; dalla riga attiva al fondo del foglio...
+
 dim lrow as long
 dim lcol as long 
 
@@ -246,4 +247,7 @@ End Sub
 &apos; BLOCCARE I COMANDI DURANTE L&apos;ESECUZIONE DI UNA MACRO!!!!! 
 &apos; fatto... ma non sono soddisfatto!
 
+Sub Macro1
+
+End Sub
 </script:module>

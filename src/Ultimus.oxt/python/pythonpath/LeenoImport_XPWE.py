@@ -1113,12 +1113,23 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     def set_num_or_formula(col, row, value):
         """Scrive un numero o formula mantenendo la logica originale."""
         cell = oSheet.getCellByPosition(col, row)
-        if value is None:
+        if value is None or str(value).strip() == '':
             return
+        v_strip = str(value).strip()
         try:
-            cell.Value = float(value.replace(',', '.'))
-        except Exception:
-            cell.Formula = ('=' + str(value).strip()).replace('=-', '=')
+            # tenta di inserire come valore numerico
+            cell.Value = float(v_strip.replace(',', '.'))
+        except (ValueError, TypeError):
+            # se non è numerico, controlla se assomiglia a una formula
+            # o se siamo in una colonna che non dovrebbe contenere testo libero
+            if any(c in v_strip for c in '+-*/()'):
+                cell.Formula = ('=' + v_strip).replace('=-', '=')
+            elif col in (5, 6, 7, 8):
+                # in queste colonne (F, G, H, I) il testo libero è probabilmente un errore
+                pass
+            else:
+                # altrimenti scrivi come stringa semplice
+                cell.String = v_strip
 
     def handle_negatives(startRow):
         """Gestione del segno negativo (logica invariata)."""

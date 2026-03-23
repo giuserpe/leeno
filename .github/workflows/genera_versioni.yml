@@ -69,6 +69,7 @@ jobs:
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
           OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
+          TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}"
 
       - name: Verifica output
         run: |

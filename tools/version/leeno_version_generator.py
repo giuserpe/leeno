@@ -4,7 +4,11 @@ Script completo per la gestione delle versioni LeenO con archivio .oxt
 """
 import os
 import re
+import json
 import logging
+import urllib.request
+import urllib.parse
+import urllib.error
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List
@@ -250,6 +254,43 @@ class VersionManager:
             f.write(html)
 
 
+def send_telegram_notification(version_string: str):
+    """Invia notifica al canale Telegram @LeenoChannel"""
+    bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '')
+    chat_id = os.getenv('TELEGRAM_CHAT_ID', '@LeenoChannel')
+
+    if not bot_token:
+        logger.warning("TELEGRAM_BOT_TOKEN non impostato, notifica Telegram saltata")
+        return
+
+    message = (
+        f"\U0001f4e6 *Nuova versione di sviluppo disponibile*\n\n"
+        f"`{version_string}`\n\n"
+        f"\U0001f517 [Scarica le versioni di sviluppo](https://leeno.org/versioni-sviluppo/)"
+    )
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    data = urllib.parse.urlencode({
+        'chat_id': chat_id,
+        'text': message,
+        'parse_mode': 'Markdown',
+        'disable_web_page_preview': 'false',
+    }).encode('utf-8')
+
+    try:
+        req = urllib.request.Request(url, data=data)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read().decode('utf-8'))
+            if result.get('ok'):
+                logger.info("Notifica Telegram inviata con successo")
+            else:
+                logger.warning(f"Risposta Telegram non ok: {result}")
+    except urllib.error.URLError as e:
+        logger.warning(f"Errore invio notifica Telegram: {e}")
+    except Exception as e:
+        logger.warning(f"Errore imprevisto notifica Telegram: {e}")
+
+
 def main():
     try:
         logger.info("Avvio generazione versione...")
@@ -276,6 +317,8 @@ def main():
 
         vm.update_version_files(new_version)
         logger.info(f"Versione generata: {new_version['full']}")
+
+        send_telegram_notification(new_version['full'])
 
     except Exception as e:
         logger.critical(f"Errore: {str(e)}")

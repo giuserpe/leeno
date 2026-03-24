@@ -153,11 +153,12 @@
                         <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Copia_riga_Ent</value>
                     </prop>
                 </node>
+
                 <!-- CTRL-SHIFT-B -->
                 <node oor:name="B_SHIFT_MOD1"
                       oor:op="replace">
                     <prop oor:name="Command">
-                        <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_colora_intera_voce</value>
                     </prop>
                 </node>
                 <!-- CTRL-SHIFT-C -->
@@ -224,6 +225,13 @@
                         <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
                     </prop>
                 </node>
+                <!-- CTRL-SHIFT-M -->
+                <node oor:name="M_SHIFT_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
+                    </prop>
+                </node>
                 <!-- CTRL-SHIFT-N -->
                 <node oor:name="N_SHIFT_MOD1"
                       oor:op="replace">
@@ -252,6 +260,7 @@
                         <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_avvia_IDE</value>
                     </prop>
                 </node>
+
                 <!-- CTRL-SHIFT-U -->
                 <node oor:name="U_SHIFT_MOD1"
                       oor:op="replace">

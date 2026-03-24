@@ -58,7 +58,7 @@ def aggiorna_configurazione_leeno():
     # 3. Trova i file nella cache
     config_base = os.path.join(user_config,
         "uno_packages/cache/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend")
-    DLG.chi(config_base)
+    # DLG.chi(config_base)
 
     if not os.path.exists(config_base):
         Dialogs.Info(Title="Errore", Text=f"Directory di configurazione non trovata:\n{config_base}")

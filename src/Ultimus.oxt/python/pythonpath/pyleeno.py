@@ -3468,7 +3468,11 @@ def XPWE_out_run(elaborato, out_file):
         UnMisura = SubElement(EPItem, 'UnMisura')
         UnMisura.text = oSheet.getCellByPosition(2, n).String
         Prezzo1 = SubElement(EPItem, 'Prezzo1')
-        Prezzo1.text = str(oSheet.getCellByPosition(4, n).Value)
+        s_prezzo = valuta_cella(oSheet.getCellByPosition(4, n)).replace(',', '.')
+        try:
+            Prezzo1.text = str(float(s_prezzo))
+        except ValueError:
+            Prezzo1.text = '0'
         Prezzo2 = SubElement(EPItem, 'Prezzo2')
         Prezzo2.text = '0'
         Prezzo3 = SubElement(EPItem, 'Prezzo3')
@@ -3563,7 +3567,11 @@ def XPWE_out_run(elaborato, out_file):
                 UnMisura = SubElement(EPItem, 'UnMisura')
                 UnMisura.text = oSheet.getCellByPosition(2, m).String
                 Prezzo1 = SubElement(EPItem, 'Prezzo1')
-                Prezzo1.text = str(oSheet.getCellByPosition(6, m).Value)
+                s_prezzo = valuta_cella(oSheet.getCellByPosition(6, m)).replace(',', '.')
+                try:
+                    Prezzo1.text = str(float(s_prezzo))
+                except ValueError:
+                    Prezzo1.text = '0'
                 Prezzo2 = SubElement(EPItem, 'Prezzo2')
                 Prezzo2.text = '0'
                 Prezzo3 = SubElement(EPItem, 'Prezzo3')
@@ -3639,9 +3647,11 @@ def XPWE_out_run(elaborato, out_file):
                                                             x).String.replace(
                                                                 ',', '.')
                         Prezzo = SubElement(EPARItem, 'Prezzo')
-                        Prezzo.text = str(
-                            oSheet.getCellByPosition(4, x).Value).replace(
-                                ',', '.')
+                        s_prezzo = valuta_cella(oSheet.getCellByPosition(4, x)).replace(',', '.')
+                        try:
+                            Prezzo.text = str(float(s_prezzo))
+                        except ValueError:
+                            Prezzo.text = '0'
                         FieldCTL = SubElement(EPARItem, 'FieldCTL')
                         FieldCTL.text = '0'
                     elif oSheet.getCellByPosition(
@@ -8362,6 +8372,19 @@ def MENU_filtra_codice():
             _gotoCella(2, target_prev)
             filtra_codice()
 
+@with_undo('Colora intera voce')
+def MENU_colora_intera_voce():
+    """
+    Colora l'intera voce corrente con il colore di sfondo della cella attiva.
+    """
+    oDoc = LeenoUtils.getDocument()
+    if not oDoc:
+        return
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = LeggiPosizioneCorrente()[1]
+    LeenoComputo.colora_voce(oSheet, lrow)
+
+
 @LeenoUtils.no_refresh
 def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     '''
@@ -10027,73 +10050,76 @@ def bak():
 class version_code:
     """ Gestisce il nome del file OXT in leeno_version_code"""
 
-    def __init__ (self):
-        """ Class initialiser """
-        pass
+    @staticmethod
+    def get_path():
+        """Restituisce il percorso di sistema del file di versione."""
+        url = LeenO_path()
+        if not url.endswith('/'):
+            url += '/'
+        return uno.fileUrlToSystemPath(url + 'leeno_version_code')
 
-    def read ():
+    @staticmethod
+    def read():
+        """Legge il codice versione corrente."""
+        try:
+            with open(version_code.get_path(), 'r', encoding='utf-8') as f:
+                return f.readline().strip()
+        except (IOError, OSError):
+            return ""
 
-        if os.altsep:
-            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                                'leeno_version_code')
-        else:
-            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                                'leeno_version_code')
-        f = open(code_file, 'r')
-        return f.readline()
+    @staticmethod
+    def write():
+        """Genera e scrive un nuovo codice versione incrementale."""
+        current = version_code.read()
+        try:
+            # Estrae l'ultimo segmento numerico e lo incrementa (es. LeenO-3.25.0.0-... -> 1)
+            ldev_part = current.split('LeenO-')[1].split('-')[0].split('.')[-1]
+            ldev = str(int(ldev_part) + 1)
+        except (IndexError, ValueError):
+            ldev = "1"
 
-    def write ():
+        today = datetime.now().strftime('%Y%m%d')
+        
+        lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
+        lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
+        lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
 
-        if os.altsep:
-            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                                'leeno_version_code')
-        else:
-            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                                'leeno_version_code')
-        f = open(code_file, 'r')
-        Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)
-        tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
-        of = open(code_file, 'w')
+        new_version = f"LeenO-{lmajor}.{lminor}.{lsubv}.{ldev}-TESTING-{today}"
 
-        new = (
-            'LeenO-' +
-            str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
-            str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
-            LeenoGlobals.getGlobalVar('Lsubv').split('.')[0] + '.' +
-            Ldev + '-TESTING-' +
-            tempo[:-6])
-        of.write(new)
-        of.close()
-        return new
+        with open(version_code.get_path(), 'w', encoding='utf-8') as f:
+            f.write(new_version)
+        
+        return new_version
 
 def description_upd():
-    '''
-    Aggiorna il valore di versione del file description.xml
-    '''
-    if os.altsep:
-        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'description.xml')
-    else:
-        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'description.xml')
-    f = open(desc_file, 'r')
+    """Aggiorna il valore della versione nel file description.xml dell'estensione."""
+    url = LeenO_path()
+    if not url.endswith('/'):
+        url += '/'
+    desc_file = uno.fileUrlToSystemPath(url + 'description.xml')
+    
     oxt_name = version_code.read()
+    # Il file description.xml richiede la versione senza il prefisso 'LeenO-'
+    version_str = oxt_name[6:] if oxt_name.startswith('LeenO-') else oxt_name
 
-    new = []
-    for el in f.readlines():
-        if '<version value=' in el:
-            el.split('''"''')
-            el = el.split('''"''')[0] +'''"'''+ oxt_name[6:100] +'''"'''+ el.split('''"''')[2]
-        new.append(el)
+    if not os.path.exists(desc_file):
+        return
 
-    str_join = ''.join(new)
+    with open(desc_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
 
-    of = open(desc_file, 'w')
-    of.write(str_join)
-    of.close()
+    new_lines = []
+    for line in lines:
+        # Aggiorna solo la tag <version> che non è commentata
+        if '<version value=' in line and '<!--' not in line:
+            line = re.sub(r'value="[^"]*"', f'value="{version_str}"', line)
+        new_lines.append(line)
+
+    with open(desc_file, 'w', encoding='utf-8') as f:
+        f.writelines(new_lines)
     return
 
-\
+
 
 ########################################################################
 def MENU_grid_switch():
@@ -12413,6 +12439,7 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 
 
 import LeenoTheme
+
 
 def MENU_debug():
     LeenoTheme.catalogo_stili_cella()

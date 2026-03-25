@@ -7426,8 +7426,9 @@ def inizializza_computo():
     Riscrive le intestazioni di colonna e le formule dei totali in COMPUTO.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.Sheets.getByName('COMPUTO')
-    oDoc.CurrentController.setActiveSheet(oSheet)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        return
     oDoc.CurrentController.freezeAtPosition(0, 3)
 
     lRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -10079,7 +10080,7 @@ class version_code:
             ldev = "1"
 
         today = datetime.now().strftime('%Y%m%d')
-        
+
         lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
         lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
         lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
@@ -10088,7 +10089,7 @@ class version_code:
 
         with open(version_code.get_path(), 'w', encoding='utf-8') as f:
             f.write(new_version)
-        
+
         return new_version
 
 def description_upd():
@@ -10097,7 +10098,7 @@ def description_upd():
     if not url.endswith('/'):
         url += '/'
     desc_file = uno.fileUrlToSystemPath(url + 'description.xml')
-    
+
     oxt_name = version_code.read()
     # Il file description.xml richiede la versione senza il prefisso 'LeenO-'
     version_str = oxt_name[6:] if oxt_name.startswith('LeenO-') else oxt_name
@@ -12442,6 +12443,8 @@ import LeenoTheme
 
 
 def MENU_debug():
+    inizializza_computo()
+    return
     LeenoTheme.catalogo_stili_cella()
 
     # MENU_trova_duplicati()

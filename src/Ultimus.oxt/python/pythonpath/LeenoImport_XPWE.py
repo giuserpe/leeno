@@ -1306,6 +1306,9 @@ def MENU_XPWE_import(filename = None):
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
+# from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
+# @measure_time(show_popup=True)
+# @measure_time_simple
 @LeenoUtils.no_refresh
 def XPWE_import(filename = None):
     '''
@@ -1515,6 +1518,7 @@ def XPWE_import(filename = None):
         PL.salva_come(dest)
 
     # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    PL.inizializza_computo()
     Dialogs.Ok(Text=f'Importazione di {elaborato} eseguita con successo!')
     if 'giuserpe' not in os.getlogin():
         PL.dlg_donazioni()

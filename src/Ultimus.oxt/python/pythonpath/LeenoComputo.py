@@ -11,7 +11,7 @@ import Dialogs
 
 import LeenoDialogs as DLG
 
-# import pyleeno as PL  # RIMOSSO PER EVITARE IMPORT CIRCOLARE
+import pyleeno as PL  # RIMOSSO PER EVITARE IMPORT CIRCOLARE
 
 
 def datiVoceComputo(oSheet, lrow):

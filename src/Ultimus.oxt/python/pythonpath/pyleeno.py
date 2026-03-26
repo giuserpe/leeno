@@ -8448,12 +8448,19 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     # --- 1bis. ROTAZIONE FOGLI (COMPUTO -> VARIANTE -> CONTABILITA) ---
     if is_ctrl and is_shift and start_sheet_name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         ordine = ["COMPUTO", "VARIANTE", "CONTABILITA"]
-        try:
-            nuovo = ordine[(ordine.index(oSheet.Name) + 1) % 3]
-            GotoSheet(nuovo)
-            oSheet = oDoc.CurrentController.ActiveSheet
-        except ValueError:
-            pass
+        # Filtra solo i fogli effettivamente presenti nel documento
+        fogli_presenti = [s for s in ordine if oDoc.Sheets.hasByName(s)]
+        
+        if len(fogli_presenti) > 1:
+            try:
+                # Trova la posizione del foglio attuale nella sequenza filtrata
+                curr_idx = fogli_presenti.index(oSheet.Name)
+                # Calcola il prossimo foglio (con wrap-around)
+                nuovo = fogli_presenti[(curr_idx + 1) % len(fogli_presenti)]
+                GotoSheet(nuovo)
+                oSheet = oDoc.CurrentController.ActiveSheet
+            except (ValueError, Exception):
+                pass
 
     if not voce:
         Dialogs.Exclamation(Title='ATTENZIONE!', Text='Seleziona una voce o una misurazione.')
@@ -10080,7 +10087,7 @@ class version_code:
             ldev = "1"
 
         today = datetime.now().strftime('%Y%m%d')
-
+        
         lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
         lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
         lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
@@ -10089,7 +10096,7 @@ class version_code:
 
         with open(version_code.get_path(), 'w', encoding='utf-8') as f:
             f.write(new_version)
-
+        
         return new_version
 
 def description_upd():
@@ -10098,7 +10105,7 @@ def description_upd():
     if not url.endswith('/'):
         url += '/'
     desc_file = uno.fileUrlToSystemPath(url + 'description.xml')
-
+    
     oxt_name = version_code.read()
     # Il file description.xml richiede la versione senza il prefisso 'LeenO-'
     version_str = oxt_name[6:] if oxt_name.startswith('LeenO-') else oxt_name

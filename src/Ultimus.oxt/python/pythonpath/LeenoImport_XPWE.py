@@ -1,4 +1,4 @@
-u"""
+"""
 Importazione computo/variante/contabilità/prezzario
 dal formato XPWE
 """
@@ -1083,6 +1083,21 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     oCellRangeAddr = CellRangeAddress()
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
 
+    # --- Mappe per ricerca sicura categorie/capitoli ---
+    def make_map(lista):
+        # lista può contenere tuple (id, ...) o dizionari {'id_sc': id, ...}
+        d = {}
+        for item in lista:
+            if isinstance(item, dict):
+                d[str(item.get('id_sc'))] = item
+            elif isinstance(item, (list, tuple)):
+                d[str(item[0])] = item
+        return d
+
+    mapSuperCategorie = make_map(capitoliCategorie.get('SuperCategorie', []))
+    mapCategorie = make_map(capitoliCategorie.get('Categorie', []))
+    mapSottoCategorie = make_map(capitoliCategorie.get('SottoCategorie', []))
+
     # --- Mappe e variabili di controllo ---
     mappaVociRighe = {}        # id voce computo → riga foglio
     numeroVoce = 1             # numerazione progressiva voci
@@ -1099,15 +1114,22 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # Funzioni interne di utilità (NON alterano la logica)
     # -------------------------------------------------------------------------
 
-    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, dict_list):
+    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, map_data):
         """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
         nonlocal lrow
+        if not idcorr or idcorr == '0' or idcorr == idtest:
+            return
+
         try:
-            if idcorr != idtest:
+            data = map_data.get(str(idcorr))
+            if data:
+                # Se è una tupla, la descrizione è all'indice 1
+                # Se è un dizionario, la descrizione è in 'dessintetica'
+                testo = data[1] if isinstance(data, (list, tuple)) else data.get('dessintetica', '')
                 reset_test[0] = idcorr
-                inser_func(oSheet, lrow, dict_list[eval(idcorr) - 1][1])
+                inser_func(oSheet, lrow, testo)
                 lrow += 1
-        except UnboundLocalError:
+        except Exception:
             pass
 
     def set_num_or_formula(col, row, value):
@@ -1132,21 +1154,26 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 cell.String = v_strip
 
     def handle_negatives(startRow):
-        """Gestione del segno negativo (logica invariata)."""
+        """
+        Gestione del segno negativo per i componenti della quantità.
+        Assicura che tutti i fattori (Col 4-8) siano positivi e inverte
+        il posizionamento del risultato (Col 9 vs Col 11) in CONTABILITA.
+        """
         try:
             if '-' in mis[7]:
-                for x in range(5, 9):
-                    try:
-                        if oSheet.getCellByPosition(x, startRow).Value != 0:
-                            val = abs(oSheet.getCellByPosition(x, startRow).Value)
-                            oSheet.getCellByPosition(x, startRow).Value = val
-                    except Exception:
-                        pass
+                # Elabora colonne da 4 (E) a 8 (I) per renderle positive
+                for x in range(4, 9):
+                    cell = oSheet.getCellByPosition(x, startRow)
+                    formula = cell.Formula
+                    if formula and str(formula).startswith('='):
+                        # Se è una formula vera, la racchiude in ABS()
+                        if not formula.startswith('=ABS('):
+                            cell.Formula = '=ABS(' + formula[1:] + ')'
+                    elif cell.Value < 0:
+                        cell.Value = abs(cell.Value)
+                
+                # Inverte una sola volta (sposta formula da Col 9 a Col 11)
                 LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
-
-                if elaborato == 'CONTABILITA':
-                    if test == '-':
-                        LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
         except Exception:
             pass
 
@@ -1171,7 +1198,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idspcat, testspcat, [idspcat, None],
             LeenoSheetUtils.inserSuperCapitolo,
-            capitoliCategorie['SuperCategorie']
+            mapSuperCategorie
         )
         testspcat = idspcat
 
@@ -1179,7 +1206,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idcat, testcat, [idcat, None],
             LeenoSheetUtils.inserCapitolo,
-            capitoliCategorie['Categorie']
+            mapCategorie
         )
         testcat = idcat
 
@@ -1187,7 +1214,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idsbcat, testsbcat, [idsbcat, None],
             LeenoSheetUtils.inserSottoCapitolo,
-            capitoliCategorie['SottoCategorie']
+            mapSottoCategorie
         )
         testsbcat = idsbcat
 
@@ -1235,14 +1262,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     c.String = ''
                     c.CellStyle = 'Comp-Bianche in mezzo_R'
 
-            # --- Data contabilita (logica originale) ---
+            # --- Data contabilita (logica corretta) ---
             if elaborato == 'CONTABILITA':
                 cdata = oSheet.getCellByPosition(1, startRow)
-                cdata.Formula = (
-                    '=DATE(' + datamis.split('/')[2] +
-                    ';' + datamis.split('/')[1] + ';' +
-                    ';' + datamis.split('/')[0] + ')'
-                )
+                d_parts = datamis.split('/')
+                # Usiamo FormulaLocal per essere sicuri dei separatori (;)
+                try:
+                    cdata.FormulaLocal = '=DATA(' + d_parts[2] + ';' + d_parts[1] + ';' + d_parts[0] + ')'
+                except:
+                    cdata.Formula = '=DATE(' + d_parts[2] + ',' + d_parts[1] + ',' + d_parts[0] + ')'
                 cdata.Value = cdata.Value
 
             # --- Popola righe ---
@@ -1306,9 +1334,6 @@ def MENU_XPWE_import(filename = None):
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
-# from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
-# @measure_time(show_popup=True)
-# @measure_time_simple
 @LeenoUtils.no_refresh
 def XPWE_import(filename = None):
     '''

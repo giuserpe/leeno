@@ -23,7 +23,7 @@ import pyleeno as PL
 import LeenoEvents
 import LeenoBasicBridge
 import uno
-# import itertools
+import itertools
 # import operator
 import LeenoConfig
 import LeenoImport_XPWE
@@ -934,14 +934,19 @@ def GeneraLibretto(oDoc):
 
                 if spazio_da_coprire > 1000 and (ingombro_pag > 3000):
                     num_righe_filler = int(spazio_da_coprire // 500)
-                    for _ in range(num_righe_filler):
-                        oSheet.getRows().insertByIndex(curr_i, 1)
-                        oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
-                        oSheet.getCellByPosition(2, curr_i).String = "––––––––––––––––––––––––––––––"
-                        # Forza altezza riga filler
-                        oSheet.getRows().getByIndex(curr_i).Height = 500
-                        curr_i += 1
-                        ultimariga += 1
+                    
+                    # Inserimento batch filler
+                    oSheet.getRows().insertByIndex(curr_i, num_righe_filler)
+                    oFRange = oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i + num_righe_filler - 1)
+                    oFRange.CellStyle = "Ultimus_centro_bordi_lati"
+                    oFRange.Rows.Height = 500
+                    
+                    filler_text = "––––––––––––––––––––––––––––––"
+                    oFTextRange = oSheet.getCellRangeByPosition(2, curr_i, 2, curr_i + num_righe_filler - 1)
+                    oFTextRange.setDataArray(tuple((filler_text,) for _ in range(num_righe_filler)))
+                    
+                    curr_i += num_righe_filler
+                    ultimariga += num_righe_filler
 
                 oSheet.getRows().insertByIndex(curr_i, 1)
                 oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
@@ -1088,43 +1093,66 @@ def GeneraLibretto(oDoc):
     SheetUtils.visualizza_PageBreak(False)
     SheetUtils.visualizza_PageBreak(True)
 
+    # --- 10. ANNOTAZIONE E MARCATURA IN BATCH ---
     # Estrai i salti di pagina orizzontali (righe) da Calc
     breaks = sorted([b.Position for b in oSheet.getRowPageBreaks()])
 
-    nPagFinale = start_nPage # Valore di fallback
-
-    # Ciclo di annotazione su tutto il blocco del SAL (inclusa la nuova riga 'daRiga')
+    # Preparazione dei dati per l'inserimento batch (Colonne 19, 20, 21, 22, 23)
+    # 19: nSal, 20: nPag, 21: -, 22: #reg, 23: nSal
+    
+    num_rows = aRiga - daRiga + 1
+    # Recuperiamo gli stili della colonna 1 in un colpo solo per il filtraggio
+    oStyleRange = oSheet.getCellRangeByPosition(1, daRiga, 1, aRiga)
+    # Nota: CellStyle non si recupera in batch facilmente con DataArray, 
+    # ma possiamo minimizzare le chiamate.
+    
+    nPagFinale = start_nPage
+    
+    # Preparazione array per le colonne 19-23
+    anno_data = [] # Conterrà liste di 5 elementi per ogni riga
+    
     for i in range(daRiga, aRiga + 1):
-        # Il numero di pagina è start_nPage + numero di salti che avvengono DOPO daRiga e PRIMA/SULLA riga i
         num_breaks_between = len([b for b in breaks if daRiga < b <= i])
         nPagCorrente = start_nPage + num_breaks_between
-
+        
+        row_data = [None] * 5 # Fallback: non sovrascrivere se non necessario
+        
         if i == daRiga:
-            # Configura riga di rinvio (segue Libretto...)
+            # Configura riga di rinvio
             oSheet.getCellRangeByPosition(0, daRiga, 36, daRiga).CellStyle = "uuuuu"
             oSheet.getCellByPosition(2, daRiga).String = f"segue Libretto delle Misure n.{nSal} - {daVoce}÷{aVoce}"
-            oSheet.getCellByPosition(20, daRiga).Value = nPagCorrente
-            oSheet.getCellByPosition(19, daRiga).Value = nSal
-            oSheet.getCellByPosition(23, daRiga).Value = nSal
-
+            
             # Subtotale nella riga di rinvio (corretto per lo slittamento riga)
             formula_sum = f"=SUBTOTAL(9;$P${primariga + 1}:$P${ultimariga + 1})"
             for c in (15, 25):
                 cell = oSheet.getCellByPosition(c, daRiga)
                 cell.Formula, cell.CellStyle = formula_sum, "comp sotto Euro 3_R"
-            continue
+            
+            row_data = [nSal, nPagCorrente, None, None, nSal]
+        else:
+            # Verifica se la riga è una riga di 'voce'
+            if oSheet.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
+                row_data = [nSal, nPagCorrente, None, "#reg", nSal]
+                nPagFinale = nPagCorrente
+        
+        anno_data.append(tuple(row_data))
 
-        # Verifica se la riga è una riga di 'voce' (misura) che richiede la marcatura della pagina
-        style = oSheet.getCellByPosition(1, i).CellStyle
-        if style == "comp Art-EP_R":
-             # Annotazione SAL, Registro e Pagina
-             oSheet.getCellByPosition(19, i).Value = nSal
-             oSheet.getCellByPosition(22, i).String = "#reg"
-             oSheet.getCellByPosition(23, i).Value = nSal
-             oSheet.getCellByPosition(20, i).Value = nPagCorrente
-             nPagFinale = nPagCorrente
+    # Scrittura batch delle annotazioni (Colonne 19-23)
+    oAnnoRange = oSheet.getCellRangeByPosition(19, daRiga, 23, aRiga)
+    # Filtriamo i None per non cancellare celle esistenti che non vogliamo toccare?
+    # In realtà in queste colonne (T-X) solitamente non c'è altro nel libretto generato.
+    # Per sicurezza, potremmo recuperare il DataArray esistente e aggiornarlo.
+    current_data = list(oAnnoRange.getDataArray())
+    for idx, new_row in enumerate(anno_data):
+        updated_row = list(current_data[idx])
+        for c_idx, val in enumerate(new_row):
+            if val is not None:
+                updated_row[c_idx] = val
+        current_data[idx] = tuple(updated_row)
+    
+    oAnnoRange.setDataArray(tuple(current_data))
 
-    # Scrive l'ultimo numero di pagina annotato nella riga gialla di riepilogo (daRiga)
+    # Scrive l'ultimo numero di pagina annotato nella riga gialla di riepilogo
     oSheet.getCellByPosition(20, daRiga).Value = nPagFinale
 
     # --- 11. AGGIORNAMENTO S2 ---
@@ -1279,27 +1307,28 @@ def GeneraRegistro(oDoc, dati):
     current_row = insRow + 2
     prima_riga_dati = current_row
 
-    # 4. INSERIMENTO VOCI CON SEZIONI DINAMICHE
-    # Inserimento parziali immediato quando cambia sezione
+    # 4. INSERIMENTO VOCI CON SEZIONI DINAMICHE IN BATCH
     current_section_type = None
     current_section_start = None
 
-    for dati_riga, is_vds in REG_DATA_ORDERED:
-        voce_type = 'VDS' if is_vds else 'LAVORI'
+    # Raggruppa le voci per tipo (LAVORI o VDS) per inserirle in blocchi
+    def get_type(entry):
+        return 'VDS' if entry[1] else 'LAVORI'
 
-        # Se cambia il tipo di voce, chiudi la sezione precedente e apri una nuova
+    for voce_type, group in itertools.groupby(REG_DATA_ORDERED, key=get_type):
+        block = [entry[0] for entry in group]
+        num_voci = len(block)
+        is_vds = (voce_type == 'VDS')
+
+        # A. Gestione cambio sezione
         if voce_type != current_section_type:
-            # Chiudi sezione precedente con parziale (se esiste)
+            # Chiudi sezione precedente con parziale
             if current_section_type is not None:
                 section_end_row = current_row - 1
-
-                # Riga vuota prima del parziale
-                oRegSheet.getRows().insertByIndex(current_row, 1)
+                oRegSheet.getRows().insertByIndex(current_row, 2)
                 oRegSheet.getCellRangeByPosition(0, current_row, 9, current_row + 1).CellStyle = "Ultimus_centro_bordi_lati"
                 current_row += 1
-
-                # Riga parziale
-                oRegSheet.getRows().insertByIndex(current_row, 1)
+                
                 testo_parziale = "Parziale della Sicurezza €" if current_section_type == 'VDS' else "Parziale dei Lavori a Misura €"
                 oRegSheet.getCellByPosition(1, current_row).String = testo_parziale
                 oRegSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra"
@@ -1307,24 +1336,11 @@ def GeneraRegistro(oDoc, dati):
                 oRegSheet.getCellByPosition(8, current_row).CellStyle = "Ultimus_destra_totali"
                 current_row += 1
 
-                # RIEMPIMENTO PAGINA tra parziale e prossima sezione
-                PL.comando('CalculateHard')
-                h_pagina_std = 25810
-                y_pos = oRegSheet.getCellByPosition(1, current_row - 1).Position.Y
-                ingombro_pag = y_pos % h_pagina_std
-                spazio_da_coprire = h_pagina_std - ingombro_pag - 2000
+                # Filler tra sezioni
+                num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000)
+                current_row += num_filler + 1
 
-                if spazio_da_coprire > 500:
-                    num_righe_filler = min(10, int(spazio_da_coprire // 500))
-                    for _ in range(num_righe_filler):
-                        oRegSheet.getRows().insertByIndex(current_row, 1)
-                        oRegSheet.getCellRangeByPosition(0, current_row, 9, current_row).CellStyle = "Ultimus_centro_bordi_lati"
-                        oRegSheet.getCellByPosition(1, current_row).String = "––––––––––––––––––––––––––––––"
-                        current_row += 1
-
-                current_row += 1  # Spazio prima della prossima sezione
-
-            # Inserisci titolo nuova sezione
+            # Titolo nuova sezione
             oRegSheet.getRows().insertByIndex(current_row, 1)
             if current_section_type is not None:
                 oRegSheet.getRows().getByIndex(current_row).IsStartOfNewPage = True
@@ -1333,20 +1349,20 @@ def GeneraRegistro(oDoc, dati):
             oRegSheet.getCellRangeByPosition(0, current_row, 9, current_row).CellStyle = "Ultimus_centro_bordi_lati"
             current_row += 1
 
-            # Inizia nuova sezione
             current_section_type = voce_type
             current_section_start = current_row
 
-        # Inserisci la voce
-        oRegSheet.getRows().insertByIndex(current_row, 1)
-        oRange = oRegSheet.getCellRangeByPosition(0, current_row, 8, current_row)
-        oRange.setDataArray((tuple(dati_riga),))
+        # B. Inserimento batch del blocco voci
+        oRegSheet.getRows().insertByIndex(current_row, num_voci)
+        oRange = oRegSheet.getCellRangeByPosition(0, current_row, 8, current_row + num_voci - 1)
+        oRange.setDataArray(tuple(tuple(d) for d in block))
 
-        oRegSheet.getCellRangeByPosition(0, current_row, 1, current_row).CellStyle = "List-stringa-sin"
-        oRegSheet.getCellRangeByPosition(2, current_row, 4, current_row).CellStyle = "List-num-centro"
-        oRegSheet.getCellRangeByPosition(5, current_row, 9, current_row).CellStyle = "List-num-euro"
+        # Styling batch
+        oRegSheet.getCellRangeByPosition(0, current_row, 1, current_row + num_voci - 1).CellStyle = "List-stringa-sin"
+        oRegSheet.getCellRangeByPosition(2, current_row, 4, current_row + num_voci - 1).CellStyle = "List-num-centro"
+        oRegSheet.getCellRangeByPosition(5, current_row, 9, current_row + num_voci - 1).CellStyle = "List-num-euro"
 
-        current_row += 1
+        current_row += num_voci
 
     # Chiudi l'ultima sezione con parziale
     if current_section_type is not None:
@@ -1368,6 +1384,11 @@ def GeneraRegistro(oDoc, dati):
 
     # 6. TOTALE GENERALE E FIRME
     lastRowWithData = current_row - 2
+    
+    # --- BUGFIX: Aggiunge l'importo totale alla riga gialla di riepilogo (insRow) ---
+    oRegSheet.getCellByPosition(8, insRow).Formula = f"=SUBTOTAL(9;$I${prima_riga_dati+1}:$I${lastRowWithData+1})"
+    oRegSheet.getCellByPosition(8, insRow).CellStyle = "comp sotto Euro 3_R"
+    
     num_righe_firme = 22
     oRegSheet.getRows().insertByIndex(current_row, num_righe_firme)
 
@@ -1416,19 +1437,8 @@ def GeneraRegistro(oDoc, dati):
     oRegSheet.getCellRangeByPosition(0, riga_riportare, 9, riga_riportare).CellStyle = "Ultimus_Bordo_sotto"
 
     # 8. RIEMPIMENTO PAGINA finale
-    PL.comando('CalculateHard')
-    h_pagina_std = 25810
-    y_pos = oRegSheet.getCellByPosition(1, riga_riportare - 1).Position.Y
-    ingombro_pag = y_pos % h_pagina_std
-    spazio_da_coprire = h_pagina_std - ingombro_pag - 2000
-
-    if spazio_da_coprire > 500:
-        num_righe_filler = int(spazio_da_coprire // 500)
-        oRegSheet.getRows().insertByIndex(riga_riportare, num_righe_filler)
-        for r in range(riga_riportare, riga_riportare + num_righe_filler):
-            oRegSheet.getCellRangeByPosition(0, r, 9, r).CellStyle = "Ultimus_centro_bordi_lati"
-            oRegSheet.getCellByPosition(1, r).String = "––––––––––––––––––––––––––––––"
-        riga_riportare += num_righe_filler
+    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000, max_filler=20)
+    riga_riportare += num_filler
 
     # 9. OTTIMIZZAZIONE E LAYOUT
     PL.comando('CalculateHard') # Forza ricalcolo layout
@@ -1562,7 +1572,8 @@ def GeneraSAL(oDoc, dati):
     # --- 2. Inserimento Intestazione "segue SAL" ---
     oSalSheet.getRows().insertByIndex(insRow, 1)
     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-    oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
+    # oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
+    oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - 1÷{aVoce}"
 
     # --- 3. Scrittura Voci SAL per sezioni ---
     current_row = insRow + 1
@@ -1640,6 +1651,10 @@ def GeneraSAL(oDoc, dati):
 
 
     lastDataRow = current_row - 1
+    
+    # --- BUGFIX: Aggiunge l'importo totale alla riga gialla di riepilogo (insRow) ---
+    oSalSheet.getCellByPosition(5, insRow).Formula = f"=SUBTOTAL(9;$F${subtotalStartRow+1}:$F${lastDataRow+1})"
+    oSalSheet.getCellByPosition(5, insRow).CellStyle = "comp sotto Euro 3_R"
 
     # --- 4. Riepilogo dopo le voci ---
     r = current_row
@@ -1865,7 +1880,6 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     """
     PL.comando('CalculateHard')
 
-    filler = "––––––––––––––––––––––––––––––"
     y_pos = oSheet.getCellByPosition(col, insertAt - 1).Position.Y
     h_row = oSheet.getRows().getByIndex(insertAt - 1).Height
     ingombro_pag = (y_pos + h_row) % h_pagina
@@ -1878,10 +1892,17 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     if num_righe <= 0:
         return 0
 
+    # Inserimento batch di tutte le righe filler
     oSheet.getRows().insertByIndex(insertAt, num_righe)
-    for r in range(insertAt, insertAt + num_righe):
-        oSheet.getCellRangeByPosition(0, r, last_col, r).CellStyle = "Ultimus_centro_bordi_lati"
-        oSheet.getCellByPosition(col, r).String = filler
+    
+    # Formattazione batch dell'intera area filler
+    oRange = oSheet.getCellRangeByPosition(0, insertAt, last_col, insertAt + num_righe - 1)
+    oRange.CellStyle = "Ultimus_centro_bordi_lati"
+    
+    # Inserimento batch delle stringhe di filler
+    filler = "––––––––––––––––––––––––––––––"
+    oFillerRange = oSheet.getCellRangeByPosition(col, insertAt, col, insertAt + num_righe - 1)
+    oFillerRange.setDataArray(tuple((filler,) for _ in range(num_righe)))
 
     return num_righe
 

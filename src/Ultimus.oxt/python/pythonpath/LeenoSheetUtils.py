@@ -987,16 +987,18 @@ def invertiUnSegno(oSheet, lrow):
         formula2 = oSheet.getCellByPosition(11, lrow).Formula
         oSheet.getCellByPosition(11, lrow).Formula = formula1
         oSheet.getCellByPosition(9, lrow).Formula = formula2
-        if oSheet.getCellByPosition(11, lrow).String != '':
-            for x in range(2, 12):
-                oSheet.getCellByPosition(
-                    x, lrow).CellStyle = oSheet.getCellByPosition(
-                        x, lrow).CellStyle + ' ROSSO'
-        else:
-            for x in range(2, 12):
-                oSheet.getCellByPosition(
-                    x, lrow).CellStyle = oSheet.getCellByPosition(
-                        x, lrow).CellStyle.split(' ROSSO')[0]
+        
+        # Gestione stili
+        is_negative = oSheet.getCellByPosition(11, lrow).String != ''
+        for x in range(2, 12):
+            cell = oSheet.getCellByPosition(x, lrow)
+            curr_style = cell.CellStyle
+            if is_negative:
+                if ' ROSSO' not in curr_style:
+                    cell.CellStyle = curr_style + ' ROSSO'
+            else:
+                if ' ROSSO' in curr_style:
+                    cell.CellStyle = curr_style.replace(' ROSSO', '')
 
 
 # ###############################################################

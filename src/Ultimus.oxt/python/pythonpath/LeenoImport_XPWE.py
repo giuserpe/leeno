@@ -1083,21 +1083,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     oCellRangeAddr = CellRangeAddress()
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
 
-    # --- Mappe per ricerca sicura categorie/capitoli ---
-    def make_map(lista):
-        # lista può contenere tuple (id, ...) o dizionari {'id_sc': id, ...}
-        d = {}
-        for item in lista:
-            if isinstance(item, dict):
-                d[str(item.get('id_sc'))] = item
-            elif isinstance(item, (list, tuple)):
-                d[str(item[0])] = item
-        return d
-
-    mapSuperCategorie = make_map(capitoliCategorie.get('SuperCategorie', []))
-    mapCategorie = make_map(capitoliCategorie.get('Categorie', []))
-    mapSottoCategorie = make_map(capitoliCategorie.get('SottoCategorie', []))
-
     # --- Mappe e variabili di controllo ---
     mappaVociRighe = {}        # id voce computo → riga foglio
     numeroVoce = 1             # numerazione progressiva voci
@@ -1114,22 +1099,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # Funzioni interne di utilità (NON alterano la logica)
     # -------------------------------------------------------------------------
 
-    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, map_data):
+    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, dict_list):
         """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
         nonlocal lrow
-        if not idcorr or idcorr == '0' or idcorr == idtest:
-            return
-
         try:
-            data = map_data.get(str(idcorr))
-            if data:
-                # Se è una tupla, la descrizione è all'indice 1
-                # Se è un dizionario, la descrizione è in 'dessintetica'
-                testo = data[1] if isinstance(data, (list, tuple)) else data.get('dessintetica', '')
+            if idcorr != idtest:
                 reset_test[0] = idcorr
-                inser_func(oSheet, lrow, testo)
+                inser_func(oSheet, lrow, dict_list[eval(idcorr) - 1][1])
                 lrow += 1
-        except Exception:
+        except UnboundLocalError:
             pass
 
     def set_num_or_formula(col, row, value):
@@ -1153,14 +1131,14 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 # altrimenti scrivi come stringa semplice
                 cell.String = v_strip
 
-    def handle_negatives(startRow):
+    def handle_negatives(startRow, vedi_neg=False):
         """
         Gestione del segno negativo per i componenti della quantità.
         Assicura che tutti i fattori (Col 4-8) siano positivi e inverte
         il posizionamento del risultato (Col 9 vs Col 11) in CONTABILITA.
         """
         try:
-            if '-' in mis[7]:
+            if '-' in mis[7] or vedi_neg:
                 # Elabora colonne da 4 (E) a 8 (I) per renderle positive
                 for x in range(4, 9):
                     cell = oSheet.getCellByPosition(x, startRow)
@@ -1198,7 +1176,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idspcat, testspcat, [idspcat, None],
             LeenoSheetUtils.inserSuperCapitolo,
-            mapSuperCategorie
+            capitoliCategorie['SuperCategorie']
         )
         testspcat = idspcat
 
@@ -1206,7 +1184,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idcat, testcat, [idcat, None],
             LeenoSheetUtils.inserCapitolo,
-            mapCategorie
+            capitoliCategorie['Categorie']
         )
         testcat = idcat
 
@@ -1214,7 +1192,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         insert_categoria_if_needed(
             idsbcat, testsbcat, [idsbcat, None],
             LeenoSheetUtils.inserSottoCapitolo,
-            mapSottoCategorie
+            capitoliCategorie['SottoCategorie']
         )
         testsbcat = idsbcat
 
@@ -1292,10 +1270,22 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
                 # VEDI VOCE
                 test = ''
+                is_vedi_neg = False
                 if mis[9] != '-2':
                     vedi = mappaVociRighe.get(mis[9])
                     try:
                         test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
+                        if test == '-':
+                            is_vedi_neg = True
+                            # In COMPUTO/VARIANTE, vedi_voce_xpwe applica già il Rosso.
+                            # Alzando il flag is_vedi_neg, handle_negatives chiamerà invertiUnSegno.
+                            # Siccome invertiUnSegno agisce come un toggle in base allo stile ROSSO,
+                            # dobbiamo rimuoverlo per assicurarci che venga riapplicato insieme al segno meno.
+                            if elaborato != 'CONTABILITA':
+                                for x in range(2, 10):
+                                    cell = oSheet.getCellByPosition(x, startRow)
+                                    if ' ROSSO' in cell.CellStyle:
+                                        cell.CellStyle = cell.CellStyle.replace(' ROSSO', '')
                     except Exception:
                         Dialogs.Exclamation(
                             Title="Attenzione",
@@ -1309,7 +1299,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                         oSheet.getCellByPosition(44, startRow).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
 
                 # segni negativi
-                handle_negatives(startRow)
+                handle_negatives(startRow, vedi_neg=is_vedi_neg)
 
                 startRow += 1
 

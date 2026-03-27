@@ -3913,105 +3913,6 @@ def firme_in_calce(lrowF=None):
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
 
-    # if oSheet.Name in ("Registro", "SAL"):
-    #     if lrowF == None:
-    #         lrowF = SheetUtils.getLastUsedRow(oSheet)
-
-    #     oSheet.getRows().insertByIndex(lrowF, 13)
-    #     riga_corrente = lrowF + 1
-    #     oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
-    #     comando('CalculateHard')
-    #     oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
-    #     aSaveData = oRange.getDataArray()
-    #     oRange.setDataArray(aSaveData)
-
-    #     oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
-    #         "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName(
-    #             '$S2.C17').String + ")")
-
-    #     oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
-    #         "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
-    #         '$S2.C16').String + ")")
-    #     oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
-    #     if oSheet.Name == "SAL":
-    #         return
-    #     nSal = 1
-    #     for i in reversed(range(2, 50)):
-    #         if oDoc.NamedRanges.hasByName("_Lib_" + str(i)):
-    #             nSal = i
-    #             break
-    #     oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
-    #         # '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
-    #         '=CONCATENATE("In data __/__/____ è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
-    #     comando('CalculateHard')
-
-    #     oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
-
-    #     aSaveData = oRange.getDataArray()
-    #     oRange.setDataArray(aSaveData)
-
-    #     oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
-    #         "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
-    #             '$S2.C16').String + ")")
-
-    # if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
-    #     # Configurazione iniziale
-    #     if lrowF is None:
-    #         lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
-
-    #     oDoc.CurrentController.setFirstVisibleRow(lrowF - 1)
-
-    #     # Trova ultima riga da processare
-    #     used_area = SheetUtils.getUsedArea(oSheet)
-    #     lrowE = used_area.EndRow
-
-    #     # Cerca riga rossa di chiusura
-    #     for i in range(lrowF, lrowE + 1):
-    #         if oSheet.getCellByPosition(0, i).CellStyle == "Riga_rossa_Chiudi":
-    #             lrowE = i
-    #             break
-    #     # Elimina righe se necessario
-    #     if lrowE > lrowF + 1:
-    #         oSheet.getRows().removeByIndex(lrowF, lrowE - lrowF)
-
-    #     # Inserimento nuove righe
-    #     NUM_RIGHE = 15
-    #     # riga_corrente = lrowF + 1
-    #     riga_corrente = lrowF
-    #     first_new_row = lrowF -1
-    #     last_new_row = lrowF + NUM_RIGHE - 1
-
-
-    #     oSheet.getRows().insertByIndex(lrowF -1, NUM_RIGHE)
-
-    #     # Formattazione celle
-    #     oSheet.getCellRangeByPosition(0, first_new_row, 25, last_new_row -1).CellStyle = "Ultimus_centro"
-    #     oSheet.getCellRangeByPosition(11, last_new_row, 25, last_new_row).CellStyle = "Comp-Bianche in mezzo Descr_R"
-
-    #     # Raggruppamento righe
-    #     range_addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    #     range_addr.Sheet = oSheet.RangeAddress.Sheet
-    #     range_addr.StartColumn = 0
-    #     range_addr.EndColumn = 0
-    #     range_addr.StartRow = first_new_row
-    #     range_addr.EndRow = last_new_row - 1
-    #     oSheet.group(range_addr, 1)
-
-    #     # Inserimento dati
-    #     # Data
-    #     data_row = riga_corrente + 3
-    #     data_cell = oSheet.getCellByPosition(1, data_row)
-    #     data_cell.Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
-    #     comando('CalculateHard')
-
-    #     # Consolida formula della data
-    #     data_array = data_cell.getDataArray()
-    #     data_cell.setDataArray(data_array)
-    #     oSheet.getCellRangeByPosition(1, data_row, 1, data_row).CellStyle = 'ULTIMUS'
-
-    #     # Tecnico
-    #     oSheet.getCellByPosition(1, riga_corrente + 5).Formula = 'Il Tecnico'
-    #     oSheet.getCellByPosition(1, riga_corrente + 6).Formula = '=CONCATENATE($S2.$C$13)'
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -4217,6 +4118,9 @@ def firme_in_calce(lrowF=None):
         # Applicazione
         oRow = SheetUtils.uFindString("TOTALI COMPUTO", oSheet)[1] +1
 
+        # Tracciamento posizioni per raggruppamento gerarchico
+        posizioni_categorie = []
+
         for key, value in categorie_ordinate.items():
             oSheet.getRows().insertByIndex(riga_corrente, 1)
             oSheet.getCellByPosition(1, riga_corrente).String = key
@@ -4225,7 +4129,6 @@ def firme_in_calce(lrowF=None):
             oSheet.getCellByPosition(18, riga_corrente).Formula = f'=SUMIF($B$2:$B${lrowF}; B{riga_corrente + 1}; $S$2:$S${lrowF})'
             oSheet.getCellByPosition(29, riga_corrente).Formula = f'=AE{riga_corrente + 1}/S{riga_corrente + 1}*100'
             oSheet.getCellByPosition(30, riga_corrente).Formula = f'=SUMIF($B$2:$B${lrowF}; B{riga_corrente + 1}; AE$2:AE${lrowF})'
-
             livello = len(key.split('.'))
             if livello == 1:
                 applica_stili_e_formule(oSheet, riga_corrente, parametri_livello1)
@@ -4234,9 +4137,42 @@ def firme_in_calce(lrowF=None):
             elif livello == 3:
                 applica_stili_e_formule(oSheet, riga_corrente, parametri_livello3)
 
+            posizioni_categorie.append((riga_corrente, livello))
             riga_corrente += 1
 
         indicator.end()
+
+        # -------------------------------------------------------------------
+        # Raggruppamento gerarchico
+        # -------------------------------------------------------------------
+        def raggruppa_figli(posizioni, livello_genitore):
+            """Raggruppa le righe dei figli sotto ciascun genitore."""
+            i = 0
+            while i < len(posizioni):
+                riga_gen, liv_gen = posizioni[i]
+                if liv_gen != livello_genitore:
+                    i += 1
+                    continue
+                # Cerca le righe figlie consecutive (livello > genitore)
+                j = i + 1
+                while j < len(posizioni) and posizioni[j][1] > livello_genitore:
+                    j += 1
+                # Se ci sono figli, raggruppa da i+1 a j-1
+                if j > i + 1:
+                    prima_figlia = posizioni[i + 1][0]
+                    ultima_figlia = posizioni[j - 1][0]
+                    addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+                    addr.Sheet = iSheet
+                    addr.StartColumn = 0
+                    addr.EndColumn = 0
+                    addr.StartRow = prima_figlia
+                    addr.EndRow = ultima_figlia
+                    oSheet.group(addr, 1)  # 1 = raggruppamento per righe
+                i = j if j > i + 1 else i + 1
+
+        # Raggruppa prima livello 1→figli, poi livello 2→figli
+        raggruppa_figli(posizioni_categorie, 1)
+        raggruppa_figli(posizioni_categorie, 2)
         oSheet.getCellRangeByPosition(
             2, inizio_gruppo, ae, inizio_gruppo).CellStyle = "Ultimus_centro"
         oSheet.getCellByPosition(ii, riga_corrente).Value = 100
@@ -8450,7 +8386,7 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
         ordine = ["COMPUTO", "VARIANTE", "CONTABILITA"]
         # Filtra solo i fogli effettivamente presenti nel documento
         fogli_presenti = [s for s in ordine if oDoc.Sheets.hasByName(s)]
-        
+
         if len(fogli_presenti) > 1:
             try:
                 # Trova la posizione del foglio attuale nella sequenza filtrata
@@ -10087,7 +10023,7 @@ class version_code:
             ldev = "1"
 
         today = datetime.now().strftime('%Y%m%d')
-        
+
         lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
         lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
         lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
@@ -10096,7 +10032,7 @@ class version_code:
 
         with open(version_code.get_path(), 'w', encoding='utf-8') as f:
             f.write(new_version)
-        
+
         return new_version
 
 def description_upd():
@@ -10105,7 +10041,7 @@ def description_upd():
     if not url.endswith('/'):
         url += '/'
     desc_file = uno.fileUrlToSystemPath(url + 'description.xml')
-    
+
     oxt_name = version_code.read()
     # Il file description.xml richiede la versione senza il prefisso 'LeenO-'
     version_str = oxt_name[6:] if oxt_name.startswith('LeenO-') else oxt_name

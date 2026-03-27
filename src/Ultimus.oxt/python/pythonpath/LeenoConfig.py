@@ -182,18 +182,24 @@ class Config(Borg):
         '''
         load configuration data from disk
         '''
+        if not os.path.exists(self._path):
+            return
+        
         try:
-            self._parser.read(self._path)
+            with open(self._path, 'r', encoding='utf-8') as f:
+                self._parser.read_file(f)
         except Exception:
-            os.remove(self._path)
+            try:
+                os.remove(self._path)
+            except:
+                pass
 
     def _store(self):
         '''
         store configuration data to disk
         '''
-        fp = open(self._path, 'w')
-        self._parser.write(fp)
-        fp.close()
+        with open(self._path, 'w', encoding='utf-8') as fp:
+            self._parser.write(fp)
 
     def read(self, section, option, convert=False):
         '''

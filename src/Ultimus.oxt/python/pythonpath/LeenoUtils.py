@@ -13,7 +13,7 @@ from contextlib import contextmanager
 
 import calendar
 import LeenoDialogs as DLG
-import pyleeno as PL
+
 import Dialogs
 from LeenoConfig import COLORE_ROSSO_AVVISO
 import LeenoGlobals
@@ -122,11 +122,20 @@ def getDocument():
         # Se arriviamo qui, non abbiamo trovato nulla
         # DLG.chi("DEBUG: Nessun documento Calc valido individuato dal Desktop.")
         return None
-
     except Exception as e:
         DLG.chi(f"Errore critico in getDocument: {str(e)}")
         DLG.chi(f"Debug: il desktop vede {desktop.getComponents().getCount()} componenti")
         return None
+
+import pyleeno as PL
+
+def getDispatcher():
+    '''
+    Restituisce un DispatchHelper per l'invio di comandi .uno:
+    '''
+    ctx = getComponentContext()
+    return ctx.ServiceManager.createInstanceWithContext(
+        "com.sun.star.frame.DispatchHelper", ctx)
 
 
 def isPasswordProtected(oDoc=None):
@@ -594,7 +603,7 @@ def reset_properties(o_range, cell_formatting=False, character_formatting=False,
         shadow_and_effects (bool): Se True, ripristina le proprietà relative agli effetti di ombreggiatura.
 
     ### ESEMPIO D'USO:
-        oDoc = LeenoUtils.getDocument()
+        oDoc = getDocument()
         o_range = oDoc.CurrentSelection
         reset_properties(o_range, cell_formatting=True, character_formatting=True)
     """
@@ -827,14 +836,13 @@ def wrap_path(path, max_len=60):
 
 ##########################################################################
 import functools
-import LeenoUtils
 
 
 
 def memorizza_posizione(step=0):
     """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
-    ctx = LeenoUtils.getComponentContext()
-    doc = LeenoUtils.getDocument()
+    ctx = getComponentContext()
+    doc = getDocument()
     controller = doc.getCurrentController()
 
     # Ottieni la selezione corrente
@@ -877,7 +885,7 @@ def ripristina_posizione():
         DLG.chi("Nessuna posizione memorizzata trovata")
         return
 
-    doc = LeenoUtils.getDocument()
+    doc = getDocument()
     controller = doc.getCurrentController()
     sheets = doc.getSheets()
 
@@ -952,7 +960,7 @@ def ProtezioneFoglioContext(sheet_or_name, password="", oDoc=None):
     # Se passiamo un nome, recuperiamo l'oggetto foglio
     if isinstance(sheet_or_name, str):
         if oDoc is None:
-            oDoc = LeenoUtils.getDocument()
+            oDoc = getDocument()
         oSheet = oDoc.getSheets().getByName(sheet_or_name)
     else:
         oSheet = sheet_or_name
@@ -1007,7 +1015,7 @@ def _fingerprint_voce(oSheet, SR, ER):
 ########################################################################
 
 
-@LeenoUtils.no_refresh
+@no_refresh
 def MENU_trova_duplicati():
     '''
     Scansiona il foglio attivo (COMPUTO, VARIANTE o CONTABILITA) e individua
@@ -1018,7 +1026,7 @@ def MENU_trova_duplicati():
     - Viene mostrato un dialogo riepilogativo.
     '''
     PL.struttura_off()
-    oDoc = LeenoUtils.getDocument()
+    oDoc = getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -1100,7 +1108,7 @@ def MENU_trova_duplicati():
     # Chiude tutti i gruppi (livello 1) tramite dispatch
     if singole:
         try:
-            dispatcher = LeenoUtils.getDispatcher()
+            dispatcher = getDispatcher()
             frame = oDoc.getCurrentController().Frame
             dispatcher.executeDispatch(frame, '.uno:HideDetail', '', 0, ())
         except Exception:

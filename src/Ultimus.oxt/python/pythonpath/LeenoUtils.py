@@ -12,53 +12,18 @@ from datetime import date
 from contextlib import contextmanager
 
 import calendar
-import LeenoDialogs as DLG
-
-import Dialogs
-from LeenoConfig import COLORE_ROSSO_AVVISO
-import LeenoGlobals
-
-
 import PyPDF2
-'''
-ALCUNE COSE UTILI
 
-La finestra che contiene il documento (o componente) corrente:
-    desktop.CurrentFrame.ContainerWindow
-Non cambia nulla se è aperto un dialogo non modale,
-ritorna SEMPRE il frame del documento.
-
-    desktop.ContainerWindow ritorna un None -- non so a che serva
-
-Per ottenere le top windows, c'è il toolkit...
-    tk = ctx.ServiceManager.createInstanceWithContext("com.sun.star.awt.Toolkit", ctx)
-    tk.getTopWindowCount()      ritorna il numero delle topwindow
-    tk.getTopWIndow(i)          ritorna una topwindow dell'elenco
-    tk.getActiveTopWindow ()    ritorna la topwindow attiva
-La topwindow attiva, per essere attiva deve, appunto, essere attiva, indi avere il focus
-Se si fa il debug, ad esempio, è probabile che la finestra attiva sia None
-
-Resta quindi SEMPRE il problema di capire come fare a centrare un dialogo sul componente corrente.
-Se non ci sono dialoghi in esecuzione, il dialogo creato prende come parent la ContainerWindow(si suppone...)
-e quindi viene posizionato in base a quella
-Se c'è un dialogo aperto e nell'event handler se ne apre un altro, l'ultimo prende come parent il precedente,
-e viene quindi posizionato in base a quello e non alla schermata principale.
-Serve quindi un metodo per trovare le dimensioni DELLA FINESTRA PARENT di un dialogo, per posizionarlo.
-
-L'oggetto UnoControlDialog permette di risalire al XWindowPeer (che non serve ad una cippa), alla XView
-(che mi fornisce la dimensione del dialogo ma NON la parent...), al UnoControlDialogModel, che fornisce
-la proprietà 'DesktopAsParent' che mi dice SOLO se il dialogo è modale (False) o non modale (True)
-
-L'unica soluzione che mi viene in mente è tentare con tk.ActiveTopWindow e, se None, prendere quella del desktop
-
-'''
+# ============================================================================
+# CORE INFRASTRUCTURE (Must be at the top to avoid circular import issues)
+# ============================================================================
 
 def getComponentContext():
     '''
     Get current application's component context
     '''
     try:
-        if __global_context__ is not None:
+        if "__global_context__" in globals() and __global_context__ is not None:
             return __global_context__
         return uno.getComponentContext()
     except Exception:
@@ -73,34 +38,16 @@ def getDesktop():
     return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
 
-# def getDocument():
-#     ctx = getComponentContext()
-#     smgr = ctx.ServiceManager
-#     desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-#     oDoc = desktop.getCurrentComponent()
-
-#     # Se il componente corrente non è un documento (es. è un dialogo)
-#     # cerchiamo l'ultimo documento attivo che sia un foglio di calcolo
-#     if not hasattr(oDoc, "getSheets"):
-#         components = desktop.getComponents().createEnumeration()
-#         while components.hasMoreElements():
-#             comp = components.nextElement()
-#             if hasattr(comp, "getSheets"): # È un file Calc
-#                 return comp
-#     return oDoc
-
 def getDocument():
     try:
         ctx = getComponentContext()
         if ctx is None:
-            DLG.chi("Errore: Contesto UNO non trovato.")
             return None
 
         desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
         def is_valid_calc(comp):
             if comp is None: return False
-            # Verifichiamo le proprietà base senza far crashare il processo
             try:
                 # Verifica che abbia i fogli e non sia stato eliminato
                 return hasattr(comp, "getSheets") and not getattr(comp, "isDisposed", False)
@@ -119,14 +66,26 @@ def getDocument():
             if is_valid_calc(comp):
                 return comp
 
-        # Se arriviamo qui, non abbiamo trovato nulla
-        # DLG.chi("DEBUG: Nessun documento Calc valido individuato dal Desktop.")
-        return None
-    except Exception as e:
-        DLG.chi(f"Errore critico in getDocument: {str(e)}")
-        DLG.chi(f"Debug: il desktop vede {desktop.getComponents().getCount()} componenti")
         return None
 
+    except Exception:
+        return None
+
+
+def getServiceManager():
+    '''
+    Gets the service manager
+    '''
+    return getComponentContext().ServiceManager
+
+# ============================================================================
+# PROJECT IMPORTS
+# ============================================================================
+
+import LeenoDialogs as DLG
+import Dialogs
+from LeenoConfig import COLORE_ROSSO_AVVISO
+import LeenoGlobals
 import pyleeno as PL
 
 def getDispatcher():
@@ -162,8 +121,6 @@ def isPasswordProtected(oDoc=None):
                     return True
 
         # 3. Verifica se il documento è in sola lettura (spesso dovuto a opzioni di condivisione)
-        # Note: oDoc.isReadOnly() non è sempre affidabile su tutti gli oggetti doc
-        # ma possiamo controllare gli Args
         args = oDoc.getArgs()
         for arg in args:
             if arg.Name == "ReadOnly" and arg.Value:
@@ -176,11 +133,7 @@ def isPasswordProtected(oDoc=None):
 
 
 
-def getServiceManager():
-    '''
-    Gets the service manager
-    '''
-    return getComponentContext().ServiceManager
+
 
 
 def createUnoService(serv):

@@ -10,13 +10,12 @@ description: >
 
 ## Fase A — Preparazione contenuti
 
-1. Estrarre il log delle modifiche:
-   ```
-   git log --since=YYYY-MM-DD --pretty=format:"%ad > %B" --reverse > log
-   ```
-2. Aggiungere le note di versione al manuale (`documentazione/MANUALE_LeenO.fodt`)
-3. Esportare il manuale in PDF (`MANUALE_LeenO.pdf`)
-4. Scrivere l'articolo di presentazione
+1. **Generazione Articolo Novità**:
+   Invocare la skill `leeno-articolo-novita` per analizzare i cambiamenti dall'ultimo tag stabile e produrre una bozza dell'articolo di presentazione orientata all'utente.
+   - Alternativamente, comando rapido per il log: `git log vX.X.X..HEAD --pretty=format:"%s" --reverse`
+2. **Note di Versione**: Riportare le novità salienti nel manuale (`documentazione/MANUALE_LeenO.fodt`).
+3. **Esportazione Manuale**: Generare il PDF aggiornato (`MANUALE_LeenO.pdf`).
+4. **Finalizzazione Articolo**: Rifinire la bozza generata al punto 1 per l'uso su blog e social.
 
 ## Fase B — Aggiornamento template .ODS
 
@@ -93,8 +92,10 @@ description: >
 ## Fase G — Comunicazione
 
 1. Aggiornare [DOXYGEN](https://leeno.org/doxyLeenO/html/namespacepyleeno.html)
-2. Pubblicare su **Linkedin**
-3. Pubblicare su **openikos**
-4. Pubblicare su **X** (ex Twitter)
-5. Aggiornare [LibreOffice Extensions](https://extensions.libreoffice.org/extensions/leeno-2)
-6. Inviare **Newsletter**
+2. Pubblicare l'articolo (generato nella Fase A) su **Linkedin**, **openikos**, **X** e **Telegram**.
+3. Aggiornare [LibreOffice Extensions](https://extensions.libreoffice.org/extensions/leeno-2).
+4. Inviare **Newsletter** basata sullo stesso articolo.
+
+---
+> [!TIP]
+> Durante la Fase A, puoi chiedere all'assistente: *"Usa la skill leeno-articolo-novita per preparare il post di rilascio"* per ottenere una bozza già pronta e orientata all'utente finale.

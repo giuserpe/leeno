@@ -285,6 +285,10 @@ def MENU_invia_voce():
     try:
         VK_CONTROL = 0x11
         ctrl_premuto = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
+        if ctrl_premuto:
+            if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 2:
+                cfg.write('Generale', 'pesca_auto', stato)
+                return
     except Exception:
         ctrl_premuto = False
 
@@ -11656,13 +11660,7 @@ def sposta_voce(lrow=None, msg=1):
         return
 
     # --- OTTIMIZZAZIONE MASSIMA ---
-    oDoc.addActionLock()
-    oDoc.lockControllers()
-    # Sospende il calcolo automatico delle formule (fondamentale in file pesanti)
-    # oDoc.calculateAll()
-    # oDoc.enableAutomaticCalculation(False)
     with LeenoUtils.DocumentRefreshContext(False):
-    # try:
         # Inserimento righe vuote a destinazione
         oSheet.getRows().insertByIndex(dest_row, num_rows)
 
@@ -11678,12 +11676,6 @@ def sposta_voce(lrow=None, msg=1):
 
         # Rimozione vecchie righe
         oSheet.getRows().removeByIndex(actual_SR, num_rows)
-
-    # finally:
-        # Riattiviamo il motore di calcolo e il layout
-        # oDoc.enableAutomaticCalculation(True)
-        # oDoc.unlockControllers()
-        # oDoc.removeActionLock()
 
     # 3. Altezza ottimale (eseguita DOPO lo sblocco del controller)
     # Applichiamo l'altezza ottimale solo alle righe coinvolte nello spostamento
@@ -12386,7 +12378,7 @@ import LeenoTheme
 
 
 def MENU_debug():
-    inizializza_computo()
+    LeenoUtils.DocumentRefresh(True)
     return
     LeenoTheme.catalogo_stili_cella()
 

@@ -185,6 +185,10 @@ Sub Vedi
 	ScriptPy(&quot;LeenoToolbars&quot;,&quot;Vedi&quot;)
 End Sub
 rem ######################################################################
+Sub bak0
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;bak0&quot;)
+End Sub
+rem ######################################################################
 Sub svuotaContabilita
 	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
 End Sub

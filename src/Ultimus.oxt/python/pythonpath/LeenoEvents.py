@@ -143,7 +143,7 @@ def assegna():
             pass
         macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
         macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-        macro_DOC ("OnSave", macro_URL("LeenoBasicBridge", "bak0"))
+        macro_DOC ("OnSave", 'vnd.sun.star.script:UltimusFree2.PY_bridge.bak0?language=Basic&location=application')
         # ~OnSaveDone
         # ~OnSaveFailed
         macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
@@ -152,7 +152,7 @@ def assegna():
         # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
         # ~OnCopyToDone
         # ~OnCopyToFailed
-        macro_DOC ("OnFocus", macro_URL("LeenoToolbars", "Vedi"))
+        macro_DOC ("OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
         # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
     except Exception as e:
         # ~ PL.DLG.chi(f'Errore: {e}')

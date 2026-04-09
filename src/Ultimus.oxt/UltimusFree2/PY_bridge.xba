@@ -174,7 +174,11 @@ Sub GeneraAttiContabili
 End Sub
 rem ######################################################################
 Sub MENU_AnnullaAttiContabili
-	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaAttiContabili&quot;)
+	ScriptPy("LeenoContab","MENU_AnnullaAttiContabili")
+End Sub
+rem ######################################################################
+Sub GeneraCertificatoPagamento
+	ScriptPy("LeenoContab","MENU_GeneraCdP")
 End Sub
 rem ######################################################################
 Sub MENU_elimina_righe_vuote

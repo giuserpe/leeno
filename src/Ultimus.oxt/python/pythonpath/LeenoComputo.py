@@ -262,7 +262,13 @@ def colora_voce(oSheet, lrow, color=None):
              pass
 
     # 3. Individua l'intero range della voce
-    sStRange = circoscriveVoceComputo(oSheet, lrow)
+    sStRange = None
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        sStRange = circoscriveVoceComputo(oSheet, lrow)
+    elif oSheet.Name == 'Analisi di Prezzo':
+        import LeenoAnalysis as LA
+        sStRange = LA.circoscriveAnalisi(oSheet, lrow)
+
     if not sStRange: return
 
     # 4. Applica il colore a tutta la voce

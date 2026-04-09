@@ -2,11 +2,14 @@
 Funzioni relative alla gestione delle analisi di prezzi
 '''
 
+import os
 import LeenoUtils
 import LeenoGlobals
 import SheetUtils
 import LeenoSheetUtils
 import LeenoEvents
+import DocUtils
+import Dialogs
 
 import LeenoDialogs as DLG
 from undo_utils import with_undo
@@ -56,50 +59,114 @@ def Inserisci_Utili():
     oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, target_row))
 
 
-def inizializzaAnalisi(oDoc):
+def inizializza_analisi(oDoc=None, nuovaScheda=False):
     '''
-    Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
-    Ritorna l'oggetto oSheet del foglio contenente le analisi
-    e la riga da cui iniziare la compilazione dell'analisi corrente
+    Prepara il foglio 'Analisi di Prezzo' copiandolo dal template master.
+    Se nuovaScheda=True, inserisce anche la prima scheda vuota e sposta il cursore.
+    Ritorna l'oggetto oSheet e la riga da cui iniziare la compilazione.
     '''
-    SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
+    import pyleeno as PL
+    PL.chiudi_dialoghi()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
+        # Costruisce il percorso del template
+        template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+
+        # Carica il template in modalità nascosta
+        oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+        if not oTemplate:
+            Dialogs.Exclamation(
+                Title='Analisi di Prezzo',
+                Text=f'Impossibile caricare il template:\n{template_path}'
+            )
+            # Fallback estremo: crea foglio vuoto
+            oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
+        else:
+            try:
+                # Determina la posizione di inserimento: dopo Elenco Prezzi o in posizione 1
+                pos = 1
+                if oDoc.getSheets().hasByName('Elenco Prezzi'):
+                    pos = oDoc.getSheets().getByName('Elenco Prezzi').getRangeAddress().Sheet + 1
+                
+                # Importa il foglio Analisi di Prezzo dal template
+                oDoc.getSheets().importSheet(oTemplate, 'Analisi di Prezzo', pos)
+            except Exception as e:
+                Dialogs.Exclamation(
+                    Title='Analisi di Prezzo',
+                    Text=f'Errore durante l\'importazione dal template:\n{str(e)}'
+                )
+                if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
+                    oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
+            finally:
+                oTemplate.close(True)
+
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-        oSheet.getCellRangeByPosition(0, 0, 15, 0).CellStyle = 'Analisi_Sfondo'
-        oSheet.getCellByPosition(0, 1).Value = 0
         oSheet.TabColor = 12189608
-        oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-        oCellAddress = oSheet.getCellByPosition(0, SheetUtils.getLastUsedRow(oSheet)).getCellAddress()
-
-        # questa è l' UNICA funzione che non può prescindere dal controller
-        # probabilmente una dimenticanza degli sviluppatori di LO
-        # controllare se in seguito cambierà qualcosa...
-        LeenoSheetUtils.setLarghezzaColonne(oSheet)
-
-        # la riga dalla quale iniziare a scrivere
-        startRow = 2
-
+        
+        # Inizializza l'area nominale del blocco nel nuovo foglio
+        SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
+        
         LeenoEvents.assegna()
         LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
+        # l'inizio del foglio per l'inserimento dati è riga 2 (dopo i primi due header)
+        startRow = 2
+        
+        # Prepariamo gli indirizzi per l'eventuale inserimento scheda
+        oRangeAddress = oDoc.NamedRanges.getByName('blocco_analisi').ReferredCells.RangeAddress
+        oCellAddress = oSheet.getCellByPosition(0, startRow).getCellAddress()
+
     else:
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+        oSheet.IsVisible = True
 
+        # Cerchiamo la riga di chiusura dell'ultima analisi presente
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
         urow = SheetUtils.getLastUsedRow(oSheet)
-        for n in range(lrow, urow):
-            if oSheet.getCellByPosition(0, n).CellStyle == 'An-sfondo-basso Att End':
-                break
-        oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-        oSheet.getRows().insertByIndex(n + 2, 26)
-        oCellAddress = oSheet.getCellByPosition(0, n + 2).getCellAddress()
+        
+        # Inizializziamo n alla fine dell'area usata come fallback
+        n = urow if urow >= 2 else 1
+        
+        # Scansioniamo solo indici validi (>= 2 per saltare gli header)
+        for n_scan in range(max(2, lrow), urow + 1):
+            try:
+                if oSheet.getCellByPosition(0, n_scan).CellStyle == 'An-sfondo-basso Att End':
+                    n = n_scan
+                    break
+            except Exception:
+                continue
+        
+        oRangeAddress = oDoc.NamedRanges.getByName('blocco_analisi').ReferredCells.RangeAddress
+        # la riga dalla quale l'eventuale nuova scheda deve partire è n + 2
+        startRow = n + 2
+        
+        # Verifica finale di validità per startRow
+        if startRow < 2:
+            startRow = 2
+            
+        oCellAddress = oSheet.getCellByPosition(0, startRow).getCellAddress()
 
-        # la riga dalla quale iniziare a scrivere
-        startRow = n + 2 + 1
+    # Assicura che il foglio sia visibile
+    oDoc.CurrentController.setActiveSheet(oSheet)
 
-    oSheet.copyRange(oCellAddress, oRangeAddress)
-    LeenoSheetUtils.inserisciRigaRossa(oSheet)
+    # Esegue l'inserimento solo se richiesto
+    if nuovaScheda:
+        # Se il foglio non è nuovo (o se vogliamo comunque inserire), aggiungiamo spazio
+        if startRow > 2 or oSheet.getCellByPosition(0, startRow).Type.value != 'EMPTY':
+            oSheet.getRows().insertByIndex(startRow, 26)
+            
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+        LeenoSheetUtils.inserisciRigaRossa(oSheet)
+        
+        # Riga finale per la scrittura dati
+        startRow = startRow + 1
+        
+        # Spostiamo il cursore sulla cella descrizione (colonna E = 4)
+        oCell = oSheet.getCellByPosition(4, startRow)
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        oDoc.CurrentController.select(oCell)
 
     return oSheet, startRow
 

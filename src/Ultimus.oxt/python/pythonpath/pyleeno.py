@@ -569,7 +569,9 @@ def invia_voce(ctrl_override=False):
         comando('Copy')
 
         _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-        inizializza_analisi()
+        # Inizializza il foglio Analisi e inserisce la prima scheda
+        import LeenoAnalysis
+        LeenoAnalysis.inizializza_analisi(nuovaScheda=True)
         _gotoCella(0, 0)
         paste_clip(insCells=1)
         tante_analisi_in_ep()
@@ -2354,7 +2356,7 @@ def scelta_viste_run():
             _vSintetica_core(oDoc, oSheet, True)
 
 # CONTABILITA
-    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL', 'CdP'):
         GotoSheet('CONTABILITA')
         oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -6027,6 +6029,7 @@ def comando(cmd):
     'NumberFormatDecimal'   =
     'ConvertFormulaToValue' = Converti formula in valore
     'DataBarFormatDialog'   = Formato Barra dati
+    'ClearArrows'           = Elimina frecce celle dipendenti
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -7020,7 +7023,8 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         LeenoComputo.ins_voce_computo()
     elif oSheet.Name == 'Analisi di Prezzo':
-        inizializza_analisi()
+        import LeenoAnalysis
+        LeenoAnalysis.inizializza_analisi(nuovaScheda=True)
     elif oSheet.Name == 'CONTABILITA':
         # LeenoContab.insertVoceContabilita(oSheet, lrow)  <<< non va
         ins_voce_contab()
@@ -7497,61 +7501,6 @@ def inizializza_computo():
     setTabColor(16762855)
 
 
-########################################################################
-def inizializza_analisi():
-    '''
-    @@@ MODIFICA IN CORSO CON 'LeenoAnalysis.inizializzaAnalisi'
-    Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
-    '''
-    with LeenoUtils.DocumentRefreshContext(False):
-        chiudi_dialoghi()
-        oDoc = LeenoUtils.getDocument()
-        SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
-        if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
-            oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
-            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-            oSheet.getCellRangeByPosition(0, 0, 15, 0).CellStyle = 'Analisi_Sfondo'
-            oSheet.getCellByPosition(0, 1).Value = 0
-            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-            oDoc.CurrentController.setActiveSheet(oSheet)
-            setTabColor(12189608)
-            oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-            oCellAddress = oSheet.getCellByPosition(
-                0,
-                SheetUtils.getUsedArea(oSheet).EndRow).getCellAddress()
-            oDoc.CurrentController.select(oSheet.getCellByPosition(0, 2))
-            oDoc.CurrentController.select(
-                oDoc.createInstance(
-                    "com.sun.star.sheet.SheetCellRanges"))  # unselect
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
-
-            LeenoEvents.assegna()
-            LeenoSheetUtils.inserisciRigaRossa(oSheet)
-            ScriviNomeDocumentoPrincipale()
-        else:
-            GotoSheet('Analisi di Prezzo')
-            oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-            oDoc.CurrentController.setActiveSheet(oSheet)
-            lrow = LeggiPosizioneCorrente()[1]
-            urow = SheetUtils.getUsedArea(oSheet).EndRow
-            if lrow >= urow:
-                lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
-            for n in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow):
-                if oSheet.getCellByPosition(
-                        0, n).CellStyle == 'An-sfondo-basso Att End':
-                    break
-            oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-            oSheet.getRows().insertByIndex(n + 2, 26)
-            oCellAddress = oSheet.getCellByPosition(0, n + 2).getCellAddress()
-            oDoc.CurrentController.select(oSheet.getCellByPosition(0, n + 2 + 1))
-            oDoc.CurrentController.select(
-                oDoc.createInstance(
-                    "com.sun.star.sheet.SheetCellRanges"))  # unselect
-        oSheet.copyRange(oCellAddress, oRangeAddress)
-    LeenoUtils.memorizza_posizione()
-    MENU_struttura_on()
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    LeenoUtils.ripristina_posizione()
 
 
 
@@ -10754,6 +10703,7 @@ def MENU_sistema_pagine(msg = True):
     Configura intestazioni e pie' di pagina degli stili di stampa
     e propone un'anteprima di stampa
     '''
+    comando('ClearArrows')
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
@@ -12313,15 +12263,6 @@ def _col_letter(col_num):
 
 
 
-
-def _col_letter(col_num):
-    """Converte numero colonna in lettera (0->A, 1->B, etc.)"""
-    result = ""
-    while col_num >= 0:
-        result = chr(col_num % 26 + 65) + result
-        col_num = col_num // 26 - 1
-    return result
-
 #########################################################################
 #########################################################################
 #########################################################################
@@ -12378,6 +12319,12 @@ import LeenoTheme
 
 
 def MENU_debug():
+    import LeenoImport_XPWE
+    oSheet = LeenoUtils.getDocument().CurrentController.getActiveSheet()
+    LeenoImport_XPWE.rimuoviAnalisiVuote(oSheet)
+    return
+    import LeenoAnalysis
+    LeenoAnalysis.inizializza_analisi()
     LeenoUtils.DocumentRefresh(True)
     return
     LeenoTheme.catalogo_stili_cella()

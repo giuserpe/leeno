@@ -26,23 +26,34 @@ import LeenoContab
 import Dialogs
 
 
+def get_xml_text(element, path, default=''):
+    ''' Estrattore sicuro di testo da un elemento XML '''
+    try:
+        found = element.find(path)
+        if found is not None:
+            return found.text or default
+        return default
+    except Exception:
+        return default
+
+
 def leggiAnagraficaGenerale(dati):
     ''' legge i dati anagrafici generali '''
-
     datiAnagrafici = {}
-    try:
-        DatiGenerali = list(dati)[0][0]
+    if dati is None:
+        return {k: '' for k in ('comune', 'oggetto', 'committente', 'impresa')}
 
-        datiAnagrafici['comune'] = DatiGenerali[1].text or ''
-        datiAnagrafici['oggetto'] = DatiGenerali[3].text or ''
-        datiAnagrafici['committente'] = DatiGenerali[4].text or ''
-        datiAnagrafici['impresa'] = DatiGenerali[5].text or ''
-        '''
-        datiAnagrafici['percprezzi'] = DatiGenerali[0].text or ''
-        datiAnagrafici['provincia'] = DatiGenerali[2].text or ''
-        datiAnagrafici['parteopera'] = DatiGenerali[6].text or ''
-        '''
-    except:
+    try:
+        # PweDatiGenerali (solitamente ha un figlio che contiene i dati)
+        child = list(dati)[0]
+        # Spesso c'è un ulteriore livello (es. DatiGenerali)
+        content = list(child)[0] if list(child) else child
+
+        datiAnagrafici['comune'] = get_xml_text(content, 'Comune')
+        datiAnagrafici['oggetto'] = get_xml_text(content, 'Oggetto')
+        datiAnagrafici['committente'] = get_xml_text(content, 'Committente')
+        datiAnagrafici['impresa'] = get_xml_text(content, 'Impresa')
+    except Exception:
         datiAnagrafici['comune'] = ''
         datiAnagrafici['oggetto'] = ''
         datiAnagrafici['committente'] = ''
@@ -53,149 +64,99 @@ def leggiAnagraficaGenerale(dati):
 
 def leggiSuperCapitoli(CapCat):
     ''' legge SuperCapitoli '''
-
-    # PweDGSuperCapitoli
     listaSuperCapitoli = []
-    if CapCat.find('PweDGSuperCapitoli'):
-        PweDGSuperCapitoli = list(CapCat.find('PweDGSuperCapitoli'))
-        for elem in PweDGSuperCapitoli:
-            id_sc = elem.get('ID')
-            #~ codice = elem.find('Codice').text
-            try:
-                codice = elem.find('Codice').text
-            except AttributeError:
-                codice = ''
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except:
-                percentuale = ''
-            diz = {}
-            diz['id_sc'] = id_sc
-            diz['codice'] = codice
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            listaSuperCapitoli.append(diz)
+    found = CapCat.find('PweDGSuperCapitoli')
+    if found is not None:
+        for elem in list(found):
+            listaSuperCapitoli.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': get_xml_text(elem, 'DesSintetica'),
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaSuperCapitoli
 
 
 def leggiCapitoli(CapCat):
     ''' legge Capitoli '''
-
-    # PweDGCapitoli
     listaCapitoli = []
-    if CapCat.find('PweDGCapitoli'):
-        PweDGCapitoli = list(CapCat.find('PweDGCapitoli'))
-        for elem in PweDGCapitoli:
-            id_sc = elem.get('ID')
-            #~ codice = elem.find('Codice').text
-            try:
-                codice = elem.find('Codice').text
-            except AttributeError:
-                codice = ''
-            dessintetica = elem.find('DesSintetica').text
+    found = CapCat.find('PweDGCapitoli')
+    if found is not None:
+        for elem in list(found):
+            dessintetica = get_xml_text(elem, 'DesSintetica')
             if dessintetica == "Nuova voce":
-                dessintetica = elem.find('DesEstesa').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except:
-                percentuale = ''
-            diz = {}
-            diz['id_sc'] = id_sc
-            diz['codice'] = codice
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            listaCapitoli.append(diz)
+                dessintetica = get_xml_text(elem, 'DesEstesa')
+
+            listaCapitoli.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': dessintetica,
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaCapitoli
 
 
 def leggiSottoCapitoli(CapCat):
     ''' legge SottoCapitoli '''
-
-    # PweDGSubCapitoli
     listaSottoCapitoli = []
-    if CapCat.find('PweDGSubCapitoli'):
-        PweDGSubCapitoli = list(CapCat.find('PweDGSubCapitoli'))
-        for elem in PweDGSubCapitoli:
-            id_sc = elem.get('ID')
-            try:
-                codice = elem.find('Codice').text
-            except AttributeError:
-                codice = ''
-            try:
-                codice = elem.find('Codice').text
-            except AttributeError:
-                codice = ''
-            dessintetica = elem.find('DesSintetica').text
+    found = CapCat.find('PweDGSubCapitoli')
+    if found is not None:
+        for elem in list(found):
+            dessintetica = get_xml_text(elem, 'DesSintetica')
             if dessintetica == "Nuova voce":
-                dessintetica = elem.find('DesEstesa').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except:
-                percentuale = ''
-            diz = {}
-            diz['id_sc'] = id_sc
-            diz['codice'] = codice
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            listaSottoCapitoli.append(diz)
+                dessintetica = get_xml_text(elem, 'DesEstesa')
+
+            listaSottoCapitoli.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': dessintetica,
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaSottoCapitoli
 
 
 def leggiSuperCategorie(CapCat):
     ''' legge SuperCategorie '''
-
-    # PweDGSuperCategorie
     listaSuperCategorie = []
-    if CapCat.find('PweDGSuperCategorie'):
-        PweDGSuperCategorie = list(CapCat.find('PweDGSuperCategorie'))
-        for elem in PweDGSuperCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            supcat = (id_sc, dessintetica, percentuale)
-            listaSuperCategorie.append(supcat)
+    found = CapCat.find('PweDGSuperCategorie')
+    if found is not None:
+        for elem in list(found):
+            listaSuperCategorie.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': get_xml_text(elem, 'DesSintetica'),
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaSuperCategorie
 
 
 def leggiCategorie(CapCat):
     ''' legge Categorie '''
-
-    # PweDGCategorie
     listaCategorie = []
-    if CapCat.find('PweDGCategorie'):
-        PweDGCategorie = list(CapCat.find('PweDGCategorie'))
-        for elem in PweDGCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            cat = (id_sc, dessintetica, percentuale)
-            listaCategorie.append(cat)
+    found = CapCat.find('PweDGCategorie')
+    if found is not None:
+        for elem in list(found):
+            listaCategorie.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': get_xml_text(elem, 'DesSintetica'),
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaCategorie
 
 
 def leggiSottoCategorie(CapCat):
     ''' legge SottoCategorie '''
-
-    # PweDGSubCategorie
     listaSottoCategorie = []
-    if CapCat.find('PweDGSubCategorie'):
-        PweDGSubCategorie = list(CapCat.find('PweDGSubCategorie'))
-        for elem in PweDGSubCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            subcat = (id_sc, dessintetica, percentuale)
-            listaSottoCategorie.append(subcat)
+    found = CapCat.find('PweDGSubCategorie')
+    if found is not None:
+        for elem in list(found):
+            listaSottoCategorie.append({
+                'id_sc': elem.get('ID'),
+                'codice': get_xml_text(elem, 'Codice'),
+                'dessintetica': get_xml_text(elem, 'DesSintetica'),
+                'percentuale': get_xml_text(elem, 'Percentuale')
+            })
     return listaSottoCategorie
 
 
@@ -235,33 +196,27 @@ def leggiCapitoliCategorie(dati):
 
 def leggiDatiGeneraliAnalisi(dati):
     ''' legge i dati generali di analisi '''
+    speseGenerali = 0
+    utiliImpresa = 0
+    oneriAccessoriSicurezza = 0
 
     try:
-        PweDGAnalisi = list(dati.find('PweDGModuli'))[0]
+        found_moduli = dati.find('PweDGModuli')
+        if found_moduli is not None:
+            PweDGAnalisi = list(found_moduli)[0]
 
-        try:
-            speseGenerali = float(PweDGAnalisi.find('SpeseGenerali').text) / 100
-        except ValueError:
-            speseGenerali = 0
+            def parse_percent(tag):
+                text = get_xml_text(PweDGAnalisi, tag, '0')
+                try:
+                    return float(text.replace(',', '.')) / 100
+                except (ValueError, TypeError):
+                    return 0.0
 
-        try:
-            utiliImpresa = float(PweDGAnalisi.find('UtiliImpresa').text) / 100
-        except ValueError:
-            utiliImpresa = 0
-
-        try:
-            oneriAccessoriSicurezza = float(PweDGAnalisi.find('OneriAccessoriSc').text) / 100
-        except ValueError:
-            oneriAccessoriSicurezza = 0
-        '''
-        speseutili = PweDGAnalisi.find('SpeseUtili').text
-        confquantita = PweDGAnalisi.find('ConfQuantita').text
-        '''
-    # ~except AttributeError:
-    except:
-        speseGenerali = 0
-        utiliImpresa = 0
-        oneriAccessoriSicurezza = 0
+            speseGenerali = parse_percent('SpeseGenerali')
+            utiliImpresa = parse_percent('UtiliImpresa')
+            oneriAccessoriSicurezza = parse_percent('OneriAccessoriSc')
+    except Exception:
+        pass
 
     return {
         'SpeseGenerali': speseGenerali,
@@ -272,68 +227,31 @@ def leggiDatiGeneraliAnalisi(dati):
 
 def leggiApprossimazioni(dati):
     ''' legge le impostazioni di approssimazione numerica '''
-
-    try:
-        PweDGConfigNumeri = dati.find('PweDGConfigurazione')
-    except AttributeError:
-        PweDGConfigNumeri = None
-
-    if PweDGConfigNumeri is None:
-        return {}
-    PweDGConfigNumeri = list(PweDGConfigNumeri)[0]
     res = {}
-
-    partiUguali = PweDGConfigNumeri.find('PartiUguali')
     try:
-        res['PartiUguali'] = int(partiUguali.text.split('.')[-1].split('|')[0])
-    except:
-        pass
-    larghezza = PweDGConfigNumeri.find('Larghezza')
+        found_config = dati.find('PweDGConfigurazione')
+        if found_config is None:
+            return res
 
-    try:
-        res['Larghezza'] = int(larghezza.text.split('.')[-1].split('|')[0])
-    except:
-        pass
+        PweDGConfigNumeri = list(found_config)[0]
 
-    lunghezza = PweDGConfigNumeri.find('Lunghezza')
-    try:
-        res['Lunghezza'] = int(lunghezza.text.split('.')[-1].split('|')[0])
-    except:
-        pass
+        def parse_decimal_digits(tag):
+            text = get_xml_text(PweDGConfigNumeri, tag)
+            if not text:
+                return None
+            try:
+                # XPWE format often uses "0.00|0" or similar
+                return int(text.split('.')[-1].split('|')[0])
+            except (ValueError, IndexError):
+                return None
 
-    hPeso = PweDGConfigNumeri.find('HPeso')
-    try:
-        res['HPeso'] = int(hPeso.text.split('.')[-1].split('|')[0])
-    except:
-        pass
-
-    quantita = PweDGConfigNumeri.find('Quantita')
-    try:
-        res['Quantita'] = int(quantita.text.split('.')[-1].split('|')[0])
-    except:
+        for field in ('PartiUguali', 'Larghezza', 'Lunghezza', 'HPeso', 'Quantita', 'Prezzi', 'PrezziTotale'):
+            val = parse_decimal_digits(field)
+            if val is not None:
+                res[field] = val
+    except Exception:
         pass
 
-    prezzi = PweDGConfigNumeri.find('Prezzi')
-    try:
-        res['Prezzi'] = int(prezzi.text.split('.')[-1].split('|')[0])
-    except:
-        pass
-
-    prezziTotale = PweDGConfigNumeri.find('PrezziTotale')
-    try:
-        res['PrezziTotale'] = int(prezziTotale.text.split('.')[-1].split('|')[0])
-    except:
-        pass
-    '''
-    Divisa = PweDGConfigNumeri.find('Divisa').text
-    ConversioniIN = PweDGConfigNumeri.find('ConversioniIN').text
-    FattoreConversione = PweDGConfigNumeri.find('FattoreConversione').text
-    Cambio = PweDGConfigNumeri.find('Cambio').text
-    ConvPrezzi = PweDGConfigNumeri.find('ConvPrezzi').text.split('.')[-1].split('|')[0]
-    ConvPrezziTotale = PweDGConfigNumeri.find('ConvPrezziTotale').text.split('.')[-1].split('|')[0]
-    IncidenzaPercentuale = PweDGConfigNumeri.find('IncidenzaPercentuale').text.split('.')[-1].split('|')[0]
-    Aliquote = PweDGConfigNumeri.find('Aliquote').text.split('.')[-1].split('|')[0]
-    '''
     return res
 
 
@@ -390,200 +308,113 @@ def compilaApprossimazioni(oDoc, approssimazioni):
 
 def leggiElencoPrezzi(misurazioni):
     ''' legge l'elenco prezzi e le eventuali voci di analisi prezzi '''
-
     dizionarioArticoli = {}
     listaArticoli = []
     listaAnalisi = []
     listaTariffeAnalisi = []
 
-    PweElencoPrezzi = list(misurazioni)[0]
+    if misurazioni is None or len(list(misurazioni)) == 0:
+        return {
+            'DizionarioArticoli': {},
+            'ListaArticoli': [],
+            'ListaAnalisi': [],
+            'ListaTariffeAnalisi': []
+        }
 
-    # leggo l'elenco prezzi
+    PweElencoPrezzi = list(misurazioni)[0]
     epitems = PweElencoPrezzi.findall('EPItem')
 
     for elem in epitems:
         id_ep = elem.get('ID')
+        if not id_ep: continue
+
         dizionarioArticolo = {}
-        try:
-            tipoep = elem.find('TipoEP').text
-        except:
-            tipoep = '0'
-        tariffa = elem.find('Tariffa').text or ''
+
+        tipoep = get_xml_text(elem, 'TipoEP', '0')
+        tariffa = get_xml_text(elem, 'Tariffa')
+
         # Voce Della Sicurezza
-        if elem.find('Flags').text == '134217728':
+        flags = get_xml_text(elem, 'Flags')
+        if flags == '134217728':
             tariffa = "VDS_" + tariffa
-        articolo = elem.find('Articolo').text
-        desridotta = elem.find('DesRidotta').text
-        destestesa = elem.find('DesEstesa').text  # .strip()
-        try:
-            desridotta = elem.find('DesBreve').text
-        except AttributeError:
-            pass
-        try:
-            desbreve = elem.find('DesBreve').text
-        except AttributeError:
-            desbreve = ''
 
-        unmisura = elem.find('UnMisura').text or ''
-        if elem.find('Prezzo1').text == '0' or elem.find('Prezzo1').text is None:
-            prezzo1 = ''
-        else:
-            prezzo1 = float(elem.find('Prezzo1').text)
-        try:
-            prezzo2 = elem.find('Prezzo2').text
-        except:
-            prezzo2 = '0'
-        try:
-            prezzo3 = elem.find('Prezzo3').text
-        except:
-            prezzo3 = '0'
-        try:
-            prezzo4 = elem.find('Prezzo4').text
-        except:
-            prezzo4 = '0'
-        try:
-            prezzo5 = elem.find('Prezzo5').text
-        except:
-            prezzo5 = '0'
-        try:
-            idspcap = elem.find('IDSpCap').text
-        except AttributeError:
-            idspcap = ''
-        try:
-            idcap = elem.find('IDCap').text
-        except AttributeError:
-            idcap = ''
-        '''
-        try:
-           idsbcap = elem.find('IDSbCap').text
-        except AttributeError:
-           idsbcap = ''
-        '''
-        try:
-            flags = elem.find('Flags').text
-        except AttributeError:
-            flags = ''
-        try:
-            data = elem.find('Data').text
-        except AttributeError:
-            data = ''
-        IncSIC = ''
-        IncMDO = ''
-        IncMAT = ''
-        IncATTR = ''
-        try:
-            if float(elem.find('IncSIC').text) != 0:
-                IncSIC = float(elem.find('IncSIC').text) / 100
-        except Exception:  # AttributeError TypeError:
-            pass
-        try:
-            if float(elem.find('IncMDO').text) != 0:
-                IncMDO = float(elem.find('IncMDO').text) / 100
-        except Exception:  # AttributeError TypeError:
-            pass
-        try:
-            if float(elem.find('IncMAT').text) != 0:
-                IncMAT = float(elem.find('IncMAT').text) / 100
-        except Exception:  # AttributeError TypeError:
-            pass
-        try:
-            if float(elem.find('IncATTR').text) != 0:
-                IncATTR = float(elem.find('IncATTR').text) / 100
-        except Exception:  # AttributeError TypeError:
-            pass
-        try:
-            adrinternet = elem.find('AdrInternet').text
-        except AttributeError:
-            adrinternet = ''
-        try:
-            pweepanalisi = elem.find('PweEPAnalisi').text
-        except:
-            pweepanalisi = ''
+        articolo = get_xml_text(elem, 'Articolo')
+        desridotta = get_xml_text(elem, 'DesRidotta')
+        destestesa = get_xml_text(elem, 'DesEstesa')
+        desbreve = get_xml_text(elem, 'DesBreve')
+        if desbreve:
+            desridotta = desbreve
 
-        dizionarioArticolo['tipoep'] = tipoep
-        dizionarioArticolo['tariffa'] = tariffa
-        dizionarioArticolo['articolo'] = articolo
-        dizionarioArticolo['desridotta'] = desridotta
-        dizionarioArticolo['destestesa'] = destestesa
-        dizionarioArticolo['desridotta'] = desridotta
-        dizionarioArticolo['desbreve'] = desbreve
-        dizionarioArticolo['unmisura'] = unmisura
-        dizionarioArticolo['prezzo1'] = prezzo1
-        dizionarioArticolo['prezzo2'] = prezzo2
-        dizionarioArticolo['prezzo3'] = prezzo3
-        dizionarioArticolo['prezzo4'] = prezzo4
-        dizionarioArticolo['prezzo5'] = prezzo5
-        dizionarioArticolo['idspcap'] = idspcap
-        dizionarioArticolo['idcap'] = idcap
-        dizionarioArticolo['flags'] = flags
-        dizionarioArticolo['data'] = data
-        dizionarioArticolo['adrinternet'] = adrinternet
+        unmisura = get_xml_text(elem, 'UnMisura')
 
-        dizionarioArticolo['IncSIC'] = IncSIC
-        dizionarioArticolo['IncMDO'] = IncMDO
-        dizionarioArticolo['IncMAT'] = IncMDO
-        dizionarioArticolo['IncATTR'] = IncMDO
-        '''
-        dizionarioArticolo['pweepanalisi'] = pweepanalisi
-        '''
-        # il dizionario articolo lo tengo completo di voci
-        # con analisi di prezzi; la lista articoli, per contro,
-        # visto che è usata SOLO per riempire il foglio EP,
-        # viene direttamente purgata dalle voci con analisi
+        def parse_price(tag):
+            text = get_xml_text(elem, tag)
+            if not text or text == '0':
+                return ''
+            try:
+                return float(text.replace(',', '.'))
+            except (ValueError, TypeError):
+                return ''
+
+        prezzo1 = parse_price('Prezzo1')
+        prezzo2 = get_xml_text(elem, 'Prezzo2', '0')
+        prezzo3 = get_xml_text(elem, 'Prezzo3', '0')
+        prezzo4 = get_xml_text(elem, 'Prezzo4', '0')
+        prezzo5 = get_xml_text(elem, 'Prezzo5', '0')
+
+        idspcap = get_xml_text(elem, 'IDSpCap')
+        idcap = get_xml_text(elem, 'IDCap')
+        data = get_xml_text(elem, 'Data')
+        adrinternet = get_xml_text(elem, 'AdrInternet')
+
+        def parse_incidenza(tag):
+            text = get_xml_text(elem, tag)
+            if not text: return ''
+            try:
+                val = float(text.replace(',', '.'))
+                return val / 100 if val != 0 else ''
+            except (ValueError, TypeError):
+                return ''
+
+        IncSIC = parse_incidenza('IncSIC')
+        IncMDO = parse_incidenza('IncMDO')
+        IncMAT = parse_incidenza('IncMAT')
+        IncATTR = parse_incidenza('IncATTR')
+
+        dizionarioArticolo.update({
+            'tipoep': tipoep, 'tariffa': tariffa, 'articolo': articolo,
+            'desridotta': desridotta, 'destestesa': destestesa, 'desbreve': desbreve,
+            'unmisura': unmisura, 'prezzo1': prezzo1, 'prezzo2': prezzo2,
+            'prezzo3': prezzo3, 'prezzo4': prezzo4, 'prezzo5': prezzo5,
+            'idspcap': idspcap, 'idcap': idcap, 'flags': flags,
+            'data': data, 'adrinternet': adrinternet,
+            'IncSIC': IncSIC, 'IncMDO': IncMDO, 'IncMAT': IncMAT, 'IncATTR': IncATTR
+        })
+
         dizionarioArticoli[id_ep] = dizionarioArticolo
 
         # leggo analisi di prezzo
-
         pweepanalisi = elem.find('PweEPAnalisi')
-        # try:
-        #     spese = int(pweepanalisi.find('Spese').text)
-        # except:
-        #     spese = None
-
-        try:
+        if pweepanalisi is not None:
             PweEPAR = pweepanalisi.find('PweEPAR')
-        except:
-            PweEPAR = None
-        if PweEPAR is not None:
-            EPARItem = PweEPAR.findall('EPARItem')
-            analisi = []
-            for el in EPARItem:
-                '''
-                id_an = el.get('ID')
-                an_tipo = el.find('Tipo').text
-                '''
-                id_ep = el.find('IDEP').text
-                an_des = el.find('Descrizione').text
-                an_um = el.find('Misura').text
-                if an_um is None:
-                    an_um = ''
-                try:
-                    an_qt = el.find('Qt').text.replace(' ', '')
-                except:
-                    an_qt = ''
-                try:
-                    an_pr = el.find('Prezzo').text.replace(' ', '')
-                except Exception:
-                    an_pr = ''
-                '''
-                an_fld = el.find('FieldCTL').text
-                '''
-                an_rigo = (id_ep, an_des, an_um, an_qt, an_pr)
-                analisi.append(an_rigo)
-            listaAnalisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
-            listaTariffeAnalisi.append(tariffa)
+            if PweEPAR is not None:
+                EPARItem = PweEPAR.findall('EPARItem')
+                analisi = []
+                for el in EPARItem:
+                    id_ep_an = get_xml_text(el, 'IDEP')
+                    an_des = get_xml_text(el, 'Descrizione')
+                    an_um = get_xml_text(el, 'Misura')
+                    an_qt = get_xml_text(el, 'Qt').replace(' ', '')
+                    an_pr = get_xml_text(el, 'Prezzo').replace(' ', '')
+                    analisi.append((id_ep_an, an_des, an_um, an_qt, an_pr))
+
+                listaAnalisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
+                listaTariffeAnalisi.append(tariffa)
+            else:
+                listaArticoli.append((tariffa, destestesa, unmisura, IncSIC, prezzo1, IncMDO, IncMAT, IncATTR))
         else:
-            # analisi non presente, includo il prezzo nell'elenco
-            articolo_modificato = (
-                tariffa,
-                destestesa,
-                unmisura,
-                IncSIC,
-                prezzo1,
-                IncMDO,
-                IncMAT,
-                IncATTR)
-            listaArticoli.append(articolo_modificato)
+            listaArticoli.append((tariffa, destestesa, unmisura, IncSIC, prezzo1, IncMDO, IncMAT, IncATTR))
+
     return {
         'DizionarioArticoli': dizionarioArticoli,
         'ListaArticoli': listaArticoli,
@@ -591,130 +422,78 @@ def leggiElencoPrezzi(misurazioni):
         'ListaTariffeAnalisi': listaTariffeAnalisi
     }
 
-
-################################################
-################################################
-################################################
-
 def leggiMisurazioni(misurazioni, ordina):
     """leggo voci di misurazione e righe"""
-
-    def text_or_empty(elem, tag):
-        nodo = elem.find(tag)
-        return nodo.text if nodo is not None else ''
+    if not misurazioni or len(list(misurazioni)) < 2:
+        return []
 
     def clean_value(elem, tag, pattern):
-        value = text_or_empty(elem, tag)
-
-        if not isinstance(value, (str, bytes)):
+        value = get_xml_text(elem, tag)
+        if not value:
             return value
-
-        # applica sostituzione
         try:
             value = re.sub(pattern, r'\1*\2', value)
         except Exception:
             pass
-
-        # conversione None secondo logica originale
         if value is not None:
             if '  ' in value or value == '0.00':
                 return None
-
         return value
 
-    if not misurazioni:
-        return
-
     listaMisure = []
-
     try:
         items = list(misurazioni)
-        PweVociComputo = items[1]  # mantengo la logica originale
+        PweVociComputo = items[1]
         vcitems = PweVociComputo.findall('VCItem')
-
         prova_l = []
         pattern = r'(\d+)(\()'
 
         for elem in vcitems:
-            diz_misura = {}
             id_vc = elem.get('ID')
-            id_ep = text_or_empty(elem, 'IDEP')
-            quantita_voce = text_or_empty(elem, 'Quantita')
-            datamis = text_or_empty(elem, 'DataMis')
-            flags_voce = text_or_empty(elem, 'Flags')
-            idspcat = text_or_empty(elem, 'IDSpCat')
-            idcat = text_or_empty(elem, 'IDCat')
-            idsbcat = text_or_empty(elem, 'IDSbCat')
+            id_ep = get_xml_text(elem, 'IDEP')
+            quantita_voce = get_xml_text(elem, 'Quantita')
+            datamis = get_xml_text(elem, 'DataMis')
+            flags_voce = get_xml_text(elem, 'Flags')
+            idspcat = get_xml_text(elem, 'IDSpCat')
+            idcat = get_xml_text(elem, 'IDCat')
+            idsbcat = get_xml_text(elem, 'IDSbCat')
 
-            # ultime righe
-            righi_mis = list(elem)[-1].findall('RGItem')
+            righi_found = list(elem)[-1] if list(elem) else None
+            righi_mis = righi_found.findall('RGItem') if righi_found is not None else []
             lista_righe = []
 
             for el in righi_mis:
-                idvv = text_or_empty(el, 'IDVV')
-                descrizione = text_or_empty(el, 'Descrizione')
-
-                # pulizia campi numerici
-                partiuguali = clean_value(el, 'PartiUguali', pattern)
-                lunghezza = clean_value(el, 'Lunghezza', pattern)
-                larghezza = clean_value(el, 'Larghezza', pattern)
-                hpeso = clean_value(el, 'HPeso', pattern)
-
-                quantita_riga = text_or_empty(el, 'Quantita')
-                flags_riga = text_or_empty(el, 'Flags')
-
                 riga_misura = (
-                    descrizione,
-                    '',
-                    '',
-                    partiuguali,
-                    lunghezza,
-                    larghezza,
-                    hpeso,
-                    quantita_riga,
-                    flags_riga,
-                    idvv,
+                    get_xml_text(el, 'Descrizione'),
+                    '', '',
+                    clean_value(el, 'PartiUguali', pattern),
+                    clean_value(el, 'Lunghezza', pattern),
+                    clean_value(el, 'Larghezza', pattern),
+                    clean_value(el, 'HPeso', pattern),
+                    get_xml_text(el, 'Quantita'),
+                    get_xml_text(el, 'Flags'),
+                    get_xml_text(el, 'IDVV')
                 )
-
                 lista_righe.append(riga_misura)
 
-            # popolazione dizionario misura
-            diz_misura['id_vc'] = id_vc
-            diz_misura['id_ep'] = id_ep
-            diz_misura['quantita'] = quantita_voce
-            diz_misura['datamis'] = datamis
-            diz_misura['flags'] = flags_voce
-            diz_misura['idspcat'] = idspcat
-            diz_misura['idcat'] = idcat
-            diz_misura['idsbcat'] = idsbcat
-            diz_misura['lista_rig'] = lista_righe
-
-            new_id = (
-                PL.strall(idspcat)
-                + '.'
-                + PL.strall(idcat)
-                + '.'
-                + PL.strall(idsbcat)
-            )
-
+            diz_misura = {
+                'id_vc': id_vc, 'id_ep': id_ep, 'quantita': quantita_voce,
+                'datamis': datamis, 'flags': flags_voce, 'idspcat': idspcat,
+                'idcat': idcat, 'idsbcat': idsbcat, 'lista_rig': lista_righe
+            }
+            new_id = f"{PL.strall(idspcat)}.{PL.strall(idcat)}.{PL.strall(idsbcat)}"
             prova_l.append((new_id, diz_misura))
             listaMisure.append(diz_misura)
 
-        # ordinamento (logica invariata)
-        if len(listaMisure) != 0 and ordina:
+        if listaMisure and ordina:
             riordinate = sorted(prova_l, key=lambda el: el[0])
             listaMisure = [el[1] for el in riordinate]
 
-    except IndexError:
+    except Exception:
         Dialogs.Exclamation(
             Title="Attenzione",
             Text="Nel file scelto non risultano esserci voci di misurazione,\n"
-                 "perciò saranno importate le sole voci di Elenco Prezzi.\n\n"
-                 "Si tenga conto che:\n"
-                 "- sarà importato solo il 'Prezzo 1' dell'elenco;\n"
-                 "- a seconda della versione, il formato XPWE potrebbe\n"
-                 "  non conservare alcuni dati come le incidenze di\n"
-                 "  sicurezza e di manodopera!"
+                 "perciò saranno importate le sole voci di Elenco Prezzi."
         )
 
     return listaMisure
@@ -734,7 +513,7 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
     return tuple(resList)
 
 
-def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=False):
+def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=False):
     # 1. Recupera tutti i codici esistenti nel foglio (colonna 0, dalla riga 3 in poi)
     existing_codes = set()
     max_row = oSheet.getRows().getCount()
@@ -789,7 +568,7 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, progress=None, case_sensitive=Fa
         # PL.stileCelleElencoPrezzi(oSheet, sRow + riga, sRow + riga + num - 1, col)
         riga += num
 
-def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
+def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     ''' compila l'elenco prezzi '''
 
     # per prima cosa estrae le liste di EP, capitoli, eccetera
@@ -818,7 +597,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
     # compilo Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
-    riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, progress = None)
+    riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, indicator=indicator)
     '''
     aggiungo i capitoli alla lista delle voci
      giallo(16777072,16777120,16777168)
@@ -828,30 +607,56 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None):
     '''
     # SuperCapitoli
     if righeSuperCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, progress = None)
+        riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, indicator=indicator)
 
     # Capitoli
     if righeCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, progress = None)
+        riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, indicator=indicator)
 
     # SottoCapitoli
     if righeSottoCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, progress = None)
+        riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, indicator=indicator)
 
     PL.riordina_ElencoPrezzi()
 
 
-def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
+def rimuoviAnalisiVuote(oSheet):
+    """Scansiona ed elimina tutte le schede di analisi segnaposto o vuote."""
+    import SheetUtils
+    import LeenoAnalysis
+    last_row = SheetUtils.getLastUsedRow(oSheet)
+    # Scansiona all'indietro per poter eliminare in sicurezza
+    for n in reversed(range(0, last_row + 1)):
+        # Identifica la riga dei dati dallo stile della colonna B (An-1-descr_)
+        if oSheet.getCellByPosition(1, n).CellStyle == 'An-1-descr_':
+            cod = oSheet.getCellByPosition(0, n).String.strip()
+            des = oSheet.getCellByPosition(1, n).String.strip()
+            um  = oSheet.getCellByPosition(2, n).String.strip()
+
+            # Criteri di identificazione segnaposto (tutte le condizioni devono essere vere)
+            if cod == 'AP' and des.startswith('<<<Scrivi la descrizione') and um == 'U.M. ?':
+                # Chiamiamo circoscriveAnalisi su n per determinare SR ed ER
+                try:
+                    sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, n)
+                    SR = sStRange.RangeAddress.StartRow
+                    ER = sStRange.RangeAddress.EndRow
+                    oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+                except Exception:
+                    pass
+
+def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
     ''' Compilo Analisi di prezzo '''
     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
     if numAnalisi == 0:
         return
-    # inizializza la progressbar
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    indicator.start("Elaborazione Analisi dei Prezzi in corso...", numAnalisi)
 
-    # Ottieni tutti i codici già presenti nel foglio (colonna 0)
-    oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+    # Se non c'è un indicatore passato, ne crea uno locale per fallback (ma non dovrebbe accadere)
+    if not indicator:
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start("Elaborazione Analisi dei Prezzi in corso...", numAnalisi)
+
+    # Ottieni il foglio delle analisi (solo setup, senza inserire schede)
+    oSheet, _ = LeenoAnalysis.inizializza_analisi(oDoc, nuovaScheda=False)
     existing_codes = set()
     max_row = oSheet.getRows().getCount()
 
@@ -860,204 +665,105 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
         codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
         existing_codes = {str(codice[0]).strip().lower() for codice in codici_esistenti if codice and codice[0]}
 
-    val = 0
-    skipped = 0
-
     # inizializza l'analisi dei prezzi
-    oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+    oSheet, startRow = LeenoAnalysis.inizializza_analisi(oDoc, nuovaScheda=True)
 
     # compila le voci dell'analisi
-    for el in elencoPrezzi['ListaAnalisi']:
-        codice = str(el[0]).strip().lower()
+    for i, el in enumerate(elencoPrezzi['ListaAnalisi']):
+        # Scaling progress: 60% -> 80%
+        if indicator:
+            indicator.Value = 60 + int((i / numAnalisi) * 20)
+            indicator.Text = f"Compilazione analisi: {el[0]}"
 
-        # Skip se il codice esiste già
+        codice = str(el[0]).strip().lower()
         if codice in existing_codes:
-            skipped += 1
-            val += 1
-            indicator.Value = val
             continue
 
         prezzo_finale = el[-1]
-
-        # circoscrive la voce di analisi corrente
         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
-
         lrow = sStRange.RangeAddress.StartRow + 2
         oSheet.getCellByPosition(0, lrow).String = el[0]
         oSheet.getCellByPosition(1, lrow).String = el[1]
         oSheet.getCellByPosition(2, lrow).String = el[2]
+
         y = 0
         n = lrow + 2
         for x in el[3]:
-            if el[3][y][1] in (
-                'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
-                'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-                if el[3][y][1] != 'overflow':
-                    n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+            # el[3][y] è lo stesso di x (tupla: id, descrizione, u.m., quantità, prezzo)
+            if x[1] in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                if x[1] != 'overflow':
+                    n = SheetUtils.uFindStringCol(x[1], 1, oSheet, lrow)
             else:
                 LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
-                if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
-                    oSheet.getCellByPosition(0, n).String = (
-                        elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]).get('tariffa'))
-                # per gli inserimenti liberi (L)
+                # Cerca la tariffa nel dizionario articoli se presente
+                art_diz = elencoPrezzi['DizionarioArticoli'].get(x[0])
+                if art_diz is not None:
+                    oSheet.getCellByPosition(0, n).String = art_diz.get('tariffa', '')
                 else:
+                    # Per gli inserimenti liberi
                     oSheet.getCellByPosition(0, n).String = ''
                     try:
                         oSheet.getCellByPosition(1, n).String = x[1]
                     except:
                         oSheet.getCellByPosition(1, n).String = ''
                     oSheet.getCellByPosition(2, n).String = x[2]
+
+                    # Gestione quantità e prezzo
                     try:
-                        float(x[3].replace(',', '.'))
-                        oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
-                    except Exception:
+                        qt = str(x[3]).replace(',', '.')
+                        oSheet.getCellByPosition(3, n).Value = float(qt) if qt else 0
+                    except:
                         oSheet.getCellByPosition(3, n).Value = 0
+
                     try:
-                        float(x[4].replace(',', '.'))
-                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
+                        pr = str(x[4]).replace(',', '.')
+                        oSheet.getCellByPosition(4, n).Value = float(pr) if pr else 0
                     except:
                         oSheet.getCellByPosition(4, n).Value = 0
-                if el[3][y][1] not in (
-                    'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
-                    'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-                    if el[3][y][3] == '':
+
+                # Se non è una categoria predefinita, gestisce la quantità forzata o formula
+                if x[1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                    if x[3] == '':
                         oSheet.getCellByPosition(3, n).Value = 0
                     else:
                         try:
-                            float(el[3][y][3])
-                            oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                            float(str(x[3]).replace(',', '.'))
+                            oSheet.getCellByPosition(3, n).Value = float(str(x[3]).replace(',', '.'))
                         except Exception:
-                            oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
+                            oSheet.getCellByPosition(3, n).Formula = '=' + str(x[3])
+
             y += 1
             n += 1
+
+        # Pulizia righe vuote e segnaposto (Cod. Art.?)
         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
-        startRow = sStRange.RangeAddress.StartRow
-        endRow = sStRange.RangeAddress.EndRow
-        for m in reversed(range(startRow, endRow)):
-            if(oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and
-                oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx'):
-                oSheet.getRows().removeByIndex(m, 1)
-            if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
-                oSheet.getCellByPosition(0, m).String = ''
-        # ~ if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
-            # ~ oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
-        oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
-
-        # aggiorna la progressbar
-        val += 1
-        indicator.Value = val
-    indicator.end()
-
-    # siccome viene inserita una voce PRIMA di iniziare la compilazione
-    # occorre eliminare l'ultima voce che risulta vuota
-    LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    PL.tante_analisi_in_ep()
-
-
-def compilaAnalisiPrezzi_(oDoc, elencoPrezzi, progress):
-    ''' Compila Analisi di prezzo, saltando voci già esistenti '''
-    numAnalisi = len(elencoPrezzi['ListaAnalisi'])
-    if numAnalisi == 0:
-        return
-
-    # Inizializza progressbar
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    indicator.start("Elaborazione Analisi dei Prezzi in corso...", numAnalisi)
-
-    # Ottieni tutti i codici già presenti nel foglio (colonna 0)
-    oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
-    existing_codes = set()
-    max_row = oSheet.getRows().getCount()
-
-    if max_row > 0:
-        # Legge i codici esistenti (prima colonna)
-        codici_esistenti = oSheet.getCellRangeByPosition(0, 0, 0, max_row - 1).getDataArray()
-        existing_codes = {str(codice[0]).strip().lower() for codice in codici_esistenti if codice and codice[0]}
-
-    val = 0
-    skipped = 0
-
-    for el in elencoPrezzi['ListaAnalisi']:
-        codice = str(el[0]).strip().lower()
-
-        # Skip se il codice esiste già
-        if codice in existing_codes:
-            # logger.info(f"Saltata analisi '{el[1]}' (codice '{el[0]}' già presente)")
-            skipped += 1
-            val += 1
-            indicator.Value = val
-            continue
-
-        prezzo_finale = el[-1]
-        sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
-        lrow = sStRange.RangeAddress.StartRow + 2
-
-        # Compila i dati (come nel tuo codice originale)
-        oSheet.getCellByPosition(0, lrow).String = el[0]
-        oSheet.getCellByPosition(1, lrow).String = el[1]
-        oSheet.getCellByPosition(2, lrow).String = el[2]
-
-        y = 0
-        n = lrow + 2
-        for x in el[3]:
-            if el[3][y][1] in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-                if el[3][y][1] != 'overflow':
-                    n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
-            else:
-                LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
-                if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
-                    oSheet.getCellByPosition(0, n).String = elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]).get('tariffa')
+        sStart = sStRange.RangeAddress.StartRow
+        sEnd = sStRange.RangeAddress.EndRow
+        for m in reversed(range(sStart, sEnd)):
+            # Se la riga è un segnaposto rimasto dal template, la elimina o la svuota
+            cell_val = oSheet.getCellByPosition(0, m).String
+            if cell_val == 'Cod. Art.?':
+                # Se è la riga di una lavorazione, la elimina se sopra c'è lo stile corretto
+                if oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx':
+                    oSheet.getRows().removeByIndex(m, 1)
                 else:
-                    oSheet.getCellByPosition(0, n).String = ''
-                    try:
-                        oSheet.getCellByPosition(1, n).String = x[1]
-                    except:
-                        oSheet.getCellByPosition(1, n).String = ''
-                    oSheet.getCellByPosition(2, n).String = x[2]
-                    try:
-                        float(x[3].replace(',', '.'))
-                        oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
-                    except Exception:
-                        oSheet.getCellByPosition(3, n).Value = 0
-                    try:
-                        float(x[4].replace(',', '.'))
-                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
-                    except:
-                        oSheet.getCellByPosition(4, n).Value = 0
-            y += 1
-            n += 1
+                    oSheet.getCellByPosition(0, m).String = ''
 
-        # Pulizia righe vuote (come nel tuo codice originale)
         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
         startRow = sStRange.RangeAddress.StartRow
-        endRow = sStRange.RangeAddress.EndRow
-        for m in reversed(range(startRow, endRow)):
-            if(oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and
-               oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx'):
-                oSheet.getRows().removeByIndex(m, 1)
-            if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
-                oSheet.getCellByPosition(0, m).String = ''
+        oSheet, startRow = LeenoAnalysis.inizializza_analisi(oDoc, nuovaScheda=True)
 
-        oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
-        val += 1
-        indicator.Value = val
+    # Pulizia globale delle schede vuote/segnaposto
+    rimuoviAnalisiVuote(oSheet)
 
-    # Elimina l'ultima voce vuota (come nel tuo codice originale)
-    LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    indicator.end()
-
-    # Dialogs.Info(
-    #     Title="Elaborazione completata",
-    #     Text=f"Analisi di prezzo elaborate: {numAnalisi - skipped}\n"
-    #          f"Analisi saltate: {skipped}\n"
-    #          "Controlla il foglio 'Analisi Prezzi' per i risultati."
-    # )
-
+    # Assicura che ci sia una riga rossa di chiusura corretta
+    LeenoSheetUtils.inserisciRigaRossa(oSheet)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     PL.tante_analisi_in_ep()
 
 
-def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
+
+def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, indicator=None):
     ''' compila il computo '''
     from datetime import datetime, date
 
@@ -1087,27 +793,40 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     mappaVociRighe = {}        # id voce computo → riga foglio
     numeroVoce = 1             # numerazione progressiva voci
 
+    def get_map(key):
+        return {str(el.get('id_sc')): el.get('dessintetica', '') for el in capitoliCategorie.get(key, [])}
+
+    mapSuperCategorie = get_map('SuperCategorie')
+    mapCategorie = get_map('Categorie')
+    mapSottoCategorie = get_map('SottoCategorie')
+
     testspcat = '0'            # per evitare duplicati supercategoria
     testcat = '0'              # per evitare duplicati categoria
     testsbcat = '0'            # per evitare duplicati sottocategoria
 
-    # --- Progress bar ---
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
+    # Se non c'è un indicatore passato, ne crea uno locale per fallback
+    if not indicator:
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
 
     # -------------------------------------------------------------------------
-    # Funzioni interne di utilità (NON alterano la logica)
+    # Funzioni interne di utilità
     # -------------------------------------------------------------------------
 
-    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, dict_list):
+    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, mapping):
         """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
         nonlocal lrow
+        if not idcorr or idcorr == '0':
+            return
+
         try:
             if idcorr != idtest:
                 reset_test[0] = idcorr
-                inser_func(oSheet, lrow, dict_list[eval(idcorr) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
+                des = mapping.get(str(idcorr))
+                if des:
+                    inser_func(oSheet, lrow, des)
+                    lrow += 1
+        except Exception:
             pass
 
     def set_num_or_formula(col, row, value):
@@ -1121,36 +840,30 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             cell.Value = float(v_strip.replace(',', '.'))
         except (ValueError, TypeError):
             # se non è numerico, controlla se assomiglia a una formula
-            # o se siamo in una colonna che non dovrebbe contenere testo libero
             if any(c in v_strip for c in '+-*/()'):
                 cell.Formula = ('=' + v_strip).replace('=-', '=')
             elif col in (5, 6, 7, 8):
-                # in queste colonne (F, G, H, I) il testo libero è probabilmente un errore
                 pass
             else:
-                # altrimenti scrivi come stringa semplice
                 cell.String = v_strip
 
-    def handle_negatives(startRow, vedi_neg=False):
+    def handle_negatives(startRow, vedi_neg=False, current_mis=None):
         """
         Gestione del segno negativo per i componenti della quantità.
-        Assicura che tutti i fattori (Col 4-8) siano positivi e inverte
-        il posizionamento del risultato (Col 9 vs Col 11) in CONTABILITA.
         """
         try:
-            if '-' in mis[7] or vedi_neg:
+            if current_mis and (len(current_mis) > 7 and '-' in str(current_mis[7])) or vedi_neg:
                 # Elabora colonne da 4 (E) a 8 (I) per renderle positive
                 for x in range(4, 9):
                     cell = oSheet.getCellByPosition(x, startRow)
                     formula = cell.Formula
                     if formula and str(formula).startswith('='):
-                        # Se è una formula vera, la racchiude in ABS()
                         if not formula.startswith('=ABS('):
                             cell.Formula = '=ABS(' + formula[1:] + ')'
                     elif cell.Value < 0:
                         cell.Value = abs(cell.Value)
-                
-                # Inverte una sola volta (sposta formula da Col 9 a Col 11)
+
+                # Inverte una sola volta
                 LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
         except Exception:
             pass
@@ -1159,10 +872,14 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # CICLO PRINCIPALE
     # -------------------------------------------------------------------------
 
-    val = 0
-    for el in listaMisure:
-        indicator.Value = val
-        val += 1
+    total_misure = len(listaMisure)
+    for i, el in enumerate(listaMisure):
+        # Scaling progress: 80% -> 100%
+        if indicator:
+            # indicator.Value = 80 + int((i / total_misure) * 20)
+            indicator.Value = int((i / total_misure) * 100)
+            # indicator.Text = f"Compilazione {elaborato}: {el.get('id_ep')}"
+            indicator.Text = f"Compilazione {elaborato}: {i+1}/{total_misure}"
 
         datamis = el.get('datamis')
         idspcat = el.get('idspcat')
@@ -1172,28 +889,12 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         # trova la prima riga libera
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
 
-        # --- Supercategoria ---
-        insert_categoria_if_needed(
-            idspcat, testspcat, [idspcat, None],
-            LeenoSheetUtils.inserSuperCapitolo,
-            capitoliCategorie['SuperCategorie']
-        )
+        # --- Categorie ---
+        insert_categoria_if_needed(idspcat, testspcat, [idspcat, None], LeenoSheetUtils.inserSuperCapitolo, mapSuperCategorie)
         testspcat = idspcat
-
-        # --- Categoria ---
-        insert_categoria_if_needed(
-            idcat, testcat, [idcat, None],
-            LeenoSheetUtils.inserCapitolo,
-            capitoliCategorie['Categorie']
-        )
+        insert_categoria_if_needed(idcat, testcat, [idcat, None], LeenoSheetUtils.inserCapitolo, mapCategorie)
         testcat = idcat
-
-        # --- Sottocategoria ---
-        insert_categoria_if_needed(
-            idsbcat, testsbcat, [idsbcat, None],
-            LeenoSheetUtils.inserSottoCapitolo,
-            capitoliCategorie['SottoCategorie']
-        )
+        insert_categoria_if_needed(idsbcat, testsbcat, [idsbcat, None], LeenoSheetUtils.inserSottoCapitolo, mapSottoCategorie)
         testsbcat = idsbcat
 
         # --- Inserimento voce ---
@@ -1203,19 +904,14 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
 
         ID = el.get('id_ep')
-
-        # --- Inserisce tariffa ---
         try:
             tariffa = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
             oSheet.getCellByPosition(1, lrow + 1).String = tariffa
-        except Exception:
+        except:
             pass
 
-        # --- Mappa id voce XPWE → riga foglio ---
         idVoceComputo = el.get('id_vc')
         mappaVociRighe[idVoceComputo] = lrow + 1
-
-        # --- Numerazione voce ---
         oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
         numeroVoce += 1
 
@@ -1226,12 +922,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
         if nrighe > 0:
             endRow = startRow + nrighe
-
-            # inserisce righe aggiuntive
             if nrighe > 1:
                 oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
 
-            # copia layout prima riga
             oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
             for n in range(startRow + 1, endRow):
                 oSheet.copyRange(oSheet.getCellByPosition(0, n).getCellAddress(), oRangeAddress)
@@ -1240,18 +933,18 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     c.String = ''
                     c.CellStyle = 'Comp-Bianche in mezzo_R'
 
-            # --- Data contabilita (logica corretta) ---
-            if elaborato == 'CONTABILITA':
+            # Data contabilita
+            if elaborato == 'CONTABILITA' and datamis:
                 cdata = oSheet.getCellByPosition(1, startRow)
                 d_parts = datamis.split('/')
-                # Usiamo FormulaLocal per essere sicuri dei separatori (;)
-                try:
-                    cdata.FormulaLocal = '=DATA(' + d_parts[2] + ';' + d_parts[1] + ';' + d_parts[0] + ')'
-                except:
-                    cdata.Formula = '=DATE(' + d_parts[2] + ',' + d_parts[1] + ',' + d_parts[0] + ')'
-                cdata.Value = cdata.Value
+                if len(d_parts) == 3:
+                    try:
+                        cdata.FormulaLocal = '=DATA(' + d_parts[2] + ';' + d_parts[1] + ';' + d_parts[0] + ')'
+                    except:
+                        cdata.Formula = '=DATE(' + d_parts[2] + ',' + d_parts[1] + ',' + d_parts[0] + ')'
+                    cdata.Value = cdata.Value
 
-            # --- Popola righe ---
+            # Popola righe
             for mis in lista_righe:
                 descrizione = (mis[0].strip() if mis[0] else '')
                 oSheet.getCellByPosition(2, startRow).String = descrizione
@@ -1261,60 +954,31 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 set_num_or_formula(7, startRow, mis[5])  # larghezza
                 set_num_or_formula(8, startRow, mis[6])  # HPESO
 
-                # riga parziale
                 if mis[8] == '2':
                     PL.parziale_core(oSheet, startRow)
                     if elaborato != 'CONTABILITA':
                         oSheet.getRows().removeByIndex(startRow + 1, 1)
-                    descrizione = ''
 
-                # VEDI VOCE
-                test = ''
                 is_vedi_neg = False
                 if mis[9] != '-2':
                     vedi = mappaVociRighe.get(mis[9])
-                    try:
-                        test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
-                        if test == '-':
-                            is_vedi_neg = True
-                            # In COMPUTO/VARIANTE, vedi_voce_xpwe applica già il Rosso.
-                            # Alzando il flag is_vedi_neg, handle_negatives chiamerà invertiUnSegno.
-                            # Siccome invertiUnSegno agisce come un toggle in base allo stile ROSSO,
-                            # dobbiamo rimuoverlo per assicurarci che venga riapplicato insieme al segno meno.
-                            if elaborato != 'CONTABILITA':
-                                for x in range(2, 10):
-                                    cell = oSheet.getCellByPosition(x, startRow)
-                                    if ' ROSSO' in cell.CellStyle:
-                                        cell.CellStyle = cell.CellStyle.replace(' ROSSO', '')
-                    except Exception:
-                        Dialogs.Exclamation(
-                            Title="Attenzione",
-                            Text="Il file di origine è disordinato.\n"
-                                 "Riordinando il computo trovo riferimenti a voci "
-                                 "non ancora inserite.\n\n"
-                                 "Controlla la voce con tariffa "
-                                 + elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
-                                 + "\nalla riga n." + str(lrow + 2)
-                        )
-                        oSheet.getCellByPosition(44, startRow).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+                    if vedi:
+                        try:
+                            test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
+                            if test == '-':
+                                is_vedi_neg = True
+                        except Exception:
+                            pass
 
-                # segni negativi
-                handle_negatives(startRow, vedi_neg=is_vedi_neg)
-
+                handle_negatives(startRow, vedi_neg=is_vedi_neg, current_mis=mis)
                 startRow += 1
 
-    # -------------------------------------------------------------------------
     # Finalizzazione
-    # -------------------------------------------------------------------------
-
-    indicator.end()
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
-
     try:
         PL.Rinumera_TUTTI_Capitoli2(oSheet)
-    except Exception:
+    except:
         pass
-
     PL.fissa()
 
 def MENU_XPWE_import(filename = None):
@@ -1334,6 +998,7 @@ def XPWE_import(filename = None):
     if isLeenoDoc == False:
         PL.creaComputo(0)
         isLeenoDoc = LeenoUtils.isLeenoDocument()
+
     # legge i totali dal documento
     if isLeenoDoc:
         oDoc = LeenoUtils.getDocument()
@@ -1357,9 +1022,9 @@ def XPWE_import(filename = None):
         ValVariante=vals[1],
         ValContabilita=vals[2]
     )
-    # controlla se si è annullato il comando
     if elabdest is None:
         return
+
     elaborato = elabdest['elaborato']
     destinazione = elabdest['destinazione']
     ordina = elabdest['ordina']
@@ -1369,171 +1034,145 @@ def XPWE_import(filename = None):
         ordina = False
 
     if filename == None:
-        filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
+        filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')
     if filename in ('Cancel', '', None):
         return
 
-    # effettua il parsing del file XML
-    tree = ElementTree()
-    # DLG.chi(tree.parse(filename))
+    indicator = None
     try:
-        tree.parse(filename)
-    except ParseError:
-        PL.clean_text_file(filename)
-        tree.parse(filename)
-    except PermissionError:
-        Dialogs.Exclamation(Title="Errore",
-                            Text="Impossibile leggere il file\n"
-                                 "Accertati che il nome del file sia corretto.")
-    except Exception as e:
-        Dialogs.Exclamation(Title="Errore",
-                            Text="Errore generico nella lettura del file\n"
-                                 "Accertati che il file sia in formato XPWE.")
-        DLG.errore(str(e))
-        return
+        # effettua il parsing del file XML
+        tree = ElementTree()
+        try:
+            tree.parse(filename)
+        except ParseError:
+            PL.clean_text_file(filename)
+            tree.parse(filename)
+        except PermissionError:
+            Dialogs.Exclamation(Title="Errore",
+                                Text="Impossibile leggere il file\n"
+                                     "Accertati che il nome del file sia corretto.")
+            return
+        except Exception as e:
+            Dialogs.Exclamation(Title="Errore",
+                                Text=f"Errore nella lettura del file XML:\n{str(e)}\n\n"
+                                     "Accertati che il file sia in formato XPWE valido.")
+            return
 
-    # ottieni l'item root
-    root = tree.getroot()
-    logging.debug(list(root))
+        # ottieni l'item root
+        root = tree.getroot()
 
-    # attiva la progressbar
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    if indicator:
-        indicator.start("Elaborazione in corso...", 100)  # 100 = max progresso
+        # attiva la progressbar
+        indicator = oDoc.getCurrentController().getStatusIndicator()
+        if indicator:
+            indicator.start("Elaborazione in corso...", 100)
+            indicator.Text = "Importazione file XPWE in corso..."
+            indicator.Value = 20
 
+        # va alla sezione dei dati generali
+        dati = root.find('PweDatiGenerali')
+        if dati == None:
+            dati = list(root)[0].find('PweDatiGenerali')
 
-    if indicator:
-        indicator.Text = "Importazione file XPWE in corso..."
-        indicator.Value = 20
+        # legge i dati anagrafici generali
+        if indicator:
+            indicator.Text = "Lettura dati..."
+            indicator.Value = 25
+        datiAnagrafici = leggiAnagraficaGenerale(dati)
 
-    # ########################################################################################
-    # LETTURA DATI
+        # legge capitoli e categorie
+        if indicator:
+            indicator.Text = "Lettura Capitoli e Categorie..."
+            indicator.Value = 30
+        capitoliCategorie = leggiCapitoliCategorie(dati)
 
-    # va alla sezione dei dati generali
-    dati = root.find('PweDatiGenerali')
-    if dati == None:
-        dati = list(root)[0].find('PweDatiGenerali')
+        # legge i dati generali per l'analisi
+        if indicator:
+            indicator.Text = "Lettura dati generali per analisi..."
+            indicator.Value = 40
+        datiGeneraliAnalisi = leggiDatiGeneraliAnalisi(dati)
 
-    # legge i dati anagrafici generali
-    datiAnagrafici = leggiAnagraficaGenerale(dati)
-    if indicator:
-        indicator.Text = "Lettura dati..."
-        indicator.Value = 35
+        # legge le approssimazioni
+        approssimazioni = leggiApprossimazioni(dati)
 
-    # legge capitoli e categorie
-    capitoliCategorie = leggiCapitoliCategorie(dati)
-    if indicator:
-        indicator.Text = "Lettura Capitoli e Categorie..."
-        indicator.Value = 50
+        misurazioni = root.find('PweMisurazioni')
+        if misurazioni == None:
+            misurazioni = list(root)[0].find('PweMisurazioni')
 
-    # legge i dati generali per l'analisi
-    datiGeneraliAnalisi = leggiDatiGeneraliAnalisi(dati)
-    if indicator:
-        indicator.Text = "Lettura dati generali per analisi..."
-        indicator.Value = 65
-
-    # legge le approssimazioni
-    approssimazioni = leggiApprossimazioni(dati)
-
-    misurazioni = root.find('PweMisurazioni')
-    if misurazioni == None:
-        misurazioni = list(root)[0].find('PweMisurazioni')
-
-    # legge l'elenco prezzi
-    try:
+        # legge l'elenco prezzi
+        if indicator:
+            indicator.Text = "Lettura Elenco Prezzi..."
+            indicator.Value = 45
         elencoPrezzi = leggiElencoPrezzi(misurazioni)
+
+        # legge le misurazioni
+        if elaborato != 'Elenco':
+            if indicator:
+                indicator.Text = "Lettura Misurazioni..."
+                indicator.Value = 50
+            listaMisure = leggiMisurazioni(misurazioni, ordina)
+        else:
+            listaMisure = []
+
+        # SCRITTURA COMPUTO
+        if destinazione == 'NUOVO':
+            oDoc = PL.creaComputo(0)
+            indicator.end()
+            indicator = oDoc.getCurrentController().getStatusIndicator()
+            indicator.start("Scrittura dati nel nuovo documento...", 100)
+
+        # Progress focus shift to COMPILATION (50% -> 100%)
+        if indicator:
+            indicator.Text = "Compilazione dati generali..."
+            indicator.Value = 55
+
+        compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)
+        compilaApprossimazioni(oDoc, approssimazioni)
+        compilaAnagraficaGenerale(oDoc, datiAnagrafici)
+
+        # compilo Elenco Prezzi
+        if indicator:
+            indicator.Text = "Compilazione Elenco Prezzi..."
+            indicator.Value = 60
+        compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
+
+        oSheet_ep = oDoc.getSheets().getByName('Elenco Prezzi')
+        oSheet_ep.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
+
+        # Compilo Analisi di prezzo (60% -> 80% internally)
+        compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=indicator)
+
+        if len(listaMisure) == 0:
+            if indicator:
+                indicator.Value = 100
+            Dialogs.Info(Title="Importazione completata",
+                         Text="Importate n." +
+                                str(len(elencoPrezzi['ListaArticoli'])) +
+                                " voci dall'elenco prezzi\ndel file: " + filename)
+            oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+            oDoc.CurrentController.setActiveSheet(oSheet)
+            return
+
+        # compila il computo (80% -> 100% internally)
+        compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, indicator=indicator)
+
+        PL.GotoSheet(elaborato)
+        oSheet_dest = oDoc.getSheets().getByName(elaborato)
+        PL.Rinumera_TUTTI_Capitoli2(oSheet_dest)
+
+        # salva il file
+        if len(oDoc.getURL()) == 0:
+            dest = filename[0:-5] + '.ods'
+            PL.salva_come(dest)
+
+        PL.inizializza_computo()
+        Dialogs.Ok(Text=f'Importazione di {len(listaMisure)} voci di {elaborato} eseguita con successo!')
+        if 'giuserpe' not in os.getlogin():
+            PL.dlg_donazioni()
+
     except Exception as e:
-        # ~ DLG.chi(f"Errore: {e}")
-        return
-    if indicator:
-        indicator.Text = "Lettura Elenco Prezzi..."
-        indicator.Value = 70
-
-    # legge le misurazioni
-    if elaborato != 'Elenco':
-        listaMisure = leggiMisurazioni(misurazioni, ordina)
-    else:
-        listaMisure = []
-    if indicator:
-        indicator.Text = "Lettura Misurazioni..."
-        indicator.Value = 100
-
-    # ########################################################################################
-    # SCRITTURA COMPUTO
-
-    # se la destinazione è un nuovo documento, crealo
-    if destinazione == 'NUOVO':
-        oDoc = PL.creaComputo(0)
-
-    # occorre ricreare di nuovo la progressbar, in modo che sia
-    # agganciata al nuovo documento
-
-    if indicator:
-        indicator.Text = "Importazione file XPWE in corso..."
-        indicator.Value = 15
-
-    # disattiva l'output a video
-    # LeenoUtils.DocumentRefresh(False)
-
-    # compila i dati generali per l'analisi
-    if indicator:
-        indicator.Text = "Compilazione dati generali di analisi..."
-        indicator.Value = 35
-    compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)
-
-    # compila le approssimazioni
-    if indicator:
-        indicator.Text = "Compilazione approssimazioni..."
-        indicator.Value = 50
-    compilaApprossimazioni(oDoc, approssimazioni)
-
-    # compilo Anagrafica generale
-    indicator.Text = "Compilazione anagrafica generale..."
-    indicator.Value = 60
-
-    compilaAnagraficaGenerale(oDoc, datiAnagrafici)
-
-    # compilo Elenco Prezzi
-    indicator.Text = "Compilazione anagrafica generale..."
-    indicator.Value = 85
-    compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress = None)
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
-
-    # Compilo Analisi di prezzo
-    indicator.Text = "Compilazione analisi prezzi..."
-    indicator.Value = 85
-    compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress = None)
-
-    # se non ci sono misurazioni di computo, finisce qui
-    if len(listaMisure) == 0:
-    #     progress.hide()
-
-        Dialogs.Info(Title="Importazione completata",
-                     Text="Importate n." +
-                           str(len(elencoPrezzi['ListaArticoli'])) +
-                           " voci dall'elenco prezzi\ndel file: " + filename)
-        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        oDoc.CurrentController.setActiveSheet(oSheet)
-
-        return
-    # compila il computo
-    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
-
-    oSheet = oDoc.getSheets().getByName(elaborato)
-
-    PL.GotoSheet(elaborato)
-
-    indicator.end()
-    PL.Rinumera_TUTTI_Capitoli2(oSheet)
-
-    # salva il file col nome del file di origine
-    if len(oDoc.getURL()) == 0:
-        dest = filename[0:-5]+ '.ods'
-        PL.salva_come(dest)
-
-    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    PL.inizializza_computo()
-    Dialogs.Ok(Text=f'Importazione di {elaborato} eseguita con successo!')
-    if 'giuserpe' not in os.getlogin():
-        PL.dlg_donazioni()
+        Dialogs.Exclamation(Title="Errore Critico",
+                            Text=f"L'importazione si è interrotta a causa di un errore imprevisto ({type(e).__name__}):\n{str(e)}")
+        logging.error(f"Errore XPWE_import: {str(e)}", exc_info=True)
+    finally:
+        if indicator:
+            indicator.end()

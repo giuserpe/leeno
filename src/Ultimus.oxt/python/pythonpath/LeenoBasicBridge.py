@@ -38,6 +38,7 @@ def callAlert():
             CALL_SET.add(funcName)
 
 import pyleeno as PL
+import LeenoAnalysis
 
 
 def DlgMain():
@@ -93,7 +94,7 @@ def inizializza_analisi():
     inizializza_analisi
     '''
     callAlert()
-    PL.inizializza_analisi()
+    LeenoAnalysis.inizializza_analisi()
 
 
 def vai_a_Computo():

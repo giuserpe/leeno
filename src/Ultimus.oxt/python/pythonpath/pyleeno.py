@@ -10696,6 +10696,7 @@ def set_area_stampa():
 
 ########################################################################
 
+@LeenoUtils.no_refresh
 def MENU_sistema_pagine(msg = True):
     '''
     msg { boolean } : se True mostra dialogo e lancia anteprima
@@ -10851,8 +10852,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             oFooter.RightText.Text.Text.CharHeight = htxt
             oAktPage.RightPageFooterContent = oFooter
 
-        if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
-            scelta_viste()
+        # if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
+        #     scelta_viste()
 
     try:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
@@ -10863,6 +10864,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):
             LeenoAnalysis.MENU_impagina_analisi()
             _gotoCella(0, 2)
+        if oDoc.CurrentController.ActiveSheet.Name == 'CONTABILITA':
+            scelta_viste()
+
         if msg:
             setPreview()
     except Exception:
@@ -10875,7 +10879,6 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
     # last = SheetUtils.getUsedArea(oSheet).EndRow
 
     # oSheet.getCellRangeByPosition(1, 0, 41, last).Rows.OptimalHeight = True
-    LeenoUtils.DocumentRefresh(True)
     return
 
 

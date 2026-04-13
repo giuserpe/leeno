@@ -791,7 +791,6 @@ def adattaAltezzaRiga(oSheet=False, all=False):
     except Exception as e:
         DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
         raise  # Rilancia per gestione esterna
-    LeenoUtils.DocumentRefresh(True)
 # ###############################################################
 
 

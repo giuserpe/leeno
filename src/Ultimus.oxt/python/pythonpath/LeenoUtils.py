@@ -208,20 +208,28 @@ def getCursorPosition(document):
 ###############################################################################
 
 
-def DocumentRefresh(boo):
+def DocumentRefresh(boo, oDoc=None):
     '''
     Abilita / disabilita il refresh per accelerare le procedure
     '''
-    oDoc = getDocument()
+    if oDoc is None:
+        oDoc = getDocument()
     if oDoc is None:
         return  # Esci silenziosamente se non c'è un documento attivo
+
     # L'ordine che segue non va cambiato!!!
     if boo:
         oDoc.IsAdjustHeightEnabled = True
         oDoc.enableAutomaticCalculation(True)
-        oDoc.removeActionLock()
-        oDoc.resetActionLocks()
-        oDoc.unlockControllers()
+        try:
+            oDoc.removeActionLock()
+        except:
+            pass
+        # oDoc.resetActionLocks() # RIMOSSO: troppo aggressivo per chiamate annidate
+        try:
+            oDoc.unlockControllers()
+        except:
+            pass
         oDoc.calculateAll()
     else:
         oDoc.lockControllers()

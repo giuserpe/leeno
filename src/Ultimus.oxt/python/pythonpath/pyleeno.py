@@ -2498,8 +2498,21 @@ def scelta_viste_run():
             else:
                 oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
 
-            if oDialog1.getControl("CBSom").State == 1:
+            # Determina il tipo di raffronto prima di genera_sommario
+            raffronto = oDialog1.getControl('ComboRAFFRONTO').getText()
+            RAFFRONTO_MAP = {
+                'Computo - Variante':     ('T', 'U', 'COMPUTO_VARIANTE'),
+                'Computo - Contabilità':  ('T', 'V', 'COMPUTO_CONTABILITÀ'),
+                'Variante - Contabilità': ('U', 'V', 'VARIANTE_CONTABILITÀ'),
+            }
+            has_raffronto = raffronto in RAFFRONTO_MAP
+
+            # Genera sommario solo se richiesto da checkbox E il raffronto
+            # non lo farà comunque (evita doppia esecuzione)
+            if oDialog1.getControl("CBSom").State == 1 and not has_raffronto:
                 genera_sommario()
+                # IMPORTANTE: ri-disabilita refresh dopo @no_refresh di genera_sommario
+                LeenoUtils.DocumentRefresh(False)
 
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow + 1
@@ -2511,18 +2524,29 @@ def scelta_viste_run():
             oSheet.getCellRangeByName('Y2').Formula = '=IF(N(T2)>N(U2); N(T2)-N(U2); "")'
             ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
-            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Computo - Variante':
-                inizializza_elenco()
-                genera_sommario()
-                oSheet.getCellRangeByName('Z2').Formula = '=IFERROR(LET(t;N(T2);u;N(U2);IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+            if has_raffronto:
+                col1, col2, label = RAFFRONTO_MAP[raffronto]
 
-                oSheet.getCellRangeByName('X1').String = 'COMPUTO_VARIANTE'
+                # genera_sommario() chiama internamente inizializza_elenco(),
+                # quindi NON serve chiamarlo separatamente (era un duplicato)
+                genera_sommario()
+                # IMPORTANTE: ri-disabilita refresh dopo @no_refresh di genera_sommario,
+                # altrimenti tutte le operazioni successive avvengono con UI attiva
+                LeenoUtils.DocumentRefresh(False)
+
+                oSheet.getCellRangeByName('Z2').Formula = (
+                    f'=IFERROR(LET(t;N({col1}2);u;N({col2}2);'
+                    f'IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";'
+                    f't>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+                )
+
+                oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 for n in range(4, ultima_voce + 2):
                     formule.append([
-                        f'=IF(N(U{n})>N(T{n}); N(U{n})-N(T{n}); "")',
-                        f'=IF(N(T{n})>N(U{n}); N(T{n})-N(U{n}); "")',
-                        f'=IFERROR(LET(t;N(T{n});u;N(U{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
+                        f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
+                        f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
+                        f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
                     ])
 
                 n += 1
@@ -2530,28 +2554,8 @@ def scelta_viste_run():
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
 
-                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(T{n});u;N(U{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
-
-            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Computo - Contabilità':
-                inizializza_elenco()
-                genera_sommario()
-                oSheet.getCellRangeByName('Z2').Formula = '=IFERROR(LET(t;N(T2);u;N(V2);IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
-
-                oSheet.getCellRangeByName ('X1').String = 'COMPUTO_CONTABILITÀ'
-                LeenoSheetUtils.setLarghezzaColonne(oSheet)
-                for n in range(4, ultima_voce + 2):
-                    formule.append([
-                        f'=IF(N(V{n})>N(T{n}); N(V{n})-N(T{n}); "")',
-                        f'=IF(N(T{n})>N(V{n}); N(T{n})-N(V{n}); "")',
-                        f'=IFERROR(LET(t;N(T{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
-                    ])
-
-                n += 1
-                oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
-                formule = tuple(formule)
-                oRange.setFormulaArray(formule)
-
-                if oRangeAddress.StartColumn != 0:
+                # Gestione voci non contabilizzate (solo Computo - Contabilità)
+                if raffronto == 'Computo - Contabilità' and oRangeAddress.StartColumn != 0:
                     if DLG.DlgSiNo(
                             "Nascondo eventuali voci non ancora contabilizzate?"
                     ) == 2:
@@ -2563,45 +2567,69 @@ def scelta_viste_run():
                                 oSheet.getCellRangeByPosition(
                                     0, el, 1, el).Rows.IsVisible = False
 
-                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(T{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
-
-            if oDialog1.getControl('ComboRAFFRONTO').getText() == 'Variante - Contabilità':
-                inizializza_elenco()
-                genera_sommario()
-                oSheet.getCellRangeByName('Z2').Formula = '=IFERROR(LET(t;N(U2);u;N(V2);IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
-
-                oSheet.getCellRangeByName ('X1').String = 'VARIANTE_CONTABILITÀ'
-                LeenoSheetUtils.setLarghezzaColonne(oSheet)
-                for n in range(4, ultima_voce + 2):
-                    formule.append([
-                        f'=IF(N(V{n})>N(U{n}); N(V{n})-N(U{n}); "")',
-                        f'=IF(N(U{n})>N(V{n}); N(U{n})-N(V{n}); "")',
-                        f'=IFERROR(LET(t;N(U{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
-                    ])
-                n += 1
-                oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
-                formule = tuple(formule)
-                oRange.setFormulaArray(formule)
-
-                oSheet.getCellRangeByName(f'Z{n}').Formula = f'=IFERROR(LET(t;N(U{n});u;N(V{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+                oSheet.getCellRangeByName(f'Z{n}').Formula = (
+                    f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});'
+                    f'IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";'
+                    f't>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+                )
 
             LeenoSheetUtils.inserisciRigaRossa(oSheet)
         else:
             return oDialog1.dispose()
-        # evidenzia le quantità eccedenti il VI/V
-        for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
-            if oSheet.getCellByPosition(
-                    26,
-                    el).Value >= 0.2 or oSheet.getCellByPosition(
-                        26, el).String == '20,00%':
+
+        # evidenzia le quantità eccedenti il VI/V — lettura batch per performance
+        endRow = SheetUtils.getUsedArea(oSheet).EndRow
+        voci_in_eccesso = set()
+
+        if endRow > 3:
+            # Lettura batch anziché getCellByPosition per ogni riga
+            valori_A = oSheet.getCellRangeByPosition(0, 3, 0, endRow - 1).getDataArray()
+            valori_X = oSheet.getCellRangeByPosition(23, 3, 23, endRow - 1).getDataArray()
+            valori_26 = oSheet.getCellRangeByPosition(26, 3, 26, endRow - 1).getDataArray()
+
+            righe_da_colorare = []
+            for idx in range(len(valori_X)):
+                val_x = valori_X[idx][0]
+                val_26 = valori_26[idx][0]
+
+                # Rileva voci con valore positivo in colonna X (index 23)
+                if isinstance(val_x, (int, float)) and val_x > 0:
+                    val_a = valori_A[idx][0]
+                    if isinstance(val_a, str) and val_a:
+                        voci_in_eccesso.add(val_a)
+
+                if (isinstance(val_26, (int, float)) and val_26 >= 0.2) or val_26 == '20,00%':
+                    righe_da_colorare.append(3 + idx)
+
+            # Applica colorazione alle righe eccedenti
+            for el in righe_da_colorare:
                 oSheet.getCellRangeByPosition(
                     0, el, 1, el).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
-        oDoc.CurrentController.select(oSheet.getCellRangeByName('Z2'))
-        comando('Copy')
-        oDoc.CurrentController.select(
-            oSheet.getCellRangeByPosition(25, 3, 25, ER+1))
-        paste_format()
+        # Applica colorazione al foglio CONTABILITA per le voci in eccesso
+        if voci_in_eccesso and oDoc.Sheets.hasByName('CONTABILITA'):
+            oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
+            contEndRow = SheetUtils.getUsedArea(oSheetCont).EndRow
+            if contEndRow > 3:
+                # Lettura batch colonna B anziché cella per cella
+                dati_B = oSheetCont.getCellRangeByPosition(1, 3, 1, contEndRow).getDataArray()
+                processed_end = -1  # fine dell'ultima voce già colorata
+                for idx, row_data in enumerate(dati_B):
+                    r = 3 + idx
+                    if r <= processed_end:
+                        continue  # salta righe già dentro una voce colorata
+                    art_cont = row_data[0]
+                    if isinstance(art_cont, str) and art_cont in voci_in_eccesso:
+                        sStRange = LeenoComputo.circoscriveVoceComputo(oSheetCont, r)
+                        if sStRange:
+                            sStRange.CellBackColor = int(COLORE_ROSSO_AVVISO)
+                            processed_end = sStRange.RangeAddress.EndRow
+
+        # Copia formato da Z2 al range — senza clipboard
+        source_cell = oSheet.getCellRangeByName('Z2')
+        target_range = oSheet.getCellRangeByPosition(25, 3, 25, ER + 1)
+        target_range.CellStyle = source_cell.CellStyle
+        target_range.NumberFormat = source_cell.NumberFormat
 
         _primaCella()
         oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = COLORE_COLONNE_RAFFRONTO
@@ -12322,6 +12350,13 @@ import LeenoTheme
 
 
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName('CONTABILITA')
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=True)
+    return
+    import dcf_parser
+    dcf_parser.leggi_file()
+    return
     import LeenoImport_XPWE
     oSheet = LeenoUtils.getDocument().CurrentController.getActiveSheet()
     LeenoImport_XPWE.rimuoviAnalisiVuote(oSheet)

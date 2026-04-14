@@ -2594,11 +2594,27 @@ def MENU_GeneraCdP():
 
 ########################################################################
 # g_exportedScripts = GeneraAttiContabili
-@LeenoUtils.no_refresh
 def MENU_trasferimento_onfly():
     '''
     Trasferisce i dati da COMPUTO/VARIANTE a CONTABILITA on-the-fly.
     '''
+    # 1. Esecuzione logica pesante (locked)
+    if not _MENU_trasferimento_onfly_core():
+        return
+
+    # 2. Finalizzazione UI (unlocked - refresh attivo)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName('CONTABILITA')
+    
+    # Dialogs.Ok(Text='Trasferimento completato con successo!')
+    LeenoUtils.DocumentRefresh(True)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=True)
+
+
+
+@LeenoUtils.no_refresh
+def _MENU_trasferimento_onfly_core():
+    ''' Logica core del trasferimento '''
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
 
@@ -2607,15 +2623,15 @@ def MENU_trasferimento_onfly():
         source_name = DLG.ScegliElaborato(Titolo='Scegli foglio sorgente',
                                          flag='export')
     except Exception:
-        return
+        return False
 
     if source_name == 'CONTABILITA':
         Dialogs.Exclamation(Title='ATTENZIONE!',
                             Text='Il foglio sorgente non può essere la CONTABILITA.')
-        return
+        return False
 
     if not oDoc.getSheets().hasByName(source_name):
-        return
+        return False
 
     # Raccolta dati
     data = get_transfer_data(source_name)
@@ -2631,12 +2647,7 @@ def MENU_trasferimento_onfly():
         data['elencoPrezzi'],
         data['listaMisure']
     )
-
-    # Finalizzazione
-    PL.GotoSheet('CONTABILITA')
-    oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    Dialogs.Ok(Text='Trasferimento completato con successo!')
+    return True
 
 
 def get_transfer_data(source_sheet_name):
@@ -2664,19 +2675,19 @@ def get_transfer_data(source_sheet_name):
             if desc not in listaspcat:
                 listaspcat.append(desc)
                 capitoliCategorie['SuperCategorie'].append(
-                    (str(len(listaspcat)), desc, '0'))
+                    {'id_sc': str(len(listaspcat)), 'dessintetica': desc})
         elif cell_2.CellStyle == 'Livello-1-scritta mini':
             desc = cell_2.String
             if desc not in listacat:
                 listacat.append(desc)
                 capitoliCategorie['Categorie'].append(
-                    (str(len(listacat)), desc, '0'))
+                    {'id_sc': str(len(listacat)), 'dessintetica': desc})
         elif cell_2.CellStyle == 'livello2_':
             desc = cell_2.String
             if desc not in listasbcat:
                 listasbcat.append(desc)
                 capitoliCategorie['SottoCategorie'].append(
-                    (str(len(listasbcat)), desc, '0'))
+                    {'id_sc': str(len(listasbcat)), 'dessintetica': desc})
 
     # 2. Scansione voci e misure
     nVCItem = 2

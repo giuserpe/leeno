@@ -767,219 +767,224 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     ''' compila il computo '''
     from datetime import datetime, date
 
-    LeenoUtils.DocumentRefresh(False)
-
-    # --- Creazione/attivazione del foglio ---
-    if elaborato == 'VARIANTE':
-        if oDoc.getSheets().hasByName('VARIANTE'):
-            oSheet = LeenoVariante.generaVariante(oDoc, False)
-        else:
-            oSheet = LeenoVariante.generaVariante(oDoc, True)
-            oSheet.getRows().removeByIndex(2, 4)
-    elif elaborato == 'CONTABILITA':
-        oSheet = LeenoContab.generaContabilita(oDoc)
-    else:
-        oSheet = oDoc.getSheets().getByName(elaborato)
-
-    # --- Rimozione della riga vuota iniziale ---
-    if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
-        oSheet.getRows().removeByIndex(3, 5 if elaborato == 'CONTABILITA' else 4)
-
-    # --- Setup cell range ---
-    oCellRangeAddr = CellRangeAddress()
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
-
-    # --- Mappe e variabili di controllo ---
-    mappaVociRighe = {}        # id voce computo → riga foglio
-    numeroVoce = 1             # numerazione progressiva voci
-
-    def get_map(key):
-        return {str(el.get('id_sc')): el.get('dessintetica', '') for el in capitoliCategorie.get(key, [])}
-
-    mapSuperCategorie = get_map('SuperCategorie')
-    mapCategorie = get_map('Categorie')
-    mapSottoCategorie = get_map('SottoCategorie')
-
-    testspcat = '0'            # per evitare duplicati supercategoria
-    testcat = '0'              # per evitare duplicati categoria
-    testsbcat = '0'            # per evitare duplicati sottocategoria
-
-    # Se non c'è un indicatore passato, ne crea uno locale per fallback
-    if not indicator:
-        indicator = oDoc.getCurrentController().getStatusIndicator()
-        indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
-
-    # -------------------------------------------------------------------------
-    # Funzioni interne di utilità
-    # -------------------------------------------------------------------------
-
-    def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, mapping):
-        """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
-        nonlocal lrow
-        if not idcorr or idcorr == '0':
-            return
-
-        try:
-            if idcorr != idtest:
-                reset_test[0] = idcorr
-                des = mapping.get(str(idcorr))
-                if des:
-                    inser_func(oSheet, lrow, des)
-                    lrow += 1
-        except Exception:
-            pass
-
-    def set_num_or_formula(col, row, value):
-        """Scrive un numero o formula mantenendo la logica originale."""
-        cell = oSheet.getCellByPosition(col, row)
-        if value is None or str(value).strip() == '':
-            return
-        v_strip = str(value).strip()
-        try:
-            # tenta di inserire come valore numerico
-            cell.Value = float(v_strip.replace(',', '.'))
-        except (ValueError, TypeError):
-            # se non è numerico, controlla se assomiglia a una formula
-            if any(c in v_strip for c in '+-*/()'):
-                cell.Formula = ('=' + v_strip).replace('=-', '=')
-            elif col in (5, 6, 7, 8):
-                pass
+    with LeenoUtils.DocumentRefreshContext(False):
+        # --- Creazione/attivazione del foglio ---
+        if elaborato == 'VARIANTE':
+            if oDoc.getSheets().hasByName('VARIANTE'):
+                oSheet = LeenoVariante.generaVariante(oDoc, False)
             else:
-                cell.String = v_strip
-
-    def handle_negatives(startRow, vedi_neg=False, current_mis=None):
-        """
-        Gestione del segno negativo per i componenti della quantità.
-        """
-        try:
-            if current_mis and (len(current_mis) > 7 and '-' in str(current_mis[7])) or vedi_neg:
-                # Elabora colonne da 4 (E) a 8 (I) per renderle positive
-                for x in range(4, 9):
-                    cell = oSheet.getCellByPosition(x, startRow)
-                    formula = cell.Formula
-                    if formula and str(formula).startswith('='):
-                        if not formula.startswith('=ABS('):
-                            cell.Formula = '=ABS(' + formula[1:] + ')'
-                    elif cell.Value < 0:
-                        cell.Value = abs(cell.Value)
-
-                # Inverte una sola volta
-                LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
-        except Exception:
-            pass
-
-    # -------------------------------------------------------------------------
-    # CICLO PRINCIPALE
-    # -------------------------------------------------------------------------
-
-    total_misure = len(listaMisure)
-    for i, el in enumerate(listaMisure):
-        # Scaling progress: 80% -> 100%
-        if indicator:
-            # indicator.Value = 80 + int((i / total_misure) * 20)
-            indicator.Value = int((i / total_misure) * 100)
-            # indicator.Text = f"Compilazione {elaborato}: {el.get('id_ep')}"
-            indicator.Text = f"Compilazione {elaborato}: {i+1}/{total_misure}"
-
-        datamis = el.get('datamis')
-        idspcat = el.get('idspcat')
-        idcat = el.get('idcat')
-        idsbcat = el.get('idsbcat')
-
-        # trova la prima riga libera
-        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
-
-        # --- Categorie ---
-        insert_categoria_if_needed(idspcat, testspcat, [idspcat, None], LeenoSheetUtils.inserSuperCapitolo, mapSuperCategorie)
-        testspcat = idspcat
-        insert_categoria_if_needed(idcat, testcat, [idcat, None], LeenoSheetUtils.inserCapitolo, mapCategorie)
-        testcat = idcat
-        insert_categoria_if_needed(idsbcat, testsbcat, [idsbcat, None], LeenoSheetUtils.inserSottoCapitolo, mapSottoCategorie)
-        testsbcat = idsbcat
-
-        # --- Inserimento voce ---
-        if elaborato == 'CONTABILITA':
-            LeenoContab.insertVoceContabilita(oSheet, lrow)
+                oSheet = LeenoVariante.generaVariante(oDoc, True)
+                oSheet.getRows().removeByIndex(2, 4)
+        elif elaborato == 'CONTABILITA':
+            oSheet = LeenoContab.generaContabilita(oDoc)
         else:
-            LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
+            oSheet = oDoc.getSheets().getByName(elaborato)
 
-        ID = el.get('id_ep')
+        # --- Rimozione della riga vuota iniziale ---
+        if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
+            oSheet.getRows().removeByIndex(3, 5 if elaborato == 'CONTABILITA' else 4)
+
+        # --- Setup cell range ---
+        oCellRangeAddr = CellRangeAddress()
+        oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
+
+        # --- Mappe e variabili di controllo ---
+        mappaVociRighe = {}        # id voce computo → riga foglio
+        numeroVoce = 1             # numerazione progressiva voci
+
+        def get_map(key):
+            res = {}
+            for el in capitoliCategorie.get(key, []):
+                if isinstance(el, dict):
+                    res[str(el.get('id_sc'))] = el.get('dessintetica', '')
+                elif isinstance(el, (list, tuple)) and len(el) >= 2:
+                    res[str(el[0])] = str(el[1])
+            return res
+
+        mapSuperCategorie = get_map('SuperCategorie')
+        mapCategorie = get_map('Categorie')
+        mapSottoCategorie = get_map('SottoCategorie')
+
+        testspcat = '0'            # per evitare duplicati supercategoria
+        testcat = '0'              # per evitare duplicati categoria
+        testsbcat = '0'            # per evitare duplicati sottocategoria
+
+        # Se non c'è un indicatore passato, ne crea uno locale per fallback
+        if not indicator:
+            indicator = oDoc.getCurrentController().getStatusIndicator()
+            indicator.start(f'Compilazione {elaborato}...', len(listaMisure))
+
+        # -------------------------------------------------------------------------
+        # Funzioni interne di utilità
+        # -------------------------------------------------------------------------
+
+        def insert_categoria_if_needed(idcorr, idtest, reset_test, inser_func, mapping):
+            """Inserisce capitolo/sottocapitolo solo se cambia l'id."""
+            nonlocal lrow
+            if not idcorr or idcorr == '0':
+                return
+
+            try:
+                if idcorr != idtest:
+                    reset_test[0] = idcorr
+                    des = mapping.get(str(idcorr))
+                    if des:
+                        inser_func(oSheet, lrow, des)
+                        lrow += 1
+            except Exception:
+                pass
+
+        def set_num_or_formula(col, row, value):
+            """Scrive un numero o formula mantenendo la logica originale."""
+            cell = oSheet.getCellByPosition(col, row)
+            if value is None or str(value).strip() == '':
+                return
+            v_strip = str(value).strip()
+            try:
+                # tenta di inserire come valore numerico
+                cell.Value = float(v_strip.replace(',', '.'))
+            except (ValueError, TypeError):
+                # se non è numerico, controlla se assomiglia a una formula
+                if any(c in v_strip for c in '+-*/()'):
+                    cell.Formula = ('=' + v_strip).replace('=-', '=')
+                elif col in (5, 6, 7, 8):
+                    pass
+                else:
+                    cell.String = v_strip
+
+        def handle_negatives(startRow, vedi_neg=False, current_mis=None):
+            """
+            Gestione del segno negativo per i componenti della quantità.
+            """
+            try:
+                if current_mis and (len(current_mis) > 7 and '-' in str(current_mis[7])) or vedi_neg:
+                    # Elabora colonne da 4 (E) a 8 (I) per renderle positive
+                    for x in range(4, 9):
+                        cell = oSheet.getCellByPosition(x, startRow)
+                        formula = cell.Formula
+                        if formula and str(formula).startswith('='):
+                            if not formula.startswith('=ABS('):
+                                cell.Formula = '=ABS(' + formula[1:] + ')'
+                        elif cell.Value < 0:
+                            cell.Value = abs(cell.Value)
+
+                    # Inverte una sola volta
+                    LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+            except Exception:
+                pass
+
+        # -------------------------------------------------------------------------
+        # CICLO PRINCIPALE
+        # -------------------------------------------------------------------------
+
+        total_misure = len(listaMisure)
+        for i, el in enumerate(listaMisure):
+            # Scaling progress: 80% -> 100%
+            if indicator:
+                # indicator.Value = 80 + int((i / total_misure) * 20)
+                indicator.Value = int((i / total_misure) * 100)
+                # indicator.Text = f"Compilazione {elaborato}: {el.get('id_ep')}"
+                indicator.Text = f"Compilazione {elaborato}: {i+1}/{total_misure}"
+
+            datamis = el.get('datamis')
+            idspcat = el.get('idspcat')
+            idcat = el.get('idcat')
+            idsbcat = el.get('idsbcat')
+
+            # trova la prima riga libera
+            lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+            # --- Categorie ---
+            insert_categoria_if_needed(idspcat, testspcat, [idspcat, None], LeenoSheetUtils.inserSuperCapitolo, mapSuperCategorie)
+            testspcat = idspcat
+            insert_categoria_if_needed(idcat, testcat, [idcat, None], LeenoSheetUtils.inserCapitolo, mapCategorie)
+            testcat = idcat
+            insert_categoria_if_needed(idsbcat, testsbcat, [idsbcat, None], LeenoSheetUtils.inserSottoCapitolo, mapSottoCategorie)
+            testsbcat = idsbcat
+
+            # --- Inserimento voce ---
+            if elaborato == 'CONTABILITA':
+                LeenoContab.insertVoceContabilita(oSheet, lrow)
+            else:
+                LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
+
+            ID = el.get('id_ep')
+            try:
+                tariffa = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+                oSheet.getCellByPosition(1, lrow + 1).String = tariffa
+            except:
+                pass
+
+            idVoceComputo = el.get('id_vc')
+            mappaVociRighe[idVoceComputo] = lrow + 1
+            oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
+            numeroVoce += 1
+
+            # --- Misurazioni ---
+            startRow = lrow + 2
+            lista_righe = el.get('lista_rig')
+            nrighe = len(lista_righe)
+
+            if nrighe > 0:
+                endRow = startRow + nrighe
+                if nrighe > 1:
+                    oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
+
+                oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
+                for n in range(startRow + 1, endRow):
+                    oSheet.copyRange(oSheet.getCellByPosition(0, n).getCellAddress(), oRangeAddress)
+                    if elaborato == 'CONTABILITA':
+                        c = oSheet.getCellByPosition(1, n)
+                        c.String = ''
+                        c.CellStyle = 'Comp-Bianche in mezzo_R'
+
+                # Data contabilita
+                if elaborato == 'CONTABILITA' and datamis:
+                    cdata = oSheet.getCellByPosition(1, startRow)
+                    d_parts = datamis.split('/')
+                    if len(d_parts) == 3:
+                        try:
+                            cdata.FormulaLocal = '=DATA(' + d_parts[2] + ';' + d_parts[1] + ';' + d_parts[0] + ')'
+                        except:
+                            cdata.Formula = '=DATE(' + d_parts[2] + ',' + d_parts[1] + ',' + d_parts[0] + ')'
+                        cdata.Value = cdata.Value
+
+                # Popola righe
+                for mis in lista_righe:
+                    descrizione = (mis[0].strip() if mis[0] else '')
+                    oSheet.getCellByPosition(2, startRow).String = descrizione
+
+                    set_num_or_formula(5, startRow, mis[3])  # parti uguali
+                    set_num_or_formula(6, startRow, mis[4])  # lunghezza
+                    set_num_or_formula(7, startRow, mis[5])  # larghezza
+                    set_num_or_formula(8, startRow, mis[6])  # HPESO
+
+                    if mis[8] == '2':
+                        PL.parziale_core(oSheet, startRow)
+                        if elaborato != 'CONTABILITA':
+                            oSheet.getRows().removeByIndex(startRow + 1, 1)
+
+                    is_vedi_neg = False
+                    if mis[9] != '-2':
+                        vedi = mappaVociRighe.get(mis[9])
+                        if vedi:
+                            try:
+                                test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
+                                if test == '-':
+                                    is_vedi_neg = True
+                            except Exception:
+                                pass
+
+                    handle_negatives(startRow, vedi_neg=is_vedi_neg, current_mis=mis)
+                    startRow += 1
+
+        # Finalizzazione
+        LeenoSheetUtils.numeraVoci(oSheet, 0, True)
         try:
-            tariffa = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
-            oSheet.getCellByPosition(1, lrow + 1).String = tariffa
+            PL.Rinumera_TUTTI_Capitoli2(oSheet)
         except:
             pass
-
-        idVoceComputo = el.get('id_vc')
-        mappaVociRighe[idVoceComputo] = lrow + 1
-        oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
-        numeroVoce += 1
-
-        # --- Misurazioni ---
-        startRow = lrow + 2
-        lista_righe = el.get('lista_rig')
-        nrighe = len(lista_righe)
-
-        if nrighe > 0:
-            endRow = startRow + nrighe
-            if nrighe > 1:
-                oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
-
-            oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
-            for n in range(startRow + 1, endRow):
-                oSheet.copyRange(oSheet.getCellByPosition(0, n).getCellAddress(), oRangeAddress)
-                if elaborato == 'CONTABILITA':
-                    c = oSheet.getCellByPosition(1, n)
-                    c.String = ''
-                    c.CellStyle = 'Comp-Bianche in mezzo_R'
-
-            # Data contabilita
-            if elaborato == 'CONTABILITA' and datamis:
-                cdata = oSheet.getCellByPosition(1, startRow)
-                d_parts = datamis.split('/')
-                if len(d_parts) == 3:
-                    try:
-                        cdata.FormulaLocal = '=DATA(' + d_parts[2] + ';' + d_parts[1] + ';' + d_parts[0] + ')'
-                    except:
-                        cdata.Formula = '=DATE(' + d_parts[2] + ',' + d_parts[1] + ',' + d_parts[0] + ')'
-                    cdata.Value = cdata.Value
-
-            # Popola righe
-            for mis in lista_righe:
-                descrizione = (mis[0].strip() if mis[0] else '')
-                oSheet.getCellByPosition(2, startRow).String = descrizione
-
-                set_num_or_formula(5, startRow, mis[3])  # parti uguali
-                set_num_or_formula(6, startRow, mis[4])  # lunghezza
-                set_num_or_formula(7, startRow, mis[5])  # larghezza
-                set_num_or_formula(8, startRow, mis[6])  # HPESO
-
-                if mis[8] == '2':
-                    PL.parziale_core(oSheet, startRow)
-                    if elaborato != 'CONTABILITA':
-                        oSheet.getRows().removeByIndex(startRow + 1, 1)
-
-                is_vedi_neg = False
-                if mis[9] != '-2':
-                    vedi = mappaVociRighe.get(mis[9])
-                    if vedi:
-                        try:
-                            test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
-                            if test == '-':
-                                is_vedi_neg = True
-                        except Exception:
-                            pass
-
-                handle_negatives(startRow, vedi_neg=is_vedi_neg, current_mis=mis)
-                startRow += 1
-
-    # Finalizzazione
-    LeenoSheetUtils.numeraVoci(oSheet, 0, True)
-    try:
-        PL.Rinumera_TUTTI_Capitoli2(oSheet)
-    except:
-        pass
-    PL.fissa()
+        PL.fissa()
 
 def MENU_XPWE_import(filename = None):
     # with LeenoUtils.DocumentRefreshContext(False):

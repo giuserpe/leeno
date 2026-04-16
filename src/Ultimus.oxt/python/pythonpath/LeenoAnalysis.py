@@ -10,6 +10,7 @@ import LeenoSheetUtils
 import LeenoEvents
 import DocUtils
 import Dialogs
+import pyleeno as PL
 
 import LeenoDialogs as DLG
 from undo_utils import with_undo
@@ -286,3 +287,105 @@ def MENU_impagina_analisi():
             next_cell = oSheet.getCellByPosition(0, row + 2)
             if next_cell.CellStyle != 'Ultimus_centro':
                 next_cell.Rows.IsStartOfNewPage = True
+
+########################################################################
+
+def Main_Riordina_Analisi_Alfabetico():
+    _Riordina_Analisi_Alfabetico()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByName("Analisi di Prezzo")
+    import LeenoSheetUtils
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    return
+
+@with_undo("Riordina Analisi di Prezzo Alfabetico")
+@LeenoUtils.no_refresh
+def _Riordina_Analisi_Alfabetico():
+    PL.chiudi_dialoghi()
+
+    # with LeenoUtils.DocumentRefreshContext(False):
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByName("Analisi di Prezzo")
+    lLastUrow = SheetUtils.getLastUsedRow(oSheet)
+
+    # 1. Raccogli tutte le schede con le loro posizioni attuali
+    schede = []  # Lista di tuple: (codice, riga_inizio, riga_fine)
+    i = 0
+    while i <= lLastUrow:
+        cell = oSheet.getCellByPosition(0, i)
+        if cell.CellStyle == "An.1v-Att Start":
+            inizio = i
+            codice = oSheet.getCellByPosition(0, i + 1).String
+            fine = None
+            for x in range(i + 1, lLastUrow + 1):
+                if oSheet.getCellByPosition(0, x).CellStyle == "Analisi_Sfondo":
+                    fine = x
+                    break
+            if fine is None:
+                msg = f"Errore: scheda '{codice}' (riga {inizio + 1}) non ha riga di fine 'Analisi_Sfondo'"
+                DLG.chi(msg)
+                return
+            if any(s[0] == codice for s in schede):
+                msg = f"Mi fermo! Il codice:\n\t\t\t\t\t\t{codice}\nè presente più volte. Correggi e ripeti il comando."
+                DLG.chi(msg)
+                return
+            schede.append((codice, inizio, fine))
+            i = fine + 1
+        else:
+            i += 1
+
+    if not schede:
+        return
+
+    # 2. Ordina alfabeticamente A-Z
+    schede_ordinate = sorted(schede, key=lambda x: x[0])
+
+    PL.struttura_off()
+
+    # 3. Sposta ogni scheda.
+    # FIX 1: target_index = riga della prima scheda (non hardcoded 1)
+    #         così le intestazioni globali sopra rimangono intatte.
+    target_index = schede[0][1]
+
+    # FIX 2: processa in ordine INVERSO (Z→A) inserendo sempre in testa:
+    #         il risultato finale sarà A-Z.
+    for codice_target, _, _ in reversed(schede_ordinate):
+        # Ricerca la posizione attuale della scheda (cambia ad ogni iterazione)
+        trovata = False
+        inizio = None
+        fine = None
+        lscanLimit = SheetUtils.getLastUsedRow(oSheet)
+
+        for i in range(target_index, lscanLimit + 1):
+            cell = oSheet.getCellByPosition(0, i)
+            if cell.CellStyle == "An.1v-Att Start":
+                if oSheet.getCellByPosition(0, i + 1).String == codice_target:
+                    inizio = i
+                    for x in range(i + 1, lscanLimit + 1):
+                        if oSheet.getCellByPosition(0, x).CellStyle == "Analisi_Sfondo":
+                            fine = x
+                            trovata = True
+                            break
+                    break
+
+        if not trovata:
+            continue
+
+        nrighe = fine - inizio + 1
+
+        # Inserisce spazio esattamente uguale alla scheda da spostare
+        oSheet.getRows().insertByIndex(target_index, nrighe)
+
+        # La scheda originale è slittata in basso di nrighe
+        original_inizio = inizio + nrighe
+        original_fine = fine + nrighe
+
+        # Copia il blocco nella nuova posizione
+        selezione = oSheet.getCellRangeByPosition(0, original_inizio, 250, original_fine)
+        oDest = oSheet.getCellByPosition(0, target_index).CellAddress
+        oSheet.copyRange(oDest, selezione.RangeAddress)
+
+        # Rimuove il blocco originale (ora vuoto)
+        oSheet.getRows().removeByIndex(original_inizio, nrighe)
+
+    PL.MENU_struttura_on()

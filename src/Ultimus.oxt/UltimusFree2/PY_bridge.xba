@@ -110,7 +110,7 @@ Sub analisi_in_ElencoPrezzi
 End Sub
 rem ######################################################################
 Sub Main_Riordina_Analisi_Alfabetico
-	ScriptPy(&quot;pyleeno&quot;,&quot;Main_Riordina_Analisi_Alfabetico&quot;)
+	ScriptPy(&quot;LeenoAnalysis&quot;,&quot;Main_Riordina_Analisi_Alfabetico&quot;)
 End Sub
 rem ######################################################################
 Sub inizializza_elenco
@@ -174,11 +174,11 @@ Sub GeneraAttiContabili
 End Sub
 rem ######################################################################
 Sub MENU_AnnullaAttiContabili
-	ScriptPy("LeenoContab","MENU_AnnullaAttiContabili")
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaAttiContabili&quot;)
 End Sub
 rem ######################################################################
 Sub GeneraCertificatoPagamento
-	ScriptPy("LeenoContab","MENU_GeneraCdP")
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_GeneraCdP&quot;)
 End Sub
 rem ######################################################################
 Sub MENU_elimina_righe_vuote

@@ -1422,8 +1422,26 @@ def vai_a_variabili():
 
 def vai_a_Scorciatoie():
     chiudi_dialoghi()
+
+    oDoc = LeenoUtils.getDocument()
+
+    template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+
+
+    oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+    
+    # Determina la posizione di inserimento
+    pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
+
+    # Importa il foglio CdP
+    try:
+        oDoc.getSheets().removeByName('Scorciatoie')
+    except:
+        pass
+    oDoc.getSheets().importSheet(oTemplate, 'Scorciatoie', pos)
     GotoSheet('Scorciatoie')
-    _primaCella(0, 0)
+    fissa()
+    # _primaCella(0, 0)
 
 
 ########################################################################
@@ -2584,12 +2602,14 @@ def scelta_viste_run():
         if endRow > 3:
             # Lettura batch anziché getCellByPosition per ogni riga
             valori_A = oSheet.getCellRangeByPosition(0, 3, 0, endRow - 1).getDataArray()
-            valori_X = oSheet.getCellRangeByPosition(23, 3, 23, endRow - 1).getDataArray()
+            valori_X_Y = oSheet.getCellRangeByPosition(23, 3, 24, endRow - 1).getDataArray()
             valori_26 = oSheet.getCellRangeByPosition(26, 3, 26, endRow - 1).getDataArray()
 
             righe_da_colorare = []
-            for idx in range(len(valori_X)):
-                val_x = valori_X[idx][0]
+            voci_spuntate = set()
+            for idx in range(len(valori_X_Y)):
+                val_x = valori_X_Y[idx][0]
+                val_y = valori_X_Y[idx][1]
                 val_26 = valori_26[idx][0]
 
                 # Rileva voci con valore positivo in colonna X (index 23)
@@ -2597,6 +2617,12 @@ def scelta_viste_run():
                     val_a = valori_A[idx][0]
                     if isinstance(val_a, str) and val_a:
                         voci_in_eccesso.add(val_a)
+
+                # Rileva voci spuntate (X=0 e Y=0, gestendo anche le stringhe vuote delle formule)
+                if (val_x == 0 or val_x == "") and (val_y == 0 or val_y == ""):
+                    val_a = valori_A[idx][0]
+                    if isinstance(val_a, str) and val_a:
+                        voci_spuntate.add(val_a)
 
                 if (isinstance(val_26, (int, float)) and val_26 >= 0.2) or val_26 == '20,00%':
                     righe_da_colorare.append(3 + idx)
@@ -2606,8 +2632,8 @@ def scelta_viste_run():
                 oSheet.getCellRangeByPosition(
                     0, el, 1, el).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
-        # Applica colorazione al foglio CONTABILITA per le voci in eccesso
-        if voci_in_eccesso and oDoc.Sheets.hasByName('CONTABILITA'):
+        # Applica colorazione al foglio CONTABILITA per le voci in eccesso (rosso) o spuntate (verde)
+        if (voci_in_eccesso or voci_spuntate) and oDoc.Sheets.hasByName('CONTABILITA'):
             oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
             contEndRow = SheetUtils.getUsedArea(oSheetCont).EndRow
             if contEndRow > 3:
@@ -2619,11 +2645,18 @@ def scelta_viste_run():
                     if r <= processed_end:
                         continue  # salta righe già dentro una voce colorata
                     art_cont = row_data[0]
-                    if isinstance(art_cont, str) and art_cont in voci_in_eccesso:
-                        sStRange = LeenoComputo.circoscriveVoceComputo(oSheetCont, r)
-                        if sStRange:
-                            sStRange.CellBackColor = int(COLORE_ROSSO_AVVISO)
-                            processed_end = sStRange.RangeAddress.EndRow
+                    if isinstance(art_cont, str):
+                        target_color = None
+                        if art_cont in voci_in_eccesso:
+                            target_color = int(COLORE_ROSSO_AVVISO)
+                        elif art_cont in voci_spuntate:
+                            target_color = int(COLORE_VERDE_SPUNTA)
+
+                        if target_color is not None:
+                            sStRange = LeenoComputo.circoscriveVoceComputo(oSheetCont, r)
+                            if sStRange:
+                                sStRange.CellBackColor = target_color
+                                processed_end = sStRange.RangeAddress.EndRow
 
         # Copia formato da Z2 al range — senza clipboard
         source_cell = oSheet.getCellRangeByName('Z2')
@@ -5308,7 +5341,7 @@ def Copia_riga_Ent(num_righe=None):
             num_righe = 1
 
     # Validazione parametro
-    if not isinstance(num_righe, int) or num_righe < 1:
+    if not isinstance(num_righe, int) or num_righe < 0:
         DLG.chi(f"Numero righe non valido: {num_righe}. Uso valore 1.")
         num_righe = 1
 
@@ -10919,22 +10952,41 @@ def fissa():
     evitando che le prime righe rimangano nascoste.
     '''
     oDoc = LeenoUtils.getDocument()
-    oDoc.CurrentController.freezeAtPosition(0, 0) # Rimuove eventuali blocchi esistenti
+    if not oDoc or not hasattr(oDoc, 'CurrentController'):
+        return
 
-    # Riporta la vista all'inizio per evitare che le righe
-    # rimangano intrappolate sopra l'area di blocco
-    oDoc.CurrentController.setFirstVisibleColumn(0)
-    oDoc.CurrentController.setFirstVisibleRow(0)
+    controller = oDoc.CurrentController
+    
+    # Rimuove eventuali blocchi esistenti e riporta la vista all'inizio
+    # per evitare che le righe rimangano intrappolate sopra l'area di blocco
+    controller.freezeAtPosition(0, 0)
+    controller.setFirstVisibleColumn(0)
+    controller.setFirstVisibleRow(0)
 
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = controller.ActiveSheet
+    if not oSheet:
+        return
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Elenco Prezzi'):
-        # Blocca sopra la riga 3 (quindi righe 0, 1, 2 fissate)
-        oDoc.CurrentController.freezeAtPosition(0, 3)
-    elif oSheet.Name in ('Analisi di Prezzo'):
-        oDoc.CurrentController.freezeAtPosition(0, 2)
-    elif oSheet.Name in ('Registro', 'SAL', 'S2'):
-        oDoc.CurrentController.freezeAtPosition(0, 1)
+    # Mappa dei fogli e relative righe da bloccare
+    # 3: COMPUTO, VARIANTE, CONTABILITA, Elenco Prezzi
+    # 2: Analisi di Prezzo
+    # 1: Registro, SAL, S2
+    sheet_freeze_rows = {
+        'COMPUTO': 3,
+        'VARIANTE': 3,
+        'CONTABILITA': 3,
+        'Elenco Prezzi': 3,
+        'Analisi di Prezzo': 2,
+        'Registro': 1,
+        'SAL': 1,
+        'S2': 1,
+        'Lista 1': 4,
+        'Scorciatoie': 1
+    }
+
+    rows_to_freeze = sheet_freeze_rows.get(oSheet.Name, 0)
+    if rows_to_freeze > 0:
+        controller.freezeAtPosition(0, rows_to_freeze)
 
 ########################################################################
 
@@ -11742,127 +11794,6 @@ def cerca_rosso_mancante():
             else:
                 pass
     return
-@with_undo("Riordina Analisi di Prezzo Alfabetico")
-@LeenoUtils.no_refresh
-########################################################################
-def Main_Riordina_Analisi_Alfabetico():
-    chiudi_dialoghi()
-    with LeenoUtils.DocumentRefreshContext(False):
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.Sheets.getByName("Analisi di Prezzo")
-        lLastUrow = SheetUtils.getLastUsedRow(oSheet) + 1
-
-        # Raccogli tutte le schede con le loro posizioni
-        schede = []  # Lista di tuple: (codice, riga_inizio, riga_fine)
-        i = 0
-        while i <= lLastUrow:
-            cell = oSheet.getCellByPosition(0, i)
-            # Verifica se è l'inizio di una scheda
-            if cell.CellStyle == "An.1v-Att Start":
-                inizio = i
-                # La cella con il codice è sempre la seconda cella (riga successiva)
-                codice = oSheet.getCellByPosition(0, i + 1).String
-                # Trova la fine della scheda (cerca "----")
-                fine = None
-                for x in range(i + 1, lLastUrow + 1):
-                    if oSheet.getCellByPosition(0, x).String == "----":
-                        fine = x
-                        break
-                if fine is None:
-                    msg = f"Errore: scheda '{codice}' non ha riga di fine '----'"
-                    DLG.chi(msg)
-                    return
-                # Verifica doppioni
-                if any(s[0] == codice for s in schede):
-                    msg = f"Mi fermo! Il codice:\n\t\t\t\t\t\t{codice}\nè presente più volte. Correggi e ripeti il comando."
-                    DLG.chi(msg)
-                    return
-                schede.append((codice, inizio, fine))
-                # Salta alla riga dopo la fine
-                i = fine + 1
-            else:
-                i += 1
-
-        if not schede:
-            return
-
-        # Crea una lista ordinata dei codici
-        schede_ordinate = sorted(schede, key=lambda x: x[0])
-
-        # Verifica se le schede sono già in ordine
-        gia_ordinato = True
-        for i in range(len(schede)):
-            if schede[i][0] != schede_ordinate[i][0]:
-                gia_ordinato = False
-                break
-
-        if gia_ordinato:
-            Dialogs.Info(Title = 'Informazione', Text = "Le Analisi di Prezzo sono già in ordine alfabetico.")
-            return
-
-        struttura_off()
-        # Sposta le schede nell'ordine corretto
-        lrowDest = schede[0][1]  # Posizione della prima scheda originale
-
-        for codice_target, _, _ in schede_ordinate:
-            # Trova la scheda nella posizione attuale
-            trovata = False
-            inizio = None
-            fine = None
-
-            for i in range(lrowDest, SheetUtils.getLastUsedRow(oSheet) + 1):
-                cell = oSheet.getCellByPosition(0, i)
-                if cell.CellStyle == "An.1v-Att Start":
-                    # Verifica che sia la scheda giusta controllando il codice
-                    codice_trovato = oSheet.getCellByPosition(0, i + 1).String
-                    if codice_trovato == codice_target:
-                        inizio = i
-                        # Trova la fine
-                        for x in range(i + 1, SheetUtils.getLastUsedRow(oSheet) + 1):
-                            if oSheet.getCellByPosition(0, x).String == "----":
-                                fine = x
-                                trovata = True
-                                break
-                        break
-
-            if not trovata:
-                continue
-
-            # Se la scheda è già nella posizione corretta, aggiorna solo la destinazione
-            if inizio == lrowDest:
-                # Include la riga "Analisi_Sfondo" dopo "----"
-                lrowDest = fine + 2
-                continue
-
-            # Calcola numero di righe (include "----" ma non "Analisi_Sfondo")
-            nrighe = fine - inizio + 1
-
-            # Inserisci spazio per la scheda nella posizione di destinazione
-            oSheet.getRows().insertByIndex(lrowDest, nrighe + 1)  # +1 per "Analisi_Sfondo"
-
-            # Aggiorna la posizione originale
-            inizio += nrighe + 1
-            fine += nrighe + 1
-
-            # Copia la scheda (include "----")
-            selezione = oSheet.getCellRangeByPosition(0, inizio, 250, fine)
-            oDest = oSheet.getCellByPosition(0, lrowDest).CellAddress
-            oSheet.copyRange(oDest, selezione.RangeAddress)
-
-            # Copia la riga "Analisi_Sfondo" se presente
-            if fine + 1 <= SheetUtils.getLastUsedRow(oSheet):
-                riga_sfondo = oSheet.getCellRangeByPosition(0, fine + 1, 250, fine + 1)
-                if oSheet.getCellByPosition(0, fine + 1).CellStyle == "Analisi_Sfondo":
-                    oDest_sfondo = oSheet.getCellByPosition(0, lrowDest + nrighe).CellAddress
-                    oSheet.copyRange(oDest_sfondo, riga_sfondo.RangeAddress)
-
-            # Cancella la vecchia scheda (include "----" e "Analisi_Sfondo")
-            oSheet.getRows().removeByIndex(inizio, nrighe + 1)
-
-            # Aggiorna il punto di inserimento per la prossima scheda
-            lrowDest += nrighe + 1
-        MENU_struttura_on()
-    Menu_adattaAltezzaRiga()
 
 
 ########################################################################

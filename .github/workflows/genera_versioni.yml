@@ -64,12 +64,23 @@ jobs:
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
-          curl -s \
-            -H "Authorization: token ${{ secrets.GH_API_TAGS }}" \
+          TOKEN="${{ secrets.GH_API_TAGS }}"
+          AUTH_HEADER=""
+          if [ -n "$TOKEN" ]; then
+            AUTH_HEADER="-H \"Authorization: token $TOKEN\""
+            echo "DEBUG: Uso token GH_API_TAGS"
+          else
+            echo "DEBUG: Token GH_API_TAGS non trovato, procedo senza autenticazione (potrebbe esserci rate limit)"
+          fi
+          
+          curl -s $AUTH_HEADER \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/giuserpe/leeno/commits?sha=dev&per_page=20" \
             -o commits_raw.json
-          echo "=== Commit recuperati ==="
+          
+          echo "=== Commit recuperati (anteprima) ==="
+          head -n 20 commits_raw.json || echo "File vuoto"
+          
           python3 tools/version/parse_commits.py
 
       - name: Genera file versione

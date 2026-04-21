@@ -169,6 +169,7 @@ class VersionManager:
             commit_rows.append(f"""
             <tr>
                 <td>{c['date']}</td>
+                <td>{c.get('author', 'N/A')}</td>
                 <td><a href="{c['url']}" target="_blank" rel="noopener"><code>{c['sha']}</code></a></td>
                 <td>{c['msg']}</td>
             </tr>""")
@@ -181,6 +182,7 @@ class VersionManager:
         <thead>
             <tr>
                 <th style="width:140px">Data</th>
+                <th style="width:120px">Autore</th>
                 <th style="width:80px">Commit</th>
                 <th>Descrizione</th>
             </tr>
@@ -189,6 +191,10 @@ class VersionManager:
             {"".join(commit_rows)}
         </tbody>
     </table>"""
+        else:
+            commits_section = """
+    <h2>Attività di sviluppo recente</h2>
+    <p><i>Nessun commit recente trovato o errore nel recupero dei dati.</i></p>"""
 
         html = f"""<!DOCTYPE html>
 <html lang="it">
@@ -273,6 +279,7 @@ class VersionManager:
         <h2>Informazioni</h2>
         <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
         <p><strong>Ultima versione:</strong> {version_info['full']}</p>
+        <p><strong>Build Commit:</strong> <code>{version_info['git_sha']}</code></p>
     </div>
 
     <h2>Download disponibili</h2>

@@ -5,6 +5,12 @@ e salva i primi 8 significativi in commits.json.
 """
 import json
 from datetime import datetime, timezone
+import os, sys
+if not os.path.exists('commits_raw.json'):
+    print("commits_raw.json non trovato, skip.")
+    with open('commits.json', 'w') as f:
+        f.write('[]')
+    sys.exit(0)
 
 SKIP_PREFIXES = (
     'chore: aggiorna versions.html',

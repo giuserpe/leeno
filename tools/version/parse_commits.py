@@ -39,8 +39,10 @@ if not isinstance(raw, list):
     sys.exit(0)
 
 commits = []
-for item in raw:
+print(f"DEBUG: Processo {len(raw)} elementi da raw JSON")
+for i, item in enumerate(raw):
     if not isinstance(item, dict):
+        print(f"DEBUG: Elemento {i} non è un dict: {type(item)}")
         continue
         
     commit_data = item.get('commit', {})

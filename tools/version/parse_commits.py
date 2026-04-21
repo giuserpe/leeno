@@ -49,11 +49,9 @@ for i, item in enumerate(raw):
     msg_full = commit_data.get('message', '').strip()
     if not msg_full:
         continue
-        
-    msg = msg_full.splitlines()[0]  # solo prima riga
 
     # Salta commit automatici
-    if any(msg.startswith(p) for p in SKIP_PREFIXES):
+    if any(msg_full.startswith(p) for p in SKIP_PREFIXES):
         continue
 
     sha = item.get('sha', '')[:7]
@@ -70,13 +68,13 @@ for i, item in enumerate(raw):
     author = commit_data.get('author', {}).get('name', 'N/A')
     commits.append({
         'sha': sha,
-        'msg': msg,
+        'msg': msg_full,
         'date': date,
         'url': url,
         'author': author,
     })
 
-    if len(commits) >= 10:
+    if len(commits) >= 3:
         break
 
 with open(JSON_PATH, 'w', encoding='utf-8') as f:

@@ -171,7 +171,7 @@ class VersionManager:
                 <td>{c['date']}</td>
                 <td>{c.get('author', 'N/A')}</td>
                 <td><a href="{c['url']}" target="_blank" rel="noopener"><code>{c['sha']}</code></a></td>
-                <td>{c['msg']}</td>
+                <td><div class="commit-msg">{c['msg']}</div></td>
             </tr>""")
 
         commits_section = ''
@@ -267,6 +267,12 @@ class VersionManager:
         }}
         a {{ color: #0066cc; text-decoration: none; }}
         a:hover {{ text-decoration: underline; }}
+        .commit-msg {{ 
+            white-space: pre-wrap; 
+            font-size: 0.9em; 
+            color: #444;
+            max-width: 600px;
+        }}
         @media (max-width: 768px) {{
             th, td {{ padding: 8px; }}
         }}

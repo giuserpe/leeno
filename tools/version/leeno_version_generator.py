@@ -278,7 +278,6 @@ class VersionManager:
     <div class="info-box">
         <h2>Informazioni</h2>
         <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-        <p><strong>Ultima versione:</strong> {version_info['full']}</p>
         <p><strong>Build Commit:</strong> <code>{version_info['git_sha']}</code></p>
     </div>
 

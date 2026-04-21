@@ -64,22 +64,19 @@ jobs:
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
-          TOKEN="${{ secrets.GH_API_TAGS }}"
-          AUTH_HEADER=""
-          if [ -n "$TOKEN" ]; then
-            AUTH_HEADER="-H \"Authorization: token $TOKEN\""
-            echo "DEBUG: Uso token GH_API_TAGS"
-          else
-            echo "DEBUG: Token GH_API_TAGS non trovato, procedo senza autenticazione (potrebbe esserci rate limit)"
-          fi
+          # Usa GITHUB_TOKEN fornito automaticamente da GitHub Actions
+          AUTH_HEADER="-H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\""
+          
+          echo "DEBUG: Recupero commit per il repository ${{ github.repository }} branch dev"
           
           curl -s $AUTH_HEADER \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/giuserpe/leeno/commits?sha=dev&per_page=20" \
+            "https://api.github.com/repos/${{ github.repository }}/commits?sha=dev&per_page=20" \
             -o commits_raw.json
           
-          echo "=== Commit recuperati (anteprima) ==="
-          head -n 20 commits_raw.json || echo "File vuoto"
+          echo "=== Anteprima risposta API (primi 200 caratteri) ==="
+          head -c 200 commits_raw.json
+          echo -e "\n================================================"
           
           python3 tools/version/parse_commits.py
 

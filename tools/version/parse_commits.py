@@ -17,8 +17,6 @@ if not os.path.exists(RAW_PATH):
     sys.exit(0)
 
 SKIP_PREFIXES = (
-    'chore: aggiorna versions.html',
-    'chore: aggiorna version',
     'Merge branch',
     'merge branch',
 )

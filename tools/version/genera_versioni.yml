@@ -64,13 +64,15 @@ jobs:
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
+          echo "=== Recupero commit dal branch dev ==="
           curl -s \
-            -H "Authorization: token ${{ secrets.GH_API_TAGS }}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/giuserpe/leeno/commits?sha=dev&per_page=20" \
             -o commits_raw.json
-          echo "=== Primi 200 caratteri risposta API ==="
-          head -c 200 commits_raw.json
+          echo "=== Primi 300 caratteri risposta API ==="
+          head -c 300 commits_raw.json
+          echo ""
           python3 tools/version/parse_commits.py
 
       - name: Genera file versione

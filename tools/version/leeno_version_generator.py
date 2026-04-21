@@ -2,13 +2,10 @@
 """
 Script completo per la gestione delle versioni LeenO con archivio .oxt
 """
+import json
 import os
 import re
-import json
 import logging
-import urllib.request
-import urllib.parse
-import urllib.error
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List
@@ -39,13 +36,20 @@ class VersionManager:
         """
         Legge oxt_list.txt generato da parse_webdav.py.
         Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
-          parts[0] = data (YYYY-MM-DD)
-          parts[1] = ora  (HH:MM)
-          parts[2] = dimensione (es. 4.4MB)
-          parts[3] = nome file
+          parts[0] = data, parts[1] = ora, parts[2] = size, parts[3] = nome
+
+        PUBLIC_DOWNLOAD_URL è già nella forma:
+          https://dev.leeno.org/index.php/s/TOKEN/download?path=&files=
+        quindi l'URL finale è semplicemente base_url + nome_file.
         """
         oxt_list = []
-        base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
+        raw_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#')
+        # Normalizza: rimuovi trailing slash solo se NON termina con '='
+        # (se termina con '=' è già pronto per appendere il nome file)
+        if raw_url.endswith('='):
+            base_url = raw_url
+        else:
+            base_url = raw_url.rstrip('/')
 
         try:
             oxt_list_path = os.getenv('OXT_LIST_PATH', '')
@@ -68,7 +72,14 @@ class VersionManager:
                     else:
                         logger.warning(f"Riga non parsabile: {line!r}")
                         continue
-                    url = f"{base_url}/download?path=&files={name}" if base_url else '#'
+                    # URL: se base_url termina con '=' appendi direttamente il nome
+                    # altrimenti aggiungi /download?path=&files=
+                    if base_url.endswith('='):
+                        url = f"{base_url}{name}"
+                    elif base_url:
+                        url = f"{base_url}/download?path=&files={name}"
+                    else:
+                        url = '#'
                     oxt_list.append({
                         'name': name,
                         'size': size,
@@ -89,6 +100,16 @@ class VersionManager:
             'date': datetime.now().strftime('%Y-%m-%d'),
             'url': '#'
         }]
+
+    def _parse_commits(self) -> List[Dict[str, str]]:
+        """Legge commits.json generato da parse_commits.py."""
+        commits_path = os.getenv('COMMITS_PATH', 'commits.json')
+        try:
+            with open(commits_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Impossibile leggere commits.json: {e}")
+            return []
 
     def update_version_files(self, version_info: Dict[str, str]):
         """Genera tutti i file necessari"""
@@ -122,37 +143,62 @@ class VersionManager:
             f.write(content)
 
     def _generate_versions_html(self, version_info: Dict[str, str]):
-        """Genera la pagina HTML con le ultime 5 versioni"""
+        """Genera la pagina HTML con le ultime 5 versioni e gli ultimi commit"""
         oxt_files = self._parse_oxt_list()
+        commits = self._parse_commits()
         now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
-        has_sha256 = any(file.get('sha256') for file in oxt_files)
-
+        # Righe tabella download
         rows = []
         for i, file in enumerate(oxt_files):
             name = file['name']
             badge = '<span class="badge badge-latest">ULTIMA</span>' if i == 0 else ''
             url = file.get('url', '#')
-            sha256_cell = f'<td class="hash">{file.get("sha256", "")}</td>' if has_sha256 else ''
             rows.append(f"""
             <tr>
                 <td>{name} {badge}</td>
                 <td><a href="{url}" download>Scarica</a></td>
-                {sha256_cell}
                 <td>{file['date']}</td>
                 <td>{file['size']}</td>
             </tr>""")
+
+        # Sezione commit
+        commit_rows = []
+        for c in commits:
+            commit_rows.append(f"""
+            <tr>
+                <td>{c['date']}</td>
+                <td><a href="{c['url']}" target="_blank" rel="noopener"><code>{c['sha']}</code></a></td>
+                <td>{c['msg']}</td>
+            </tr>""")
+
+        commits_section = ''
+        if commit_rows:
+            commits_section = f"""
+    <h2>Attività di sviluppo recente</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width:140px">Data</th>
+                <th style="width:80px">Commit</th>
+                <th>Descrizione</th>
+            </tr>
+        </thead>
+        <tbody>
+            {"".join(commit_rows)}
+        </tbody>
+    </table>"""
 
         html = f"""<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="utf-8">
-    <title>Versioni Nightly Builds LeenO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <title>Versioni Nightly Builds LeenO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {{
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -191,10 +237,12 @@ class VersionManager:
         }}
         tr:nth-child(even) {{ background-color: #f2f2f2; }}
         tr:hover {{ background-color: #e9f7fe; }}
-        .hash {{
+        code {{
             font-family: monospace;
-            font-size: 0.85em;
-            word-break: break-all;
+            font-size: 0.9em;
+            background: #eef;
+            padding: 1px 5px;
+            border-radius: 3px;
         }}
         .badge {{
             display: inline-block;
@@ -223,8 +271,8 @@ class VersionManager:
 
     <div class="info-box">
         <h2>Informazioni</h2>
-        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.
-        ATTENZIONE: le versioni di sviluppo non sono destinate alla produzione e possono causare la perdita di dati!</p>
+        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p><strong>Ultima versione:</strong> {version_info['full']}</p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -233,7 +281,6 @@ class VersionManager:
             <tr>
                 <th>Versione</th>
                 <th>Download</th>
-                {"<th>SHA256</th>" if has_sha256 else ""}
                 <th>Data</th>
                 <th>Dimensione</th>
             </tr>
@@ -242,7 +289,7 @@ class VersionManager:
             {"".join(rows)}
         </tbody>
     </table>
-
+    {commits_section}
     <div class="footer">
         <p>Generato automaticamente il {now_utc} UTC</p>
         <p>Server: {base_url}</p>
@@ -252,43 +299,6 @@ class VersionManager:
 """
         with open(self.web_dir / 'versions.html', 'w', encoding='utf-8') as f:
             f.write(html)
-
-
-def send_telegram_notification(version_string: str):
-    """Invia notifica al canale Telegram @LeenoChannel"""
-    bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '')
-    chat_id = os.getenv('TELEGRAM_CHAT_ID', '@LeenoChannel')
-
-    if not bot_token:
-        logger.warning("TELEGRAM_BOT_TOKEN non impostato, notifica Telegram saltata")
-        return
-
-    message = (
-        f"\U0001f4e6 *Nuova versione di sviluppo disponibile*\n\n"
-        f"`{version_string}`\n\n"
-        f"\U0001f517 [Scarica le versioni di sviluppo](https://leeno.org/versioni-sviluppo/)"
-    )
-
-    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-    data = urllib.parse.urlencode({
-        'chat_id': chat_id,
-        'text': message,
-        'parse_mode': 'Markdown',
-        'disable_web_page_preview': 'false',
-    }).encode('utf-8')
-
-    try:
-        req = urllib.request.Request(url, data=data)
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            result = json.loads(resp.read().decode('utf-8'))
-            if result.get('ok'):
-                logger.info("Notifica Telegram inviata con successo")
-            else:
-                logger.warning(f"Risposta Telegram non ok: {result}")
-    except urllib.error.URLError as e:
-        logger.warning(f"Errore invio notifica Telegram: {e}")
-    except Exception as e:
-        logger.warning(f"Errore imprevisto notifica Telegram: {e}")
 
 
 def main():
@@ -317,8 +327,6 @@ def main():
 
         vm.update_version_files(new_version)
         logger.info(f"Versione generata: {new_version['full']}")
-
-        send_telegram_notification(new_version['full'])
 
     except Exception as e:
         logger.critical(f"Errore: {str(e)}")

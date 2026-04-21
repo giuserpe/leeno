@@ -61,15 +61,25 @@ jobs:
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
 
+      - name: Recupera ultimi commit da GitHub API
+        run: |
+          curl -s \
+            -H "Authorization: token ${{ secrets.GH_API_TAGS }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/giuserpe/leeno/commits?sha=dev&per_page=20" \
+            -o commits_raw.json
+          echo "=== Commit recuperati ==="
+          python3 tools/version/parse_commits.py
+
       - name: Genera file versione
         run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
+          COMMITS_PATH: ${{ github.workspace }}/commits.json
           OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
-          TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}"
 
       - name: Verifica output
         run: |

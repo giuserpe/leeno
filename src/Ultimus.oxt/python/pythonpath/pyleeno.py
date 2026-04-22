@@ -5389,7 +5389,7 @@ def Copia_riga_Ent(num_righe=None):
             return None
 
         # Aggiorna altezza ultima riga inserita
-        oSheet.getCellRangeByPosition(0, lrow, 48, lrow).Rows.OptimalHeight = True
+        oSheet.getCellRangeByPosition(0, lrow +1, 48, lrow +1).Rows.OptimalHeight = True
 
     elif nome_sheet == "Elenco Prezzi":
         MENU_nuova_voce_scelta()
@@ -8821,15 +8821,29 @@ def autoexec_off():
             pass
 
 ########################################################################
+utsave = None
+
+
 class trun(threading.Thread):
     '''Avvia processi automatici ad intervalli definiti di tempo'''
     def __init__(self):
         threading.Thread.__init__(self)
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        self._stop_event.set()
 
     def run(self):
-        while True:
-            minuti = 60 * int(cfg.read('Generale', 'pausa_backup'))
-            time.sleep(minuti)
+        while not self._stop_event.is_set():
+            try:
+                minuti_conf = cfg.read('Generale', 'pausa_backup')
+                minuti = 60 * int(minuti_conf) if minuti_conf else 600
+            except:
+                minuti = 600
+
+            # Attende 'minuti' secondi o finché l'evento di stop non viene impostato
+            if self._stop_event.wait(minuti):
+                break
             bak()
 
 
@@ -8837,15 +8851,17 @@ def autorun():
     '''
     @@ DA DOCUMENTARE
     '''
-    # global utsave
+    global utsave
     if int(cfg.read('Generale', 'copie_backup')) != 0:
+        if utsave and utsave.is_alive():
+            utsave.stop()
         utsave = trun()
-        utsave._stop()
         utsave.start()
     else:
         try:
-            utsave._stop()
-            utsave = False
+            if utsave and utsave.is_alive():
+                utsave.stop()
+            utsave = None
         except:
             pass
 
@@ -12281,6 +12297,9 @@ import LeenoTheme
 
 
 def MENU_debug():
+    import app_bridge
+    app_bridge.autocad("1_2_3_4_via Lucrezio_contabili di lavoro.dwg", "ADD")
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('CONTABILITA')
     LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=True)

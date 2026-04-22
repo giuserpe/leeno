@@ -7,7 +7,7 @@ import os
 import re
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 
 logging.basicConfig(
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class VersionManager:
     VERSION_PATTERN = re.compile(
-        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)-(?P<type>STABLE|TESTING)-(?P<date>\d{8})$'
+        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?:\.(?P<build>\d+))?(?:-(?P<type>STABLE|TESTING))?-(?P<date>\d{8})$'
     )
 
     def __init__(self, repo_root: Path):
@@ -146,7 +146,7 @@ class VersionManager:
         """Genera la pagina HTML con le ultime 5 versioni e gli ultimi commit"""
         oxt_files = self._parse_oxt_list()
         commits = self._parse_commits()
-        now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
+        now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
         # Righe tabella download
@@ -327,14 +327,14 @@ def main():
             raise ValueError(f"Formato versione non valido: {current_version}")
 
         new_version = {
-            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build'))}-{match.group('type')}-{datetime.now().strftime('%Y%m%d')}",
+            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build') or '0')}-{match.group('type') or 'STABLE'}-{datetime.now().strftime('%Y%m%d')}",
             'major': match.group('major'),
             'minor': match.group('minor'),
             'patch': match.group('patch'),
-            'build_number': os.getenv('BUILD_NUMBER', match.group('build')),
+            'build_number': os.getenv('BUILD_NUMBER', match.group('build') or '0'),
             'build_date': datetime.now().strftime('%Y-%m-%d'),
             'git_sha': os.getenv('GITHUB_SHA', 'local')[:7],
-            'type': match.group('type')
+            'type': match.group('type') or 'STABLE'
         }
 
         vm.update_version_files(new_version)

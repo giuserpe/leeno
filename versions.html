@@ -86,7 +86,7 @@
     <div class="info-box">
         <h2>Informazioni</h2>
         <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-        <p><strong>Build Commit:</strong> <code>49d4e42</code></p>
+        <p><strong>Build Commit:</strong> <code>5ea103b</code></p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -102,7 +102,21 @@
         <tbody>
             
             <tr>
-                <td>LeenO-3.25.0.30-TESTING-20260421.oxt <span class="badge badge-latest">ULTIMA</span></td>
+                <td>LeenO-3.25.0.32-TESTING-20260422.oxt <span class="badge badge-latest">ULTIMA</span></td>
+                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.32-TESTING-20260422.oxt" download>Scarica</a></td>
+                <td>2026-04-22 21:56</td>
+                <td>4.5MB</td>
+            </tr>
+            <tr>
+                <td>LeenO-3.25.0.31-TESTING-20260422.oxt </td>
+                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.31-TESTING-20260422.oxt" download>Scarica</a></td>
+                <td>2026-04-22 21:38</td>
+                <td>4.5MB</td>
+            </tr>
+            <tr>
+                <td>LeenO-3.25.0.30-TESTING-20260421.oxt </td>
                 <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 /download?path=&files=LeenO-3.25.0.30-TESTING-20260421.oxt" download>Scarica</a></td>
                 <td>2026-04-21 19:16</td>
@@ -122,20 +136,6 @@
                 <td>2026-04-16 07:05</td>
                 <td>4.5MB</td>
             </tr>
-            <tr>
-                <td>LeenO-3.25.0.27-TESTING-20260415.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.27-TESTING-20260415.oxt" download>Scarica</a></td>
-                <td>2026-04-15 16:58</td>
-                <td>4.5MB</td>
-            </tr>
-            <tr>
-                <td>LeenO-3.25.0.26-TESTING-20260415.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.26-TESTING-20260415.oxt" download>Scarica</a></td>
-                <td>2026-04-15 11:51</td>
-                <td>4.5MB</td>
-            </tr>
         </tbody>
     </table>
     
@@ -152,44 +152,31 @@
         <tbody>
             
             <tr>
-                <td>2026-04-21 20:49</td>
+                <td>2026-04-22 21:58</td>
                 <td>giuseppe vizziello</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/49d4e42b07b247a140236f989ae07683fdd6d9ee" target="_blank" rel="noopener"><code>49d4e42</code></a></td>
-                <td><div class="commit-msg">chore(version): migliora rendering messaggi commit e semplifica parser
+                <td><a href="https://github.com/giuserpe/leeno/commit/5ea103b1515b69b09857eead7f7dec6dd4294d6a" target="_blank" rel="noopener"><code>5ea103b</code></a></td>
+                <td><div class="commit-msg">chore(meta): bump versione a 3.25.0.32-TESTING-20260422
 
-- Avvolge il messaggio commit in <div class="commit-msg"> per layout più leggibile
-- Aggiunge stile dedicato (pre‑wrap, max‑width, colore testo)
-- Usa msg_full completo invece della sola prima riga
-- Riduce limite commit mostrati da 10 a 3
-- Rimuove split superfluo e semplifica logica di filtraggio</div></td>
+Aggiorna il numero di build a 32 e allinea le informazioni di versione in tutti i file generati.</div></td>
             </tr>
             <tr>
-                <td>2026-04-21 20:40</td>
+                <td>2026-04-22 21:55</td>
                 <td>giuseppe vizziello</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e7a4a4fc0b00912cff300a75ea728f08c603ec34" target="_blank" rel="noopener"><code>e7a4a4f</code></a></td>
-                <td><div class="commit-msg">chore(ci): migliora recupero commit e aggiunge log diagnostici
+                <td><a href="https://github.com/giuserpe/leeno/commit/56314495f454b11fc3658f7f4c77e85fc04022cd" target="_blank" rel="noopener"><code>5631449</code></a></td>
+                <td><div class="commit-msg">chore(meta): rende flessibile il parsing della versione nel generatore
 
-- Usa GITHUB_TOKEN con curl -L per seguire redirect API
-- Riduce anteprima JSON a 100 caratteri per log più pulito
-- Aggiunge messaggi DEBUG e separatori leggibili nel workflow
-- Estende parse_commits.py con log sul numero di elementi processati
-- Registra elementi non‑dict per facilitare il debugging</div></td>
+Permette la gestione di versioni senza numero di build o tipo (es. versioni stable). Corregge anche un DeprecationWarning per datetime.utcnow.</div></td>
             </tr>
             <tr>
-                <td>2026-04-21 20:35</td>
+                <td>2026-04-22 21:43</td>
                 <td>giuseppe vizziello</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1aca3e0bed3cdedf8517aac0e29528ddb75cf1cf" target="_blank" rel="noopener"><code>1aca3e0</code></a></td>
-                <td><div class="commit-msg">chore(ci): semplifica recupero commit e pulisce filtri parser
-
-- Usa GITHUB_TOKEN per autenticazione API GitHub nel workflow
-- Migliora log di debug e anteprima risposta API
-- Rimuove prefissi superflui da SKIP_PREFIXES in parse_commits.py
-- Elimina visualizzazione “Ultima versione” da versions.html</div></td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d8d5f74c2c5ab48376bd13e626a6cb96f94cf2c1" target="_blank" rel="noopener"><code>d8d5f74</code></a></td>
+                <td><div class="commit-msg">chore(meta): bump versione a 3.25.0.31-TESTING-20260422</div></td>
             </tr>
         </tbody>
     </table>
     <div class="footer">
-        <p>Generato automaticamente il 2026-04-21 20:49 UTC</p>
+        <p>Generato automaticamente il 2026-04-22 22:06 UTC</p>
         <p>Server: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 </p>
     </div>

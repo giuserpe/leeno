@@ -13,7 +13,9 @@ Esempio_LeenO.ods
 icons/Thumbs.db
 
 src/Ultimus.oxt/python/pythonpath/.eric6project/
- 
+src/Ultimus.oxt/python/pythonpath/.agent/skills/syllabus-auto/
+.agent/skills/syllabus-auto/
+.agent/*.ffs_db
 __pycache__/
 *.py[cod]
 

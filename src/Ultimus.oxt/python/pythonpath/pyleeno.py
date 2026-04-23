@@ -838,6 +838,8 @@ def avvia_IDE():
         pass
 
     dest = LeenoGlobals.dest()
+    if 'giuserpe' in os.getlogin():
+        dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno'
 
     # apri_con_editor(f'{dest}/python/pythonpath', 1)
     apri_con_editor(f'{dest}', 1)

@@ -79,7 +79,7 @@ jobs:
           python3 tools/version/parse_commits.py
 
       - name: Genera file versione
-        run: python tools/version/leeno_version_generator.py
+        run: python3 tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}

@@ -65,6 +65,8 @@ def autocad(nome_finestra, comando):
     Argomenti:
         nome_finestra (str): parte del titolo della finestra.
         comando (str): comando AutoCAD da inviare.
+    Esempio:
+        autocad("1_2_3_4_via Lucrezio_contabili di lavoro.dwg", "ADD")
     """
     hwnd = trova_autocad(nome_finestra)
     if attiva_finestra(hwnd):

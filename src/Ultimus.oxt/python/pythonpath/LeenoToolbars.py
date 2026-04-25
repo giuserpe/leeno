@@ -120,7 +120,8 @@ def Vedi(arg=None):
         # DLG.chi(f"checkpoint 6 (dopo toolbar sheet): {time.time()-t0:.3f}s")
 
     except Exception as e:
-        DLG.chi(f"Eccezione nel blocco toolbar: {e} — a {time.time()-t0:.3f}s")
+        # DLG.chi(f"Eccezione nel blocco toolbar: {e} — a {time.time()-t0:.3f}s")
+        pass
 
     # DLG.chi(f"checkpoint 7 (prima di PL.dp): {time.time()-t0:.3f}s")
     PL.dp()

@@ -752,46 +752,59 @@ def adattaAltezzaRiga(oSheet=False, all=False):
 
     try:
         # --- INIZIALIZZAZIONE VELOCE ---
-
         oDoc = LeenoUtils.getDocument()
         oSheet = oSheet or oDoc.CurrentController.ActiveSheet
         usedArea = SheetUtils.getUsedArea(oSheet)
-        versione_lo = float(PL.loVersion()[:5].replace('.', ''))  # Chiamata UNICA
+        versione_lo = float(PL.loVersion()[:5].replace('.', ''))
 
-        # --- OPERAZIONE PRINCIPALE (velocizzata) ---
+        # --- GESTIONE PROTEZIONE ---
+        # Essenziale per fogli di contabilità che sono protetti di default
+        is_protected = oSheet.isProtected()
+        if is_protected:
+            oSheet.unprotect("") # Password standard LeenO (vuota)
+
+        # --- OPERAZIONE PRINCIPALE ---
         oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
 
-        # --- CASI SPECIALI (ottimizzati) ---
+        # --- CASI SPECIALI ---
         if oSheet.Name in FOGLI_SPECIALI:
-            # Imposta altezza fissa per riga speciale
             oSheet.getCellByPosition(0, RIGA_SPECIALE).Rows.Height = ALTEZZA_SPECIALE
 
-            # Ottimizzazione per 'Elenco Prezzi': evita loop se non necessario
-            if oSheet.Name == 'Elenco Prezzi' and usedArea.EndRow > 0:
-                oSheet.Rows.OptimalHeight = True  # Già fatto sopra, ma ripetuto per sicurezza
-
-        # --- GESTIONE VERSIONI LO (5.4.2 - 6.4.1) ---
+        # --- GESTIONE VERSIONI LO (Workaround per bug storici) ---
         if 520 < versione_lo < 642:
-            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")  # Prende gli stili UNA volta
+            cell_styles = oDoc.StyleFamilies.getByName("CellStyles")
             for stile in STILI_CELLA:
                 try:
                     cell_styles.getByName(stile).IsTextWrapped = True
                 except Exception:
-                    continue  # Ignora stili mancanti senza log (più veloce)
+                    continue
 
-            # Ottimizzazione: usa 'getCellRangeByPosition' solo per righe con stili speciali
+        # --- LOGICA DI ADATTAMENTO COMPLETO (Iterativo) ---
+        # Viene eseguito se richiesto esplicitamente (all=True)
+        # o se siamo in versioni LO che richiedono forzatura rigo per rigo
+        if all or (520 < versione_lo < 642):
             if all:
-
+                # Loop su tutta l'area usata per le righe che hanno stili con testo a capo
                 for y in range(0, usedArea.EndRow + 1):
                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
-                        oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+                        oSheet.getRows().getByIndex(y).OptimalHeight = True
             else:
+                # Solo intorno alla riga corrente
                 oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
 
+        # --- RIPRISTINO PROTEZIONE ---
+        if is_protected:
+            oSheet.protect("")
+
     except Exception as e:
-        DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")  # Log essenziale
-        raise  # Rilancia per gestione esterna
-    LeenoUtils.DocumentRefresh(True)
+        # Tenta di ripristinare la protezione anche in caso di errore
+        try:
+            if is_protected and not oSheet.isProtected():
+                oSheet.protect("")
+        except:
+            pass
+        DLG.chi(f"Errore in adattaAltezzaRiga: {str(e)}")
+        raise
 # ###############################################################
 
 
@@ -987,16 +1000,18 @@ def invertiUnSegno(oSheet, lrow):
         formula2 = oSheet.getCellByPosition(11, lrow).Formula
         oSheet.getCellByPosition(11, lrow).Formula = formula1
         oSheet.getCellByPosition(9, lrow).Formula = formula2
-        if oSheet.getCellByPosition(11, lrow).String != '':
-            for x in range(2, 12):
-                oSheet.getCellByPosition(
-                    x, lrow).CellStyle = oSheet.getCellByPosition(
-                        x, lrow).CellStyle + ' ROSSO'
-        else:
-            for x in range(2, 12):
-                oSheet.getCellByPosition(
-                    x, lrow).CellStyle = oSheet.getCellByPosition(
-                        x, lrow).CellStyle.split(' ROSSO')[0]
+        
+        # Gestione stili
+        is_negative = oSheet.getCellByPosition(11, lrow).String != ''
+        for x in range(2, 12):
+            cell = oSheet.getCellByPosition(x, lrow)
+            curr_style = cell.CellStyle
+            if is_negative:
+                if ' ROSSO' not in curr_style:
+                    cell.CellStyle = curr_style + ' ROSSO'
+            else:
+                if ' ROSSO' in curr_style:
+                    cell.CellStyle = curr_style.replace(' ROSSO', '')
 
 
 # ###############################################################

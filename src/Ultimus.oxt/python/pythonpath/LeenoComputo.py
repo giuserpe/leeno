@@ -11,7 +11,7 @@ import Dialogs
 
 import LeenoDialogs as DLG
 
-import pyleeno as PL
+import pyleeno as PL  #  RIMOSSO PER EVITARE IMPORT CIRCOLARE
 
 
 def datiVoceComputo(oSheet, lrow):
@@ -176,6 +176,104 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
     else:
         end_offset = -2 if oSheet.Name == 'CONTABILITA' else -1
         return oSheet.getCellRangeByPosition(2, start_row + 2, 8, end_row + end_offset)
+
+
+import uno
+import unohelper
+from com.sun.star.frame import XStatusListener
+
+class ColorStatusListener(unohelper.Base, XStatusListener):
+    def __init__(self):
+        self.color = None
+        self.called = False
+    def statusChanged(self, event):
+        # Il valore del colore è spesso contenuto in event.State
+        # Per .uno:BackgroundColor, se caricato, è un valore intero RGB
+        if hasattr(event, "State"):
+            self.color = event.State
+        self.called = True
+    def disposing(self, event):
+        pass
+
+def get_bucket_color_registry_file():
+    """
+    Legge il colore direttamente dal file registrymodifications.xcu.
+    Metodo suggerito dall'utente per la massima precisione e persistenza.
+    """
+    try:
+        import unohelper
+        import re
+        import os
+        
+        # 1. Recupera il percorso del profilo utente in modo generico
+        ctx = uno.getComponentContext()
+        ps = ctx.ServiceManager.createInstanceWithContext("com.sun.star.util.PathSettings", ctx)
+        user_config_path = unohelper.fileUrlToSystemPath(ps.UserConfig)
+        
+        # Il file è nella cartella 'user', che è il genitore di 'config' (ps.UserConfig)
+        user_dir = os.path.dirname(user_config_path)
+        reg_path = os.path.join(user_dir, "registrymodifications.xcu")
+        
+        if not os.path.exists(reg_path):
+            return None
+            
+        # 2. Cerchiamo la riga specifica nel file XML
+        # Usiamo una ricerca testuale semplice per velocità, dato che il file può essere enorme
+        target_path = '/org.openoffice.Office.Common/UserColors'
+        target_prop = 'RecentColor'
+        
+        # Leggiamo il file a blocchi per sicurezza (evita di caricare tutto se non ci sono newline)
+        with open(reg_path, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read() # Registrymodifications di solito è tra 1 e 10 MB, accettabile
+            
+            # Regex per trovare il valore nel nodo UserColors
+            pattern = fr'oor:path="{target_path}".*?oor:name="{target_prop}".*?<value>(.*?)</value>'
+            match = re.search(pattern, content)
+            
+            if match:
+                recent_str = match.group(1)
+                colors = recent_str.strip().split(" ")
+                if colors:
+                    return int(colors[0])
+                    
+    except Exception as e:
+        # DLG.chi(f"Errore lettura file registro: {e}")
+        pass
+    return None
+
+
+def colora_voce(oSheet, lrow, color=None):
+    """
+    Colora l'intera voce corrente con il colore specificato.
+    Se color è None, lo legge direttamente dal file di registro (metodo ultra-robusto).
+    """
+    # 1. Recupero colore via Lettura Diretta File Registro (.xcu)
+    if color is None:
+        color = get_bucket_color_registry_file()
+
+    # 2. Se non abbiamo ancora un colore, fallback su selezione (per sicurezza)
+    if color is None:
+        oDoc = LeenoUtils.getDocument()
+        oSel = oDoc.CurrentController.getSelection()
+        try:
+             target_cell = oSel if not hasattr(oSel, "getCellByPosition") else oSel.getCellByPosition(0, 0)
+             color = target_cell.CellBackColor
+        except:
+             pass
+
+    # 3. Individua l'intero range della voce
+    sStRange = None
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        sStRange = circoscriveVoceComputo(oSheet, lrow)
+    elif oSheet.Name == 'Analisi di Prezzo':
+        import LeenoAnalysis as LA
+        sStRange = LA.circoscriveAnalisi(oSheet, lrow)
+
+    if not sStRange: return
+
+    # 4. Applica il colore a tutta la voce
+    if color is not None:
+        sStRange.CellBackColor = int(color)
 
 
 

@@ -64,22 +64,19 @@ jobs:
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
-          echo "DEBUG: Recupero commit per ${{ github.repository }} (branch dev)"
-          
-          curl -s -L \
+          echo "=== Recupero commit dal branch dev ==="
+          curl -s \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/commits?sha=dev&per_page=20" \
+            "https://api.github.com/repos/giuserpe/leeno/commits?sha=dev&per_page=20" \
             -o commits_raw.json
-          
-          echo "=== Anteprima commits_raw.json (primi 100 char) ==="
-          head -c 100 commits_raw.json
-          echo -e "\n------------------------------------------------"
-          
+          echo "=== Primi 300 caratteri risposta API ==="
+          head -c 300 commits_raw.json
+          echo ""
           python3 tools/version/parse_commits.py
 
       - name: Genera file versione
-        run: python3 tools/version/leeno_version_generator.py
+        run: python tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}

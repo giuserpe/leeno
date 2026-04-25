@@ -2,11 +2,12 @@
 """
 Script completo per la gestione delle versioni LeenO con archivio .oxt
 """
+import json
 import os
 import re
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 
 logging.basicConfig(
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class VersionManager:
     VERSION_PATTERN = re.compile(
-        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)-(?P<type>STABLE|TESTING)-(?P<date>\d{8})$'
+        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?:\.(?P<build>\d+))?(?:-(?P<type>STABLE|TESTING))?-(?P<date>\d{8})$'
     )
 
     def __init__(self, repo_root: Path):
@@ -35,13 +36,20 @@ class VersionManager:
         """
         Legge oxt_list.txt generato da parse_webdav.py.
         Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
-          parts[0] = data (YYYY-MM-DD)
-          parts[1] = ora  (HH:MM)
-          parts[2] = dimensione (es. 4.4MB)
-          parts[3] = nome file
+          parts[0] = data, parts[1] = ora, parts[2] = size, parts[3] = nome
+
+        PUBLIC_DOWNLOAD_URL è già nella forma:
+          https://dev.leeno.org/index.php/s/TOKEN/download?path=&files=
+        quindi l'URL finale è semplicemente base_url + nome_file.
         """
         oxt_list = []
-        base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
+        raw_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#')
+        # Normalizza: rimuovi trailing slash solo se NON termina con '='
+        # (se termina con '=' è già pronto per appendere il nome file)
+        if raw_url.endswith('='):
+            base_url = raw_url
+        else:
+            base_url = raw_url.rstrip('/')
 
         try:
             oxt_list_path = os.getenv('OXT_LIST_PATH', '')
@@ -64,7 +72,14 @@ class VersionManager:
                     else:
                         logger.warning(f"Riga non parsabile: {line!r}")
                         continue
-                    url = f"{base_url}/download?path=&files={name}" if base_url else '#'
+                    # URL: se base_url termina con '=' appendi direttamente il nome
+                    # altrimenti aggiungi /download?path=&files=
+                    if base_url.endswith('='):
+                        url = f"{base_url}{name}"
+                    elif base_url:
+                        url = f"{base_url}/download?path=&files={name}"
+                    else:
+                        url = '#'
                     oxt_list.append({
                         'name': name,
                         'size': size,
@@ -85,6 +100,16 @@ class VersionManager:
             'date': datetime.now().strftime('%Y-%m-%d'),
             'url': '#'
         }]
+
+    def _parse_commits(self) -> List[Dict[str, str]]:
+        """Legge commits.json generato da parse_commits.py."""
+        commits_path = os.getenv('COMMITS_PATH', 'commits.json')
+        try:
+            with open(commits_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Impossibile leggere commits.json: {e}")
+            return []
 
     def update_version_files(self, version_info: Dict[str, str]):
         """Genera tutti i file necessari"""
@@ -118,37 +143,68 @@ class VersionManager:
             f.write(content)
 
     def _generate_versions_html(self, version_info: Dict[str, str]):
-        """Genera la pagina HTML con le ultime 5 versioni"""
+        """Genera la pagina HTML con le ultime 5 versioni e gli ultimi commit"""
         oxt_files = self._parse_oxt_list()
-        now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
+        commits = self._parse_commits()
+        now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
-        has_sha256 = any(file.get('sha256') for file in oxt_files)
-
+        # Righe tabella download
         rows = []
         for i, file in enumerate(oxt_files):
             name = file['name']
             badge = '<span class="badge badge-latest">ULTIMA</span>' if i == 0 else ''
             url = file.get('url', '#')
-            sha256_cell = f'<td class="hash">{file.get("sha256", "")}</td>' if has_sha256 else ''
             rows.append(f"""
             <tr>
                 <td>{name} {badge}</td>
                 <td><a href="{url}" download>Scarica</a></td>
-                {sha256_cell}
                 <td>{file['date']}</td>
                 <td>{file['size']}</td>
             </tr>""")
+
+        # Sezione commit
+        commit_rows = []
+        for c in commits:
+            commit_rows.append(f"""
+            <tr>
+                <td>{c['date']}</td>
+                <td>{c.get('author', 'N/A')}</td>
+                <td><a href="{c['url']}" target="_blank" rel="noopener"><code>{c['sha']}</code></a></td>
+                <td><div class="commit-msg">{c['msg']}</div></td>
+            </tr>""")
+
+        commits_section = ''
+        if commit_rows:
+            commits_section = f"""
+    <h2>Attività di sviluppo recente</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width:140px">Data</th>
+                <th style="width:120px">Autore</th>
+                <th style="width:80px">Commit</th>
+                <th>Descrizione</th>
+            </tr>
+        </thead>
+        <tbody>
+            {"".join(commit_rows)}
+        </tbody>
+    </table>"""
+        else:
+            commits_section = """
+    <h2>Attività di sviluppo recente</h2>
+    <p><i>Nessun commit recente trovato o errore nel recupero dei dati.</i></p>"""
 
         html = f"""<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="utf-8">
-    <title>Versioni Nightly Builds LeenO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <title>Versioni Nightly Builds LeenO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {{
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -187,10 +243,12 @@ class VersionManager:
         }}
         tr:nth-child(even) {{ background-color: #f2f2f2; }}
         tr:hover {{ background-color: #e9f7fe; }}
-        .hash {{
+        code {{
             font-family: monospace;
-            font-size: 0.85em;
-            word-break: break-all;
+            font-size: 0.9em;
+            background: #eef;
+            padding: 1px 5px;
+            border-radius: 3px;
         }}
         .badge {{
             display: inline-block;
@@ -209,6 +267,12 @@ class VersionManager:
         }}
         a {{ color: #0066cc; text-decoration: none; }}
         a:hover {{ text-decoration: underline; }}
+        .commit-msg {{ 
+            white-space: pre-wrap; 
+            font-size: 0.9em; 
+            color: #444;
+            max-width: 600px;
+        }}
         @media (max-width: 768px) {{
             th, td {{ padding: 8px; }}
         }}
@@ -219,8 +283,8 @@ class VersionManager:
 
     <div class="info-box">
         <h2>Informazioni</h2>
-        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.
-        ATTENZIONE: le versioni di sviluppo non sono destinate alla produzione e possono causare la perdita di dati!</p>
+        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p><strong>Build Commit:</strong> <code>{version_info['git_sha']}</code></p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -229,7 +293,6 @@ class VersionManager:
             <tr>
                 <th>Versione</th>
                 <th>Download</th>
-                {"<th>SHA256</th>" if has_sha256 else ""}
                 <th>Data</th>
                 <th>Dimensione</th>
             </tr>
@@ -238,7 +301,7 @@ class VersionManager:
             {"".join(rows)}
         </tbody>
     </table>
-
+    {commits_section}
     <div class="footer">
         <p>Generato automaticamente il {now_utc} UTC</p>
         <p>Server: {base_url}</p>
@@ -264,14 +327,14 @@ def main():
             raise ValueError(f"Formato versione non valido: {current_version}")
 
         new_version = {
-            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build'))}-{match.group('type')}-{datetime.now().strftime('%Y%m%d')}",
+            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build') or '0')}-{match.group('type') or 'STABLE'}-{datetime.now().strftime('%Y%m%d')}",
             'major': match.group('major'),
             'minor': match.group('minor'),
             'patch': match.group('patch'),
-            'build_number': os.getenv('BUILD_NUMBER', match.group('build')),
+            'build_number': os.getenv('BUILD_NUMBER', match.group('build') or '0'),
             'build_date': datetime.now().strftime('%Y-%m-%d'),
             'git_sha': os.getenv('GITHUB_SHA', 'local')[:7],
-            'type': match.group('type')
+            'type': match.group('type') or 'STABLE'
         }
 
         vm.update_version_files(new_version)

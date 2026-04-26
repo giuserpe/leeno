@@ -7,7 +7,7 @@ import os
 import re
 import logging
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Dict, List
 
 logging.basicConfig(
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class VersionManager:
     VERSION_PATTERN = re.compile(
-        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?:\.(?P<build>\d+))?(?:-(?P<type>STABLE|TESTING))?-(?P<date>\d{8})$'
+        r'^LeenO-(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\.(?P<build>\d+)-(?P<type>STABLE|TESTING)-(?P<date>\d{8})$'
     )
 
     def __init__(self, repo_root: Path):
@@ -36,20 +36,10 @@ class VersionManager:
         """
         Legge oxt_list.txt generato da parse_webdav.py.
         Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
-          parts[0] = data, parts[1] = ora, parts[2] = size, parts[3] = nome
-
-        PUBLIC_DOWNLOAD_URL è già nella forma:
-          https://dev.leeno.org/index.php/s/TOKEN/download?path=&files=
-        quindi l'URL finale è semplicemente base_url + nome_file.
         """
         oxt_list = []
         raw_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#')
-        # Normalizza: rimuovi trailing slash solo se NON termina con '='
-        # (se termina con '=' è già pronto per appendere il nome file)
-        if raw_url.endswith('='):
-            base_url = raw_url
-        else:
-            base_url = raw_url.rstrip('/')
+        base_url = raw_url if raw_url.endswith('=') else raw_url.rstrip('/')
 
         try:
             oxt_list_path = os.getenv('OXT_LIST_PATH', '')
@@ -72,8 +62,6 @@ class VersionManager:
                     else:
                         logger.warning(f"Riga non parsabile: {line!r}")
                         continue
-                    # URL: se base_url termina con '=' appendi direttamente il nome
-                    # altrimenti aggiungi /download?path=&files=
                     if base_url.endswith('='):
                         url = f"{base_url}{name}"
                     elif base_url:
@@ -146,7 +134,7 @@ class VersionManager:
         """Genera la pagina HTML con le ultime 5 versioni e gli ultimi commit"""
         oxt_files = self._parse_oxt_list()
         commits = self._parse_commits()
-        now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')
+        now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
         base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
 
         # Righe tabella download
@@ -164,26 +152,22 @@ class VersionManager:
             </tr>""")
 
         # Sezione commit
-        commit_rows = []
-        for c in commits:
-            commit_rows.append(f"""
+        if commits:
+            commit_rows = []
+            for c in commits:
+                commit_rows.append(f"""
             <tr>
                 <td>{c['date']}</td>
-                <td>{c.get('author', 'N/A')}</td>
                 <td><a href="{c['url']}" target="_blank" rel="noopener"><code>{c['sha']}</code></a></td>
-                <td><div class="commit-msg">{c['msg']}</div></td>
+                <td class="commit-msg">{c['msg']}</td>
             </tr>""")
-
-        commits_section = ''
-        if commit_rows:
             commits_section = f"""
     <h2>Attività di sviluppo recente</h2>
     <table>
         <thead>
             <tr>
                 <th style="width:140px">Data</th>
-                <th style="width:120px">Autore</th>
-                <th style="width:80px">Commit</th>
+                <th style="width:90px">Commit</th>
                 <th>Descrizione</th>
             </tr>
         </thead>
@@ -205,72 +189,111 @@ class VersionManager:
     <meta http-equiv="Expires" content="0">
     <title>Versioni Nightly Builds LeenO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        :root {{
+            --bg-primary: #f0f4e0;
+            --bg-dark: #121a23;
+            --bg-green: #0e1a08;
+            --accent-cyan: #aad400;
+            --accent-rust: #ff4d2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8896ab;
+            --text-dark: #1a2010;
+            --text-green: #5d7400;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }}
         body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-dark);
             line-height: 1.6;
             margin: 0;
             padding: 20px;
-            color: #333;
             max-width: 1200px;
             margin: auto;
         }}
         h1, h2 {{
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
+            font-family: var(--font-display);
+            color: var(--bg-dark);
+            border-bottom: 2px solid var(--accent-cyan);
             padding-bottom: 10px;
+            margin-top: 30px;
         }}
         .info-box {{
-            background-color: #f8f9fa;
+            background-color: #ffffff;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 0px;
             margin-bottom: 20px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--accent-cyan);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }}
         table {{
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }}
         th, td {{
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }}
         th {{
-            background-color: #3498db;
-            color: white;
-        }}
-        tr:nth-child(even) {{ background-color: #f2f2f2; }}
-        tr:hover {{ background-color: #e9f7fe; }}
-        code {{
-            font-family: monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            text-transform: uppercase;
             font-size: 0.9em;
-            background: #eef;
-            padding: 1px 5px;
+            letter-spacing: 0.05em;
+        }}
+        tr:nth-child(even) {{ background-color: rgba(0,0,0,0.02); }}
+        tr:hover {{ background-color: rgba(170,212,0,0.1); }}
+        code {{
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: rgba(0,0,0,0.05);
+            padding: 3px 6px;
             border-radius: 3px;
+            color: var(--text-green);
         }}
         .badge {{
             display: inline-block;
-            padding: 3px 7px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            font-weight: bold;
-            color: white;
+            padding: 4px 8px;
+            border-radius: 0px;
+            font-size: 0.75rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--bg-dark);
+            letter-spacing: 0.05em;
         }}
-        .badge-latest {{ background-color: #2ecc71; }}
+        .badge-latest {{ background-color: var(--accent-cyan); }}
         .footer {{
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #7f8c8d;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             text-align: center;
+            font-family: var(--font-mono);
         }}
-        a {{ color: #0066cc; text-decoration: none; }}
-        a:hover {{ text-decoration: underline; }}
-        .commit-msg {{ 
-            white-space: pre-wrap; 
-            font-size: 0.9em; 
-            color: #444;
+        a {{
+            color: var(--accent-rust);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }}
+        a:hover {{
+            text-decoration: underline;
+            color: #ff6b50;
+        }}
+        .commit-msg {{
+            font-size: 0.9em;
+            color: var(--text-secondary);
             max-width: 600px;
         }}
         @media (max-width: 768px) {{
@@ -283,7 +306,8 @@ class VersionManager:
 
     <div class="info-box">
         <h2>Informazioni</h2>
-        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p>Questa tabella elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p><strong>Ultima versione:</strong> {version_info['full']}</p>
         <p><strong>Build Commit:</strong> <code>{version_info['git_sha']}</code></p>
     </div>
 
@@ -327,14 +351,14 @@ def main():
             raise ValueError(f"Formato versione non valido: {current_version}")
 
         new_version = {
-            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build') or '0')}-{match.group('type') or 'STABLE'}-{datetime.now().strftime('%Y%m%d')}",
+            'full': f"LeenO-{match.group('major')}.{match.group('minor')}.{match.group('patch')}.{os.getenv('BUILD_NUMBER', match.group('build'))}-{match.group('type')}-{datetime.now().strftime('%Y%m%d')}",
             'major': match.group('major'),
             'minor': match.group('minor'),
             'patch': match.group('patch'),
-            'build_number': os.getenv('BUILD_NUMBER', match.group('build') or '0'),
+            'build_number': os.getenv('BUILD_NUMBER', match.group('build')),
             'build_date': datetime.now().strftime('%Y-%m-%d'),
             'git_sha': os.getenv('GITHUB_SHA', 'local')[:7],
-            'type': match.group('type') or 'STABLE'
+            'type': match.group('type')
         }
 
         vm.update_version_files(new_version)

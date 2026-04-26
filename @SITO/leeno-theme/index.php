@@ -66,7 +66,12 @@
                         <path d="M3 9h18M9 21V9"/>
                     </svg>
                 </div>
-                <h3 class="feature-title">Automazione Completa</h3>
+                <h3 class="feature-title">
+                    <a href="https://leeno.org/about-leeno/" class="feature-title-link">
+                        Automazione Completa
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                </h3>
                 <p class="feature-desc">Genera computi metrici, contabilità di cantiere, varianti e libretti delle misure automaticamente. Ogni calcolo è gestito dalle macro integrate.</p>
             </div>
 

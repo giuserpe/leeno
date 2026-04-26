@@ -185,49 +185,6 @@ def MENU_nuovo_usobollo():
     '''Crea un nuovo documento in formato uso bollo.'''
     creaUsobollo()
 
-
-########################################################################
-# @LeenoUtils.no_refresh
-# def invia_voce_interno():
-#     '''
-#     Invia le voci di Elenco Prezzi verso uno degli altri elaborati.
-#     Richiede comunque la scelta del DP
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
-
-#     elenco = seleziona()
-#     codici = [oSheet.getCellByPosition(0, el).String for el in elenco]
-#     meta = oSheet.getCellRangeByName('C2').String
-
-#     if meta == 'VARIANTE':
-#         genera_variante()
-#     elif meta == 'CONTABILITA':
-#         LeenoContab.attiva_contabilita()
-#         # ins_voce_contab()
-#     elif meta == 'COMPUTO':
-#         GotoSheet(meta)
-#     else:
-#         Dialogs.NotifyDialog(IconType="warning",Title='AVVISO!',
-#     Text='''Per procedere devi prima scegliere,
-# dalla cella "C2", l'elaborato a cui
-# inviare le voci di prezzo selezionate.
-
-# Se l'elaborato è già esistente,
-# assicurati di aver scelto anche
-# la posizione di destinazione.''')
-#         _gotoCella(2, 1)
-#         return
-#     oSheet = oDoc.getSheets().getByName(meta)
-#     for el in codici:
-#         if oSheet.Name == 'CONTABILITA':
-#             GotoSheet(meta)
-#             ins_voce_contab(cod=el)
-#         else:
-#             LeenoComputo.ins_voce_computo(cod=el)
-#         lrow = SheetUtils.getLastUsedRow(oSheet)
-#     return
-
 @with_undo('Invia voce a Variante')
 @LeenoUtils.no_refresh
 def invia_voce_interno():
@@ -5391,7 +5348,10 @@ def Copia_riga_Ent(num_righe=None):
             return None
 
         # Aggiorna altezza ultima riga inserita
-        oSheet.getCellRangeByPosition(0, lrow +1, 48, lrow +1).Rows.OptimalHeight = True
+        if oSheet.Name == 'CONTABILITA':
+            oSheet.getCellRangeByPosition(0, lrow +1, 48, lrow +1).Rows.OptimalHeight = True
+        elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            oSheet.getCellRangeByPosition(0, lrow, 42, lrow).Rows.OptimalHeight = True
 
     elif nome_sheet == "Elenco Prezzi":
         MENU_nuova_voce_scelta()

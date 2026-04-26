@@ -78,7 +78,12 @@
                         <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                     </svg>
                 </div>
-                <h3 class="feature-title">Prezzari Regionali</h3>
+                <h3 class="feature-title">
+                    <a href="https://leeno.org/prezziari/download-prezziari/" class="feature-title-link">
+                        Prezzari Regionali
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                </h3>
                 <p class="feature-desc">Accesso ai prezzari regionali aggiornati annualmente. Importa gli elenchi prezzi di tutte le regioni e enti.</p>
             </div>
 
@@ -89,7 +94,12 @@
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                     </svg>
                 </div>
-                <h3 class="feature-title">Conforme al DM 49/2018</h3>
+                <h3 class="feature-title">
+                    <a href="https://leeno.org/leeno-e-il-computo-su-formato-opendocument-odf/" class="feature-title-link">
+                        Conforme al DM 49/2018
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                </h3>
                 <p class="feature-desc">Formato ODF aperto e interoperabile. Conforme al decreto per la contabilità dei lavori pubblici. Nessuna dipendenza da software proprietario.</p>
             </div>
         </div>

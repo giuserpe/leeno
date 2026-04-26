@@ -3,6 +3,7 @@
 *.xba
 *.xdl
 *.xlb
+*.zip
 .directory
 DialogStrings_it_IT.*
 RegisteredFlag

@@ -7,72 +7,104 @@
     <meta http-equiv="Expires" content="0">
     <title>Versioni Nightly Builds LeenO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #f0f4e0;
+            --bg-dark: #121a23;
+            --bg-green: #0e1a08;
+            --accent-cyan: #aad400;
+            --accent-rust: #ff4d2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8896ab;
+            --text-dark: #1a2010;
+            --text-green: #5d7400;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-dark);
             line-height: 1.6;
             margin: 0;
             padding: 20px;
-            color: #333;
             max-width: 1200px;
             margin: auto;
         }
         h1, h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
+            font-family: var(--font-display);
+            color: var(--bg-dark);
+            border-bottom: 2px solid var(--accent-cyan);
             padding-bottom: 10px;
+            margin-top: 30px;
         }
         .info-box {
-            background-color: #f8f9fa;
+            background-color: #ffffff;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 0px;
             margin-bottom: 20px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--accent-cyan);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         th, td {
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         th {
-            background-color: #3498db;
-            color: white;
-        }
-        tr:nth-child(even) { background-color: #f2f2f2; }
-        tr:hover { background-color: #e9f7fe; }
-        code {
-            font-family: monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            text-transform: uppercase;
             font-size: 0.9em;
-            background: #eef;
-            padding: 1px 5px;
+            letter-spacing: 0.05em;
+        }
+        tr:nth-child(even) { background-color: rgba(0,0,0,0.02); }
+        tr:hover { background-color: rgba(170, 212, 0, 0.1); }
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: rgba(0,0,0,0.05);
+            padding: 3px 6px;
             border-radius: 3px;
+            color: var(--text-green);
         }
         .badge {
             display: inline-block;
-            padding: 3px 7px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            font-weight: bold;
-            color: white;
+            padding: 4px 8px;
+            border-radius: 0px;
+            font-size: 0.75rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--bg-dark);
+            letter-spacing: 0.05em;
         }
-        .badge-latest { background-color: #2ecc71; }
+        .badge-latest { background-color: var(--accent-cyan); }
         .footer {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #7f8c8d;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             text-align: center;
+            font-family: var(--font-mono);
         }
-        a { color: #0066cc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        a { color: var(--accent-rust); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        a:hover { text-decoration: underline; color: #ff6b50; }
         .commit-msg { 
             white-space: pre-wrap; 
             font-size: 0.9em; 
-            color: #444;
+            color: var(--text-secondary);
             max-width: 600px;
         }
         @media (max-width: 768px) {

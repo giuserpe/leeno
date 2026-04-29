@@ -24,18 +24,22 @@ get_header();
                 <span class="current"><?php the_title(); ?></span>
             </nav>
             <h1 class="page-title"><?php the_title(); ?></h1>
-            <?php
-            $content = get_the_content();
-            if ( $content ) : ?>
-            <div class="page-desc archivio-intro">
-                <?php echo wp_kses_post( $content ); ?>
-            </div>
-            <?php endif; ?>
         </div>
     </div>
 
     <div class="container archivio-container">
-        <?php
+        <div class="content-layout">
+            <div class="content-main">
+
+            <?php
+            $content = get_the_content();
+            if ( $content ) : ?>
+            <div class="archivio-intro entry-content" style="margin-bottom:2rem;">
+                <?php echo wp_kses_post( $content ); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php
         if ( ! class_exists('WPFB_Core') ) : ?>
             <p class="prezzari-error">Plugin WP Filebase non attivo.</p>
         <?php else :
@@ -160,7 +164,16 @@ get_header();
             <?php endif; // files
         endif; // WPFB_Core
         ?>
-    </div>
+            </div><!-- .content-main -->
+
+            <?php if ( is_active_sidebar('sidebar-blog') ) : ?>
+            <aside class="content-sidebar">
+                <?php dynamic_sidebar('sidebar-blog'); ?>
+            </aside>
+            <?php endif; ?>
+
+        </div><!-- .content-layout -->
+    </div><!-- .container -->
 
 </main>
 

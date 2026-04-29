@@ -20,13 +20,6 @@ get_header();
                 <span class="current"><?php the_title(); ?></span>
             </nav>
             <h1 class="page-title"><?php the_title(); ?></h1>
-            <?php
-            $desc = get_the_content();
-            if ( $desc ) : ?>
-            <div class="page-desc prezzari-intro">
-                <?php echo wp_kses_post( $desc ); ?>
-            </div>
-            <?php endif; ?>
             <div class="prezzari-search-bar">
                 <input
                     type="text"
@@ -40,7 +33,18 @@ get_header();
     </div>
 
     <div class="container prezzari-container">
-        <?php
+        <div class="content-layout">
+            <div class="content-main">
+
+            <?php
+            $desc = get_the_content();
+            if ( $desc ) : ?>
+            <div class="prezzari-intro entry-content" style="margin-bottom:2rem;">
+                <?php echo wp_kses_post( $desc ); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php
         // ── Carica WP Filebase se non già caricato ──────────────────────────
         if ( ! class_exists('WPFB_Core') ) {
             $wpfb_path = WP_PLUGIN_DIR . '/wp-filebase/wp-filebase.php';
@@ -55,23 +59,27 @@ get_header();
 
             global $wpdb;
 
-            // ── Recupera la root category (Prezzari = 170) ──────────────────────
-            $repo_id = 170;
+            // Cerchiamo l'ID della categoria principale dei listini
+            $listini_cat_id = $wpdb->get_var(
+                "SELECT cat_id FROM {$wpdb->prefix}wpfb_cats 
+                 WHERE cat_name = 'LISTINI' OR cat_name = 'Prezzari' 
+                 LIMIT 1"
+            );
 
-            // Prendi le categorie figlie di primo livello (escludendo .Schema o nomi nascosti)
-            global $wpdb;
+            // Se non troviamo la categoria specifica, mostriamo tutto come prima (fallback)
+            $parent_id = $listini_cat_id ? (int)$listini_cat_id : 0;
+
             $top_cats = $wpdb->get_results( $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}wpfb_cats
-                 WHERE cat_parent = %d AND cat_name NOT LIKE '.%%'
+                 WHERE cat_parent = %d
                  ORDER BY cat_name ASC",
-                $repo_id
+                $parent_id
             ) );
 
-            if ( empty( $top_cats ) ) {
-                // Fallback: prendi tutte le categorie (escludendo quelle nascoste)
+            if ( empty( $top_cats ) && $parent_id === 0 ) {
+                // Fallback: se siamo alla radice e non c'è nulla, prendi tutto
                 $top_cats = $wpdb->get_results(
                     "SELECT * FROM {$wpdb->prefix}wpfb_cats
-                     WHERE cat_name NOT LIKE '.%%'
                      ORDER BY cat_name ASC"
                 );
             }
@@ -129,7 +137,14 @@ get_header();
                             </thead>
                             <tbody>
                             <?php foreach ( $files as $file ) :
-                                $dl_url   = home_url( '?wpfb_dl=' . $file->file_id );
+                        $dl_url = '';
+                                if ( method_exists('WPFB_Core', 'GetUrl') ) {
+                                    $dl_url = WPFB_Core::GetUrl( $file );
+                                } elseif ( isset($file->file_url) ) {
+                                    $dl_url = $file->file_url;
+                                } else {
+                                    $dl_url = home_url( '?wpfb_dl=' . $file->file_id );
+                                }
                                 $name     = $file->file_display_name ?: $file->file_name;
                                 $size     = size_format( $file->file_size, 1 );
                                 $hits     = intval( $file->file_hits );
@@ -183,6 +198,15 @@ get_header();
             endif; // top_cats
         endif; // WPFB_Core
         ?>
+            </div><!-- .content-main -->
+
+            <?php if ( is_active_sidebar('sidebar-blog') ) : ?>
+            <aside class="content-sidebar">
+                <?php dynamic_sidebar('sidebar-blog'); ?>
+            </aside>
+            <?php endif; ?>
+
+        </div><!-- .content-layout -->
     </div><!-- .prezzari-container -->
 
 </main>

@@ -19,11 +19,18 @@ get_header();
                 <span class="current"><?php the_title(); ?></span>
             </nav>
             <h1 class="page-title"><?php the_title(); ?></h1>
+        </div>
+    </div>
+
+    <div class="container prezzari-container">
+        <div class="content-layout">
+            <div class="content-main">
+
             <?php
             $desc = get_the_content();
             $intro = '';
             $iframe_content = '';
-            
+
             $pos = strpos( $desc, '[advanced_iframe' );
             if ( $pos !== false ) {
                 $intro = substr( $desc, 0, $pos );
@@ -33,15 +40,12 @@ get_header();
             }
 
             if ( trim( strip_tags( $intro ) ) || trim( $intro ) ) : ?>
-            <div class="page-desc software-intro">
+            <div class="software-intro entry-content" style="margin-bottom: 2rem;">
                 <?php echo apply_filters( 'the_content', $intro ); ?>
             </div>
             <?php endif; ?>
-        </div>
-    </div>
 
-    <div class="container prezzari-container">
-        <?php
+            <?php
         // ── Carica WP Filebase se non già caricato ──────────────────────────
         if ( ! class_exists('WPFB_Core') ) {
             $wpfb_path = WP_PLUGIN_DIR . '/wp-filebase/wp-filebase.php';
@@ -128,6 +132,15 @@ get_header();
             endif; // software_cat
         endif; // WPFB_Core
         ?>
+            </div><!-- .content-main -->
+
+            <?php if ( is_active_sidebar('sidebar-blog') ) : ?>
+            <aside class="content-sidebar">
+                <?php dynamic_sidebar('sidebar-blog'); ?>
+            </aside>
+            <?php endif; ?>
+
+        </div><!-- .content-layout -->
     </div><!-- .prezzari-container -->
 
     <?php if ( ! empty( $iframe_content ) && trim( $iframe_content ) ) : ?>

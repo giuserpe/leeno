@@ -775,7 +775,7 @@ img {
 }
 
 .page-desc {
-    color: var(--text-secondary);
+    color: var(--text-dark);
     margin-top: 12px;
 }
 
@@ -809,13 +809,13 @@ img {
 }
 
 .widget a {
-    color: var(--text-secondary);
+    color: var(--text-green);
     font-size: 0.85rem;
     transition: color 0.2s;
 }
 
 .widget a:hover {
-    color: var(--accent-cyan);
+    color: var(--accent-rust);
 }
 
 .widget ul {
@@ -889,9 +889,9 @@ img {
 .page-desc a,
 .prezzari-intro a,
 .single-content a {
-    color: var(--accent-cyan) !important;
+    color: var(--text-green) !important;
     text-decoration: underline !important;
-    text-decoration-color: rgba(170,212,0,0.4) !important;
+    text-decoration-color: rgba(93,116,0,0.4) !important;
     text-underline-offset: 3px !important;
     transition: color 0.2s, text-decoration-color 0.2s !important;
 }
@@ -2108,7 +2108,7 @@ h3.wpfb-cat,
 }
 
 .prezzari-intro {
-    color: rgba(255,255,255,0.6);
+    color: var(--text-dark);
     font-size: 0.88rem;
     line-height: 1.7;
     margin-top: 12px;
@@ -2302,9 +2302,9 @@ h3.wpfb-cat,
 /* ── Link globali su sfondo chiaro ──────────────────────────── */
 /* Cattura link non coperti da regole più specifiche */
 .page-content a:not(.btn-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link) {
-    color: var(--accent-cyan) !important;
+    color: var(--text-green) !important;
     text-decoration: underline;
-    text-decoration-color: rgba(170,212,0,0.35);
+    text-decoration-color: rgba(93,116,0,0.35);
     text-underline-offset: 3px;
 }
 .page-content a:not(.btn-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link):hover {
@@ -2322,7 +2322,7 @@ h3.wpfb-cat,
 }
 
 .archivio-intro {
-    color: rgba(255,255,255,0.6);
+    color: var(--text-dark);
     font-size: 0.88rem;
     line-height: 1.7;
     margin-top: 12px;
@@ -2392,4 +2392,77 @@ h3.wpfb-cat,
 .archivio-row:first-child .archivio-ver-badge {
     background: rgba(170,212,0,0.2);
     border-color: var(--accent-cyan);
+}
+
+/* Padding container archivio e prezzari coerente con page.php */
+.archivio-container,
+.prezzari-container {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+/* ============================================================
+   TESTO SU SFONDO CHIARO — regole esplicite
+   ============================================================ */
+
+/* Contenuto principale su bg chiaro */
+.content-main,
+.content-main p,
+.content-main li,
+.content-main td,
+.content-main th,
+.content-main span:not(.prezzari-size):not(.prezzari-hits):not(.archivio-date):not(.archivio-ver-badge):not(.archivio-count):not(.archivio-sort-label) {
+    color: var(--text-dark);
+}
+
+.content-main h1,
+.content-main h2,
+.content-main h3,
+.content-main h4,
+.content-main h5,
+.content-main h6 {
+    color: var(--text-dark);
+}
+
+/* Intro prezzari e archivio */
+.prezzari-intro,
+.prezzari-intro p,
+.archivio-intro,
+.archivio-intro p,
+.software-intro,
+.software-intro p {
+    color: var(--text-dark) !important;
+}
+
+.prezzari-intro strong,
+.archivio-intro strong,
+.software-intro strong {
+    color: var(--text-dark) !important;
+}
+
+/* Testo secondario su sfondo chiaro */
+.content-main .text-secondary,
+.prezzari-hits,
+.prezzari-size,
+.archivio-date,
+.archivio-sort-label {
+    color: var(--text-secondary) !important;
+}
+
+/* Sidebar widget testi */
+.content-sidebar,
+.content-sidebar p,
+.content-sidebar li,
+.widget-title {
+    color: var(--text-dark);
+}
+
+/* Nome file nelle tabelle */
+.prezzari-file-link,
+.archivio-file-link {
+    color: var(--text-dark) !important;
+}
+.prezzari-file-link:hover,
+.archivio-file-link:hover {
+    color: var(--accent-rust) !important;
 }

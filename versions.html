@@ -125,8 +125,8 @@
     <div class="info-box">
         <h2>Informazioni</h2>
         <p>Questa tabella elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-        <p><strong>Ultima versione:</strong> LeenO-3.25.0.376-TESTING-20260429</p>
-        <p><strong>Build Commit:</strong> <code>cc34f2a</code></p>
+        <p><strong>Ultima versione:</strong> LeenO-3.25.0.377-TESTING-20260429</p>
+        <p><strong>Build Commit:</strong> <code>207898b</code></p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -191,6 +191,19 @@
         <tbody>
             
             <tr>
+                <td>2026-04-29 21:34</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/207898bbb8003955a9a37bc75b91e9b2096b437e" target="_blank" rel="noopener"><code>207898b</code></a></td>
+                <td class="commit-msg">refactor(scelta_viste): ottimizzata gestione calcolo automatico e colorazione voci
+
+- In `scelta_viste_run()` (`pyleeno.py`):
+  - Aggiunto `enableAutomaticCalculation(False/True)` intorno a `setFormulaArray()` per evitare calcoli inutili durante l’esecuzione
+  - Migliorata la logica di rilevamento scostamenti (colonna Z) con lettura batch e gestione più robusta delle stringhe di percentuale
+  - Refactoring della colorazione voci in eccesso/spuntate su CONTABILITA con uso di `SheetCellRanges` per applicare i colori in batch (più efficiente)
+  - Pulizia e commenti migliorati per maggiore leggibilità
+
+Riduce i tempi di esecuzione della vista raffronto e rende il codice più performante su fogli grandi.</td>
+            </tr>
+            <tr>
                 <td>2026-04-29 21:27</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/cc34f2abcc53a7d754f6ddb86f9bd9a75e6f7e20" target="_blank" rel="noopener"><code>cc34f2a</code></a></td>
                 <td class="commit-msg">refactor(ui): separata etichetta dal checkbox nella finestra di benvenuto DlgMain</td>
@@ -200,15 +213,10 @@
                 <td><a href="https://github.com/giuserpe/leeno/commit/72f762b9de7f1a18b8a917a8f09261ea15437424" target="_blank" rel="noopener"><code>72f762b</code></a></td>
                 <td class="commit-msg">refactor(theme): uniformato struttura con sidebar e stili testo su pagine Prezzari/Software/Archivio</td>
             </tr>
-            <tr>
-                <td>2026-04-26 21:08</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/eb251544ebc34e9e4f3e856e75347218b35a605e" target="_blank" rel="noopener"><code>eb25154</code></a></td>
-                <td class="commit-msg">feat(theme): nuovo template Archivio Download + stili dedicati in main.css</td>
-            </tr>
         </tbody>
     </table>
     <div class="footer">
-        <p>Generato automaticamente il 2026-04-29 21:27 UTC</p>
+        <p>Generato automaticamente il 2026-04-29 21:34 UTC</p>
         <p>Server: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 </p>
     </div>

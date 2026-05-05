@@ -2191,6 +2191,7 @@ def voce_breve_ep():
 def scelta_viste():
     with LeenoUtils.DocumentRefreshContext(False):
         scelta_viste_run()
+    LeenoUtils.DocumentRefresh(True)
 
 def scelta_viste_run():
     '''
@@ -2337,11 +2338,45 @@ def scelta_viste_run():
         GotoSheet('CONTABILITA')
         oSheet = oDoc.CurrentController.ActiveSheet
 
+
+
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
 
         oDialog1.getControl('ComboVISTA').setText('Scegli...')
+
+        # 2. SUGGERIMENTO INTERVALLO VOCI (daVoce / aVoce)
+        daVoceSuggerita = 1
+        libretti = SheetUtils.sStrColtoList('segue Libretto delle Misure n.', 2, oSheet, start=2)
+        try:
+            daVoceSuggerita = int(oSheet.getCellByPosition(2, libretti[-1]).String.split('÷')[1]) + 1
+        except:
+            daVoceSuggerita = 1
+
+        oDialog1.getControl('da_voce').Text = str(daVoceSuggerita)
+        oDialog1.getControl('da_voce').Enable = False
+
+
+        last_row_contab = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+        aVoceMassima = 0
+        for el in reversed(range(3, last_row_contab + 1)):
+            s_val = oSheet.getCellByPosition(0, el).String.strip()
+            if s_val.isdigit():
+                aVoceMassima = int(s_val)
+                break
+
+        sString = oDialog1.getControl('a_voce')
+        sString.Text = str(aVoceMassima)
+
+        if daVoceSuggerita > aVoceMassima:
+            oDialog1.getControl('a_voce').Enable = False
+            oDialog1.getControl('a_voce').Text = ""
+            oDialog1.getControl('da_voce').Enable = False
+            oDialog1.getControl('da_voce').Text = ""
+        else:
+            oDialog1.getControl('a_voce').Enable = True
+            oDialog1.getControl('da_voce').Enable = False
 
         # Inizio voce
         sString = oDialog1.getControl('TextField3')
@@ -8458,6 +8493,15 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
                     closest_row = sopra + 1
 
             n = sotto + 1
+        elif cell_style == 'Ultimus_centro_bordi_lati':
+            oCellRangeAddr.StartRow = n
+            oCellRangeAddr.EndRow = n
+            try:
+                oSheet.group(oCellRangeAddr, 1)
+            except Exception:
+                pass
+            oSheet.getCellRangeByPosition(0, n, 0, n).Rows.IsVisible = False
+            n += 1
         else:
             n += 1
 

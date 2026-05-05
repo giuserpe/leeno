@@ -457,7 +457,7 @@ def MENU_AnnullaAttiContabili():
 
         try:
             [oDoc.Sheets.removeByName(el)   #select
-            for el in ('Registro', 'SAL')   #from
+            for el in ('Registro', 'SAL', 'CdP')   #from
             if len (listaSal) == 1]         #where
         except Exception as e:
             # ~ DLG.errore(e)
@@ -470,6 +470,7 @@ def MENU_AnnullaAttiContabili():
             nome_area = "_Reg_" + listaSal[-1]
             if len (listaSal) == 1:
                 oDoc.Sheets.removeByName('Registro')
+                oDoc.Sheets.removeByName('CdP')
             else:
                 oNamedRange = oRanges.getByName(nome_area).ReferredCells.RangeAddress
                 oSheet.ungroup(oNamedRange, 1)
@@ -498,6 +499,14 @@ def MENU_AnnullaAttiContabili():
                 #cancella area di stampa
                 LeenoSheetUtils.DelPrintSheetArea()
             oDoc.NamedRanges.removeByName(nome_area)
+
+        #elimina CdP
+            try:
+                if oDoc.Sheets.hasByName('CdP'):
+                    oDoc.Sheets.removeByName('CdP')
+            except Exception:
+                pass
+
         # --- Pulizia SITUAZIONE CONTABILE in S2 ---
         try:
             oS2 = oDoc.getSheets().getByName('S2')
@@ -888,8 +897,9 @@ def GeneraLibretto(oDoc):
     except:
         daVoceSuggerita = 1
 
-    daVoce = PL.InputBox(str(daVoceSuggerita), f"SAL n.{nSal}: Libretto, da voce n.")
-    if not daVoce: return
+    dialogo = PL.oDialog1
+    daVoce = dialogo.getControl('da_voce').Text
+
 
     try:
         lrow_start = int(SheetUtils.uFindStringCol(daVoce, 0, oSheet))
@@ -910,7 +920,7 @@ def GeneraLibretto(oDoc):
             aVoceMassima = int(s_val)
             break
 
-    aVoce = PL.InputBox(str(aVoceMassima), f"SAL n.{nSal}: Libretto, a voce n.")
+    aVoce = dialogo.getControl('a_voce').Text
     if not aVoce or int(aVoce) < int(daVoce): return
 
     try:
@@ -1466,7 +1476,8 @@ def GeneraRegistro(oDoc, dati):
     # Totale generale
     oRegSheet.getCellByPosition(1, current_row).String = "Lavori a tutto il ___/___/_________ - T O T A L E  €"
     oRegSheet.getCellByPosition(1, current_row).CellStyle = "Ultimus_destra"
-    oRegSheet.getCellByPosition(8, current_row).Formula = f"=SUBTOTAL(9;$I${prima_riga_dati+1}:$I${lastRowWithData+1})"
+    # oRegSheet.getCellByPosition(8, current_row).Formula = f"=SUBTOTAL(9;$I${prima_riga_dati+1}:$I${lastRowWithData+1})"
+    oRegSheet.getCellByPosition(8, current_row).Formula = f"=SUBTOTAL(9;$I$1:$I${lastRowWithData+1})"
     oRegSheet.getCellByPosition(8, current_row).CellStyle = "Ultimus_destra_totali"
 
     # Dati per firme
@@ -1904,37 +1915,84 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
         # Riga 1-indexed del riepilogo SAL per le formule Calc
         R = insRowRiepilogo + 1  # conversione 0-indexed → 1-indexed
 
-        # Mappatura: (offset da xS2, formula o valore)
-        # Le formule cross-sheet usano il formato $SAL.F$XX
-        dati = [
-            # (+8)  Lavori e somministrazioni a MISURA = Riepilogo insRow+6
-            (8,  f"=$SAL.$F${R + 6}"),
-            # (+4)  Quota sicurezza non soggetta a ribasso = Riepilogo insRow+7
-            (4,  f"=$SAL.$F${R + 7}"),
-            # (+9)  Quota sicurezza (ripetuta) = Riepilogo insRow+7
-            (9,  f"=$SAL.$F${R + 7}"),
-            # (+12) Importo su cui applicare il ribasso = Riepilogo insRow+8
-            (12, f"=$SAL.$F${R + 8}"),
-            # (+13) Ribasso = Riepilogo insRow+9
-            (13, f"=$SAL.$F${R + 9}"),
-            # (+14) Importo ribassato (PER I LAVORI A MISURA) = Riepilogo insRow+11
-            (14, f"=$SAL.$F${R + 11}"),
-            # ritenute per infortuni
-            (16, f"=({ncol}17+{ncol}12)*$S2.$C$85"),
-            # recupero anticipazione
-            (17, f"=({ncol}17+{ncol}12)*$S2.$C$80"),
-            # detrazioni
-            (19, f"={ncol}19+{ncol}20"),
-            # (+20) Importo Certificato di pagamento = Riepilogo insRow+13 (TOTALE)
-            (20, f"={ncol}12+{ncol}17-{ncol}22"),
-        ]
+        # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
+        def trova_r_S2(testo, start_offset=0):
+            for i in range(start_offset, 40):
+                riga = xS2 + i
+                cell_text = oS2.getCellByPosition(4, riga).String.lower()
+                if testo.lower() in cell_text:
+                    return i
+            return None
 
-        for offset, formula in dati:
-            oS2.getCellByPosition(col, xS2 + offset).Formula = formula
+        # Troviamo gli offset relativi a yS2 per le varie voci
+        r_misura = trova_r_S2("a misura")
+        r_sic_mis = trova_r_S2("sicurezza", r_misura) if r_misura else None
+        r_mdo_mis = trova_r_S2("quota mdo", r_misura) if r_misura else None
 
-        # Quota MDO (valore diretto, non presente nel riepilogo SAL)
-        oS2.getCellByPosition(col, xS2 + 5).Value = mdo   # Quota MDO non sogg.
-        oS2.getCellByPosition(col, xS2 + 10).Value = mdo  # Quota MDO (ripetuta)
+        r_corpo = trova_r_S2("a corpo")
+        r_sic_corpo = trova_r_S2("sicurezza", r_corpo) if r_corpo else None
+        r_mdo_corpo = trova_r_S2("quota mdo", r_corpo) if r_corpo else None
+
+        r_app_rib = trova_r_S2("applicare il ribasso")
+        r_ribasso = trova_r_S2("ribasso del")
+        r_imp_rib = trova_r_S2("importo ribassato")
+
+        r_garanzia = trova_r_S2("per garanzia")
+        r_infortuni = trova_r_S2("per infortuni")
+        r_anticipo = trova_r_S2("recupero anticipazione")
+        r_cert_prec = trova_r_S2("certificati precedenti")
+        r_detraz = trova_r_S2("totale detrazioni")
+        r_certif = trova_r_S2("Certificato di pagamento")
+
+        def scrivi(offset, formula_o_valore):
+            if offset is not None:
+                cell = oS2.getCellByPosition(col, xS2 + offset)
+                if isinstance(formula_o_valore, str) and formula_o_valore.startswith('='):
+                    cell.Formula = formula_o_valore
+                else:
+                    cell.Value = formula_o_valore
+
+        # Scriviamo i valori collegati al riepilogo SAL
+        scrivi(r_misura, f"=$SAL.$F${R + 6}")
+        scrivi(r_sic_corpo, f"=$SAL.$F${R + 7}")
+        scrivi(r_sic_mis, f"=$SAL.$F${R + 7}")
+        scrivi(r_app_rib, f"=$SAL.$F${R + 8}")
+        scrivi(r_ribasso, f"=$SAL.$F${R + 9}")
+        scrivi(r_imp_rib, f"=$SAL.$F${R + 11}")
+
+        # Valori diretti per MDO
+        scrivi(r_mdo_corpo, mdo)
+        scrivi(r_mdo_mis, mdo)
+
+        # Formule dinamiche interne a S2 basate sulle righe effettive (1-indexed)
+        def rf(offset):
+            # Ritorna il riferimento alla cella es: F14
+            return f"{ncol}{xS2 + offset + 1}" if offset is not None else "0"
+
+        # Infortuni = (Importo ribassato + Sicurezza) * Incidenza infortuni (Anagrafica C85 -> riga 84 0-idx)
+        # Attenzione: l'Anagrafica usa coordinate assolute. C85 è $S2.$C$85.
+        if r_infortuni is not None:
+            scrivi(r_infortuni, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C$85")
+
+        # Anticipazione = (Importo ribassato + Sicurezza) * Incidenza anticipazione (Anagrafica C80)
+        if r_anticipo is not None:
+            scrivi(r_anticipo, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C$80")
+
+        # Totale detrazioni = Garanzia + Infortuni + Anticipo + Cert. Precedenti
+        if r_detraz is not None:
+            somma_detraz = "+".join(filter(lambda x: x != "0", [rf(r_garanzia), rf(r_infortuni), rf(r_anticipo), rf(r_cert_prec)]))
+            if somma_detraz:
+                scrivi(r_detraz, f"={somma_detraz}")
+
+        # Importo Certificato = Importo ribassato + Sicurezza - Totale detrazioni
+        if r_certif is not None:
+            if nSal == 1:
+                scrivi(r_certif, f"={rf(r_imp_rib)}+{rf(r_sic_mis)}-{rf(r_detraz)}")
+            else:
+                # cert_prec = _col_letter(col - 1) + str(xS2 + r_detraz + 2)
+                certif = f"SUM({_col_letter(yS2+1)}{r_certif+3}:{_col_letter(col-1)}{r_certif+3})"
+                scrivi(r_certif, f"={rf(r_imp_rib)}+{rf(r_sic_mis)}-{rf(r_detraz)}-{certif}")
+
 
     except Exception as e:
         # Non bloccante: errore nel popolamento S2 non deve interrompere il SAL
@@ -2024,6 +2082,30 @@ def insrow():
 
 
 
+def _leggi_dato_anagrafico(oSheet, label):
+    '''
+    Cerca `label` nelle colonne B (1) e A (0).
+    Ritorna il valore della colonna C (2) sulla stessa riga.
+    Se non trova nulla, ritorna stringa vuota.
+    '''
+    try:
+        for col in (1, 0):
+            row = SheetUtils.uFindStringCol(label, col, oSheet, start=0)
+            if row is not None:
+                val = oSheet.getCellByPosition(2, int(row)).String
+                if val:
+                    return val.strip()
+        # Fallback su ricerca intero foglio
+        res = SheetUtils.uFindString(label, oSheet)
+        if res:
+            val = oSheet.getCellByPosition(2, res[1]).String
+            if val:
+                return val.strip()
+    except Exception:
+        pass
+    return ""
+
+
 def firme_libretto(lrowF=None, oSheet=None):
     """
     Inserisce i dati per le firme nel foglio specificato o in quello attivo,
@@ -2038,7 +2120,7 @@ def firme_libretto(lrowF=None, oSheet=None):
     oSheet_S2 = oDoc.getSheets().getByName("S2")
 
     # --- 1. Recupero dati da S2 ---
-    luogo_raw = oSheet_S2.getCellRangeByName("$S2.C4").String
+    luogo_raw = _leggi_dato_anagrafico(oSheet_S2, 'Località')
     ultimo_token = luogo_raw.split(" ")[-1] if luogo_raw else ""
     luogo = f"{ultimo_token}, " if ultimo_token else "Data, "
 
@@ -2050,18 +2132,18 @@ def firme_libretto(lrowF=None, oSheet=None):
     firme = []
     firme.append(f"{luogo} ___/___/_________") # Data
 
-    impresa = oSheet_S2.getCellRangeByName("$S2.C17").String
+    impresa = _leggi_dato_anagrafico(oSheet_S2, 'Appaltatore')
     firme.append(f"L'Impresa esecutrice\n({impresa})")
 
-    contabile = oSheet_S2.getCellRangeByName("$S2.C14").String
+    contabile = _leggi_dato_anagrafico(oSheet_S2, 'Direttore Operativo Contabile')
     if contabile:
         firme.append(f"Il Direttore Operativo Contabile\n({contabile})")
 
-    cse = oSheet_S2.getCellRangeByName("$S2.C15").String
+    cse = _leggi_dato_anagrafico(oSheet_S2, 'C.S.E.') or _leggi_dato_anagrafico(oSheet_S2, 'Coordinatore per la Sicurezza') or _leggi_dato_anagrafico(oSheet_S2, 'C.S.P.')
     if cse:
         firme.append(f"Visto: il C.S.E.\n({cse})")
 
-    direttore = oSheet_S2.getCellRangeByName("$S2.C16").String
+    direttore = _leggi_dato_anagrafico(oSheet_S2, 'Direttore Lavori')
     firme.append(f"Il Direttore dei Lavori\n({direttore})")
 
     # --- 4. Inserimento Righe e Scrittura ---
@@ -2141,6 +2223,9 @@ def EseguiContabilita(oDoc):
         try:
             GeneraCdP(oDoc, dati)
         except Exception as e_cdp:
+            import traceback
+            with open(r"C:\Users\TEST\.gemini\antigravity\cdp_error.log", "w") as f:
+                f.write(traceback.format_exc())
             # Non bloccante: il CdP è un atto integrativo
             try:
                 DLG.errore(f'Attenzione: CdP non generato: {e_cdp}')
@@ -2302,20 +2387,22 @@ def setup_foglio_CdP(oDoc):
 
 def _leggi_iva_da_S2(oS2):
     '''
-    Cerca l'aliquota IVA in S2: riga successiva a "Ritenute per infortuni".
+    Cerca l'aliquota IVA in S2 cercando l'etichetta "I.V.A." nell'Anagrafica.
     Ritorna il valore come float (es. 0.22 per 22%) oppure 0.22 di default.
+    Accetta anche 0% come valore valido (reverse charge, esenzione, ecc.).
     '''
     try:
-        row_rit = SheetUtils.uFindStringCol('Ritenute per infortuni', 0, oS2)
-        if row_rit is not None:
-            iva_val = oS2.getCellByPosition(2, int(row_rit) + 1).Value
-            if iva_val and iva_val > 0:
-                return iva_val
-        # secondo tentativo: cerca con label parziale
-        row_rit = SheetUtils.uFindStringCol('Ritenute per infortuni', 1, oS2)
-        if row_rit is not None:
-            iva_val = oS2.getCellByPosition(2, int(row_rit) + 1).Value
-            if iva_val and iva_val > 0:
+        # Cerca direttamente l'etichetta "I.V.A." in colonna A o B
+        for col in (0, 1):
+            row_iva = SheetUtils.uFindStringCol('I.V.A.', col, oS2, start=0)
+            if row_iva is not None:
+                iva_val = oS2.getCellByPosition(2, int(row_iva)).Value
+                return iva_val  # accetta anche 0%
+        # Fallback: cerca "IVA" senza punti
+        for col in (0, 1):
+            row_iva = SheetUtils.uFindStringCol('IVA', col, oS2, start=0)
+            if row_iva is not None:
+                iva_val = oS2.getCellByPosition(2, int(row_iva)).Value
                 return iva_val
     except Exception:
         pass
@@ -2351,17 +2438,25 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
     perc_iva_str = f'{aliquota_iva * 100:.0f}'
 
     # Dati anagrafici
-    committente = oS2.getCellByPosition(2, 5).String   # C6
-    oggetto     = oS2.getCellByPosition(2, 6).String   # C7
-    impresa     = oS2.getCellByPosition(2, 16).String  # C17
-    nome_dl     = oS2.getCellByPosition(2, 15).String  # C16
-    luogo_raw   = oS2.getCellByPosition(2, 3).String   # C4
+    committente = _leggi_dato_anagrafico(oS2, 'Committente') or _leggi_dato_anagrafico(oS2, 'Stazione Appaltante')
+    oggetto     = _leggi_dato_anagrafico(oS2, 'OGGETTO')
+    impresa     = _leggi_dato_anagrafico(oS2, 'Appaltatore')
+    nome_dl     = _leggi_dato_anagrafico(oS2, 'Direttore Lavori')
+    luogo_raw   = _leggi_dato_anagrafico(oS2, 'Località')
     luogo       = luogo_raw.split(' ')[-1] if luogo_raw else ''
 
     # ── Ancoraggi nel foglio CdP ─────────────────────────────────────────
     def R(testo, col=None):
-        r, _ = _trova_riva(oCdP, testo, col)
-        return r
+        '''Cerca testo nel CdP con ricerca substring (non esatta).'''
+        if col is not None:
+            r = SheetUtils.uFindStringCol(testo, col, oCdP, start=0, equal=0)
+            return int(r) if r is not None else None
+        # Cerca in colonne 0..5
+        for c in range(6):
+            r = SheetUtils.uFindStringCol(testo, c, oCdP, start=0, equal=0)
+            if r is not None:
+                return int(r)
+        return None
 
     r_comm     = R('COMMITTENTE')
     r_imp      = R('IMPRESA')
@@ -2428,6 +2523,17 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
                         break
                 break
 
+    # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
+    def trova_r_S2(testo, start_offset=0):
+        for i in range(start_offset, 40):
+            riga = xS2 + i
+            cell_text = oS2.getCellByPosition(4, riga).String.lower()
+            if testo.lower() in cell_text:
+                return riga
+        return None
+
+    r2_certif = trova_r_S2("importo certificato")
+
     # ── 2. Blocco sinistro: certificati precedenti ───────────────────────
     if r_Ncert is not None:
         r_first = r_Ncert + 1   # prima riga dati cert LIST
@@ -2437,32 +2543,43 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
                 break
             col_i      = yS2 + i
             s2_col_i   = _col_letter(col_i)
-            # Data SAL i (offset +2)
+            # Data SAL i (offset +2) - Nota: la data in S2 è sempre alla riga xS2 + 2
             data_i = oS2.getCellByPosition(col_i, xS2 + 2).Value
             oCdP.getCellByPosition(0, r).Value  = i          # N°
             oCdP.getCellByPosition(1, r).Value = data_i     # Data
-            # Importo: punta a S2 offset+20 = Importo Certificato di Pagamento i
-            oCdP.getCellByPosition(imp_col_sx, r).Formula = \
-                f'=$S2.${s2_col_i}${xS2 + 21}'
+            # Importo: punta a S2 Importo Certificato di Pagamento i
+            if r2_certif is not None:
+                oCdP.getCellByPosition(imp_col_sx, r).Formula = \
+                    f'=$S2.${s2_col_i}${r2_certif + 1}'
 
         # TOTALE anticipazione (stessa riga dell'IVA, blocco sinistro)
         if r_iva is not None and r_first <= r_iva:
             oCdP.getCellByPosition(imp_col_sx, r_iva).Formula = \
                 f'=SUBTOTAL(9;{s}{r_first + 1}:{s}{r_iva})'
 
+    r2_misura = trova_r_S2("a misura")
+    r2_sic_mis = trova_r_S2("sicurezza", r2_misura - xS2) if r2_misura else None
+    r2_mdo_mis = trova_r_S2("quota mdo", r2_misura - xS2) if r2_misura else None
+    r2_imp_rib = trova_r_S2("importo ribassato")
+    r2_infortuni = trova_r_S2("per infortuni")
+    r2_anticipo = trova_r_S2("recupero anticipazione")
+
     # ── 3. Blocco destro: importi ─────────────────────────────────────────
-    # "Per lavori e somministrazioni" → SAL corrente TOTALE (S2 offset +20)
-    if r_lavori is not None:
+    # "Per lavori e somministrazioni" → punta direttamente a Importo Certificato di S2
+    if r_lavori is not None and r2_certif is not None:
+        #ref = f'$S2.${s2_col}${r2_certif + 1}'
+        ref = f'$S2.${s2_col}${r2_sic_mis + 1}+S2.${s2_col}${r2_imp_rib + 1}'
         oCdP.getCellByPosition(val_col, r_lavori).Formula = \
-            f'=$S2.${s2_col}${xS2 + 10}+$S2.${s2_col}${xS2 + 15}'
+            f'=IF({ref}=0;"";{ref})'
 
     # "Per materiali giacenti in cantiere" → riga sotto r_lavori, lascia editabile
     # (non scriviamo nulla: cella già vuota nel template)
 
     # SOMMANO importi soggetti a ritenute
     if r_sogg is not None and r_lavori is not None:
+        sub = f'SUBTOTAL(9;{v}{r_lavori + 1}:{v}{r_sogg})'
         oCdP.getCellByPosition(val_col, r_sogg).Formula = \
-            f'=SUBTOTAL(9;{v}{r_lavori + 1}:{v}{r_sogg})'
+            f'=IF({sub}=0;"";{sub})'
 
     # SOMMANO importi NON soggetti a ritenute
     if r_nonsogg is not None and r_sogg is not None:
@@ -2470,25 +2587,38 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
         oCdP.getCellByPosition(val_col, r_nonsogg).Formula = \
             f'=SUBTOTAL(9;{v}{r_ns_start + 1}:{v}{r_nonsogg})'
 
-    # a) Ritenuta per infortuni 0,5%
-    if r_ritenuta is not None and r_sogg is not None:
-        oCdP.getCellByPosition(val_col, r_ritenuta).Formula = \
-            f'={v}{r_sogg + 1}*0.005'
-
-    # b) Ammontare Certificati precedenti → TOTALE anticipazione (blocco sinistra)
+    # b) Ammontare Certificati precedenti → TOTALE del blocco sinistro
     if r_certprec is not None and r_iva is not None:
+        ref_cert_prec = f'{s}{r_iva + 1}'
         oCdP.getCellByPosition(val_col, r_certprec).Formula = \
-            f'={s}{r_iva + 1}'
+            f'=IF({ref_cert_prec}=0;"";{ref_cert_prec})'
+
+    # a) Ritenuta per infortuni
+    if r_ritenuta is not None and r2_infortuni is not None:
+        ref = f'$S2.${s2_col}${r2_infortuni + 1}'
+        oCdP.getCellByPosition(val_col, r_ritenuta).Formula = \
+            f'=IF({ref}=0;"";{ref})'
+
+    # a.2) Recupero anticipazione
+    r_anticipo_cdp = R('Recupero anticipazione') or R('anticipazione')
+    if r_anticipo_cdp is not None and r2_anticipo is not None:
+        ref = f'$S2.${s2_col}${r2_anticipo + 1}'
+        oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = \
+            f'=IF({ref}=0;"";{ref})'
+
 
     # TOTALE DETRAZIONE
     if r_totdet is not None and r_ritenuta is not None:
+        sub = f'SUM({v}{r_ritenuta + 1}:{v}{r_totdet})'
         oCdP.getCellByPosition(val_col, r_totdet).Formula = \
-            f'=SUM({v}{r_ritenuta + 1}:{v}{r_totdet})'
+            f'=IF({sub}=0;"";{sub})'
 
     # RISULTA IL CREDITO DELL'IMPRESA
     if r_credito is not None and r_sogg is not None and r_totdet is not None:
+        expr = f'{v}{r_sogg + 1}+{v}{r_nonsogg + 1}-{v}{r_totdet + 1}'
+        # expr = f'{v}{r_sogg + 1}+{v}{r_nonsogg + 1}-{ref_cert_prec}'
         oCdP.getCellByPosition(val_col, r_credito).Formula = \
-            f'={v}{r_sogg + 1}+{v}{r_nonsogg + 1}-{v}{r_totdet + 1}'
+            f'=IF({expr}=0;"";{expr})'
 
     # per I.V.A. al __%
     if r_iva is not None and r_credito is not None:
@@ -2499,13 +2629,15 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
                 oCdP.getCellByPosition(c, r_iva).String = \
                     f'per I.V.A. al {perc_iva_str}%'
                 break
+        expr = f'{v}{r_credito + 1}*{aliquota_iva}'
         oCdP.getCellByPosition(val_col, r_iva).Formula = \
-            f'={v}{r_credito + 1}*{aliquota_iva}'
+            f'=IF({expr}=0;"";{expr})'
 
     # TOTALE GENERALE
     if r_totgen is not None and r_credito is not None and r_iva is not None:
+        expr = f'{v}{r_credito + 1}+{v}{r_iva + 1}'
         oCdP.getCellByPosition(val_col, r_totgen).Formula = \
-            f'={v}{r_credito + 1}+{v}{r_iva + 1}'
+            f'=IF({expr}=0;"";{expr})'
 
     # ── 4. Sezione CERTIFICA ─────────────────────────────────────────────
     if r_certifica is not None and r_totgen is not None:
@@ -2533,8 +2665,8 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
     if r_certifica is not None:
         r_firma = r_certifica + 3
         # Luogo e data (colonna sinistra)
-        oCdP.getCellByPosition(1, r_firma).String = \
-            f'{luogo}, ___/___/_________'
+        # oCdP.getCellByPosition(1, r_firma).String = \
+        #     f'{luogo}, ___/___/_________'
         # Il Responsabile del Procedimento (colonna destra)
         # Cerca la cella "Responsabile" nel template
         r_resp, c_resp = _trova_riva(oCdP, 'Responsabile')
@@ -2605,7 +2737,7 @@ def MENU_trasferimento_onfly():
     # 2. Finalizzazione UI (unlocked - refresh attivo)
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('CONTABILITA')
-    
+
     # Dialogs.Ok(Text='Trasferimento completato con successo!')
     LeenoUtils.DocumentRefresh(True)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=True)

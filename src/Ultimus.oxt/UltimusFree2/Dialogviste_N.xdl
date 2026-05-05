@@ -11,6 +11,7 @@
   <dlg:style dlg:style-id="6" dlg:background-color="0xff4000" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="8" dlg:background-color="0x66ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="9" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton28" dlg:tab-index="5" dlg:left="9" dlg:top="171" dlg:width="95" dlg:height="15" dlg:help-text="&amp;517.Dialogviste_N.CommandButton28.HelpText" dlg:value="Trova ricorrenze voci di E.P.">
@@ -79,7 +80,7 @@
   <dlg:button dlg:style-id="6" dlg:id="EliminaMisure" dlg:tab-index="16" dlg:left="9" dlg:top="55" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1095.Dialogviste_N.EliminaMisure.HelpText" dlg:value="&amp;1096.Dialogviste_N.EliminaMisure.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.svuotaContabilita?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="SituazioneContabile" dlg:tab-index="4" dlg:left="9" dlg:top="94" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1097.Dialogviste_N.SituazioneContabile.HelpText" dlg:value="&amp;1098.Dialogviste_N.SituazioneContabile.Label" dlg:multiline="true">
+  <dlg:button dlg:style-id="7" dlg:id="SituazioneContabile" dlg:tab-index="4" dlg:left="-141" dlg:top="78" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1097.Dialogviste_N.SituazioneContabile.HelpText" dlg:value="&amp;1098.Dialogviste_N.SituazioneContabile.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.vedi_situazione_contabile?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="8" dlg:id="GeneraAtti" dlg:tab-index="2" dlg:left="9" dlg:top="114" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1099.Dialogviste_N.GeneraAtti.HelpText" dlg:value="&amp;1100.Dialogviste_N.GeneraAtti.Label" dlg:multiline="true">
@@ -92,5 +93,9 @@
   <dlg:button dlg:style-id="4" dlg:id="CommandButton6" dlg:tab-index="31" dlg:left="137" dlg:top="192" dlg:width="71" dlg:height="15" dlg:help-text="&amp;1346.Dialogviste_N.CommandButton6.HelpText" dlg:value="&amp;1347.Dialogviste_N.CommandButton6.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trasferimento_onfly?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
+  <dlg:text dlg:style-id="9" dlg:id="Label1" dlg:tab-index="34" dlg:left="9" dlg:top="95" dlg:width="23" dlg:height="10" dlg:help-text="&amp;1358.Dialogviste_N.Label1.HelpText" dlg:value="&amp;1359.Dialogviste_N.Label1.Label" dlg:align="center" dlg:valign="center"/>
+  <dlg:text dlg:style-id="9" dlg:id="Label2" dlg:tab-index="35" dlg:left="60" dlg:top="95" dlg:width="25" dlg:height="12" dlg:help-text="&amp;1362.Dialogviste_N.Label2.HelpText" dlg:value="&amp;1363.Dialogviste_N.Label2.Label" dlg:align="center" dlg:valign="center"/>
+  <dlg:textfield dlg:id="da_voce" dlg:tab-index="33" dlg:left="35" dlg:top="95" dlg:width="20" dlg:height="11" dlg:help-text="&amp;1364.Dialogviste_N.da_voce.HelpText" dlg:align="center" dlg:valign="center" dlg:value="&amp;1365.Dialogviste_N.da_voce.Text"/>
+  <dlg:textfield dlg:id="a_voce" dlg:tab-index="32" dlg:left="84" dlg:top="95" dlg:width="20" dlg:height="11" dlg:help-text="&amp;1366.Dialogviste_N.a_voce.HelpText" dlg:align="center" dlg:valign="center" dlg:value="&amp;1367.Dialogviste_N.a_voce.Text"/>
  </dlg:bulletinboard>
 </dlg:window>

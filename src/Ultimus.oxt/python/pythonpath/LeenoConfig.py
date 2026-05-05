@@ -112,6 +112,7 @@ class Config(Borg):
             ('Generale', 'ultimo_percorso', expanduser("~")),
             ('Generale', 'precisione_come_mostrato', '(bool)True'),
             ('Generale', 'nuova_voce', 'True'),
+            ('Generale', 'applica_colori', 'True'),
 
             ('Generale', 'colorazione_categorie', 'Nessuno'),
 
@@ -346,6 +347,9 @@ def MENU_leeno_conf():
 
     if cfg.read('Generale', 'nuova_voce') == 'True':
         oDlg_config.getControl('CheckBox7').State = 1
+
+    if cfg.read('Generale', 'applica_colori') == 'True':
+        oDlg_config.getControl('CheckBox9').State = 1
 
     oDlg_config.getControl('ComboBox4').Text = cfg.read('Generale', 'copie_backup')
     if int(cfg.read('Generale', 'copie_backup')) != 0:

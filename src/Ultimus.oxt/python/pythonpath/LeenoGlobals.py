@@ -47,7 +47,7 @@ if getGlobalVar('Lmajor') is None:
                         'Comp End Attributo'),
 
         'stili_contab': ('Comp Start Attributo_R', 'comp 10 s_R', 'uuuuu',
-                         'Comp End Attributo_R', 'Comp TOTALI'),
+                         'Comp End Attributo_R', 'Comp TOTALI', 'Ultimus_centro_bordi_lati'),
         'stili_analisi': ('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla',
                           'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN',
                           'An-sfondo-basso Att End'),

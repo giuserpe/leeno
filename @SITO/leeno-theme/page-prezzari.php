@@ -89,6 +89,7 @@ get_header();
             <?php else :
 
                 // Funzione ricorsiva per renderizzare categorie e file
+                if ( ! function_exists('leeno_render_cat') ) :
                 function leeno_render_cat( $cat, $depth = 0 ) {
                     global $wpdb;
 
@@ -189,6 +190,7 @@ get_header();
                     </div><!-- .prezzari-block -->
                     <?php
                 }
+                endif; // function_exists leeno_render_cat
 
                 // Render di tutte le top-level categories
                 foreach ( $top_cats as $cat ) :

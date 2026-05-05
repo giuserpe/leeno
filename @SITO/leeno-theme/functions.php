@@ -140,3 +140,26 @@ add_action('widgets_init', function () {
         'after_title'   => '</h4>',
     ]);
 });
+
+/**
+ * Fix: WP Document Revisions incompatibile con WP 6.9+
+ * Rimuove il filtro che causa il fatal error su get_adjacent_post
+ */
+add_action('init', function () {
+    if ( class_exists('WP_Document_Revisions') ) {
+        global $wp_filter;
+        foreach ( ['get_previous_post_where', 'get_next_post_where'] as $hook ) {
+            if ( isset($wp_filter[$hook]) ) {
+                foreach ( $wp_filter[$hook]->callbacks as $priority => $callbacks ) {
+                    foreach ( $callbacks as $key => $callback ) {
+                        if ( is_array($callback['function']) &&
+                             is_a($callback['function'][0], 'WP_Document_Revisions') &&
+                             $callback['function'][1] === 'suppress_adjacent_doc' ) {
+                            unset($wp_filter[$hook]->callbacks[$priority][$key]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}, 20);

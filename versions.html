@@ -125,8 +125,8 @@
     <div class="info-box">
         <h2>Informazioni</h2>
         <p>Questa tabella elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-        <p><strong>Ultima versione:</strong> LeenO-3.25.0.383-TESTING-20260507</p>
-        <p><strong>Build Commit:</strong> <code>365bab5</code></p>
+        <p><strong>Ultima versione:</strong> LeenO-3.25.0.384-TESTING-20260507</p>
+        <p><strong>Build Commit:</strong> <code>cea7bb4</code></p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -191,6 +191,16 @@
         <tbody>
             
             <tr>
+                <td>2026-05-07 21:45</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/cea7bb456c892f5a8d2d8f73c963b196e52cbad8" target="_blank" rel="noopener"><code>cea7bb4</code></a></td>
+                <td class="commit-msg">refactor(bridge): estende bootstrap pythonpath e aggiunge direttive pyrefly
+
+- Aggiunge parentPath a sys.path per garantire import più robusti
+- Mantiene myPath come fallback evitando duplicazioni
+- Introduce direttive pyrefly per ignorare nomi non risolvibili in callAlert
+- Preserva la logica di alert per chiamate Basic → Python</td>
+            </tr>
+            <tr>
                 <td>2026-05-07 21:42</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/365bab509c3505d10fa1bc73426a689a5f9f5cbf" target="_blank" rel="noopener"><code>365bab5</code></a></td>
                 <td class="commit-msg">refactor(ui): sostituito "Elimina TUTTE le misure" con "Annulla Tutti Atti Contabili" nella dialog viste</td>
@@ -200,19 +210,10 @@
                 <td><a href="https://github.com/giuserpe/leeno/commit/0b7f6386b3fd267b9d742a439cd8ac090f09664c" target="_blank" rel="noopener"><code>0b7f638</code></a></td>
                 <td class="commit-msg">update</td>
             </tr>
-            <tr>
-                <td>2026-05-07 21:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/dd15aed81718df450794841be18e139e5043502b" target="_blank" rel="noopener"><code>dd15aed</code></a></td>
-                <td class="commit-msg">refactor(dispatcher): corregge gestione pythonpath e aggiunge direttive pyrefly
-
-- Aggiunge commenti pyrefly per ignorare import UNO non risolvibili staticamente
-- Migliora fixPythonPath aggiungendo pythonpath come percorso separato
-- Evita duplicazioni in sys.path e rende più chiara la logica di caricamento moduli</td>
-            </tr>
         </tbody>
     </table>
     <div class="footer">
-        <p>Generato automaticamente il 2026-05-07 21:42 UTC</p>
+        <p>Generato automaticamente il 2026-05-07 21:46 UTC</p>
         <p>Server: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 </p>
     </div>

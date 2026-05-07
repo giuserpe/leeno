@@ -3,9 +3,13 @@ import os
 import inspect
 import importlib
 import traceback
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 import unohelper
+# pyrefly: ignore [missing-import]
 from com.sun.star.task import XJobExecutor
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import MessageBoxButtons as MSG_BUTTONS
 from datetime import datetime
 
@@ -36,9 +40,11 @@ def loVersion():
 
 def fixPythonPath():
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    myPath = os.path.join(myPath, "pythonpath")
     if myPath not in sys.path:
         sys.path.append(myPath)
+    libPath = os.path.join(myPath, "pythonpath")
+    if libPath not in sys.path:
+        sys.path.append(libPath)
 
 def reloadLeenoModules():
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

@@ -194,7 +194,7 @@ Sub bak0
 End Sub
 rem ######################################################################
 Sub svuotaContabilita
-	ScriptPy(&quot;LeenoContab&quot;,&quot;Menu_svuotaContabilita&quot;)
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_AnnullaTuttiAttiContabili&quot;)
 End Sub
 rem ######################################################################
 Sub trasferimento_onfly

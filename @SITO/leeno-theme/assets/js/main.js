@@ -572,12 +572,15 @@
             const link = item.querySelector(':scope > a');
             if (!link) return;
 
-            link.addEventListener('click', function (e) {
+            function handleSubmenuToggle(e) {
                 // Only on mobile when nav is active
                 if (!nav.classList.contains('active')) return;
                 e.preventDefault();
+                e.stopPropagation();
                 item.classList.toggle('submenu-open');
-            });
+            }
+            link.addEventListener('click', handleSubmenuToggle);
+            link.addEventListener('touchstart', handleSubmenuToggle, { passive: false });
         });
 
         // Close mobile menu on window resize to desktop

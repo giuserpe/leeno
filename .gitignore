@@ -4,6 +4,7 @@
 *.xdl
 *.xlb
 *.zip
+*.log
 .directory
 DialogStrings_it_IT.*
 RegisteredFlag

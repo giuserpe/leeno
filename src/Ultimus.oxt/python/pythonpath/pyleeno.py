@@ -36,13 +36,16 @@ import threading
 import time
 # import csv
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.FontWeight import BOLD, NORMAL
 
 import os
 import shutil
 import sys
 import ctypes
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 import unohelper
 import zipfile
 import inspect
@@ -52,8 +55,10 @@ import tempfile
 from pathlib import Path
 # from uno import fileUrlToSystemPath, systemPathToFileUrl
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
+
 import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
@@ -86,13 +91,18 @@ from undo_utils import with_undo, with_undo_batch, no_undo
 # http://www.html.it/articol\i/il-misterioso-mondo-dei-namespaces-1/
 
 # from com.sun.star.lang import Locale
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 # from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
+# pyrefly: ignore [missing-import]
 from com.sun.star.table.CellHoriJustify import RIGHT
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.FontSlant import ITALIC, NONE
+# pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans.PropertyAttribute import \
     MAYBEVOID, REMOVEABLE, MAYBEDEFAULT
 
@@ -2976,6 +2986,7 @@ def riordina_ElencoPrezzi_():
             for col in range(start_col, end_col + 1):
                 cell = sheet.getCellByPosition(col, source_row)
                 # Salva tutti i dettagli della cella
+                # pyrefly: ignore [missing-import]
                 from com.sun.star.table.CellContentType import TEXT, VALUE, FORMULA, EMPTY
                 cell_type = cell.Type
                 riga_dati.append({
@@ -2992,6 +3003,7 @@ def riordina_ElencoPrezzi_():
             for col_offset, cell_data in enumerate(riga_dati):
                 dest_col = start_col + col_offset
                 cell = sheet.getCellByPosition(dest_col, dest_row)
+                # pyrefly: ignore [missing-import]
                 from com.sun.star.table.CellContentType import TEXT, VALUE, FORMULA, EMPTY
 
                 if cell_data['type'] == FORMULA:
@@ -4508,6 +4520,7 @@ def tante_analisi_in_ep():
     with LeenoUtils.DocumentRefreshContext(False):
 
         # 1. Prepara dati dalla sheet Analisi
+        # pyrefly: ignore [missing-import]
         from com.sun.star.container import NoSuchElementException
         try:
             src_sheet = oDoc.getSheets().getByName('Analisi di prezzo')
@@ -8244,7 +8257,9 @@ def SubSum(lrow, sub=False):
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
 
+# pyrefly: ignore [missing-import]
 import unohelper
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import XKeyHandler
 
 class LeenoKeyHandler(unohelper.Base, XKeyHandler):
@@ -9635,25 +9650,6 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
 ########################################################################
 
 
-def chiudi_dialoghi(event=None):
-    '''
-    @@ DA DOCUMENTARE
-    '''
-
-    try:
-        oDialog1.endExecute()
-    except:
-        pass
-    try:
-        oDlgMain.endExecute()
-    except:
-        pass
-
-    # return
-    if event:
-        event.Source.Context.endExecute()
-    return
-
 
 def chiudi_dialoghi(event=None):
     '''
@@ -11006,33 +11002,28 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 
 
 ########################################################################
-@LeenoUtils.preserva_posizione(step=0)
 @LeenoUtils.no_refresh
 def fissa():
     '''
     Fissa le righe e le colonne nel foglio attivo,
     evitando che le prime righe rimangano nascoste.
+    Utilizza le proprietà UNO del controller per maggiore robustezza.
     '''
     oDoc = LeenoUtils.getDocument()
     if not oDoc or not hasattr(oDoc, 'CurrentController'):
         return
 
     controller = oDoc.CurrentController
-
-    # Rimuove eventuali blocchi esistenti e riporta la vista all'inizio
-    # per evitare che le righe rimangano intrappolate sopra l'area di blocco
-    controller.freezeAtPosition(0, 0)
-    controller.setFirstVisibleColumn(0)
-    controller.setFirstVisibleRow(0)
-
     oSheet = controller.ActiveSheet
     if not oSheet:
         return
 
+    # Reset visuale: rimuove blocchi e torna in cima
+    controller.freezeAtPosition(0, 0)
+    controller.setFirstVisibleColumn(0)
+    controller.setFirstVisibleRow(0)
+
     # Mappa dei fogli e relative righe da bloccare
-    # 3: COMPUTO, VARIANTE, CONTABILITA, Elenco Prezzi
-    # 2: Analisi di Prezzo
-    # 1: Registro, SAL, S2
     sheet_freeze_rows = {
         'COMPUTO': 3,
         'VARIANTE': 3,
@@ -11048,7 +11039,24 @@ def fissa():
 
     rows_to_freeze = sheet_freeze_rows.get(oSheet.Name, 0)
     if rows_to_freeze > 0:
-        controller.freezeAtPosition(0, rows_to_freeze)
+        # Imposta il blocco tramite il metodo standard UNO (più robusto)
+        try:
+            controller.freezeAtPosition(0, rows_to_freeze)
+        except Exception:
+            # Fallback nel caso in cui freezeAtPosition fallisca
+            try:
+                controller.SplitColumn = 0
+                controller.SplitRow = rows_to_freeze
+                controller.FreezePanes = True
+            except Exception:
+                pass
+
+    # Seleziona la prima cella sotto il blocco per dare il focus all'area dati
+    try:
+        oCell = oSheet.getCellByPosition(0, rows_to_freeze)
+        controller.select(oCell)
+    except:
+        pass
 
 ########################################################################
 
@@ -11597,8 +11605,11 @@ def inputbox(message, title="", default="", x=None, y=None):
     LABEL_HEIGHT = BUTTON_HEIGHT * 2 + 5
     EDIT_HEIGHT = 24
     HEIGHT = VERT_MARGIN * 2 + LABEL_HEIGHT + VERT_SEP + EDIT_HEIGHT
+    # pyrefly: ignore [missing-import]
     from com.sun.star.awt.PosSize import POS, SIZE, POSSIZE
+    # pyrefly: ignore [missing-import]
     from com.sun.star.awt.PushButtonType import OK, CANCEL
+    # pyrefly: ignore [missing-import]
     from com.sun.star.util.MeasureUnit import TWIP
     ctx = uno.getComponentContext()
     def create(name):
@@ -12325,6 +12336,21 @@ def somma_per_colore_nella_colonna():
     # Formattazione italiana: punto per le migliaia, virgola per i decimali
     formattato = "{:,.2f}".format(totale_somma).replace(",", "X").replace(".", ",").replace("X", ".")
 
+    # Inserimento del risultato nella prima cella visibile e vuota a destra
+    active_row = selection.RangeAddress.StartRow
+    # pyrefly: ignore [missing-import]
+    from com.sun.star.table.CellContentType import EMPTY
+
+    res_col = -1
+    for c in range(target_column + 1, sheet.Columns.Count):
+        if sheet.Columns.getByIndex(c).IsVisible:
+            if sheet.getCellByPosition(c, active_row).getType() == EMPTY:
+                res_col = c
+                break
+
+    if res_col != -1:
+        sheet.getCellByPosition(res_col, active_row).Value = totale_somma
+
     messaggio = (
         f"Colonna: {target_column + 1}\n"
         f"Celle trovate: {celle_contate}\n\n"
@@ -12340,10 +12366,13 @@ from Debug import measure_time, mostra_statistiche_performance, pulisci_log_perf
 
 
 
-import LeenoTheme
 
 
 def MENU_debug():
+    fissa()
+    return
+    LeenoContab.MENU_AnnullaTuttiAttiContabili()
+    return
     import app_bridge
     app_bridge.autocad("1_2_3_4_via Lucrezio_contabili di lavoro.dwg", "ADD")
     return
@@ -12362,6 +12391,8 @@ def MENU_debug():
     LeenoAnalysis.inizializza_analisi()
     LeenoUtils.DocumentRefresh(True)
     return
+    import LeenoTheme
+
     LeenoTheme.catalogo_stili_cella()
 
     # MENU_trova_duplicati()

@@ -7,111 +7,72 @@
     <meta http-equiv="Expires" content="0">
     <title>Versioni Nightly Builds LeenO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-primary: #f0f4e0;
-            --bg-dark: #121a23;
-            --bg-green: #0e1a08;
-            --accent-cyan: #aad400;
-            --accent-rust: #ff4d2e;
-            --text-primary: #ffffff;
-            --text-secondary: #8896ab;
-            --text-dark: #1a2010;
-            --text-green: #5d7400;
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
         body {
-            font-family: var(--font-body);
-            background: var(--bg-primary);
-            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            color: #333;
             max-width: 1200px;
             margin: auto;
         }
         h1, h2 {
-            font-family: var(--font-display);
-            color: var(--bg-dark);
-            border-bottom: 2px solid var(--accent-cyan);
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
-            margin-top: 30px;
         }
         .info-box {
-            background-color: #ffffff;
+            background-color: #f8f9fa;
             padding: 15px;
-            border-radius: 0px;
+            border-radius: 5px;
             margin-bottom: 20px;
-            border-left: 4px solid var(--accent-cyan);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-left: 4px solid #3498db;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         th, td {
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: var(--font-display);
-            text-transform: uppercase;
-            font-size: 0.9em;
-            letter-spacing: 0.05em;
+            background-color: #3498db;
+            color: white;
         }
-        tr:nth-child(even) { background-color: rgba(0,0,0,0.02); }
-        tr:hover { background-color: rgba(170,212,0,0.1); }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        tr:hover { background-color: #e9f7fe; }
         code {
-            font-family: var(--font-mono);
-            font-size: 0.85em;
-            background: rgba(0,0,0,0.05);
-            padding: 3px 6px;
+            font-family: monospace;
+            font-size: 0.9em;
+            background: #eef;
+            padding: 1px 5px;
             border-radius: 3px;
-            color: var(--text-green);
         }
         .badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 0px;
-            font-size: 0.75rem;
-            font-family: var(--font-display);
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--bg-dark);
-            letter-spacing: 0.05em;
+            padding: 3px 7px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
         }
-        .badge-latest { background-color: var(--accent-cyan); }
+        .badge-latest { background-color: #2ecc71; }
         .footer {
-            margin-top: 40px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-align: center;
-            font-family: var(--font-mono);
-        }
-        a {
-            color: var(--accent-rust);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-        a:hover {
-            text-decoration: underline;
-            color: #ff6b50;
-        }
-        .commit-msg {
+            margin-top: 30px;
             font-size: 0.9em;
-            color: var(--text-secondary);
+            color: #7f8c8d;
+            text-align: center;
+        }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .commit-msg { 
+            white-space: pre-wrap; 
+            font-size: 0.9em; 
+            color: #444;
             max-width: 600px;
         }
         @media (max-width: 768px) {
@@ -124,9 +85,8 @@
 
     <div class="info-box">
         <h2>Informazioni</h2>
-        <p>Questa tabella elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-        <p><strong>Ultima versione:</strong> LeenO-3.25.0.389-TESTING-20260507</p>
-        <p><strong>Build Commit:</strong> <code>4b511ef</code></p>
+        <p>Questa pagina elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
+        <p><strong>Build Commit:</strong> <code>6140612</code></p>
     </div>
 
     <h2>Download disponibili</h2>
@@ -142,38 +102,38 @@
         <tbody>
             
             <tr>
-                <td>LeenO-3.25.0.53-TESTING-20260507.oxt <span class="badge badge-latest">ULTIMA</span></td>
+                <td>LeenO-3.25.0.61-TESTING-20260510.oxt <span class="badge badge-latest">ULTIMA</span></td>
                 <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.53-TESTING-20260507.oxt" download>Scarica</a></td>
-                <td>2026-05-07 17:05</td>
+/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt" download>Scarica</a></td>
+                <td>2026-05-09 22:10</td>
                 <td>4.5MB</td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.52-TESTING-20260507.oxt </td>
+                <td>LeenO-3.25.0.60-TESTING-20260509.oxt </td>
                 <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.52-TESTING-20260507.oxt" download>Scarica</a></td>
-                <td>2026-05-07 12:56</td>
-                <td>5.0MB</td>
-            </tr>
-            <tr>
-                <td>LeenO-3.25.0.51-TESTING-20260507.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.51-TESTING-20260507.oxt" download>Scarica</a></td>
-                <td>2026-05-07 08:17</td>
-                <td>4.7MB</td>
-            </tr>
-            <tr>
-                <td>LeenO-3.25.0.50-TESTING-20260507.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.50-TESTING-20260507.oxt" download>Scarica</a></td>
-                <td>2026-05-06 22:02</td>
+/download?path=&files=LeenO-3.25.0.60-TESTING-20260509.oxt" download>Scarica</a></td>
+                <td>2026-05-09 21:25</td>
                 <td>4.5MB</td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.49-TESTING-20260506.oxt </td>
+                <td>LeenO-3.25.0.59-TESTING-20260509.oxt </td>
                 <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.49-TESTING-20260506.oxt" download>Scarica</a></td>
-                <td>2026-05-06 21:42</td>
+/download?path=&files=LeenO-3.25.0.59-TESTING-20260509.oxt" download>Scarica</a></td>
+                <td>2026-05-09 21:06</td>
+                <td>4.5MB</td>
+            </tr>
+            <tr>
+                <td>LeenO-3.25.0.58-TESTING-20260509.oxt </td>
+                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.58-TESTING-20260509.oxt" download>Scarica</a></td>
+                <td>2026-05-08 22:14</td>
+                <td>4.5MB</td>
+            </tr>
+            <tr>
+                <td>LeenO-3.25.0.57-TESTING-20260509.oxt </td>
+                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt" download>Scarica</a></td>
+                <td>2026-05-08 22:03</td>
                 <td>4.5MB</td>
             </tr>
         </tbody>
@@ -184,7 +144,8 @@
         <thead>
             <tr>
                 <th style="width:140px">Data</th>
-                <th style="width:90px">Commit</th>
+                <th style="width:120px">Autore</th>
+                <th style="width:80px">Commit</th>
                 <th>Descrizione</th>
             </tr>
         </thead>
@@ -192,16 +153,18 @@
             
             <tr>
                 <td>2026-05-07 21:54</td>
+                <td>giuseppe vizziello</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/4b511ef9d802d0850256a46f3f22adc82411339a" target="_blank" rel="noopener"><code>4b511ef</code></a></td>
-                <td class="commit-msg">chore(release): aggiorna versione a 3.25.0.53-TESTING-20260507
+                <td><div class="commit-msg">chore(release): aggiorna versione a 3.25.0.53-TESTING-20260507
 
 - Aggiorna il numero di versione in description.xml
-- Allinea leeno_version_code alla nuova release</td>
+- Allinea leeno_version_code alla nuova release</div></td>
             </tr>
             <tr>
                 <td>2026-05-07 21:53</td>
+                <td>giuseppe vizziello</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/e974bfb59e98d8f3cd9fdaa1d91d7b6056d0d676" target="_blank" rel="noopener"><code>e974bfb</code></a></td>
-                <td class="commit-msg">refactor(contab): centralizza annullamento SAL e migliora generazione registri/SAL
+                <td><div class="commit-msg">refactor(contab): centralizza annullamento SAL e migliora generazione registri/SAL
 
 - Introduce _annulla_ultimo_sal_core per unificare la logica di annullamento
 - Riorganizza MENU_AnnullaAttiContabili e aggiunge MENU_AnnullaTuttiAttiContabili
@@ -209,24 +172,25 @@
 - Rimuove svuotaContabilita e funzioni legacy correlate
 - Forza IsTextWrapped nelle descrizioni di Registro e SAL per migliore leggibilità
 - Ottimizza gestione altezze righe e applica adattaAltezzaRiga ai fogli generati
-- Aggiunge pyrefly: ignore agli import UNO non risolvibili staticamente</td>
+- Aggiunge pyrefly: ignore agli import UNO non risolvibili staticamente</div></td>
             </tr>
             <tr>
                 <td>2026-05-07 21:52</td>
+                <td>giuseppe vizziello</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/2f7991c89762ab3f0987cc135f6c7ef4f0378028" target="_blank" rel="noopener"><code>2f7991c</code></a></td>
-                <td class="commit-msg">refactor(pyleeno): aggiunge direttive pyrefly e migliora robustezza funzioni UNO
+                <td><div class="commit-msg">refactor(pyleeno): aggiunge direttive pyrefly e migliora robustezza funzioni UNO
 
 - Aggiunge pyrefly: ignore su import UNO e costanti non risolvibili staticamente
 - Introduce import locali protetti in riordina_ElencoPrezzi_ e tante_analisi_in_ep()
 - Rimuove vecchia versione duplicata di chiudi_dialoghi()
 - Rafforza fissa() con reset vista, fallback UNO e selezione cella post‑freeze
 - Estende somma_per_colore_nella_colonna con inserimento automatico del risultato
-- Aggiorna MENU_debug con chiamate temporanee e cleanup</td>
+- Aggiorna MENU_debug con chiamate temporanee e cleanup</div></td>
             </tr>
         </tbody>
     </table>
     <div class="footer">
-        <p>Generato automaticamente il 2026-05-07 21:55 UTC</p>
+        <p>Generato automaticamente il 2026-05-09 22:15 UTC</p>
         <p>Server: https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 </p>
     </div>

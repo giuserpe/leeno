@@ -69,6 +69,22 @@ def _uno_condition_operator_greater_equal():
     return cache._enum
 
 
+def _uno_validation_type_decimal():
+    cache = _uno_validation_type_decimal
+    if getattr(cache, '_enum', None) is None:
+        cache._enum = uno.Enum(
+            "com.sun.star.sheet.ValidationType", "DECIMAL")
+    return cache._enum
+
+
+def _uno_validation_alert_stop():
+    cache = _uno_validation_alert_stop
+    if getattr(cache, '_enum', None) is None:
+        cache._enum = uno.Enum(
+            "com.sun.star.sheet.ValidationAlertStyle", "STOP")
+    return cache._enum
+
+
 def _imposta_validazione_decimale_su_intervallo(
         oCellOrRange, skip_se_gia_decimale=False):
     """
@@ -78,25 +94,26 @@ def _imposta_validazione_decimale_su_intervallo(
     VT_DECIMAL = 2
     if skip_se_gia_decimale:
         try:
-            if oCellOrRange.Validation.Type == VT_DECIMAL:
+            if int(oCellOrRange.Validation.Type) == VT_DECIMAL:
                 return
         except Exception:
             pass
 
-    ALERT_STOP = 0
     op_ge = _uno_condition_operator_greater_equal()
+    vt_dec = _uno_validation_type_decimal()
+    alert_stop = _uno_validation_alert_stop()
 
     val = oCellOrRange.Validation
     val.Type = 0
     oCellOrRange.Validation = val
 
     val = oCellOrRange.Validation
-    val.Type = VT_DECIMAL
+    val.Type = vt_dec
     val.Operator = op_ge
     val.setFormula1("-1E300")
     val.IgnoreBlankCells = True
     val.ShowErrorMessage = True
-    val.ErrorAlertStyle = ALERT_STOP
+    val.ErrorAlertStyle = alert_stop
     val.ErrorMessage = (
         "Sono ammessi solo numeri o formule che restituiscono numeri."
     )
@@ -160,34 +177,114 @@ def applica_validazione_decimale():
     )
 
 
-def valida_numeri_decimale(oCell=None):
-    """Validazione decimale: ammessi numeri (incluso 0) e formule numeriche; escluse le stringhe."""
+def _try_unprotect_leeno_sheet(oSheet):
+    """Sblocca il foglio se protetto (password vuota o tipica template LeenO)."""
+    if oSheet is None or not oSheet.isProtected():
+        return
+    for pwd in ("", "password"):
+        try:
+            oSheet.unprotect(pwd)
+            return
+        except Exception:
+            continue
+
+
+def _raccolta_celle_validazione_esplicita(doc, oCell):
+    """
+    Risolve oCell in una lista di SheetCell.
+    Su LibreOffice/pyuno alcuni intervalli non espongono supportsService(SheetCellRange)
+    ma hanno getRangeAddress: proviamo anche quel percorso.
+    """
+    celle = []
+    if doc is None:
+        return celle
+
+    ss = getattr(oCell, "supportsService", None)
+    if callable(ss):
+        try:
+            if oCell.supportsService("com.sun.star.sheet.SheetCell"):
+                return [oCell]
+        except Exception:
+            pass
+        try:
+            if oCell.supportsService("com.sun.star.sheet.SheetCellRange"):
+                addr = oCell.getRangeAddress()
+                sheet = doc.Sheets[addr.Sheet]
+                for r in range(addr.StartRow, addr.EndRow + 1):
+                    for c in range(addr.StartColumn, addr.EndColumn + 1):
+                        celle.append(sheet.getCellByPosition(c, r))
+                return celle
+        except Exception:
+            pass
+
+    try:
+        addr = oCell.getRangeAddress()
+        sheet = doc.Sheets[addr.Sheet]
+        for r in range(addr.StartRow, addr.EndRow + 1):
+            for c in range(addr.StartColumn, addr.EndColumn + 1):
+                celle.append(sheet.getCellByPosition(c, r))
+        return celle
+    except Exception:
+        pass
+
+    try:
+        ca = oCell.getCellAddress()
+        sheet = doc.Sheets[ca.Sheet]
+        return [sheet.getCellByPosition(ca.Column, ca.Row)]
+    except Exception:
+        return []
+
+
+def valida_numeri_decimale(oCell=None, *, unprotect_if_needed=False):
+    """Validazione decimale: ammessi numeri (incluso 0) e formule numeriche; escluse le stringhe.
+
+    unprotect_if_needed: su foglio protetto Calc può ignorare l'impostazione della validità
+    (dialog «Validità» resta «Ogni valore»); prova unprotect con password LeenO tipiche.
+    """
 
     celle = []
+    doc = LeenoUtils.getDocument()
 
-    # Se viene passata una cella o un range, usalo direttamente
-    if oCell and hasattr(oCell, "supportsService"):
-        if oCell.supportsService("com.sun.star.sheet.SheetCell") or \
-           oCell.supportsService("com.sun.star.sheet.SheetCellRange"):
-            celle.append(oCell)
+    if oCell is not None:
+        celle = _raccolta_celle_validazione_esplicita(doc, oCell)
+        if not celle:
+            return
     else:
-        # Altrimenti usa la selezione corrente
-        doc = LeenoUtils.getDocument()
-        if not hasattr(doc, "CurrentSelection"):
+        if doc is None or not hasattr(doc, "CurrentSelection"):
             return
 
         sel = doc.CurrentSelection
 
-        if sel.supportsService("com.sun.star.sheet.SheetCell"):
-            celle.append(sel)
-        elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
-            celle.append(sel)  # Ottimizzato: applica al range direttamente
-        elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
-            for r in sel.getRangeAddresses():
-                sheet = doc.Sheets[r.Sheet]
-                celle.append(sheet.getCellRangeByPosition(r.StartColumn, r.StartRow, r.EndColumn, r.EndRow))
-        else:
-            return
+        if getattr(sel, "supportsService", None) and callable(sel.supportsService):
+            try:
+                if sel.supportsService("com.sun.star.sheet.SheetCell"):
+                    celle.append(sel)
+                elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
+                    addr = sel.getRangeAddress()
+                    sheet = doc.Sheets[addr.Sheet]
+                    for r in range(addr.StartRow, addr.EndRow + 1):
+                        for c in range(addr.StartColumn, addr.EndColumn + 1):
+                            celle.append(sheet.getCellByPosition(c, r))
+                elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
+                    for r in sel.getRangeAddresses():
+                        sheet = doc.Sheets[r.Sheet]
+                        for rr in range(r.StartRow, r.EndRow + 1):
+                            for cc in range(r.StartColumn, r.EndColumn + 1):
+                                celle.append(sheet.getCellByPosition(cc, rr))
+            except Exception:
+                celle = []
+        if not celle:
+            celle = _raccolta_celle_validazione_esplicita(doc, sel)
+
+    if not celle:
+        return
+
+    if unprotect_if_needed:
+        try:
+            addr0 = celle[0].getCellAddress()
+            _try_unprotect_leeno_sheet(doc.Sheets[addr0.Sheet])
+        except Exception:
+            pass
 
     for cell in celle:
         _imposta_validazione_decimale_su_intervallo(cell)

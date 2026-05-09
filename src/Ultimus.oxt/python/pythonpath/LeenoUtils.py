@@ -776,7 +776,7 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str, width=72) -> str:
+def wrap_text(text: str, width=65) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]

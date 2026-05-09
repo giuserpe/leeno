@@ -59,6 +59,10 @@ from pathlib import Path
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
+# pyrefly: ignore [missing-import]
+import unohelper
+# pyrefly: ignore [missing-import]
+from com.sun.star.sheet import XRangeSelectionListener
 import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
@@ -85,7 +89,7 @@ cfg = LeenoConfig.Config()
 
 import Dialogs
 
-from undo_utils import with_undo, with_undo_batch, no_undo
+from undo_utils import with_undo, with_undo_batch, no_undo, UndoContext
 
 # cos'e' il namespace:
 # http://www.html.it/articol\i/il-misterioso-mondo-dei-namespaces-1/
@@ -6123,6 +6127,140 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
     oCell.Validation = oTabVal
 
 
+def _uno_condition_operator_greater_equal():
+    cache = _uno_condition_operator_greater_equal
+    if getattr(cache, '_enum', None) is None:
+        cache._enum = uno.Enum(
+            "com.sun.star.sheet.ConditionOperator", "GREATER_EQUAL")
+    return cache._enum
+
+
+def _imposta_validazione_decimale_su_intervallo(
+        oCellOrRange, skip_se_gia_decimale=False):
+    """
+    Applica validazione decimale a SheetCell / SheetCellRange (uso interno e macro batch).
+    Evita ricreazioni ripetute dell'enum UNO per ConditionOperator.
+    """
+    VT_DECIMAL = 2
+    if skip_se_gia_decimale:
+        try:
+            if oCellOrRange.Validation.Type == VT_DECIMAL:
+                return
+        except Exception:
+            pass
+
+    ALERT_STOP = 0
+    op_ge = _uno_condition_operator_greater_equal()
+
+    val = oCellOrRange.Validation
+    val.Type = 0
+    oCellOrRange.Validation = val
+
+    val = oCellOrRange.Validation
+    val.Type = VT_DECIMAL
+    val.Operator = op_ge
+    val.setFormula1("-1E300")
+    val.IgnoreBlankCells = True
+    val.ShowErrorMessage = True
+    val.ErrorAlertStyle = ALERT_STOP
+    val.ErrorMessage = (
+        "Sono ammessi solo numeri o formule che restituiscono numeri."
+    )
+    oCellOrRange.Validation = val
+
+
+def valida_numeri_decimale(oCell=None):
+    """Validazione decimale: ammessi numeri (incluso 0) e formule numeriche; escluse le stringhe."""
+
+    celle = []
+
+    # Se viene passata una cella o un range, usalo direttamente
+    if oCell and hasattr(oCell, "supportsService"):
+        if oCell.supportsService("com.sun.star.sheet.SheetCell") or \
+           oCell.supportsService("com.sun.star.sheet.SheetCellRange"):
+            celle.append(oCell)
+    else:
+        # Altrimenti usa la selezione corrente
+        doc = LeenoUtils.getDocument()
+        if not hasattr(doc, "CurrentSelection"):
+            return
+
+        sel = doc.CurrentSelection
+
+        if sel.supportsService("com.sun.star.sheet.SheetCell"):
+            celle.append(sel)
+        elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
+            celle.append(sel)  # Ottimizzato: applica al range direttamente
+        elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
+            for r in sel.getRangeAddresses():
+                sheet = doc.Sheets[r.Sheet]
+                celle.append(sheet.getCellRangeByPosition(r.StartColumn, r.StartRow, r.EndColumn, r.EndRow))
+        else:
+            return
+
+    for cell in celle:
+        _imposta_validazione_decimale_su_intervallo(cell)
+
+
+
+def valida_numeri_decimale_diverso_da_0():
+    """Applica validazione decimale diverso da 0; non forza formato (rispetta lo stile cella)."""
+    doc = LeenoUtils.getDocument()
+    if not hasattr(doc, "CurrentSelection"):
+        return
+
+    sel = doc.CurrentSelection
+    celle = []
+
+    # Raccolta celle selezionate
+    if sel.supportsService("com.sun.star.sheet.SheetCell"):
+        celle.append(sel)
+    elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
+        addr = sel.getRangeAddress()
+        sheet = doc.Sheets[addr.Sheet]
+        for r in range(addr.StartRow, addr.EndRow + 1):
+            for c in range(addr.StartColumn, addr.EndColumn + 1):
+                celle.append(sheet.getCellByPosition(c, r))
+    elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
+        for r in sel.getRangeAddresses():
+            sheet = doc.Sheets[r.Sheet]
+            for rr in range(r.StartRow, r.EndRow + 1):
+                for cc in range(r.StartColumn, r.EndColumn + 1):
+                    celle.append(sheet.getCellByPosition(cc, rr))
+    else:
+        return
+
+    VT_DECIMAL = 2
+    ALERT_STOP = 0
+
+    for cell in celle:
+        # 1. Reset completo
+        val = cell.Validation
+        val.Type = 0
+        cell.Validation = val
+
+        # Non impostiamo NumberFormat sulla cella: un formato diretto ha priorita'
+        # sullo stile (CellStyle); finche' esiste, le modifiche ai decimali dallo stile non si applicano.
+
+        # 2. Nuova validazione
+        val = cell.Validation
+        val.Type = VT_DECIMAL
+        val.Operator = uno.Enum("com.sun.star.sheet.ConditionOperator", "NOT_EQUAL")
+        val.setFormula1("0")
+        val.IgnoreBlankCells = True
+        val.ShowErrorMessage = True
+        val.ErrorAlertStyle = ALERT_STOP
+        val.ErrorMessage = "Sono ammessi solo numeri o formule che restituiscono numeri."
+
+        cell.Validation = val
+
+    Dialogs.Info(
+        Title='Avviso',
+        Text=(
+            "Validazione decimale (diverso da 0) applicata senza modificare il formato numerico: "
+            "resta quello di stile della cella."
+        ),
+    )
 ########################################################################
 
 def comando(cmd):
@@ -9981,6 +10119,10 @@ def bak0():
     # tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
     oDoc = LeenoUtils.getDocument()
     orig = oDoc.getURL()
+    DLG.chi(orig)
+    #evita il bak-up del file di template Computo_LeenO.ods
+    if "Computo_LeenO" in orig:
+        return
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
     try:
@@ -11002,7 +11144,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 
 
 ########################################################################
-@LeenoUtils.no_refresh
+# @LeenoUtils.no_refresh
 def fissa():
     '''
     Fissa le righe e le colonne nel foglio attivo,
@@ -12297,88 +12439,160 @@ def _col_letter(col_num):
         col_num = col_num // 26 - 1
     return result
 
+#########################################################################
+#########################################################################
+#########################################################################
 
+# --- LISTENER ASINCRONO (NON BLOCCANTE) ---
+class RangeListener(unohelper.Base, XRangeSelectionListener):
+    def __init__(self, controller, formula, color):
+        self.controller = controller
+        self.formula = formula
+        self.color = color
 
-#########################################################################
-#########################################################################
-#########################################################################
-@LeenoUtils.no_refresh
+    def done(self, event):
+        """Viene eseguito quando l'utente clicca sulla cella"""
+        try:
+            oDoc = self.controller.Model
+            sheet = oDoc.CurrentController.getActiveSheet()
+            target_range = sheet.getCellRangeByName(event.RangeDescriptor)
+            target_cell = target_range.getCellByPosition(0, 0)
+
+            # Inserimento formula e colore
+            target_cell.Formula = self.formula
+            target_cell.CellBackColor = self.color
+
+        except Exception as e:
+            print(f"Errore nell'inserimento: {e}")
+        finally:
+            self.unregister()
+
+    def aborted(self, event):
+        self.unregister()
+
+    def unregister(self):
+        """Rimuove se stesso per liberare memoria"""
+        self.controller.removeRangeSelectionListener(self)
+
+    def disposing(self, event):
+        pass
+
+# --- FUNZIONE PRINCIPALE ---
+@with_undo("Somma per Colore")
 def somma_per_colore_nella_colonna():
-    """
-    Somma i valori nella colonna della cella attiva filtrando per
-    Stile di Cella o Colore di sfondo.
-    """
-    oDoc = LeenoUtils.getDocument() #
+    oDoc = LeenoUtils.getDocument()
     selection = oDoc.CurrentSelection
 
-    # Recuperiamo i riferimenti della cella attiva
+    if not hasattr(selection, "CellBackColor"):
+        return
+
     target_color = selection.CellBackColor
     target_column = selection.RangeAddress.StartColumn
     sheet = oDoc.CurrentController.getActiveSheet()
 
-    # Troviamo l'ultima riga usata per non scansionare l'intero foglio
+    # Logica di scansione (Veloce)
     cursor = sheet.createCursor()
     cursor.gotoEndOfUsedArea(False)
     last_row = cursor.RangeAddress.EndRow
 
-    totale_somma = 0.0
-    celle_contate = 0
+    indirizzi_celle = []
+    converter = oDoc.createInstance("com.sun.star.table.CellAddressConversion")
 
     for riga in range(last_row + 1):
         cell = sheet.getCellByPosition(target_column, riga)
+        if cell.CellBackColor == target_color and cell.getValue() != 0:
+            converter.Address = cell.CellAddress
+            indirizzi_celle.append(converter.UserInterfaceRepresentation.replace("$", ""))
 
-        if cell.CellBackColor == target_color:
-            celle_contate += 1
+    if not indirizzi_celle:
+        return
 
-            totale_somma += cell.Value
+    formula_string = "=" + "+".join(indirizzi_celle)
 
+    # AVVIO SELEZIONE SENZA LOOP WHILE
+    controller = oDoc.CurrentController
 
-    # Formattazione italiana: punto per le migliaia, virgola per i decimali
-    formattato = "{:,.2f}".format(totale_somma).replace(",", "X").replace(".", ",").replace("X", ".")
+    # Passiamo la formula e il colore al listener così che sappia cosa scrivere
+    listener = RangeListener(controller, formula_string, target_color)
+    controller.addRangeSelectionListener(listener)
 
-    # Inserimento del risultato nella prima cella visibile e vuota a destra
-    active_row = selection.RangeAddress.StartRow
-    # pyrefly: ignore [missing-import]
-    from com.sun.star.table.CellContentType import EMPTY
-
-    res_col = -1
-    for c in range(target_column + 1, sheet.Columns.Count):
-        if sheet.Columns.getByIndex(c).IsVisible:
-            if sheet.getCellByPosition(c, active_row).getType() == EMPTY:
-                res_col = c
-                break
-
-    if res_col != -1:
-        sheet.getCellByPosition(res_col, active_row).Value = totale_somma
-
-    messaggio = (
-        f"Colonna: {target_column + 1}\n"
-        f"Celle trovate: {celle_contate}\n\n"
-        f"Somma totale per il colore selezionato: {formattato}"
+    props = (
+        PropertyValue(Name="Title", Value="LeenO: Clicca sulla cella di destinazione"),
+        PropertyValue(Name="CloseOnMouseRelease", Value=True),
+        PropertyValue(Name="SingleCellMode", Value=True),
     )
 
-    Dialogs.Info(Title="Risultato Calcolo", Text=messaggio)
+    # Questa chiamata è asincrona: la funzione finisce qui,
+    # ma LibreOffice resta in attesa del click.
+    controller.startRangeSelection(props)
 
 
+def applica_validazione_decimale():
+    """
+    Applica validazione decimale alle colonne F, G, H, I con stile di cella che inizia con 'comp'.
+    Modalità batch: rileva blocchi contigui di celle per velocizzare l'operazione.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.getActiveSheet()
+    lastrow = SheetUtils.getLastUsedRow(oSheet)
 
-from Debug import measure_time, mostra_statistiche_performance, pulisci_log_performance, measure_time_simple
-# @measure_time(show_popup=True)
+    first_row = 4
+    cols_f_i = range(4, 9)  # colonne F..I (0-based)
+    comp_prefix = 'comp'
 
+    indicator = oDoc.CurrentController.getStatusIndicator()
+    indicator.start('Applicazione validazione decimale (batch)...', len(cols_f_i))
 
+    rng_sheet = oSheet.getCellRangeByPosition
 
+    def apply_dec_batch(rng):
+        _imposta_validazione_decimale_su_intervallo(
+            rng, skip_se_gia_decimale=True)
+
+    try:
+        with LeenoUtils.DocumentRefreshContext(False):
+            with UndoContext('Applicazione validazione decimale'):
+                if lastrow >= first_row:
+                    n_rows = lastrow - first_row + 1
+                    for i, col in enumerate(cols_f_i):
+                        indicator.setValue(i + 1)
+                        oColRange = rng_sheet(col, first_row, col, lastrow)
+                        col_cell = oColRange.getCellByPosition
+                        start_row = None
+                        for rel_row in range(n_rows):
+                            row = first_row + rel_row
+                            stile = col_cell(0, rel_row).CellStyle
+                            if stile.startswith(comp_prefix):
+                                if start_row is None:
+                                    start_row = row
+                            elif start_row is not None:
+                                apply_dec_batch(
+                                    rng_sheet(col, start_row, col, row - 1))
+                                start_row = None
+                        if start_row is not None:
+                            apply_dec_batch(
+                                rng_sheet(col, start_row, col, lastrow))
+    finally:
+        indicator.end()
+
+    Dialogs.Info(
+        Title='Avviso',
+        Text=(
+            "Validazione decimale applicata in modalità batch: ammessi numeri (anche 0) e formule; "
+            "non ammessi testi. Il formato numerico resta quello di stile della cella."
+        ),
+    )
 
 
 def MENU_debug():
-    fissa()
+    applica_validazione_decimale()
     return
-    LeenoContab.MENU_AnnullaTuttiAttiContabili()
-    return
+    # debug_validation()
+    # return
+    # somma_per_colore_nella_colonna()
+    # return
     import app_bridge
     app_bridge.autocad("1_2_3_4_via Lucrezio_contabili di lavoro.dwg", "ADD")
-    return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName('CONTABILITA')
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=True)
     return
     import dcf_parser
     dcf_parser.leggi_file()

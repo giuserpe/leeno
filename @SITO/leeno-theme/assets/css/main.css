@@ -88,7 +88,7 @@
     justify-content: center;
     gap: 12px;
     background: #ff4d2e;
-    color: #fff !important;
+    color: #ffffff !important; /* Forza il bianco puro */
     font-family: var(--font-display);
     font-weight: 800;
     padding: 12px 32px;
@@ -107,10 +107,12 @@
     background: var(--accent-rust-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 77, 46, 0.4);
+    color: #ffffff !important;
 }
 
 .btn-leeno-download svg {
     transition: transform 0.3s;
+    stroke: #ffffff !important; /* Icona bianca */
     stroke-width: 3;
 }
 
@@ -372,7 +374,7 @@ img {
     align-items: center;
     gap: 7px;
     background: #ff4d2e;
-    color: #fff !important;
+    color: #ffffff !important;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 0.75rem;
@@ -390,6 +392,11 @@ img {
     background: var(--accent-rust-hover);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(255, 77, 46, 0.3);
+    color: #ffffff !important;
+}
+
+.btn-download svg {
+    stroke: #ffffff !important;
 }
 
 /* Mobile menu toggle */

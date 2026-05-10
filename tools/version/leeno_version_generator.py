@@ -150,7 +150,7 @@ class VersionManager:
                 <td class="col-extra">{file['date']}</td>
                 <td style="text-align: right;">
                     <a href="{url}" class="btn-download-link" download>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Scarica
                     </a>
                 </td>
@@ -382,30 +382,34 @@ class VersionManager:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            background: var(--accent-rust);
-            color: #fff;
+            gap: 12px;
+            background: #ff4d2e;
+            color: #ffffff !important;
             font-family: var(--font-display);
-            font-weight: 700;
-            padding: 10px 24px;
-            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 12px 32px;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.05em;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
+            border-radius: 2px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
+            box-shadow: 0 4px 15px rgba(255, 77, 46, 0.3);
+            text-decoration: none !important;
         }}
 
         .btn-download-link:hover {{
             background: var(--accent-rust-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 77, 46, 0.3);
-            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 77, 46, 0.4);
+            color: #ffffff !important;
         }}
 
         .btn-download-link svg {{
             transition: transform 0.3s;
+            stroke: #ffffff !important;
+            stroke-width: 3;
         }}
 
         .btn-download-link:hover svg {{

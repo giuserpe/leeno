@@ -73,44 +73,54 @@
             padding: 40px 0;
         }
 
-        /* ——— TABLE ——— */
-        .table-wrap {
-            background: #fff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-            overflow-x: auto;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            background: #fff;
+        }
+
+        thead tr {
+            border-top: 3px solid #000;
+            border-bottom: 3px solid #000;
         }
 
         th {
-            background: var(--bg-dark);
-            color: #fff;
-            padding: 18px 24px;
+            background: #f9f9f9;
+            color: #000;
+            padding: 12px 20px;
             font-family: var(--font-display);
-            font-weight: 600;
+            font-weight: 800;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
 
         td {
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
-            font-size: 0.95rem;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .col-name {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .col-name a:hover {
+            text-decoration: underline;
+        }
+
+        .col-dim, .col-extra {
+            color: #aaa;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: right;
         }
 
         tr:hover td {
-            background: rgba(170, 212, 0, 0.04);
+            background: rgba(0, 0, 0, 0.01);
         }
 
         .badge {
@@ -276,23 +286,23 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Versione</th>
-                            <th>Download</th>
-                            <th>Data</th>
-                            <th>Dimensione</th>
+                            <th>Nome</th>
+                            <th style="text-align: right;">Dim.</th>
+                            <th style="text-align: right;">&darr;</th>
+                            <th style="width: 150px;"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Nessun file disponibile <span class="badge">ULTIMA</span></td>
-                            <td>
+                            <td class="col-name"><a href="#">Nessun file disponibile</a> <span class="badge">ULTIMA</span></td>
+                            <td class="col-dim">0 KB</td>
+                            <td class="col-extra">2026-04-22</td>
+                            <td style="text-align: right;">
                                 <a href="#" class="btn-download-link" download>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                     Scarica
                                 </a>
                             </td>
-                            <td>2026-04-22</td>
-                            <td>0 KB</td>
                         </tr>
                     </tbody>
                 </table>

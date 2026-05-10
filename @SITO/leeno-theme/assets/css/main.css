@@ -27,6 +27,9 @@
 .leeno-table-wrap {
     margin: 30px 0;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    width: 100%;
 }
 
 .leeno-table {
@@ -60,6 +63,7 @@
 .leeno-table .col-name {
     font-weight: 600;
     font-size: 1rem;
+    word-break: break-word;
 }
 
 .leeno-table .col-name a {
@@ -71,10 +75,22 @@
 }
 
 .leeno-table .col-dim, 
+.leeno-table .col-date,
 .leeno-table .col-extra {
-    color: #aaa;
+    color: var(--text-secondary);
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.leeno-table .col-dl {
+    text-align: right;
+    min-width: 140px;
+}
+
+.leeno-table .col-date,
+.leeno-table .col-dim {
+    min-width: 90px;
 }
 
 .leeno-table tr:hover td {
@@ -2474,7 +2490,7 @@ h3.wpfb-cat,
 }
 
 /* Nome file */
-.col-name { width: 100%; }
+.col-name { width: auto; }
 
 .prezzari-file-link {
     color: var(--text-dark);
@@ -2499,18 +2515,6 @@ h3.wpfb-cat,
     color: var(--text-secondary);
 }
 
-/* Contatore download */
-.col-hits {
-    white-space: nowrap;
-    text-align: right;
-}
-
-.prezzari-hits {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    opacity: 0.6;
-}
 
 /* Pulsante download */
 .col-dl {
@@ -2559,9 +2563,10 @@ h3.wpfb-cat,
 
 /* Responsive */
 @media (max-width: 600px) {
-    .col-hits { display: none; }
-    .prezzari-dl-btn span { display: none; }
-    .prezzari-table td { padding: 8px 10px; }
+    .leeno-table { min-width: 600px; }
+    .btn-leeno-download span { display: none; }
+    .btn-leeno-download { padding: 8px 12px; }
+    .leeno-table td, .leeno-table th { padding: 10px 12px; }
 }
 
 /* ── Link globali su sfondo chiaro ──────────────────────────── */

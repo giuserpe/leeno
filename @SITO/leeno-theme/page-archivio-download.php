@@ -103,11 +103,10 @@ get_header();
                 <table class="leeno-table" role="table">
                     <thead>
                         <tr>
-                            <th scope="col">Versione / File</th>
-                            <th scope="col" style="text-align: right; width: 100px;">Data</th>
-                            <th scope="col" style="text-align: right; width: 100px;">Dim.</th>
-                            <th scope="col" style="text-align: right; width: 60px;">&darr;</th>
-                            <th scope="col" style="width: 150px;"></th>
+                            <th scope="col" class="col-name">Versione / File</th>
+                            <th scope="col" class="col-date" style="text-align: right; width: 100px;">Data</th>
+                            <th scope="col" class="col-dim" style="text-align: right; width: 100px;">Dim.</th>
+                            <th scope="col" class="col-dl" style="width: 150px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,24 +137,21 @@ get_header();
                                     <?php echo esc_html($name); ?>
                                 </a>
                             </td>
-                            <td class="col-extra" style="color: #666;">
+                            <td class="col-date" style="color: #666; text-align: right;">
                                 <?php echo esc_html($date); ?>
                             </td>
-                            <td class="col-dim">
+                            <td class="col-dim" style="text-align: right;">
                                 <?php echo esc_html($size); ?>
                             </td>
-                            <td class="col-extra">
-                                <span title="Download effettuati"><?php echo number_format_i18n($hits); ?></span>
-                            </td>
-                            <td style="text-align: right;">
+                            <td class="col-dl" style="text-align: right;">
                                 <a href="<?php echo esc_url($dl_url); ?>" class="btn-leeno-download" aria-label="Scarica <?php echo esc_attr($name); ?>">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                         <polyline points="7 10 12 15 17 10"/>
                                         <line x1="12" y1="15" x2="12" y2="3"/>
-                                    </svg>
-                                    Scarica
-                                </a>
+                                     </svg>
+                                     <span>Scarica</span>
+                                 </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

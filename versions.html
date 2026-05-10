@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt">LeenO-3.25.0.61-TESTING-20260510.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.25.0.62-TESTING-20260510.oxt">LeenO-3.25.0.62-TESTING-20260510.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-10 21:24</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.62-TESTING-20260510.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt">LeenO-3.25.0.61-TESTING-20260510.oxt</a> </td>
                 <td class="col-dim">4.5MB</td>
                 <td class="col-extra">2026-05-09 22:10</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt">LeenO-3.25.0.57-TESTING-20260509.oxt</a> </td>
-                <td class="col-dim">4.5MB</td>
-                <td class="col-extra">2026-05-08 22:03</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -450,6 +450,30 @@
         <tbody>
             
             <tr>
+                <td>2026-05-10 21:24</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/641ddaf6e4a4557fad46a474e759f460b84af0a3" target="_blank" rel="noopener"><code>641ddaf</code></a></td>
+                <td class="commit-msg">refactor(theme): migliora resa tabelle Premium e allinea markup pagine
+
+- Aggiunge overflow touch e width 100% al wrapper delle tabelle
+- Introduce word-break su col-name per evitare overflow dei nomi lunghi
+- Uniforma col-date/col-dim/col-extra con font mono, nowrap e colore secondario
+- Definisce col-dl con min-width e allineamento a destra
+- Rimuove vecchie classi col-hits/prezzari-hits non più usate
+- Aggiorna pagine archivio/prezzari/software con nuove classi col-name/col-date/col-dim/col-dl
+- Semplifica header tabelle eliminando colonna hits
+- Riduce padding mobile e nasconde testo nei pulsanti su schermi piccoli</td>
+            </tr>
+            <tr>
+                <td>2026-05-10 20:52</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ac8373bf8713525b6b8f7101ab9f216c1750eda8" target="_blank" rel="noopener"><code>ac8373b</code></a></td>
+                <td class="commit-msg">chore: aggiorna versione tema e migliora layout contenuti
+
+- Incrementa la versione del tema a 1.0.1 per il cache busting
+- Aggiunge un contenitore per il contenuto principale in page.php
+- Modifica stili CSS per pulsanti download e tabelle, migliorando coerenza e leggibilità
+- Aggiorna stili footer e tabelle per allineamento con design Premium</td>
+            </tr>
+            <tr>
                 <td>2026-05-10 20:44</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/d12e22ac2530a0c929a7ca2bbcbc87f0cdba0bd3" target="_blank" rel="noopener"><code>d12e22a</code></a></td>
                 <td class="commit-msg">style: forza override finale per pulsanti download
@@ -458,25 +482,6 @@
 - Applica override globale a btn-leeno-download, btn-download-link e btn-download
 - Garantisce coerenza visiva anche in presenza di stili concorrenti
 - Nessun impatto su layout o comportamento dei pulsanti</td>
-            </tr>
-            <tr>
-                <td>2026-05-10 20:39</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/30d7925ac3bc077230399b11816b488ab70cd7d0" target="_blank" rel="noopener"><code>30d7925</code></a></td>
-                <td class="commit-msg">style: esclude link standard dai selettori generici
-
-- Applica :not(.btn-leeno-download):not(.btn-download-link) ai selettori dei link
-- Evita che i pulsanti download ereditino stile underline/hover dei link normali
-- Nessun impatto su layout o colori esistenti</td>
-            </tr>
-            <tr>
-                <td>2026-05-10 20:34</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/7fd3c194214f1e14e976326965e71319165feb37" target="_blank" rel="noopener"><code>7fd3c19</code></a></td>
-                <td class="commit-msg">refactor(theme): uniforma colore testo/icona nei pulsanti download
-
-- Forza bianco puro (#ffffff) su testo e icone dei pulsanti (btn-leeno-download, btn-download)
-- Aggiorna SVG: stroke bianco, stroke-width=3, linecap/linejoin round
-- Allinea generator e versions.html allo stesso stile
-- Mantiene invariati layout e dimensioni introdotti nel refactoring precedente</td>
             </tr>
         </tbody>
     </table>
@@ -498,8 +503,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-10 20:45 UTC</p>
-                <p>Build Commit: <code>d12e22a</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-10 21:24 UTC</p>
+                <p>Build Commit: <code>641ddaf</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

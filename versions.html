@@ -34,7 +34,7 @@
 
         /* ——— Reset & Base ——— */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+        
         html {
             font-size: 16px;
             scroll-behavior: smooth;
@@ -71,7 +71,7 @@
         /* ——— HEADER ——— */
         .site-header {
             background: var(--bg-dark);
-            padding: 20px 0;
+            padding: 15px 0;
             border-bottom: 1px solid rgba(170, 212, 0, 0.1);
         }
 
@@ -88,7 +88,7 @@
         }
 
         .site-logo img {
-            height: 40px;
+            height: 36px;
             width: auto;
         }
 
@@ -97,20 +97,20 @@
             font-weight: 700;
             color: #fff;
             letter-spacing: 0.1em;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .main-nav {
             display: flex;
-            gap: 24px;
+            gap: 20px;
         }
 
         .main-nav a {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
         }
 
         .main-nav a:hover {
@@ -120,62 +120,34 @@
         /* ——— PAGE HEADER (HERO) ——— */
         .page-header {
             background: var(--bg-dark);
-            padding: 80px 0 60px;
+            padding: 40px 0;
             color: #fff;
             text-align: center;
         }
 
         .page-title {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             text-transform: uppercase;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .page-subtitle {
             color: var(--text-secondary);
             font-family: var(--font-mono);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 0.05em;
         }
 
         /* ——— CONTENT ——— */
         .content-main {
-            padding: 60px 0;
-        }
-
-        .info-box {
-            background: #fff;
-            padding: 32px;
-            border-left: 4px solid var(--accent-cyan);
-            margin-bottom: 48px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-box h2 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            color: var(--bg-dark);
-            text-transform: uppercase;
-        }
-
-        .info-box p {
-            margin-bottom: 8px;
-            font-size: 1rem;
-            color: var(--text-green);
-        }
-
-        .info-box code {
-            font-family: var(--font-mono);
-            background: var(--bg-primary);
-            padding: 4px 8px;
-            color: var(--text-dark);
+            padding: 40px 0;
         }
 
         /* ——— TABLE ——— */
         .table-wrap {
             background: #fff;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             overflow-x: auto;
         }
 
@@ -188,18 +160,19 @@
         th {
             background: var(--bg-dark);
             color: #fff;
-            padding: 20px 24px;
+            padding: 18px 24px;
             font-family: var(--font-display);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
         }
 
         td {
-            padding: 18px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             vertical-align: middle;
+            font-size: 0.95rem;
         }
 
         tr:last-child td {
@@ -207,17 +180,17 @@
         }
 
         tr:hover td {
-            background: rgba(170, 212, 0, 0.05);
+            background: rgba(170, 212, 0, 0.04);
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 3px 8px;
             background: var(--accent-cyan);
             color: var(--bg-dark);
             font-family: var(--font-display);
             font-weight: 700;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-left: 8px;
@@ -231,8 +204,8 @@
             color: var(--bg-dark);
             font-family: var(--font-display);
             font-weight: 700;
-            padding: 10px 20px;
-            font-size: 0.8rem;
+            padding: 8px 16px;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             transition: all 0.2s;
@@ -243,32 +216,35 @@
             transform: translateY(-2px);
         }
 
-        /* ——— RECENT ACTIVITY ——— */
+        /* ——— ACTIVITY SECTIONS ——— */
         .activity-section {
-            margin-top: 60px;
+            margin-bottom: 60px;
         }
 
         .activity-section h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 24px;
             text-transform: uppercase;
             color: var(--bg-dark);
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 16px;
         }
 
         .no-activity {
             color: var(--text-secondary);
             font-style: italic;
             padding: 24px;
-            background: rgba(0,0,0,0.03);
+            background: #fff;
             border: 1px dashed rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         /* ——— FOOTER ——— */
         .site-footer {
             background: var(--bg-dark);
             color: #fff;
-            padding: 60px 0 40px;
-            margin-top: 80px;
+            padding: 40px 0;
+            margin-top: 60px;
         }
 
         .footer-row {
@@ -276,36 +252,36 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 32px;
+            gap: 24px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 32px;
-            margin-bottom: 32px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
         }
 
         .footer-brand {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            gap: 12px;
         }
 
         .footer-logo {
-            height: 32px;
+            height: 28px;
             width: auto;
         }
 
         .footer-license {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
         .footer-links {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             flex-wrap: wrap;
         }
 
         .footer-links a {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
         }
 
@@ -316,7 +292,7 @@
         .footer-bottom {
             text-align: center;
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
@@ -324,20 +300,25 @@
         @media (max-width: 768px) {
             .header-inner {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
             }
             .main-nav {
                 gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             .footer-row {
                 flex-direction: column;
                 text-align: center;
             }
+            .footer-brand {
+                flex-direction: column;
+            }
             .footer-links {
                 justify-content: center;
             }
             td, th {
-                padding: 12px;
+                padding: 12px 16px;
             }
         }
     </style>
@@ -367,12 +348,6 @@
     </div>
 
     <main class="container content-main">
-        <!-- <div class="info-box">
-            <h2>Informazioni</h2>
-            <p>Questa tabella elenca le ultime 5 versioni di sviluppo disponibili sul server.</p>
-            <p><strong>Build Commit:</strong> <code>local</code></p>
-        </div> -->
-
         <div class="activity-section">
             <h2>Download disponibili</h2>
             <div class="table-wrap">
@@ -425,11 +400,10 @@
             </div>
             <div class="footer-bottom">
                 <p>Generato automaticamente il 2026-04-22 21:57 UTC</p>
-                <p>Server: GitHub Actions / Automated Build</p>
+                <p>Build Commit: <code>local</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>
 </body>
 
-</html>
 

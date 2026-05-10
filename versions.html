@@ -336,28 +336,6 @@
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="https://leeno.org/" class="site-logo">
-                <img src="https://leeno.org/wp-content/themes/leeno-theme/assets/images/logo-leeno.png" alt="LeenO Logo">
-                <span class="site-name">LEENO</span>
-            </a>
-            <nav class="main-nav">
-                <a href="https://leeno.org/about-leeno/leeno/download/">Download</a>
-                <a href="https://leeno.org/category/documentazione/">Documentazione</a>
-                <a href="https://leeno.org/forums/">Forum</a>
-                <a href="https://github.com/giuserpe/leeno">GitHub</a>
-            </nav>
-        </div>
-    </header>
-
-    <div class="page-header">
-        <div class="container">
-            <h1 class="page-title">Nightly Builds</h1>
-            <p class="page-subtitle">Ultimi sviluppi di LeenO (Experimental)</p>
-        </div>
-    </div>
-
     <main class="container content-main">
         <div class="activity-section">
             <h2>Download disponibili</h2>
@@ -426,6 +404,16 @@
         <tbody>
             
             <tr>
+                <td>2026-05-10 16:48</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/6ae6adbbd2b9cb8094667c82edac892390a1b35f" target="_blank" rel="noopener"><code>6ae6adb</code></a></td>
+                <td class="commit-msg">refactor(ui): rimuove header e hero da versions.html e generator
+
+- Elimina header, navigazione e sezione hero dalle versioni statiche
+- Allinea il generatore HTML rimuovendo le stesse sezioni
+- Mantiene solo contenuto centrale (download + attività) e footer
+- Snellisce il markup rendendo la pagina un frammento integrabile</td>
+            </tr>
+            <tr>
                 <td>2026-05-10 16:36</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/2a24f4a3fbee9521ffd8c1ebb83c33c37005f65d" target="_blank" rel="noopener"><code>2a24f4a</code></a></td>
                 <td class="commit-msg">refactor(version-gen): allinea stile HTML del generatore a versions.html
@@ -450,15 +438,6 @@
 - Snellisce footer: dimensioni ridotte e allineamenti più coerenti
 - Applica le stesse ottimizzazioni alla copia root di versions.html</td>
             </tr>
-            <tr>
-                <td>2026-05-10 16:09</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/11ab71ad9070e21f7d0b8cb4d1ee627c1f7c3e6f" target="_blank" rel="noopener"><code>11ab71a</code></a></td>
-                <td class="commit-msg">chore(ui): riallinea versions.html rimuovendo info-box anche nella copia root
-
-- Commenta la sezione Informazioni per uniformità con tools/version/versions.html
-- Mantiene solo la sezione Download come contenuto principale
-- Nessuna modifica strutturale o stilistica aggiuntiva</td>
-            </tr>
         </tbody>
     </table>
     </main>
@@ -479,8 +458,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-10 16:36 UTC</p>
-                <p>Build Commit: <code>2a24f4a</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-10 16:49 UTC</p>
+                <p>Build Commit: <code>6ae6adb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

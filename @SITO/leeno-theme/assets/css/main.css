@@ -2646,3 +2646,23 @@ h3.wpfb-cat,
 .archivio-file-link:hover {
     color: var(--accent-rust) !important;
 }
+
+
+/* ============================================================
+   FINAL OVERRIDE FOR PREMIUM BUTTONS
+   Forza il bianco puro su testo e icone per i bottoni download
+   ============================================================ */
+body .btn-leeno-download, 
+body .btn-download-link, 
+body .btn-download { 
+    color: #ffffff !important; 
+    text-decoration: none !important; 
+}
+
+body .btn-leeno-download svg, 
+body .btn-download-link svg, 
+body .btn-download svg { 
+    stroke: #ffffff !important; 
+    fill: none !important; 
+}
+

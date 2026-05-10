@@ -297,26 +297,6 @@ class VersionManager:
         }}
 
         /* ——— PAGE HEADER (HERO) ——— */
-        .page-header {{
-            background: var(--bg-dark);
-            padding: 40px 0;
-            color: #fff;
-            text-align: center;
-        }}
-
-        .page-title {{
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }}
-
-        .page-subtitle {{
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-        }}
-
         /* ——— CONTENT ——— */
         .content-main {{
             padding: 40px 0;
@@ -378,21 +358,35 @@ class VersionManager:
         .btn-download-link {{
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             background: var(--accent-rust);
-            color: var(--bg-dark);
+            color: #fff;
             font-family: var(--font-display);
             font-weight: 700;
-            padding: 8px 16px;
-            font-size: 0.75rem;
+            padding: 10px 24px;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.2s;
+            letter-spacing: 0.08em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
         }}
 
         .btn-download-link:hover {{
             background: var(--accent-rust-hover);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 77, 46, 0.3);
+            color: #fff;
+        }}
+
+        .btn-download-link svg {{
+            transition: transform 0.3s;
+        }}
+
+        .btn-download-link:hover svg {{
+            transform: translateY(2px);
         }}
 
         /* ——— ACTIVITY SECTIONS ——— */

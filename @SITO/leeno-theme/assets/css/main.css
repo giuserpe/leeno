@@ -86,30 +86,32 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background: var(--accent-rust);
+    gap: 12px;
+    background: #ff4d2e;
     color: #fff !important;
     font-family: var(--font-display);
-    font-weight: 700;
-    padding: 10px 24px;
-    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 12px 32px;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
+    border-radius: 2px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 77, 46, 0.3);
     text-decoration: none !important;
 }
 
 .btn-leeno-download:hover {
     background: var(--accent-rust-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 77, 46, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 77, 46, 0.4);
 }
 
 .btn-leeno-download svg {
     transition: transform 0.3s;
+    stroke-width: 3;
 }
 
 .btn-leeno-download:hover svg {
@@ -369,22 +371,25 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: var(--accent-rust);
-    color: var(--bg-dark);
+    background: #ff4d2e;
+    color: #fff !important;
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.75rem;
     text-transform: uppercase;
-    padding: 10px 18px;
+    padding: 10px 20px;
     letter-spacing: 0.05em;
-    transition: background 0.2s, transform 0.2s;
-    flex-shrink: 0;         /* non si restringe mai */
+    transition: all 0.2s;
+    flex-shrink: 0;
     white-space: nowrap;
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
 }
 
 .btn-download:hover {
     background: var(--accent-rust-hover);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 77, 46, 0.3);
 }
 
 /* Mobile menu toggle */

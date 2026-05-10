@@ -991,11 +991,11 @@ img {
     margin-bottom: 16px;
 }
 
-.entry-content a,
-.content-main a,
-.page-desc a,
-.prezzari-intro a,
-.single-content a {
+.entry-content a:not(.btn-leeno-download):not(.btn-download-link),
+.content-main a:not(.btn-leeno-download):not(.btn-download-link),
+.page-desc a:not(.btn-leeno-download):not(.btn-download-link),
+.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link),
+.single-content a:not(.btn-leeno-download):not(.btn-download-link) {
     color: var(--accent-cyan) !important;
     text-decoration: underline !important;
     text-decoration-color: rgba(170,212,0,0.4) !important;
@@ -1003,11 +1003,11 @@ img {
     transition: color 0.2s, text-decoration-color 0.2s !important;
 }
 
-.entry-content a:hover,
-.content-main a:hover,
-.page-desc a:hover,
-.prezzari-intro a:hover,
-.single-content a:hover {
+.entry-content a:not(.btn-leeno-download):not(.btn-download-link):hover,
+.content-main a:not(.btn-leeno-download):not(.btn-download-link):hover,
+.page-desc a:not(.btn-leeno-download):not(.btn-download-link):hover,
+.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link):hover,
+.single-content a:not(.btn-leeno-download):not(.btn-download-link):hover {
     color: var(--accent-rust) !important;
     text-decoration-color: var(--accent-rust) !important;
 }

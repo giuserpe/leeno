@@ -6,7 +6,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Theme version for cache busting
-define('LEENO_DM_VERSION', '1.0.0');
+define('LEENO_DM_VERSION', '1.0.1');
 
 /**
  * Theme setup

@@ -48,11 +48,13 @@ $page_class   = $is_prezzari ? 'page-prezzari' : '';
     <div class="container" style="padding-top: 40px; padding-bottom: 80px;">
         <div class="content-layout">
             <div class="content-main">
+                <div class="entry-content">
                 <?php
                 while (have_posts()) : the_post();
                     the_content();
                 endwhile;
                 ?>
+                </div>
             </div>
 
             <?php if (is_active_sidebar('sidebar-blog') && !$is_prezzari) : ?>

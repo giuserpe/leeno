@@ -23,6 +23,99 @@
     --radius:       0px;
 }
 
+/* ——— LEENO PREMIUM TABLES ——— */
+.leeno-table-wrap {
+    margin: 30px 0;
+    overflow-x: auto;
+}
+
+.leeno-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.leeno-table thead tr {
+    border-top: 3px solid #000;
+    border-bottom: 3px solid #000;
+}
+
+.leeno-table th {
+    background: #f9f9f9;
+    color: #000;
+    padding: 12px 20px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.leeno-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.leeno-table .col-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.leeno-table .col-name a {
+    color: var(--accent-cyan);
+}
+
+.leeno-table .col-name a:hover {
+    text-decoration: underline;
+}
+
+.leeno-table .col-dim, 
+.leeno-table .col-extra {
+    color: #aaa;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.leeno-table tr:hover td {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+/* ——— CTA DOWNLOAD BUTTON ——— */
+.btn-leeno-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent-rust);
+    color: #fff !important;
+    font-family: var(--font-display);
+    font-weight: 700;
+    padding: 10px 24px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
+    text-decoration: none !important;
+}
+
+.btn-leeno-download:hover {
+    background: var(--accent-rust-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 77, 46, 0.3);
+}
+
+.btn-leeno-download svg {
+    transition: transform 0.3s;
+}
+
+.btn-leeno-download:hover svg {
+    transform: translateY(2px);
+}
+
 /* ——— Reset & Base ——— */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1526,7 +1619,7 @@ h3.wpfb-cat,
     border-left: 4px solid var(--accent-cyan) !important;
 }
 
-/* Tabella file */
+/* Tabella file (WP Filebase) — Uniformata a LeenO Premium */
 table.wpfb-table,
 .wpfb-file-list table,
 #wpfb-all-files table {
@@ -1534,69 +1627,62 @@ table.wpfb-table,
     border-collapse: collapse !important;
     margin: 0 0 32px 0 !important;
     background: #fff !important;
-    font-size: 0.88rem !important;
 }
 
-/* Intestazione colonne */
+table.wpfb-table thead tr,
+.wpfb-file-list table thead tr {
+    border-top: 3px solid #000 !important;
+    border-bottom: 3px solid #000 !important;
+}
+
 table.wpfb-table thead th,
 .wpfb-file-list table thead th {
-    background: rgba(18, 26, 35, 0.06) !important;
-    color: var(--text-dark) !important;
+    background: #f9f9f9 !important;
+    color: #000 !important;
     font-family: var(--font-display) !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
     font-size: 0.75rem !important;
     text-transform: uppercase !important;
     letter-spacing: 0.06em !important;
-    padding: 10px 16px !important;
-    border-bottom: 2px solid var(--bg-dark) !important;
+    padding: 12px 20px !important;
     text-align: left !important;
 }
 
-/* Righe dati */
 table.wpfb-table tbody tr,
 .wpfb-file-list table tbody tr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-    transition: background 0.15s !important;
-}
-table.wpfb-table tbody tr:nth-child(even),
-.wpfb-file-list table tbody tr:nth-child(even) {
-    background: rgba(0, 0, 0, 0.025) !important;
-}
-table.wpfb-table tbody tr:hover,
-.wpfb-file-list table tbody tr:hover {
-    background: rgba(0, 229, 255, 0.06) !important;
+    border-bottom: 1px solid #f0f0f0 !important;
 }
 
-/* Celle dati */
 table.wpfb-table tbody td,
 .wpfb-file-list table tbody td {
-    padding: 10px 16px !important;
+    padding: 12px 20px !important;
     color: var(--text-dark) !important;
     vertical-align: middle !important;
+    font-size: 0.95rem !important;
 }
 
-/* Nome file: link */
+/* Link nome file */
 .wpfb-table .wpfb-filename a,
 .wpfb-file-list .wpfb-filename a {
-    color: var(--text-dark) !important;
-    font-weight: 500 !important;
+    color: var(--accent-cyan) !important;
+    font-weight: 600 !important;
     text-decoration: none !important;
-    transition: color 0.2s !important;
-}
-.wpfb-table .wpfb-filename a:hover,
-.wpfb-file-list .wpfb-filename a:hover {
-    color: var(--accent-rust) !important;
 }
 
-/* Dimensione file e contatore: stile mono badge */
+.wpfb-table .wpfb-filename a:hover,
+.wpfb-file-list .wpfb-filename a:hover {
+    text-decoration: underline !important;
+}
+
+/* Dimensione e hits */
 .wpfb-table .wpfb-filesize,
 .wpfb-file-list .wpfb-filesize,
 .wpfb-table .wpfb-hits,
 .wpfb-file-list .wpfb-hits {
     font-family: var(--font-mono) !important;
-    font-size: 0.78rem !important;
-    color: var(--text-secondary) !important;
-    white-space: nowrap !important;
+    font-size: 0.85rem !important;
+    color: #aaa !important;
+    text-align: right !important;
 }
 
 /* Pulsante download inline */
@@ -1674,37 +1760,42 @@ a.wpfb-dl-btn,
 }
 
 /* ============================================================
-   Tabelle nei post (entry-content)
+   Tabelle nei post (entry-content) — Uniformate a LeenO Premium
    ============================================================ */
 .entry-content table {
     width: 100%;
     border-collapse: collapse;
-    margin: 24px 0;
-    font-size: 0.88rem;
-    overflow: hidden;
+    margin: 32px 0;
+    background: #fff;
 }
+
+.entry-content table thead tr {
+    border-top: 3px solid #000;
+    border-bottom: 3px solid #000;
+}
+
 .entry-content table thead th {
-    background: var(--bg-dark);
-    color: #fff;
+    background: #f9f9f9;
+    color: #000;
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.78rem;
+    font-weight: 800;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 10px 14px;
+    padding: 12px 16px;
     text-align: left;
 }
-.entry-content table tbody tr:nth-child(even) {
-    background: rgba(0, 0, 0, 0.03);
-}
+
 .entry-content table tbody td {
-    padding: 9px 14px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
     color: var(--text-dark);
     vertical-align: middle;
+    font-size: 0.95rem;
 }
+
 .entry-content table tbody tr:hover {
-    background: rgba(0, 229, 255, 0.05);
+    background: rgba(0, 0, 0, 0.01);
 }
 
 /* ============================================================

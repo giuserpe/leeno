@@ -83,14 +83,14 @@ get_header();
                 if ( empty( $files ) ) : ?>
                     <p class="prezzari-error">Nessun file trovato in questa categoria.</p>
                 <?php else : ?>
-                    <div class="prezzari-block prezzari-region">
-                        <table class="prezzari-table" role="table">
+                    <div class="leeno-table-wrap">
+                        <table class="leeno-table" role="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Nome</th>
-                                    <th scope="col" class="col-size">Dim.</th>
-                                    <th scope="col" class="col-hits">↓</th>
-                                    <th scope="col" class="col-dl"></th>
+                                    <th scope="col" style="text-align: right; width: 100px;">Dim.</th>
+                                    <th scope="col" style="text-align: right; width: 60px;">&darr;</th>
+                                    <th scope="col" style="width: 150px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,21 +100,21 @@ get_header();
                                 $size     = size_format( $file->file_size, 1 );
                                 $hits     = intval( $file->file_hits );
                             ?>
-                                <tr class="prezzari-row">
+                                <tr class="leeno-row">
                                     <td class="col-name">
-                                        <a href="<?php echo esc_url($dl_url); ?>" class="prezzari-file-link">
+                                        <a href="<?php echo esc_url($dl_url); ?>">
                                             <?php echo esc_html($name); ?>
                                         </a>
                                     </td>
-                                    <td class="col-size">
-                                        <span class="prezzari-size"><?php echo esc_html($size); ?></span>
+                                    <td class="col-dim">
+                                        <?php echo esc_html($size); ?>
                                     </td>
-                                    <td class="col-hits">
-                                        <span class="prezzari-hits" title="Download effettuati"><?php echo number_format_i18n($hits); ?></span>
+                                    <td class="col-extra">
+                                        <span title="Download effettuati"><?php echo number_format_i18n($hits); ?></span>
                                     </td>
-                                    <td class="col-dl">
-                                        <a href="<?php echo esc_url($dl_url); ?>" class="prezzari-dl-btn" aria-label="Scarica <?php echo esc_attr($name); ?>">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                    <td style="text-align: right;">
+                                        <a href="<?php echo esc_url($dl_url); ?>" class="btn-leeno-download" aria-label="Scarica <?php echo esc_attr($name); ?>">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                                 <polyline points="7 10 12 15 17 10"/>
                                                 <line x1="12" y1="15" x2="12" y2="3"/>

@@ -116,26 +116,6 @@
         }
 
         /* ——— PAGE HEADER (HERO) ——— */
-        .page-header {
-            background: var(--bg-dark);
-            padding: 40px 0;
-            color: #fff;
-            text-align: center;
-        }
-
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-        }
-
         /* ——— CONTENT ——— */
         .content-main {
             padding: 40px 0;
@@ -197,21 +177,35 @@
         .btn-download-link {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             background: var(--accent-rust);
-            color: var(--bg-dark);
+            color: #fff;
             font-family: var(--font-display);
             font-weight: 700;
-            padding: 8px 16px;
-            font-size: 0.75rem;
+            padding: 10px 24px;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.2s;
+            letter-spacing: 0.08em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 77, 46, 0.2);
         }
 
         .btn-download-link:hover {
             background: var(--accent-rust-hover);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 77, 46, 0.3);
+            color: #fff;
+        }
+
+        .btn-download-link svg {
+            transition: transform 0.3s;
+        }
+
+        .btn-download-link:hover svg {
+            transform: translateY(2px);
         }
 
         /* ——— ACTIVITY SECTIONS ——— */
@@ -404,6 +398,16 @@
         <tbody>
             
             <tr>
+                <td>2026-05-10 16:55</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/9db4a778245778f540b767de787ae08b1c0bd8dc" target="_blank" rel="noopener"><code>9db4a77</code></a></td>
+                <td class="commit-msg">refactor(ui): migliora stile e interazioni del pulsante download
+
+- Aggiorna btn-download-link con colori coerenti (testo bianco)
+- Aumenta padding e dimensione font per migliore leggibilità
+- Aggiunge shadow, transizioni fluide e animazione dell’icona
+- Uniforma le modifiche in generator e versions.html (root e tools/)</td>
+            </tr>
+            <tr>
                 <td>2026-05-10 16:48</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/6ae6adbbd2b9cb8094667c82edac892390a1b35f" target="_blank" rel="noopener"><code>6ae6adb</code></a></td>
                 <td class="commit-msg">refactor(ui): rimuove header e hero da versions.html e generator
@@ -425,19 +429,6 @@
 - Riorganizza sezioni attività e footer per coerenza visiva
 - Rimuove info-box legacy e adatta struttura al nuovo layout</td>
             </tr>
-            <tr>
-                <td>2026-05-10 16:22</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ecb51eac81b9bd80f3721cd334e23dfae9b81c32" target="_blank" rel="noopener"><code>ecb51ea</code></a></td>
-                <td class="commit-msg">refactor(ui): affina tipografia e spaziature di versions.html
-
-- Riduce padding header e hero per layout più compatto
-- Ridimensiona logo, font e spaziature della navigazione
-- Ottimizza tabelle: padding, font-size, hover più leggero
-- Aggiorna badge e pulsanti download con proporzioni più equilibrate
-- Migliora sezioni attività con titolo evidenziato e box più pulito
-- Snellisce footer: dimensioni ridotte e allineamenti più coerenti
-- Applica le stesse ottimizzazioni alla copia root di versions.html</td>
-            </tr>
         </tbody>
     </table>
     </main>
@@ -458,8 +449,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-10 16:49 UTC</p>
-                <p>Build Commit: <code>6ae6adb</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-10 16:56 UTC</p>
+                <p>Build Commit: <code>9db4a77</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

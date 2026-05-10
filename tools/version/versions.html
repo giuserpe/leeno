@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -29,7 +28,6 @@
             --font-body: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --container: 1200px;
-            --radius: 0px;
         }
 
         /* ——— Reset & Base ——— */
@@ -68,6 +66,56 @@
             padding: 0 24px;
         }
 
+        /* ——— HEADER ——— */
+        .site-header {
+            background: var(--bg-dark);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(170, 212, 0, 0.1);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .site-logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .site-name {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.1em;
+            font-size: 1.1rem;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-nav a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .main-nav a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* ——— PAGE HEADER (HERO) ——— */
         /* ——— CONTENT ——— */
         .content-main {
             padding: 40px 0;
@@ -85,32 +133,50 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            background: #fff;
+        }
+
+        thead tr {
+            border-top: 3px solid #000;
+            border-bottom: 3px solid #000;
         }
 
         th {
-            background: var(--bg-dark);
-            color: #fff;
-            padding: 18px 24px;
+            background: #f9f9f9;
+            color: #000;
+            padding: 12px 20px;
             font-family: var(--font-display);
-            font-weight: 600;
+            font-weight: 800;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
 
         td {
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
-            font-size: 0.95rem;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .col-name {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .col-name a:hover {
+            text-decoration: underline;
+        }
+
+        .col-dim, .col-extra {
+            color: #aaa;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: right;
         }
 
         tr:hover td {
-            background: rgba(170, 212, 0, 0.04);
+            background: rgba(0, 0, 0, 0.01);
         }
 
         .badge {
@@ -187,6 +253,20 @@
             text-align: center;
         }
 
+        .commit-msg {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: rgba(0,0,0,0.05);
+            padding: 3px 6px;
+            color: var(--text-green);
+        }
+
         /* ——— FOOTER ——— */
         .site-footer {
             background: var(--bg-dark);
@@ -246,6 +326,15 @@
 
         /* ——— Responsive ——— */
         @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .main-nav {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
             .footer-row {
                 flex-direction: column;
                 text-align: center;
@@ -262,7 +351,6 @@
         }
     </style>
 </head>
-
 <body>
     <main class="container content-main">
         <div class="activity-section">
@@ -271,33 +359,33 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Versione</th>
-                            <th>Download</th>
-                            <th>Data</th>
-                            <th>Dimensione</th>
+                            <th>Nome</th>
+                            <th style="text-align: right;">Dim.</th>
+                            <th style="text-align: right;">&darr;</th>
+                            <th style="width: 150px;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Nessun file disponibile <span class="badge">ULTIMA</span></td>
-                            <td>
-                                <a href="#" class="btn-download-link" download>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                                    Scarica
-                                </a>
-                            </td>
-                            <td>2026-04-22</td>
-                            <td>0 KB</td>
-                        </tr>
+                        
+            <tr>
+                <td class="col-name"><a href="#">Nessun file disponibile</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">0KB</td>
+                <td class="col-extra">2026-05-10</td>
+                <td style="text-align: right;">
+                    <a href="#" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="activity-section">
-            <h2>Attività di sviluppo recente</h2>
-            <p class="no-activity">Nessun commit recente trovato o errore nel recupero dei dati.</p>
-        </div>
+        
+    <h2>Attività di sviluppo recente</h2>
+    <p><i>Nessun commit recente trovato o errore nel recupero dei dati.</i></p>
     </main>
 
     <footer class="site-footer">
@@ -316,11 +404,10 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-04-22 21:57 UTC</p>
+                <p>Generato automaticamente il 2026-05-10 21:26 UTC</p>
                 <p>Build Commit: <code>local</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>
 </body>
-
 </html>

@@ -68,76 +68,6 @@
             padding: 0 24px;
         }
 
-        /* ——— HEADER ——— */
-        .site-header {
-            background: var(--bg-dark);
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(170, 212, 0, 0.1);
-        }
-
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .site-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .site-logo img {
-            height: 36px;
-            width: auto;
-        }
-
-        .site-name {
-            font-family: var(--font-display);
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.1em;
-            font-size: 1.1rem;
-        }
-
-        .main-nav {
-            display: flex;
-            gap: 20px;
-        }
-
-        .main-nav a {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .main-nav a:hover {
-            color: var(--accent-cyan);
-        }
-
-        /* ——— PAGE HEADER (HERO) ——— */
-        .page-header {
-            background: var(--bg-dark);
-            padding: 40px 0;
-            color: #fff;
-            text-align: center;
-        }
-
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .page-subtitle {
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-        }
-
         /* ——— CONTENT ——— */
         .content-main {
             padding: 40px 0;
@@ -298,15 +228,6 @@
 
         /* ——— Responsive ——— */
         @media (max-width: 768px) {
-            .header-inner {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .main-nav {
-                gap: 12px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
             .footer-row {
                 flex-direction: column;
                 text-align: center;
@@ -325,28 +246,6 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="https://leeno.org/" class="site-logo">
-                <img src="https://leeno.org/wp-content/themes/leeno-theme/assets/images/logo-leeno.png" alt="LeenO Logo">
-                <span class="site-name">LEENO</span>
-            </a>
-            <nav class="main-nav">
-                <a href="https://leeno.org/about-leeno/leeno/download/">Download</a>
-                <a href="https://leeno.org/category/documentazione/">Documentazione</a>
-                <a href="https://leeno.org/forums/">Forum</a>
-                <a href="https://github.com/giuserpe/leeno">GitHub</a>
-            </nav>
-        </div>
-    </header>
-
-    <div class="page-header">
-        <div class="container">
-            <h1 class="page-title">Nightly Builds</h1>
-            <p class="page-subtitle">Ultimi sviluppi di LeenO (Experimental)</p>
-        </div>
-    </div>
-
     <main class="container content-main">
         <div class="activity-section">
             <h2>Download disponibili</h2>

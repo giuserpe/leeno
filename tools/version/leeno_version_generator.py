@@ -517,28 +517,6 @@ class VersionManager:
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="https://leeno.org/" class="site-logo">
-                <img src="https://leeno.org/wp-content/themes/leeno-theme/assets/images/logo-leeno.png" alt="LeenO Logo">
-                <span class="site-name">LEENO</span>
-            </a>
-            <nav class="main-nav">
-                <a href="https://leeno.org/about-leeno/leeno/download/">Download</a>
-                <a href="https://leeno.org/category/documentazione/">Documentazione</a>
-                <a href="https://leeno.org/forums/">Forum</a>
-                <a href="https://github.com/giuserpe/leeno">GitHub</a>
-            </nav>
-        </div>
-    </header>
-
-    <div class="page-header">
-        <div class="container">
-            <h1 class="page-title">Nightly Builds</h1>
-            <p class="page-subtitle">Ultimi sviluppi di LeenO (Experimental)</p>
-        </div>
-    </div>
-
     <main class="container content-main">
         <div class="activity-section">
             <h2>Download disponibili</h2>

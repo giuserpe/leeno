@@ -133,32 +133,50 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            background: #fff;
+        }
+
+        thead tr {
+            border-top: 3px solid #000;
+            border-bottom: 3px solid #000;
         }
 
         th {
-            background: var(--bg-dark);
-            color: #fff;
-            padding: 18px 24px;
+            background: #f9f9f9;
+            color: #000;
+            padding: 12px 20px;
             font-family: var(--font-display);
-            font-weight: 600;
+            font-weight: 800;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
 
         td {
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
-            font-size: 0.95rem;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .col-name {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .col-name a:hover {
+            text-decoration: underline;
+        }
+
+        .col-dim, .col-extra {
+            color: #aaa;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: right;
         }
 
         tr:hover td {
-            background: rgba(170, 212, 0, 0.04);
+            background: rgba(0, 0, 0, 0.01);
         }
 
         .badge {
@@ -337,48 +355,78 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Versione</th>
-                            <th>Download</th>
-                            <th>Data</th>
-                            <th>Dimensione</th>
+                            <th>Nome</th>
+                            <th style="text-align: right;">Dim.</th>
+                            <th style="text-align: right;">&darr;</th>
+                            <th style="width: 150px;"></th>
                         </tr>
                     </thead>
                     <tbody>
                         
             <tr>
-                <td>LeenO-3.25.0.61-TESTING-20260510.oxt <span class="badge badge-latest">ULTIMA</span></td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt" download>Scarica</a></td>
-                <td>2026-05-09 22:10</td>
-                <td>4.5MB</td>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt">LeenO-3.25.0.61-TESTING-20260510.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-09 22:10</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.61-TESTING-20260510.oxt" class="btn-download-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.60-TESTING-20260509.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.60-TESTING-20260509.oxt" download>Scarica</a></td>
-                <td>2026-05-09 21:25</td>
-                <td>4.5MB</td>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.60-TESTING-20260509.oxt">LeenO-3.25.0.60-TESTING-20260509.oxt</a> </td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-09 21:25</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.60-TESTING-20260509.oxt" class="btn-download-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.59-TESTING-20260509.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.59-TESTING-20260509.oxt" download>Scarica</a></td>
-                <td>2026-05-09 21:06</td>
-                <td>4.5MB</td>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.59-TESTING-20260509.oxt">LeenO-3.25.0.59-TESTING-20260509.oxt</a> </td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-09 21:06</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.59-TESTING-20260509.oxt" class="btn-download-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.58-TESTING-20260509.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.58-TESTING-20260509.oxt" download>Scarica</a></td>
-                <td>2026-05-08 22:14</td>
-                <td>4.5MB</td>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.58-TESTING-20260509.oxt">LeenO-3.25.0.58-TESTING-20260509.oxt</a> </td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-08 22:14</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.58-TESTING-20260509.oxt" class="btn-download-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
             </tr>
             <tr>
-                <td>LeenO-3.25.0.57-TESTING-20260509.oxt </td>
-                <td><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt" download>Scarica</a></td>
-                <td>2026-05-08 22:03</td>
-                <td>4.5MB</td>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt">LeenO-3.25.0.57-TESTING-20260509.oxt</a> </td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-05-08 22:03</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.25.0.57-TESTING-20260509.oxt" class="btn-download-link" download>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
             </tr>
                     </tbody>
                 </table>
@@ -398,6 +446,18 @@
         <tbody>
             
             <tr>
+                <td>2026-05-10 17:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/dae32e128501e872f2ac54f9f957b514fca549d7" target="_blank" rel="noopener"><code>dae32e1</code></a></td>
+                <td class="commit-msg">refactor(ui): ristruttura tabella download e uniforma markup generator/static
+
+- Introduce colonne semantiche (nome, dimensione, data, azione) con classi dedicate
+- Aggiorna header tabella con stile tipografico più marcato (bordi, uppercase, weight 800)
+- Migliora leggibilità: nome evidenziato, dimensioni e date allineate a destra
+- Riorganizza pulsante download in colonna separata con stile coerente
+- Aggiorna leeno_version_generator.py per produrre il nuovo layout
+- Allinea versions.html (root e tools/) alla nuova struttura</td>
+            </tr>
+            <tr>
                 <td>2026-05-10 16:58</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5b0eca8168357d0cfacaad9fd6e55e1f2c0221a6" target="_blank" rel="noopener"><code>5b0eca8</code></a></td>
                 <td class="commit-msg">chore(ui): aggiorna dicitura licenza footer a LGPL v3
@@ -414,16 +474,6 @@
 - Aumenta padding e dimensione font per migliore leggibilità
 - Aggiunge shadow, transizioni fluide e animazione dell’icona
 - Uniforma le modifiche in generator e versions.html (root e tools/)</td>
-            </tr>
-            <tr>
-                <td>2026-05-10 16:48</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6ae6adbbd2b9cb8094667c82edac892390a1b35f" target="_blank" rel="noopener"><code>6ae6adb</code></a></td>
-                <td class="commit-msg">refactor(ui): rimuove header e hero da versions.html e generator
-
-- Elimina header, navigazione e sezione hero dalle versioni statiche
-- Allinea il generatore HTML rimuovendo le stesse sezioni
-- Mantiene solo contenuto centrale (download + attività) e footer
-- Snellisce il markup rendendo la pagina un frammento integrabile</td>
             </tr>
         </tbody>
     </table>
@@ -445,8 +495,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-10 17:13 UTC</p>
-                <p>Build Commit: <code>5b0eca8</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-10 17:33 UTC</p>
+                <p>Build Commit: <code>dae32e1</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

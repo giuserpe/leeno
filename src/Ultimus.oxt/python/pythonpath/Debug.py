@@ -4,6 +4,8 @@
 '''
 Modulo di debug per LeenO
 '''
+from xml.etree import ElementTree
+import zipfile
 import os
 import sys
 import pyleeno as PL
@@ -11,6 +13,7 @@ import Dialogs
 import LeenoUtils
 import LeenoDialogs as DLG
 
+# pyrefly: ignore [missing-import]
 import uno
 import os
 import sys
@@ -186,6 +189,7 @@ def _log_to_file(func_name, module_name, start_datetime, elapsed_time, success, 
     """Scrive le informazioni nel file di log."""
     try:
         import os
+        # pyrefly: ignore [missing-import]
         import uno
 
         # Ottieni il path dell'estensione
@@ -217,6 +221,7 @@ def _log_to_console(func_name, time_str, success):
     """Scrive in console (solo per debug in sviluppo)."""
     try:
         import os
+        # pyrefly: ignore [missing-import]
         import uno
 
         # Solo per l'utente giuserpe (sviluppatore)
@@ -437,6 +442,7 @@ def mostra_statistiche_performance():
     Analizza il file di log delle performance e mostra statistiche in un popup.
     """
     import os
+    # pyrefly: ignore [missing-import]
     import uno
     from collections import defaultdict
 
@@ -513,6 +519,7 @@ def pulisci_log_performance():
     Svuota il file di log delle performance.
     """
     import os
+    # pyrefly: ignore [missing-import]
     import uno
 
     try:
@@ -549,7 +556,7 @@ def check_ods(percorso):
             # Parsing XML di content.xml
             with z.open("content.xml") as f:
                 try:
-                    Element.parse(f)
+                    Element.parse(f)                    
                     print("content.xml OK")
                 except ET.ParseError as e:
                     print(f"XML corrotto: {e}")

@@ -11388,6 +11388,20 @@ def MENU_hl():
             # DLG.errore(e)
             pass
 
+def xref_path():
+    '''
+    Inserisce un hyperlink all'indirizzo di file selezionato; il
+    testo sarà "►►►"
+    '''
+    oDoc = LeenoUtils.getDocument()
+    # oSheet = oDoc.CurrentController.ActiveSheet
+
+    file_path = Dialogs.FileSelect()
+
+    selection = oDoc.CurrentSelection
+    selection.Formula = f'=HYPERLINK("{file_path}";"►►►")'
+    return 
+
 
 
 ########################################################################
@@ -12389,7 +12403,7 @@ def somma_per_colore_nella_colonna():
 
 
 def MENU_debug():
-    applica_validazione_decimale()
+    xref_path()
     return
     # debug_validation()
     # return

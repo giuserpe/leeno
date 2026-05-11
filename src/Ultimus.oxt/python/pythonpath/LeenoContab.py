@@ -1842,7 +1842,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
         r_garanzia = trova_r_S2("per garanzia")
         r_infortuni = trova_r_S2("per infortuni")
-        r_anticipo = trova_r_S2("recupero anticipazione")
+        r_anticipo = trova_r_S2("anticipazione")
         r_cert_prec = trova_r_S2("certificati precedenti")
         r_detraz = trova_r_S2("totale detrazioni")
         r_certif = trova_r_S2("Certificato di pagamento")
@@ -1874,12 +1874,16 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
         # Infortuni = (Importo ribassato + Sicurezza) * Incidenza infortuni (Anagrafica C85 -> riga 84 0-idx)
         # Attenzione: l'Anagrafica usa coordinate assolute. C85 è $S2.$C$85.
+        row_inf = SheetUtils.uFindStringCol('Ritenute per infortuni:', 1, oS2, start=0, equal=1)
+        
         if r_infortuni is not None:
-            scrivi(r_infortuni, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C$85")
+            scrivi(r_infortuni, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C${row_inf + 1}")
 
         # Anticipazione = (Importo ribassato + Sicurezza) * Incidenza anticipazione (Anagrafica C80)
+        row_ant = SheetUtils.uFindStringCol('Incidenza Anticipazione:', 1, oS2, start=0, equal=1)
+
         if r_anticipo is not None:
-            scrivi(r_anticipo, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C$80")
+            scrivi(r_anticipo, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C${row_ant + 1}")
 
         # Totale detrazioni = Garanzia + Infortuni + Anticipo + Cert. Precedenti
         if r_detraz is not None:

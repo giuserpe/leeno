@@ -291,6 +291,7 @@ def invia_voce(ctrl_override=False):
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    analisi = []
     stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
     stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
     stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
@@ -438,6 +439,12 @@ def invia_voce(ctrl_override=False):
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         oSheet.getCellByPosition(1, SR +1).CellBackColor = COLORE_VERDE_SPUNTA
+        
+        oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
+        res_ep = SheetUtils.uFindString(art, oSheetEP)
+        if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
+            if art not in analisi:
+                analisi.append(art)
 
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
@@ -534,28 +541,66 @@ def invia_voce(ctrl_override=False):
 
 
     try:
-        len(analisi)
+        if analisi:
+            _gotoDoc(fpartenza)
+            oDoc = LeenoUtils.getDocument()
+            oSheetAP = oDoc.getSheets().getByName('Analisi di Prezzo')
+            oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
+            import LeenoAnalysis
 
-        selezione = []
-        lista = []
-        _gotoDoc(fpartenza)
-        oDoc = LeenoUtils.getDocument()
-        GotoSheet('Analisi di Prezzo')
-        ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
-        ranges.addRangeAddresses(selezione_analisi, True)
-        oDoc.CurrentController.select(ranges)
+            # Raccolta ricorsiva dei costi elementari e delle relative analisi
+            voci_da_recuperare = []
+            i = 0
+            while i < len(analisi):
+                cod = analisi[i]
+                i += 1
+                res = SheetUtils.uFindString(cod, oSheetAP)
+                if res:
+                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, res[1])
+                    for row in range(r.RangeAddress.StartRow, r.RangeAddress.EndRow + 1):
+                        if oSheetAP.getCellByPosition(0, row).CellStyle == 'An-lavoraz-Cod-sx':
+                            ce_cod = oSheetAP.getCellByPosition(0, row).String
+                            if ce_cod:
+                                if ce_cod not in voci_da_recuperare:
+                                    voci_da_recuperare.append(ce_cod)
+                                
+                                # Se il costo elementare è a sua volta un'analisi, lo aggiungo alla coda
+                                res_ep = SheetUtils.uFindString(ce_cod, oSheetEP)
+                                if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
+                                    if ce_cod not in analisi:
+                                        analisi.append(ce_cod)
 
-        comando('Copy')
+            # Invia i costi elementari al Documento Principale
+            for ce_cod in voci_da_recuperare:
+                dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
+                if not SheetUtils.uFindString(ce_cod, dccSheetEP):
+                    recupera_voce(ce_cod)
 
-        _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-        # Inizializza il foglio Analisi e inserisce la prima scheda
-        import LeenoAnalysis
-        LeenoAnalysis.inizializza_analisi(nuovaScheda=True)
-        _gotoCella(0, 0)
-        paste_clip(insCells=1)
-        tante_analisi_in_ep()
-    except Exception:
-        pass
+            _gotoDoc(fpartenza)
+            GotoSheet('Analisi di Prezzo')
+
+            selezione_analisi = []
+            for cod in analisi:
+                res = SheetUtils.uFindString(cod, oSheetAP)
+                if res:
+                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, res[1])
+                    selezione_analisi.append(r.RangeAddress)
+
+            if selezione_analisi:
+                ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+                ranges.addRangeAddresses(tuple(selezione_analisi), True)
+                oDoc.CurrentController.select(ranges)
+
+                comando('Copy')
+
+                _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
+                # Inizializza il foglio Analisi e inserisce la prima scheda
+                LeenoAnalysis.inizializza_analisi(nuovaScheda=True)
+                _gotoCella(0, 0)
+                paste_clip(insCells=1)
+                tante_analisi_in_ep()
+    except Exception as e:
+        DLG.errore(f"Errore durante l'invio delle analisi: {e}")
 
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -2381,24 +2426,26 @@ def scelta_viste_run():
 
 
         last_row_contab = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-        aVoceMassima = 0
-        for el in reversed(range(3, last_row_contab + 1)):
-            s_val = oSheet.getCellByPosition(0, el).String.strip()
-            if s_val.isdigit():
-                aVoceMassima = int(s_val)
-                break
+        # aVoceMassima = daVoceSuggerita -1
+        # for el in reversed(range(3, last_row_contab + 1)):
+        #     s_val = oSheet.getCellByPosition(0, el).String.strip()
+        #     if s_val.isdigit():
+        #         aVoceMassima = int(s_val)
+        #         break
 
-        sString = oDialog1.getControl('a_voce')
-        sString.Text = str(aVoceMassima)
+        # sString = oDialog1.getControl('a_voce')
+        # sString.Text = str(aVoceMassima)
 
-        if daVoceSuggerita > aVoceMassima:
-            oDialog1.getControl('a_voce').Enable = False
-            oDialog1.getControl('a_voce').Text = ""
-            oDialog1.getControl('da_voce').Enable = False
-            oDialog1.getControl('da_voce').Text = ""
-        else:
-            oDialog1.getControl('a_voce').Enable = True
-            oDialog1.getControl('da_voce').Enable = False
+        # if daVoceSuggerita > aVoceMassima:
+        #     oDialog1.getControl('a_voce').Enable = False
+        #     oDialog1.getControl('a_voce').Text = ""
+        #     oDialog1.getControl('da_voce').Enable = False
+        #     oDialog1.getControl('da_voce').Text = ""
+        # else:
+        #     oDialog1.getControl('a_voce').Enable = True
+        #     oDialog1.getControl('da_voce').Enable = False
+        oDialog1.getControl('a_voce').Enable = True
+        oDialog1.getControl('da_voce').Enable = False
 
         # Inizio voce
         sString = oDialog1.getControl('TextField3')
@@ -8530,7 +8577,7 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
         _gotoCella(1, closest_row)
 
 ########################################################################
-
+@LeenoUtils.preserva_posizione(step=0)
 def MENU_struttura_on():
     '''
     Attiva la visualizzazione a struttura in base al foglio attivo.
@@ -8905,7 +8952,8 @@ class trun(threading.Thread):
             # Attende 'minuti' secondi o finché l'evento di stop non viene impostato
             if self._stop_event.wait(minuti):
                 break
-            bak()
+            if "Computo_LeenO.ods" not in LeenoUtils.getDocument().getURL():
+                bak()
 
 
 def autorun():
@@ -8995,7 +9043,8 @@ def autoexec_run():
 
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
-    bak0()
+    if "Computo_LeenO.ods" not in LeenoUtils.getDocument().getURL():
+        bak0()
     autorun()
     sistema_aree()
     ctx = LeenoUtils.getComponentContext()
@@ -11006,6 +11055,7 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 
 ########################################################################
 # @LeenoUtils.no_refresh
+@with_undo("Fissa Righe/Colonne")
 def fissa():
     '''
     Fissa le righe e le colonne nel foglio attivo,
@@ -11027,20 +11077,28 @@ def fissa():
     controller.setFirstVisibleRow(0)
 
     # Mappa dei fogli e relative righe da bloccare
-    sheet_freeze_rows = {
-        'COMPUTO': 3,
-        'VARIANTE': 3,
-        'CONTABILITA': 3,
-        'Elenco Prezzi': 3,
-        'Analisi di Prezzo': 2,
-        'Registro': 1,
-        'SAL': 1,
-        'S2': 1,
-        'Lista 1': 4,
-        'Scorciatoie': 1
+    sheet_configs = {
+        'COMPUTO': (0, 3),
+        'VARIANTE': (0, 3),
+        'CONTABILITA': (0, 3),
+        'Elenco Prezzi': (0, 3),
+        'Analisi di Prezzo': (0, 2),
+        'Registro': (0, 1),
+        'SAL': (0, 1),
+        'S2': (0, 1),
+        'Lista 1': (0, 4),
+        'Scorciatoie': (0, 1)
     }
 
-    rows_to_freeze = sheet_freeze_rows.get(oSheet.Name, 0)
+    for sheet_name, config in sheet_configs.items():
+        if oSheet.Name == sheet_name:
+            cols_to_freeze, rows_to_freeze = config
+            break
+    else:
+        rows_to_freeze = 0
+        cols_to_freeze = 0
+            
+
     if rows_to_freeze > 0:
         # Imposta il blocco tramite il metodo standard UNO (più robusto)
         try:
@@ -11060,8 +11118,6 @@ def fissa():
         controller.select(oCell)
     except:
         pass
-
-########################################################################
 
 @LeenoUtils.no_refresh
 def trova_ricorrenze():
@@ -12403,6 +12459,8 @@ def somma_per_colore_nella_colonna():
 
 
 def MENU_debug():
+    fissa()
+    return
     xref_path()
     return
     # debug_validation()

@@ -5,6 +5,7 @@
 LeenoContab.py - Contabilità per Leeno
 '''
 
+# _gotoCella è disponibile tramite 'import pyleeno as PL' (vedi sotto)
 from LeenoDispatcher import handle_exception
 from datetime import date
 # pyrefly: ignore [missing-import]
@@ -351,6 +352,7 @@ def MENU_AnnullaAttiContabili():
         indicator.start("Annullamento atti in corso...", 5)
         _annulla_ultimo_sal_core(oDoc, indicator, listaSal)
         indicator.end()
+        PL._gotoCella(0,0)
         Dialogs.Info(Text=f"Atti del SAL n. {listaSal[-1]} annullati.")
 
 @with_progress_reclaim(manager_attr='progress')
@@ -2421,7 +2423,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
     oggetto     = _leggi_dato_anagrafico(oS2, 'OGGETTO')
     impresa     = _leggi_dato_anagrafico(oS2, 'Appaltatore')
     nome_dl     = _leggi_dato_anagrafico(oS2, 'Direttore Lavori') or _leggi_dato_anagrafico(oS2, 'Direttore dei Lavori')
-    nome_resp   = _leggi_dato_anagrafico(oS2, 'Responsabile del Procedimento') or _leggi_dato_anagrafico(oS2, 'R.U.P.') or _leggi_dato_anagrafico(oS2, 'RUP') or _leggi_dato_anagrafico(oS2, 'Responsabile Procedimento') or _leggi_dato_anagrafico(oS2, 'Responsabile del Progetto')
+    nome_resp   = _leggi_dato_anagrafico(oS2, 'Responsabile') or _leggi_dato_anagrafico(oS2, 'R.U.P.') or _leggi_dato_anagrafico(oS2, 'RUP')
     luogo_raw   = _leggi_dato_anagrafico(oS2, 'Località')
     luogo       = luogo_raw.split(' ')[-1] if luogo_raw else ''
     data_odierna = date.today().strftime('%d/%m/%Y')
@@ -2817,35 +2819,43 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
             f'{luogo}, {data_odierna}'
 
     if r_certifica is not None:
-        # Il Responsabile del Procedimento (colonna destra)
-        # Cerca la cella "Responsabile" nel template
-        r_resp, c_resp = _trova_riva(oCdP, 'Il Responsabile del Procedimento', equal=0)
-        if r_resp is not None:
-            # Scrive il nome DL nella riga sotto
-            oCdP.getCellByPosition(c_resp, r_resp + 1).String = \
-                f'({nome_resp})'
+        # Responsabile (qualsiasi variante: del Procedimento, del Progetto, di Progetto...)
+        # Cerca in tutte le colonne usate; scrive il nome nella riga sotto.
+        _max_col = SheetUtils.getLastUsedColumn(oCdP) if hasattr(SheetUtils, 'getLastUsedColumn') else 9
+        _scritto = False
+        for _r in range(SheetUtils.getLastUsedRow(oCdP) + 1):
+            for _col in range(_max_col + 1):
+                if 'RESPONSABILE' in oCdP.getCellByPosition(_col, _r).String.upper():
+                    oCdP.getCellByPosition(_col, _r + 1).String = f'({nome_resp})'
+                    _scritto = True
+                    break
+            if _scritto:
+                break
 
-        # Direttore Lavori (colonna sinistra)
-        r_dl_sign, c_dl_sign = _trova_riva(oCdP, 'Il Direttore dei Lavori', equal=0)
-        if r_dl_sign is not None:
-            cell = oCdP.getCellByPosition(c_dl_sign, r_dl_sign)
-            txt = cell.String
+        # Direttore Lavori (qualsiasi colonna del template)
+        _cell_dl = None
+        for _lbl_dl in ('Il Direttore dei Lavori', 'Direttore Lavori'):
+            _lbl_dl_up = _lbl_dl.upper()
+            for _r in range(SheetUtils.getLastUsedRow(oCdP) + 1):
+                for _col in range(_max_col + 1):
+                    if _lbl_dl_up in oCdP.getCellByPosition(_col, _r).String.upper():
+                        _cell_dl = oCdP.getCellByPosition(_col, _r)
+                        break
+                if _cell_dl:
+                    break
+            if _cell_dl:
+                break
+
+        if _cell_dl is not None:
+            txt = _cell_dl.String
             # Inserisce la polizza se presente il placeholder (fallback)
             if 'n._' in txt and polizza_n:
                 txt = txt.replace('n.__________', f'n. {polizza_n}')
-
             # Inserisce il nome DL in coda se non già presente
             if f'({nome_dl})' not in txt:
                 txt = txt.strip() + f'\n({nome_dl})'
-            cell.String = txt
-            cell.IsTextWrapped = True
-        else:
-            # Fallback se non trova la stringa estesa
-            r_dl_alt, c_dl_alt = _trova_riva(oCdP, 'Direttore Lavori')
-            if r_dl_alt is not None:
-                cell_alt = oCdP.getCellByPosition(c_dl_alt, r_dl_alt + 1)
-                cell_alt.String = f'({nome_dl})'
-                cell_alt.IsTextWrapped = True
+            _cell_dl.String = txt
+            _cell_dl.IsTextWrapped = True
 
 
 

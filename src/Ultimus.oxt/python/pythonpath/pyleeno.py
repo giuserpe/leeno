@@ -439,7 +439,7 @@ def invia_voce(ctrl_override=False):
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         oSheet.getCellByPosition(1, SR +1).CellBackColor = COLORE_VERDE_SPUNTA
-        
+
         oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
         res_ep = SheetUtils.uFindString(art, oSheetEP)
         if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
@@ -563,7 +563,7 @@ def invia_voce(ctrl_override=False):
                             if ce_cod:
                                 if ce_cod not in voci_da_recuperare:
                                     voci_da_recuperare.append(ce_cod)
-                                
+
                                 # Se il costo elementare è a sua volta un'analisi, lo aggiungo alla coda
                                 res_ep = SheetUtils.uFindString(ce_cod, oSheetEP)
                                 if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
@@ -2426,26 +2426,26 @@ def scelta_viste_run():
 
 
         last_row_contab = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-        # aVoceMassima = daVoceSuggerita -1
-        # for el in reversed(range(3, last_row_contab + 1)):
-        #     s_val = oSheet.getCellByPosition(0, el).String.strip()
-        #     if s_val.isdigit():
-        #         aVoceMassima = int(s_val)
-        #         break
+        aVoceMassima = daVoceSuggerita -1
+        for el in reversed(range(3, last_row_contab + 1)):
+            s_val = oSheet.getCellByPosition(0, el).String.strip()
+            if s_val.isdigit():
+                aVoceMassima = int(s_val)
+                break
 
-        # sString = oDialog1.getControl('a_voce')
-        # sString.Text = str(aVoceMassima)
+        sString = oDialog1.getControl('a_voce')
+        sString.Text = str(aVoceMassima)
 
-        # if daVoceSuggerita > aVoceMassima:
-        #     oDialog1.getControl('a_voce').Enable = False
-        #     oDialog1.getControl('a_voce').Text = ""
-        #     oDialog1.getControl('da_voce').Enable = False
-        #     oDialog1.getControl('da_voce').Text = ""
-        # else:
-        #     oDialog1.getControl('a_voce').Enable = True
-        #     oDialog1.getControl('da_voce').Enable = False
-        oDialog1.getControl('a_voce').Enable = True
-        oDialog1.getControl('da_voce').Enable = False
+        if daVoceSuggerita > aVoceMassima:
+            oDialog1.getControl('a_voce').Enable = False
+            oDialog1.getControl('a_voce').Text = f"{daVoceSuggerita - 1}"
+            oDialog1.getControl('da_voce').Enable = False
+            oDialog1.getControl('da_voce').Text = f"{daVoceSuggerita - 1}"
+        else:
+            oDialog1.getControl('a_voce').Enable = True
+            oDialog1.getControl('da_voce').Enable = False
+        # oDialog1.getControl('a_voce').Enable = True
+        # oDialog1.getControl('da_voce').Enable = False
 
         # Inizio voce
         sString = oDialog1.getControl('TextField3')
@@ -11097,7 +11097,7 @@ def fissa():
     else:
         rows_to_freeze = 0
         cols_to_freeze = 0
-            
+
 
     if rows_to_freeze > 0:
         # Imposta il blocco tramite il metodo standard UNO (più robusto)
@@ -11456,7 +11456,7 @@ def xref_path():
 
     selection = oDoc.CurrentSelection
     selection.Formula = f'=HYPERLINK("{file_path}";"►►►")'
-    return 
+    return
 
 
 

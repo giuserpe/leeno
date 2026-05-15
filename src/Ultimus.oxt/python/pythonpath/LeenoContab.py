@@ -2771,28 +2771,31 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
 
     # ── 4. Sezione CERTIFICA ─────────────────────────────────────────────
     importo_finale = 0.0
-    # Priorità assoluta ai dati già presenti in S2 (più affidabili)
-    if r2_certif is not None:
-        importo_finale = oS2.getCellByPosition(col_sal, r2_certif).Value
 
-    # Fallback al ricalcolo nel foglio CdP se S2 non ha il dato
-    if importo_finale == 0.0 and r_totgen is not None:
+    # Recupera il valore direttamente dal risultato del calcolo nel foglio CdP
+    if r_totgen is not None:
         try:
             was_auto = oDoc.isAutomaticCalculationEnabled()
             oDoc.enableAutomaticCalculation(True)
             oDoc.calculateAll()
-            importo_finale = oCdP.getCellByPosition(val_col, r_totgen).Value
+            _v = oCdP.getCellByPosition(val_col, r_totgen).Value
+            importo_finale = round(_v, 2)
             oDoc.enableAutomaticCalculation(was_auto)
         except Exception:
             pass
 
+    # Fallback ai dati presenti in S2 se CdP è vuoto
+    if importo_finale == 0.0 and r2_certif is not None:
+        _v = oS2.getCellByPosition(col_sal, r2_certif).Value
+        importo_finale = round(_v, 2)
+
+    # Preparazione delle stringhe per Title e Certifica
+    str_n_cert = oS2.getCellByPosition(col_sal, r2_n_cert).String if r2_n_cert is not None else str(nSal)
+    # Formattazione importo stile IT (1.234,56) - importo_finale è già troncato a 2 decimali
+    str_importo = f"{importo_finale:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    # DLG.chi(str_importo)
     if r_certifica is not None:
         in_lettere = numero_in_lettere_euro(importo_finale)
-
-        # Preparazione delle stringhe per Title e Certifica
-        str_n_cert = oS2.getCellByPosition(col_sal, r2_n_cert).String if r2_n_cert is not None else str(nSal)
-        # Formattazione importo stile IT (1.234,56)
-        str_importo = f"{importo_finale:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
         # Testo completo per la sezione CERTIFICA
         certifica_testo = (
@@ -3008,6 +3011,9 @@ def _MENU_trasferimento_onfly_core():
         source_name = DLG.ScegliElaborato(Titolo='Scegli foglio sorgente',
                                          flag='export')
     except Exception:
+        return False
+
+    if not source_name:
         return False
 
     if source_name == 'CONTABILITA':

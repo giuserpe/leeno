@@ -88,7 +88,8 @@ get_header();
                             <thead>
                                 <tr>
                                     <th scope="col" class="col-name">Nome</th>
-                                    <th scope="col" class="col-dim" style="text-align: right; width: 100px;">Dim.</th>
+                                    <th scope="col" class="col-dim" style="text-align: right; width: 80px;">Dim.</th>
+                                    <th scope="col" class="col-hits" style="text-align: right; width: 80px;">Downloads</th>
                                     <th scope="col" class="col-dl" style="width: 150px;"></th>
                                 </tr>
                             </thead>
@@ -107,6 +108,9 @@ get_header();
                                     </td>
                                     <td class="col-dim" style="text-align: right;">
                                         <?php echo esc_html($size); ?>
+                                    </td>
+                                    <td class="col-hits" style="text-align: right;">
+                                        <?php echo number_format_i18n($hits); ?>
                                     </td>
                                     <td class="col-dl" style="text-align: right;">
                                         <a href="<?php echo esc_url($dl_url); ?>" class="btn-leeno-download" aria-label="Scarica <?php echo esc_attr($name); ?>">

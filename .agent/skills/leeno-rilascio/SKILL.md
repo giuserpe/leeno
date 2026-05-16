@@ -13,7 +13,9 @@ description: >
 1. **Generazione Articolo Novità**:
    Invocare la skill `leeno-articolo-novita` per analizzare i cambiamenti dall'ultimo tag stabile e produrre una bozza dell'articolo di presentazione orientata all'utente.
    - Alternativamente, comando rapido per il log: `git log vX.X.X..HEAD --pretty=format:"%s" --reverse`
-2. **Note di Versione**: Riportare le novità salienti nel manuale (`documentazione/MANUALE_LeenO.fodt`).
+2. **Note di Versione**:
+   - Riportare le novità salienti nel manuale (`documentazione/MANUALE_LeenO.fodt`).
+   - Riportare le note di versione in coda al file `documentazione/NOTE_di_versione.fodt`.
 3. **Esportazione Manuale**: Generare il PDF aggiornato (`MANUALE_LeenO.pdf`).
 4. **Finalizzazione Articolo**: Rifinire la bozza generata al punto 1 per l'uso su blog e social.
 
@@ -33,9 +35,12 @@ description: >
 1. Verificare la versione in `LeenoGlobals.py` (`Lmajor`, `Lminor`, `Lsubv`)
 2. In `make_pack()`: **disattivare** `description_upd()`
 3. Controllare/aggiornare versione in `description.xml`
-4. Controllare/aggiornare versione in `leeno_version_code`
-5. Aggiornare info in `pkg-desc/description.txt`
-6. Rimuovere `def MENU_debug` (se presente)
+4. **Formato Versione**: In `leeno_version_code`, la versione DEVE seguire il formato previsto dal generatore CI:  
+   `LeenO-X.Y.Z.B-TYPE-YYYYMMDD` (es. `LeenO-3.26.0.0-STABLE-20260516`).  
+   *Nota: Se il formato è errato, le GitHub Actions falliranno.*
+5. **Aggiornamento LeenO.update.xml**: Aggiornare versione e link download anche in `LeenO.update.xml`.
+6. Aggiornare info in `pkg-desc/description.txt`
+7. Rimuovere `def MENU_debug` (se presente)
 7. Cancellare `MANUALE_LeenO.pdf` dalla dir sorgente (se presente)
 8. Aggiungere `MANUALE_LeenO.pdf` aggiornato al pacchetto
 9. Pacchettizzare con **CTRL-SHIFT-G**
@@ -59,10 +64,13 @@ description: >
    ```
 
 2. Merge in master:
-   ```
+   ```bash
    git checkout master
+   git pull origin master  # Assicurarsi di essere aggiornati
    git merge dev
    ```
+   *Nota: Se il merge fallisce per file bloccati in `.vscode`, chiudere l'editor o usare un terminale esterno.*
+   *Nota: Se ci sono conflitti in `versions.html`, solitamente si preferisce la versione di `dev`: `git checkout --theirs versions.html`.*
 
 3. Creare il tag annotato:
    ```

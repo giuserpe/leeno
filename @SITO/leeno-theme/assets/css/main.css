@@ -67,10 +67,12 @@
 }
 
 .leeno-table .col-name a {
-    color: var(--accent-cyan);
+    color: var(--text-green);
+    font-weight: 600;
 }
 
 .leeno-table .col-name a:hover {
+    color: var(--accent-rust);
     text-decoration: underline;
 }
 
@@ -1021,11 +1023,12 @@ img {
 .page-desc a:not(.btn-leeno-download):not(.btn-download-link),
 .prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link),
 .single-content a:not(.btn-leeno-download):not(.btn-download-link) {
-    color: var(--accent-cyan) !important;
+    color: var(--text-green) !important;
+    font-weight: 600 !important;
     text-decoration: underline !important;
-    text-decoration-color: rgba(170,212,0,0.4) !important;
+    text-decoration-color: var(--accent-cyan) !important;
     text-underline-offset: 3px !important;
-    transition: color 0.2s, text-decoration-color 0.2s !important;
+    transition: all 0.2s !important;
 }
 
 .entry-content a:not(.btn-leeno-download):not(.btn-download-link):hover,

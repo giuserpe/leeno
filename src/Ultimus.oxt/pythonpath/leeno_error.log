@@ -504,3 +504,4075 @@ File: pyleeno.py, Line: 5281, Function: paste_smart
 
 ------------------------------------------------------------
 
+[2026-03-25 13:01:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.3-TESTING-20260324
+
+Errore: name 'PL' is not defined
+
+File: 'LeenoComputo.py'
+Line: '351'
+Function: 'ins_voce_computo'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 7081, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 367, Function: wrapper
+File: LeenoComputo.py, Line: 351, Function: ins_voce_computo
+------------------------------------------------------------
+
+[2026-03-25 13:01:18]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.3-TESTING-20260324
+
+Errore: name 'PL' is not defined
+
+File: 'LeenoComputo.py'
+Line: '351'
+Function: 'ins_voce_computo'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 7081, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 367, Function: wrapper
+File: LeenoComputo.py, Line: 351, Function: ins_voce_computo
+------------------------------------------------------------
+
+[2026-03-26 12:38:04]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.3-TESTING-20260324
+
+Errore: list index out of range
+
+File: 'pyleeno.py'
+Line: '5544'
+Function: 'cerca_in_elenco'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 5525, Function: MENU_cerca_in_elenco
+File: pyleeno.py, Line: 5544, Function: cerca_in_elenco
+------------------------------------------------------------
+
+[2026-03-26 16:01:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.4-TESTING-20260326
+
+Errore: Couldn't convert <traceback object at 0x000001A830BC94C0> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 8335, Function: MENU_filtra_codice
+File: LeenoUtils.py, Line: 366, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-03-26 17:35:17]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.4-TESTING-20260326
+
+Errore: Couldn't convert <traceback object at 0x000001A8EC434300> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoUtils.py, Line: 366, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-04-09 11:00:36]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.17-TESTING-20260409
+
+Errore: Type 0 is not supported!
+
+File: 'LeenoComputo.py'
+Line: '135'
+Function: 'circoscriveVoceComputo'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 5465, Function: MENU_cerca_in_elenco
+File: pyleeno.py, Line: 5486, Function: cerca_in_elenco
+File: LeenoComputo.py, Line: 135, Function: circoscriveVoceComputo
+------------------------------------------------------------
+
+[2026-04-09 13:45:54]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.17-TESTING-20260409
+
+Errore: cannot access local variable 'oSheet' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '7525'
+Function: 'inizializza_analisi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 7023, Function: MENU_nuova_voce_scelta
+File: pyleeno.py, Line: 7525, Function: inizializza_analisi
+------------------------------------------------------------
+
+[2026-04-09 13:46:45]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.17-TESTING-20260409
+
+Errore: cannot access local variable 'oSheet' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '7525'
+Function: 'inizializza_analisi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 7023, Function: MENU_nuova_voce_scelta
+File: pyleeno.py, Line: 7525, Function: inizializza_analisi
+------------------------------------------------------------
+
+[2026-04-09 15:24:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.18-TESTING-20260409
+
+Errore: module 'pyleeno' has no attribute 'creaComputo'
+
+File: 'LeenoImport_XPWE.py'
+Line: '972'
+Function: 'XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoImport_XPWE.py, Line: 959, Function: MENU_XPWE_import
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: LeenoImport_XPWE.py, Line: 972, Function: XPWE_import
+------------------------------------------------------------
+
+[2026-04-13 13:39:27]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: module 'pyleeno' has no attribute 'creaComputo'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1004'
+Function: 'XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoImport_XPWE.py, Line: 991, Function: MENU_XPWE_import
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: LeenoImport_XPWE.py, Line: 1004, Function: XPWE_import
+------------------------------------------------------------
+
+[2026-04-14 08:05:35]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: module 'pyleeno' has no attribute 'creaComputo'
+
+File: 'LeenoImport_XPWE.py'
+Line: '999'
+Function: 'XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoImport_XPWE.py, Line: 986, Function: MENU_XPWE_import
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: LeenoImport_XPWE.py, Line: 999, Function: XPWE_import
+------------------------------------------------------------
+
+[2026-04-14 08:52:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: module 'pyleeno' has no attribute 'LeenO_path'
+
+File: 'Dialogs.py'
+Line: '2623'
+Function: 'Info'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: pyleeno.py, Line: 12312, Function: somma_per_colore_nella_colonna
+File: Dialogs.py, Line: 2623, Function: Info
+------------------------------------------------------------
+
+[2026-04-14 10:26:24]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: module 'dcf_parser' has no attribute 'leggi_file'
+
+File: 'pyleeno.py'
+Line: '12326'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 12326, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-04-14 12:36:24]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: 'tuple' object has no attribute 'get'
+
+File: 'LeenoImport_XPWE.py'
+Line: '797'
+Function: '<dictcomp>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: LeenoContab.py, Line: 2627, Function: MENU_trasferimento_onfly
+File: LeenoImport_XPWE.py, Line: 799, Function: compilaComputo
+File: LeenoImport_XPWE.py, Line: 797, Function: get_map
+File: LeenoImport_XPWE.py, Line: 797, Function: <dictcomp>
+------------------------------------------------------------
+
+[2026-04-14 12:36:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.23-TESTING-20260410
+
+Errore: 'tuple' object has no attribute 'get'
+
+File: 'LeenoImport_XPWE.py'
+Line: '797'
+Function: '<dictcomp>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoUtils.py, Line: 329, Function: wrapper
+File: LeenoContab.py, Line: 2627, Function: MENU_trasferimento_onfly
+File: LeenoImport_XPWE.py, Line: 799, Function: compilaComputo
+File: LeenoImport_XPWE.py, Line: 797, Function: get_map
+File: LeenoImport_XPWE.py, Line: 797, Function: <dictcomp>
+------------------------------------------------------------
+
+[2026-04-15 08:30:19]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.25-TESTING-20260414
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1435'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 113, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1435, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-04-15 08:31:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.25-TESTING-20260414
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1435'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 113, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1435, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-04-15 08:34:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.25-TESTING-20260414
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1454'
+Function: 'GotoSheet'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 113, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1425, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1454, Function: GotoSheet
+------------------------------------------------------------
+
+[2026-04-15 08:34:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.25-TESTING-20260414
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1457'
+Function: 'GotoSheet'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 113, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1425, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1457, Function: GotoSheet
+------------------------------------------------------------
+
+[2026-04-15 08:35:34]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.25-TESTING-20260414
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1457'
+Function: 'GotoSheet'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 113, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1425, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1457, Function: GotoSheet
+------------------------------------------------------------
+
+[2026-04-16 08:20:58]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:04]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:04]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:06]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:16]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:16]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:21]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:27]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 08:21:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.27-TESTING-20260415
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 49, Function: DlgMain
+File: pyleeno.py, Line: 9758, Function: DlgMain
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 147, Function: creaComputo
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:44]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-16 11:32:45]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.28-TESTING-20260416
+
+Errore: 'NoneType' object has no attribute 'getURL'
+
+File: 'pyleeno.py'
+Line: '9925'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoBasicBridge.py, Line: 255, Function: autoexec
+File: pyleeno.py, Line: 8899, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8921, Function: autoexec_run
+File: pyleeno.py, Line: 9925, Function: bak0
+------------------------------------------------------------
+
+[2026-04-22 23:10:32]
+OS: win32 / LibreOffice-26.2.2.2 / LeenO-3.25.0.30-TESTING-20260421
+
+Errore: cannot access local variable 'Toolbars' where it is not associated with a value
+
+File: 'LeenoConfig.py'
+Line: '274'
+Function: 'MENU_leeno_conf'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoConfig.py, Line: 274, Function: MENU_leeno_conf
+------------------------------------------------------------
+
+[2026-04-22 23:10:41]
+OS: win32 / LibreOffice-26.2.2.2 / LeenO-3.25.0.30-TESTING-20260421
+
+Errore: cannot access local variable 'Toolbars' where it is not associated with a value
+
+File: 'LeenoConfig.py'
+Line: '274'
+Function: 'MENU_leeno_conf'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoConfig.py, Line: 274, Function: MENU_leeno_conf
+------------------------------------------------------------
+
+[2026-04-23 17:40:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.32-TESTING-20260422
+
+Errore: [WinError 123] La sintassi del nome del file, della directory o del volume non è corretta: 'https:'
+
+File: '<frozen os>'
+Line: '225'
+Function: 'makedirs'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 8917, Function: autoexec
+File: LeenoUtils.py, Line: 337, Function: wrapper
+File: pyleeno.py, Line: 8939, Function: autoexec_run
+File: pyleeno.py, Line: 9954, Function: bak0
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 215, Function: makedirs
+File: <frozen os>, Line: 225, Function: makedirs
+------------------------------------------------------------
+
+[2026-04-27 22:32:23]
+OS: win32 / LibreOffice-26.2.2.2 / LeenO-3.25.0.36-TESTING-20260427
+
+Errore: unexpected indent (pyleeno.py, line 2446)
+
+File: '<frozen importlib._bootstrap>'
+Line: '488'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 268, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 995, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1133, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1063, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-04-27 22:32:29]
+OS: win32 / LibreOffice-26.2.2.2 / LeenO-3.25.0.36-TESTING-20260427
+
+Errore: unexpected indent (pyleeno.py, line 2446)
+
+File: '<frozen importlib._bootstrap>'
+Line: '488'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 268, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 995, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1133, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1063, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-04-30 13:11:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.37-TESTING-20260428
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoSheetUtils.py'
+Line: '611'
+Function: 'prossimaVoce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 8299, Function: MENU_filtra_codice
+File: LeenoSheetUtils.py, Line: 611, Function: prossimaVoce
+------------------------------------------------------------
+
+[2026-05-04 12:31:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.38-TESTING-20260430
+
+Errore: Couldn't convert <traceback object at 0x000002590F2EE000> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoContab.py, Line: 2602, Function: MENU_trasferimento_onfly
+File: LeenoUtils.py, Line: 336, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-06 23:51:56]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.49-TESTING-20260506
+
+Errore: module 'LeenoSheetUtils' has no attribute 'GotoSheet'
+
+File: 'LeenoContab.py'
+Line: '2265'
+Function: 'EseguiContabilita'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: LeenoContab.py, Line: 92, Function: wrapper
+File: LeenoContab.py, Line: 2203, Function: GeneraAttiContabili
+File: LeenoContab.py, Line: 2265, Function: EseguiContabilita
+------------------------------------------------------------
+
+[2026-05-07 09:41:48]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.50-TESTING-20260507
+
+Errore: module 'LeenoContab' has no attribute 'MENU_AnnullaTuttiAttiContabili'
+
+File: 'pyleeno.py'
+Line: '12347'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 12347, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-07 09:43:59]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.50-TESTING-20260507
+
+Errore: getValue
+
+File: 'LeenoContab.py'
+Line: '455'
+Function: '_annulla_ultimo_sal_core'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 12347, Function: MENU_debug
+File: LeenoContab.py, Line: 92, Function: wrapper
+File: LeenoContab.py, Line: 378, Function: MENU_AnnullaTuttiAttiContabili
+File: LeenoContab.py, Line: 455, Function: _annulla_ultimo_sal_core
+------------------------------------------------------------
+
+[2026-05-07 10:02:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.50-TESTING-20260507
+
+Errore: Couldn't convert <traceback object at 0x000001976C8DB240> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 279, Function: trigger
+File: pyleeno.py, Line: 12352, Function: MENU_debug
+File: LeenoUtils.py, Line: 336, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-07 13:41:52]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.51-TESTING-20260507
+
+Errore: No module named 'python' (or 'python.LeenoDispatcher.handle_exception' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 268, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 64, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 13, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 22, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 8, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-07 13:44:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.51-TESTING-20260507
+
+Errore: No module named 'python' (or 'python.LeenoDispatcher.handle_exception' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 268, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoBasicBridge.py, Line: 22, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 11, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-07 17:36:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.52-TESTING-20260507
+
+Errore: cannot access local variable 'codice_da_cercare' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '5614'
+Function: 'cerca_in_elenco'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 281, Function: trigger
+File: pyleeno.py, Line: 5578, Function: MENU_cerca_in_elenco
+File: pyleeno.py, Line: 5614, Function: cerca_in_elenco
+------------------------------------------------------------
+
+[2026-05-08 09:10:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: name 'EMPTY' is not defined
+
+File: 'pyleeno.py'
+Line: '12410'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12410, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 09:18:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'LeenoUndo' (or 'LeenoUndo.with_undo' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 12370, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:49:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named '_typeshed' (or '_typeshed._type_checker_internals' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:53:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:53:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:54:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:55:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:56:33]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:57:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:58:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 09:59:54]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'src' (or 'src.Ultimus.oxt.python.LeenoDebug.sheet' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 22, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 10:06:17]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: invalid syntax (pyleeno.py, line 12380)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-05-08 10:06:59]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: No module named 'LeenoUndo' (or 'LeenoUndo.with_undo' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 12380, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 10:07:33]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: Couldn't convert <pyleeno.RangeListener object at 0x000001DA80645AD0> to a UNO type; caught exception: <class 'AttributeError'>: 'RangeListener' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'pyleeno.py'
+Line: '12415'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12415, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 10:08:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: Couldn't convert <pyleeno.RangeListener object at 0x000001DA8C37F1D0> to a UNO type; caught exception: <class 'AttributeError'>: 'RangeListener' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'pyleeno.py'
+Line: '12415'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12415, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 10:10:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: Couldn't convert {'Title': 'Seleziona la cella di destinazione', 'CloseOnMouseRelease': True} to a UNO type; caught exception: <class 'AttributeError'>: 'dict' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'pyleeno.py'
+Line: '12422'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12422, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 10:15:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: getByIndex
+
+File: 'pyleeno.py'
+Line: '12519'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12519, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 10:20:04]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: somma_per_colore_nella_colonna() missing 1 required positional argument: 'self'
+
+File: 'LeenoDispatcher.py'
+Line: '285'
+Function: 'trigger'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+------------------------------------------------------------
+
+[2026-05-08 10:30:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: Couldn't convert {'Title': 'Seleziona la cella di destinazione', 'CloseOnMouseRelease': True} to a UNO type; caught exception: <class 'AttributeError'>: 'dict' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'pyleeno.py'
+Line: '12374'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12374, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 10:39:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: CurrentSelection
+
+File: 'pyleeno.py'
+Line: '12525'
+Function: 'avvia_selezione_range'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12545, Function: MENU_debug
+File: pyleeno.py, Line: 12525, Function: avvia_selezione_range
+------------------------------------------------------------
+
+[2026-05-08 10:40:04]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: CurrentSelection
+
+File: 'pyleeno.py'
+Line: '12525'
+Function: 'avvia_selezione_range'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12545, Function: MENU_debug
+File: pyleeno.py, Line: 12525, Function: avvia_selezione_range
+------------------------------------------------------------
+
+[2026-05-08 11:13:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.53-TESTING-20260507
+
+Errore: Couldn't convert {'Title': 'Seleziona la cella di destinazione', 'CloseOnMouseRelease': True} to a UNO type; caught exception: <class 'AttributeError'>: 'dict' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'pyleeno.py'
+Line: '12374'
+Function: 'somma_per_colore_nella_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 12374, Function: somma_per_colore_nella_colonna
+------------------------------------------------------------
+
+[2026-05-08 18:57:57]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: module 'LeenoDialogs' has no attribute 'info'
+
+File: 'pyleeno.py'
+Line: '9989'
+Function: 'bak0'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+File: pyleeno.py, Line: 9989, Function: bak0
+------------------------------------------------------------
+
+[2026-05-08 18:58:56]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: module 'pyleeno' has no attribute 'apri_con_editor'
+
+File: 'LeenoDialogs.py'
+Line: '79'
+Function: 'chi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 8980, Function: autoexec
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 9002, Function: autoexec_run
+File: pyleeno.py, Line: 9989, Function: bak0
+File: LeenoDialogs.py, Line: 79, Function: chi
+------------------------------------------------------------
+
+[2026-05-08 19:01:36]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: module 'pyleeno' has no attribute 'apri_con_editor'
+
+File: 'LeenoDialogs.py'
+Line: '79'
+Function: 'chi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoBasicBridge.py, Line: 54, Function: DlgMain
+File: pyleeno.py, Line: 9820, Function: DlgMain
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 161, Function: creaComputo
+File: pyleeno.py, Line: 8980, Function: autoexec
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 9002, Function: autoexec_run
+File: pyleeno.py, Line: 9992, Function: bak0
+File: LeenoDialogs.py, Line: 79, Function: chi
+------------------------------------------------------------
+
+[2026-05-08 19:20:59]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: No module named 'com' (or 'com.sun.star.sheet.ValidationType' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 6132, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 19:23:49]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: No module named 'com' (or 'com.sun.star.sheet.ValidationType' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 6132, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 19:27:12]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: No module named 'com' (or 'com.sun.star.sheet.ValidationType' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 6132, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 19:28:08]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: No module named 'com' (or 'com.sun.star.sheet.ValidationType' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 6132, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 19:34:16]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: No module named 'com' (or 'com.sun.star.sheet.ValidationType' is unknown)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 6132, Function: <module>
+File: uno.py, Line: 425, Function: _uno_import
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-08 19:36:53]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: pyuno.getConstantByName: com.sun.star.sheet.ValidationType.CUSTOMis not a constant
+
+File: 'uno.py'
+Line: '64'
+Function: 'getConstantByName'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12446, Function: MENU_debug
+File: pyleeno.py, Line: 6146, Function: valida_solo_numeri
+File: uno.py, Line: 64, Function: getConstantByName
+------------------------------------------------------------
+
+[2026-05-08 19:39:00]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: pyuno.getConstantByName: com.sun.star.sheet.ValidationType.CUSTOMis not a constant
+
+File: 'uno.py'
+Line: '64'
+Function: 'getConstantByName'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12446, Function: MENU_debug
+File: pyleeno.py, Line: 6146, Function: valida_solo_numeri
+File: uno.py, Line: 64, Function: getConstantByName
+------------------------------------------------------------
+
+[2026-05-08 19:40:16]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: Cells
+
+File: 'pyleeno.py'
+Line: '6153'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12451, Function: MENU_debug
+File: pyleeno.py, Line: 6153, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 19:53:06]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: module 'LeenoDialogs' has no attribute 'info'
+
+File: 'pyleeno.py'
+Line: '6177'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12450, Function: MENU_debug
+File: pyleeno.py, Line: 6177, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:06:24]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: IgnoreBlank
+
+File: 'pyleeno.py'
+Line: '6172'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12455, Function: MENU_debug
+File: pyleeno.py, Line: 6172, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:32:44]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: module 'Dialogs' has no attribute 'info'
+
+File: 'pyleeno.py'
+Line: '6183'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12461, Function: MENU_debug
+File: pyleeno.py, Line: 6183, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:38:26]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: IgnoreBlank
+
+File: 'pyleeno.py'
+Line: '6177'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12465, Function: MENU_debug
+File: pyleeno.py, Line: 6177, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:43:52]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: IgnoreBlank
+
+File: 'pyleeno.py'
+Line: '6175'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12452, Function: MENU_debug
+File: pyleeno.py, Line: 6175, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:46:26]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: IgnoreBlank
+
+File: 'pyleeno.py'
+Line: '6175'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12452, Function: MENU_debug
+File: pyleeno.py, Line: 6175, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 20:48:41]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.54-TESTING-20260508
+
+Errore: IntrospectionAccessStatic_Impl::setPropertyValueByIndex(), property at index 117 is readonly
+
+File: 'pyleeno.py'
+Line: '6168'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12450, Function: MENU_debug
+File: pyleeno.py, Line: 6168, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 23:45:53]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.55-TESTING-20260508
+
+Errore: IntrospectionAccessStatic_Impl::setPropertyValueByIndex(), property at index 117 is readonly
+
+File: 'pyleeno.py'
+Line: '12482'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12499, Function: MENU_debug
+File: pyleeno.py, Line: 12482, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-08 23:46:09]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.55-TESTING-20260508
+
+Errore: IntrospectionAccessStatic_Impl::setPropertyValueByIndex(), property at index 117 is readonly
+
+File: 'pyleeno.py'
+Line: '12482'
+Function: 'valida_solo_numeri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12499, Function: MENU_debug
+File: pyleeno.py, Line: 12482, Function: valida_solo_numeri
+------------------------------------------------------------
+
+[2026-05-09 21:43:59]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.58-TESTING-20260509
+
+Errore: module 'LeenoUtils' has no attribute 'getLastUsedCell'
+
+File: 'pyleeno.py'
+Line: '12519'
+Function: 'applica_validazione_decimale'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12530, Function: MENU_debug
+File: pyleeno.py, Line: 12519, Function: applica_validazione_decimale
+------------------------------------------------------------
+
+[2026-05-11 15:41:16]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: module 'Dialogs' has no attribute 'Fileselect'
+
+File: 'pyleeno.py'
+Line: '11397'
+Function: 'link_paths'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12440, Function: MENU_debug
+File: pyleeno.py, Line: 11397, Function: link_paths
+------------------------------------------------------------
+
+[2026-05-11 15:48:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 15:50:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 15:50:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 15:58:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:01:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:07:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 289, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:11:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 289, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:14:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:14:54]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:16:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: Formula
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12445, Function: MENU_debug
+File: pyleeno.py, Line: 11403, Function: link_paths
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-11 16:47:58]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.62-TESTING-20260510
+
+Errore: name 'link_paths' is not defined
+
+File: 'pyleeno.py'
+Line: '12406'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12406, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-14 17:06:48]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.68-TESTING-20260514
+
+Errore: cannot import name '_gotoCella' from partially initialized module 'pyleeno' (most likely due to a circular import) (C:\Users\TEST\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu1152867wg3.tmp_\LeenO.oxt\python\pythonpath\pyleeno.py)
+
+File: 'LeenoContab.py'
+Line: '8'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: pyleeno.py, Line: 68, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 13, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 8, Function: <module>
+------------------------------------------------------------
+
+[2026-05-14 18:29:57]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.25.0.68-TESTING-20260514
+
+Errore: cannot import name '_gotoCella' from partially initialized module 'pyleeno' (most likely due to a circular import) (C:\Users\TEST\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu1152867wg3.tmp_\LeenO.oxt\python\pythonpath\pyleeno.py)
+
+File: 'LeenoContab.py'
+Line: '8'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 274, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: pyleeno.py, Line: 68, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 13, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 8, Function: <module>
+------------------------------------------------------------
+
+[2026-05-15 21:40:03]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.25.0.72-TESTING-20260515
+
+Errore: Couldn't convert <traceback object at 0x000001C518038DC0> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoContab.py, Line: 2990, Function: MENU_trasferimento_onfly
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+

@@ -30,7 +30,7 @@ def initGlobalVars(d):
 if getGlobalVar('Lmajor') is None:
     initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
-        'Lminor': 25,       # NUOVE FUNZIONALITA'
+        'Lminor': 26,       # NUOVE FUNZIONALITA'
         'Lsubv': "0",       # CORREZIONE BUGS
         # ~'Lmajor': 3,        # INCOMPATIBILITA'
         # ~'Lminor': 23,       # NUOVE FUNZIONALITA'

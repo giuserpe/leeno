@@ -10220,8 +10220,8 @@ def make_pack(bar=0):
                 7, 338).String
     except Exception:
         pass
-    oxt_name = version_code.write()
-    description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
+    oxt_name = version_code.read()
+    # description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -12458,21 +12458,7 @@ def somma_per_colore_nella_colonna():
     controller.startRangeSelection(props)
 
 
-def MENU_debug():
-    fissa()
-    return
-    xref_path()
-    return
-    # debug_validation()
-    # return
-    # somma_per_colore_nella_colonna()
-    # return
-    import app_bridge
-    app_bridge.autocad("1_2_3_4_via Lucrezio_contabili di lavoro.dwg", "ADD")
-    return
-    import dcf_parser
-    dcf_parser.leggi_file()
-    return
+
     import LeenoImport_XPWE
     oSheet = LeenoUtils.getDocument().CurrentController.getActiveSheet()
     LeenoImport_XPWE.rimuoviAnalisiVuote(oSheet)

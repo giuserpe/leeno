@@ -10221,7 +10221,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.read()
-    # description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
+    description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()

@@ -31,7 +31,7 @@ if getGlobalVar('Lmajor') is None:
     initGlobalVars({
         'Lmajor': 3,        # INCOMPATIBILITA'
         'Lminor': 26,       # NUOVE FUNZIONALITA'
-        'Lsubv': "0",       # CORREZIONE BUGS
+        'Lsubv': "1",       # CORREZIONE BUGS
         # ~'Lmajor': 3,        # INCOMPATIBILITA'
         # ~'Lminor': 23,       # NUOVE FUNZIONALITA'
         # ~'Lsubv': "0",       # CORREZIONE BUGS

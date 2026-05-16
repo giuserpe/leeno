@@ -102,5 +102,6 @@
     <dlg:menuitem dlg:value="&amp;1345.ComboBox3.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CheckBox9" dlg:tab-index="32" dlg:left="12" dlg:top="129" dlg:width="108" dlg:height="11" dlg:help-text="&amp;1350.Dlg_config.CheckBox9.HelpText" dlg:value="&amp;1351.Dlg_config.CheckBox9.Label" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

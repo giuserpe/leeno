@@ -3,6 +3,9 @@
 *.xba
 *.xdl
 *.xlb
+*.zip
+*.log
+staged_diff.txt
 .directory
 DialogStrings_it_IT.*
 RegisteredFlag
@@ -32,3 +35,4 @@ src/Ultimus.oxt/python/pythonpath/__pycache__/
 Leeno.e4p
 __init__.py
 *_COMAU*
+src/Ultimus.oxt/pythonpath/leeno_error.log

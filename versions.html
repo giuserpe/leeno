@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -28,6 +29,7 @@
             --font-body: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --container: 1200px;
+            --radius: 0px;
         }
 
         /* ——— Reset & Base ——— */
@@ -66,67 +68,9 @@
             padding: 0 24px;
         }
 
-        /* ——— HEADER ——— */
-        .site-header {
-            background: var(--bg-dark);
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(170, 212, 0, 0.1);
-        }
-
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .site-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .site-logo img {
-            height: 36px;
-            width: auto;
-        }
-
-        .site-name {
-            font-family: var(--font-display);
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.1em;
-            font-size: 1.1rem;
-        }
-
-        .main-nav {
-            display: flex;
-            gap: 20px;
-        }
-
-        .main-nav a {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .main-nav a:hover {
-            color: var(--accent-cyan);
-        }
-
-        /* ——— PAGE HEADER (HERO) ——— */
         /* ——— CONTENT ——— */
         .content-main {
             padding: 40px 0;
-        }
-
-        /* ——— TABLE ——— */
-        .table-wrap {
-            background: #fff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-            overflow-x: auto;
         }
 
         table {
@@ -253,20 +197,6 @@
             text-align: center;
         }
 
-        .commit-msg {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            max-width: 600px;
-        }
-
-        code {
-            font-family: var(--font-mono);
-            font-size: 0.85em;
-            background: rgba(0,0,0,0.05);
-            padding: 3px 6px;
-            color: var(--text-green);
-        }
-
         /* ——— FOOTER ——— */
         .site-footer {
             background: var(--bg-dark);
@@ -351,6 +281,7 @@
         }
     </style>
 </head>
+
 <body>
     <main class="container content-main">
         <div class="activity-section">
@@ -366,122 +297,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.71-TESTING-20260514.oxt">LeenO-3.25.0.71-TESTING-20260514.oxt</a> <span class="badge">ULTIMA</span></td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-14 20:33</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.71-TESTING-20260514.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.70-TESTING-20260514.oxt">LeenO-3.25.0.70-TESTING-20260514.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-14 17:07</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.70-TESTING-20260514.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.69-TESTING-20260514.oxt">LeenO-3.25.0.69-TESTING-20260514.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-14 16:37</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.69-TESTING-20260514.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.68-TESTING-20260514.oxt">LeenO-3.25.0.68-TESTING-20260514.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-14 09:46</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.68-TESTING-20260514.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.67-TESTING-20260513.oxt">LeenO-3.25.0.67-TESTING-20260513.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-14 08:11</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.25.0.67-TESTING-20260513.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
+                        <tr>
+                            <td class="col-name"><a href="#">Nessun file disponibile</a> <span class="badge">ULTIMA</span></td>
+                            <td class="col-dim">0 KB</td>
+                            <td class="col-extra">2026-04-22</td>
+                            <td style="text-align: right;">
+                                <a href="#" class="btn-download-link" download>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Scarica
+                                </a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        
-    <h2>Attività di sviluppo recente</h2>
-    <table>
-        <thead>
-            <tr>
-                <th style="width:140px">Data</th>
-                <th style="width:90px">Commit</th>
-                <th>Descrizione</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-            <tr>
-                <td>2026-05-13 19:48</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1db45236b17d99b965d2ba18886d20abcb37b2e6" target="_blank" rel="noopener"><code>1db4523</code></a></td>
-                <td class="commit-msg">chore(versioning): incrementa versione a 3.25.0.67-TESTING-20260513
-
-- Aggiornati campi versione in description.xml
-- Allineato leeno_version_code alla nuova release</td>
-            </tr>
-            <tr>
-                <td>2026-05-13 19:45</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5a582ccea280538ca106d960d22445d2a7eb731b" target="_blank" rel="noopener"><code>5a582cc</code></a></td>
-                <td class="commit-msg">feat(core): invia analisi e costi elementari al documento principale
-
-- La funzione invia_voce ora raccoglie ricorsivamente i costi elementari e le
-  relative schede di analisi per garantirne l'integrità nel DP.
-- Aggiunge avviso in contabilità per valore 'a voce' mancante.
-- Migliora formattazione importi e logica nel Certificato di Pagamento.
-- Aggiorna il manuale con la funzionalità di somma per colore.
-- Incrementa versione a 3.25.0.66-TESTING.</td>
-            </tr>
-            <tr>
-                <td>2026-05-13 19:41</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ab856649885e8bf2cbe883822b9db12850e5fe78" target="_blank" rel="noopener"><code>ab85664</code></a></td>
-                <td class="commit-msg">chore(template): pulizia placeholder anagrafici e campi testuali in Computo_LeenO.ods
-
-- Sostituisce valori precompilati (Comune di Matera, Appaltatore, Progettista, Collaboratori, ecc.)
-  con placeholder neutri (“0”) o campi vuoti
-- Uniforma intestazioni e sezioni amministrative eliminando riferimenti non generici
-- Aggiorna blocchi S2/SAL/Verbali/Ordini di servizio con etichette neutre
-- Mantiene invariata la struttura del template senza modificare formule o layout</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="activity-section">
+            <h2>Attività di sviluppo recente</h2>
+            <p class="no-activity">Nessun commit recente trovato o errore nel recupero dei dati.</p>
+        </div>
     </main>
 
     <footer class="site-footer">
@@ -500,10 +335,11 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-14 20:38 UTC</p>
-                <p>Build Commit: <code>1db4523</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-04-22 21:57 UTC</p>
+                <p>Build Commit: <code>local</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>
 </body>
-</html>
+
+

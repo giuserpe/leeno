@@ -4,9 +4,13 @@ Utilities to handle worksheets
 Copyright 2020 by Massimo Del Fedele
 '''
 import random
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 from com.sun.star.xml import AttributeData
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
+# pyrefly: ignore [missing-import]
 from com.sun.star.util import SortField
 import LeenoUtils
 import DocUtils

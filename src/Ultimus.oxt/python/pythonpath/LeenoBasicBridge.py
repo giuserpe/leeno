@@ -11,7 +11,10 @@ ALERT_BASIC_CALLS = 0
 # dirty trick to have pythonpath added if missing
 import sys, os, inspect
 myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-if(myPath not in sys.path):
+parentPath = os.path.dirname(myPath)
+if parentPath not in sys.path:
+    sys.path.append(parentPath)
+if myPath not in sys.path:
     sys.path.append(myPath)
 
 import Dialogs
@@ -33,8 +36,10 @@ if 'CALL_SET' not in bDict:
 def callAlert():
     if ALERT_BASIC_CALLS:
         funcName = inspect.stack()[1][3]
+        # pyrefly: ignore [unknown-name]
         if not funcName in CALL_SET:
             Dialogs.Exclamation(Title="LeenoBasicBridge", Text=f"Chiamata da basic a\n'{funcName}'")
+            # pyrefly: ignore [unknown-name]
             CALL_SET.add(funcName)
 
 import pyleeno as PL

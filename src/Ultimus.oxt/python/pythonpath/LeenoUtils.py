@@ -304,12 +304,15 @@ def no_refresh_context():
         # Yield control al blocco with
         yield
     except Exception as e:
+        # Recuperiamo il messaggio prima di ogni altra operazione
+        msg = str(e)
         # Se l'eccezione è un oggetto UNO (ha il metodo getTypes), 
         # lo trasformiamo in una Exception Python standard per evitare 
-        # che contextlib crashi cercando di impostare __traceback__
+        # che contextlib crashi cercando di impostare __traceback__ su un
+        # oggetto UNO, operazione che il bridge Python-UNO non supporta.
         if hasattr(e, "getTypes"):
-            raise Exception(f"Errore UNO: {str(e)}") from None
-        raise
+            raise Exception(f"Errore UNO: {msg}") from None
+        raise e
     finally:
         # Cleanup: riattiva sempre il refresh
         DocumentRefresh(True)
@@ -773,7 +776,7 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str, width=72) -> str:
+def wrap_text(text: str, width=65) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
@@ -986,6 +989,8 @@ def MENU_trova_duplicati():
     - Le voci duplicate vengono evidenziate con COLORE_ROSSO_AVVISO sulla cella A del SR.
     - Viene mostrato un dialogo riepilogativo.
     '''
+    import SheetUtils
+    import LeenoComputo
     PL.struttura_off()
     oDoc = getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1082,7 +1087,7 @@ def MENU_trova_duplicati():
             righe.append(f'  {art}  ({len(lst)} volte, q.tà = {quant})')
         testo = 'Voci duplicate trovate:\n\n' + '\n'.join(righe)
     else:
-        struttura_off()
+        PL.struttura_off()
         testo = 'Nessuna voce duplicata trovata.'
 
     Dialogs.notizia(Title='Duplicati', Text=testo)

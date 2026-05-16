@@ -8,17 +8,25 @@ Copyright 2020 by Massimo Del Fedele
 import os
 import inspect
 from datetime import date
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 import unohelper
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.style.VerticalAlignment import MIDDLE as VA_MIDDLE
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import Size
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import XActionListener, XTextListener
+# pyrefly: ignore [missing-import]
 from com.sun.star.task import XJobExecutor
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import XTopWindowListener
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.util import MeasureUnit
 
 from LeenoConfig import Config

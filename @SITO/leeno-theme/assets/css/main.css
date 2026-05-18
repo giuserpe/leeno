@@ -67,7 +67,7 @@
 }
 
 .leeno-table .col-name a {
-    color: var(--text-green);
+    color: #455600;
     font-weight: 600;
 }
 
@@ -943,13 +943,15 @@ img {
 }
 
 .widget a {
-    color: var(--text-secondary);
+    color: var(--text-dark);
     font-size: 0.85rem;
-    transition: color 0.2s;
+    text-decoration: none;
+    transition: all 0.2s;
 }
 
 .widget a:hover {
-    color: var(--accent-cyan);
+    color: var(--accent-rust);
+    text-decoration: underline;
 }
 
 .widget ul {
@@ -1023,10 +1025,10 @@ img {
 .page-desc a:not(.btn-leeno-download):not(.btn-download-link),
 .prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link),
 .single-content a:not(.btn-leeno-download):not(.btn-download-link) {
-    color: var(--text-green) !important;
+    color: #455600 !important; /* Verde scuro ad alto contrasto */
     font-weight: 600 !important;
     text-decoration: underline !important;
-    text-decoration-color: var(--accent-cyan) !important;
+    text-decoration-color: rgba(69, 86, 0, 0.4) !important;
     text-underline-offset: 3px !important;
     transition: all 0.2s !important;
 }
@@ -2575,9 +2577,9 @@ h3.wpfb-cat,
 /* ── Link globali su sfondo chiaro ──────────────────────────── */
 /* Cattura link non coperti da regole più specifiche */
 .page-content a:not(.btn-download):not(.btn-download-link):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link) {
-    color: var(--accent-cyan) !important;
+    color: #455600 !important;
     text-decoration: underline;
-    text-decoration-color: rgba(170,212,0,0.35);
+    text-decoration-color: rgba(69, 86, 0, 0.3);
     text-underline-offset: 3px;
 }
 .page-content a:not(.btn-download):not(.btn-download-link):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link):hover {

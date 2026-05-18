@@ -168,13 +168,13 @@ def applica_validazione_decimale():
     finally:
         indicator.end()
 
-    Dialogs.Info(
-        Title='Avviso',
-        Text=(
-            "Validazione decimale applicata in modalità batch: ammessi numeri (anche 0) e formule; "
-            "non ammessi testi. Il formato numerico resta quello di stile della cella."
-        ),
-    )
+    # Dialogs.Info(
+    #     Title='Avviso',
+    #     Text=(
+    #         "Validazione decimale applicata in modalità batch: ammessi numeri (anche 0) e formule; "
+    #         "non ammessi testi. Il formato numerico resta quello di stile della cella."
+    #     ),
+    # )
 
 
 def _try_unprotect_leeno_sheet(oSheet):
@@ -290,61 +290,61 @@ def valida_numeri_decimale(oCell=None, *, unprotect_if_needed=False):
         _imposta_validazione_decimale_su_intervallo(cell)
 
 
-def valida_numeri_decimale_diverso_da_0():
-    """Applica validazione decimale diverso da 0; non forza formato (rispetta lo stile cella)."""
-    doc = LeenoUtils.getDocument()
-    if not hasattr(doc, "CurrentSelection"):
-        return
+# def valida_numeri_decimale_diverso_da_0():
+#     """Applica validazione decimale diverso da 0; non forza formato (rispetta lo stile cella)."""
+#     doc = LeenoUtils.getDocument()
+#     if not hasattr(doc, "CurrentSelection"):
+#         return
 
-    sel = doc.CurrentSelection
-    celle = []
+#     sel = doc.CurrentSelection
+#     celle = []
 
-    # Raccolta celle selezionate
-    if sel.supportsService("com.sun.star.sheet.SheetCell"):
-        celle.append(sel)
-    elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
-        addr = sel.getRangeAddress()
-        sheet = doc.Sheets[addr.Sheet]
-        for r in range(addr.StartRow, addr.EndRow + 1):
-            for c in range(addr.StartColumn, addr.EndColumn + 1):
-                celle.append(sheet.getCellByPosition(c, r))
-    elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
-        for r in sel.getRangeAddresses():
-            sheet = doc.Sheets[r.Sheet]
-            for rr in range(r.StartRow, r.EndRow + 1):
-                for cc in range(r.StartColumn, r.EndColumn + 1):
-                    celle.append(sheet.getCellByPosition(cc, rr))
-    else:
-        return
+#     # Raccolta celle selezionate
+#     if sel.supportsService("com.sun.star.sheet.SheetCell"):
+#         celle.append(sel)
+#     elif sel.supportsService("com.sun.star.sheet.SheetCellRange"):
+#         addr = sel.getRangeAddress()
+#         sheet = doc.Sheets[addr.Sheet]
+#         for r in range(addr.StartRow, addr.EndRow + 1):
+#             for c in range(addr.StartColumn, addr.EndColumn + 1):
+#                 celle.append(sheet.getCellByPosition(c, r))
+#     elif sel.supportsService("com.sun.star.sheet.SheetCellRanges"):
+#         for r in sel.getRangeAddresses():
+#             sheet = doc.Sheets[r.Sheet]
+#             for rr in range(r.StartRow, r.EndRow + 1):
+#                 for cc in range(r.StartColumn, r.EndColumn + 1):
+#                     celle.append(sheet.getCellByPosition(cc, rr))
+#     else:
+#         return
 
-    VT_DECIMAL = 2
-    ALERT_STOP = 0
+#     VT_DECIMAL = 2
+#     ALERT_STOP = 0
 
-    for cell in celle:
-        # 1. Reset completo
-        val = cell.Validation
-        val.Type = 0
-        cell.Validation = val
+#     for cell in celle:
+#         # 1. Reset completo
+#         val = cell.Validation
+#         val.Type = 0
+#         cell.Validation = val
 
-        # Non impostiamo NumberFormat sulla cella: un formato diretto ha priorita'
-        # sullo stile (CellStyle); finche' esiste, le modifiche ai decimali dallo stile non si applicano.
+#         # Non impostiamo NumberFormat sulla cella: un formato diretto ha priorita'
+#         # sullo stile (CellStyle); finche' esiste, le modifiche ai decimali dallo stile non si applicano.
 
-        # 2. Nuova validazione
-        val = cell.Validation
-        val.Type = VT_DECIMAL
-        val.Operator = uno.Enum("com.sun.star.sheet.ConditionOperator", "NOT_EQUAL")
-        val.setFormula1("0")
-        val.IgnoreBlankCells = True
-        val.ShowErrorMessage = True
-        val.ErrorAlertStyle = ALERT_STOP
-        val.ErrorMessage = "Sono ammessi solo numeri o formule che restituiscono numeri."
+#         # 2. Nuova validazione
+#         val = cell.Validation
+#         val.Type = VT_DECIMAL
+#         val.Operator = uno.Enum("com.sun.star.sheet.ConditionOperator", "NOT_EQUAL")
+#         val.setFormula1("0")
+#         val.IgnoreBlankCells = True
+#         val.ShowErrorMessage = True
+#         val.ErrorAlertStyle = ALERT_STOP
+#         val.ErrorMessage = "Sono ammessi solo numeri o formule che restituiscono numeri."
 
-        cell.Validation = val
+#         cell.Validation = val
 
-    Dialogs.Info(
-        Title='Avviso',
-        Text=(
-            "Validazione decimale (diverso da 0) applicata senza modificare il formato numerico: "
-            "resta quello di stile della cella."
-        ),
-    )
+#     Dialogs.Info(
+#         Title='Avviso',
+#         Text=(
+#             "Validazione decimale (diverso da 0) applicata senza modificare il formato numerico: "
+#             "resta quello di stile della cella."
+#         ),
+#     )

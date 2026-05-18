@@ -2483,7 +2483,8 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
                   '*.svg': 'SVG(*.svg)',
                   '*.dcf': 'DCF(*.dcf)',
                   '*.dat': 'dat(*.dat)', }
-    oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
+    ctx = uno.getComponentContext()
+    oFilePicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", ctx)
     oFilePicker.initialize((mode, ))
 
     # try to get path from current document, if any
@@ -2521,7 +2522,8 @@ def FolderSelect(titolo='Scegli la cartella...', startPath=None):
     Returns:
         str: percorso della cartella selezionata con trailing separator, None se annullato
     """
-    oFolderPicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FolderPicker")
+    ctx = uno.getComponentContext()
+    oFolderPicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FolderPicker", ctx)
 
     # Determina il percorso iniziale
     if startPath is None:

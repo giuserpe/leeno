@@ -8,7 +8,7 @@ from xml.etree import ElementTree
 import zipfile
 import os
 import sys
-import pyleeno as PL
+
 import Dialogs
 import LeenoUtils
 import LeenoDialogs as DLG
@@ -38,7 +38,9 @@ def force_restart():
 def aggiorna_configurazione_leeno():
     '''Rigenera Addons.xcu, Accelerators.xcu e registrymodifications.xcu senza reinstallare (Win/Linux/Mac)'''
     # 1. Ottieni il percorso di LeenO installato
-    leeno_path = PL.LeenO_path()
+    ctx = LeenoUtils.getComponentContext()
+    pir = ctx.getValueByName('/singletons/com.sun.star.deployment.PackageInformationProvider')
+    leeno_path = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
 
     # 2. Determina i percorsi in base al sistema operativo
     if sys.platform == "win32":
@@ -68,15 +70,16 @@ def aggiorna_configurazione_leeno():
         return False
 
     target_addons = None
-    target_accelerators = None
     for root, dirs, files in os.walk(config_base):
         if "Addons.xcu" in files:
             target_addons = os.path.join(root, "Addons.xcu")
-        if "Accelerators.xcu" in files:
-            target_accelerators = os.path.join(root, "Accelerators.xcu")
-
-        if target_addons and target_accelerators:
             break
+
+    # Accelerators.xcu non è copiato nel PackageRegistryBackend, ma resta nella cartella dell'estensione
+    leeno_path_sys = uno.fileUrlToSystemPath(leeno_path)
+    target_accelerators = os.path.join(leeno_path_sys, "Accelerators.xcu")
+    if not os.path.exists(target_accelerators):
+        target_accelerators = None
 
     # 4. Funzione helper per l'aggiornamento del file
     def process_xcu(source, target, label):
@@ -95,7 +98,7 @@ def aggiorna_configurazione_leeno():
             return f"✓ {label} aggiornato"
         except Exception as e:
             return f"✗ Errore {label}: {str(e)}"
-
+    DLG.chi(list([target_addons, target_accelerators]))
     risultato_addons = process_xcu(source_addons, target_addons, "Addons.xcu")
     risultato_accelerators = process_xcu(source_accelerators, target_accelerators, "Accelerators.xcu")
 

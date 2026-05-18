@@ -96,7 +96,7 @@ from LeenoValidation import (
     debug_validation,
     valida_cella,
     valida_numeri_decimale,
-    valida_numeri_decimale_diverso_da_0,
+    # valida_numeri_decimale_diverso_da_0,
 )
 
 # cos'e' il namespace:
@@ -271,7 +271,7 @@ def MENU_invia_voce():
     except Exception:
         ctrl_premuto = False
 
-    invia_voce(ctrl_override=ctrl_premuto)
+    avviso_vedi_voce = invia_voce(ctrl_override=ctrl_premuto)
 
     cfg.write('Generale', 'pesca_auto', stato)
     oDoc = LeenoUtils.getDocument()
@@ -280,6 +280,9 @@ def MENU_invia_voce():
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     LeenoUtils.DocumentRefresh(True)
+
+    if avviso_vedi_voce:
+        Dialogs.Exclamation(Title="ATTENZIONE!", Text="Nella voce inviata è presente un riferimento ad altra voce (vedi voce). Verifica attentamente!")
 
 
 def invia_voce(ctrl_override=False):
@@ -298,18 +301,20 @@ def invia_voce(ctrl_override=False):
 
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
+    avviso_vedi_voce = False
+
     if fpartenza == LeenoGlobals.getGlobalVar('sUltimus'):
         if nSheet == 'Elenco Prezzi':
             invia_voce_interno()
-            return
+            return False
         else:
             Dialogs.Exclamation(Title='ATTENZIONE!',
                 Text="Questo file coincide con il Documento Principale (DP).")
-        return
+        return False
     elif LeenoGlobals.getGlobalVar('sUltimus') == '':
         Dialogs.Exclamation(Title='ATTENZIONE!',
             Text="E' necessario impostare il Documento Principale (DP).")
-        return
+        return False
     nSheetDCC = getDCCSheet()
     # arrivo - Documento Principale
     DP = LeenoGlobals.getGlobalVar('sUltimus')
@@ -371,6 +376,10 @@ def invia_voce(ctrl_override=False):
         analisi = getAnalisi(oSheet)
         voce_da_inviare = oSheet.getCellByPosition(0, lrow).String
 
+        # Check "vedi voce" nella descrizione (colonna C -> indice 2)
+        if "vedi voce" in oSheet.getCellByPosition(2, lrow).String.lower():
+            avviso_vedi_voce = True
+
         # 1. Focus su DP e verifica presenza codice in EP del DP
         _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
@@ -389,7 +398,7 @@ def invia_voce(ctrl_override=False):
             if pos_dest[1] > SheetUtils.getLastUsedRow(dccSheetDest):
                 Dialogs.Exclamation(Title='ATTENZIONE!',
                     Text="La posizione di destinazione non è corretta.")
-                return
+                return avviso_vedi_voce
 
             if cfg.read('Generale', 'nuova_voce') == 'True' and not ctrl_override:
                 MENU_nuova_voce_scelta()
@@ -423,7 +432,7 @@ def invia_voce(ctrl_override=False):
             else:
                 ddcDoc.CurrentController.setFirstVisibleRow(3)
                 _gotoCella(1, 4)
-        return
+        return avviso_vedi_voce
 
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -437,6 +446,9 @@ def invia_voce(ctrl_override=False):
         range_src = f'A{SR+1}:AZ{ER+1}'
 
         data = oSheet.getCellRangeByName(range_src).FormulaArray
+
+        if "vedi voce" in str(data).lower():
+            avviso_vedi_voce = True
 
         oSheet.getCellByPosition(1, SR +1).CellBackColor = COLORE_VERDE_SPUNTA
 
@@ -453,7 +465,7 @@ def invia_voce(ctrl_override=False):
             oDoc.CurrentController.select(
                 oDoc.createInstance(
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
-            return
+            return avviso_vedi_voce
         noVoce = LeenoGlobals.getGlobalVar('noVoce')
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             comando('Copy')
@@ -472,14 +484,14 @@ def invia_voce(ctrl_override=False):
             if dccSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo + stili_contab):
                 lrow += 1
             else:
-                return
+                return avviso_vedi_voce
             if dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_cat:
                 Dialogs.Exclamation(Title = 'ATTENZIONE!',
                 Text='''La posizione di destinazione non è corretta.
     I nomi dei fogli di partenza e di arrivo devo essere coincidenti.''')
                 # unselect
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-                return
+                return avviso_vedi_voce
             else:
                 try:
                     lrow = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
@@ -534,7 +546,7 @@ def invia_voce(ctrl_override=False):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text="Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
-            return
+            return avviso_vedi_voce
         oDoc.CurrentController.select(
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
@@ -621,6 +633,8 @@ def invia_voce(ctrl_override=False):
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
+
+    return avviso_vedi_voce
 
 
 
@@ -735,111 +749,6 @@ def MENU_copia_sorgente_per_git():
 
 ########################################################################
 
-def cerca_path_valido():
-    """
-    Cerca il percorso di un editor di codice installato sul sistema.
-    Priorità: Antigravity > VS Code
-    Supporta Windows, Linux e macOS.
-
-    Returns:
-        str: Percorso completo dell'editor trovato
-
-    Raises:
-        FileNotFoundError: Se nessun editor viene trovato
-    """
-    if 'giuserpe' in os.getlogin():
-        import platform
-        system = platform.system()
-
-        possible_paths = []
-
-        # === ANTIGRAVITY (Priorità 1) ===
-        if system == "Windows":
-            possible_paths.extend([
-                os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
-                "C:\\Program Files\\Antigravity\\Antigravity.exe",
-                "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
-                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
-            ])
-        elif system == "Linux":
-            possible_paths.extend([
-                "/usr/bin/antigravity",
-                "/usr/local/bin/antigravity",
-                os.path.expanduser("~/.local/bin/antigravity"),
-            ])
-        elif system == "Darwin":  # macOS
-            possible_paths.extend([
-                "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
-                os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
-            ])
-
-        # === VS CODE (Fallback) ===
-        if system == "Windows":
-            possible_paths.extend([
-                os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
-                "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-                "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
-                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-                "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            ])
-        elif system == "Linux":
-            possible_paths.extend([
-                "/usr/bin/code",
-                "/usr/local/bin/code",
-                "/snap/bin/code",
-                os.path.expanduser("~/.local/bin/code"),
-            ])
-        elif system == "Darwin":  # macOS
-            possible_paths.extend([
-                "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
-                "/usr/local/bin/code",
-            ])
-
-        editor_path = None
-        for path in possible_paths:
-            if os.path.exists(path):
-                editor_path = path
-                break
-
-        if editor_path is None:
-            raise FileNotFoundError(
-                f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
-                "Assicurati che almeno uno sia installato."
-            )
-        return editor_path
-
-def apri_con_editor(full_file_path, line_number):
-    """
-    Apre un file nell'editor di codice alla riga specificata.
-    Riutilizza la finestra già aperta dell'editor se disponibile.
-
-    Args:
-        full_file_path (str): Percorso completo del file da aprire
-        line_number (int): Numero di riga da visualizzare
-    """
-    editor_path = cerca_path_valido()
-
-    # Controlla se il file esiste
-    if not os.path.exists(full_file_path):
-        DLG.chi(f"File non trovato: {full_file_path}")
-        return
-
-    # Controlla che il numero di riga sia valido
-    if not isinstance(line_number, int) or line_number < 1:
-        DLG.chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
-        return
-
-    # Costruisci il comando per aprire il file alla riga specifica
-    # --reuse-window: riutilizza la finestra già aperta invece di crearne una nuova
-    # --goto: apre il file alla riga:colonna specificata
-    comando = f'"{editor_path}" --reuse-window --goto "{full_file_path}:{line_number}"'
-
-    # Apri il file nell'editor
-    try:
-        subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except Exception as e:
-        DLG.chi(f"Errore durante l'apertura del file con l'editor: {e}")
-
 
 def MENU_avvia_IDE():
     '''
@@ -865,9 +774,9 @@ def avvia_IDE():
     if 'giuserpe' in os.getlogin():
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno'
 
-    # apri_con_editor(f'{dest}/python/pythonpath', 1)
-    apri_con_editor(f'{dest}', 1)
-    # apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
+    # DLG.apri_con_editor(f'{dest}/python/pythonpath', 1)
+    DLG.apri_con_editor(f'{dest}', 1)
+    # DLG.apri_con_editor(f'{dest}/python/pythonpath/pyleeno.py', 1)
     basic_LeenO('PY_bridge.avvia_IDE')
     return
 
@@ -1457,7 +1366,10 @@ def vai_a_Scorciatoie():
     oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
 
     # Determina la posizione di inserimento
-    pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
+    try:
+        pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
+    except:
+        pos = oDoc.getSheets().Count
 
     # Importa il foglio CdP
     try:
@@ -9080,6 +8992,7 @@ def autoexec_run():
         try:
             GotoSheet(nome)
             subst_str(' >(', ' ►(')
+            applica_validazione_decimale()
         except Exception:
             pass
     GotoSheet(oSheet.Name)
@@ -12474,6 +12387,10 @@ def somma_per_colore_nella_colonna():
     # MENU_trova_duplicati()
     # LeenoSheetUtils.cerca_errori()
     # LeenoTheme.trova_colore_cella()
+
+def MENU_debug():
+    import LeenoTheme
+    LeenoTheme.catalogo_stili_cella()
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

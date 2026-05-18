@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
   <node oor:name="AddonUI">
     <node oor:name="OfficeToolBar">
@@ -1205,7 +1205,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.xref_path</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value xml:lang="it">Inserisci Riferimento Esterno...</value>
+                  <value>Inserisci Riferimento Esterno...</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1220,7 +1220,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.somma_per_colore_nella_colonna</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value xml:lang="it">Somma per Colore</value>
+                  <value>Somma per Colore</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

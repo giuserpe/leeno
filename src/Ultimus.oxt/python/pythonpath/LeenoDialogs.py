@@ -14,8 +14,10 @@ import os
 import traceback
 import subprocess
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK_CANCEL
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_YES_NO
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_YES_NO_CANCEL
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_RETRY_CANCEL
@@ -25,13 +27,16 @@ from com.sun.star.awt.MessageBoxButtons import BUTTONS_YES_NO
 # from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_CANCEL
 # from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_RETRY
 # from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_YES
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_NO
 # from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_IGNORE
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX
 # from com.sun.star.awt.MessageBoxType import INFOBOX
 # from com.sun.star.awt.MessageBoxType import WARNINGBOX
 # from com.sun.star.awt.MessageBoxType import ERRORBOX
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
@@ -76,7 +81,7 @@ def chi(s = 'pausa...', OFF=False):
         if OFF:
             pass
         else:
-            PL.apri_con_editor(full_file_path, line_number)
+            apri_con_editor(full_file_path, line_number)
 
         # Mostra il messaggio in un dialogo
         MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
@@ -405,3 +410,108 @@ def ScegliElabDest(*, Title='', AskTarget=False, AskSort=False, Sort=False, ValC
     sort = dlg['sort'].getState()
 
     return {'elaborato':elab, 'destinazione':dest, 'ordina':sort}
+
+def cerca_path_valido():
+    """
+    Cerca il percorso di un editor di codice installato sul sistema.
+    Priorità: Antigravity > VS Code
+    Supporta Windows, Linux e macOS.
+
+    Returns:
+        str: Percorso completo dell'editor trovato
+
+    Raises:
+        FileNotFoundError: Se nessun editor viene trovato
+    """
+    if 'giuserpe' in os.getlogin():
+        import platform
+        system = platform.system()
+
+        possible_paths = []
+
+        # === ANTIGRAVITY (Priorità 1) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
+                "C:\\Program Files\\Antigravity\\Antigravity.exe",
+                "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
+                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/antigravity",
+                "/usr/local/bin/antigravity",
+                os.path.expanduser("~/.local/bin/antigravity"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
+                os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
+            ])
+
+        # === VS CODE (Fallback) ===
+        if system == "Windows":
+            possible_paths.extend([
+                os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+                "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+                "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+                "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            ])
+        elif system == "Linux":
+            possible_paths.extend([
+                "/usr/bin/code",
+                "/usr/local/bin/code",
+                "/snap/bin/code",
+                os.path.expanduser("~/.local/bin/code"),
+            ])
+        elif system == "Darwin":  # macOS
+            possible_paths.extend([
+                "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
+                "/usr/local/bin/code",
+            ])
+
+        editor_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                editor_path = path
+                break
+
+        if editor_path is None:
+            raise FileNotFoundError(
+                f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
+                "Assicurati che almeno uno sia installato."
+            )
+        return editor_path
+
+def apri_con_editor(full_file_path, line_number):
+    """
+    Apre un file nell'editor di codice alla riga specificata.
+    Riutilizza la finestra già aperta dell'editor se disponibile.
+
+    Args:
+        full_file_path (str): Percorso completo del file da aprire
+        line_number (int): Numero di riga da visualizzare
+    """
+    editor_path = cerca_path_valido()
+
+    # Controlla se il file esiste
+    if not os.path.exists(full_file_path):
+        chi(f"File non trovato: {full_file_path}")
+        return
+
+    # Controlla che il numero di riga sia valido
+    if not isinstance(line_number, int) or line_number < 1:
+        chi("Numero di riga non valido. Deve essere un intero maggiore di 0.")
+        return
+
+    # Costruisci il comando per aprire il file alla riga specifica
+    # --reuse-window: riutilizza la finestra già aperta invece di crearne una nuova
+    # --goto: apre il file alla riga:colonna specificata
+    comando = f'"{editor_path}" --reuse-window --goto "{full_file_path}:{line_number}"'
+
+    # Apri il file nell'editor
+    try:
+        subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        chi(f"Errore durante l'apertura del file con l'editor: {e}")

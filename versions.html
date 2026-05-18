@@ -450,21 +450,30 @@
         <tbody>
             
             <tr>
-                <td>2026-05-16 15:02</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/9f878d3bf96269cfdbaae9f2e1f573ae1d7c99f8" target="_blank" rel="noopener"><code>9f878d3</code></a></td>
-                <td class="commit-msg">fix(version): adegua formato versione per il generatore CI su dev</td>
-            </tr>
-            <tr>
-                <td>2026-05-16 12:00</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e1912b8dfcc2714f54133124bdc18622c70ca99b" target="_blank" rel="noopener"><code>e1912b8</code></a></td>
-                <td class="commit-msg">feat: rilascio versione 3.26.0</td>
-            </tr>
-            <tr>
-                <td>2026-05-15 20:37</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/f6aef785e9bb8ca0cadc56c7543b1ceb7560f662" target="_blank" rel="noopener"><code>f6aef78</code></a></td>
-                <td class="commit-msg">docs: aggiunge istruzioni su annullamento atti contabili e validazione Viste
+                <td>2026-05-18 21:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a88fadbcc815971853dc549f5a58740a389fcba7" target="_blank" rel="noopener"><code>a88fadb</code></a></td>
+                <td class="commit-msg">refactor(core): migliora integrazione UNO, editor esterno e gestione avvisi
 
-Aggiornato il manuale utente, il file di tracking e la mappa delle sezioni per includere i nuovi controlli introdotti nella scheda Viste (obbligo campo 'a voce', barra di progresso) e le funzioni di annullamento (singolo e totale) degli atti contabili.</td>
+• Rimuove import non utilizzati (pyleeno) da Debug.py
+• Usa PackageInformationProvider per individuare il percorso dell’estensione
+• Corregge gestione Accelerators.xcu (non presente nel backend)
+• Aggiorna FileSelect/FolderSelect usando createInstanceWithContext
+• Introduce cerca_path_valido() e apri_con_editor() con supporto Antigravity/VS Code
+• Sostituisce PL.apri_con_editor con funzione locale
+• Commenta avvisi modali superflui in LeenoValidation
+• Disabilita valida_numeri_decimale_diverso_da_0 e rimuove import relativo
+• Aggiunge avviso “vedi voce” in invia_voce() e propaga flag al chiamante
+• Migliora robustezza invia_voce con return booleano coerente</td>
+            </tr>
+            <tr>
+                <td>2026-05-16 17:17</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/4472a3953b0f7e05a57c9ccab5016a82632abf2b" target="_blank" rel="noopener"><code>4472a39</code></a></td>
+                <td class="commit-msg">chore(core): prepara ambiente di sviluppo per versione 3.26.1</td>
+            </tr>
+            <tr>
+                <td>2026-05-16 17:17</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/90d227c82f8344d442f1a612a76eb759e6d75eb7" target="_blank" rel="noopener"><code>90d227c</code></a></td>
+                <td class="commit-msg">docs: aggiorna procedura note di versione e reformatta note 3.26.0</td>
             </tr>
         </tbody>
     </table>
@@ -486,8 +495,8 @@ Aggiornato il manuale utente, il file di tracking e la mappa delle sezioni per i
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-18 19:41 UTC</p>
-                <p>Build Commit: <code>9f878d3</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-18 21:37 UTC</p>
+                <p>Build Commit: <code>a88fadb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

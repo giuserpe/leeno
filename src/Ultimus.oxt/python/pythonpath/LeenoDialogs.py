@@ -436,6 +436,7 @@ def cerca_path_valido():
                 "C:\\Program Files\\Antigravity\\Antigravity.exe",
                 "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
                 "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
+                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe"
             ])
         elif system == "Linux":
             possible_paths.extend([

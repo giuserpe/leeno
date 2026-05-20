@@ -12324,6 +12324,7 @@ class RangeListener(unohelper.Base, XRangeSelectionListener):
 # --- FUNZIONE PRINCIPALE ---
 @with_undo("Somma per Colore")
 def somma_per_colore_nella_colonna():
+    LeenoUtils.DocumentRefresh(True)
     oDoc = LeenoUtils.getDocument()
     selection = oDoc.CurrentSelection
 
@@ -12340,13 +12341,11 @@ def somma_per_colore_nella_colonna():
     last_row = cursor.RangeAddress.EndRow
 
     indirizzi_celle = []
-    converter = oDoc.createInstance("com.sun.star.table.CellAddressConversion")
 
     for riga in range(last_row + 1):
         cell = sheet.getCellByPosition(target_column, riga)
         if cell.CellBackColor == target_color and cell.getValue() != 0:
-            converter.Address = cell.CellAddress
-            indirizzi_celle.append(converter.UserInterfaceRepresentation.replace("$", ""))
+            indirizzi_celle.append(f"{_col_letter(target_column)}{riga + 1}")
 
     if not indirizzi_celle:
         return
@@ -12370,25 +12369,28 @@ def somma_per_colore_nella_colonna():
     # ma LibreOffice resta in attesa del click.
     controller.startRangeSelection(props)
 
-
-
-    import LeenoImport_XPWE
-    oSheet = LeenoUtils.getDocument().CurrentController.getActiveSheet()
-    LeenoImport_XPWE.rimuoviAnalisiVuote(oSheet)
-    return
-    import LeenoAnalysis
-    LeenoAnalysis.inizializza_analisi()
+def MENU_debug():
     LeenoUtils.DocumentRefresh(True)
     return
-    import LeenoTheme
+    oDoc = LeenoUtils.getDocument()
+    sheet = oDoc.CurrentController.getActiveSheet()
+    lrow = SheetUtils.getLastUsedRow(sheet)
+    elenco_codici = set()
+    for el in range(2, lrow):
+        codice = sheet.getCellByPosition(0, el).String
+        elenco_codici.add(codice)
+    DLG.chi(sorted(elenco_codici))
+    oSheet = oDoc.getSheets().getByName("contabilità_2")
+    LRow = SheetUtils.getLastUsedRow(oSheet)
+    for riga in range(1, LRow + 1):
+        if oSheet.getCellByPosition(0, riga).String in elenco_codici:
+            oSheet.getCellRangeByPosition(0, riga, 4, riga).CellBackColor = 16711935
+        
+        
+    
+    
 
-    LeenoTheme.catalogo_stili_cella()
-
-    # MENU_trova_duplicati()
-    # LeenoSheetUtils.cerca_errori()
-    # LeenoTheme.trova_colore_cella()
-
-def MENU_debug():
+    return
     import LeenoTheme
     LeenoTheme.catalogo_stili_cella()
 

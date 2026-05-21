@@ -6,6 +6,8 @@ LeenoContab.py - Contabilità per Leeno
 '''
 
 # _gotoCella è disponibile tramite 'import pyleeno as PL' (vedi sotto)
+import LeenoSettings
+from LeenoSettings import setPageStyle
 from LeenoDispatcher import handle_exception
 from datetime import date
 # pyrefly: ignore [missing-import]
@@ -1202,6 +1204,7 @@ def setup_foglio(oDoc, nome_foglio, dopo_di="CONTABILITA"):
     if not sheets.hasByName(nome_foglio):
         sheets.insertNewByName(nome_foglio, target_pos)
         sheet = sheets.getByName(nome_foglio)
+        LeenoSettings.setPageStyle()
         scrivi_intestazioni_fisse(sheet, nome_foglio)
     else:
         # Se esiste, lo spostiamo nella posizione corretta
@@ -1417,7 +1420,7 @@ def GeneraRegistro(oDoc, dati):
     oRegSheet.getCellRangeByPosition(0, riga_riportare, 9, riga_riportare).CellStyle = "Ultimus_Bordo_sotto"
 
     # 8. RIEMPIMENTO PAGINA finale
-    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000, max_filler=20)
+    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000)
     riga_riportare += num_filler
 
     # 9. OTTIMIZZAZIONE E LAYOUT
@@ -1789,6 +1792,59 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
     oSheet.getCellByPosition(5, insRow + 13).CellStyle = "Ultimus_destra_totali"
     oSheet.getCellByPosition(5, insRow + 13).Formula = f"={ncol}{insRow + 8}+{ncol}{insRow + 12}"
 
+    # Controllo superamento importo contrattuale
+    try:
+        oDoc.calculate()
+        valore_risultante = oSheet.getCellByPosition(5, insRow + 13).Value
+        oS2 = oDoc.getSheets().getByName("S2")
+        labels = ["importo netto di contratto", "importo di contratto", "importo contrattuale", "importo a contratto"]
+        imp_contratto = 0.0
+        found = False
+        # 1. Cerca in Anagrafica (col 0/1 -> valore col 2)
+        for r in range(200):
+            for col in (0, 1):
+                cell_txt = oS2.getCellByPosition(col, r).String.lower()
+                for label in labels:
+                    if label in cell_txt:
+                        v = oS2.getCellByPosition(2, r).Value
+                        if v:
+                            imp_contratto = v
+                            found = True
+                            break
+                if found: break
+            if found: break
+
+        # 2. Cerca in Tabella SITUAZIONE CONTABILE
+        if not found:
+            markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+            if markerS2:
+                yS2, xS2 = markerS2[0], markerS2[1]
+                for i in range(40):
+                    riga = xS2 + i
+                    cell_text = oS2.getCellByPosition(4, riga).String.lower()
+                    for label in labels:
+                        if label in cell_text:
+                            imp_contratto = oS2.getCellByPosition(yS2, riga).Value
+                            found = True
+                            break
+                    if found: break
+
+        if imp_contratto > 0 and valore_risultante > imp_contratto:
+            val_ris_str = f"{valore_risultante:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            imp_contr_str = f"{imp_contratto:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            Dialogs.NotifyDialog(
+                IconType="warning",
+                Title="ATTENZIONE!",
+                Text=(
+                    f"Il valore totale del SAL (€ {val_ris_str}) "
+                    f"supera l'importo contrattuale (€ {imp_contr_str}) "
+                    "annotato in Anagrafica Generale!"
+                    f"\n\nDifferenza: € {(valore_risultante - imp_contratto):,.2f}!"
+                )
+            )
+    except Exception:
+        pass
+
     currRow = insRow + 14
 
     # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
@@ -1921,7 +1977,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
 ########################################################################
 
-def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=10):
+def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100):
     """
     Riempie lo spazio residuo nella pagina corrente con righe tratteggiate.
     Usa la stessa logica del Registro: calcolo posizionale Y con cap massimo.
@@ -1930,29 +1986,120 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     """
     PL.comando('CalculateHard')
 
+    try:
+        oDoc = LeenoUtils.getDocument()
+        pageStyles = oDoc.StyleFamilies.getByName("PageStyles")
+        pageStyle = pageStyles.getByName(oSheet.PageStyle)
+        
+        pageHeight = pageStyle.Height
+        topMargin = pageStyle.TopMargin
+        bottomMargin = pageStyle.BottomMargin
+        
+        headerH = pageStyle.HeaderHeight if getattr(pageStyle, "HeaderIsOn", False) else 0
+        headerDist = pageStyle.HeaderBodyDistance if getattr(pageStyle, "HeaderIsOn", False) else 0
+        
+        footerH = pageStyle.FooterHeight if getattr(pageStyle, "FooterIsOn", False) else 0
+        footerDist = pageStyle.FooterBodyDistance if getattr(pageStyle, "FooterIsOn", False) else 0
+        
+        h_pagina_calc = pageHeight - topMargin - bottomMargin - headerH - headerDist - footerH - footerDist
+        if h_pagina_calc > 0:
+            h_pagina = h_pagina_calc
+    except Exception:
+        pass
+
+    # Calcola l'altezza delle righe da ripetere (TitleRows) se presenti
+    h_title = 0
+    try:
+        if oSheet.getPrintTitleRows():
+            title_range = oSheet.getTitleRows()
+            for i in range(title_range.StartRow, title_range.EndRow + 1):
+                r_title = oSheet.getRows().getByIndex(i)
+                if r_title.IsVisible:
+                    h_title += r_title.Height
+    except Exception:
+        pass
+
+    # Cerca l'ultimo salto pagina manuale (IsStartOfNewPage) prima di insertAt
+    y_page_start = 0
+    is_after_break = False
+    oRows = oSheet.getRows()
+    for r in range(insertAt - 1, 0, -1):
+        try:
+            if oRows.getByIndex(r).IsStartOfNewPage:
+                y_page_start = oSheet.getCellByPosition(col, r).Position.Y
+                is_after_break = True
+                break
+        except:
+            pass
+
+    # Position.Y reale di Calc: coordinata continua nel foglio
     y_pos = oSheet.getCellByPosition(col, insertAt - 1).Position.Y
     h_row = oSheet.getRows().getByIndex(insertAt - 1).Height
-    ingombro_pag = (y_pos + h_row) % h_pagina
+    y_total = y_pos + h_row
+
+    # Altezza del contenuto dall'inizio della pagina corrente
+    content_on_page = y_total - y_page_start
+
+    # Area contenuto per pagina (ridotta dalle TitleRows sulle pagine 2+)
+    h_content = h_pagina - h_title
+    if h_content <= 0:
+        h_content = h_pagina
+
+    if is_after_break:
+        # Dopo un salto pagina manuale: le TitleRows si ripetono
+        if content_on_page <= h_content:
+            ingombro_pag = h_title + content_on_page
+        else:
+            # Il contenuto ha generato ulteriori salti automatici
+            remaining = content_on_page - h_content
+            position_in_content = remaining % h_content
+            ingombro_pag = h_title + position_in_content
+    else:
+        # Nessun salto manuale: prima pagina o pagine con solo salti automatici
+        if y_total <= h_pagina:
+            ingombro_pag = y_total
+        else:
+            remaining = y_total - h_pagina
+            position_in_content = remaining % h_content
+            ingombro_pag = h_title + position_in_content
+
     spazio_da_coprire = h_pagina - ingombro_pag - margine
 
-    if spazio_da_coprire <= 500:
+    if spazio_da_coprire <= 0:
         return 0
 
-    num_righe = min(max_filler, int(spazio_da_coprire // 500))
-    if num_righe <= 0:
-        return 0
-
-    # Inserimento batch di tutte le righe filler
-    oSheet.getRows().insertByIndex(insertAt, num_righe)
-
-    # Formattazione batch dell'intera area filler
-    oRange = oSheet.getCellRangeByPosition(0, insertAt, last_col, insertAt + num_righe - 1)
-    oRange.CellStyle = "Ultimus_centro_bordi_lati"
-
-    # Inserimento batch delle stringhe di filler
     filler = "––––––––––––––––––––––––––––––"
-    oFillerRange = oSheet.getCellRangeByPosition(col, insertAt, col, insertAt + num_righe - 1)
-    oFillerRange.setDataArray(tuple((filler,) for _ in range(num_righe)))
+
+    # Inserisce UNA riga di prova per misurare l'altezza reale della riga filler
+    oSheet.getRows().insertByIndex(insertAt, 1)
+    oSheet.getCellRangeByPosition(0, insertAt, last_col, insertAt).CellStyle = "Ultimus_centro_bordi_lati"
+    oSheet.getCellByPosition(col, insertAt).String = filler
+
+    h_filler = oSheet.getRows().getByIndex(insertAt).Height
+    if h_filler <= 0:
+        h_filler = 500  # fallback di sicurezza
+
+    # Calcola il numero totale di righe che ci stanno (inclusa quella di prova)
+    num_righe = min(max_filler, int(spazio_da_coprire // h_filler))
+    if num_righe <= 0:
+        # Lo spazio non basta nemmeno per una riga: rimuovi la prova
+        oSheet.getRows().removeByIndex(insertAt, 1)
+        return 0
+
+    # Inserisci le righe rimanenti (ne abbiamo già 1)
+    if num_righe > 1:
+        oSheet.getRows().insertByIndex(insertAt + 1, num_righe - 1)
+
+        # Formattazione batch delle righe aggiuntive
+        oRange = oSheet.getCellRangeByPosition(0, insertAt + 1, last_col, insertAt + num_righe - 1)
+        oRange.CellStyle = "Ultimus_centro_bordi_lati"
+
+        # Testo filler nelle righe aggiuntive
+        oFillerRange = oSheet.getCellRangeByPosition(col, insertAt + 1, col, insertAt + num_righe - 1)
+        oFillerRange.setDataArray(tuple((filler,) for _ in range(num_righe - 1)))
+
+    # Applica stile "Ultimus_" alla riga vuota successiva all'ultimo filler
+    oSheet.getCellRangeByPosition(0, insertAt + num_righe, last_col, insertAt + num_righe).CellStyle = "Ultimus_"
 
     return num_righe
 
@@ -2939,6 +3086,7 @@ def _mostra_riepilogo_cdp(riepilogo, titolo="Atti contabili aggiornati con succe
     msg += f"-------------------------------------------------------\n"
     msg += f"Lavori eseguiti (netto): € {tot_lav_netto:,.2f}\n"
     msg += f"Importo a contratto: € {i_contr:,.2f}\n"
+    # msg += f"Differenza: € {(i_contr - tot_lav_netto):,.2f}\n"
     msg += f"Avanzamento lavori: {perc:.2f}%"
 
     # Sostituisci separatori decimali e migliaia per formato italiano

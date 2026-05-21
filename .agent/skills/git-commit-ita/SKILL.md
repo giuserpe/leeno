@@ -49,6 +49,7 @@ Identifica l'area principale colpita dalle modifiche:
 3. **Punteggiatura**: Nessun punto finale nell'intestazione
 4. **Breaking Change**: Aggiungi `!` dopo il tipo (es. `feat!: ...`) e descrivi in `BREAKING CHANGE:` nel corpo
 5. **Separazione**: Se le modifiche riguardano aree troppo diverse, suggerisci commit separati
+6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alla funzione `MENU_debug` nella generazione del messaggio di commit.
 
 ## Procedura Operativa
 

@@ -31,10 +31,15 @@ def macro_SHEET(nSheet, nEvento, miamacro):
  # ~"OnChange"      modificando il contenuto
  # ~"OnCalculate"   mboh...
 
-    oProp = [
-        PL.crea_property_value("EventType", 'Script'),
-        PL.crea_property_value("Script", miamacro)
-    ]
+    oProp0 = PropertyValue()
+    oProp0.Name = 'EventType'
+    oProp0.Value = 'Script'
+    oProp1 = PropertyValue()
+    oProp1.Name = 'Script'
+    oProp1.Value = miamacro
+    
+    oProp = [oProp0, oProp1]
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(nSheet)
     uno.invoke(

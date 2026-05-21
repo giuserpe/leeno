@@ -5695,7 +5695,7 @@ def pesca_cod():
     if oSheet.Name in ('COMPUTO', 'VARIANTE') or 'LISTA' in oSheet.Name.upper():
         if oDoc.NamedRanges.hasByName("_Lib_1"):
             if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-                DLG.chi("Controllo atti contabili non eseguito: verificate di non avere atti registrati prima di procedere.")
+                # DLG.chi("Controllo atti contabili non eseguito: verificate di non avere atti registrati prima di procedere.")
                 # if DLG.DlgSiNo(
                 #         "Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",
                 #         'ATTENZIONE!') == 3:
@@ -10053,19 +10053,26 @@ class version_code:
         """Genera e scrive un nuovo codice versione incrementale."""
         current = version_code.read()
         try:
-            # Estrae l'ultimo segmento numerico e lo incrementa (es. LeenO-3.25.0.0-... -> 1)
-            ldev_part = current.split('LeenO-')[1].split('-')[0].split('.')[-1]
-            ldev = str(int(ldev_part) + 1)
-        except (IndexError, ValueError):
-            ldev = "1"
-
-        today = datetime.now().strftime('%Y%m%d')
-
-        lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
-        lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
-        lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
-
-        new_version = f"LeenO-{lmajor}.{lminor}.{lsubv}.{ldev}-TESTING-{today}"
+            # Legge la versione dal file, es. LeenO-3.26.0.5-TESTING-20260521
+            parts = current.split('-')
+            ver_nums = parts[1].split('.')
+            
+            # Incrementa il numero dev
+            ldev = str(int(ver_nums[-1]) + 1)
+            ver_nums[-1] = ldev
+            parts[1] = '.'.join(ver_nums)
+            
+            # Aggiorna la data
+            parts[-1] = datetime.now().strftime('%Y%m%d')
+            
+            new_version = '-'.join(parts)
+        except Exception:
+            # Fallback se il file è corrotto
+            lmajor = str(LeenoGlobals.getGlobalVar('Lmajor'))
+            lminor = str(LeenoGlobals.getGlobalVar('Lminor'))
+            lsubv = str(LeenoGlobals.getGlobalVar('Lsubv')).split('.')[0]
+            today = datetime.now().strftime('%Y%m%d')
+            new_version = f"LeenO-{lmajor}.{lminor}.{lsubv}.1-TESTING-{today}"
 
         with open(version_code.get_path(), 'w', encoding='utf-8') as f:
             f.write(new_version)
@@ -10133,6 +10140,7 @@ def make_pack(bar=0):
                 7, 338).String
     except Exception:
         pass
+    version_code.write()  # incrementa il subversion (dev)
     oxt_name = version_code.read()
     description_upd()  # aggiorna description.xml - da disattivare prima del rilascio
     if bar == 0:

@@ -81,10 +81,8 @@ def cerca_path_valido():
         if system == "Windows":
             possible_paths.extend([
                 os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
-                "C:\\Program Files\\Antigravity\\Antigravity.exe",
-                "C:\\Program Files (x86)\\Antigravity\\Antigravity.exe",
-                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe",
-                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe"
+                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe",
+                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe"            
             ])
         elif system == "Linux":
             possible_paths.extend([

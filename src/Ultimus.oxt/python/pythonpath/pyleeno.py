@@ -6361,10 +6361,10 @@ def numera_voci():
     if last_row < first_row:
         return
 
-    # 2. Acquisiamo i dati e gli stili
+    # 2. Acquisiamo le formule e i dati
     # Prendiamo le prime due colonne (A e B)
     oRange = oSheet.getCellRangeByPosition(0, first_row, 1, last_row)
-    data = list(oRange.getDataArray())
+    data = list(oRange.getFormulaArray())
 
     n = 1
 
@@ -6404,7 +6404,7 @@ def numera_voci():
         data[i] = tuple(row_list)
 
     # 4. SCRITTURA ATOMICA: Unica operazione nel registro di Undo
-    oRange.setDataArray(tuple(data))
+    oRange.setFormulaArray(tuple(data))
 ########################################################################
 @LeenoUtils.no_refresh
 def richiesta_offerta():
@@ -11773,7 +11773,7 @@ def sposta_voce(lrow=None, msg=1):
         oCellAddress = oSheet.getCellByPosition(0, dest_row).getCellAddress()
 
         # Spostamento fisico dei dati
-        oSheet.moveRange(oCellAddress, oRangeAddress)
+        oSheet.copyRange(oCellAddress, oRangeAddress)
 
         # Rimozione vecchie righe
         oSheet.getRows().removeByIndex(actual_SR, num_rows)

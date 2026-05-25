@@ -577,15 +577,47 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None):
 def generaContabilita(oDoc):
     '''
     Mostra il foglio di contabilità, se presente
-    Altrimenti lo genera
+    Altrimenti lo genera importandolo dal template Computo_LeenO.ods
     '''
+    oSheet = None
     if oDoc.Sheets.hasByName('S1'):
         oDoc.Sheets.getByName('S1').getCellByPosition(7, 327).Value = 1
         if oDoc.Sheets.hasByName('CONTABILITA'):
             oSheet = oDoc.Sheets.getByName('CONTABILITA')
         else:
-            #oSheet = oDoc.Sheets.insertNewByName('CONTABILITA', 5)
-            insertVoceContabilita(oSheet, 0)
+            # Costruisce il percorso del template
+            template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+            
+            # Carica il template in modalità nascosta
+            oTemplate = None
+            imported = False
+            try:
+                oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+                if oTemplate:
+                    # Determina la posizione di inserimento
+                    pos = 5
+                    if oDoc.Sheets.hasByName('VARIANTE'):
+                        pos = oDoc.Sheets.getByName('VARIANTE').getRangeAddress().Sheet + 1
+                    elif oDoc.Sheets.hasByName('COMPUTO'):
+                        pos = oDoc.Sheets.getByName('COMPUTO').getRangeAddress().Sheet + 1
+                    
+                    oDoc.getSheets().importSheet(oTemplate, 'CONTABILITA', pos)
+                    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+                    imported = True
+            except Exception:
+                pass
+            finally:
+                if oTemplate:
+                    try:
+                        oTemplate.close(True)
+                    except Exception:
+                        pass
+            
+            # Fallback se l'importazione fallisce
+            if not imported:
+                oDoc.getSheets().insertNewByName('CONTABILITA', 5)
+                oSheet = oDoc.Sheets.getByName('CONTABILITA')
+                insertVoceContabilita(oSheet, 0)
 
             LeenoEvents.assegna()
             LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
@@ -610,7 +642,7 @@ def attiva_contabilita():
                 if oDoc.Sheets.hasByName(el):
                     PL.GotoSheet(el)
         else:
-            oDoc.Sheets.insertNewByName('CONTABILITA', 5)
+            generaContabilita(oDoc)
             PL.GotoSheet('CONTABILITA')
             PL._gotoCella(0, 2)
         PL.GotoSheet('CONTABILITA')
@@ -1620,7 +1652,21 @@ def GeneraSAL(oDoc, dati):
         if partial_label == "Parziale dei Lavori a Misura €":
             oS2 = oDoc.getSheets().getByName("S2")
             res_rib = SheetUtils.uFindString("Ribasso:", oS2)
-            addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else "$S2.$C$20"
+            # addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else "$S2.$C$20"
+            addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else 0.0
+
+            if res_rib:
+                cell_rib = oS2.getCellByPosition(2, res_rib[1])
+                if cell_rib.Error != 0 or str(cell_rib.String).startswith("#"):
+                    addr_rib = 0.0
+                    try:
+                        Dialogs.NotifyDialog(
+                            IconType="warning",
+                            Title="ATTENZIONE!",
+                            Text="Errore rilevato nel valore del Ribasso nel foglio 'S2'.\nVerrà applicato un Ribasso pari a 0.00%.\n\nVerificare i dati in Anagrafica Generale."
+                        )
+                    except Exception:
+                        pass
 
             current_row += 1
             oSalSheet.getRows().insertByIndex(current_row, 1)
@@ -1766,11 +1812,25 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
     # Ribasso (testo dinamico + calcolo)
     oS2 = oDoc.getSheets().getByName("S2")
     res_rib = SheetUtils.uFindString("Ribasso:", oS2)
-    addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else "$S2.$C$20"
+    # addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else "$S2.$C$20"
+    addr_rib = f"$S2.${_col_letter(2)}${res_rib[1] + 1}" if res_rib else 0.0
+
+    if res_rib:
+        cell_rib = oS2.getCellByPosition(2, res_rib[1])
+        if cell_rib.Error != 0 or str(cell_rib.String).startswith("#"):
+            addr_rib = 0.0
+            # try:
+            #     Dialogs.NotifyDialog(
+            #         IconType="warning",
+            #         Title="ATTENZIONE!",
+            #         Text="Errore rilevato nel valore del Ribasso nel foglio 'S2'.\nVerrà applicato un Ribasso pari a 0.00%.\n\nVerificare i dati in Anagrafica Generale."
+            #     )
+            # except Exception:
+            #     pass
 
     oSheet.getCellByPosition(fcol + 1, insRow + 9).Formula = \
         f'=CONCATENATE("RIBASSO del ";TEXT({addr_rib}*100;"#.##0,000");"%")'
-    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*-{addr_rib}"
+    oSheet.getCellByPosition(5, insRow + 9).Formula = f"={ncol}{insRow + 9}*{addr_rib}"
 
     # Re-integro Sicurezza e Manodopera (positivi)
     # oSheet.getCellRangeByPosition(fcol + 1, insRow + 10, fcol + 1, insRow + 11).CellStyle = "Ultimus_sx_bold"
@@ -2886,9 +2946,9 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
 
     # TOTALE DETRAZIONE
     if r_totdet is not None and r_ritenuta is not None:
-        sub = f'SUM({v}{r_ritenuta + 1}:{v}{r_totdet})'
-        oCdP.getCellByPosition(val_col, r_totdet).Formula = \
-            f'=IF({sub}=0;"";{sub})'
+        sub = f'=SUM({v}{r_ritenuta + 1}:{v}{r_totdet})'
+        oCdP.getCellByPosition(val_col, r_totdet).Formula = sub
+        # f'=IF({sub}=0;"";{sub})'
 
     # RISULTA IL CREDITO DELL'IMPRESA
     if r_credito is not None and r_sogg is not None and r_totdet is not None:

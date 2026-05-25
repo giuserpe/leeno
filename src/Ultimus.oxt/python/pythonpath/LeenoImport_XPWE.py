@@ -534,6 +534,7 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=F
     # 2. Filtra i nuovi dati: rimuove duplicati interni + codici già esistenti
     nuovi_dati = []
     seen_new_codes = set()
+    skipped_existing_count = 0
 
     for riga in dati:
         if not riga or not riga[0]:  # Skip righe vuote
@@ -544,12 +545,16 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=F
             codice = codice.lower()
 
         # Controlla sia nei codici esistenti che nei nuovi già processati
-        if codice not in existing_codes and codice not in seen_new_codes:
+        if codice in existing_codes:
+            skipped_existing_count += 1
+            continue
+
+        if codice not in seen_new_codes:
             nuovi_dati.append(riga)
             seen_new_codes.add(codice)
 
     if not nuovi_dati:
-        return
+        return skipped_existing_count
 
     # 3. Inserimento dati (ottimizzato per grandi blocchi)
     righe_totali = len(nuovi_dati)
@@ -567,6 +572,8 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=F
         oRange.setDataArray(sliced)
         # PL.stileCelleElencoPrezzi(oSheet, sRow + riga, sRow + riga + num - 1, col)
         riga += num
+
+    return skipped_existing_count
 
 def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     ''' compila l'elenco prezzi '''
@@ -597,7 +604,9 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     # compilo Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
-    riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, indicator=indicator)
+    skipped_count = riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, indicator=indicator)
+    if skipped_count is None:
+        skipped_count = 0
     '''
     aggiungo i capitoli alla lista delle voci
      giallo(16777072,16777120,16777168)
@@ -618,6 +627,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
         riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, indicator=indicator)
 
     PL.riordina_ElencoPrezzi()
+    return skipped_count
 
 
 def rimuoviAnalisiVuote(oSheet):
@@ -1138,7 +1148,7 @@ def XPWE_import(filename = None):
         if indicator:
             indicator.Text = "Compilazione Elenco Prezzi..."
             indicator.Value = 60
-        compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
+        skipped_count = compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
 
         oSheet_ep = oDoc.getSheets().getByName('Elenco Prezzi')
         oSheet_ep.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
@@ -1149,10 +1159,13 @@ def XPWE_import(filename = None):
         if len(listaMisure) == 0:
             if indicator:
                 indicator.Value = 100
-            Dialogs.Info(Title="Importazione completata",
-                         Text="Importate n." +
-                                str(len(elencoPrezzi['ListaArticoli'])) +
-                                " voci dall'elenco prezzi\ndel file: " + filename)
+            
+            imported_count = len(elencoPrezzi['ListaArticoli']) - skipped_count
+            text = f"Importate n. {imported_count} voci dall'elenco prezzi\ndel file: {filename}"
+            if skipped_count > 0:
+                text += f"\n\nAttenzione: {skipped_count} voci non sono state importate perché già presenti nel file corrente con lo stesso codice."
+            
+            Dialogs.Info(Title="Importazione completata", Text=text)
             oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
             oDoc.CurrentController.setActiveSheet(oSheet)
             return
@@ -1170,7 +1183,12 @@ def XPWE_import(filename = None):
             PL.salva_come(dest)
 
         PL.inizializza_computo()
-        Dialogs.Ok(Text=f'Importazione di {len(listaMisure)} voci di {elaborato} eseguita con successo!')
+        
+        ok_msg = f'Importazione di {len(listaMisure)} voci di {elaborato} eseguita con successo!'
+        if skipped_count > 0:
+            ok_msg += f'\n\nAttenzione: {skipped_count} voci di prezzo non sono state importate perché già presenti nel file corrente con lo stesso codice.'
+        
+        Dialogs.Ok(Text=ok_msg)
         if 'giuserpe' not in os.getlogin():
             PL.dlg_donazioni()
 

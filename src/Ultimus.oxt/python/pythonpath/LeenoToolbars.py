@@ -2,6 +2,7 @@
 LeenoToolbars
 Gestione delle toolbars di LeenO
 '''
+# pyrefly: ignore [missing-import]
 from com.sun.star.awt import Point
 
 import os

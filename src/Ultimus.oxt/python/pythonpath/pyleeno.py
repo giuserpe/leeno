@@ -12377,30 +12377,67 @@ def somma_per_colore_nella_colonna():
     # ma LibreOffice resta in attesa del click.
     controller.startRangeSelection(props)
 
-def MENU_debug():
-    LeenoUtils.DocumentRefresh(True)
-    return
+
+
+def MENU_debug_giannelli():
+    # Ottiene il documento corrente
     oDoc = LeenoUtils.getDocument()
-    sheet = oDoc.CurrentController.getActiveSheet()
-    lrow = SheetUtils.getLastUsedRow(sheet)
+    
+    # 1. Recupera l'area di celle associata al nome definito "GIANNELLI_SAL4"
+    # .ReferredCells restituisce l'oggetto CellRange su cui possiamo operare
+    referred_cells_sal4 = oDoc.NamedRanges.getByName("GIANNELLI_SAL4").ReferredCells
+    # Ottiene dinamicamente il foglio in cui si trova l'intervallo GIANNELLI_SAL4
+    oSheet_sal4 = referred_cells_sal4.getSpreadsheet()
+    # Ottiene le coordinate (struct RangeAddress) dell'intervallo
+    range_addr_sal4 = referred_cells_sal4.RangeAddress
+    
+    start_row_sal4 = range_addr_sal4.StartRow
+    end_row_sal4 = range_addr_sal4.EndRow
+
+    # Raccoglie tutti i codici univoci presenti nella colonna A (indice 0)
+    # nell'intervallo definito da GIANNELLI_SAL4
     elenco_codici = set()
-    for el in range(2, lrow):
-        codice = sheet.getCellByPosition(0, el).String
+    for el in range(start_row_sal4, end_row_sal4 + 1):
+        codice = oSheet_sal4.getCellByPosition(0, el).String
         elenco_codici.add(codice)
-    DLG.chi(sorted(elenco_codici))
-    oSheet = oDoc.getSheets().getByName("contabilità_2")
-    LRow = SheetUtils.getLastUsedRow(oSheet)
-    for riga in range(1, LRow + 1):
-        if oSheet.getCellByPosition(0, riga).String in elenco_codici:
-            oSheet.getCellRangeByPosition(0, riga, 4, riga).CellBackColor = 16711935
-        
-        
     
+    # 2. Recupera l'area di celle associata al nome definito "GIANNELLI_PARALLELO"
+    referred_cells_parallelo = oDoc.NamedRanges.getByName("GIANNELLI_PARALLELO").ReferredCells
+    oSheet_parallelo = referred_cells_parallelo.getSpreadsheet()
+    range_addr_parallelo = referred_cells_parallelo.RangeAddress
     
+    # Definisce l'intervallo di righe includendo un margine superiore e inferiore
+    start_row_par = range_addr_parallelo.StartRow - 1
+    end_row_par = range_addr_parallelo.EndRow + 1
+
+    # Scansiona le righe dell'intervallo definito nel foglio PARALLELO
+    for riga in range(start_row_par, end_row_par):
+        # Se il codice nella prima colonna corrisponde a uno di quelli raccolti
+        if oSheet_parallelo.getCellByPosition(0, riga).String in elenco_codici:
+            # Colora lo sfondo dell'intera riga (dalla colonna 0 alla 10) con il verde di spunta
+            # oSheet_parallelo.getCellRangeByPosition(0, riga, 10, riga).CellBackColor = COLORE_VERDE_SPUNTA
+            # Assicura che la riga sia visibile
+            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
+        else:
+            # Altrimenti nasconde/chiude la riga
+            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = False
 
     return
-    import LeenoTheme
-    LeenoTheme.catalogo_stili_cella()
+
+def MENU_debug():
+    MENU_debug_giannelli()
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = SheetUtils.getLastUsedRow(oSheet) + 1
+    # Scansiona tutte le righe da 0 a lrow - 1
+    for i in range(0, lrow):
+        # Verifica se il valore nella colonna I (indice 8) è maggiore di quello in colonna C (indice 2) alla riga i
+        if oSheet.getCellByPosition(8, i).Value > oSheet.getCellByPosition(2, i).Value:
+            # Colora la cella in colonna I (indice 8) alla riga i
+            oSheet.getCellByPosition(8, i).CellBackColor = COLORE_ROSSO_AVVISO
+    return
+
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

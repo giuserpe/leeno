@@ -167,23 +167,29 @@ class VersionManager:
                 <td class="commit-msg">{c['msg']}</td>
             </tr>""")
             commits_section = f"""
-    <h2>Attività di sviluppo recente</h2>
-    <table>
-        <thead>
-            <tr>
-                <th style="width:140px">Data</th>
-                <th style="width:90px">Commit</th>
-                <th>Descrizione</th>
-            </tr>
-        </thead>
-        <tbody>
-            {"".join(commit_rows)}
-        </tbody>
-    </table>"""
+        <div class="activity-section">
+            <h2>Attività di sviluppo recente</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:140px">Data</th>
+                            <th style="width:90px">Commit</th>
+                            <th>Descrizione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {"".join(commit_rows)}
+                    </tbody>
+                </table>
+            </div>
+        </div>"""
         else:
             commits_section = """
-    <h2>Attività di sviluppo recente</h2>
-    <p><i>Nessun commit recente trovato o errore nel recupero dei dati.</i></p>"""
+        <div class="activity-section">
+            <h2>Attività di sviluppo recente</h2>
+            <p class="no-activity">Nessun commit recente trovato o errore nel recupero dei dati.</p>
+        </div>"""
         html = f"""<!DOCTYPE html>
 <html lang="it">
 <head>

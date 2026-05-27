@@ -19,6 +19,7 @@
 # import pydevd
 
 # from scriptforge import CreateScriptService
+from dcf_parser import generate_xpwe
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 from collections import OrderedDict
@@ -10520,6 +10521,7 @@ def clean_text(desc):
 
         # Pulizia spazi con newline
         '\n \n': '\n',
+        '\n\n': '\n',
         '\n ': '\n',
 
         # RIMOSSO: '': '\n',  <-- QUESTO ERA IL BUG!
@@ -12420,7 +12422,7 @@ def MENU_debug_giannelli():
             oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
         else:
             # Altrimenti nasconde/chiude la riga
-            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = False
+            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
 
     return
 
@@ -12436,7 +12438,22 @@ def MENU_debug():
         if oSheet.getCellByPosition(8, i).Value > oSheet.getCellByPosition(2, i).Value:
             # Colora la cella in colonna I (indice 8) alla riga i
             oSheet.getCellByPosition(8, i).CellBackColor = COLORE_ROSSO_AVVISO
-    return
+            oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
+########################################################################
+
+import dcf_parser
+
+
+########################################################################
+
+def MENU_debug():
+    dcf_parser.import_generated_xpwe()
+    # MENU_anteprima_dcf()
+    # import dcf_parser
+    # file_path = Dialogs.FileSelect("Seleziona file DCF...", "*.dcf", 0)
+    # if file_path:
+    #     doc = dcf_parser.parse_auto(file_path)
+    #     DLG.chi(f'{doc=}')
 
 
 ########################################################################

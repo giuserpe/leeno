@@ -7,6 +7,7 @@ import re
 import os
 
 from xml.etree.ElementTree import ElementTree, ParseError
+# pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
 
 import LeenoUtils

@@ -4576,3 +4576,598 @@ File: contextlib.py, Line: 191, Function: __exit__
 File: uno.py, Line: 513, Function: _uno_struct__setattr__
 ------------------------------------------------------------
 
+[2026-05-17 12:21:53]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1460'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoBasicBridge.py, Line: 118, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1460, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-05-17 12:22:20]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1460'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoBasicBridge.py, Line: 118, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1460, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-05-17 12:37:32]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: Couldn't convert <traceback object at 0x0000027907AD8A40> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 9027, Function: autoexec
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-05-18 08:19:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'LeenO_path'
+
+File: 'Debug.py'
+Line: '41'
+Function: 'aggiorna_configurazione_leeno'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: Debug.py, Line: 41, Function: aggiorna_configurazione_leeno
+------------------------------------------------------------
+
+[2026-05-18 09:36:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'apri_con_editor'
+
+File: 'LeenoDialogs.py'
+Line: '79'
+Function: 'chi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: Debug.py, Line: 82, Function: aggiorna_configurazione_leeno
+File: LeenoDialogs.py, Line: 79, Function: chi
+------------------------------------------------------------
+
+[2026-05-18 09:38:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'LeenO_path'
+
+File: 'Dialogs.py'
+Line: '2631'
+Function: 'Info'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: Debug.py, Line: 149, Function: aggiorna_configurazione_leeno
+File: Dialogs.py, Line: 2631, Function: Info
+------------------------------------------------------------
+
+[2026-05-18 09:45:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'apri_con_editor'
+
+File: 'LeenoDialogs.py'
+Line: '79'
+Function: 'chi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: Debug.py, Line: 100, Function: aggiorna_configurazione_leeno
+File: LeenoDialogs.py, Line: 79, Function: chi
+------------------------------------------------------------
+
+[2026-05-18 09:52:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'LeenoDialogs' has no attribute 'apri_con_editor'
+
+File: 'pyleeno.py'
+Line: '764'
+Function: 'avvia_IDE'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 743, Function: MENU_avvia_IDE
+File: pyleeno.py, Line: 764, Function: avvia_IDE
+------------------------------------------------------------
+
+[2026-05-18 10:06:58]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'apri_con_editor'
+
+File: 'LeenoDialogs.py'
+Line: '84'
+Function: 'chi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: Debug.py, Line: 100, Function: aggiorna_configurazione_leeno
+File: LeenoDialogs.py, Line: 84, Function: chi
+------------------------------------------------------------
+
+[2026-05-18 10:10:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'LeenoUtils' has no attribute 'createUnoService'
+
+File: 'Dialogs.py'
+Line: '2486'
+Function: 'FileSelect'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 11354, Function: xref_path
+File: Dialogs.py, Line: 2486, Function: FileSelect
+------------------------------------------------------------
+
+[2026-05-18 11:32:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoSheetUtils.py'
+Line: '611'
+Function: 'prossimaVoce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 824, Function: MENU_Inser_SuperCapitolo
+File: pyleeno.py, Line: 789, Function: Ins_Categorie
+File: LeenoSheetUtils.py, Line: 611, Function: prossimaVoce
+------------------------------------------------------------
+
+[2026-05-19 16:08:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'LeenoSheetUtils' has no attribute 'last_row'
+
+File: 'pyleeno.py'
+Line: '12394'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12394, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-19 16:12:06]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: 'list' object has no attribute 'set'
+
+File: 'pyleeno.py'
+Line: '12400'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 12400, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-20 08:32:13]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.1-TESTING-20260516
+
+Errore: module 'pyleeno' has no attribute 'creaComputo'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1004'
+Function: 'XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoImport_XPWE.py, Line: 991, Function: MENU_XPWE_import
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: LeenoImport_XPWE.py, Line: 1004, Function: XPWE_import
+------------------------------------------------------------
+
+[2026-05-21 22:10:04]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.7-TESTING-20260521
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '127'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: LeenoToolbars.py, Line: 127, Function: Vedi
+------------------------------------------------------------
+
+[2026-05-21 22:12:13]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.7-TESTING-20260521
+
+Errore: module 'pyleeno' has no attribute 'crea_property_value'
+
+File: 'LeenoEvents.py'
+Line: '35'
+Function: 'macro_SHEET'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 8936, Function: autoexec
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 8948, Function: autoexec_run
+File: LeenoEvents.py, Line: 197, Function: pulisci
+File: LeenoEvents.py, Line: 35, Function: macro_SHEET
+------------------------------------------------------------
+
+[2026-05-21 22:23:34]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.7-TESTING-20260521
+
+Errore: module 'pyleeno' has no attribute 'crea_property_value'
+
+File: 'LeenoEvents.py'
+Line: '35'
+Function: 'macro_SHEET'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 285, Function: trigger
+File: pyleeno.py, Line: 8936, Function: autoexec
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 8948, Function: autoexec_run
+File: LeenoEvents.py, Line: 197, Function: pulisci
+File: LeenoEvents.py, Line: 35, Function: macro_SHEET
+------------------------------------------------------------
+
+[2026-05-26 17:17:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:18:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:19:17]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:20:27]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:21:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:21:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12392'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12392, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:22:12]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: list expected at most 1 argument, got 2
+
+File: 'pyleeno.py'
+Line: '12394'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12394, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 17:24:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getSheets
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12396, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:26:38]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: get
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12391, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:30:48]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:32:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:33:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:36:48]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:37:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:38:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: getByPosition
+
+File: 'uno.py'
+Line: '504'
+Function: '_uno_struct__getattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12387, Function: MENU_debug
+File: uno.py, Line: 504, Function: _uno_struct__getattr__
+------------------------------------------------------------
+
+[2026-05-26 18:45:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: activeSheet
+
+File: 'pyleeno.py'
+Line: '12382'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12382, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 18:46:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.13-TESTING-20260526
+
+Errore: module 'LeenoUtils' has no attribute 'getLastUsedRow'
+
+File: 'pyleeno.py'
+Line: '12383'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12383, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-26 20:58:29]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.14-TESTING-20260526
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '127'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 127, Function: Vedi
+------------------------------------------------------------
+
+[2026-05-27 12:44:58]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.15-TESTING-20260526
+
+Errore: [Errno 13] Permission denied: 'D:\\2023_01_PNRR-VIA_LUCREZIO\\@DL\\SISTEMAZIONE_ESTERNA\\_muro_DI_SOSTEGNO\\muro.dcf.xpwe'
+
+File: 'dcf_parser.py'
+Line: '1142'
+Function: 'generate_xpwe'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12453, Function: MENU_debug
+File: dcf_parser.py, Line: 1142, Function: generate_xpwe
+------------------------------------------------------------
+
+[2026-05-27 19:01:23]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.17-TESTING-20260527
+
+Errore: import_generated_xpwe() missing 1 required positional argument: 'xpwe_path'
+
+File: 'pyleeno.py'
+Line: '12450'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12450, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-27 19:22:03]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.17-TESTING-20260527
+
+Errore: generate_xpwe() missing 1 required positional argument: 'xpwe_path'
+
+File: 'pyleeno.py'
+Line: '12451'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12451, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-05-27 22:09:31]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.17-TESTING-20260527
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-05-27 22:23:37]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.17-TESTING-20260527
+
+Errore: [Errno 13] Permission denied: 'W:\\_dwg\\ULTIMUSFREE\\esempiprimus\\Scuola Agna.dcf.xpwe'
+
+File: 'dcf_parser.py'
+Line: '1155'
+Function: 'generate_xpwe'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12458, Function: MENU_debug
+File: dcf_parser.py, Line: 1155, Function: generate_xpwe
+------------------------------------------------------------
+

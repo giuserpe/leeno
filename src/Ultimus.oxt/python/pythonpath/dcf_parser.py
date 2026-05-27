@@ -37,24 +37,6 @@ import os
 import datetime
 from typing import Any
 
-import sys
-import os
-
-# === Miglioramento per menu contestuale ===
-if len(sys.argv) > 1:
-    path_arg = sys.argv[1]
-    if not os.path.isabs(path_arg):
-        # Se viene passato solo il nome file, cerca nella stessa cartella dello script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        path_arg = os.path.join(script_dir, path_arg)
-    # Normalizza il percorso
-    if os.path.exists(path_arg):
-        sys.argv[1] = os.path.normpath(path_arg)
-    else:
-        print(f"ERRORE: File non trovato: {path_arg}")
-        input("Premi INVIO per chiudere...")
-        sys.exit(1)
-
 
 # ===========================================================================
 # LOGGING SU FILE  (sostituto di print() per uso con LibreOffice / DLG.chi)
@@ -393,6 +375,8 @@ def _dcf_parse_dati_generali(xml: str) -> dict[str, Any]:
             'provincia':   a.get('Prvnc', ''),
             'impresa':     a.get('Imprs', ''),
             'operatore':   a.get('Oprtr', ''),
+            'perc_prezzi': _float(a.get('PrcPrz', '0')),
+            'parte_opera': a.get('PrtOpr', ''),
         }
 
     qe_items = []
@@ -416,9 +400,14 @@ def _dcf_parse_dati_generali(xml: str) -> dict[str, Any]:
             nome = a.get('DesSnt', '')
             if nome and nome not in ('<nessuna>', 'overflow'):
                 items[id_] = {
-                    'nome':    nome,
-                    'importo': _float(a.get('MDOImp', '0')),
-                    'cod':     a.get('Cod', ''),
+                    'nome':      nome,
+                    'des_est':   a.get('DesEst', ''),
+                    'importo':   _float(a.get('MDOImp', '0')),
+                    'cod':       a.get('Cod', ''),
+                    'data_init': a.get('DtInz', ''),
+                    'durata':    a.get('Drt', ''),
+                    'cod_fase':  a.get('CdFs', ''),
+                    'percent':   _float(a.get('Prc', '0')),
                 }
         result[key] = items
 
@@ -473,14 +462,23 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
             'des_estesa':   dest,
             'um':           a.get('UnMsr', ''),
             'prezzo':       _float(a.get('Prz1', '0')),
+            'prezzo2':      _float(a.get('Prz2', '0')),
+            'prezzo3':      _float(a.get('Prz3', '0')),
+            'prezzo4':      _float(a.get('Prz4', '0')),
+            'prezzo5':      _float(a.get('Prz5', '0')),
             'prezzo_netto': _float(a.get('PrNetto', '0')),
             'inc_mdo':      _float(a.get('MDOInc', '0')),
             'inc_sic':      _float(a.get('SICInc', '0')),
+            'inc_mat':      _float(a.get('MATInc', '0')),
+            'inc_attr':     _float(a.get('ATTRInc', '0')),
             'ribassabile':  a.get('Rbs', '0') != '1',
             'id_spcap':     _int(a.get('IdSpCap', '0')),
             'id_cap':       _int(a.get('IdCap', '0')),
             'id_sbcap':     _int(a.get('IdSbCap', '0')),
             'flags':        _int(a.get('Fgs', '0')),
+            'data':         a.get('Dt', ''),
+            'adr_internet': a.get('AdrInt', ''),
+            'tag_bim':      a.get('TagBIM', ''),
         }
 
     ep_list  = [_build(a) for a in sorted(by_trf.values(), key=lambda x: x.get('Trf', ''))]
@@ -500,12 +498,13 @@ def _dcf_parse_vc(xml: str) -> list[dict[str, Any]]:
             misure.append({
                 'id':          _int(rm.get('IdRM', '0')),
                 'descrizione': rm.get('Des', ''),
-                'pu':          _float(rm.get('Pu', '0')),
-                'lu':          _float(rm.get('Lu', '0')),
-                'la':          _float(rm.get('La', '0')),
-                'hp':          _float(rm.get('Hp', '0')),
-                'qt':          _float(rm.get('Qt', '0')),
+                'pu':          rm.get('Pu', ''),   # stringa: può contenere formula
+                'lu':          rm.get('Lu', ''),   # stringa: può contenere formula
+                'la':          rm.get('La', ''),   # stringa: può contenere formula
+                'hp':          rm.get('Hp', ''),   # stringa: può contenere formula
+                'qt':          _float(rm.get('Qt', '0')),  # sempre numero (pre-calcolato)
                 'rif_voce':    _int(rm.get('IdVV', '0')),
+                'flags':       _int(rm.get('Fgs', '0')),
             })
         items.append({
             'id':       _int(a.get('IdVC', '0')),
@@ -585,10 +584,14 @@ def _xpwe_parse_categorie(root: ET.Element) -> dict[str, Any]:
             nome = (el.findtext('DesSintetica') or '').strip()
             if nome:
                 result[key][id_] = {
-                    'nome':    nome,
-                    'des_est': (el.findtext('DesEstesa') or '').strip(),
-                    'importo': 0.0,
-                    'cod':     (el.findtext('Codice') or '').strip(),
+                    'nome':      nome,
+                    'des_est':   (el.findtext('DesEstesa') or '').strip(),
+                    'importo':   0.0,
+                    'cod':       (el.findtext('Codice') or '').strip(),
+                    'data_init': (el.findtext('DataInit') or '').strip(),
+                    'durata':    (el.findtext('Durata') or '').strip(),
+                    'cod_fase':  (el.findtext('CodFase') or '').strip(),
+                    'percent':   _float(el.findtext('Percentuale')),
                 }
     return result
 
@@ -611,6 +614,10 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
             'des_estesa':   desc_best,
             'um':           (el.findtext('UnMisura') or '').strip(),
             'prezzo':       _float(el.findtext('Prezzo1')),
+            'prezzo2':      _float(el.findtext('Prezzo2')),
+            'prezzo3':      _float(el.findtext('Prezzo3')),
+            'prezzo4':      _float(el.findtext('Prezzo4')),
+            'prezzo5':      _float(el.findtext('Prezzo5')),
             'prezzo_netto': 0.0,
             'inc_mdo':      _float(el.findtext('IncMDO')),
             'inc_sic':      _float(el.findtext('IncSIC')),
@@ -621,6 +628,8 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
             'id_cap':       _int(el.findtext('IDCap')),
             'id_sbcap':     _int(el.findtext('IDSbCap')),
             'flags':        _int(el.findtext('Flags')),
+            'data':         (el.findtext('Data') or '').strip(),
+            'adr_internet': (el.findtext('AdrInternet') or '').strip(),
             'tag_bim':      (el.findtext('TagBIM') or '').strip(),
         }
         ep_list.append(item)
@@ -637,10 +646,10 @@ def _xpwe_parse_vc(root: ET.Element) -> list[dict[str, Any]]:
             misure.append({
                 'id':          _int(rg.get('ID', '0')),
                 'descrizione': (rg.findtext('Descrizione') or '').strip(),
-                'pu':          _float(rg.findtext('PartiUguali')),
-                'lu':          _float(rg.findtext('Lunghezza')),
-                'la':          _float(rg.findtext('Larghezza')),
-                'hp':          _float(rg.findtext('HPeso')),
+                'pu':          (rg.findtext('PartiUguali') or '').strip(),  # formula
+                'lu':          (rg.findtext('Lunghezza')   or '').strip(),  # formula
+                'la':          (rg.findtext('Larghezza')   or '').strip(),  # formula
+                'hp':          (rg.findtext('HPeso')       or '').strip(),  # formula
                 'qt':          _float(rg.findtext('Quantita')),
                 'rif_voce':    _int(rg.findtext('IDVV')),
                 'flags':       _int(rg.findtext('Flags')),
@@ -698,11 +707,19 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
 
     # Rileva DRM ACCA (dati XML cifrati con protezione proprietaria)
     if blocks.get('_drm') == 'ACCA':
-        _log(f'parse_dcf: DRM ACCA rilevato — {blocks.get("_drm_count",0)} blocchi cifrati')
+        n = blocks.get('_drm_count', 0)
+        _log(f'parse_dcf: DRM ACCA rilevato — {n} blocchi cifrati')
+        _log('parse_dcf: Il file DCF è protetto da DRM ACCA.')
+        _log('parse_dcf: Soluzione -> chiedere al mittente di riesportare il file come XPWE')
+        _log('parse_dcf: (PriMus: File → Esporta → XPWE 5.05)')
         _ind_end()
         return {
             'formato':          'dcf',
             '_drm':             True,
+            '_drm_count':       n,
+            '_messaggio':       ('Il file DCF è protetto da DRM ACCA e non è leggibile. '
+                                 'Chiedere al mittente di riesportarlo come XPWE '
+                                 '(PriMus: File → Esporta → XPWE 5.05).'),
             '_tipo_documento':  'drm_acca',
             'info':             {},
             'quadro_economico': [],
@@ -726,10 +743,16 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
     _log(f'parse_dcf: TpDoc={tp_doc}  has_data={has_data}')
 
     if tp_doc == 2 and not has_data:
+        _log('parse_dcf: Soluzione -> esportare il file XPWE da PriMus e usare parse_xpwe()')
+        _log('parse_dcf: (PriMus: File → Esporta → XPWE 5.05)')
         _ind_end()
         return {
             'formato':          'dcf',
             '_encrypted':       True,
+            '_messaggio':       ('Il file DCF è di tipo Contabilità (TpDoc=2): '
+                                 'i dati sono crittografati e non estraibili. '
+                                 'Esportare il file come XPWE da PriMus '
+                                 '(File → Esporta → XPWE 5.05).'),
             '_tipo_documento':  'contabilita',
             '_info_doc':        info_doc,
             'info':             {},
@@ -750,6 +773,19 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
     dg = _dcf_parse_dati_generali(blocks.get('DatiGenerali', ''))
     ep_list, ep_by_id_map = _dcf_parse_ep(blocks.get('CollectionEP', ''))
 
+    # Verifica integrità CollectionEP: CountId deve corrispondere agli EP estratti
+    import re as _re
+    _ep_xml = blocks.get('CollectionEP', '')
+    _count_match = _re.search(r'CountId="(\d+)"', _ep_xml)
+    if _count_match:
+        _count_id  = int(_count_match.group(1))
+        _count_got = len(ep_by_id_map)
+        if _count_got < _count_id:
+            _log(f'parse_dcf: ATTENZIONE CollectionEP parzialmente corrotto: '
+                 f'CountId={_count_id} ma solo {_count_got} voci estratte.')
+            _log('parse_dcf: Le voci mancanti non sono recuperabili dal DCF.')
+            _log('parse_dcf: Soluzione -> esportare XPWE da PriMus per ottenere dati completi.')
+
     # Rileva DCF con dati XML insufficienti (PriMus non ha esportato l'XML embedded)
     # In questo caso il DCF esiste ma i blocchi sono quasi vuoti (< 1KB)
     ep_xml_size = len(blocks.get('CollectionEP', ''))
@@ -759,10 +795,15 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
              f'(CollectionEP={ep_xml_size} chars, DatiGenerali={dg_xml_size} chars)')
         _log('parse_dcf: il DCF non contiene XML embedded leggibile.')
         _log('parse_dcf: Soluzione -> esportare il file XPWE da PriMus e usare parse_xpwe()')
+        _log('parse_dcf: (PriMus: File → Esporta → XPWE 5.05)')
         _ind_end()
         return {
             'formato':          'dcf',
             '_no_xml':          True,
+            '_messaggio':       ('Il file DCF non contiene dati XML leggibili '
+                                 '(probabilmente non ancora esportato da PriMus). '
+                                 'Esportare il file come XPWE '
+                                 '(PriMus: File → Esporta → XPWE 5.05).'),
             '_ep_xml_size':     ep_xml_size,
             '_dg_xml_size':     dg_xml_size,
             'info':             {},
@@ -910,34 +951,225 @@ def computo_con_descrizioni(doc: dict) -> list[dict]:
     return rows
 
 
+def generate_xpwe(doc: dict, xpwe_path: str, source_nome: str = 'LeenO') -> None:
+    """
+    Genera un file .xpwe (XPWE 5.05) da un doc prodotto da parse_dcf() o parse_xpwe().
+
+    Parametri:
+        doc        : dizionario restituito da parse_dcf / parse_xpwe / parse_auto
+        xpwe_path  : percorso del file di output (es. r'C:\\mio.xpwe')
+        source_nome: nome del programma generante (default: 'LeenO')
+
+    Il file generato è conforme alle specifiche pubbliche XPWE 5.05 ACCA software.
+    """
+    import xml.etree.ElementTree as _ET
+    import html as _h
+    import datetime as _dt
+
+    def _e(s) -> str:
+        """Escape per testo XML."""
+        return _h.escape(str(s or ''))
+
+    def _sub(parent, tag: str, text=None) -> _ET.Element:
+        el = _ET.SubElement(parent, tag)
+        if text is not None:
+            el.text = str(text) if text != '' else ''
+        return el
+
+    def _fmt_float(v, decimals=2) -> str:
+        if v is None or v == '':
+            return ''
+        try:
+            return f'{float(v):.{decimals}f}'.rstrip('0').rstrip('.') or '0'
+        except (ValueError, TypeError):
+            return str(v)
+
+    info   = doc.get('info', {})
+    oggi   = _dt.date.today().strftime('%d/%m/%Y')
+
+    # -----------------------------------------------------------------------
+    # Radice
+    # -----------------------------------------------------------------------
+    root = _ET.Element('PweDocumento')
+
+    _sub(root, 'CopyRight',          'Copyright ACCA software S.p.A.')
+    _sub(root, 'TipoDocumento',       '1')          # 1 = Progetto
+    _sub(root, 'TipoFormato',         'XMLPwe')
+    _sub(root, 'Versione',            '5.05')
+    _sub(root, 'SourceVersione',      'LeenO')
+    _sub(root, 'SourceNome',          source_nome)
+    _sub(root, 'FileNameDocumento',   xpwe_path)
+
+    # -----------------------------------------------------------------------
+    # PweDatiGenerali
+    # -----------------------------------------------------------------------
+    dg = _sub(root, 'PweDatiGenerali')
+
+    prog = _sub(_sub(dg, 'PweDGProgetto'), 'PweDGDatiGenerali')
+    _sub(prog, 'PercPrezzi',  str(info.get('perc_prezzi', 0) or 0))
+    _sub(prog, 'Comune',      _e(info.get('comune',      '')))
+    _sub(prog, 'Provincia',   _e(info.get('provincia',   '')))
+    _sub(prog, 'Oggetto',     _e(info.get('oggetto',     '')))
+    _sub(prog, 'Committente', _e(info.get('committente', '')))
+    _sub(prog, 'Impresa',     _e(info.get('impresa',     '')))
+    _sub(prog, 'ParteOpera',  _e(info.get('parte_opera', '')))
+
+    # Capitoli / Categorie
+    cc = _sub(dg, 'PweDGCapitoliCategorie')
+
+    for xml_parent, key in [
+        ('PweDGSuperCapitoli', 'DGSuperCapitoliItem', ),
+        ('PweDGCapitoli',      'DGCapitoliItem'),
+        ('PweDGSubCapitoli',   'DGSubCapitoliItem'),
+        ('PweDGSuperCategorie','DGSuperCategorieItem'),
+        ('PweDGCategorie',     'DGCategorieItem'),
+        ('PweDGSubCategorie',  'DGSubCategorieItem'),
+    ]:
+        pass  # gestito sotto
+
+    xpwe_key_map = [
+        ('PweDGSuperCapitoli',  'DGSuperCapitoliItem',  'super_capitoli'),
+        ('PweDGCapitoli',       'DGCapitoliItem',        'capitoli'),
+        ('PweDGSubCapitoli',    'DGSubCapitoliItem',     'sotto_capitoli'),
+        ('PweDGSuperCategorie', 'DGSuperCategorieItem',  'super_categorie'),
+        ('PweDGCategorie',      'DGCategorieItem',       'categorie'),
+        ('PweDGSubCategorie',   'DGSubCategorieItem',    'sotto_categorie'),
+    ]
+    for xml_sect, xml_item, doc_key in xpwe_key_map:
+        sect = _sub(cc, xml_sect)
+        items = doc.get(doc_key, {})
+        for id_, item in sorted(items.items()):
+            it = _ET.SubElement(sect, xml_item)
+            it.set('ID', str(id_))
+            _sub(it, 'DesSintetica', _e(item.get('nome', '')))
+            _sub(it, 'DesEstesa',    _e(item.get('des_est',   '')))
+            _sub(it, 'DataInit',     _e(item.get('data_init', '')))
+            _sub(it, 'Durata',       str(item.get('durata',   '')))
+            _sub(it, 'CodFase',      _e(item.get('cod_fase',  '')))
+            _sub(it, 'Percentuale',  _fmt_float(item.get('percent', 0)) if item.get('percent') else '')
+            _sub(it, 'Codice',       _e(item.get('cod', '')))
+
+    # Moduli analisi (valori minimi conformi)
+    mod  = _sub(dg, 'PweDGModuli')
+    anal = _sub(mod, 'PweDGAnalisi')
+    _sub(anal, 'SpeseUtili',       '-1')
+    _sub(anal, 'SpeseGenerali',    '14')
+    _sub(anal, 'UtiliImpresa',     '10')
+    _sub(anal, 'OneriAccessoriSc', '0')
+    _sub(anal, 'ConfQuantita',     '11.3|1')
+    _sub(anal, 'OneriSociali',     '0')
+
+    # Configurazione numeri
+    cfg  = _sub(_sub(dg, 'PweDGConfigurazione'), 'PweDGConfigNumeri')
+    _sub(cfg, 'Divisa',              'euro')
+    _sub(cfg, 'ConversioniIN',       'lire')
+    _sub(cfg, 'FattoreConversione',  '1936.27')
+    _sub(cfg, 'Cambio',              '1')
+    _sub(cfg, 'PartiUguali',         '8.2|0')
+    _sub(cfg, 'Lunghezza',           '8.2|0')
+    _sub(cfg, 'Larghezza',           '9.3|0')
+    _sub(cfg, 'HPeso',               '9.3|0')
+    _sub(cfg, 'Quantita',            '10.2|1')
+    _sub(cfg, 'Prezzi',              '10.2|1')
+    _sub(cfg, 'PrezziTotale',        '14.2|1')
+    _sub(cfg, 'ConvPrezzi',          '11.0|1')
+    _sub(cfg, 'ConvPrezziTotale',    '15.0|1')
+    _sub(cfg, 'IncidenzaPercentuale','7.3|0')
+    _sub(cfg, 'Aliquote',            '7.3|0')
+
+    # -----------------------------------------------------------------------
+    # PweMisurazioni
+    # -----------------------------------------------------------------------
+    mis = _sub(root, 'PweMisurazioni')
+
+    # Elenco Prezzi
+    ep_sect = _sub(mis, 'PweElencoPrezzi')
+    for ep in doc.get('elenco_prezzi', []):
+        it = _ET.SubElement(ep_sect, 'EPItem')
+        it.set('ID', str(ep['id']))
+        _sub(it, 'TipoEP',    '0')
+        _sub(it, 'Tariffa',   _e(ep.get('tariffa',     '')))
+        _sub(it, 'Articolo',  _e(ep.get('articolo',    '')))
+        _sub(it, 'DesRidotta',_e(ep.get('des_ridotta', '')))
+        _sub(it, 'DesEstesa', _e(ep.get('des_estesa',  '')))
+        _sub(it, 'DesBreve',  _e(ep.get('des_breve',   '')))
+        _sub(it, 'UnMisura',  _e(ep.get('um',          '')))
+        _sub(it, 'Prezzo1',   _fmt_float(ep.get('prezzo',  0)))
+        _sub(it, 'Prezzo2',   _fmt_float(ep.get('prezzo2', 0)))
+        _sub(it, 'Prezzo3',   _fmt_float(ep.get('prezzo3', 0)))
+        _sub(it, 'Prezzo4',   _fmt_float(ep.get('prezzo4', 0)))
+        _sub(it, 'Prezzo5',   _fmt_float(ep.get('prezzo5', 0)))
+        _sub(it, 'IDSpCap',   str(ep.get('id_spcap', 0)))
+        _sub(it, 'IDCap',     str(ep.get('id_cap',   0)))
+        _sub(it, 'IDSbCap',   str(ep.get('id_sbcap', 0)))
+        _sub(it, 'CodiceWBSCAP', '')
+        _sub(it, 'Flags',     str(ep.get('flags', 0)))
+        _sub(it, 'Data',      _e(ep.get('data', oggi)) or oggi)
+        _sub(it, 'AdrInternet', _e(ep.get('adr_internet', '')))
+        _sub(it, 'IncSIC',    _fmt_float(ep.get('inc_sic',  0)))
+        _sub(it, 'IncMDO',    _fmt_float(ep.get('inc_mdo',  0)))
+        _sub(it, 'IncMAT',    _fmt_float(ep.get('inc_mat',  0)))
+        _sub(it, 'IncATTR',   _fmt_float(ep.get('inc_attr', 0)))
+        _sub(it, 'TagBIM',    _e(ep.get('tag_bim', '')))
+        _sub(it, 'PweEPAnalisi', None)
+
+    # Voci Computo
+    vc_sect = _sub(mis, 'PweVociComputo')
+    for vc in doc.get('computo', []):
+        it = _ET.SubElement(vc_sect, 'VCItem')
+        it.set('ID', str(vc['id']))
+        _sub(it, 'IDEP',     str(vc['id_ep']))
+        _sub(it, 'Quantita', _fmt_float(vc.get('quantita', 0), 3))
+        _sub(it, 'DataMis',  _e(vc.get('data_mis', oggi)))
+        _sub(it, 'Flags',    str(vc.get('flags', 0)))
+        _sub(it, 'IDSpCat',  str(vc.get('id_spcal', 0)))
+        _sub(it, 'IDCat',    str(vc.get('id_cat',   0)))
+        _sub(it, 'IDSbCat',  str(vc.get('id_sbcat', 0)))
+        _sub(it, 'CodiceWBS', _e(vc.get('cod_wbs', '')))
+        misure = vc.get('misure', [])
+        if misure:
+            rg_sect = _sub(it, 'PweVCMisure')
+            for rg in misure:
+                rg_it = _ET.SubElement(rg_sect, 'RGItem')
+                rg_it.set('ID', str(rg['id']))
+                _sub(rg_it, 'IDVV',        str(rg.get('rif_voce', -2)))
+                _sub(rg_it, 'Descrizione', _e(rg.get('descrizione', '')))
+                pu = rg.get('pu', 0)
+                lu = rg.get('lu', 0)
+                la = rg.get('la', 0)
+                hp = rg.get('hp', 0)
+                qt = rg.get('qt', 0)
+                _sub(rg_it, 'PartiUguali', _e(pu) if pu else '')
+                _sub(rg_it, 'Lunghezza',   _e(lu) if lu else '')
+                _sub(rg_it, 'Larghezza',   _e(la) if la else '')
+                _sub(rg_it, 'HPeso',       _e(hp) if hp else '')
+                _sub(rg_it, 'Quantita',    _fmt_float(qt, 2))
+                _sub(rg_it, 'Flags',       str(rg.get('flags', 0)))
+
+    # -----------------------------------------------------------------------
+    # Serializzazione
+    # -----------------------------------------------------------------------
+    _ET.indent(root, space='\t')
+    tree = _ET.ElementTree(root)
+
+    with open(xpwe_path, 'w', encoding='utf-8') as fh:
+        fh.write('<?xml version="1.0" encoding="utf-8"?>\n')
+        fh.write('<?mso-application progid="PriMus.Document.XPWE"?>\n')
+        tree.write(fh, encoding='unicode', xml_declaration=False)
+
+    _log(f'generate_xpwe: scritto {xpwe_path!r}')
+    _log(f'  EP={len(doc.get("elenco_prezzi",[]))}  VC={len(doc.get("computo",[]))}')
+
+
 # ===========================================================================
 # CLI
 # ===========================================================================
 
 if __name__ == '__main__':
-    import sys
-    import json
-    import tkinter as tk
-    from tkinter import scrolledtext
-
-    def mostra_risultati(titolo: str, testo: str) -> None:
-        """Mostra i risultati in una finestra con testo selezionabile."""
-        win = tk.Tk()
-        win.title(titolo)
-        win.attributes('-topmost', True)
-        win.resizable(True, True)
-        txt = scrolledtext.ScrolledText(win, wrap=tk.WORD, width=90, height=30,
-                                        font=('Consolas', 9))
-        txt.insert(tk.END, testo)
-        txt.config(state=tk.DISABLED)
-        txt.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
-        btn = tk.Button(win, text='Chiudi', command=win.destroy, width=10)
-        btn.pack(pady=(0, 8))
-        win.mainloop()
+    import sys, json
 
     if len(sys.argv) < 2:
-        mostra_risultati('dcf_parser',
-                         'Uso: python dcf_parser.py <file.dcf|file.xpwe> [--json]')
+        _log('Uso: python dcf_parser.py <file.dcf|file.xpwe> [--json] [--log=<percorso>]')
         sys.exit(1)
 
     for arg in sys.argv[1:]:
@@ -948,68 +1180,80 @@ if __name__ == '__main__':
 
     path = sys.argv[1]
     _log(f'parse_auto({path!r})')
-
-    try:
-        doc = parse_auto(path)
-    except Exception as e:
-        mostra_risultati('dcf_parser — Errore', f'Errore durante il parsing:\n\n{e}')
-        sys.exit(1)
+    doc  = parse_auto(path)
 
     if '--json' in sys.argv:
         out = {k: v for k, v in doc.items() if not k.startswith('_')}
         sys.stdout.write(json.dumps(out, ensure_ascii=False, indent=2))
         sys.exit(0)
 
-    # Costruisci il testo di riepilogo
     info = doc['info']
     fmt  = doc['formato'].upper()
-    righe = []
-    righe.append('=' * 62)
-    righe.append(f'  [{fmt}]  {os.path.basename(path)}')
-    righe.append('=' * 62)
-    righe.append(f'  Oggetto      : {info.get("oggetto", "N/D")}')
-    righe.append(f'  Committente  : {info.get("committente", "")}')
-    righe.append(f'  Comune       : {info.get("comune", "")}')
-    righe.append(f'  Importo      : EUR {info.get("importo_lavori", 0):,.2f}')
-    righe.append('')
-    righe.append(f'  Elenco prezzi : {len(doc["elenco_prezzi"])} voci')
-    righe.append(f'  Computo       : {len(doc["computo"])} voci')
-    righe.append(f'  Categorie     : {len(doc["categorie"])}')
-    if doc.get('strutture_stampa'):
-        righe.append(f'  Strutture ST  : {len(doc["strutture_stampa"])}')
+    _log('=' * 62)
+    _log(f'  [{fmt}] {info.get("oggetto", "N/D")}')
+    _log(f'  {info.get("committente", "")} - {info.get("comune", "")}')
+    _log('=' * 62)
+    _log(f'  Elenco prezzi : {len(doc["elenco_prezzi"])} voci')
+    _log(f'  Computo       : {len(doc["computo"])} voci')
+    _log(f'  Categorie     : {len(doc["categorie"])}')
+    if doc['strutture_stampa']:
+        _log(f'  Strutture ST  : {len(doc["strutture_stampa"])}')
 
-    if doc.get('_no_xml'):
-        righe.append('')
-        righe.append('  ATTENZIONE: dati XML insufficienti.')
-        righe.append('  Soluzione: esportare il file XPWE da PriMus.')
-    else:
-        righe.append('')
-        righe.append('Categorie:')
-        for id_, cat in sorted(doc['super_categorie'].items()):
-            imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
-            righe.append(f'  [{id_}] {cat["nome"]}{imp}')
-        for id_, cat in sorted(doc['categorie'].items()):
-            imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
-            righe.append(f'    [{id_}] {cat["nome"]}{imp}')
+    _log('\nCategorie:')
+    for id_, cat in sorted(doc['super_categorie'].items()):
+        imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
+        _log(f'  [{id_}] {cat["nome"]}{imp}')
+    for id_, cat in sorted(doc['categorie'].items()):
+        imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
+        _log(f'    [{id_}] {cat["nome"]}{imp}')
 
-        righe.append('')
-        righe.append('Elenco prezzi (prime 8):')
-        for ep in doc['elenco_prezzi'][:8]:
-            righe.append(f'  {ep["tariffa"]:20s} {ep["um"]:5s} '
-                         f'EUR{ep["prezzo"]:>10.2f}  {ep["des_estesa"][:60]}')
-        if len(doc['elenco_prezzi']) > 8:
-            righe.append(f'  ... e altre {len(doc["elenco_prezzi"])-8} voci')
+    _log('\nElenco prezzi (prime 8):')
+    for ep in doc['elenco_prezzi'][:8]:
+        _log(f'  {ep["tariffa"]:20s} {ep["um"]:5s} EUR{ep["prezzo"]:>10.2f}  '
+             f'{ep["des_estesa"][:65]}')
+    if len(doc['elenco_prezzi']) > 8:
+        _log(f'  ... e altre {len(doc["elenco_prezzi"])-8} voci')
 
-        righe.append('')
-        righe.append('Computo (prime 5):')
-        for r in computo_con_descrizioni(doc)[:5]:
-            righe.append(f'  [{r["categoria"][:18]:18s}] {r["tariffa"]:18s} '
-                         f'{r["um"]:4s} Qt={r["quantita"]:8.3f}  '
-                         f'EUR{r["importo"]:>10.2f}  {r["descrizione"][:40]}')
+    _log('\nComputo (prime 5):')
+    for r in computo_con_descrizioni(doc)[:5]:
+        _log(f'  [{r["categoria"][:18]:18s}] {r["tariffa"]:18s} {r["um"]:4s} '
+             f'Qt={r["quantita"]:8.3f}  EUR{r["importo"]:>10.2f}  {r["descrizione"][:45]}')
 
-    righe.append('')
-    righe.append(f'Log: {LOG_FILE}')
+    _log(f'\nLog scritto in: {LOG_FILE}')
 
-    testo = '\n'.join(righe)
-    _log(testo)
-    mostra_risultati(f'dcf_parser — {os.path.basename(path)}', testo)
+
+def import_generated_xpwe(xpwe_path: str = None):
+    """
+    Importa il file XPWE in LeenO utilizzando la funzione nativa XPWE_import.
+    Se xpwe_path non è fornito, richiede all'utente di selezionare un file DCF,
+    lo converte in XPWE e poi procede all'importazione.
+    """
+    if not xpwe_path:
+        try:
+            import Dialogs
+            dcf_path = Dialogs.FileSelect("Seleziona file DCF da importare...", "*.dcf", 0)
+        except ImportError:
+            _log("ERRORE: Dialogs non disponibile per la selezione del file.")
+            return
+            
+        if not dcf_path:
+            _log("import_generated_xpwe: Nessun file selezionato, operazione annullata.")
+            return
+            
+        _log(f"import_generated_xpwe: Avvio conversione del file DCF {dcf_path!r}")
+        doc = parse_dcf(dcf_path)
+        xpwe_path = dcf_path + '.xpwe'
+        
+        generate_xpwe(doc, xpwe_path)
+        
+        import os
+        if not os.path.exists(xpwe_path):
+            _log("import_generated_xpwe: File XPWE non generato (possibile DRM/criptato o errore). Importazione annullata.")
+            return
+
+    try:
+        from LeenoImport_XPWE import XPWE_import
+        _log(f"import_generated_xpwe: avvio importazione per {xpwe_path!r}")
+        XPWE_import(xpwe_path)
+    except Exception as e:
+        _log(f"import_generated_xpwe: ERRORE durante l'importazione di {xpwe_path!r} - {e}")

@@ -9,27 +9,43 @@ NS = {
     'nc': 'http://nextcloud.org/ns',
 }
 
-tree = ET.parse('webdav.xml')
-root = tree.getroot()
+try:
+    tree = ET.parse('webdav.xml')
+    root = tree.getroot()
+except Exception as e:
+    print(f"Errore nel parsing di webdav.xml: {e}")
+    # Crea un file vuoto per evitare crash successivi
+    with open('oxt_list.txt', 'w') as f:
+        pass
+    import sys
+    sys.exit(0)
 
 entries = []
 for resp in root.findall('d:response', NS):
     href = resp.findtext('d:href', '', NS)
-    if not href.lower().endswith('.oxt'):
+    if not href or not href.lower().endswith('.oxt'):
         continue
-    prop = resp.find('.//d:prop', NS)
+    
     name = href.rstrip('/').split('/')[-1]
-    size_b = prop.findtext('d:getcontentlength', '0', NS)
-    date_raw = prop.findtext('d:getlastmodified', '', NS)
+    
+    # Cerca globalmente all'interno di response per evitare problemi con propstat multipli
+    size_b = resp.findtext('.//d:getcontentlength', default='0', namespaces=NS)
+    if not size_b: size_b = '0'
+    
+    date_raw = resp.findtext('.//d:getlastmodified', default='', namespaces=NS)
+    if not date_raw: date_raw = ''
+    
     try:
         dt = parsedate_to_datetime(date_raw)
         date = dt.strftime('%Y-%m-%d %H:%M')
     except Exception:
         date = date_raw[:10] if date_raw else 'N/A'
+        
     try:
         size_mb = f"{int(size_b) / 1048576:.1f}MB"
     except Exception:
         size_mb = 'N/A'
+        
     entries.append((date, size_mb, name))
 
 entries.sort(reverse=True)

@@ -54,22 +54,27 @@ class VersionManager:
                     if len(parts) >= 4:
                         date = f"{parts[0]} {parts[1]}"
                         size = parts[2]
-                        name = parts[3]
+                        name_raw = " ".join(parts[3:])
                     elif len(parts) == 3:
                         date = parts[0]
                         size = parts[1]
-                        name = parts[2]
+                        name_raw = parts[2]
                     else:
                         logger.warning(f"Riga non parsabile: {line!r}")
                         continue
+                        
+                    import urllib.parse
+                    name_decoded = urllib.parse.unquote(name_raw)
+                    
                     if base_url.endswith('='):
-                        url = f"{base_url}{name}"
+                        url = f"{base_url}{name_raw}"
                     elif base_url:
-                        url = f"{base_url}/download?path=&files={name}"
+                        # Assicuriamoci che name_raw sia URL-encoded (se proviene da WebDAV solitamente lo è)
+                        url = f"{base_url}/download?path=&files={name_raw}"
                     else:
                         url = '#'
                     oxt_list.append({
-                        'name': name,
+                        'name': name_decoded,
                         'size': size,
                         'date': date,
                         'url': url,

@@ -2482,7 +2482,8 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
                   '*.xml': 'XML(*.xml)',
                   '*.svg': 'SVG(*.svg)',
                   '*.dcf': 'DCF(*.dcf)',
-                  '*.dat': 'dat(*.dat)', }
+                  '*.dat': 'dat(*.dat)',
+                  '*.DB': 'PriMus Paradox(*.DB)', }
     ctx = uno.getComponentContext()
     oFilePicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", ctx)
     oFilePicker.initialize((mode, ))

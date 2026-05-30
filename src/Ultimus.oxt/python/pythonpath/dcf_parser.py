@@ -781,10 +781,19 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
         _count_id  = int(_count_match.group(1))
         _count_got = len(ep_by_id_map)
         if _count_got < _count_id:
+            _mancanti = _count_id - _count_got
             _log(f'parse_dcf: ATTENZIONE CollectionEP parzialmente corrotto: '
-                 f'CountId={_count_id} ma solo {_count_got} voci estratte.')
+                 f'CountId={_count_id} ma solo {_count_got} voci estratte '
+                 f'({_mancanti} mancanti).')
             _log('parse_dcf: Le voci mancanti non sono recuperabili dal DCF.')
             _log('parse_dcf: Soluzione -> esportare XPWE da PriMus per ottenere dati completi.')
+            _user_msg(
+                f'Il file DCF contiene {_mancanti} voci di elenco prezzi non leggibili\n'
+                f'(saranno estratte {_count_got} delle {_count_id} attese).\n\n'
+                f'Il file è parzialmente corrotto.\n\n'
+                f'Aprire il file in PriMus ed esportarlo come XPWE\n'
+                f'(File → Esporta → XPWE 5.05) per ottenere tutti i dati.'
+            )
 
     # Rileva DCF con dati XML insufficienti (PriMus non ha esportato l'XML embedded)
     # In questo caso il DCF esiste ma i blocchi sono quasi vuoti (< 1KB)
@@ -1161,99 +1170,85 @@ def generate_xpwe(doc: dict, xpwe_path: str, source_nome: str = 'LeenO') -> None
     _log(f'  EP={len(doc.get("elenco_prezzi",[]))}  VC={len(doc.get("computo",[]))}')
 
 
-# ===========================================================================
-# CLI
-# ===========================================================================
-
-if __name__ == '__main__':
-    import sys, json
-
-    if len(sys.argv) < 2:
-        _log('Uso: python dcf_parser.py <file.dcf|file.xpwe> [--json] [--log=<percorso>]')
-        sys.exit(1)
-
-    for arg in sys.argv[1:]:
-        if arg.startswith('--log='):
-            LOG_FILE = arg[6:]
-
-    log_reset()
-
-    path = sys.argv[1]
-    _log(f'parse_auto({path!r})')
-    doc  = parse_auto(path)
-
-    if '--json' in sys.argv:
-        out = {k: v for k, v in doc.items() if not k.startswith('_')}
-        sys.stdout.write(json.dumps(out, ensure_ascii=False, indent=2))
-        sys.exit(0)
-
-    info = doc['info']
-    fmt  = doc['formato'].upper()
-    _log('=' * 62)
-    _log(f'  [{fmt}] {info.get("oggetto", "N/D")}')
-    _log(f'  {info.get("committente", "")} - {info.get("comune", "")}')
-    _log('=' * 62)
-    _log(f'  Elenco prezzi : {len(doc["elenco_prezzi"])} voci')
-    _log(f'  Computo       : {len(doc["computo"])} voci')
-    _log(f'  Categorie     : {len(doc["categorie"])}')
-    if doc['strutture_stampa']:
-        _log(f'  Strutture ST  : {len(doc["strutture_stampa"])}')
-
-    _log('\nCategorie:')
-    for id_, cat in sorted(doc['super_categorie'].items()):
-        imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
-        _log(f'  [{id_}] {cat["nome"]}{imp}')
-    for id_, cat in sorted(doc['categorie'].items()):
-        imp = f'  -> EUR {cat["importo"]:,.2f}' if cat['importo'] else ''
-        _log(f'    [{id_}] {cat["nome"]}{imp}')
-
-    _log('\nElenco prezzi (prime 8):')
-    for ep in doc['elenco_prezzi'][:8]:
-        _log(f'  {ep["tariffa"]:20s} {ep["um"]:5s} EUR{ep["prezzo"]:>10.2f}  '
-             f'{ep["des_estesa"][:65]}')
-    if len(doc['elenco_prezzi']) > 8:
-        _log(f'  ... e altre {len(doc["elenco_prezzi"])-8} voci')
-
-    _log('\nComputo (prime 5):')
-    for r in computo_con_descrizioni(doc)[:5]:
-        _log(f'  [{r["categoria"][:18]:18s}] {r["tariffa"]:18s} {r["um"]:4s} '
-             f'Qt={r["quantita"]:8.3f}  EUR{r["importo"]:>10.2f}  {r["descrizione"][:45]}')
-
-    _log(f'\nLog scritto in: {LOG_FILE}')
-
-
-def import_generated_xpwe(xpwe_path: str = None):
+def _user_msg(msg: str) -> None:
     """
-    Importa il file XPWE in LeenO utilizzando la funzione nativa XPWE_import.
-    Se xpwe_path non è fornito, richiede all'utente di selezionare un file DCF,
+    Mostra un messaggio all'utente.
+    In LeenO usa DLG.chi(); fuori da LO scrive solo nel log.
+    """
+    _log(f'[MSG] {msg}')
+    try:
+        import Dialogs
+        Dialogs.NotifyDialog(
+            IconType="warning",
+            Title='AVVISO!',
+            Text=msg
+        )
+    except Exception:
+        pass
+
+
+def import_generated_xpwe(xpwe_path: str = None) -> None:
+    """
+    Importa un file XPWE in LeenO usando la funzione nativa XPWE_import.
+    Se xpwe_path non è fornito, apre un dialog per scegliere un DCF,
     lo converte in XPWE e poi procede all'importazione.
     """
     if not xpwe_path:
         try:
             import Dialogs
-            dcf_path = Dialogs.FileSelect("Seleziona file DCF da importare...", "*.dcf", 0)
+            dcf_path = Dialogs.FileSelect('Seleziona file DCF da importare...', '*.dcf', 0)
         except ImportError:
-            _log("ERRORE: Dialogs non disponibile per la selezione del file.")
+            _log('import_generated_xpwe: Dialogs non disponibile.')
             return
-            
+
         if not dcf_path:
-            _log("import_generated_xpwe: Nessun file selezionato, operazione annullata.")
+            _log('import_generated_xpwe: Nessun file selezionato.')
             return
-            
-        _log(f"import_generated_xpwe: Avvio conversione del file DCF {dcf_path!r}")
+
+        _log(f'import_generated_xpwe: conversione {dcf_path!r}')
         doc = parse_dcf(dcf_path)
+
+        # Gestione casi di blocco con messaggio utente
+        if doc.get('_drm'):
+            _user_msg(doc.get('_messaggio',
+                'Il file DCF è protetto da DRM (Digital Rights Management) ACCA e non è leggibile.\n'
+                'Chiedere al mittente di riesportarlo come XPWE\n'
+                '(PriMus: File → Esporta → XPWE 5.05).'))
+            return
+
+        if doc.get('_encrypted'):
+            _user_msg(doc.get('_messaggio',
+                'Il file DCF è di tipo Contabilità (TpDoc=2): dati crittografati.\n'
+                'Esportare il file come XPWE da PriMus\n'
+                '(File → Esporta → XPWE 5.05).'))
+            return
+
+        if doc.get('_no_xml'):
+            _user_msg(doc.get('_messaggio',
+                'Il file DCF non contiene dati XML leggibili.\n'
+                'Esportare il file come XPWE da PriMus\n'
+                '(File → Esporta → XPWE 5.05).'))
+            return
+
+        if not doc.get('elenco_prezzi'):
+            _user_msg('Il file DCF non contiene voci di elenco prezzi leggibili.\n'
+                      'Verificare il file o esportarlo come XPWE da PriMus\n'
+                      '(File → Esporta → XPWE 5.05).')
+            return
+
         xpwe_path = dcf_path + '.xpwe'
-        
         generate_xpwe(doc, xpwe_path)
-        
+
         import os
         if not os.path.exists(xpwe_path):
-            _log("import_generated_xpwe: File XPWE non generato (possibile DRM/criptato o errore). Importazione annullata.")
+            _user_msg('Errore nella generazione del file XPWE.\n'
+                      'Verificare i permessi sulla cartella di destinazione.')
             return
 
     try:
         from LeenoImport_XPWE import XPWE_import
-        _log(f"import_generated_xpwe: avvio importazione per {xpwe_path!r}")
+        _log(f'import_generated_xpwe: importazione {xpwe_path!r}')
         XPWE_import(xpwe_path)
     except Exception as e:
-        _log(f"import_generated_xpwe: ERRORE durante l'importazione di {xpwe_path!r} - {e}")
+        _log(f'import_generated_xpwe: ERRORE — {e}')
+        _user_msg(f"Errore durante l'importazione XPWE:\n{e}")

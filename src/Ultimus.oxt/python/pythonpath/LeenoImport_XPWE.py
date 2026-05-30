@@ -174,12 +174,16 @@ def leggiCapitoliCategorie(dati):
     }
 
     # PweDGCapitoliCategorie
+    if dati is None:
+        return res
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
     except AttributeError:
         return res
 
     # legge SuperCapitoli
+    if CapCat is None:
+        return res
     res['SuperCapitoli'] = leggiSuperCapitoli(CapCat)
     # legge Capitoli
     res['Capitoli'] = leggiCapitoli(CapCat)
@@ -201,6 +205,8 @@ def leggiDatiGeneraliAnalisi(dati):
     utiliImpresa = 0
     oneriAccessoriSicurezza = 0
 
+    if dati is None:
+        return {'SpeseGenerali': speseGenerali, 'UtiliImpresa': utiliImpresa, 'OneriAccessoriSicurezza': oneriAccessoriSicurezza}
     try:
         found_moduli = dati.find('PweDGModuli')
         if found_moduli is not None:
@@ -229,6 +235,8 @@ def leggiDatiGeneraliAnalisi(dati):
 def leggiApprossimazioni(dati):
     ''' legge le impostazioni di approssimazione numerica '''
     res = {}
+    if dati is None:
+        return res
     try:
         found_config = dati.find('PweDGConfigurazione')
         if found_config is None:
@@ -998,6 +1006,27 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         PL.fissa()
 
 def MENU_XPWE_import(filename = None):
+    try:
+        is_ctrl, is_shift = PL.GetModifiers()
+    except AttributeError:
+        is_ctrl, is_shift = False, False
+    if is_ctrl:
+        Dialogs.NotifyDialog(
+            IconType="info",
+            Title="Leeno - Importazione file DCF",
+            Text=
+"I file DCF sono protetti da DRM (Digital Rights Management) "
+"e non possono essere importati direttamente in LeenO.\n\n"
+"Il metodo più affidabile per importare un file DCF in LeenO "
+"consiste nel convertirlo preventivamente in formato XPWE "
+"tramite Primus (ACCA).\n\n"
+"La presente procedura consente comunque l'importazione di file DCF prodotti con versioni molto datate del Primus, "
+"ma il risultato deve essere verificato con attenzione.\n\n"
+            )
+        import dcf_parser
+        dcf_parser.import_generated_xpwe()
+        return
+
     # with LeenoUtils.DocumentRefreshContext(False):
     XPWE_import(filename = None)
     oDoc = LeenoUtils.getDocument()
@@ -1086,8 +1115,13 @@ def XPWE_import(filename = None):
 
         # va alla sezione dei dati generali
         dati = root.find('PweDatiGenerali')
-        if dati == None:
-            dati = list(root)[0].find('PweDatiGenerali')
+        if dati is None:
+            try:
+                dati = list(root)[0].find('PweDatiGenerali')
+            except (IndexError, AttributeError):
+                dati = None
+        if dati is None:
+            logging.warning("Sezione 'PweDatiGenerali' non trovata nel file XPWE")
 
         # legge i dati anagrafici generali
         if indicator:
@@ -1111,8 +1145,11 @@ def XPWE_import(filename = None):
         approssimazioni = leggiApprossimazioni(dati)
 
         misurazioni = root.find('PweMisurazioni')
-        if misurazioni == None:
-            misurazioni = list(root)[0].find('PweMisurazioni')
+        if misurazioni is None:
+            try:
+                misurazioni = list(root)[0].find('PweMisurazioni')
+            except (IndexError, AttributeError):
+                misurazioni = None
 
         # legge l'elenco prezzi
         if indicator:

@@ -12447,7 +12447,9 @@ import dcf_parser
 ########################################################################
 
 def MENU_debug():
-    dcf_parser.import_generated_xpwe()
+    import paradox_to_xpwe
+    paradox_to_xpwe.import_paradox_db()
+    # dcf_parser.import_generated_xpwe()
     # MENU_anteprima_dcf()
     # import dcf_parser
     # file_path = Dialogs.FileSelect("Seleziona file DCF...", "*.dcf", 0)

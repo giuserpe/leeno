@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.20-TESTING-20260528.oxt">LeenO-3.26.0.20-TESTING-20260528.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.21-TESTING-20260528.oxt">LeenO-3.26.0.21-TESTING-20260528.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.6MB</td>
+                <td class="col-extra">2026-05-28 21:18</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.21-TESTING-20260528.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.20-TESTING-20260528.oxt">LeenO-3.26.0.20-TESTING-20260528.oxt</a> </td>
                 <td class="col-dim">4.6MB</td>
                 <td class="col-extra">2026-05-28 19:34</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.15-TESTING-20260526.oxt">LeenO-3.26.0.15-TESTING-20260526.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-05-26 20:50</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.15-TESTING-20260526.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -451,6 +451,30 @@
                     </thead>
                     <tbody>
                         
+            <tr>
+                <td>2026-05-30 21:21</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/56d3c9f5147935fcae6b0b1356d542798e551f5c" target="_blank" rel="noopener"><code>56d3c9f</code></a></td>
+                <td class="commit-msg">feat(import): supporto completo ai formati Paradox (.DB/.MB) e robustezza XPWE/DCF
+
+• Aggiunge filtro PriMus Paradox (*.DB) al FilePicker
+• Rafforza leggiCapitoliCategorie / leggiDatiGeneraliAnalisi / leggiApprossimazioni con early‑return sicuri su dati=None
+• Migliora XPWE_import:
+  – fallback sicuro su PweDatiGenerali e PweMisurazioni mancanti
+  – logging più chiaro in caso di sezioni assenti
+• MENU_XPWE_import:
+  – CTRL attiva percorso DCF dedicato con avviso esplicito DRM
+  – integrazione con dcf_parser.import_generated_xpwe()
+• dcf_parser:
+  – aggiunge _user_msg() per notifiche utente
+  – gestisce casi: DRM, encrypted, no_xml, EP mancanti
+  – messaggi più chiari su voci mancanti e corruzione parziale
+• Nuovo modulo paradox_to_xpwe:
+  – parser completo Paradox (DB/MB) con decodifica numeri proprietaria
+  – estrazione EP, UM, descrizioni estese, capitoli e prezzi
+  – generazione XPWE 5.05 conforme
+  – funzione import_paradox_db() integrabile in LeenO
+• Aggiornamento versione a 3.26.0.21‑TESTING‑20260528</td>
+            </tr>
             <tr>
                 <td>2026-05-28 19:46</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/8701f4d43b5a58481ae4cc07d9be408882ce8dd7" target="_blank" rel="noopener"><code>8701f4d</code></a></td>
@@ -478,11 +502,6 @@ l'interfaccia CLI per la diagnostica dei file, aggiunge un controllo
 di integrità su CollectionEP per rilevare DCF corrotti e risolve un bug
 sulla pulizia dei fine riga doppi.</td>
             </tr>
-            <tr>
-                <td>2026-05-26 20:56</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/37ffb28bf6e26ef9d1534d4fa9438a94dc53484a" target="_blank" rel="noopener"><code>37ffb28</code></a></td>
-                <td class="commit-msg">chore(release): bump versione a 3.26.0.15-TESTING-20260526</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -505,8 +524,8 @@ sulla pulizia dei fine riga doppi.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-05-28 19:48 UTC</p>
-                <p>Build Commit: <code>8701f4d</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-05-30 21:21 UTC</p>
+                <p>Build Commit: <code>56d3c9f</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -136,10 +136,19 @@ def sbloccaContabilita(oSheet, lrow):
 # ###############################################################
 
 
-def insertVoceContabilita(oSheet, lrow):
+def insertVoceContabilita(lrow=0, arg=1, cod=None):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
+    from datetime import date
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+
+    if lrow == 0:
+        lrow = PL.LeggiPosizioneCorrente()[1]
+        if oSheet.getCellByPosition(0, lrow + 1).CellStyle == 'uuuuu':
+            return False
+
     # controllo che non ci siano atti registrati
     # se ci sono, chiede conferma per poter operare
     if not sbloccaContabilita(oSheet, lrow):
@@ -169,7 +178,7 @@ def insertVoceContabilita(oSheet, lrow):
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
     else:
-        return
+        return False
 
     oDoc = SheetUtils.getDocumentFromSheet(oSheet)
     oSheetto = oDoc.getSheets().getByName('S5')
@@ -180,8 +189,11 @@ def insertVoceContabilita(oSheet, lrow):
     oSheet.copyRange(oCellAddress, oRangeAddress)
     oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
 
+    PL._gotoCella(1, lrow + 1)
+
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
+    data = 0.0
     for n in reversed(range(0, sopra)):
         if oSheet.getCellByPosition(1, n).CellStyle == 'Ultimus_centro_bordi_lati':
             break
@@ -217,16 +229,17 @@ def insertVoceContabilita(oSheet, lrow):
        str(sopra + 5) + '<>"";P' + str(sopra + 5) + ';""))')
     oSheet.getCellByPosition(36, sopra + 4).CellStyle = "comp -controolo"
 
-    LeenoSheetUtils.numeraVoci(oSheet, 0, True)
+    if cod:
+        oSheet.getCellByPosition(1, sopra + 1).String = cod
 
-    '''
-        @@@@ NOTA BENE : QUESTA PARTE È PER L'USO INTERATTIVO
-        VEDIAMO CHE FARNE IN SEGUITO
+    PL.numera_voci()
+
     if cfg.read('Generale', 'pesca_auto') == '1':
         if arg == 0:
-            return
-        pesca_cod()
-    '''
+            return True
+        PL.pesca_cod()
+
+    return True
 
 # ###############################################################
 

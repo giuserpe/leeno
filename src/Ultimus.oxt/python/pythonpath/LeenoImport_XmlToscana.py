@@ -55,6 +55,7 @@ def parseXML(data, defaultTitle=None):
             'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.regione.campania.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.calabriallpp.it/prezzario.xsd"': 'EASY',
+            'EASY="https://prezzario.regione.sardegna.it/prezzario/prezzario.xsd"': 'EASY',
         }
         # controlla se il file è di tipo conosciuto
         # la Regione Toscana ha l'abitudine di cambiare i tags dei formati XML
@@ -66,14 +67,18 @@ def parseXML(data, defaultTitle=None):
     if trovaTipo(data) == 'EASY':
         if data.find("xmlns:EASY=") < 0:
             pattern = "<EASY:Prezzario>"
-            pos = data.find(pattern) + len(pattern) - 1
-            data = data[:pos] + ' xmlns:EASY="mynamespace"' + data[pos:]
+            pos_found = data.find(pattern)
+            if pos_found >= 0:
+                pos = pos_found + len(pattern) - 1
+                data = data[:pos] + ' xmlns:EASY="mynamespace"' + data[pos:]
 
     if trovaTipo(data) == 'PRT' or trovaTipo(data) == None:
         if data.find("xmlns:PRT=") < 0:
             pattern = "<PRT:Prezzario>"
-            pos = data.find(pattern) + len(pattern) - 1
-            data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
+            pos_found = data.find(pattern)
+            if pos_found >= 0:
+                pos = pos_found + len(pattern) - 1
+                data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
 
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
@@ -157,7 +162,14 @@ supportato nella prossima versione del programma""")
             art = articolo.find('livello4').text
         if art is None:
             art = ''
-        desc = voce + '\n' + art
+        # se art inizia con lo stesso testo di voce (ignorando spazi e a capo),
+        # la voce è ridondante: usa solo art per evitare duplicazioni
+        v_clean = ' '.join(voce.upper().split())
+        a_clean = ' '.join(art.upper().split())
+        if v_clean and a_clean and a_clean.startswith(v_clean):
+            desc = art
+        else:
+            desc = voce + '\n' + art
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella

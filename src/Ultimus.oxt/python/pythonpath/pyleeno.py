@@ -244,7 +244,8 @@ def invia_voce_interno():
         if meta == 'CONTABILITA':
             # Nota: GotoSheet dentro il loop può rallentare, ma garantisce il focus
             GotoSheet('CONTABILITA')
-            ins_voce_contab(cod=codice_voce)
+            import LeenoContab
+            LeenoContab.insertVoceContabilita(cod=codice_voce)
         else:
             # Per COMPUTO e VARIANTE la logica di inserimento è identica
             # Assicurati che ins_voce_computo inserisca nel foglio attivo
@@ -5792,7 +5793,8 @@ def MENU_ricicla_misure():
         if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + (
                 'comp Int_colonna_R_prima', ):
             return
-        ins_voce_contab(arg=0)
+        import LeenoContab
+        LeenoContab.insertVoceContabilita(arg=0)
         partenza = cerca_partenza()
         if is_ctrl:
             GotoSheet('COMPUTO')
@@ -7097,133 +7099,14 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
         import LeenoAnalysis
         LeenoAnalysis.inizializza_analisi(nuovaScheda=True)
     elif oSheet.Name == 'CONTABILITA':
-        # LeenoContab.insertVoceContabilita(oSheet, lrow)  <<< non va
-        ins_voce_contab()
+        import LeenoContab as LC
+        LC.insertVoceContabilita()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
     elif oDoc.getSheets().hasByName('GIORNALE_BIANCO'):
         LeenoGiornale.MENU_nuovo_giorno()
 
 # nuova_voce_contab  ##################################################
-@LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
-def ins_voce_contab(lrow=0, arg=1, cod=None):
-    '''
-    @@@ MODIFICA IN CORSO CON 'LeenoContab.insertVoceContabilita
-    Inserisce una nuova voce in CONTABILITA.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet = oDoc.Sheets.getByName('CONTABILITA')
-
-    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
-    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
-
-    if lrow == 0:
-        lrow = LeggiPosizioneCorrente()[1]
-        if oSheet.getCellByPosition(0, lrow + 1).CellStyle == 'uuuuu':
-            return
-
-    try:
-        # controllo che non ci siano atti registrati
-        partenza = cerca_partenza()
-        if partenza[2] == '#reg':
-            sblocca_cont()
-            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-                return
-        else:
-            pass
-        ###
-    except Exception:
-        pass
-
-    stile = oSheet.getCellByPosition(0, lrow).CellStyle
-    nSal = 0
-    if stile == 'Ultimus_centro_bordi_lati':
-        i = lrow
-        while i != 0:
-            if oSheet.getCellByPosition(23, i).Value != 0:
-                nSal = int(oSheet.getCellByPosition(23, i).Value)
-                break
-            i -= 1
-        while oSheet.getCellByPosition(0, lrow).CellStyle == stile:
-            lrow += 1
-        if oSheet.getCellByPosition(0, lrow).CellStyle == 'uuuuu':
-            lrow += 1
-            #  nSal += 1
-        #  else
-    elif stile == 'Comp TOTALI':
-        pass
-    if stile in stili_cat:
-        lrow += 1
-    elif stile in (stili_contab):
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
-        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
-
-    oSheetto = oDoc.getSheets().getByName('S5')
-    oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
-    oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
-
-    oSheet.getRows().insertByIndex(lrow, 5)  # inserisco le righe
-    oSheet.copyRange(oCellAddress, oRangeAddress)
-
-    _gotoCella(1, lrow + 1)
-
-    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    sopra = sStRange.RangeAddress.StartRow
-    data = 0.0
-    for n in reversed(range(0, sopra)):
-        if oSheet.getCellByPosition(
-                1, n).CellStyle == 'Ultimus_centro_bordi_lati':
-            break
-        if oSheet.getCellByPosition(1, n).CellStyle == 'Data_bianca':
-            data = oSheet.getCellByPosition(1, n).Value
-            break
-    if data == 0.0:
-        oSheet.getCellByPosition(1, sopra +
-                                 2).Value = date.today().toordinal() - 693594
-    else:
-        oSheet.getCellByPosition(1, sopra + 2).Value = data
-########################################################################
-#  sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;
-# FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) +
-# ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) +
-# ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' +
-# str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-#  oSheet.getCellByPosition(2, lrow+1).Formula = sformula
-########################################################################
-# raggruppo i righi di mirura
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = 0
-    oCellRangeAddr.EndColumn = 0
-    oCellRangeAddr.StartRow = lrow + 2
-    oCellRangeAddr.EndRow = lrow + 2
-    oSheet.group(oCellRangeAddr, 1)
-########################################################################
-
-    if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
-        if lrow - 1 == oSheet.getCellRangeByName(
-                '_Lib_' + str(nSal)).getRangeAddress().EndRow:
-            nSal += 1
-
-    oSheet.getCellByPosition(23, sopra + 1).Value = nSal
-    oSheet.getCellByPosition(23, sopra + 1).CellStyle = 'Sal'
-
-    oSheet.getCellByPosition(35, sopra + 4).Formula = '=B' + str(sopra + 2)
-    oSheet.getCellByPosition(
-        36, sopra +
-        4).Formula = '=IF(ISERROR(P' + str(sopra + 5) + ');"";IF(P' + str(
-            sopra + 5) + '<>"";P' + str(sopra + 5) + ';""))'
-    oSheet.getCellByPosition(36, sopra + 4).CellStyle = "comp -controolo"
-    if cod:
-        oSheet.getCellByPosition(1, sopra + 1).String = cod
-    numera_voci()
-    if cfg.read('Generale', 'pesca_auto') == '1':
-        if arg == 0:
-            return
-        pesca_cod()
 
 
 ########################################################################
@@ -10470,6 +10353,22 @@ def clean_text(desc):
     # Rimuove caratteri non stampabili (mantiene \n, \r, \t normali)
     desc = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', desc)
 
+    # Rimuove XML character references a caratteri di controllo illegali
+    # (es. &#22; → U+0016) mantenendo &#9; &#10; &#13; (tab, LF, CR)
+    def _remove_illegal_charref(m):
+        code = int(m.group(1))
+        if code in (9, 10, 13) or code > 31:
+            return m.group(0)  # mantieni
+        return ''
+    desc = re.sub(r'&#(\d+);', _remove_illegal_charref, desc)
+
+    def _remove_illegal_hexref(m):
+        code = int(m.group(1), 16)
+        if code in (9, 10, 13) or code > 31:
+            return m.group(0)  # mantieni
+        return ''
+    desc = re.sub(r'&#x([0-9a-fA-F]+);', _remove_illegal_hexref, desc)
+
     sostituzioni = {
         # Entità HTML per lettere accentate
         "&Agrave;": "À",
@@ -12447,8 +12346,12 @@ import dcf_parser
 ########################################################################
 
 def MENU_debug():
+    LeenoContab.insertVoceContabilita()
+    return
     import paradox_to_xpwe
-    paradox_to_xpwe.import_paradox_db()
+    
+    paradox_to_xpwe.select_folder_and_convert(lire_to_euro=False)
+
     # dcf_parser.import_generated_xpwe()
     # MENU_anteprima_dcf()
     # import dcf_parser

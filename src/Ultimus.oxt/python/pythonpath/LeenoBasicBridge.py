@@ -346,7 +346,8 @@ def ins_voce_contab(lrow=0, arg=1):
     Inserisce una nuova voce in CONTABILITA.
     '''
     callAlert()
-    PL.ins_voce_contab(lrow, arg)
+    import LeenoContab
+    LeenoContab.insertVoceContabilita(lrow, arg)
 
 def Duplica_Sheet_new_doc_No_Cons():
     '''

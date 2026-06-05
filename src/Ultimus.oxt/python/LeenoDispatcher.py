@@ -140,11 +140,11 @@ def dest():
             try:
                 os.makedirs(
                     os.getenv("HOMEPATH") + '\\' + src_oxt +
-                    '\\leeno\\src\\Ultimus.oxt\\')
+                    '\\leeno\\')
             except FileExistsError:
                 pass
             return os.getenv("HOMEDRIVE") + os.getenv(
-                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\'
         else:
             return 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
 

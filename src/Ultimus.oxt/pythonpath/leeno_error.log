@@ -5171,3 +5171,491 @@ File: pyleeno.py, Line: 12458, Function: MENU_debug
 File: dcf_parser.py, Line: 1155, Function: generate_xpwe
 ------------------------------------------------------------
 
+[2026-05-28 16:11:38]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.18-TESTING-20260527
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-05-29 23:00:40]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'GetModifiers'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1001'
+Function: 'MENU_XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport_XPWE.py, Line: 1001, Function: MENU_XPWE_import
+------------------------------------------------------------
+
+[2026-05-30 00:02:21]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'GetModifiers'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1001'
+Function: 'MENU_XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport_XPWE.py, Line: 1001, Function: MENU_XPWE_import
+------------------------------------------------------------
+
+[2026-05-30 12:55:45]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: No module named 'paradox_to_xpwe'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12451, Function: MENU_debug
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-30 12:56:27]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: No module named 'paradox_to_xpwe'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12451, Function: MENU_debug
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-30 12:57:05]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: No module named 'paradox_to_xpwe'
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12450, Function: MENU_debug
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-05-30 16:14:14]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-05-30 18:09:48]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'GetModifiers'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1001'
+Function: 'MENU_XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport_XPWE.py, Line: 1001, Function: MENU_XPWE_import
+------------------------------------------------------------
+
+[2026-05-30 21:21:48]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'GetModifiers'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1009'
+Function: 'MENU_XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport_XPWE.py, Line: 1009, Function: MENU_XPWE_import
+------------------------------------------------------------
+
+[2026-05-30 21:36:37]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'creaComputo'
+
+File: 'LeenoImport_XPWE.py'
+Line: '1044'
+Function: 'XPWE_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport_XPWE.py, Line: 1031, Function: MENU_XPWE_import
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: LeenoImport_XPWE.py, Line: 1044, Function: XPWE_import
+------------------------------------------------------------
+
+[2026-05-30 23:25:59]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.21-TESTING-20260528
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '54'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 54, Function: DlgMain
+------------------------------------------------------------
+
+[2026-06-01 12:18:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: [WinError 5] Accesso negato: 'C:\\Users\\TEST\\AppData\\Local\\Temp\\tmpi0nd0fzr\\allegati\\APPROVAZIONE_VARIANTE-DETERMINA_EDOC.pdf'
+
+File: 'shutil.py'
+Line: '632'
+Function: '_rmtree_unsafe'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: LeenoEtransmit.py, Line: 243, Function: e_transmit_calc
+File: shutil.py, Line: 787, Function: rmtree
+File: shutil.py, Line: 629, Function: _rmtree_unsafe
+File: shutil.py, Line: 634, Function: _rmtree_unsafe
+File: shutil.py, Line: 632, Function: _rmtree_unsafe
+------------------------------------------------------------
+
+[2026-06-03 10:50:36]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 10:50:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 10:50:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:18:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:23:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:24:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:26:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7161'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7161, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:26:18]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7163'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7163, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 11:31:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7163'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7163, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 12:14:30]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7163'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7163, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 12:15:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoSheetUtils.py'
+Line: '611'
+Function: 'prossimaVoce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7165, Function: ins_voce_contab
+File: LeenoSheetUtils.py, Line: 611, Function: prossimaVoce
+------------------------------------------------------------
+
+[2026-06-03 12:21:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: cannot access local variable 'ultimo_sal' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '7164'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7164, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 12:40:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: insertVoceContabilita() missing 2 required positional arguments: 'oSheet' and 'lrow'
+
+File: 'pyleeno.py'
+Line: '12451'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12451, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-03 12:46:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 12:49:10]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.22-TESTING-20260530
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '7160'
+Function: 'ins_voce_contab'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7101, Function: MENU_nuova_voce_scelta
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 7160, Function: ins_voce_contab
+------------------------------------------------------------
+
+[2026-06-03 18:20:12]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.23-TESTING-20260603
+
+Errore: cannot import name 'insertVoceContabilita' from partially initialized module 'LeenoContab' (most likely due to a circular import) (C:\Users\giuserpe\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu192404319g.tmp_\LeenO.oxt\python\pythonpath\LeenoContab.py)
+
+File: 'LeenoBasicBridge.py'
+Line: '9'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 73, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 31, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 9, Function: <module>
+------------------------------------------------------------
+
+[2026-06-03 18:29:52]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.23-TESTING-20260603
+
+Errore: module 'pyleeno' has no attribute 'LeenO_path'
+
+File: 'Dialogs.py'
+Line: '2634'
+Function: 'Info'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoImport.py, Line: 661, Function: MENU_Piemonte
+File: Dialogs.py, Line: 2634, Function: Info
+------------------------------------------------------------
+
+[2026-06-03 22:18:28]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.23-TESTING-20260603
+
+Errore: Versione_LeenO
+
+File: 'pyleeno.py'
+Line: '9122'
+Function: 'inizializza'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 8820, Function: autoexec
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 8833, Function: autoexec_run
+File: pyleeno.py, Line: 9122, Function: inizializza
+------------------------------------------------------------
+
+[2026-06-05 22:14:01]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.25-TESTING-20260603
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+

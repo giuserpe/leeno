@@ -452,6 +452,14 @@
                     <tbody>
                         
             <tr>
+                <td>2026-06-05 20:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c01cfbb3c47e317a83337a4da13500ba5e076d24" target="_blank" rel="noopener"><code>c01cfbb</code></a></td>
+                <td class="commit-msg">feat: raggruppa prezzari per regione e fix percorsi Windows
+
+- sito: Riorganizza la visualizzazione dei file raggruppandoli per regione e anno.
+- core: Corregge il percorso di destinazione su Windows in LeenoDispatcher.</td>
+            </tr>
+            <tr>
                 <td>2026-06-03 21:08</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/c56afceac9ee77ff9717d77a536d34e2f881f5af" target="_blank" rel="noopener"><code>c56afce</code></a></td>
                 <td class="commit-msg">feat(import-xml): supporto completo XML Sardegna 2024 + fix robustezza Toscana/EASY + miglioramenti Paradox
@@ -511,30 +519,6 @@
 - Incrementa numero versione in description.xml
 - Allinea leeno_version_code alla nuova release</td>
             </tr>
-            <tr>
-                <td>2026-05-30 21:21</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/56d3c9f5147935fcae6b0b1356d542798e551f5c" target="_blank" rel="noopener"><code>56d3c9f</code></a></td>
-                <td class="commit-msg">feat(import): supporto completo ai formati Paradox (.DB/.MB) e robustezza XPWE/DCF
-
-• Aggiunge filtro PriMus Paradox (*.DB) al FilePicker
-• Rafforza leggiCapitoliCategorie / leggiDatiGeneraliAnalisi / leggiApprossimazioni con early‑return sicuri su dati=None
-• Migliora XPWE_import:
-  – fallback sicuro su PweDatiGenerali e PweMisurazioni mancanti
-  – logging più chiaro in caso di sezioni assenti
-• MENU_XPWE_import:
-  – CTRL attiva percorso DCF dedicato con avviso esplicito DRM
-  – integrazione con dcf_parser.import_generated_xpwe()
-• dcf_parser:
-  – aggiunge _user_msg() per notifiche utente
-  – gestisce casi: DRM, encrypted, no_xml, EP mancanti
-  – messaggi più chiari su voci mancanti e corruzione parziale
-• Nuovo modulo paradox_to_xpwe:
-  – parser completo Paradox (DB/MB) con decodifica numeri proprietaria
-  – estrazione EP, UM, descrizioni estese, capitoli e prezzi
-  – generazione XPWE 5.05 conforme
-  – funzione import_paradox_db() integrabile in LeenO
-• Aggiornamento versione a 3.26.0.21‑TESTING‑20260528</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -557,8 +541,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-06-03 21:09 UTC</p>
-                <p>Build Commit: <code>c56afce</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-06-05 20:51 UTC</p>
+                <p>Build Commit: <code>c01cfbb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

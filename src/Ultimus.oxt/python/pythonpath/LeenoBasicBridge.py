@@ -51,7 +51,25 @@ def DlgMain():
     DlgMain"
     '''
     callAlert()
-    PL.DlgMain()
+    try:
+        PL.DlgMain()
+    except AttributeError:
+        # Try to reload the module in case LibreOffice is loading a stale/partial copy
+        try:
+            import importlib
+            importlib.reload(PL)
+            if hasattr(PL, 'DlgMain'):
+                PL.DlgMain()
+                return
+        except Exception:
+            pass
+        # Fallback: show a clear error so the user can take action (reinstall/update extension)
+        Dialogs.Exclamation(
+            Title="Errore Leeno",
+            Text=("Impossibile trovare la funzione DlgMain nel modulo pyleeno. "
+                  "Reinstalla o aggiorna l'estensione LeenO e riavvia LibreOffice."),
+        )
+        raise
 
 
 def vai_a_M1():

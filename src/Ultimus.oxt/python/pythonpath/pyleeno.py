@@ -158,14 +158,9 @@ def creaComputo(arg=1):
     opz.Name = 'AsTemplate'
     opz.Value = True
 
-    if not os.path.exists(LeenO_path() + '/template/leeno/Computo_LeenO.ods'):
-        document = desktop.loadComponentFromURL(
-            LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
-            (opz, ))
-    else:
-        document = desktop.loadComponentFromURL(
-            LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
-            (opz, ))
+    document = desktop.loadComponentFromURL(
+        LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
+        (opz, ))
 
     autoexec()
     if arg == 1:
@@ -1119,6 +1114,9 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
     listasbcat = []
     listacat = []
     listaspcat = []
+    idspcat = 0  # inizializzazione per strutture gerarchiche non rigide
+    idcat = 0
+    idsbcat = 0
 
     # Inizializza la progressbar
     indicator = oDoc.getCurrentController().getStatusIndicator()
@@ -1364,24 +1362,36 @@ def vai_a_Scorciatoie():
 
     template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
 
-
     oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+    if oTemplate is None:
+        Dialogs.Exclamation(Title='Scorciatoie', Text=f'Impossibile caricare il template:\n{template_path}')
+        return
 
-    # Determina la posizione di inserimento
     try:
-        pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
-    except:
-        pos = oDoc.getSheets().Count
+        # Verifica che il foglio 'Scorciatoie' esista nel template
+        if not oTemplate.getSheets().hasByName('Scorciatoie'):
+            Dialogs.Exclamation(Title='Scorciatoie', Text="Il foglio 'Scorciatoie' non è presente nel template.")
+            oTemplate.close(True)
+            return
 
-    # Importa il foglio CdP
-    try:
-        oDoc.getSheets().removeByName('Scorciatoie')
-    except:
-        pass
-    oDoc.getSheets().importSheet(oTemplate, 'Scorciatoie', pos)
+        # Determina la posizione di inserimento
+        try:
+            pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
+        except Exception:
+            pos = oDoc.getSheets().getCount()
+
+        try:
+            oDoc.getSheets().removeByName('Scorciatoie')
+        except Exception:
+            pass
+
+        oDoc.getSheets().importSheet(oTemplate, 'Scorciatoie', pos)
+
+    finally:
+        oTemplate.close(True)
+
     GotoSheet('Scorciatoie')
     fissa()
-    # _primaCella(0, 0)
 
 
 ########################################################################
@@ -1776,6 +1786,12 @@ def MENU_prefisso_VDS_():
     Duplica la voce di Elenco Prezzi corrente aggiunge il prefisso 'VDS_'
     e individuandola come Voce Della Sicurezza
     '''
+    is_ctrl, is_shift = GetModifiers()
+    if is_ctrl:
+        # se si preme CTRL esegue MENU_costo_elementare_
+        LeenoUtils.DocumentRefresh(True)
+        MENU_costo_elementare_()
+        return
     oDoc = LeenoUtils.getDocument()
 
     pref = "VDS_"
@@ -1833,7 +1849,7 @@ def MENU_prefisso_VDS_():
                     fini.append(x - 2)
 
         if oSheet.Name == 'Elenco Prezzi':
-            MENU_prefisso_codice()
+            vds_ep()
             return
 
         else:
@@ -1859,7 +1875,7 @@ def MENU_prefisso_VDS_():
                         if pref not in art:
                             LeenoComputo.cambia_articolo(oSheet, lrow, pref+art)
                         # DLG.chi(pref)
-                        if pref in art:
+                        elif pref in art:
                             LeenoComputo.cambia_articolo(oSheet, lrow, art.replace(pref, ''))
 
                     lrow = LeggiPosizioneCorrente()[1]
@@ -1873,6 +1889,57 @@ def MENU_prefisso_VDS_():
     _gotoCella(1, lrow+1)
 
     LeenoUtils.DocumentRefresh(True)
+
+########################################################################
+
+@LeenoUtils.no_refresh # evita il refresh automatico
+def MENU_costo_elementare_():
+    '''
+    Duplica la voce di Elenco Prezzi corrente inserendola sotto.
+    Aggiunge il suffisso '_CE' al codice e ricalcola il prezzo (Prezzo / (1.10*1.15)).
+    Aggiunge in fondo alla descrizione la formula del calcolo.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name != 'Elenco Prezzi':
+        return
+
+    try:
+        lrow = LeggiPosizioneCorrente()[1]
+
+        codice_corrente = oSheet.getCellByPosition(0, lrow).String
+        if codice_corrente.endswith("_CE"):
+            LeenoUtils.DocumentRefresh(True)
+            return
+
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, 50, lrow))
+        comando('Copy')
+
+        oSheet.getRows().insertByIndex(lrow + 1, 1)
+
+        _gotoCella(0, lrow + 1)
+        paste_clip(pastevalue=False)
+
+        oSheet.getCellByPosition(0, lrow + 1).String = codice_corrente + "_CE"
+
+        prezzo_corrente = oSheet.getCellByPosition(4, lrow + 1).Value
+        desc_corrente = oSheet.getCellByPosition(1, lrow + 1).String
+
+        prezzo_str = f"{prezzo_corrente:.2f}".replace(".", ",")
+
+        suffisso_desc = f"\n(Costo elementare: {prezzo_str}/(1,1*1,15))"
+        oSheet.getCellByPosition(1, lrow + 1).String = desc_corrente + suffisso_desc
+
+        nuovo_prezzo = prezzo_corrente / (1.10 * 1.15)
+        oSheet.getCellByPosition(4, lrow + 1).Value = nuovo_prezzo
+
+        _gotoCella(0, lrow + 1)
+
+    except Exception:
+        pass
+    LeenoUtils.DocumentRefresh(True)
+    oSheet.getRows().getByIndex(lrow + 1).OptimalHeight = True
 
 ########################################################################
 
@@ -9940,15 +10007,15 @@ class version_code:
             # Legge la versione dal file, es. LeenO-3.26.0.5-TESTING-20260521
             parts = current.split('-')
             ver_nums = parts[1].split('.')
-            
+
             # Incrementa il numero dev
             ldev = str(int(ver_nums[-1]) + 1)
             ver_nums[-1] = ldev
             parts[1] = '.'.join(ver_nums)
-            
+
             # Aggiorna la data
             parts[-1] = datetime.now().strftime('%Y%m%d')
-            
+
             new_version = '-'.join(parts)
         except Exception:
             # Fallback se il file è corrotto
@@ -12283,7 +12350,7 @@ def somma_per_colore_nella_colonna():
 def MENU_debug_giannelli():
     # Ottiene il documento corrente
     oDoc = LeenoUtils.getDocument()
-    
+
     # 1. Recupera l'area di celle associata al nome definito "GIANNELLI_SAL4"
     # .ReferredCells restituisce l'oggetto CellRange su cui possiamo operare
     referred_cells_sal4 = oDoc.NamedRanges.getByName("GIANNELLI_SAL4").ReferredCells
@@ -12291,7 +12358,7 @@ def MENU_debug_giannelli():
     oSheet_sal4 = referred_cells_sal4.getSpreadsheet()
     # Ottiene le coordinate (struct RangeAddress) dell'intervallo
     range_addr_sal4 = referred_cells_sal4.RangeAddress
-    
+
     start_row_sal4 = range_addr_sal4.StartRow
     end_row_sal4 = range_addr_sal4.EndRow
 
@@ -12301,12 +12368,12 @@ def MENU_debug_giannelli():
     for el in range(start_row_sal4, end_row_sal4 + 1):
         codice = oSheet_sal4.getCellByPosition(0, el).String
         elenco_codici.add(codice)
-    
+
     # 2. Recupera l'area di celle associata al nome definito "GIANNELLI_PARALLELO"
     referred_cells_parallelo = oDoc.NamedRanges.getByName("GIANNELLI_PARALLELO").ReferredCells
     oSheet_parallelo = referred_cells_parallelo.getSpreadsheet()
     range_addr_parallelo = referred_cells_parallelo.RangeAddress
-    
+
     # Definisce l'intervallo di righe includendo un margine superiore e inferiore
     start_row_par = range_addr_parallelo.StartRow - 1
     end_row_par = range_addr_parallelo.EndRow + 1
@@ -12345,13 +12412,11 @@ import dcf_parser
 
 ########################################################################
 
-def MENU_debug():
-    LeenoContab.insertVoceContabilita()
-    return
-    import paradox_to_xpwe
-    
-    paradox_to_xpwe.select_folder_and_convert(lire_to_euro=False)
 
+def MENU_debug():
+    return
+    # MENU_prefisso_VDS_()
+    # return
     # dcf_parser.import_generated_xpwe()
     # MENU_anteprima_dcf()
     # import dcf_parser

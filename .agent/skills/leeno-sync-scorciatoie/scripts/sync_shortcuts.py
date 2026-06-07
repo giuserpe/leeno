@@ -45,7 +45,7 @@ def format_shortcut_name(raw):
 def sync():
     if not os.path.exists(TEMP_DIR):
         os.makedirs(TEMP_DIR)
-    
+
     # 1. Parse Accelerators
     accel_shortcuts = []
     accel_tree = ET.parse(ACCEL_FILE)
@@ -71,12 +71,12 @@ def sync():
     if os.path.exists(unzipped_path): shutil.rmtree(unzipped_path)
     with zipfile.ZipFile(TEMPLATE_FILE, 'r') as zip_ref:
         zip_ref.extractall(unzipped_path)
-    
+
     content_xml = os.path.join(unzipped_path, "content.xml")
     tree = ET.parse(content_xml)
     root = tree.getroot()
     sheet = root.find(".//table:table[@table:name='Scorciatoie']", NS)
-    
+
     if sheet is None:
         print("Scorciatoie sheet not found!")
         return
@@ -88,7 +88,7 @@ def sync():
         readable = format_shortcut_name(name)
         desc = labels.get(cmd, cmd.split('.')[-1].replace('MENU_', '').replace('_', ' ').capitalize())
         macro = cmd.replace("service:org.giuseppe-vizziello.leeno.dispatcher?", "").replace("vnd.sun.star.script:UltimusFree2.", "").split('?')[0]
-        
+
         target = 'OTHER'
         if 'MOD1' in name and 'SHIFT' in name: target = 'CTRL+SHIFT'
         elif 'MOD1' in name: target = 'CTRL'
@@ -96,9 +96,23 @@ def sync():
         elif 'MOD2' in name: target = 'ALT'
         groups[target].append((readable, desc, macro))
 
+    toolbar_combos = [
+        ('Ctrl + Click', "Toolbar 'Filtra codice': vai alla prossima voce", 'MENU_filtra_codice'),
+        ('Shift + Click', "Toolbar 'Filtra codice': vai alla voce precedente", 'MENU_filtra_codice'),
+        ('Ctrl+Shift + Click', "Toolbar 'Filtra codice': filtra con salto/foglio alternativo", 'MENU_filtra_codice'),
+        ('Ctrl + Click', "Toolbar 'Struttura Computo M': mostra Super Categoria", 'struttura_ComputoM'),
+        ('Shift + Click', "Toolbar 'Struttura Computo M': mostra Categoria", 'struttura_ComputoM'),
+        ('Ctrl+Shift + Click', "Toolbar 'Struttura Computo M': mostra Sotto Categoria", 'struttura_ComputoM'),
+        ('Ctrl + Click', "Toolbar 'Struttura CONTAB': mostra Super Categoria", 'struttura_CONTAB'),
+        ('Shift + Click', "Toolbar 'Struttura CONTAB': mostra Categoria", 'struttura_CONTAB'),
+        ('Ctrl+Shift + Click', "Toolbar 'Struttura CONTAB': mostra Sotto Categoria", 'struttura_CONTAB'),
+        ('Ctrl + Click', "Toolbar importazione XPWE: attiva importazione DCF speciale", 'MENU_XPWE_import'),
+        ('Ctrl + Click', "Toolbar VDS: esegue MENU_costo_elementare_", 'MENU_prefisso_VDS_'),
+    ]
+
     # Build rows
     rows = sheet.findall('table:table-row', NS)[:6] # Keep header
-    
+
     def add_sec(title, items):
         if not items: return
         # Section title
@@ -109,17 +123,17 @@ def sync():
         r.append(ET.Element(f'{{{NS["table"]}}}covered-table-cell', {f'{{{NS["table"]}}}number-columns-repeated': '2'}))
         r.append(ET.Element(f'{{{NS["table"]}}}table-cell', {f'{{{NS["table"]}}}number-columns-repeated': '16380'}))
         rows.append(r)
-        
+
         for short, d, m in sorted(items):
             row = ET.Element(f'{{{NS["table"]}}}table-row')
             row.append(ET.Element(f'{{{NS["table"]}}}table-cell'))
             c1 = ET.SubElement(row, f'{{{NS["table"]}}}table-cell', {f'{{{NS["office"]}}}value-type': 'string', f'{{{NS["table"]}}}style-name': 'ce594'})
             p1 = ET.SubElement(c1, f'{{{NS["text"]}}}p')
             ET.SubElement(p1, f'{{{NS["text"]}}}span', {f'{{{NS["text"]}}}style-name': 'T4'}).text = short
-            
+
             c2 = ET.SubElement(row, f'{{{NS["table"]}}}table-cell', {f'{{{NS["office"]}}}value-type': 'string'})
             ET.SubElement(c2, f'{{{NS["text"]}}}p').text = d
-            
+
             c3 = ET.SubElement(row, f'{{{NS["table"]}}}table-cell', {f'{{{NS["office"]}}}value-type': 'string'})
             p3 = ET.SubElement(c3, f'{{{NS["text"]}}}p')
             ET.SubElement(p3, f'{{{NS["text"]}}}span', {f'{{{NS["text"]}}}style-name': 'T5'}).text = m
@@ -132,10 +146,11 @@ def sync():
     add_sec("Combinazioni con SHIFT", groups['SHIFT'])
     add_sec("Combinazioni con CTRL+SHIFT", groups['CTRL+SHIFT'])
     add_sec("Combinazioni con ALT", groups['ALT'])
+    add_sec("Combinazioni toolbar + tastiera", toolbar_combos)
 
     for r in list(sheet.findall('table:table-row', NS)): sheet.remove(r)
     for r in rows: sheet.append(r)
-    
+
     tree.write(content_xml, encoding='utf-8', xml_declaration=True)
 
     # Re-zip
@@ -146,7 +161,7 @@ def sync():
             for file in files:
                 fp = os.path.join(root, file)
                 zip_out.write(fp, os.path.relpath(fp, unzipped_path))
-    
+
     shutil.rmtree(TEMP_DIR)
     print(f"Aggiornamento completato. Backup creato in {os.path.basename(bak_file)}")
 

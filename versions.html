@@ -452,6 +452,33 @@
                     <tbody>
                         
             <tr>
+                <td>2026-06-09 22:17</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/607a86d9142a18fbcf8f507aa3596afedf3adad5" target="_blank" rel="noopener"><code>607a86d</code></a></td>
+                <td class="commit-msg">chore(versioning+core): bump a 3.26.0.31‑TESTING‑20260609 e allinea refactoring voci/categorie
+
+• Aggiorna versione in description.xml e leeno_version_code
+• LeenoSheetUtils:
+  – rimuove selezionaVoce legacy (ora delegato a pyleeno.seleziona_voce)
+  – eliminaVoce ora usa seleziona_voce() centralizzato
+  – micro‑fix stile Livello‑0-scritta mini val
+
+• pyleeno:
+  – MENU_invia_voce: variabile lrow → row, fix override CTRL e messaggi
+  – recupera_voce(): parametro rinominato lrow_src → row_src
+  – gestione scroll/visibilità dopo inserimento voce nel DP
+  – fix destinazione misure (range_dest) e rigenera_voce(row)
+  – codice_voce(): rinomina lrow → row
+  – Ins_Categorie:
+      • aggiunto comportamento speciale con CTRL per applicare stili diretti
+      • merge celle corretto
+      • rinumerazione immediata
+  – Tutti_Subtotali / SubSum_*: rinomina lrow → row e correzione formule
+
+• Template:
+  – aggiornata data in Computo_LeenO.ods
+  – reinserita sezione Scorciatoie generata automaticamente</td>
+            </tr>
+            <tr>
                 <td>2026-06-07 21:02</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/fe8705ccdb23dbf36200e0f99a1f58330e5b4b5c" target="_blank" rel="noopener"><code>fe8705c</code></a></td>
                 <td class="commit-msg">chore(shortcuts): integra combinazioni toolbar+tastiera e migliora robustezza caricamento template
@@ -512,58 +539,6 @@
 - sito: Riorganizza la visualizzazione dei file raggruppandoli per regione e anno.
 - core: Corregge il percorso di destinazione su Windows in LeenoDispatcher.</td>
             </tr>
-            <tr>
-                <td>2026-06-03 21:08</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c56afceac9ee77ff9717d77a536d34e2f881f5af" target="_blank" rel="noopener"><code>c56afce</code></a></td>
-                <td class="commit-msg">feat(import-xml): supporto completo XML Sardegna 2024 + fix robustezza Toscana/EASY + miglioramenti Paradox
-
-• Aggiunge parser nativo per formato SAR24 (SAR24_prezzario_articoli)
-  – parsing iterativo con iterparse per ridurre memoria
-  – gestione categorie/sottocategorie
-  – deduplicazione descrizioni (evita ripetizioni sottocapitolo/descrizione)
-  – pulizia caratteri illegali XML
-  – parsing sicuro prezzi/sicurezza con fallback
-
-• Estende riconoscimento namespace EASY per Regione Sardegna
-  – aggiunto mapping EASY="https://prezzario.regione.sardegna.it/prezzario/prezzario.xsd"
-  – inserimento namespace mancante solo se il tag è realmente presente
-
-• Migliora parser Toscana
-  – evita duplicazioni voce/articolo quando il testo coincide
-  – gestione più robusta dei pattern <EASY:Prezzario> e <PRT:Prezzario>
-
-• Migliora importazione DCF
-  – messaggi utente più chiari tramite _user_msg()
-  – gestione esplicita casi: DRM, encrypted, no_xml, EP mancanti
-  – abort sicuro con spiegazione e istruzioni per XPWE
-
-• Migliora XPWE_import
-  – fallback sicuro su PweDatiGenerali e PweMisurazioni mancanti
-  – logging warning se sezioni non trovate
-
-• Migliora insertVoceContabilita
-  – nuova firma insertVoceContabilita(lrow, arg, cod)
-  – calcolo automatico riga corrente
-  – prevenzione inserimento su righe “uuuuu”
-  – posizionamento cursore su nuova voce
-  – applicazione numerazione tramite PL.numera_voci()
-  – pesca_auto ripristinata in forma sicura
-
-• Aggiorna FileSelect
-  – aggiunto filtro PriMus Paradox (*.DB)
-
-• Aggiunge modulo benchmark.py per test prestazioni parser Sardegna
-
-• Aggiorna paradox_to_xpwe
-  – riscrittura completa con struttura modulare
-  – parser EP/VC robusto, dedup su tariffa
-  – decodifica numeri Paradox migliorata
-  – supporto memo FmtMemo
-  – generazione XPWE 5.05 conforme
-  – logging esteso
-
-• Bump versione → 3.26.0.25‑TESTING‑20260603</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -586,8 +561,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-06-07 21:02 UTC</p>
-                <p>Build Commit: <code>fe8705c</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-06-09 22:17 UTC</p>
+                <p>Build Commit: <code>607a86d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

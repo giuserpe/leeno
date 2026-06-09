@@ -535,37 +535,37 @@ def cercaPartenza(oSheet, lrow):
 # ###############################################################
 
 
-def selezionaVoce(oSheet, lrow):
-    '''
-    Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
-    CONTABILITA o Analisi di Prezzo
-    lrow { long }  : numero riga all'interno della voce
-    '''
-    if oSheet.Name in ('Elenco Prezzi'):
-        return lrow, lrow
+# def selezionaVoce(oSheet, lrow):
+#     '''
+#     Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
+#     CONTABILITA o Analisi di Prezzo
+#     lrow { long }  : numero riga all'interno della voce
+#     '''
+#     if oSheet.Name in ('Elenco Prezzi'):
+#         return lrow, lrow
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    elif oSheet.Name == 'Analisi di Prezzo':
-        sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
-    ###
-    elif oSheet.Name == 'CONTABILITA':
-        partenza = cercaPartenza(oSheet, lrow)
-        if partenza[2] == '#reg':
-            PL.sblocca_cont()
-            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-                return
-            pass
-        else:
-            pass
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    else:
-        raise
+#     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+#     elif oSheet.Name == 'Analisi di Prezzo':
+#         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
+#     ###
+#     elif oSheet.Name == 'CONTABILITA':
+#         partenza = cercaPartenza(oSheet, lrow)
+#         if partenza[2] == '#reg':
+#             PL.sblocca_cont()
+#             if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
+#                 return
+#             pass
+#         else:
+#             pass
+#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+#     else:
+#         raise
 
-    SR = sStRange.RangeAddress.StartRow
-    ER = sStRange.RangeAddress.EndRow
-    # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-    return SR, ER
+#     SR = sStRange.RangeAddress.StartRow
+#     ER = sStRange.RangeAddress.EndRow
+#     # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+#     return SR, ER
 
 
 # ###############################################################
@@ -648,10 +648,8 @@ def eliminaVoce(oSheet, lrow):
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
-    voce = selezionaVoce(oSheet, lrow)
-    SR = voce[0]
-    ER = voce[1]
-
+    import pyleeno as PL
+    SR, ER = PL.seleziona_voce(row=lrow)
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
 
 # ###############################################################
@@ -830,7 +828,7 @@ def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
     # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = 'Livello-0-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
-    oSheet.getCellRangeByPosition( 18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
     oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-0-scritta mini val'

@@ -2864,7 +2864,7 @@ def scelta_viste_run():
                                     while end_v < contEndRow and oSheetCont.getCellByPosition(0, end_v).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
                                         end_v += 1
 
-                                    oRangeV = oSheetCont.getCellRangeByPosition(0, start_v, 50, end_v)
+                                    oRangeV = oSheetCont.getCellRangeByPosition(39, start_v, 40, end_v)
                                     if target_color == "ROSSO":
                                         oRangesRosso.addRangeAddress(oRangeV.RangeAddress, False)
                                     else:
@@ -2994,9 +2994,11 @@ def genera_sommario():
                 # Quantità Computo
                 f"=LET(_s; SUMIF(AA; A{n}; BB); IF(_s; _s; \"--\"))",
                 # Quantità Variante
-                f'=LET(_s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))',
+                # f'=LET(_s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))',
+                f'=LET(_s; SUMIF(varAA; A{n}; varBB); IF(_s; _s; "--"))',
                 # Quantità Contabilità
-                f'=LET(_s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))',
+                # f'=LET(_s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))',
+                f'=LET(_s; SUMIF(GG; A{n}; G1G1); IF(_s; _s; "--"))',
                 '',
                 # Scostamento Variante Computo
                 f'=LET(_s; IF(M{n}="--"; 0; VALUE(M{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(_s; _s; "--"))',
@@ -4798,28 +4800,6 @@ def Circoscrive_Analisi(row):
                 break
     celle = oSheet.getCellRangeByPosition(0, SR, 250, ER)
     return celle
-
-########################################################################
-def ColumnNumberToName(oSheet, cColumnNumb):
-    '''Trasforma IDcolonna in Nome'''
-    #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
-    oColumns = oSheet.getColumns()
-    oColumn = oColumns.getByIndex(cColumnNumb).Name
-    return oColumn
-
-
-########################################################################
-def ColumnNameToNumber(oSheet, cColumnName):
-    '''Trasforma il nome colonna in IDcolonna'''
-    #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
-    oColumns = oSheet.getColumns()
-    oColumn = oColumns.getByName(cColumnName)
-    oRangeAddress = oColumn.getRangeAddress()
-    nColumn = oRangeAddress.StartColumn
-    return nColumn
-
 
 ########################################################################
 def MENU_azzera_voce():
@@ -12563,47 +12543,8 @@ import dcf_parser
 
 
 ########################################################################
-
-
 def MENU_debug():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    # SR, ER = seleziona()
-    SR, ER = seleziona_voce()
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 50, ER))
-    
-    return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = LeggiPosizioneCorrente()[1]
-    rigenera_voce(lrow)
-    return
-    numera_voci()
-
-
-    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
-        return
-
-    # --- 2. IDENTIFICAZIONE DEL RANGE DI VOCI ---
-    oSel = oDoc.CurrentController.getSelection()
-    if not oSel.supportsService("com.sun.star.table.CellRange"):
-        return
-
-    try:
-        # Identifica l'inizio della prima voce e la fine dell'ultima voce nella selezione
-        SR = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().StartRow).RangeAddress.StartRow
-        ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
-    except:
-        if oSheet.Name == "Analisi di Prezzo":
-            sStRange = Circoscrive_Analisi(LeggiPosizioneCorrente()[1])
-            SR = sStRange.RangeAddress.StartRow
-            ER = sStRange.RangeAddress.EndRow
-        else:
-            return
-
-    # Seleziona visivamente l'area che sta per essere eliminata
-
-
+    LeenoSheetUtils.riepilogo_quantita()
     return
     # MENU_prefisso_VDS_()
     # return

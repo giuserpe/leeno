@@ -2,9 +2,11 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
-import uno
+import pyleeno as PL
+# pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 
 import LeenoUtils
@@ -535,42 +537,6 @@ def cercaPartenza(oSheet, lrow):
 # ###############################################################
 
 
-# def selezionaVoce(oSheet, lrow):
-#     '''
-#     Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
-#     CONTABILITA o Analisi di Prezzo
-#     lrow { long }  : numero riga all'interno della voce
-#     '''
-#     if oSheet.Name in ('Elenco Prezzi'):
-#         return lrow, lrow
-
-#     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-#     elif oSheet.Name == 'Analisi di Prezzo':
-#         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
-#     ###
-#     elif oSheet.Name == 'CONTABILITA':
-#         partenza = cercaPartenza(oSheet, lrow)
-#         if partenza[2] == '#reg':
-#             PL.sblocca_cont()
-#             if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-#                 return
-#             pass
-#         else:
-#             pass
-#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-#     else:
-#         raise
-
-#     SR = sStRange.RangeAddress.StartRow
-#     ER = sStRange.RangeAddress.EndRow
-#     # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-#     return SR, ER
-
-
-# ###############################################################
-
-
 def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     """
     Sposta il cursore prima o dopo la voce corrente restituendo l'ID riga.
@@ -606,9 +572,6 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     # Gestione casi particolari
     if stile_corrente in STILI_CAT:
         lrow += 1
-    elif stile_corrente in STILI_CONTAB:
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
 
     # Caso riga iniziale
     if lrow == 0:
@@ -628,10 +591,13 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
 
     if stile_corrente in STILI_VALIDI:
         voce_range = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        if n == 0:
-            lrow = voce_range.RangeAddress.StartRow
-        elif n == 1:
-            lrow = voce_range.RangeAddress.EndRow + 1
+        if voce_range is not None:
+            if n == 0:
+                lrow = voce_range.RangeAddress.StartRow
+            elif n == 1:
+                lrow = voce_range.RangeAddress.EndRow + 1
+        else:
+            lrow += 1
 
     # Salta righe con stili particolari
     while stile_corrente in STILI_DA_SALTARE:
@@ -648,7 +614,6 @@ def eliminaVoce(oSheet, lrow):
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
-    import pyleeno as PL
     SR, ER = PL.seleziona_voce(row=lrow)
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
 
@@ -704,6 +669,7 @@ def inserisciRigaRossa(oSheet):
 
 
 # ###############################################################
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 
 def setAdatta():
@@ -963,14 +929,6 @@ def invertiUnSegno(oSheet, lrow):
                     lrow + 1) + ')=0;"";PRODUCT(E' + str(
                         lrow + 1) + ':I' + str(lrow + 1) + '))'
                           # se VediVoce
-                # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
-                # ~ oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' +
-                # str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' +
-                # str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
-                # ~ else:
-                # ~ oSheet.getCellByPosition(9, lrow).Formula=
-                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
-                # ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                 for x in range(2, 10):
                     oSheet.getCellByPosition(
                         x, lrow).CellStyle = oSheet.getCellByPosition(
@@ -981,14 +939,7 @@ def invertiUnSegno(oSheet, lrow):
                 ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
                     lrow + 1) + ')=0;"";-PRODUCT(E' + str(
                         lrow + 1) + ':I' + str(lrow + 1) + '))'  # se VediVoce
-                # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
-                # ~ oSheet.getCellByPosition(9, lrow).Formula =
-                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
-                # "";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
-                # ~ else:
-                # ~ oSheet.getCellByPosition(9, lrow).Formula =
-                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
-                # "";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+
                 for x in range(2, 10):
                     oSheet.getCellByPosition(
                         x, lrow).CellStyle = oSheet.getCellByPosition(
@@ -1137,6 +1088,7 @@ def cerca_errori():
     Cerca celle contenenti errori (#N/D, #DIV/0!, ecc.) in Calc
     partendo dalla selezione corrente fino alla fine del foglio.
     """
+    # pyrefly: ignore [missing-import]
     import uno
     # Utilizzo uno.Enum per evitare problemi di importazione diretta di com.sun.star.table
     ENUM_FORMULA = uno.Enum("com.sun.star.table.CellContentType", "FORMULA")
@@ -1192,3 +1144,62 @@ def cerca_errori():
     except:
         Dialogs.Info(Title="Ricerca completata", Text="Nessun errore trovato.")
 
+
+########################################################################
+@LeenoUtils.no_refresh
+def riepilogo_quantita():
+    """Inserisce colonne di riepilogo per Computo,
+    Variante e Contabilità su ogni voce del foglio attivo."""
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    # 4. Intestazioni colonne (ottimizzato con mapping)
+    INTESTAZIONI = {
+        'L3': 'Quantità\nComputo',
+        'M3': 'Quantità\nVariante',
+        'N3': 'Quantità\nContabilità'
+    }
+
+    if oSheet.Name == 'CONTABILITA':
+        QUANTITA_COL = {
+            'COMPUTO': (38, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
+            'VARIANTE': (39, '=LET(_s; SUMIF(varAA; B{n}; varBB); IF(_s; _s; "--"))'),
+            'CONTABILITA': (40, '=LET(_s; SUMIF(GG; B{n}; G1G1); IF(_s; _s; "--"))')
+        }
+        oSheet.getCellRangeByName("AM3").String = "Quantità\nComputo"
+        oSheet.getCellRangeByName("AN3").String = "Quantità\nVariante"
+        oSheet.getCellRangeByName("AO3").String = "Quantità\nContabilità"
+        oSheet.getCellRangeByName("AM3:AO3").CellStyle = "comp Int_colonna"
+    else:
+        QUANTITA_COL = {
+            'COMPUTO': (44, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
+            'VARIANTE': (45, '=LET(_s; SUMIF(varAA; B{n}; varBB); IF(_s; _s; "--"))'),
+            'CONTABILITA': (46, '=LET(_s; SUMIF(GG; B{n}; G1G1); IF(_s; _s; "--"))')
+        }
+        oSheet.getCellRangeByName("AS3").String = "Quantità\nComputo"
+        oSheet.getCellRangeByName("AT3").String = "Quantità\nVariante"
+        oSheet.getCellRangeByName("AU3").String = "Quantità\nContabilità"
+        oSheet.getCellRangeByName("AS3:AU3").CellStyle = "comp Int_colonna"
+
+    row = prossimaVoce(oSheet, 0, 1, True)
+    last = cercaUltimaVoce(oSheet) 
+    while row < last:
+        voce_range = PL.seleziona_voce(row)
+        if voce_range is None:
+            # Fallback sicuro per evitare errori se la riga non è una voce valida
+            next_row = prossimaVoce(oSheet, row, 1, True)
+            row = next_row if next_row > row else row + 1
+            continue
+            
+        SR, ER = voce_range
+        n = SR + 2
+        for sheetName, (col, formula) in QUANTITA_COL.items():
+            s = oSheet.getCellByPosition(col, ER)
+            s.Formula = formula.format(n=n)
+            s.CellStyle = 'Comp-Variante num sotto'
+            
+        next_row = prossimaVoce(oSheet, row, 1, True)
+        row = next_row if next_row > row else row + 1
+
+    return

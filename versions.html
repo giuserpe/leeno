@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.33-TESTING-20260610.oxt">LeenO-3.26.0.33-TESTING-20260610.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.34-TESTING-20260611.oxt">LeenO-3.26.0.34-TESTING-20260611.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.6MB</td>
+                <td class="col-extra">2026-06-10 22:04</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.34-TESTING-20260611.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.33-TESTING-20260610.oxt">LeenO-3.26.0.33-TESTING-20260610.oxt</a> </td>
                 <td class="col-dim">4.6MB</td>
                 <td class="col-extra">2026-06-10 11:54</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.29-TESTING-20260607.oxt">LeenO-3.26.0.29-TESTING-20260607.oxt</a> </td>
-                <td class="col-dim">4.6MB</td>
-                <td class="col-extra">2026-06-07 16:20</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.29-TESTING-20260607.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,92 +452,31 @@
                     <tbody>
                         
             <tr>
+                <td>2026-06-10 22:09</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1b70723a0d250c6db30aa5b070538df75f875e18" target="_blank" rel="noopener"><code>1b70723</code></a></td>
+                <td class="commit-msg">chore(versioning): aggiorna versione a 3.26.0.34‑TESTING‑20260611
+
+- Incrementa numero versione in description.xml
+- Allinea leeno_version_code alla nuova build</td>
+            </tr>
+            <tr>
+                <td>2026-06-10 22:08</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/fea57c48506feefb96d2f58357cea94212b3e0f7" target="_blank" rel="noopener"><code>fea57c4</code></a></td>
+                <td class="commit-msg">fix(core): risolve errori NoneType nell'attraversamento voci e introduce riepilogo_quantita
+Il calcolo della prossima voce andava in crash per tentato accesso al RangeAddress
+su righe non valide o categorie, superato inserendo un fallback di sicurezza.
+Aggiunta l'utility 'riepilogo_quantita' per popolare le formule di sintesi
+risolvendo in modo dinamico gli indici di colonna a seconda del foglio
+attivo (con coordinate specifiche per il foglio di Contabilità).
+Rimossi vecchi blocchi inutilizzati e funzioni di colonna obsolete per snellire.</td>
+            </tr>
+            <tr>
                 <td>2026-06-09 22:18</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/00da90f4bf63312072877d8ec5d9d0f3dcf4fbcb" target="_blank" rel="noopener"><code>00da90f</code></a></td>
                 <td class="commit-msg">chore(versioning): aggiorna versione a 3.26.0.32‑TESTING‑20260610
 
 - Incrementa numero versione in description.xml
 - Allinea leeno_version_code alla nuova build</td>
-            </tr>
-            <tr>
-                <td>2026-06-09 22:17</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/607a86d9142a18fbcf8f507aa3596afedf3adad5" target="_blank" rel="noopener"><code>607a86d</code></a></td>
-                <td class="commit-msg">chore(versioning+core): bump a 3.26.0.31‑TESTING‑20260609 e allinea refactoring voci/categorie
-
-• Aggiorna versione in description.xml e leeno_version_code
-• LeenoSheetUtils:
-  – rimuove selezionaVoce legacy (ora delegato a pyleeno.seleziona_voce)
-  – eliminaVoce ora usa seleziona_voce() centralizzato
-  – micro‑fix stile Livello‑0-scritta mini val
-
-• pyleeno:
-  – MENU_invia_voce: variabile lrow → row, fix override CTRL e messaggi
-  – recupera_voce(): parametro rinominato lrow_src → row_src
-  – gestione scroll/visibilità dopo inserimento voce nel DP
-  – fix destinazione misure (range_dest) e rigenera_voce(row)
-  – codice_voce(): rinomina lrow → row
-  – Ins_Categorie:
-      • aggiunto comportamento speciale con CTRL per applicare stili diretti
-      • merge celle corretto
-      • rinumerazione immediata
-  – Tutti_Subtotali / SubSum_*: rinomina lrow → row e correzione formule
-
-• Template:
-  – aggiornata data in Computo_LeenO.ods
-  – reinserita sezione Scorciatoie generata automaticamente</td>
-            </tr>
-            <tr>
-                <td>2026-06-07 21:02</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/fe8705ccdb23dbf36200e0f99a1f58330e5b4b5c" target="_blank" rel="noopener"><code>fe8705c</code></a></td>
-                <td class="commit-msg">chore(shortcuts): integra combinazioni toolbar+tastiera e migliora robustezza caricamento template
-
-• sync_shortcuts.py:
-  – aggiunta sezione “Combinazioni toolbar + tastiera”
-  – nuove combo per Filtra Codice, Struttura ComputoM/CONTAB, VDS, XPWE import
-  – normalizzazione righe e spaziature
-  – mantenuto ordinamento e struttura del foglio Scorciatoie
-
-• LeenoBasicBridge:
-  – DlgMain(): fallback intelligente con reload dinamico di pyleeno
-  – messaggio d’errore chiaro se il modulo è corrotto o non aggiornato
-
-• pyleeno:
-  – creaComputo(): rimosso ramo inutile, caricamento template unificato
-  – vai_a_Scorciatoie(): gestione template mancante, foglio assente, cleanup sicuro
-  – MENU_prefisso_VDS_: aggiunto comportamento speciale con CTRL → MENU_costo_elementare_
-  – nuova funzione MENU_costo_elementare_():
-      • duplica voce EP
-      • aggiunge suffisso _CE
-      • calcola costo elementare (Prezzo / (1.10*1.15))
-      • aggiorna descrizione con formula
-      • mantiene altezza riga ottimale
-  – Sincronizza_SottoCap_Tag_Capitolo_Cor(): inizializzazione idspcat/idcat/idsbcat per strutture non rigide
-
-• LeenoImport_XmlSardegna:
-  – parser SAR24 completo con iterparse
-  – dedup descrizioni, pulizia caratteri illegali
-  – gestione robusta prezzi/sicurezza
-  – categorie e supercategorie generate correttamente
-
-• LeenoImport_XmlToscana:
-  – aggiunto namespace Sardegna EASY
-  – fix inserimento namespace condizionale
-  – dedup voce/articolo quando coincidono
-
-• paradox_to_xpwe:
-  – riscrittura completa del modulo
-  – parser EP/VC robusto, dedup su tariffa
-  – decodifica numeri Paradox migliorata
-  – supporto FmtMemo
-  – generazione XPWE 5.05 conforme
-  – logging esteso
-
-• template Computo_LeenO.ods:
-  – aggiornata data
-  – sostituita intera sezione Scorciatoie con versione generata automaticamente
-  – aggiunta sezione “Combinazioni toolbar + tastiera”
-
-• bump versione → 3.26.0.29‑TESTING‑20260607</td>
             </tr>
                     </tbody>
                 </table>
@@ -561,8 +500,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-06-10 20:10 UTC</p>
-                <p>Build Commit: <code>00da90f</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-06-10 22:09 UTC</p>
+                <p>Build Commit: <code>1b70723</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

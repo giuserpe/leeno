@@ -135,6 +135,39 @@ def sbloccaContabilita(oSheet, lrow):
 
 # ###############################################################
 
+def insertVoceContabilitaGrezza(oSheet, lrow):
+    '''
+    Inserisce una voce grezza in CONTABILITA (usato dall'importazione)
+    '''
+    from com.sun.star.table import CellRangeAddress
+    import SheetUtils
+    oDoc = SheetUtils.getDocumentFromSheet(oSheet)
+    oSheetto = oDoc.getSheets().getByName('S5')
+    oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
+    oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
+    
+    oSheet.getRows().insertByIndex(lrow, 5)
+    oSheet.copyRange(oCellAddress, oRangeAddress)
+    oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
+    
+    # raggruppo i righi di misura
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = CellRangeAddress()
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.StartRow = lrow + 2
+    oCellRangeAddr.EndRow = lrow + 2
+    oSheet.group(oCellRangeAddr, 1)
+
+    # correggo le formule base
+    oSheet.getCellByPosition(23, lrow + 1).Value = 1
+    oSheet.getCellByPosition(23, lrow + 1).CellStyle = 'Sal'
+    oSheet.getCellByPosition(35, lrow + 4).Formula = '=B' + str(lrow + 2)
+    oSheet.getCellByPosition(36, lrow + 4).Formula = (
+       '=IF(ISERROR(P' + str(lrow + 5) + ');"";IF(P' +
+       str(lrow + 5) + '<>"";P' + str(lrow + 5) + ';""))')
+    oSheet.getCellByPosition(36, lrow + 4).CellStyle = "comp -controolo"
 
 def insertVoceContabilita(lrow=0, arg=1, cod=None):
     '''

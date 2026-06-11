@@ -521,10 +521,9 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
             resList.append(titolo)
     return tuple(resList)
 
-
-def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=False):
+def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=False, overwrite=False):
     # 1. Recupera tutti i codici esistenti nel foglio (colonna 0, dalla riga 3 in poi)
-    existing_codes = set()
+    existing_codes = {}
     max_row = oSheet.getRows().getCount()
 
     if max_row > 3:
@@ -533,17 +532,18 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=F
         for start_row in range(3, max_row, chunk_size):
             end_row = min(start_row + chunk_size, max_row)
             codici_esistenti = oSheet.getCellRangeByPosition(0, start_row, 0, end_row - 1).getDataArray()
-            for codice in codici_esistenti:
+            for i, codice in enumerate(codici_esistenti):
                 if codice and codice[0]:
                     code = str(codice[0]).strip()
                     if not case_sensitive:
                         code = code.lower()
-                    existing_codes.add(code)
+                    existing_codes[code] = start_row + i
 
-    # 2. Filtra i nuovi dati: rimuove duplicati interni + codici già esistenti
+    # 2. Filtra i nuovi dati: rimuove duplicati interni + codici già esistenti (se non overwrite)
     nuovi_dati = []
     seen_new_codes = set()
     skipped_existing_count = 0
+    overwritten_count = 0
 
     for riga in dati:
         if not riga or not riga[0]:  # Skip righe vuote
@@ -553,37 +553,42 @@ def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=F
         if not case_sensitive:
             codice = codice.lower()
 
-        # Controlla sia nei codici esistenti che nei nuovi già processati
+        # Controlla se esiste
         if codice in existing_codes:
-            skipped_existing_count += 1
+            if overwrite:
+                row_idx = existing_codes[codice]
+                colonne = len(riga)
+                oRange = oSheet.getCellRangeByPosition(0, row_idx, colonne - 1, row_idx)
+                oRange.setDataArray((riga,))
+                overwritten_count += 1
+                seen_new_codes.add(codice)
+            else:
+                skipped_existing_count += 1
             continue
 
         if codice not in seen_new_codes:
             nuovi_dati.append(riga)
             seen_new_codes.add(codice)
 
-    if not nuovi_dati:
-        return skipped_existing_count
+    # 3. Inserimento nuovi dati (ottimizzato per grandi blocchi)
+    if nuovi_dati:
+        righe_totali = len(nuovi_dati)
+        colonne = len(nuovi_dati[0])
+        sRow = 4
+        oSheet.getRows().insertByIndex(sRow, righe_totali)
 
-    # 3. Inserimento dati (ottimizzato per grandi blocchi)
-    righe_totali = len(nuovi_dati)
-    colonne = len(nuovi_dati[0])
-    sRow = 4
-    oSheet.getRows().insertByIndex(sRow, righe_totali)
+        # Inserimento a step (es. 100 righe alla volta)
+        step = 100
+        riga = 0
+        while riga < righe_totali:
+            sliced = nuovi_dati[riga:riga + step]
+            num = len(sliced)
+            oRange = oSheet.getCellRangeByPosition(0, sRow + riga, colonne - 1, sRow + riga + num - 1)
+            oRange.setDataArray(sliced)
+            # PL.stileCelleElencoPrezzi(oSheet, sRow + riga, sRow + riga + num - 1, col)
+            riga += num
 
-    # Inserimento a step (es. 100 righe alla volta)
-    step = 100
-    riga = 0
-    while riga < righe_totali:
-        sliced = nuovi_dati[riga:riga + step]
-        num = len(sliced)
-        oRange = oSheet.getCellRangeByPosition(0, sRow + riga, colonne - 1, sRow + riga + num - 1)
-        oRange.setDataArray(sliced)
-        # PL.stileCelleElencoPrezzi(oSheet, sRow + riga, sRow + riga + num - 1, col)
-        riga += num
-
-    return skipped_existing_count
-
+    return skipped_existing_count, overwritten_count
 def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     ''' compila l'elenco prezzi '''
 
@@ -603,40 +608,65 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     arraySottoCapitoli = estraiDatiCapitoliCategorie(capitoliCategorie, 'SottoCapitoli')
     righeSottoCapitoli = len(arraySottoCapitoli)
 
-    # numero totale di righe da inserire
-    righeTotali = righeArticoli + righeSuperCapitoli + righeCapitoli + righeSottoCapitoli
-
-    # inizializza la progressbar
-    # progress.setLimits(0, righeTotali)
-    # progress.setValue(0)
-
-    # compilo Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
-    skipped_count = riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, indicator=indicator)
-    if skipped_count is None:
-        skipped_count = 0
-    '''
-    aggiungo i capitoli alla lista delle voci
-     giallo(16777072,16777120,16777168)
-     verde(9502608,13696976,15794160)
-     viola(12632319,13684991,15790335)
-    SUPERCAPITOLI
-    '''
+    # Controllo sovrapposizioni
+    existing_codes = set()
+    max_row = oSheet.getRows().getCount()
+    if max_row > 3:
+        for start_row in range(3, max_row, 1000):
+            end_row = min(start_row + 1000, max_row)
+            codici_esistenti = oSheet.getCellRangeByPosition(0, start_row, 0, end_row - 1).getDataArray()
+            for codice in codici_esistenti:
+                if codice and codice[0]:
+                    existing_codes.add(str(codice[0]).strip().lower())
+
+    overlap = False
+    for arr in (arrayArticoli, arraySuperCapitoli, arrayCapitoli, arraySottoCapitoli):
+        for riga in arr:
+            if riga and riga[0] and str(riga[0]).strip().lower() in existing_codes:
+                overlap = True
+                break
+        if overlap:
+            break
+
+    overwrite_flag = False
+    if overlap:
+        res = Dialogs.YesNoDialog(IconType="warning", Title="Voci già presenti", 
+            Text="Attenzione: nell'Elenco Prezzi sono già presenti alcune voci con codice identico a quelle in importazione.\n\nProcedendo, queste voci verranno SOVRASCRITTE con i nuovi dati.\n\nVuoi procedere con la sovrascrittura?")
+        if res == 1:
+            overwrite_flag = True
+        else:
+            # Se l'utente risponde No, disabilitiamo la sovrascrittura. Verranno saltate.
+            overwrite_flag = False
+
+    tot_skipped = 0
+    tot_overwritten = 0
+
+    s, o = riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, indicator=indicator, overwrite=overwrite_flag)
+    tot_skipped += s
+    tot_overwritten += o
+
     # SuperCapitoli
     if righeSuperCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, indicator=indicator)
+        s, o = riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, indicator=indicator, overwrite=overwrite_flag)
+        tot_skipped += s
+        tot_overwritten += o
 
     # Capitoli
     if righeCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, indicator=indicator)
+        s, o = riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, indicator=indicator, overwrite=overwrite_flag)
+        tot_skipped += s
+        tot_overwritten += o
 
     # SottoCapitoli
     if righeSottoCapitoli:
-        riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, indicator=indicator)
+        s, o = riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, indicator=indicator, overwrite=overwrite_flag)
+        tot_skipped += s
+        tot_overwritten += o
 
     PL.riordina_ElencoPrezzi()
-    return skipped_count
+    return tot_skipped, tot_overwritten
 
 
 def rimuoviAnalisiVuote(oSheet):
@@ -923,7 +953,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
             # --- Inserimento voce ---
             if elaborato == 'CONTABILITA':
-                LeenoContab.insertVoceContabilita(oSheet, lrow)
+                LeenoContab.insertVoceContabilitaGrezza(oSheet, lrow)
             else:
                 LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
 
@@ -1186,7 +1216,7 @@ def XPWE_import(filename = None):
         if indicator:
             indicator.Text = "Compilazione Elenco Prezzi..."
             indicator.Value = 60
-        skipped_count = compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
+        skipped_count, overwritten_count = compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
 
         oSheet_ep = oDoc.getSheets().getByName('Elenco Prezzi')
         oSheet_ep.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'
@@ -1201,7 +1231,9 @@ def XPWE_import(filename = None):
             imported_count = len(elencoPrezzi['ListaArticoli']) - skipped_count
             text = f"Importate n. {imported_count} voci dall'elenco prezzi\ndel file: {filename}"
             if skipped_count > 0:
-                text += f"\n\nAttenzione: {skipped_count} voci non sono state importate perché già presenti nel file corrente con lo stesso codice."
+                text += f"\n\nAttenzione: {skipped_count} voci sono state ignorate perché già presenti (sovrascrittura non confermata)."
+            if overwritten_count > 0:
+                text += f"\n\nInfo: {overwritten_count} voci preesistenti sono state sovrascritte con i nuovi dati."
             
             Dialogs.Info(Title="Importazione completata", Text=text)
             oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -1224,7 +1256,9 @@ def XPWE_import(filename = None):
         
         ok_msg = f'Importazione di {len(listaMisure)} voci di {elaborato} eseguita con successo!'
         if skipped_count > 0:
-            ok_msg += f'\n\nAttenzione: {skipped_count} voci di prezzo non sono state importate perché già presenti nel file corrente con lo stesso codice.'
+            ok_msg += f'\n\nAttenzione: {skipped_count} voci di prezzo sono state ignorate perché già presenti (sovrascrittura non confermata).'
+        if overwritten_count > 0:
+            ok_msg += f'\n\nInfo: {overwritten_count} voci preesistenti in elenco prezzi sono state sovrascritte con i nuovi dati.'
         
         Dialogs.Ok(Text=ok_msg)
         if 'giuserpe' not in os.getlogin():

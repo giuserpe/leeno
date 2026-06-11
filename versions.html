@@ -452,31 +452,35 @@
                     <tbody>
                         
             <tr>
-                <td>2026-06-10 22:09</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1b70723a0d250c6db30aa5b070538df75f875e18" target="_blank" rel="noopener"><code>1b70723</code></a></td>
-                <td class="commit-msg">chore(versioning): aggiorna versione a 3.26.0.34‑TESTING‑20260611
-
-- Incrementa numero versione in description.xml
-- Allinea leeno_version_code alla nuova build</td>
+                <td>2026-06-11 20:51</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/21272d5d62fa88d0f36feccac3f48fd1122aecfc" target="_blank" rel="noopener"><code>21272d5</code></a></td>
+                <td class="commit-msg">feat: add Debug module for LibreOffice configuration management and performance profiling</td>
             </tr>
             <tr>
-                <td>2026-06-10 22:08</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/fea57c48506feefb96d2f58357cea94212b3e0f7" target="_blank" rel="noopener"><code>fea57c4</code></a></td>
-                <td class="commit-msg">fix(core): risolve errori NoneType nell'attraversamento voci e introduce riepilogo_quantita
-Il calcolo della prossima voce andava in crash per tentato accesso al RangeAddress
-su righe non valide o categorie, superato inserendo un fallback di sicurezza.
-Aggiunta l'utility 'riepilogo_quantita' per popolare le formule di sintesi
-risolvendo in modo dinamico gli indici di colonna a seconda del foglio
-attivo (con coordinate specifiche per il foglio di Contabilità).
-Rimossi vecchi blocchi inutilizzati e funzioni di colonna obsolete per snellire.</td>
+                <td>2026-06-11 20:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/cdba4274c8abbdf2c10b441865d47c3c7fe18051" target="_blank" rel="noopener"><code>cdba427</code></a></td>
+                <td class="commit-msg">feat(ui): aggiunge voce menu Riepilogo quantitativo con icone e undo
+
+- Aggiunta voce Ca60 in Addons.xcu per esporre riepilogo_quantita
+  nella barra degli strumenti con icona dedicata
+- Aggiunte icone riepilogo_quantita in tutti i formati richiesti
+  (16px, 26px, variante hover, SVG chiaro e scuro)
+- Decorata riepilogo_quantita con @with_undo per supporto annulla/ripristina
+- Bump versione a 3.26.0.35-TESTING-20260611</td>
             </tr>
             <tr>
-                <td>2026-06-09 22:18</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/00da90f4bf63312072877d8ec5d9d0f3dcf4fbcb" target="_blank" rel="noopener"><code>00da90f</code></a></td>
-                <td class="commit-msg">chore(versioning): aggiorna versione a 3.26.0.32‑TESTING‑20260610
+                <td>2026-06-11 20:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/80338dd6dae8b21b1e6c3ad0f43162953755cdb8" target="_blank" rel="noopener"><code>80338dd</code></a></td>
+                <td class="commit-msg">feat(import): gestisce sovrascrittura voci EP con dialogo di conferma
 
-- Incrementa numero versione in description.xml
-- Allinea leeno_version_code alla nuova build</td>
+- riempiBloccoElencoPrezzi ora restituisce una tupla (skipped, overwritten)
+  invece del solo conteggio delle voci saltate
+- compilaElencoPrezzi rileva preventivamente le voci con codice duplicato
+  e mostra un dialogo YesNo per chiedere conferma prima di sovrascriverle
+- I messaggi di riepilogo post-importazione distinguono ora tra voci
+  ignorate (sovrascrittura rifiutata) e voci sovrascritte (confermata)
+- Nell'importazione contabilità si usa insertVoceContabilitaGrezza
+  al posto di insertVoceContabilita per coerenza con il flusso computo</td>
             </tr>
                     </tbody>
                 </table>
@@ -500,8 +504,8 @@ Rimossi vecchi blocchi inutilizzati e funzioni di colonna obsolete per snellire.
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-06-11 19:36 UTC</p>
-                <p>Build Commit: <code>1b70723</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-06-11 20:52 UTC</p>
+                <p>Build Commit: <code>21272d5</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

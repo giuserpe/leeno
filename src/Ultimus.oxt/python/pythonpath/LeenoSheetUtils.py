@@ -1147,6 +1147,7 @@ def cerca_errori():
 
 ########################################################################
 @LeenoUtils.no_refresh
+@with_undo
 def riepilogo_quantita():
     """Inserisce colonne di riepilogo per Computo,
     Variante e Contabilità su ogni voce del foglio attivo."""

@@ -664,6 +664,23 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ca60" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.riepilogo_quantita</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/riepilogo_quantita</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Riepilogo quantitativo</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
       </node>
     </node>
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->

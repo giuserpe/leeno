@@ -67,8 +67,9 @@ def _create_wrapper(func, undo_description):
         undoManager.enterUndoContext(undo_description)
 
         try:
-            # Esegui la funzione
-            result = func(*args, **kwargs)
+            # Esegui la funzione con refresh bloccato
+            with LeenoUtils.no_refresh_context():
+                result = func(*args, **kwargs)
             # Chiudi contesto undo in caso di successo
             undoManager.leaveUndoContext()
             return result
@@ -111,8 +112,9 @@ def with_undo_batch(description="Operazioni multiple"):
             undoManager.lock()
 
             try:
-                # Esegui le operazioni
-                result = func(*args, **kwargs)
+                # Esegui le operazioni con refresh bloccato
+                with LeenoUtils.no_refresh_context():
+                    result = func(*args, **kwargs)
 
                 # Sblocca e crea un singolo undo per tutto
                 undoManager.unlock()
@@ -220,6 +222,7 @@ def analizza_performance_log():
     Analizza il file di log delle performance e mostra statistiche.
     """
     import os
+    # pyrefly: ignore [missing-import]
     import uno
     from collections import defaultdict
 
@@ -274,3 +277,34 @@ def analizza_performance_log():
 
     except Exception as e:
         print(f"Errore nell'analisi del log: {e}")
+
+
+def MENU_undo():
+    """
+    Esegue l'undo bloccando il refresh dello schermo.
+    """
+    try:
+        import LeenoUtils
+        oDoc = LeenoUtils.getDocument()
+        if oDoc and oDoc.UndoManager.isUndoPossible():
+            with LeenoUtils.no_refresh_context():
+                oDoc.UndoManager.undo()
+    except Exception as e:
+        import LeenoDialogs as DLG
+        DLG.chi(f"Errore durante l'undo: {e}")
+
+
+def MENU_redo():
+    """
+    Esegue il redo bloccando il refresh dello schermo.
+    """
+    try:
+        import LeenoUtils
+        oDoc = LeenoUtils.getDocument()
+        if oDoc and oDoc.UndoManager.isRedoPossible():
+            with LeenoUtils.no_refresh_context():
+                oDoc.UndoManager.redo()
+    except Exception as e:
+        import LeenoDialogs as DLG
+        DLG.chi(f"Errore durante il redo: {e}")
+

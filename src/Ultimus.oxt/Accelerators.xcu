@@ -96,6 +96,20 @@
                         <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_taglia_x</value>
                     </prop>
                 </node>
+                <!-- CTRL-Z (Undo con blocco refresh) -->
+                <node oor:name="Z_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_undo</value>
+                    </prop>
+                </node>
+                <!-- CTRL-Y (Redo con blocco refresh) -->
+                <node oor:name="Y_MOD1"
+                      oor:op="replace">
+                    <prop oor:name="Command">
+                        <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_redo</value>
+                    </prop>
+                </node>
                 <!-- CTRL-INS -->
                 <node oor:name="INSERT_MOD1"
                       oor:op="replace">

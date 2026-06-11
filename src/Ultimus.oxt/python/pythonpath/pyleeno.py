@@ -90,7 +90,7 @@ cfg = LeenoConfig.Config()
 
 import Dialogs
 
-from undo_utils import with_undo, with_undo_batch, no_undo, UndoContext
+from undo_utils import with_undo, with_undo_batch, no_undo, UndoContext, MENU_undo, MENU_redo
 
 from LeenoValidation import (
     applica_validazione_decimale,
@@ -7553,7 +7553,7 @@ def inizializza_computo():
     #  oSheet.getCellRangeByName('C1').CellBackColor = 16762855
     #  oSheet.getCellRangeByName('C1').String = 'COMPUTO'
 
-    oSheet.getCellByPosition(2, 1).String = 'QUESTA RIGA NON VIENE STAMPATA'
+    # oSheet.getCellByPosition(2, 1).String = 'QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellByPosition(
         17, 1).Formula = '=SUBTOTAL(9;R:R)'  # sicurezza
     oSheet.getCellByPosition(

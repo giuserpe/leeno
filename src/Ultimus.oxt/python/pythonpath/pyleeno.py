@@ -20,6 +20,7 @@
 
 # from scriptforge import CreateScriptService
 # from dcf_parser import generate_xpwe
+from LeenoAnalysis import copiaRigaAnalisi
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 from collections import OrderedDict
@@ -2665,6 +2666,36 @@ def scelta_viste_run():
 #Elenco Prezzi
     elif oSheet.Name in ('Elenco Prezzi'):
         oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+
+        # --- Controllo doppioni ---
+        start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
+        if end_row > start_row:
+            data_range = oSheet.getCellRangeByPosition(0, start_row, 4, end_row)
+            full_data = data_range.getDataArray()
+            
+            col_b_formulas = oSheet.getCellRangeByPosition(1, start_row, 1, end_row).getFormulaArray()
+            
+            seen = set()
+            ha_doppioni = False
+            for idx, row in enumerate(full_data):
+                if str(col_b_formulas[idx][0]).startswith('='):
+                    continue
+                
+                key = (row[0], row[2], row[3], row[4])
+                if key == ('', '', '', ''):
+                    continue
+                if key in seen:
+                    ha_doppioni = True
+                    break
+                seen.add(key)
+                
+            if ha_doppioni:
+                if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!!!", \
+                    Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nVuoi avviare la procedura di eliminazione prima di procedere?") == 1:
+                    MENU_doppioni()
+                    oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        # --- Fine controllo doppioni ---
+
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application"
         )
@@ -4688,6 +4719,8 @@ def MENU_analisi_in_ElencoPrezzi():
         }
 
         for col, formula in formule.items():
+            if col == 3 and oDoc.Sheets.getByName('Analisi di Prezzo').getCellByPosition(3, riga).Value == 0:
+                formula = ""
             oSheet.getCellByPosition(col, target_row).Formula = formula
         _gotoCella("A5")
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
@@ -4738,6 +4771,7 @@ def tante_analisi_in_ep():
             # Condizioni di salto repentine
             if not codice or "Scrivi la descrizione" in descrizione:
                 continue
+
 
             try:
                 cell_style = src_sheet.getCellByPosition(0, n).CellStyle
@@ -5500,71 +5534,71 @@ def copia_riga_contab(row, num_righe=1):
 
 ########################################################################
 
-def copia_riga_analisi(row, num_righe=1):
-    '''
-    @@@ MODIFICA IN CORSO CON 'LeenoAnalysis.copiaRigaAnalisi'
-    Inserisce una nuova riga di misurazione in analisi di prezzo
-    '''
-    analisi_riga_validazione = None
+# def copia_riga_analisi(row, num_righe=1):
+#     '''
+#     @@@ MODIFICA IN CORSO CON 'LeenoAnalysis.copiaRigaAnalisi'
+#     Inserisce una nuova riga di misurazione in analisi di prezzo
+#     '''
+#     analisi_riga_validazione = None
 
-    with LeenoUtils.DocumentRefreshContext(False):
-        oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
-        stile = oSheet.getCellByPosition(0, row).CellStyle
-        if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
-            row = row + 1
-            oSheet.getRows().insertByIndex(row, 1)
-            # imposto gli stili
-            oSheet.getCellByPosition(0, row).CellStyle = 'An-lavoraz-Cod-sx'
-            oSheet.getCellRangeByPosition(1, row, 5,
-                                        row).CellStyle = 'An-lavoraz-generica'
-            oSheet.getCellByPosition(3, row).CellStyle = 'An-lavoraz-input'
-            oSheet.getCellByPosition(6, row).CellStyle = 'An-senza'
-            oSheet.getCellByPosition(7, row).CellStyle = 'An-senza-DX'
-            # ci metto le formule
-            #  oDoc.enableAutomaticCalculation(False)
-            oSheet.getCellByPosition(1, row).Formula = '=IF(A' + str(
-                row + 1) + '="";"";CONCATENATE("  ";VLOOKUP(A' + str(
-                    row + 1) + ';elenco_prezzi;2;FALSE());' '))'
-            oSheet.getCellByPosition(
-                2,
-                row).Formula = '=IF(A' + str(row + 1) + '="";"";VLOOKUP(A' + str(
-                    row + 1) + ';elenco_prezzi;3;FALSE()))'
-            oSheet.getCellByPosition(3, row).Value = 0
-            oSheet.getCellByPosition(
-                4,
-                row).Formula = '=IF(A' + str(row + 1) + '="";0;VLOOKUP(A' + str(
-                    row + 1) + ';elenco_prezzi;5;FALSE()))'
-            oSheet.getCellByPosition(
-                5, row).Formula = '=D' + str(row + 1) + '*E' + str(row + 1)
-            oSheet.getCellByPosition(
-                8, row
-            ).Formula = '=IF(A' + str(row + 1) + '="";"";IF(VLOOKUP(A' + str(
-                row + 1) + ';elenco_prezzi;6;FALSE())="";"";(VLOOKUP(A' + str(
-                    row + 1) + ';elenco_prezzi;6;FALSE()))))'
-            oSheet.getCellByPosition(9, row).Formula = '=IF(I' + str(
-                row + 1) + '="";"";I' + str(row + 1) + '*F' + str(row + 1) + ')'
-            #  oDoc.enableAutomaticCalculation(True)
-            # preserva il Pesca
-            if oSheet.getCellByPosition(
-                    1, row - 1).CellStyle == 'An-lavoraz-dx-senza-bordi':
-                oRangeAddress = oSheet.getCellByPosition(0, row +
-                                                        1).getRangeAddress()
-                oCellAddress = oSheet.getCellByPosition(0, row).getCellAddress()
-                oSheet.copyRange(oCellAddress, oRangeAddress)
-            # oSheet.getCellByPosition(0, row).String = 'Cod. Art.?'
-            analisi_riga_validazione = row
-        _gotoCella(0, row)
-        if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
-            pesca_cod()
+#     with LeenoUtils.DocumentRefreshContext(False):
+#         oDoc = LeenoUtils.getDocument()
+#         oSheet = oDoc.CurrentController.ActiveSheet
+#         stile = oSheet.getCellByPosition(0, row).CellStyle
+#         if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
+#             row = row + 1
+#             oSheet.getRows().insertByIndex(row, 1)
+#             # imposto gli stili
+#             oSheet.getCellByPosition(0, row).CellStyle = 'An-lavoraz-Cod-sx'
+#             oSheet.getCellRangeByPosition(1, row, 5,
+#                                         row).CellStyle = 'An-lavoraz-generica'
+#             oSheet.getCellByPosition(3, row).CellStyle = 'An-lavoraz-input'
+#             oSheet.getCellByPosition(6, row).CellStyle = 'An-senza'
+#             oSheet.getCellByPosition(7, row).CellStyle = 'An-senza-DX'
+#             # ci metto le formule
+#             #  oDoc.enableAutomaticCalculation(False)
+#             oSheet.getCellByPosition(1, row).Formula = '=IF(A' + str(
+#                 row + 1) + '="";"";CONCATENATE("  ";VLOOKUP(A' + str(
+#                     row + 1) + ';elenco_prezzi;2;FALSE());' '))'
+#             oSheet.getCellByPosition(
+#                 2,
+#                 row).Formula = '=IF(A' + str(row + 1) + '="";"";VLOOKUP(A' + str(
+#                     row + 1) + ';elenco_prezzi;3;FALSE()))'
+#             oSheet.getCellByPosition(3, row).Value = 0
+#             oSheet.getCellByPosition(
+#                 4,
+#                 row).Formula = '=IF(A' + str(row + 1) + '="";0;VLOOKUP(A' + str(
+#                     row + 1) + ';elenco_prezzi;5;FALSE()))'
+#             oSheet.getCellByPosition(
+#                 5, row).Formula = '=D' + str(row + 1) + '*E' + str(row + 1)
+#             oSheet.getCellByPosition(
+#                 8, row
+#             ).Formula = '=IF(A' + str(row + 1) + '="";"";IF(VLOOKUP(A' + str(
+#                 row + 1) + ';elenco_prezzi;6;FALSE())="";"";(VLOOKUP(A' + str(
+#                     row + 1) + ';elenco_prezzi;6;FALSE()))))'
+#             oSheet.getCellByPosition(9, row).Formula = '=IF(I' + str(
+#                 row + 1) + '="";"";I' + str(row + 1) + '*F' + str(row + 1) + ')'
+#             #  oDoc.enableAutomaticCalculation(True)
+#             # preserva il Pesca
+#             if oSheet.getCellByPosition(
+#                     1, row - 1).CellStyle == 'An-lavoraz-dx-senza-bordi':
+#                 oRangeAddress = oSheet.getCellByPosition(0, row +
+#                                                         1).getRangeAddress()
+#                 oCellAddress = oSheet.getCellByPosition(0, row).getCellAddress()
+#                 oSheet.copyRange(oCellAddress, oRangeAddress)
+#             # oSheet.getCellByPosition(0, row).String = 'Cod. Art.?'
+#             analisi_riga_validazione = row
+#         _gotoCella(0, row)
+#         if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
+#             pesca_cod()
 
-    if analisi_riga_validazione is not None:
-        oDoc2 = LeenoUtils.getDocument()
-        if oDoc2 is not None:
-            sh = oDoc2.CurrentController.ActiveSheet
-            valida_numeri_decimale(
-                sh.getCellByPosition(3, analisi_riga_validazione),
-                unprotect_if_needed=True)
+#     if analisi_riga_validazione is not None:
+#         oDoc2 = LeenoUtils.getDocument()
+#         if oDoc2 is not None:
+#             sh = oDoc2.CurrentController.ActiveSheet
+#             valida_numeri_decimale(
+#                 sh.getCellByPosition(3, analisi_riga_validazione),
+#                 unprotect_if_needed=True)
 
 ########################################################################
 
@@ -5627,7 +5661,7 @@ def Copia_riga_Ent(num_righe=None):
         'COMPUTO': copia_riga_computo,
         'VARIANTE': copia_riga_computo,
         'CONTABILITA': copia_riga_contab,
-        'Analisi di Prezzo': copia_riga_analisi,
+        'Analisi di Prezzo': copiaRigaAnalisi,
     }
 
     # Esegue l'azione appropriata in base al tipo di foglio

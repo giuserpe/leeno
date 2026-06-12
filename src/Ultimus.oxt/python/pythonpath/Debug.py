@@ -98,7 +98,7 @@ def aggiorna_configurazione_leeno():
             return f"✓ {label} aggiornato"
         except Exception as e:
             return f"✗ Errore {label}: {str(e)}"
-    DLG.chi(list([target_addons, target_accelerators]))
+    # DLG.chi(list([target_addons, target_accelerators]))
     risultato_addons = process_xcu(source_addons, target_addons, "Addons.xcu")
     risultato_accelerators = process_xcu(source_accelerators, target_accelerators, "Accelerators.xcu")
 
@@ -559,9 +559,9 @@ def check_ods(percorso):
             # Parsing XML di content.xml
             with z.open("content.xml") as f:
                 try:
-                    Element.parse(f)                    
+                    ElementTree.parse(f)                    
                     print("content.xml OK")
-                except ET.ParseError as e:
+                except ElementTree.ParseError as e:
                     print(f"XML corrotto: {e}")
 
             # Lista tutti i file nell'archivio

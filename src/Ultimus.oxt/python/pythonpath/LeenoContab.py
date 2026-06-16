@@ -187,7 +187,7 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
     if not sbloccaContabilita(oSheet, lrow):
         return False
 
-    stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_contab = LeenoGlobals.getGlobalVar('stili_contab') + LeenoGlobals.getGlobalVar('stili_cat')
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
     if stile == 'comp Int_colonna_R_prima':
@@ -208,7 +208,14 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
         pass
     elif stile in stili_contab:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
+        if sStRange is not None:
+            # Estrae l'SAL dalla voce su cui ci si trovava, se esiste
+            val_sal = oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value
+            nSal = int(val_sal) if val_sal else 0
+        else:
+            # Se siamo su un capitolo o altra riga senza attributi, nSal di default è 0
+            nSal = 0
+            
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
     else:
         return False

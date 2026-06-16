@@ -364,6 +364,8 @@ def MENU_PrintSettings():
 def setPageStyle(silent = False):
     '''
     Attribuisce ad ogni foglio il suo specifico stile di pagina.
+    Usa assegnazione diretta (oSheet.PageStyle) senza GotoSheet/dispatch
+    per evitare switch di foglio e i relativi ridisegni intermedi.
     '''
     importa_stili_pagina_non_presenti(silent=silent)
 
@@ -378,43 +380,28 @@ def setPageStyle(silent = False):
         'SAL': 'PageStyle_SAL_A4',
     }
 
-    # Ottieni il contesto e i servizi necessari
-    ctx = LeenoUtils.getComponentContext()
-    desktop = LeenoUtils.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-
     oDoc = LeenoUtils.getDocument()
-    nSheet = oDoc.CurrentController.ActiveSheet.Name
+    # Cache della collezione stili: evita lookup ripetuto per ogni foglio
+    oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
 
-    # Itera su ciascun foglio
-    for el in stili.keys():
+    for el, stile_nome in stili.items():
         try:
-            PL.GotoSheet(el)
-
-            # Crea le proprietà per lo stile di pagina
-            oProp = [
-                PL.crea_property_value("Template", stili[el]),
-                PL.crea_property_value("Family", 8)
-            ]
-
-            # Applica lo stile alla pagina tramite dispatchHelper
-            dispatchHelper.executeDispatch(oFrame, ".uno:StyleApply", "", 0, tuple(oProp))
-
-            # Applica le impostazioni di zoom layout alla pagina
+            if not oDoc.getSheets().hasByName(el):
+                continue
             oSheet = oDoc.getSheets().getByName(el)
-            oSheet.PageStyle = stili[el]
-            oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName(stili[el])
-            oAktPage.PageScale = 0  # Imposta la scala automatica
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1  # Adatta alla larghezza
-            oAktPage.ScaleToPagesY = 0  # Altezza non specificata
-        except Exception as e:
-            importa_stili_pagina_non_presenti()
-            continue
 
-    # Ritorna al foglio originale
-    PL.GotoSheet(nSheet)
+            # Assegnazione diretta senza navigare al foglio (nessun ridisegno)
+            oSheet.PageStyle = stile_nome
+
+            # Applica le impostazioni di scala allo stile di pagina
+            if oPageStyles.hasByName(stile_nome):
+                oAktPage = oPageStyles.getByName(stile_nome)
+                oAktPage.PageScale = 0          # scala automatica
+                oAktPage.CenterHorizontally = True
+                oAktPage.ScaleToPagesX = 1      # adatta alla larghezza
+                oAktPage.ScaleToPagesY = 0      # altezza non specificata
+        except Exception:
+            continue
 
 
 
@@ -695,16 +682,35 @@ def importa_stili_pagina_non_presenti(silent = False):
     Args:
         silent (bool): se True non avvia l'indicatore di progresso.
     """
+    # Stili minimi richiesti da LeenO
+    _STILI_LEENO = frozenset((
+        'Page_Style_COPERTINE',
+        'PageStyle_COMPUTO_A4',
+        'PageStyle_Elenco Prezzi',
+        'PageStyle_Analisi di Prezzo',
+        'Page_Style_Libretto_Misure2',
+        'PageStyle_REGISTRO_A4',
+        'PageStyle_SAL_A4',
+    ))
+
+    oDoc = LeenoUtils.getDocument()
+    existing_page_styles = oDoc.StyleFamilies.getByName('PageStyles')
+    existing_style_names = set(
+        existing_page_styles.getByIndex(i).Name
+        for i in range(existing_page_styles.Count)
+    )
+
+    # Early-exit: se tutti gli stili LeenO sono già presenti,
+    # non aprire il documento template (operazione costosa)
+    if _STILI_LEENO.issubset(existing_style_names):
+        return
+
     with LeenoUtils.DocumentRefreshContext(False):
         # Percorso del file di template
         filename = PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
-        oDoc = LeenoUtils.getDocument()
-
-        # Ottieni gli stili di pagina già presenti nel documento corrente
-        existing_page_styles = oDoc.StyleFamilies.getByName('PageStyles')
-        existing_style_names = [existing_page_styles.getByIndex(i).Name for i in range(existing_page_styles.Count)]
         lun_1 = len(existing_page_styles)
+
 
         # Creare la lista di PropertyValue per le opzioni di caricamento
         loadOptions = [

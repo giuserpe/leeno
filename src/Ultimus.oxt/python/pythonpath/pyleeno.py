@@ -3025,11 +3025,9 @@ def genera_sommario():
                 # Quantità Computo
                 f"=LET(_s; SUMIF(AA; A{n}; BB); IF(_s; _s; \"--\"))",
                 # Quantità Variante
-                # f'=LET(_s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))',
-                f'=LET(_s; SUMIF(varAA; A{n}; varBB); IF(_s; _s; "--"))',
+                f'=LET(_s; SUMIF(varAA; A{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))',
                 # Quantità Contabilità
-                # f'=LET(_s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))',
-                f'=LET(_s; SUMIF(GG; A{n}; G1G1); IF(_s; _s; "--"))',
+                f'=LET(_s; SUMIF(GG; A{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))',
                 '',
                 # Scostamento Variante Computo
                 f'=LET(_s; IF(M{n}="--"; 0; VALUE(M{n})) - IF(L{n}="--"; 0; VALUE(L{n})); IF(_s; _s; "--"))',
@@ -10728,7 +10726,7 @@ def sistema_cose():
         if cell.Type.value == 'TEXT':
             cell.String = clean_text(cell.String)
 
-    Menu_adattaAltezzaRiga()
+    LeenoSheetUtils.adattaAltezzaRiga(all=False)
 
 
 ########################################################################
@@ -10866,28 +10864,34 @@ def set_area_stampa():
     ER = SheetUtils.getLastUsedRow(oSheet)
 
     iSheet = oSheet.RangeAddress.Sheet
-    oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oTitles.Sheet = iSheet
 
     if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA'):
 
-        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+        if oSheet.getCellByPosition(0, 2).Rows.Height != 800:
+            oSheet.getCellByPosition(0, 2).Rows.Height = 800
         SR = 2
         EC = 41
+        
         # riga da ripetere
-        oTitles.StartRow = 2
-        oTitles.EndRow = 2
-        oSheet.setTitleRows(oTitles)
-        oSheet.setPrintTitleRows(True)
+        has_titles = oSheet.getPrintTitleRows()
+        curr_titles = oSheet.getTitleRows() if has_titles else None
+        if not has_titles or not curr_titles or curr_titles.StartRow != 2 or curr_titles.EndRow != 2:
+            oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            oTitles.Sheet = iSheet
+            oTitles.StartRow = 2
+            oTitles.EndRow = 2
+            oSheet.setTitleRows(oTitles)
+            oSheet.setPrintTitleRows(True)
+
         if oSheet.Name == 'Elenco Prezzi':
             if oSheet.getColumns().getByIndex(11).IsVisible == False or \
                 oSheet.getColumns().getByIndex(12).IsVisible == False or \
                 oSheet.getColumns().getByIndex(13).IsVisible == False:
                 EC = 25
-                ER = 1
+                ER = max(2, ER)  # Prima era ER = 1 con SR = 2, causing SR > ER
             else:
                 EC = 6
-                ER -= 1
+                ER = max(2, ER - 1)
         if oSheet.Name == 'CONTABILITA':
             EC = 15
             if oDoc.NamedRanges.hasByName('_Lib_1'):
@@ -10895,13 +10899,15 @@ def set_area_stampa():
     elif oSheet.Name in ('Analisi di Prezzo'):
         EC = 6
         SR = 1
-        ER -= 1
-        oSheet.setPrintTitleRows(False)
+        ER = max(1, ER - 1)
+        if oSheet.getPrintTitleRows():
+            oSheet.setPrintTitleRows(False)
     elif oSheet.Name in ('cP_Cop'):
         EC = 7
         SR = 0
-        ER -= 1
-        oSheet.setPrintTitleRows(False)
+        ER = max(0, ER - 1)
+        if oSheet.getPrintTitleRows():
+            oSheet.setPrintTitleRows(False)
     elif oSheet.Name in ('SAL'):
         SR = 2
         EC = 5
@@ -10909,16 +10915,25 @@ def set_area_stampa():
         SR = 0
         ER = SheetUtils.getLastUsedRow(oSheet)
         EC = SheetUtils.getLastUsedColumn(oSheet)
-# imposta area di stampa
-    oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oStampa.Sheet = iSheet
-    oStampa.StartColumn = 0
-    oStampa.StartRow = SR
-    oStampa.EndColumn = EC
-    oStampa.EndRow = ER
-    oSheet.setPrintAreas((oStampa,))
 
-    LS.setPageStyle()
+    # imposta area di stampa
+    current_areas = oSheet.getPrintAreas()
+    needs_update = True
+    if len(current_areas) == 1:
+        ca = current_areas[0]
+        if ca.StartColumn == 0 and ca.StartRow == SR and ca.EndColumn == EC and ca.EndRow == ER:
+            needs_update = False
+
+    if needs_update:
+        oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oStampa.Sheet = iSheet
+        oStampa.StartColumn = 0
+        oStampa.StartRow = SR
+        oStampa.EndColumn = EC
+        oStampa.EndRow = ER
+        oSheet.setPrintAreas((oStampa,))
+
+    LS.setPageStyle(silent=True)
 
 ########################################################################
 
@@ -10952,9 +10967,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             LeenoSheetUtils.SbiancaCellePrintArea()
 
     oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    SheetUtils.visualizza_PageBreak()
-    oSheet.removeAllManualPageBreaks()
+    # adatta solo la riga corrente (non l'intero foglio) per evitare freeze su EP grandi
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False)
 
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
@@ -10978,108 +10992,129 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
         else:
             luogo = '\n\nElenco Prezzi'
 
-    # luogo = '\nLocalità: ' + oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
-
-    ###
-    #  oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    #  DLG.mri(oAktPage)
-    #  return
-    ###
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(1)
     else:
         dettaglio_misure(0)
-    for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
-        oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
 
-        # chi((n , oAktPage.DisplayName))
-        if oAktPage.DisplayName == 'Page_Style_COPERTINE':
-            oAktPage.HeaderIsOn = False
-            oAktPage.FooterIsOn = False
-        else:
-            oAktPage.HeaderIsOn = True
-            oAktPage.FooterIsOn = True
+    # --- Costanti pre-calcolate (evita ricalcoli dentro il loop) ---
+    STILI_CON_HEADER = frozenset((
+        'PageStyle_Analisi di Prezzo',
+        'PageStyle_COMPUTO_A4',
+        'PageStyle_Elenco Prezzi',
+    ))
+    FONT = 'Liberation Sans Narrow'
+    # htxt: dimensione font in punti (FISSO — PageScale è 0, quindi 8/100*0 = 0 era un bug)
+    HTXT_DEFAULT = 8.0
+    HTXT_ANALISI  = 9.0
+    # nomefile calcolato una sola volta fuori dal loop
+    nomefile = os.path.basename(oDoc.getURL().replace('%20', ' '))
 
-        # margini della pagina
-        oAktPage.TopMargin = 1000
-        oAktPage.BottomMargin = 1350
-        oAktPage.LeftMargin = 1000
-        oAktPage.RightMargin = 1000
+    # Struttura bordo azzerato costruita una sola volta e riusata
+    bordo_zero = uno.createUnoStruct('com.sun.star.table.BorderLine2')
+    bordo_zero.LineWidth = 0
+    bordo_zero.OuterLineWidth = 0
 
-        oAktPage.FooterLeftMargin = 0
-        oAktPage.FooterRightMargin = 0
-        oAktPage.HeaderLeftMargin = 0
-        oAktPage.HeaderRightMargin = 0
+    # Nomi e valori delle 14 proprietà comuni da impostare su ogni stile.
+    # setPropertyValues() riduce a 1 chiamata UNO invece di 14 separate,
+    # eliminando le notifiche di aggiornamento intermedie che causavano il freeze.
+    PROPS_COMUNI_NOMI = (
+        'TopMargin', 'BottomMargin', 'LeftMargin', 'RightMargin',
+        'FooterLeftMargin', 'FooterRightMargin',
+        'HeaderLeftMargin', 'HeaderRightMargin',
+        'HeaderBodyDistance', 'FooterBodyDistance',
+        'PageScale', 'CenterHorizontally',
+        'ScaleToPagesX', 'ScaleToPagesY',
+    )
+    PROPS_COMUNI_VALORI = (
+        1000, 1350, 1000, 1000,
+        0, 0,
+        0, 0,
+        0, 0,
+        0, True,
+        1, 0,
+    )
 
-        oAktPage.HeaderBodyDistance = 0
-        oAktPage.FooterBodyDistance = 0
+    # Cache della collezione stili: evita due getByName('PageStyles') per ogni iterazione
+    oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+    nCount = oPageStyles.Count
 
-        # Adatto lo zoom alla larghezza pagina
-        oAktPage.PageScale = 0
-        oAktPage.CenterHorizontally = True
-        oAktPage.ScaleToPagesX = 1
-        oAktPage.ScaleToPagesY = 0
+    for n in range(nCount):
+        oAktPage = oPageStyles.getByIndex(n)
+        displayName = oAktPage.DisplayName
 
+        # chi((n , displayName))
+        is_copertina = (displayName == 'Page_Style_COPERTINE')
+        oAktPage.HeaderIsOn = not is_copertina
+        oAktPage.FooterIsOn = not is_copertina
 
+        # Batch write proprietà comuni: 1 chiamata UNO invece di 14
+        try:
+            oAktPage.setPropertyValues(PROPS_COMUNI_NOMI, PROPS_COMUNI_VALORI)
+        except Exception:
+            # fallback singolo se XMultiPropertySet non supportato
+            oAktPage.TopMargin = 1000
+            oAktPage.BottomMargin = 1350
+            oAktPage.LeftMargin = 1000
+            oAktPage.RightMargin = 1000
+            oAktPage.FooterLeftMargin = 0
+            oAktPage.FooterRightMargin = 0
+            oAktPage.HeaderLeftMargin = 0
+            oAktPage.HeaderRightMargin = 0
+            oAktPage.HeaderBodyDistance = 0
+            oAktPage.FooterBodyDistance = 0
+            oAktPage.PageScale = 0
+            oAktPage.CenterHorizontally = True
+            oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
 
-        if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo',
-                                    'PageStyle_COMPUTO_A4',
-                                    'PageStyle_Elenco Prezzi'):
-            htxt = 8.0 / 100 * oAktPage.PageScale
-            if oSheet.Name == 'Analisi di Prezzo':
-                htxt = 9.0 / 100 * oAktPage.PageScale
-            # if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
-            #     htxt = 10.0
-            #azzera i bordi
-            bordo = oAktPage.TopBorder
-            bordo.LineWidth = 0
-            bordo.OuterLineWidth = 0
-            oAktPage.TopBorder = bordo
+        if displayName in STILI_CON_HEADER:
+            htxt = HTXT_ANALISI if oSheet.Name == 'Analisi di Prezzo' else HTXT_DEFAULT
 
-            bordo = oAktPage.BottomBorder
-            bordo.LineWidth = 0
-            bordo.OuterLineWidth = 0
-            oAktPage.BottomBorder = bordo
+            # Azzera i 4 bordi in 1 chiamata batch invece di 4 read-modify-write
+            try:
+                oAktPage.setPropertyValues(
+                    ('TopBorder', 'BottomBorder', 'RightBorder', 'LeftBorder'),
+                    (bordo_zero, bordo_zero, bordo_zero, bordo_zero)
+                )
+            except Exception:
+                oAktPage.TopBorder = bordo_zero
+                oAktPage.BottomBorder = bordo_zero
+                oAktPage.RightBorder = bordo_zero
+                oAktPage.LeftBorder = bordo_zero
 
-            bordo = oAktPage.RightBorder
-            bordo.LineWidth = 0
-            bordo.OuterLineWidth = 0
-            oAktPage.RightBorder = bordo
-
-            bordo = oAktPage.LeftBorder
-            bordo.LineWidth = 0
-            bordo.OuterLineWidth = 0
-            oAktPage.LeftBorder = bordo
-
-            # HEADER
+            # HEADER: leggi una volta, modifica in memoria, riscrivi una volta
             oHeader = oAktPage.RightPageHeaderContent
-            # oAktPage.PageScale = 95
             oHeader.LeftText.Text.String = committente
-            oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.LeftText.Text.Text.CharFontName = FONT
             oHeader.LeftText.Text.Text.CharHeight = htxt
 
             oHeader.CenterText.Text.String = oggetto
-            oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.CenterText.Text.Text.CharFontName = FONT
             oHeader.CenterText.Text.Text.CharHeight = htxt
 
             oHeader.RightText.Text.String = luogo
-            oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHeader.RightText.Text.Text.CharFontName = FONT
             oHeader.RightText.Text.Text.CharHeight = htxt
 
             oAktPage.RightPageHeaderContent = oHeader
-            # FOOTER
+
+            # FOOTER: leggi una volta, modifica in memoria, riscrivi una volta
             oFooter = oAktPage.RightPageFooterContent
             oFooter.CenterText.Text.String = ''
-            nomefile = oDoc.getURL().replace('%20',' ')
-            oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + os.path.basename(nomefile)
-            oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + nomefile
+            oFooter.LeftText.Text.Text.CharFontName = FONT
             oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
-            oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oFooter.RightText.Text.Text.CharFontName = FONT
             oFooter.RightText.Text.Text.CharHeight = htxt
             oAktPage.RightPageFooterContent = oFooter
 
         # if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
         #     scelta_viste()
+
+    # Attiva i salti di pagina DOPO aver configurato tutti gli stili:
+    # il ridisegno avviene una volta sola, a elaborazione completata
+    SheetUtils.visualizza_PageBreak()
 
     try:
         if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE',
@@ -11097,14 +11132,6 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
             setPreview()
     except Exception:
         pass
-        # bordo lato destro in attesa di LibreOffice 6.2
-        # bordo = oAktPage.RightBorder
-        # bordo.LineWidth = 0
-        # bordo.OuterLineWidth = 0
-        # oAktPage.RightBorder = bordo
-    # last = SheetUtils.getUsedArea(oSheet).EndRow
-
-    # oSheet.getCellRangeByPosition(1, 0, 41, last).Rows.OptimalHeight = True
     return
 
 

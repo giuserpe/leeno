@@ -2,6 +2,10 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
+import functools
+# pyrefly: ignore [missing-import]
+import uno
+from SheetUtils import getLastUsedRow
 import pyleeno as PL
 # pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
@@ -569,9 +573,10 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     # Ottieni stile corrente (una sola chiamata)
     stile_corrente = oSheet.getCellByPosition(0, lrow).CellStyle
 
-    # Gestione casi particolari
+    # Se siamo su una categoria, vogliamo sempre inserire/spostarci 
+    # al rigo immediatamente successivo
     if stile_corrente in STILI_CAT:
-        lrow += 1
+        return lrow + 1
 
     # Caso riga iniziale
     if lrow == 0:
@@ -587,6 +592,7 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
 
     # Logica principale di spostamento
     if saltaCat and stile_corrente in STILI_CAT:
+        # Già gestito sopra, ma lo manteniamo per sicurezza
         return lrow + 1
 
     if stile_corrente in STILI_VALIDI:
@@ -694,7 +700,7 @@ def setAdatta():
 
 
 @LeenoUtils.preserva_posizione(step=0)
-def adattaAltezzaRiga(oSheet=False, all=False):
+def adattaAltezzaRiga(oSheet=False, all=True):
     """
     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
     Versione bilanciata tra velocità e manutenibilità.
@@ -728,7 +734,12 @@ def adattaAltezzaRiga(oSheet=False, all=False):
             oSheet.unprotect("") # Password standard LeenO (vuota)
 
         # --- OPERAZIONE PRINCIPALE ---
-        oSheet.Rows.OptimalHeight = True  # Applica a tutto il foglio in un colpo solo
+        # Applica a tutto il foglio solo se richiesto (all=True)
+        # altrimenti causa freeze su fogli enormi come Elenco Prezzi
+        if all:
+            last_row = getLastUsedRow(oSheet)
+            if last_row >= 0:
+                oSheet.getCellRangeByPosition(0, 0, 0, last_row).Rows.OptimalHeight = True
 
         # --- CASI SPECIALI ---
         if oSheet.Name in FOGLI_SPECIALI:
@@ -743,18 +754,19 @@ def adattaAltezzaRiga(oSheet=False, all=False):
                 except Exception:
                     continue
 
-        # --- LOGICA DI ADATTAMENTO COMPLETO (Iterativo) ---
-        # Viene eseguito se richiesto esplicitamente (all=True)
-        # o se siamo in versioni LO che richiedono forzatura rigo per rigo
-        if all or (520 < versione_lo < 642):
-            if all:
-                # Loop su tutta l'area usata per le righe che hanno stili con testo a capo
+        # --- LOGICA DI ADATTAMENTO SPECIFICO ---
+        if all:
+            # Se versioni vecchie, serve forzare riga per riga per gli stili wrap
+            if 520 < versione_lo < 642:
                 for y in range(0, usedArea.EndRow + 1):
                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
                         oSheet.getRows().getByIndex(y).OptimalHeight = True
-            else:
-                # Solo intorno alla riga corrente
-                oSheet.getCellRangeByPosition(0, lrow - 1, 0, lrow + 1).Rows.OptimalHeight = True
+        else:
+            # Se all=False, ci limitiamo alla riga corrente e adiacenti
+            start_row = max(0, lrow - 1)
+            end_row = min(usedArea.EndRow, lrow + 1)
+            # Adatta l'altezza ottimale solo per il piccolo range
+            oSheet.getCellRangeByPosition(0, start_row, 0, end_row).Rows.OptimalHeight = True
 
         # --- RIPRISTINO PROTEZIONE ---
         if is_protected:
@@ -1165,8 +1177,8 @@ def riepilogo_quantita():
     if oSheet.Name == 'CONTABILITA':
         QUANTITA_COL = {
             'COMPUTO': (38, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
-            'VARIANTE': (39, '=LET(_s; SUMIF(varAA; B{n}; varBB); IF(_s; _s; "--"))'),
-            'CONTABILITA': (40, '=LET(_s; SUMIF(GG; B{n}; G1G1); IF(_s; _s; "--"))')
+            'VARIANTE': (39, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
+            'CONTABILITA': (40, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))')
         }
         oSheet.getCellRangeByName("AM3").String = "Quantità\nComputo"
         oSheet.getCellRangeByName("AN3").String = "Quantità\nVariante"
@@ -1175,8 +1187,8 @@ def riepilogo_quantita():
     else:
         QUANTITA_COL = {
             'COMPUTO': (44, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
-            'VARIANTE': (45, '=LET(_s; SUMIF(varAA; B{n}; varBB); IF(_s; _s; "--"))'),
-            'CONTABILITA': (46, '=LET(_s; SUMIF(GG; B{n}; G1G1); IF(_s; _s; "--"))')
+            'VARIANTE': (45, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
+            'CONTABILITA': (46, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))')
         }
         oSheet.getCellRangeByName("AS3").String = "Quantità\nComputo"
         oSheet.getCellRangeByName("AT3").String = "Quantità\nVariante"

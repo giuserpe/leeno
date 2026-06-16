@@ -523,11 +523,13 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
 
 def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=False, overwrite=False):
     # 1. Recupera tutti i codici esistenti nel foglio (colonna 0, dalla riga 3 in poi)
+    import SheetUtils
     existing_codes = {}
-    max_row = oSheet.getRows().getCount()
+    # Usa getLastUsedRow invece del numero massimo di righe in Calc (1.048.576) per evitare loop enormi
+    max_row = SheetUtils.getLastUsedRow(oSheet) + 1
 
     if max_row > 3:
-        # Legge i codici in batch per ottimizzazione (evita timeout su fogli grandi)
+        # Legge i codici in batch per ottimizzazione
         chunk_size = 1000  # Adjust based on performance
         for start_row in range(3, max_row, chunk_size):
             end_row = min(start_row + chunk_size, max_row)
@@ -611,8 +613,10 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
     # Controllo sovrapposizioni
+    import SheetUtils
     existing_codes = set()
-    max_row = oSheet.getRows().getCount()
+    # Usa getLastUsedRow per evitare il blocco per il milione di iterazioni
+    max_row = SheetUtils.getLastUsedRow(oSheet) + 1
     if max_row > 3:
         for start_row in range(3, max_row, 1000):
             end_row = min(start_row + 1000, max_row)

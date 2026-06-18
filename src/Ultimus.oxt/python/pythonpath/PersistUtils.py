@@ -16,7 +16,7 @@ _TYPENAMEMAP = {
     'str': str,
     'int': int,
     'float': float,
-    'date': LeenoUtils.string2Date,
+    'date': lambda x: LeenoUtils.string2Date(x),
     'bool': lambda x : True if x == 'True' else False,
 }
 

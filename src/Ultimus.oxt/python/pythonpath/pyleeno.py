@@ -20,6 +20,7 @@
 
 # from scriptforge import CreateScriptService
 # from dcf_parser import generate_xpwe
+from ctypes import string_at
 from LeenoAnalysis import copiaRigaAnalisi
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
@@ -12546,47 +12547,52 @@ def MENU_debug_giannelli():
 
     # 1. Recupera l'area di celle associata al nome definito "GIANNELLI_SAL4"
     # .ReferredCells restituisce l'oggetto CellRange su cui possiamo operare
-    referred_cells_sal4 = oDoc.NamedRanges.getByName("GIANNELLI_SAL4").ReferredCells
+    referred_cells = oDoc.NamedRanges.getByName("elenco_prezzi").ReferredCells
     # Ottiene dinamicamente il foglio in cui si trova l'intervallo GIANNELLI_SAL4
-    oSheet_sal4 = referred_cells_sal4.getSpreadsheet()
-    # Ottiene le coordinate (struct RangeAddress) dell'intervallo
-    range_addr_sal4 = referred_cells_sal4.RangeAddress
+    
+    oSheet = referred_cells.getSpreadsheet()
 
-    start_row_sal4 = range_addr_sal4.StartRow
-    end_row_sal4 = range_addr_sal4.EndRow
+    # Ottiene le coordinate (struct RangeAddress) dell'intervallo
+    range_addr = referred_cells.RangeAddress
+
+    start_row = range_addr.StartRow
+    end_row = range_addr.EndRow
 
     # Raccoglie tutti i codici univoci presenti nella colonna A (indice 0)
     # nell'intervallo definito da GIANNELLI_SAL4
     elenco_codici = set()
-    for el in range(start_row_sal4, end_row_sal4 + 1):
-        codice = oSheet_sal4.getCellByPosition(0, el).String
-        elenco_codici.add(codice)
+    for el in range(start_row, end_row + 1):
+        codice = oSheet.getCellByPosition(0, el).String
+
 
     # 2. Recupera l'area di celle associata al nome definito "GIANNELLI_PARALLELO"
-    referred_cells_parallelo = oDoc.NamedRanges.getByName("GIANNELLI_PARALLELO").ReferredCells
-    oSheet_parallelo = referred_cells_parallelo.getSpreadsheet()
-    range_addr_parallelo = referred_cells_parallelo.RangeAddress
+    referred_cells = oDoc.NamedRanges.getByName("elenco_variante").ReferredCells
+    oSheet_var = referred_cells.getSpreadsheet()
+
+    range_addr = referred_cells.RangeAddress
 
     # Definisce l'intervallo di righe includendo un margine superiore e inferiore
-    start_row_par = range_addr_parallelo.StartRow - 1
-    end_row_par = range_addr_parallelo.EndRow + 1
+    start_row_par = range_addr.StartRow - 1
+    end_row_par = range_addr.EndRow + 1
 
     # Scansiona le righe dell'intervallo definito nel foglio PARALLELO
     for riga in range(start_row_par, end_row_par):
         # Se il codice nella prima colonna corrisponde a uno di quelli raccolti
-        if oSheet_parallelo.getCellByPosition(0, riga).String in elenco_codici:
+        if oSheet_var.getCellByPosition(0, riga).String not in elenco_codici:
             # Colora lo sfondo dell'intera riga (dalla colonna 0 alla 10) con il verde di spunta
-            # oSheet_parallelo.getCellRangeByPosition(0, riga, 10, riga).CellBackColor = COLORE_VERDE_SPUNTA
+            oSheet_var.getCellRangeByPosition(0, riga, 50, riga).CellBackColor = COLORE_ROSSO_AVVISO
             # Assicura che la riga sia visibile
-            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
+            # oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
         else:
             # Altrimenti nasconde/chiude la riga
-            oSheet_parallelo.getCellRangeByPosition(0, riga, 0, riga).Rows.IsVisible = True
+            oSheet_var.getCellRangeByPosition(0, riga, 50, riga).CellBackColor = COLORE_VERDE_SPUNTA
+
 
     return
 
 def MENU_debug():
     MENU_debug_giannelli()
+    return
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -12598,24 +12604,6 @@ def MENU_debug():
             # Colora la cella in colonna I (indice 8) alla riga i
             oSheet.getCellByPosition(8, i).CellBackColor = COLORE_ROSSO_AVVISO
             oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
-########################################################################
-
-import dcf_parser
-
-
-########################################################################
-def MENU_debug():
-    LeenoSheetUtils.riepilogo_quantita()
-    return
-    # MENU_prefisso_VDS_()
-    # return
-    # dcf_parser.import_generated_xpwe()
-    # MENU_anteprima_dcf()
-    # import dcf_parser
-    # file_path = Dialogs.FileSelect("Seleziona file DCF...", "*.dcf", 0)
-    # if file_path:
-    #     doc = dcf_parser.parse_auto(file_path)
-    #     DLG.chi(f'{doc=}')
 
 
 ########################################################################

@@ -5,6 +5,7 @@ external constraints
 
 Copyright 2020 by Massimo Del Fedele
 """
+import LeenoComputo
 import os
 import inspect
 from datetime import date
@@ -2564,7 +2565,7 @@ def FolderSelect(titolo='Scegli la cartella...', startPath=None):
 
 
 
-def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
+def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None, FontName=None, FontWeight=100):
     """
     Mostra una finestra di dialogo informativa in LibreOffice.
 
@@ -2573,7 +2574,7 @@ def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
         Image: percorso personalizzato dell'immagine (facoltativo)
         Title: titolo della finestra
         Text: testo del messaggio
-    """
+        """
 
     try:
         ctx = LeenoUtils.getComponentContext()
@@ -2599,6 +2600,10 @@ def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None):
         oDlgInfo.getModel().ImageControl1.ImageURL = Image
         oDlgInfo.Title = Title or IconType.capitalize()
         sString = oDlgInfo.getControl("Text")
+        if FontName:
+            sString.Model.FontName = FontName
+        if FontWeight:
+            sString.Model.FontWeight = FontWeight
         sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
 
         oDlgInfo.execute()

@@ -1154,6 +1154,24 @@
                 </prop>
               </node>
 
+        <node oor:name="m2U07.2" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoA2.MENU_importi</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/riepilogo_a2</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Riepilogo importi A2 cartella</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+
               <node oor:name="m2U07.3" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

@@ -368,8 +368,6 @@ def invia_voce(ctrl_override=False):
         # ddcDoc.CurrentController.setFirstVisibleRow(3)
         # _gotoCella(0, 4)
 
-    # DLG.chi(1)
-
     # partenza
     if oSheet.Name == 'Elenco Prezzi':
         analisi = getAnalisi(oSheet)
@@ -402,19 +400,20 @@ def invia_voce(ctrl_override=False):
             if cfg.read('Generale', 'nuova_voce') == 'True' and not ctrl_override:
                 MENU_nuova_voce_scelta()
                 pos_dest = LeggiPosizioneCorrente()
-                dccSheetDest.getCellByPosition(pos_dest[0], pos_dest[1]).String = voce_da_inviare
-                dccSheetDest.getCellByPosition(1, pos_dest[1]).CellBackColor = COLORE_VERDE_SPUNTA
-                _gotoCella(pos_dest[0] + 1, pos_dest[1] + 1)
+                start_row = pos_dest[1]
+                dccSheetDest.getCellByPosition(pos_dest[0], start_row).String = voce_da_inviare
+                dccSheetDest.getCellByPosition(1, start_row).CellBackColor = COLORE_VERDE_SPUNTA
+                _gotoCella(pos_dest[0] + 1, start_row + 1)
             else:
                 row_dest = LeggiPosizioneCorrente()[1]
                 LeenoComputo.cambia_articolo(dccSheetDest, row_dest, voce_da_inviare)
                 sStRange = LeenoComputo.circoscriveVoceComputo(dccSheetDest, row_dest)
                 start_row = sStRange.RangeAddress.StartRow
                 dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
-
+            
             controller = ddcDoc.CurrentController
             controller.setFirstVisibleColumn(0)
-            controller.setFirstVisibleRow(start_row - 10)
+            controller.setFirstVisibleRow(max(0, start_row - 10))
 
         elif nSheetDCC == 'Elenco Prezzi':
             if ctrl_override and codice_selezionato_dp:
@@ -447,7 +446,7 @@ def invia_voce(ctrl_override=False):
         ER = dv.ER
         SR = dv.SR
 
-        range_src = f'A{SR+1}:AZ{ER+1}'
+        range_src = f'A{SR+1}:AL{ER+1}'
 
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
@@ -489,18 +488,11 @@ def invia_voce(ctrl_override=False):
                 row += 1
             else:
                 return avviso_vedi_voce
-            if dccSheet.getCellByPosition(0, row).CellStyle not in stili_computo + stili_contab + stili_cat:
-                Dialogs.Exclamation(Title = 'ATTENZIONE!',
-                Text='''La posizione di destinazione non è corretta.
-    I nomi dei fogli di partenza e di arrivo devo essere coincidenti.''')
-                # unselect
-                oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-                return avviso_vedi_voce
-            else:
-                try:
-                    row = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
-                except Exception as e:
-                    DLG.errore(e)
+            # if dccSheet.getCellByPosition(0, row).CellStyle not in stili_computo + stili_contab + stili_cat:
+            try:
+                row = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
+            except Exception as e:
+                DLG.errore(e)
 
             MENU_nuova_voce_scelta() # inserisce la nuova voce
             # if nSheetDCC == 'CONTABILITA':
@@ -512,16 +504,52 @@ def invia_voce(ctrl_override=False):
             if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
                 _gotoCella(0, row + 1) # posiziona sulla prima riga delle misure della voce
 
-            Copia_riga_Ent(ER - SR - 3) # inserisce le righe per le misure
+            # COMPUTO/VARIANTE: ER-SR = N+2  → offset 3 → N-1 righe extra
+            # CONTABILITA:      ER-SR = N+3  → offset 4 → N-1 righe extra
+            # (CONTABILITA ha un footer in più: "Somma positivi e negativi")
+            _offset_misure = 3 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 4
+            Copia_riga_Ent(ER - SR - _offset_misure) # inserisce le righe per le misure
 
             _gotoCella(0, row) # posiziona sulla riga della voce
 
-            if row == 4:
-                range_dest = f'A{row}:AZ{row+ER-SR}'
-            else:
-                range_dest = f'A{row+1}:AZ{row+1+ER-SR}'
+            _n_misure = ER - SR - (2 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 3)
+            # data contiene ER-SR+1 righe. Vogliamo copiare solo header(1) + articolo(1) + misure(_n_misure)
+            # tralasciando i footer per non sovrascrivere quelli specifici della destinazione (che hanno
+            # dimensioni e stili diversi tra COMPUTO e CONTABILITA).
+            data_to_paste = data[:_n_misure + 2]
 
-            dccSheet.getCellRangeByName(range_dest).FormulaArray = data
+            if oSheet.Name == 'CONTABILITA' and dccSheet.Name in ('COMPUTO', 'VARIANTE'):
+                # Svuota la colonna L (indice 11) prima di incollare
+                cleaned_data = []
+                for riga in data_to_paste:
+                    riga_list = list(riga)
+                    if len(riga_list) > 11:
+                        riga_list[11] = ""
+                    cleaned_data.append(tuple(riga_list))
+                data_to_paste = tuple(cleaned_data)
+
+            if row == 4:
+                range_dest = f'A{row}:AL{row + _n_misure + 1}'
+            else:
+                range_dest = f'A{row+1}:AL{row+1 + _n_misure + 1}'
+
+            dccSheet.getCellRangeByName(range_dest).FormulaArray = data_to_paste
+
+            # FormulaArray trasferisce valori/formule ma NON gli stili.
+            # Lo stile ROSSO su col F/G/H indica che la riga di misura è negativa
+            # (PRODUCT positivo ma formula con segno -): va ripristinato manualmente
+            # sulle righe di destinazione corrispondenti a quelle negative nella sorgente.
+            for _i in range(_n_misure):
+                _src_r = SR + 2 + _i
+                _dst_r = row + 2 + _i
+                # Controlla stile ROSSO su col F(5), G(6), H(7) nella sorgente
+                if any('ROSSO' in oSheet.getCellByPosition(x, _src_r).CellStyle
+                       for x in range(5, 8)):
+                    # Applica ROSSO alle stesse colonne della destinazione (come invertiUnSegno)
+                    for x in range(2, 10):
+                        _stile = dccSheet.getCellByPosition(x, _dst_r).CellStyle
+                        if 'ROSSO' not in _stile:
+                            dccSheet.getCellByPosition(x, _dst_r).CellStyle = _stile + ' ROSSO'
 
             rigenera_voce(row)
             rigenera_parziali(False)
@@ -5171,7 +5199,7 @@ def MENU_elimina_voce():
 
 @with_undo("Elimina Voci Selezionate")
 @LeenoUtils.no_refresh # evita il flickering del documento durante l'eliminazione
-@LeenoUtils.preserva_posizione(step=-20)
+@LeenoUtils.preserva_posizione(step=0)
 def elimina_voce(row=None):
     '''
     Elimina una o più voci selezionate in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo.
@@ -5681,11 +5709,23 @@ def Copia_riga_Ent(num_righe=None):
             DLG.chi(f"ERRORE: La funzione {azioni[nome_sheet].__name__} ha restituito tipo non valido: {type(result)}")
             return None
 
-        # Aggiorna altezza ultima riga inserita
-        if oSheet.Name == 'CONTABILITA':
-            oSheet.getCellRangeByPosition(0, row +1, 48, row +1).Rows.OptimalHeight = True
-        elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            oSheet.getCellRangeByPosition(0, row, 42, row).Rows.OptimalHeight = True
+        # Aggiorna altezza delle righe inserite
+        if oSheet.Name in ('CONTABILITA', 'COMPUTO', 'VARIANTE'):
+            is_protected = oSheet.isProtected()
+            if is_protected:
+                oSheet.unprotect("")
+            
+            try:
+                # Forza temporaneamente il refresh per permettere a LibreOffice di calcolare
+                # correttamente l'altezza del testo inserito.
+                with LeenoUtils.DocumentRefreshContext(True):
+                    for y in range(row_originale + 1, row_originale + num_righe + 1):
+                        oSheet.getRows().getByIndex(y).OptimalHeight = True
+            except Exception:
+                pass
+            
+            if is_protected:
+                oSheet.protect("")
 
     elif nome_sheet == "Elenco Prezzi":
         MENU_nuova_voce_scelta()
@@ -8030,6 +8070,21 @@ def parziale_core(oSheet, row):
                 row + 1) + ')-SUBTOTAL(9;L' + str(da) + ':L' + str(row +
                                                                     1) + ')'
 
+    # Aggiorna altezza della riga del parziale
+    is_protected = oSheet.isProtected()
+    if is_protected:
+        oSheet.unprotect("")
+    
+    try:
+        with LeenoUtils.DocumentRefreshContext(True):
+            DLG.chi(row)
+            oSheet.getRows().getByIndex(row).OptimalHeight = True
+    except Exception:
+        pass
+    
+    if is_protected:
+        oSheet.protect("")
+
 
 ########################################################################
 # @LeenoUtils.no_refresh # decoratore per disabilitare il refresh automatico
@@ -8121,9 +8176,18 @@ def MENU_vedi_voce():
 
             except Exception:
                 pass
-    oSheet.getRows().getByIndex(row).OptimalHeight = True
-    # Fuori dal context manager il refresh è già attivo,
-    # ma se Calc fosse pigro, puoi forzare un aggiornamento finale qui.
+    is_protected = oSheet.isProtected()
+    if is_protected:
+        oSheet.unprotect("")
+    
+    try:
+        with LeenoUtils.DocumentRefreshContext(True):
+            oSheet.getRows().getByIndex(row).OptimalHeight = True
+    except Exception:
+        pass
+    
+    if is_protected:
+        oSheet.protect("")
 
 def strall(el, n=3, pos=0):
     '''

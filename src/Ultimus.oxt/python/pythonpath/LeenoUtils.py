@@ -286,10 +286,10 @@ logger = logging.getLogger(__name__)
 # CONTEXT MANAGER (per uso con 'with')
 # ============================================================================
 
-@contextmanager
-def no_refresh_context():
+class no_refresh_context:
     """
     Context manager per disabilitare temporaneamente il refresh.
+    Realizzato come classe per evitare crash di contextlib con oggetti UNO.
 
     Uso:
         with no_refresh_context():
@@ -297,25 +297,16 @@ def no_refresh_context():
             pass
         # Il refresh è riattivato qui
     """
-    # Setup: disabilita refresh
-    DocumentRefresh(False)
+    def __enter__(self):
+        DocumentRefresh(False)
+        return self
 
-    try:
-        # Yield control al blocco with
-        yield
-    except Exception as e:
-        # Recuperiamo il messaggio prima di ogni altra operazione
-        msg = str(e)
-        # Se l'eccezione è un oggetto UNO (ha il metodo getTypes), 
-        # lo trasformiamo in una Exception Python standard per evitare 
-        # che contextlib crashi cercando di impostare __traceback__ su un
-        # oggetto UNO, operazione che il bridge Python-UNO non supporta.
-        if hasattr(e, "getTypes"):
-            raise Exception(f"Errore UNO: {msg}") from None
-        raise e
-    finally:
-        # Cleanup: riattiva sempre il refresh
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # Riattiva sempre il refresh
         DocumentRefresh(True)
+        # Ritorna False per propagare l'eccezione nativamente,
+        # senza alterare o nascondere il traceback originale.
+        return False
 
 
 # ============================================================================

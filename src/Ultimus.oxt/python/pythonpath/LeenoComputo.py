@@ -1,4 +1,15 @@
+# pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
+# pyrefly: ignore [missing-import]
+from com.sun.star.frame import XStatusListener
+# pyrefly: ignore [missing-import]
+import uno
+# pyrefly: ignore [missing-import]
+import unohelper
+# pyrefly: ignore [missing-import]
+import os
+# pyrefly: ignore [missing-import]
+import re
 import SheetUtils
 import LeenoUtils
 import LeenoGlobals
@@ -178,10 +189,6 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
         return oSheet.getCellRangeByPosition(2, start_row + 2, 8, end_row + end_offset)
 
 
-import uno
-import unohelper
-from com.sun.star.frame import XStatusListener
-
 class ColorStatusListener(unohelper.Base, XStatusListener):
     def __init__(self):
         self.color = None
@@ -201,7 +208,6 @@ def get_bucket_color_registry_file():
     Metodo suggerito dall'utente per la massima precisione e persistenza.
     """
     try:
-        import unohelper
         import re
         import os
         
@@ -470,7 +476,6 @@ def salva_senza_prezzi():
 
     indicator.setValue(3)
 
-    import os, uno
 
     base = os.path.basename(orig_url)
     nome_base = ".".join(base.split(".")[:-1])

@@ -664,7 +664,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ca60" oor:op="replace">
+        <node oor:name="Ca61" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -1165,7 +1165,7 @@
             <value>%origin%/icons/riepilogo_a2</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Riepilogo importi A2 cartella</value>
+            <value>Importi Computo/Variante/Contabilità</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

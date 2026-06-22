@@ -5,23 +5,97 @@
    viewBox="0 0 32 32"
    version="1.1"
    id="svg8"
-   xmlns="http://www.w3.org/2000/svg">
-  <g id="layer1">
+   sodipodi:docname="riepilogo_quantita.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="25.21875"
+     inkscape:cx="16.019827"
+     inkscape:cy="16"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <g
+     id="layer1"
+     transform="matrix(1,0,0,1.3360073,0,-4.7521034)">
     <!-- List / Document lines on the left representing the spreadsheet rows -->
     <!-- Bullet points -->
-    <rect x="4" y="6" width="3" height="3" rx="0.5" fill="#000000" />
-    <rect x="4" y="14" width="3" height="3" rx="0.5" fill="#000000" />
-    <rect x="4" y="22" width="3" height="3" rx="0.5" fill="#000000" />
-    
+    <rect
+       x="3.0879803"
+       y="6.6529655"
+       width="3.1808178"
+       height="2.7375641"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect1"
+       style="stroke-width:0.983626" />
+    <rect
+       x="3.0879803"
+       y="13.953136"
+       width="3.1808178"
+       height="2.7375641"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect2"
+       style="stroke-width:0.983626" />
+    <rect
+       x="3.0879803"
+       y="21.253307"
+       width="3.1808178"
+       height="2.7375641"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect3"
+       style="stroke-width:0.983626" />
     <!-- Text row indicators -->
-    <rect x="9" y="6.5" width="7" height="2" rx="0.5" fill="#000000" />
-    <rect x="9" y="14.5" width="7" height="2" rx="0.5" fill="#000000" />
-    <rect x="9" y="22.5" width="7" height="2" rx="0.5" fill="#000000" />
-
+    <rect
+       x="8.3893433"
+       y="7.1092262"
+       width="7.4219079"
+       height="1.8250427"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect4"
+       style="stroke-width:0.983626" />
+    <rect
+       x="8.3893433"
+       y="14.409397"
+       width="7.4219079"
+       height="1.8250427"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect5"
+       style="stroke-width:0.983626" />
+    <rect
+       x="8.3893433"
+       y="21.709568"
+       width="7.4219079"
+       height="1.8250427"
+       rx="0.53013629"
+       fill="#000000"
+       id="rect6"
+       style="stroke-width:0.983626" />
     <!-- Greek Sigma Symbol Σ on the right representing sum/summary/quantities -->
     <path
        fill="#000000"
-       d="M 18,6 L 29,6 L 29,9.5 L 22.5,9.5 L 26.5,15.5 L 22.5,21.5 L 29,21.5 L 29,25 L 18,25 L 18,22 L 23,15.5 L 18,9 Z"
-       id="sigma" />
+       d="m 17.931797,6.6529656 h 11.662999 v 3.1938243 h -6.891772 l 4.24109,5.4751291 -4.24109,5.475127 h 6.891772 v 3.193825 H 17.931797 V 21.253307 L 23.23316,15.321919 17.931797,9.3905297 Z"
+       id="sigma"
+       style="stroke-width:0.983626" />
   </g>
 </svg>

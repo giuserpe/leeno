@@ -2,7 +2,6 @@ name: Genera versioni LeenO con WebDAV
 
 on:
   push:
-    branches: [dev]
   workflow_dispatch:
 
 jobs:

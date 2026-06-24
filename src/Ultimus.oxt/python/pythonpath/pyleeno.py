@@ -20,6 +20,8 @@
 
 # from scriptforge import CreateScriptService
 # from dcf_parser import generate_xpwe
+from LeenoUtils import release_ram
+from LeenoSheetUtils import cancella_riepilogo_quantita
 from ctypes import string_at
 from LeenoAnalysis import copiaRigaAnalisi
 from datetime import datetime, date
@@ -2406,6 +2408,7 @@ def voce_breve_ep():
 ########################################################################
 
 # @LeenoUtils.no_refresh
+@LeenoUtils.release_ram
 def scelta_viste():
     with LeenoUtils.DocumentRefreshContext(False):
         scelta_viste_run()
@@ -4863,12 +4866,14 @@ def Circoscrive_Analisi(row):
     return celle
 
 ########################################################################
+@with_undo('Azzera voce')
+@LeenoUtils.no_refresh
 def MENU_azzera_voce():
     '''
     Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
     oDoc = LeenoUtils.getDocument()
-    LeenoUtils.DocumentRefresh(False)
+    # LeenoUtils.DocumentRefresh(False)
 
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -4911,7 +4916,6 @@ def MENU_azzera_voce():
                 fine = sStRange.RangeAddress.EndRow
                 if oSheet.Name == 'CONTABILITA':
                     fine -= 1
-                _gotoCella(2, fine - 1)
                 if '*** VOCE AZZERATA ***' in oSheet.getCellByPosition(2, fine - 1).String:
                     # elimino il colore di sfondo
                     if oSheet.Name == 'CONTABILITA':
@@ -4923,10 +4927,9 @@ def MENU_azzera_voce():
                     raggruppa_righe_voce(row, 0)
                     oSheet.getRows().removeByIndex(fine - 1, 1)
                     fine -= 1
-                    _gotoCella(1, inizio + 1)
                     idx -= 1
                 else:
-                    Copia_riga_Ent()
+                    Copia_riga_Ent(num_righe=1, target_row=fine - 1)
                     oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
                     if oSheet.Name == 'CONTABILITA':
                         oSheet.getCellByPosition(
@@ -4938,23 +4941,10 @@ def MENU_azzera_voce():
                         oSheet.getCellByPosition(
                             5, fine).Formula = '=SUBTOTAL(9;J' + str(
                                 inizio + 1) + ':J' + str(fine) + ')'
-                    inverti_segno()
+                    inverti_segno(target_row=fine)
                     # cambio il colore di sfondo
-                    oDoc.CurrentController.select(sStRange)
+                    sStRange.CellBackColor = COLORE_GRIGIO_INATTIVA
                     raggruppa_righe_voce(row, 1)
-                    ctx = LeenoUtils.getComponentContext()
-                    desktop = LeenoUtils.getDesktop()
-                    oFrame = desktop.getCurrentFrame()
-                    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-                        'com.sun.star.frame.DispatchHelper', ctx)
-                    oProp = PropertyValue()
-                    oProp.Name = 'BackgroundColor'
-                    oProp.Value = COLORE_GRIGIO_INATTIVA
-                    properties = (oProp, )
-                    dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-                    # oDoc.CurrentController.select(
-                    #     oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-                    _gotoCella(1, inizio + 1)
                     ###
                 row = LeggiPosizioneCorrente()[1]
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
@@ -4964,7 +4954,7 @@ def MENU_azzera_voce():
     except Exception:
         pass
     #  _gotoCella(1, fine +3)
-    LeenoUtils.DocumentRefresh(True)
+    # LeenoUtils.DocumentRefresh(True)
 
 
 ########################################################################
@@ -5638,7 +5628,7 @@ def MENU_Copia_riga_Ent():
     Copia_riga_Ent()
 
 # @LeenoUtils.no_refresh
-def Copia_riga_Ent(num_righe=None):
+def Copia_riga_Ent(num_righe=None, target_row=None):
     """
     Aggiunge righe di misurazione.
     Se num_righe non è specificato, usa il numero di righe attualmente selezionate.
@@ -5679,7 +5669,10 @@ def Copia_riga_Ent(num_righe=None):
         for el in range(5, 8):
             col_misura.getByIndex(el).IsVisible = True
 
-    row = LeggiPosizioneCorrente()[1]
+    if target_row is not None:
+        row = target_row
+    else:
+        row = LeggiPosizioneCorrente()[1]
     row_originale = row  # Salva il valore originale
     dettaglio_attivo = cfg.read('Generale', 'dettaglio') == '1'
 
@@ -5765,7 +5758,7 @@ def count_clipboard_lines():
     # Restituisce il valore
     return num_lines
 
-
+@release_ram
 @with_undo()
 def paste_smart():
     """
@@ -6120,25 +6113,29 @@ def MENU_inverti_segno():
     inverti_segno()
 
 @with_undo('Inverti segno delle misure')
-def inverti_segno():
+def inverti_segno(target_row=None):
     '''
     Inverte il segno delle formule di quantità e gestisce lo stile ROSSO tramite suffisso.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    selection = oDoc.getCurrentSelection()
-
-    # Estrazione robusta degli indirizzi (gestisce selezioni singole o multiple)
-    try:
-        ranges = selection.getRangeAddresses()
-    except AttributeError:
-        ranges = [selection.getRangeAddress()]
-
-    # Creazione lista univoca delle righe selezionate
+    
     lista_righe = set()
-    for r in ranges:
-        for row in range(r.StartRow, r.EndRow + 1):
-            lista_righe.add(row)
+    if target_row is not None:
+        lista_righe.add(target_row)
+    else:
+        selection = oDoc.getCurrentSelection()
+
+        # Estrazione robusta degli indirizzi (gestisce selezioni singole o multiple)
+        try:
+            ranges = selection.getRangeAddresses()
+        except AttributeError:
+            ranges = [selection.getRangeAddress()]
+
+        # Creazione lista univoca delle righe selezionate
+        for r in ranges:
+            for row in range(r.StartRow, r.EndRow + 1):
+                lista_righe.add(row)
 
     # Elaborazione per fogli COMPUTO e VARIANTE
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -6177,15 +6174,15 @@ def inverti_segno():
                 f2 = cell_11.Formula
                 cell_11.Formula = f1
                 cell_9.Formula = f2
-
-                if cell_11.Value > 0:
-                    for x in range(2, 12):
-                        current_cell = oSheet.getCellByPosition(x, row)
-                        current_cell.CellStyle = current_cell.CellStyle + ' ROSSO'
-                else:
-                    for x in range(2, 12):
-                        current_cell = oSheet.getCellByPosition(x, row)
-                        current_cell.CellStyle = current_cell.CellStyle.split(' ROSSO')[0]
+                with LeenoUtils.DocumentRefreshContext(True):
+                    if cell_11.Value > 0:
+                        for x in range(2, 12):
+                            current_cell = oSheet.getCellByPosition(x, row)
+                            current_cell.CellStyle = current_cell.CellStyle + ' ROSSO'
+                    else:                        
+                        for x in range(2, 12):
+                            current_cell = oSheet.getCellByPosition(x, row)
+                            current_cell.CellStyle = current_cell.CellStyle.split(' ROSSO')[0]
 
 ########################################################################
 
@@ -7998,6 +7995,7 @@ def MENU_parziale():
 
 
 ###
+@release_ram
 @LeenoUtils.no_refresh
 def parziale_core(oSheet, row):
     '''
@@ -8069,21 +8067,6 @@ def parziale_core(oSheet, row):
             9, row).Formula = '=SUBTOTAL(9;J' + str(da) + ':J' + str(
                 row + 1) + ')-SUBTOTAL(9;L' + str(da) + ':L' + str(row +
                                                                     1) + ')'
-
-    # Aggiorna altezza della riga del parziale
-    is_protected = oSheet.isProtected()
-    if is_protected:
-        oSheet.unprotect("")
-    
-    try:
-        with LeenoUtils.DocumentRefreshContext(True):
-            DLG.chi(row)
-            oSheet.getRows().getByIndex(row).OptimalHeight = True
-    except Exception:
-        pass
-    
-    if is_protected:
-        oSheet.protect("")
 
 
 ########################################################################
@@ -9935,6 +9918,7 @@ def DlgPDF():
 
     oDlgPDF.execute()
 
+@LeenoUtils.release_ram
 def DlgMain():
     '''
     Visualizza il menù principale DlgMain
@@ -11203,11 +11187,73 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
 ########################################################################
 # @LeenoUtils.no_refresh
 @with_undo("Fissa Righe/Colonne")
+# def fissa():
+#     '''
+#     Fissa le righe e le colonne nel foglio attivo,
+#     evitando che le prime righe rimangano nascoste.
+#     Utilizza le proprietà UNO del controller per maggiore robustezza.
+#     '''
+#     oDoc = LeenoUtils.getDocument()
+#     if not oDoc or not hasattr(oDoc, 'CurrentController'):
+#         return
+
+#     controller = oDoc.CurrentController
+#     oSheet = controller.ActiveSheet
+#     if not oSheet:
+#         return
+
+#     # Reset visuale: rimuove blocchi e torna in cima
+#     controller.freezeAtPosition(0, 0)
+#     controller.setFirstVisibleColumn(0)
+#     controller.setFirstVisibleRow(0)
+
+#     # Mappa dei fogli e relative righe da bloccare
+#     sheet_configs = {
+#         'COMPUTO': (0, 3),
+#         'VARIANTE': (0, 3),
+#         'CONTABILITA': (0, 3),
+#         'Elenco Prezzi': (0, 3),
+#         'Analisi di Prezzo': (0, 2),
+#         'Registro': (0, 1),
+#         'SAL': (0, 1),
+#         'S2': (0, 1),
+#         'Lista 1': (0, 4),
+#         'Scorciatoie': (0, 1)
+#     }
+
+#     for sheet_name, config in sheet_configs.items():
+#         if oSheet.Name == sheet_name:
+#             cols_to_freeze, rows_to_freeze = config
+#             break
+#     else:
+#         rows_to_freeze = 0
+#         cols_to_freeze = 0
+
+
+#     if rows_to_freeze > 0:
+#         # Imposta il blocco tramite il metodo standard UNO (più robusto)
+#         try:
+#             controller.freezeAtPosition(0, rows_to_freeze)
+#         except Exception:
+#             # Fallback nel caso in cui freezeAtPosition fallisca
+#             try:
+#                 controller.SplitColumn = 0
+#                 controller.SplitRow = rows_to_freeze
+#                 controller.FreezePanes = True
+#             except Exception:
+#                 pass
+
+#     # Seleziona la prima cella sotto il blocco per dare il focus all'area dati
+#     try:
+#         oCell = oSheet.getCellByPosition(0, rows_to_freeze)
+#         controller.select(oCell)
+#     except:
+#         pass
+
 def fissa():
     '''
-    Fissa le righe e le colonne nel foglio attivo,
-    evitando che le prime righe rimangano nascoste.
-    Utilizza le proprietà UNO del controller per maggiore robustezza.
+    Fissa le righe nel foglio attivo usando le API UNO di SpreadsheetView.
+    Evita che le prime righe rimangano nascoste dopo il freeze.
     '''
     oDoc = LeenoUtils.getDocument()
     if not oDoc or not hasattr(oDoc, 'CurrentController'):
@@ -11218,53 +11264,38 @@ def fissa():
     if not oSheet:
         return
 
-    # Reset visuale: rimuove blocchi e torna in cima
-    controller.freezeAtPosition(0, 0)
-    controller.setFirstVisibleColumn(0)
-    controller.setFirstVisibleRow(0)
-
-    # Mappa dei fogli e relative righe da bloccare
-    sheet_configs = {
-        'COMPUTO': (0, 3),
-        'VARIANTE': (0, 3),
-        'CONTABILITA': (0, 3),
-        'Elenco Prezzi': (0, 3),
+    SHEET_FREEZE_MAP = {
+        'COMPUTO':           (0, 3),
+        'VARIANTE':          (0, 3),
+        'CONTABILITA':       (0, 3),
+        'Elenco Prezzi':     (0, 3),
         'Analisi di Prezzo': (0, 2),
-        'Registro': (0, 1),
-        'SAL': (0, 1),
-        'S2': (0, 1),
-        'Lista 1': (0, 4),
-        'Scorciatoie': (0, 1)
+        'Registro':          (0, 1),
+        'SAL':               (0, 1),
+        'S2':                (0, 1),
+        'Lista 1':           (0, 4),
+        'Scorciatoie':       (0, 1),
     }
 
-    for sheet_name, config in sheet_configs.items():
-        if oSheet.Name == sheet_name:
-            cols_to_freeze, rows_to_freeze = config
-            break
-    else:
-        rows_to_freeze = 0
-        cols_to_freeze = 0
+    cols_freeze, rows_freeze = SHEET_FREEZE_MAP.get(oSheet.Name, (0, 0))
 
+    # Reset: rimuove blocchi esistenti
+    controller.freezeAtPosition(0, 0)
 
-    if rows_to_freeze > 0:
-        # Imposta il blocco tramite il metodo standard UNO (più robusto)
-        try:
-            controller.freezeAtPosition(0, rows_to_freeze)
-        except Exception:
-            # Fallback nel caso in cui freezeAtPosition fallisca
-            try:
-                controller.SplitColumn = 0
-                controller.SplitRow = rows_to_freeze
-                controller.FreezePanes = True
-            except Exception:
-                pass
+    # Porta la vista all'origine selezionando A1 —
+    # SpreadsheetView non ha createViewCursor(), ma select() su una cella
+    # è sufficiente a riposizionare la vista prima del freeze.
+    controller.select(oSheet.getCellByPosition(0, 0))
 
-    # Seleziona la prima cella sotto il blocco per dare il focus all'area dati
+    # if rows_freeze > 0 or cols_freeze > 0:
+    controller.freezeAtPosition(cols_freeze, rows_freeze)
+
+    # Posiziona il cursore sulla prima cella navigabile (sotto/dopo il freeze)
     try:
-        oCell = oSheet.getCellByPosition(0, rows_to_freeze)
-        controller.select(oCell)
-    except:
+        controller.select(oSheet.getCellByPosition(cols_freeze, rows_freeze))
+    except Exception:
         pass
+
 
 @LeenoUtils.no_refresh
 def trova_ricorrenze():
@@ -12653,8 +12684,11 @@ def MENU_debug_giannelli():
 
 
     return
-
+@LeenoUtils.release_ram
 def MENU_debug():
+    cancella_riepilogo_quantita()
+    return
+    
     MENU_debug_giannelli()
     return
 

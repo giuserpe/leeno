@@ -72,6 +72,7 @@ _TOOLBAR_NAMES = (
 
 import time
 import LeenoDialogs as DLG
+@LeenoUtils.release_ram
 def Vedi(arg=None):
     '''
     accende tutte le toolbars (se non sono richieste quelle contestuali)

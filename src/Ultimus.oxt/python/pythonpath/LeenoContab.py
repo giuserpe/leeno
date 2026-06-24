@@ -626,7 +626,7 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None):
 
 # ###############################################################
 
-
+@LeenoUtils.release_ram
 def generaContabilita(oDoc):
     '''
     Mostra il foglio di contabilità, se presente
@@ -2620,7 +2620,7 @@ def _leggi_iva_da_S2(oS2):
                 return iva_val
     except Exception:
         pass
-    return 0.22  # default IVA 22%
+    return 0  # default IVA 0%
 
 
 def _leggi_anticipo_da_S2(oS2):

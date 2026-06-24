@@ -78,16 +78,6 @@ def getServiceManager():
     '''
     return getComponentContext().ServiceManager
 
-# ============================================================================
-# PROJECT IMPORTS
-# ============================================================================
-
-import LeenoDialogs as DLG
-import Dialogs
-from LeenoConfig import COLORE_ROSSO_AVVISO
-import LeenoGlobals
-import pyleeno as PL
-
 def getDispatcher():
     '''
     Restituisce un DispatchHelper per l'invio di comandi .uno:
@@ -331,6 +321,38 @@ def no_refresh(func):
             return func(*args, **kwargs)
 
     return wrapper
+
+
+import gc
+
+def release_ram(func):
+    """
+    Decorator che forza il Garbage Collector a rilasciare RAM 
+    dopo l'esecuzione della funzione decorata.
+
+    Uso:
+        @release_ram
+        def mia_funzione():
+            pass
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        finally:
+            gc.collect()
+
+    return wrapper
+
+# ============================================================================
+# PROJECT IMPORTS
+# ============================================================================
+
+import LeenoDialogs as DLG
+import Dialogs
+from LeenoConfig import COLORE_ROSSO_AVVISO
+import LeenoGlobals
+import pyleeno as PL
 
 # ============================================================================
 # RIEPILOGO UTILIZZO

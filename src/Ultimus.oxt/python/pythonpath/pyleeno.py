@@ -5175,7 +5175,7 @@ def seleziona_voce(row=None):
 
 
 ########################################################################
-
+@LeenoUtils.release_ram
 @with_undo() # abilita l'undo per l'intera funzione
 @LeenoUtils.no_refresh # evita il flickering del documento durante l'eliminazione
 @LeenoUtils.preserva_posizione(step=0)
@@ -9002,6 +9002,7 @@ def autoexec_off():
             oSheet.getCellRangeByName("A1").String = ''
         except Exception:
             pass
+    LeenoSheetUtils.cancella_riepilogo_quantita()
 
 ########################################################################
 utsave = None
@@ -12684,14 +12685,10 @@ def MENU_debug_giannelli():
 
 
     return
+
 @LeenoUtils.release_ram
 def MENU_debug():
-    cancella_riepilogo_quantita()
     return
-    
-    MENU_debug_giannelli()
-    return
-
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     row = SheetUtils.getLastUsedRow(oSheet) + 1

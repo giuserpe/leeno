@@ -1221,62 +1221,17 @@ def riepilogo_quantita():
 def cancella_riepilogo_quantita():
     """Cancella le colonne di riepilogo per Computo,
     Variante e Contabilità su ogni voce del foglio attivo."""
-
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    # 4. Intestazioni colonne (ottimizzato con mapping)
-    INTESTAZIONI = {
-        'L3': '',
-        'M3': '',
-        'N3': ''
-    }
-
-    if oSheet.Name == 'CONTABILITA':
-        QUANTITA_COL = {
-            'COMPUTO': (38, ''),
-            'VARIANTE': (39, ''),
-            'CONTABILITA': (40, '')
-        }
-        oSheet.getCellRangeByName("AM3").String = ""
-        oSheet.getCellRangeByName("AN3").String = ""
-        oSheet.getCellRangeByName("AO3").String = ""
-        oSheet.getCellRangeByName("AM3:AO3").CellStyle = "comp Int_colonna"
-    else:
-        QUANTITA_COL = {
-            'COMPUTO': (44, ''),
-            'VARIANTE': (45, ''),
-            'CONTABILITA': (46, '')
-        }
-        oSheet.getCellRangeByName("AS3").String = ""
-        oSheet.getCellRangeByName("AT3").String = ""
-        oSheet.getCellRangeByName("AU3").String = ""
-        oSheet.getCellRangeByName("AS3:AU3").CellStyle = "comp Int_colonna"
-
-    row = prossimaVoce(oSheet, 0, 1, True)
-    last = cercaUltimaVoce(oSheet)
-
-    for sheetName, (col, formula) in QUANTITA_COL.items():
-        oSheet.getCellRangeByPosition(col, 2, col, last).clearContents(HARDATTR+FORMATTED+EDITATTR)
-    return
-
-    while row < last:
-        voce_range = PL.seleziona_voce(row)
-        if voce_range is None:
-            # Fallback sicuro per evitare errori se la riga non è una voce valida
-            next_row = prossimaVoce(oSheet, row, 1, True)
-            row = next_row if next_row > row else row + 1
+    for el in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            last = cercaUltimaVoce(oSheet)
+        except:
             continue
-            
-        SR, ER = voce_range
-        n = SR + 2
-        for sheetName, (col, formula) in QUANTITA_COL.items():
-            s = oSheet.getCellByPosition(col, ER)
-            s.Formula = formula.format(n=n)
-            s.CellStyle = 'Comp-Variante num sotto'
-            
-        next_row = prossimaVoce(oSheet, row, 1, True)
-        row = next_row if next_row > row else row + 1
-    
-
+        if oSheet.Name == 'CONTABILITA':
+            oSheet.getCellRangeByPosition(38, 2, 40, last).clearContents(HARDATTR+FORMATTED+EDITATTR+VALUE+DATETIME+STRING+ANNOTATION+FORMULA+OBJECTS)
+            oSheet.getCellRangeByPosition(38, 2, 40, last).CellStyle = "Predefinito" 
+        else:
+            oSheet.getCellRangeByPosition(44, 2, 46, last).clearContents(HARDATTR+FORMATTED+EDITATTR+VALUE+DATETIME+STRING+ANNOTATION+FORMULA+OBJECTS)
+            oSheet.getCellRangeByPosition(44, 2, 46, last).CellStyle = "Predefinito" 
     return

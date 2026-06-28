@@ -402,7 +402,7 @@ def MENU_AnnullaAttiContabili():
         return
 
     messaggio = 'Stai per eliminare gli atti del SAL n.' + listaSal[-1] + '\n\nVuoi procedere?'
-    if Dialogs.YesNoDialog(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
+    if Dialogs.DLG_ask(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
         indicator = oDoc.getCurrentController().getStatusIndicator()
         indicator.start("Annullamento atti in corso...", 5)
         _annulla_ultimo_sal_core(oDoc, indicator, listaSal)
@@ -427,7 +427,7 @@ def MENU_AnnullaTuttiAttiContabili():
                  '(SAL da 1 a ' + listaSal[-1] + ').\n\n'
                  'L\'OPERAZIONE NON È REVERSIBILE.\n\nVuoi procedere?')
 
-    if Dialogs.YesNoDialog(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
+    if Dialogs.DLG_ask(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
         indicator = oDoc.getCurrentController().getStatusIndicator()
         count = len(listaSal)
         indicator.start("Annullamento globale atti in corso...", count)
@@ -444,10 +444,11 @@ def MENU_AnnullaTuttiAttiContabili():
         Dialogs.Info(Text="Tutti gli atti contabili sono stati annullati.")
 
 
-def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None):
+def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=True):
     '''
     Logica core per annullare l'ultimo SAL.
     Usata da MENU_AnnullaAttiContabili e MENU_AnnullaTuttiAttiContabili.
+    Se rigenera_cdp=False, non rigenera il CdP del SAL precedente.
     '''
     if listaSal is None:
         listaSal = ultimo_sal()
@@ -611,7 +612,8 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None):
             n_ultimo = nuova_lista[-1]
             oSheet.getCellRangeByName('Z3').String = n_ultimo
             # Rigenera il CdP per l'ultimo SAL rimasto
-            GeneraCdP(oDoc, nSal=int(n_ultimo))
+            if rigenera_cdp:
+                GeneraCdP(oDoc, nSal=int(n_ultimo), silent=True)
         else:
             oSheet.getCellRangeByName('Z3').String = ''
             SheetUtils.visualizza_PageBreak(False)
@@ -2445,7 +2447,8 @@ def EseguiContabilita(oDoc):
     if listaSal:
         nSal = int(listaSal[-1])
         mostra_sal(nSal)
-    oController.setActiveSheet(oDoc.getSheets().getByName("CdP"))
+    if oDoc.getSheets().hasByName("CdP"):
+        oController.setActiveSheet(oDoc.getSheets().getByName("CdP"))
 
     _mostra_riepilogo_cdp(riepilogo)
 
@@ -2646,7 +2649,30 @@ def _leggi_anticipo_da_S2(oS2):
     return 0.0
 
 
-def GeneraCdP(oDoc, dati=None, nSal=None):
+def _leggi_infortuni_da_S2(oS2):
+    '''
+    Cerca l'aliquota ritenuta infortuni in S2.
+    Ritorna il valore come float (es. 0.005 per 0.5%) oppure 0.0 di default.
+    '''
+    try:
+        # Cerca direttamente l'etichetta specifica in colonna A o B
+        for col in (0, 1):
+            row_inf = SheetUtils.uFindStringCol('Ritenuta infortuni', col, oS2, start=0)
+            if row_inf is not None:
+                inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
+                return inf_val
+        # Fallback: cerca "infortuni"
+        for col in (0, 1):
+            row_inf = SheetUtils.uFindStringCol('infortuni', col, oS2, start=0)
+            if row_inf is not None:
+                inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
+                return inf_val
+    except Exception:
+        pass
+    return 0.0
+
+
+def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     '''
     CERTIFICATO DI PAGAMENTO - Popola il foglio CdP per il SAL corrente.
     Usa la struttura fissa del foglio template; individua le celle tramite
@@ -2676,6 +2702,22 @@ def GeneraCdP(oDoc, dati=None, nSal=None):
 
     aliquota_anticipo = _leggi_anticipo_da_S2(oS2)
     perc_anticipo_str = f'{aliquota_anticipo * 100:.0f}'
+
+    aliquota_infortuni = _leggi_infortuni_da_S2(oS2)
+
+    allerte = []
+    if aliquota_infortuni == 0:
+        allerte.append("Ritenuta per infortuni")
+    if aliquota_anticipo == 0:
+        allerte.append("Recupero Anticipazione")
+    if aliquota_iva == 0:
+        allerte.append("I.V.A.")
+
+    if allerte and not silent:
+        msg = "I seguenti valori mancano o sono impostati a 0:\n- " + "\n- ".join(allerte) + "\n\nVuoi procedere ugualmente?\n\n(Scegliendo 'No', verrà annullata l'intera generazione degli atti in corso)"
+        if Dialogs.DLG_ask(IconType="warning", Title="Valori mancanti o a zero", Text=msg) != 1:
+            _annulla_ultimo_sal_core(oDoc, rigenera_cdp=False)
+            return False
 
     # Dati anagrafici
     committente = _leggi_dato_anagrafico(oS2, 'Committente') or _leggi_dato_anagrafico(oS2, 'Stazione Appaltante')

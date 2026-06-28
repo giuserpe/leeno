@@ -11,11 +11,13 @@ Questa skill ha l'obiettivo di mantenere sincronizzato il manuale utente di Leen
 
 ## File Chiave
 - **Manuale**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\documentazione\MANUALE_LeenO.fodt` (formato XML)
+- **Manuale PDF**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\MANUALE_LeenO.pdf` (generato automaticamente)
 - **Registro Aggiornamenti**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\documentazione\TRACKING_MANUALE.md`
 - **Mappa Sezioni**: `MAPPA_SEZIONI.md` (nella directory di questa skill)
 
 ## Risorse della Skill
 - `scripts/genera_mappa.py` — Script Python per rigenerare la mappa delle sezioni del manuale.
+- `scripts/genera_pdf.py` — Script Python per generare il PDF del manuale dentro `src/Ultimus.oxt/`.
 
 ---
 
@@ -97,5 +99,15 @@ Dopo aver modificato il manuale, rigenera sempre la mappa per mantenerla aggiorn
 python .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py
 ```
 
-### Fase 6: Conclusione
-Comunica all'utente l'avvenuto aggiornamento del manuale, mostrando la porzione di testo inserita, e conferma l'avvenuta registrazione in `TRACKING_MANUALE.md`.
+### Fase 6: Generazione del PDF
+Dopo aver modificato il manuale e rigenerato la mappa, genera sempre il file PDF aggiornato che verrà distribuito all'interno dell'estensione OXT:
+```
+python .agent/skills/leeno-aggiorna-manuale/scripts/genera_pdf.py
+```
+Questo script converte `documentazione/MANUALE_LeenO.fodt` in `src/Ultimus.oxt/MANUALE_LeenO.pdf` tramite LibreOffice in modalità headless.
+
+> [!IMPORTANT]
+> Il PDF deve essere rigenerato **ad ogni modifica** del manuale, altrimenti gli utenti riceveranno una versione non aggiornata nell'estensione.
+
+### Fase 7: Conclusione
+Comunica all'utente l'avvenuto aggiornamento del manuale, mostrando la porzione di testo inserita, e conferma l'avvenuta registrazione in `TRACKING_MANUALE.md` e la generazione del PDF.

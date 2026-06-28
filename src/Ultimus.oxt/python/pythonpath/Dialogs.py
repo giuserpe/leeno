@@ -2644,7 +2644,7 @@ def Ok(*, Title='', Text=''):
 #######################################################################
 
 
-def YesNoDialog(IconType="info", Image=None, Title=None, Text=None):
+def DLG_ask(IconType="info", Image=None, Title=None, Text=None):
     """
     Mostra una finestra di dialogo informativa in LibreOffice.
 

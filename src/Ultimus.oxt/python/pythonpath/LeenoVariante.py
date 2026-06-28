@@ -13,7 +13,7 @@ import LeenoDialogs as DLG
 def MENU_generaVariante():
     oDoc = LeenoUtils.getDocument()
     clear = False
-    if Dialogs.YesNoDialog(
+    if Dialogs.DLG_ask(
         IconType="question",
         Title='AVVISO!',
 Text='''Vuoi svuotare la VARIANTE appena generata?

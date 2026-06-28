@@ -123,7 +123,7 @@ def aggiorna_configurazione_leeno():
         "Vuoi chiuderlo adesso?"
     )
 
-    risposta = Dialogs.YesNoDialog(
+    risposta = Dialogs.DLG_ask(
         Title="Chiusura LibreOffice?",
         Text=msg
     )

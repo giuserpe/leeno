@@ -636,7 +636,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
 
     overwrite_flag = False
     if overlap:
-        res = Dialogs.YesNoDialog(IconType="warning", Title="Voci già presenti", 
+        res = Dialogs.DLG_ask(IconType="warning", Title="Voci già presenti", 
             Text="Attenzione: nell'Elenco Prezzi sono già presenti alcune voci con codice identico a quelle in importazione.\n\nProcedendo, queste voci verranno SOVRASCRITTE con i nuovi dati.\n\nVuoi procedere con la sovrascrittura?")
         if res == 1:
             overwrite_flag = True

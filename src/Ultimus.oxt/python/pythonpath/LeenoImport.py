@@ -324,7 +324,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
       sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
 
-    # ~ if Dialogs.YesNoDialog(Title='AVVISO!',
+    # ~ if Dialogs.DLG_ask(Title='AVVISO!',
     # ~ Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 # ~ L'operazione potrebbe richiedere del tempo e
@@ -778,7 +778,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
       sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
 
-    if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
+    if Dialogs.DLG_ask(IconType="question",Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e
@@ -1040,7 +1040,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
       sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
 
-        if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
+        if Dialogs.DLG_ask(IconType="question",Title='AVVISO!',
         Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
     L'operazione potrebbe richiedere del tempo e
@@ -1239,7 +1239,7 @@ ATTENZIONE:
 N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
       sul sito istituzionale ufficiale prima di accedere al Prezzario.'''
 
-    if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
+    if Dialogs.DLG_ask(IconType="question",Title='AVVISO!',
     Text='''Vuoi ripulire le descrizioni dagli spazi e dai salti riga in eccesso?
 
 L'operazione potrebbe richiedere del tempo e

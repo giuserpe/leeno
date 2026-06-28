@@ -266,7 +266,7 @@ def MENU_invia_voce():
         VK_CONTROL = 0x11
         is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
         if is_ctrl:
-            if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 2:
+            if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 2:
                 cfg.write('Generale', 'pesca_auto', stato)
                 return
     except Exception:
@@ -2123,7 +2123,7 @@ def MENU_prefisso_codice():
     '''
 
     chiudi_dialoghi()
-    if Dialogs.YesNoDialog(IconType="question", Title='AVVISO!',
+    if Dialogs.DLG_ask(IconType="question", Title='AVVISO!',
     Text='''Questo comando aggiunge un prefisso a scelta
 ai SOLI codici di prezzo selezionati,
 oppure a tutti se non ne sono stati selezionati.
@@ -2246,7 +2246,7 @@ def cancella_voci_non_usate():
     '''
     chiudi_dialoghi()
 
-    if Dialogs.YesNoDialog(
+    if Dialogs.DLG_ask(
         IconType="question",
         Title='AVVISO!',
         Text='''Questo comando ripulisce l'Elenco Prezzi
@@ -2722,7 +2722,7 @@ def scelta_viste_run():
                 seen.add(key)
                 
             if ha_doppioni:
-                if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!!!", \
+                if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!!!", \
                     Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nVuoi avviare la procedura di eliminazione prima di procedere?") == 1:
                     MENU_doppioni()
                     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -3506,7 +3506,7 @@ def XPWE_out_run(elaborato, out_file):
     if elaborato == 'CONTABILITA':
         TipoDocumento.text = '2'
     if TipoDocumento.text != '2':
-        if Dialogs.YesNoDialog(
+        if Dialogs.DLG_ask(
             Title='',
             Text= 'Abilitando la contabilità nel formato XPWE,\n'
             'Primus potrà riconoscere e gestire correttamente le Voci della Sicurezza.\n\n'
@@ -5833,7 +5833,7 @@ def sblocca_cont():
             if partenza[2] == '':
                 pass
             if partenza[2] == '#reg':
-                if Dialogs.YesNoDialog(Title='Avviso: Voce già registrata!',
+                if Dialogs.DLG_ask(Title='Avviso: Voce già registrata!',
 
                 Text= """Lavorando in questo punto del foglio,
 comprometterai la validità degli atti contabili già emessi.
@@ -5967,7 +5967,7 @@ def pesca_cod():
                 #         "Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",
                 #         'ATTENZIONE!') == 3:
                 #     return
-                if Dialogs.YesNoDialog(IconType="question",Title='ATTENZIONE!',
+                if Dialogs.DLG_ask(IconType="question",Title='ATTENZIONE!',
                 Text="Risulta già registrato un SAL."
                     "Vuoi procedere comunque?") == 0:
                     return
@@ -7817,7 +7817,7 @@ def struttura_Elenco():
     '''
     chiudi_dialoghi()
 
-    # if Dialogs.YesNoDialog(Title='AVVISO!',
+    # if Dialogs.DLG_ask(Title='AVVISO!',
     # Text='''Adesso puoi dare ai titoli di capitolo e sottocapitolo
 # una tonalità di colore che ne migliora la leggibilità, ma
 # il risultato finale dipende dalla struttura dei codici di voce.
@@ -7903,7 +7903,7 @@ def MENU_importa_stili():
     '''
     # with LeenoUtils.DocumentRefreshContext(False):
 
-    if Dialogs.YesNoDialog(IconType="question",
+    if Dialogs.DLG_ask(IconType="question",
         Title='Vuoi sostituire gli stili del documento?',
         Text="""
 ► Scegli "Sì" per sostituire gli stili del documento selezionando
@@ -9476,7 +9476,7 @@ def adegua_tmpl():
     adegua_a = 217  # VERSIONE CORRENTE
 
     if ver_tmpl < adegua_a:
-        if Dialogs.YesNoDialog(Title='Informazione',
+        if Dialogs.DLG_ask(Title='Informazione',
         Text= '''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?''') == 0:
             Dialogs.Exclamation(Title = 'Avviso!',
@@ -9744,7 +9744,7 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
 #        oDialogo_attesa.endExecute()  # chiude il dialogo
         indicator.setValue(8)
         mostra_fogli_principali()
-#    if Dialogs.YesNoDialog(Title='Informazione',
+#    if Dialogs.DLG_ask(Title='Informazione',
 #        Text= '''Vuoi procedere con la rigenerazione di tutte le formule di ogni foglio?
 #        Questo richidere del tempo.''') == 1:
         for el in ('COMPUTO',  'VARIANTE',  'CONTABILITA'):
@@ -11006,7 +11006,7 @@ def MENU_sistema_pagine(msg = True):
     except:
         return
     if msg:
-        if Dialogs.YesNoDialog(IconType="question",Title='AVVISO!',
+        if Dialogs.DLG_ask(IconType="question",Title='AVVISO!',
             Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
 Le formattazioni dirette impostate durante il lavoro andranno perse.
 
@@ -11393,7 +11393,7 @@ def trova_np():
 
 
     # Chiedi all'utente se vuole aggiungere il prefisso NP
-    if Dialogs.YesNoDialog(IconType="question",Title='Nuovi Prezzi',
+    if Dialogs.DLG_ask(IconType="question",Title='Nuovi Prezzi',
         Text='Vuoi aggiungere il prefisso "NPxx_"\n\nai codici dei nuovi prezzi?') == 1:
         add_prefix = True
     else:
@@ -11433,12 +11433,12 @@ def trova_np():
         message += f"Il numero progressivo più alto trovato è NP{max_np:02d}_.\n\n"
         message += "Vuoi iniziare la numerazione da NP{:02d}_?".format(max_np + 1)
 
-        if Dialogs.YesNoDialog(Title='Prefissi NP esistenti trovati',
+        if Dialogs.DLG_ask(Title='Prefissi NP esistenti trovati',
                             Text=message) == 1:
             np_counter = max_np + 1
         else:
             # L'utente vuole resettare la numerazione
-            if Dialogs.YesNoDialog(IconType="question",Title='Conferma',
+            if Dialogs.DLG_ask(IconType="question",Title='Conferma',
                                 Text='Vuoi resettare la numerazione partendo da NP01_?') == 1:
                 np_counter = 1
             else:

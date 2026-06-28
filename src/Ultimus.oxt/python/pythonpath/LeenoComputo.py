@@ -487,7 +487,7 @@ def salva_senza_prezzi():
 
     # ---- CONTROLLO SOVRASCRITTURA ----
     if os.path.exists(sys_path):
-        if Dialogs.YesNoDialog(
+        if Dialogs.DLG_ask(
             IconType="question",
             Title="AVVISO!",
             Text=f"Il file:\n{sys_path}\n\nesiste già.\n\nVuoi sostituirlo?",

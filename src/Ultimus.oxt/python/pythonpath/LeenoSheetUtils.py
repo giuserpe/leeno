@@ -1024,7 +1024,7 @@ def MENU_elimina_righe_vuote():
         return
 
     confirmation_text = f'Stai per eliminare tutte le righe\ndi misura vuote nell\'elaborato {oSheet.Name}.\n\nVuoi procedere?'
-    if Dialogs.YesNoDialog(IconType="question", Title='ATTENZIONE!', Text=confirmation_text) == 0:
+    if Dialogs.DLG_ask(IconType="question", Title='ATTENZIONE!', Text=confirmation_text) == 0:
         return
 
     # lrow_c = PL.LeggiPosizioneCorrente()[1]

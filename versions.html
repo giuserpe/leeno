@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.56-TESTING-20260624.oxt">LeenO-3.26.0.56-TESTING-20260624.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.57-TESTING-20260629.oxt">LeenO-3.26.0.57-TESTING-20260629.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">5.6MB</td>
+                <td class="col-extra">2026-06-28 22:02</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.57-TESTING-20260629.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.56-TESTING-20260624.oxt">LeenO-3.26.0.56-TESTING-20260624.oxt</a> </td>
                 <td class="col-dim">5.6MB</td>
                 <td class="col-extra">2026-06-24 21:03</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.51-TESTING-20260622.oxt">LeenO-3.26.0.51-TESTING-20260622.oxt</a> </td>
-                <td class="col-dim">5.6MB</td>
-                <td class="col-extra">2026-06-22 21:08</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.51-TESTING-20260622.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,6 +452,31 @@
                     <tbody>
                         
             <tr>
+                <td>2026-06-28 22:26</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/01422fdae5b57f73ccd20ce197c654cb2f8f5198" target="_blank" rel="noopener"><code>01422fd</code></a></td>
+                <td class="commit-msg">chore(dialogs): sostituisce YesNoDialog con DLG_ask in tutto il progetto
+
+- rinomina YesNoDialog → DLG_ask in Dialogs.py
+- aggiorna tutte le chiamate nei moduli:
+  Debug, LeenoComputo, LeenoImport, LeenoImport_XPWE,
+  LeenoSheetUtils, LeenoVariante, pyleeno
+- migliora coerenza API dei dialoghi e uniforma la gestione delle conferme
+
+chore(meta): bump versione a 3.26.0.57‑TESTING‑20260629
+
+chore(cleanup): rimuove .vscode/settings.json non più necessario
+
+refactor(dialogs): riordina elementi in dialog.xlb per maggiore consistenza</td>
+            </tr>
+            <tr>
+                <td>2026-06-28 22:17</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a7a645517793d3c3335b3624c2cdb61f5c8e03a6" target="_blank" rel="noopener"><code>a7a6455</code></a></td>
+                <td class="commit-msg">feat(contab): aggiunge controllo parametri mancanti durante generazione CdP
+
+Introduce un avviso (DLG_ask) se IVA, Recupero Anticipazione o Ritenuta per infortuni sono assenti o pari a zero durante la generazione degli atti contabili. Se l'utente decide di non procedere, l'intero SAL in corso viene annullato in modo pulito, evitando la rigenerazione automatica del CdP precedente.
+Aggiornato il manuale e ottimizzata la skill di aggiornamento con generazione PDF automatica.</td>
+            </tr>
+            <tr>
                 <td>2026-06-24 21:09</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/8be6151167cda11aa7462ea13ea1f37b405ee77b" target="_blank" rel="noopener"><code>8be6151</code></a></td>
                 <td class="commit-msg">feat(riepilogo-quantita): semplifica cancellazione colonne e applica stile Predefinito
@@ -462,49 +487,6 @@
 - Ripristino stile "Predefinito" sulle colonne di riepilogo
 - Migliorata robustezza in caso di fogli mancanti
 - Integrato release_ram nei punti critici</td>
-            </tr>
-            <tr>
-                <td>2026-06-24 18:38</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1507bef7ff467527ee8c98b6eccf115f913fc5e4" target="_blank" rel="noopener"><code>1507bef</code></a></td>
-                <td class="commit-msg">chore(versioning): bump a 3.26.0.55‑TESTING‑20260624
-
-feat(core): integra release_ram in funzioni critiche e migliora gestione riepilogo quantità
-
-- aggiunto decorator @release_ram a:
-  • generaContabilita()
-  • riepilogo_quantita()
-  • Vedi()
-  • scelta_viste()
-  • paste_smart()
-  • parziale_core()
-  • DlgMain()
-  • MENU_debug()
-
-- introdotta cancella_riepilogo_quantita() in LeenoSheetUtils e richiamata da MENU_debug()
-
-- migliorata MENU_azzera_voce:
-  • uso di Copia_riga_Ent(num_righe=1, target_row=…)
-  • applicazione diretta del colore inattivo senza dispatch UNO
-  • rimozione refresh forzati superflui
-
-- esteso inverti_segno() con supporto a target_row e refresh locale
-
-- aggiornato freeze logico in fissa() con mappa unificata SHEET_FREEZE_MAP
-
-- version bump in description.xml e leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-06-24 18:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/dbd866fd6ac32cf1fab5f2d16f7899594807a5a9" target="_blank" rel="noopener"><code>dbd866f</code></a></td>
-                <td class="commit-msg">feat(core): integra release_ram in funzioni critiche e migliora gestione riepilogo quantità
-
-- aggiunge decoratore @release_ram a DlgMain, scelta_viste, parziale_core, paste_smart e MENU_debug
-- introduce cancella_riepilogo_quantita in pyleeno e lo richiama da MENU_debug
-- estende Copia_riga_Ent con parametro target_row per uso interno più robusto
-- aggiorna inverti_segno con supporto a target_row e refresh controllato
-- migliora MENU_azzera_voce: rimozione goto superflui, uso target_row, applicazione colore diretta
-- semplifica fissa(): mappa unificata fogli → freeze, reset vista più affidabile
-- rimuove codice obsoleto e ridondante nei percorsi di refresh</td>
             </tr>
                     </tbody>
                 </table>
@@ -528,8 +510,8 @@ feat(core): integra release_ram in funzioni critiche e migliora gestione riepilo
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-06-24 21:09 UTC</p>
-                <p>Build Commit: <code>8be6151</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-06-28 22:26 UTC</p>
+                <p>Build Commit: <code>01422fd</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

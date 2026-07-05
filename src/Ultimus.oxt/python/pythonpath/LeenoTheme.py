@@ -1,8 +1,10 @@
+# pyrefly: ignore [missing-import]
 import uno
 import LeenoUtils
 import LeenoConfig
 import LeenoDialogs as DLG
 
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 from contextlib import ExitStack
 

@@ -20,6 +20,7 @@
 
 # from scriptforge import CreateScriptService
 # from dcf_parser import generate_xpwe
+from LeenoUtils import preserva_posizione
 from LeenoUtils import release_ram
 from LeenoSheetUtils import cancella_riepilogo_quantita
 from ctypes import string_at
@@ -266,7 +267,7 @@ def MENU_invia_voce():
         VK_CONTROL = 0x11
         is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
         if is_ctrl:
-            if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 2:
+            if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 1:
                 cfg.write('Generale', 'pesca_auto', stato)
                 return
     except Exception:
@@ -867,12 +868,20 @@ def Ins_Categorie(n):
 
             Rinumera_TUTTI_Capitoli2(oSheet)
             return
-        if oSheet.getCellByPosition(0,row).CellStyle in stili_computo + stili_contab:
-            row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-        elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
+        stile = oSheet.getCellByPosition(0, row).CellStyle
+
+        if stile in stili_cat:
+            # Categoria o intestazione (es. comp Int_colonna_R_prima): inserisci subito dopo
             row = row + 1
+        elif stile == 'Ultimus_centro_bordi_lati':
+            # Salta tutte le righe Ultimus_centro_bordi_lati consecutive
+            while oSheet.getCellByPosition(0, row).CellStyle == 'Ultimus_centro_bordi_lati':
+                row = row + 1
+        elif stile in stili_computo + stili_contab:
+            # Voce di computo/contabilità: vai alla fine del blocco voce corrente
+            row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
         else:
-            return
+            return  # posizione non valida per l'inserimento
         sTesto = ''
         if n == 0:
             sTesto = 'Inserisci il titolo per la Supercategoria'
@@ -1961,7 +1970,7 @@ def MENU_prefisso_VDS_():
     is_ctrl, is_shift = GetModifiers()
     if is_ctrl:
         # se si preme CTRL esegue MENU_costo_elementare_
-        LeenoUtils.DocumentRefresh(True)
+        # LeenoUtils.DocumentRefresh(True)
         MENU_costo_elementare_()
         return
     oDoc = LeenoUtils.getDocument()
@@ -1972,18 +1981,39 @@ def MENU_prefisso_VDS_():
     def vds_ep():
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         row = LeggiPosizioneCorrente()[1]
-        if pref in  oSheet.getCellByPosition(0, row).String:
+        if pref in oSheet.getCellByPosition(0, row).String:
             #  Dialogs.Info(Title = 'Infomazione', Text = 'Voce della sicurezza già esistente')
-            LeenoUtils.DocumentRefresh(True)
+            # LeenoUtils.DocumentRefresh(True)
             return
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 9, row))
-        comando('Copy')
-        MENU_nuova_voce_scelta()
-        paste_clip(pastevalue = False)
-        oSheet.getCellRangeByName("A5").String = pref + oSheet.getCellRangeByName("A5").String
-        oSheet.getCellRangeByName("A5").CellBackColor = COLORE_VERDE_SPUNTA
 
-        LeenoUtils.DocumentRefresh(False)
+        src_row = row
+
+        # Inserisce riga vuota all'indice 4 (riga 5)
+        oSheet.getRows().insertByIndex(4, 1)
+
+        # Aggiorna l'indice della riga sorgente se è scivolata giù
+        if src_row >= 4:
+            src_row += 1
+
+        # Copia i dati dalla voce originale ad A5:J5
+        src_range_addr = oSheet.getCellRangeByPosition(0, src_row, 9, src_row).RangeAddress
+        dst_cell_addr = oSheet.getCellByPosition(0, 4).CellAddress
+        oSheet.copyRange(dst_cell_addr, src_range_addr)
+
+        # Copia le formule di sistema da L4:Z4 a L5:Z5 (equivalente al FillDown originario)
+        src_form_addr = oSheet.getCellRangeByName("L4:Z4").RangeAddress
+        dst_form_addr = oSheet.getCellByPosition(11, 4).CellAddress
+        oSheet.copyRange(dst_form_addr, src_form_addr)
+
+        # Modifica il codice voce inserito aggiungendo il prefisso e il colore
+        cell_a5 = oSheet.getCellRangeByName("A5")
+        cell_a5.String = pref + cell_a5.String
+        cell_a5.CellBackColor = COLORE_VERDE_SPUNTA
+
+        # Ripristina altezza riga
+        oSheet.getRows().getByIndex(4).OptimalHeight = True
+
+        # LeenoUtils.DocumentRefresh(False)
     #  oSheet = oDoc.CurrentController.ActiveSheet
 
     # LeenoUtils.DocumentRefresh(False)
@@ -2060,7 +2090,7 @@ def MENU_prefisso_VDS_():
         pass
     _gotoCella(1, row+1)
 
-    LeenoUtils.DocumentRefresh(True)
+    # LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
 
@@ -2409,6 +2439,7 @@ def voce_breve_ep():
 
 # @LeenoUtils.no_refresh
 @LeenoUtils.release_ram
+@preserva_posizione(step=0) 
 def scelta_viste():
     with LeenoUtils.DocumentRefreshContext(False):
         scelta_viste_run()
@@ -2630,12 +2661,14 @@ def scelta_viste_run():
             pass
         if len(listaSal) != 0:
             oDialog1.getControl('RimuoviSAL').Label = "Elimina atti SAL n. " + str(len(listaSal))
-            oDialog1.getControl('GeneraAtti').Label = 'Genera atti SAL n. ' + str(len(listaSal)+1)
+            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. ' + str(len(listaSal)+1)
         else:
             oDialog1.getControl('RimuoviSAL').Enable = False
             oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL da rimuovere"
+            oDialog1.getControl('RimuoviTuttiSAL').Enable = False
+            oDialog1.getControl('RimuoviTuttiSAL').Label = "Nessun SAL da rimuovere"
             oDialog1.getControl('SituazioneContabile').Enable = False
-            oDialog1.getControl('GeneraAtti').Label = 'Genera atti SAL n. 1'
+            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. 1'
 
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
             oDialog1.getControl('EliminaMisure').Enable = False
@@ -2687,12 +2720,15 @@ def scelta_viste_run():
             pass
 
         if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
-            _vSintetica_core(oDoc, oSheet, False)
-            vista_configurazione('terra_terra')
+            # _vSintetica_core(oDoc, oSheet, False)
+            # vista_configurazione('terra_terra')
+            LeenoSheetUtils.setLarghezzaColonne(oSheet)
         elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
             vista_configurazione('Semplificata')
+            LeenoSheetUtils.setLarghezzaColonne(oSheet)
         elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
             _vSintetica_core(oDoc, oSheet, True)
+            LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 #Elenco Prezzi
@@ -12688,6 +12724,26 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    DLG.mri(oSheet)
+    return
+
+    Dialogs.Critical(Title='ATTENZIONE!', Text="Nessun SAL registrato da eliminare.")
+    Dialogs.Exclamation(Title='ATTENZIONE!', Text="Nessun SAL registrato da eliminare.")
+    Dialogs.Info(Title='ATTENZIONE!', Text="Nessun SAL registrato da eliminare.")
+    Dialogs.Ok(Title='ATTENZIONE!', Text="Nessun SAL registrato da eliminare.")
+
+
+    return
+    # oDoc = LeenoUtils.getDocument()
+    # oSheet = oDoc.CurrentController.ActiveSheet
+    # for el in range(0, 1000):
+    #     oSheet.getCellByPosition(0, el).NumberFormat = el
+
+    # return
+    import LeenoComputo
+    LeenoComputo.MENU_inserisci_somme_lavori_sicurezza()
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

@@ -6,6 +6,7 @@ LeenoContab.py - Contabilità per Leeno
 '''
 
 # _gotoCella è disponibile tramite 'import pyleeno as PL' (vedi sotto)
+from pyleeno import chiudi_dialoghi
 import LeenoSettings
 from LeenoSettings import setPageStyle
 from LeenoDispatcher import handle_exception
@@ -139,6 +140,7 @@ def insertVoceContabilitaGrezza(oSheet, lrow):
     '''
     Inserisce una voce grezza in CONTABILITA (usato dall'importazione)
     '''
+    # pyrefly: ignore [missing-import]
     from com.sun.star.table import CellRangeAddress
     import SheetUtils
     oDoc = SheetUtils.getDocumentFromSheet(oSheet)
@@ -994,7 +996,7 @@ def GeneraLibretto(oDoc):
 
                     # Inserimento batch filler
                     oSheet.getRows().insertByIndex(curr_i, num_righe_filler)
-                    oFRange = oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i + num_righe_filler - 1)
+                    oFRange = oSheet.getCellRangeByPosition(0, curr_i, 32, curr_i + num_righe_filler - 1)
                     oFRange.CellStyle = "Ultimus_centro_bordi_lati"
                     oFRange.Rows.Height = 500
 
@@ -1015,7 +1017,7 @@ def GeneraLibretto(oDoc):
                 if nSal > 1:
                     oSheet.getRows().getByIndex(curr_i).IsStartOfNewPage = True
                     last_hard_break_y = oSheet.getCellByPosition(0, curr_i).Position.Y
-            oSheet.getCellRangeByPosition(0, curr_i, 11, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
+            oSheet.getCellRangeByPosition(0, curr_i, 32, curr_i).CellStyle = "Ultimus_centro_bordi_lati"
             titolo = "SICUREZZA (CALCOLO ANALITICO)" if is_vds else "LAVORI A MISURA"
             oSheet.getCellByPosition(2, curr_i).String = titolo
 
@@ -2392,6 +2394,28 @@ def EseguiContabilita(oDoc):
             # PL.scelta_viste()
             return
 
+        # Controlli preliminari su S2 per evitare di processare tutto se mancano dati
+        oS2 = oDoc.getSheets().getByName('S2')
+        aliquota_iva_check = _leggi_iva_da_S2(oS2)
+        aliquota_anticipo_check = _leggi_anticipo_da_S2(oS2)
+        aliquota_infortuni_check = _leggi_infortuni_da_S2(oS2)
+
+        allerte = []
+        if aliquota_infortuni_check == 0:
+            allerte.append("Ritenuta per infortuni")
+        if aliquota_anticipo_check == 0:
+            allerte.append("Recupero Anticipazione")
+        if aliquota_iva_check == 0:
+            allerte.append("I.V.A.")
+
+        if allerte:
+            msg = "I seguenti valori mancano o sono impostati a 0:\n- " + "\n- ".join(allerte) + "\n\nVuoi procedere ugualmente?\n\n(Scegliendo 'No', verrà annullata l'intera generazione degli atti in corso)"
+            if Dialogs.DLG_ask(IconType="warning", Title="Valori mancanti o a zero", Text=msg) != 1:
+                # _annulla_ultimo_sal_core(oDoc, rigenera_cdp=False)
+                PL.chiudi_dialoghi()
+                PL.GotoSheet('S2')                
+                return
+
         # Blocca l'interfaccia per evitare sfarfallio e velocizzare
         oDoc.lockControllers()
 
@@ -2704,20 +2728,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     perc_anticipo_str = f'{aliquota_anticipo * 100:.0f}'
 
     aliquota_infortuni = _leggi_infortuni_da_S2(oS2)
-
-    allerte = []
-    if aliquota_infortuni == 0:
-        allerte.append("Ritenuta per infortuni")
-    if aliquota_anticipo == 0:
-        allerte.append("Recupero Anticipazione")
-    if aliquota_iva == 0:
-        allerte.append("I.V.A.")
-
-    if allerte and not silent:
-        msg = "I seguenti valori mancano o sono impostati a 0:\n- " + "\n- ".join(allerte) + "\n\nVuoi procedere ugualmente?\n\n(Scegliendo 'No', verrà annullata l'intera generazione degli atti in corso)"
-        if Dialogs.DLG_ask(IconType="warning", Title="Valori mancanti o a zero", Text=msg) != 1:
-            _annulla_ultimo_sal_core(oDoc, rigenera_cdp=False)
-            return False
 
     # Dati anagrafici
     committente = _leggi_dato_anagrafico(oS2, 'Committente') or _leggi_dato_anagrafico(oS2, 'Stazione Appaltante')
@@ -3191,10 +3201,10 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     SheetUtils.NominaArea(oDoc, 'CdP', area_cdp, f'_CdP_{nSal}')
 
     # Area di stampa = tutto il foglio
-    addr = oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row).getRangeAddress()
+    addr = oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row + 2).getRangeAddress()
     oCdP.setPrintAreas((addr,))
 
-    oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row).Rows.OptimalHeight = True
+    oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row + 2).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)
     PL.GotoSheet('CdP')
 

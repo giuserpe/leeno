@@ -302,14 +302,14 @@ def setLarghezzaColonne(oSheet):
                 'AX': 1900, 'AY': 1900
             },
             'freeze': (0, 3),
-            'visible_cols': 'TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF',
+            'visible_cols': 'TTTFFTTTTTFTFTFTFFFTTFTTFFFFTTTFFFFFF',
             'range_widths': [
                 (13, 1023, 1900),
                 (19, 23, 1000)
             ],
-            'hidden_ranges': [
-                (51, 1023)
-            ]
+            # 'hidden_ranges': [
+            #     (51, 1023)
+            # ]
         },
         'COMPUTO': {
             'widths': {

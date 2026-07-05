@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 import uno
 import LeenoUtils
 
@@ -21,6 +22,15 @@ def getNumFormat(FormatString):
         NumberFormatId = NumberFormats.addNew(FormatString, LocalSettings)
     return NumberFormatId
 
+def getPercentFormat():
+    '''
+    Restituisce il formato per percentuale con 3 decimali,
+    rosso quando negativo: es. 26.354% oppure -26.354% in rosso
+    '''
+    # Sezione 1: positivi/zero (colore default)
+    # Sezione 2: negativi (rosso)
+    FormatString = '#.##0,000%;[ROSSO]-#.##0,000%'
+    return getNumFormat(FormatString)
 
 def getFormatString(stile_cella):
     '''

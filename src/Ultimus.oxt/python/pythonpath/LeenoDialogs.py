@@ -33,9 +33,8 @@ from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_NO
 
 # pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX
-# from com.sun.star.awt.MessageBoxType import INFOBOX
-# from com.sun.star.awt.MessageBoxType import WARNINGBOX
-# from com.sun.star.awt.MessageBoxType import ERRORBOX
+# pyrefly: ignore [missing-import]
+from com.sun.star.awt.MessageBoxType import INFOBOX
 # pyrefly: ignore [missing-import]
 from com.sun.star.awt.MessageBoxType import QUERYBOX
 
@@ -84,7 +83,7 @@ def chi(s = 'pausa...', OFF=False):
             apri_con_editor(full_file_path, line_number)
 
         # Mostra il messaggio in un dialogo
-        MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', 'infobox')
+        MessageBox(parentwin, s1, f'Tipo di oggetto: {str(type(s))}', INFOBOX)
 
 
 def errore(e):
@@ -107,56 +106,52 @@ def errore(e):
 def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     '''
     Visualizza il menù di scelta sì/no
-    restituisce 2 per sì e 3 per no
+    restituisce 2 per sì e 3 per no (codici UNO MessageBoxResults)
     '''
-    # Verifica che il documento sia disponibile
-    try:
-        doc = LeenoUtils.getDocument()
-        if not doc:
-            return
-        parentwin = doc.CurrentController.Frame.ContainerWindow
-    except Exception:
-        return
-    # s = 'This a message'
-    # t = 'Title of the box'
-    # MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
-    return MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO + DEFAULT_BUTTON_NO)
+    return Dialogs.messageBox(
+        text=s,
+        title=t,
+        msg_type=QUERYBOX,
+        buttons=BUTTONS_YES_NO + DEFAULT_BUTTON_NO,
+        parent=_parentWindow(),
+    )
 
 
 def MsgBox(Text, Title=''):  # s = messaggio | t = titolo
     '''
     Visualizza una message box
     '''
-    # Verifica che il documento sia disponibile
-    try:
-        doc = LeenoUtils.getDocument()
-        if not doc:
-            return
-        parentwin = doc.CurrentController.Frame.ContainerWindow
-    except Exception:
-        return
-    # s = 'This a message'
-    # t = 'Title of the box'
-    # res = MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO)
-    # chi(res)
-    # return
-    # s = res
-    # t = 'Titolo'
     if Title is None:
         Title = 'messaggio'
-    MessageBox(parentwin, str(Text), Title, 'infobox')
+    Dialogs.messageBox(
+        text=str(Text),
+        title=Title,
+        msg_type=INFOBOX,
+        parent=_parentWindow(),
+    )
+
+
+def _parentWindow():
+    try:
+        doc = LeenoUtils.getDocument()
+        if doc:
+            return doc.CurrentController.Frame.ContainerWindow
+    except Exception:
+        pass
+    return None
 
 
 def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTTONS_OK):
     '''
     Show a message box with the UNO based toolkit
     '''
-    ctx = LeenoUtils.getComponentContext()
-    sm = ctx.ServiceManager
-    sv = sm.createInstanceWithContext('com.sun.star.awt.Toolkit', ctx)
-    myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
-
-    return myBox.execute()
+    return Dialogs.messageBox(
+        text=MsgText,
+        title=MsgTitle,
+        msg_type=MsgType,
+        buttons=MsgButtons,
+        parent=ParentWin,
+    )
 # [　入手元　]
 
 

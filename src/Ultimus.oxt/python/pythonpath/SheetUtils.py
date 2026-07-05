@@ -462,7 +462,7 @@ def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
             ricorrenze.append(nRow)
     return ricorrenze
 
-def uFindString(sString, oSheet, up=False):
+def uFindString(sString, oSheet, up=False, equal=1, start_col=0, start_row=2):
     '''
     sString { string }  : stringa da cercare
     oSheet  { object }  :
@@ -475,14 +475,14 @@ def uFindString(sString, oSheet, up=False):
     oCursor = oSheet.createCursorByRange(oCell)
     oCursor.gotoEndOfUsedArea(True)
     aAddress = oCursor.RangeAddress
-    righe = range (0, aAddress.EndRow + 1)
+    righe = range (start_row, aAddress.EndRow + 1)
     if up==True:
         righe = reversed (righe)
 
     for nRow in righe:
-        for nCol in range(0, aAddress.EndColumn + 1):
+        for nCol in range(start_col, aAddress.EndColumn + 1):
             # ritocco di +Daniele Zambelli:
-            if sString.lower() == oSheet.getCellByPosition(nCol, nRow).String.lower():
+            if (equal == 1 and sString.lower() == oSheet.getCellByPosition(nCol, nRow).String.lower()) or (equal == 0 and sString.lower() in oSheet.getCellByPosition(nCol, nRow).String.lower()):
                 return (nCol, nRow)
 
 # ###############################################################

@@ -46,31 +46,6 @@ import pyleeno as PL
 import LeenoAnalysis
 
 
-# def DlgMain():
-#     '''
-#     DlgMain"
-#     '''
-#     callAlert()
-#     try:
-#         PL.DlgMain()
-#     except AttributeError:
-#         # Try to reload the module in case LibreOffice is loading a stale/partial copy
-#         try:
-#             import importlib
-#             importlib.reload(PL)
-#             if hasattr(PL, 'DlgMain'):
-#                 PL.DlgMain()
-#                 return
-#         except Exception:
-#             pass
-#         # Fallback: show a clear error so the user can take action (reinstall/update extension)
-#         Dialogs.Exclamation(
-#             Title="Errore Leeno",
-#             Text=("Impossibile trovare la funzione DlgMain nel modulo pyleeno. "
-#                   "Reinstalla o aggiorna l'estensione LeenO e riavvia LibreOffice."),
-#         )
-#         raise
-
 def DlgMain():
     '''
     DlgMain"
@@ -88,19 +63,52 @@ def DlgMain():
                 return
         except Exception:
             pass
-        # Fallback: message box nativa senza dipendenze da pyleeno (path icone, ecc.)
+        # Fallback: show a clear error so the user can take action (reinstall/update extension)
+        # NOTE: Dialogs.Exclamation uses PL.LeenO_path() internally, which would raise
+        # another AttributeError since PL (pyleeno) is the same partial module that failed.
+        # Use a raw UNO MessageBox instead, which has no pyleeno dependency.
         try:
-            Dialogs.messageBox(
-                text=(
-                    "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
-                    "Reinstalla o aggiorna l'estensione LeenO e riavvia LibreOffice."
-                ),
-                title="Errore LeenO",
-                msg_type=3,  # ERRORBOX
+            _ctx = LeenoUtils.getComponentContext()
+            _tk = _ctx.ServiceManager.createInstanceWithContext(
+                "com.sun.star.awt.Toolkit", _ctx)
+            _msg = (
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno. Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Impossibile trovare la funzione DlgMain nel modulo pyleeno.\n"
+                "Reinstalla o aggiorna l'estensione LeenO e riavvia LibreOffice."
             )
+            _tk.createMessageBox(
+                None,
+                3,   # com.sun.star.awt.MessageBoxType.ERRORBOX → 1 (WARNINGBOX=3, INFOBOX=2)
+                1,   # buttons: OK
+                "Errore LeenO",
+                _msg,
+            ).execute()
         except Exception:
-            pass
+            pass  # if even the UNO dialog fails, the raise below will surface the original error
         raise
+
 
 def vai_a_M1():
     '''

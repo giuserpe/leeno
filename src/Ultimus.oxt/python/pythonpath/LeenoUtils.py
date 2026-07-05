@@ -4,7 +4,9 @@ Often used utility functions
 Copyright 2020 by Massimo Del Fedele
 '''
 import sys
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 import unohelper
 
 from com.sun.star.beans import PropertyValue
@@ -789,7 +791,7 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str, width=65) -> str:
+def wrap_text(text: str, width=55) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
@@ -868,6 +870,7 @@ def ripristina_posizione():
 
     try:
         sheet = sheets.getByIndex(pos_data['sheet'])
+        controller.setActiveSheet(sheet)
 
         if pos_data['type'] == 'cell':
             # Ripristina singola cella
@@ -889,26 +892,42 @@ def ripristina_posizione():
 
 def preserva_posizione(step=0):
     """
-    Decorator che memorizza la posizione del cursore prima della funzione
-    e la ripristina alla fine.
+    Decorator che memorizza la posizione del cursore e il foglio attivo prima della funzione
+    e li ripristina alla fine.
     """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            # Memorizza foglio attivo
+            doc = getDocument()
+            controller = doc.getCurrentController()
+            active_sheet = controller.getActiveSheet()
+
             # Memorizza
             memorizza_posizione(step=0) # Salviamo la posizione iniziale "vera"
+            
+            # Salviamo una copia locale della posizione iniziale per non essere 
+            # sovrascritta se la funzione chiama a sua volta memorizza_posizione()
+            initial_pos = LeenoGlobals.getGlobalVar('ultima_posizione')
+            if initial_pos:
+                initial_pos = dict(initial_pos)
+
             try:
                 result = func(*args, **kwargs)
                 return result
             finally:
                 # Ripristina (anche se la funzione va in errore)
-                # Se passi un valore a 'step', lo usiamo per spostarci DOPO l'operazione
-                if step != 0:
-                    pos = LeenoGlobals.getGlobalVar('ultima_posizione')
-                    if pos:
-                        pos['row'] += step
-                        if 'end_row' in pos: pos['end_row'] += step
-                        LeenoGlobals.setGlobalVar('ultima_posizione', pos)
+                if initial_pos:
+                    if step != 0:
+                        initial_pos['row'] += step
+                        if 'end_row' in initial_pos: 
+                            initial_pos['end_row'] += step
+                    
+                    # Ripristiniamo la variabile globale con la posizione salvata all'inizio
+                    LeenoGlobals.setGlobalVar('ultima_posizione', initial_pos)
+                
+                # Ripristina foglio attivo e posizione
+                controller.setActiveSheet(active_sheet)
                 ripristina_posizione()
         return wrapper
     return decorator

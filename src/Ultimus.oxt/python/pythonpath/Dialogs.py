@@ -30,6 +30,23 @@ from com.sun.star.awt import XTopWindowListener
 # pyrefly: ignore [missing-import]
 from com.sun.star.util import MeasureUnit
 
+# pyrefly: ignore [missing-import]
+from com.sun.star.awt.MessageBoxButtons import (
+    BUTTONS_OK,
+    BUTTONS_YES_NO,
+    BUTTONS_YES_NO_CANCEL,
+    DEFAULT_BUTTON_NO,
+)
+# pyrefly: ignore [missing-import]
+from com.sun.star.awt.MessageBoxType import (
+    INFOBOX,
+    WARNINGBOX,
+    ERRORBOX,
+    QUERYBOX,
+)
+# pyrefly: ignore [missing-import]
+from com.sun.star.awt.MessageBoxResults import YES, NO, CANCEL
+
 from LeenoConfig import Config
 import LeenoUtils
 import pyleeno as PL
@@ -2565,169 +2582,142 @@ def FolderSelect(titolo='Scegli la cartella...', startPath=None):
 
 
 
-def NotifyDialog(*, IconType="info", Image=None, Title=None, Text=None, FontName=None, FontWeight=100):
-    """
-    Mostra una finestra di dialogo informativa in LibreOffice.
+_ICON_TO_MSG_TYPE = {
+    'info': INFOBOX,
+    'question': QUERYBOX,
+    'warning': WARNINGBOX,
+    'error': ERRORBOX,
+    'success': INFOBOX,
+}
 
-    Parametri:
-        IconType: tipo di icona ('info', 'warning', 'error', 'success')
-        Image: percorso personalizzato dell'immagine (facoltativo)
-        Title: titolo della finestra
-        Text: testo del messaggio
-        """
 
+def getParentWindow():
+    """Finestra contenitrice del documento attivo, per ancorare i dialoghi UNO."""
     try:
-        ctx = LeenoUtils.getComponentContext()
-        psm = ctx.ServiceManager
-        dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-        oDlgInfo = dp.createDialog(
-            "vnd.sun.star.script:UltimusFree2.DlgInfo?language=Basic&location=application"
-        )
-
-        # Se non viene fornito un percorso personalizzato, seleziona in base al tipo
-        if not Image:
-            base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
-            icon_map = {
-                "info": "info.png",
-                "question": "question.png",
-                "warning": "exclamation.png",
-                "error": "exclamation.png",
-                "success": "ok.png",
-            }
-            Image = base_path + icon_map.get(IconType.lower(), "info.png")
-
-        # Imposta immagine, titolo e testo
-        oDlgInfo.getModel().ImageControl1.ImageURL = Image
-        oDlgInfo.Title = Title or IconType.capitalize()
-        sString = oDlgInfo.getControl("Text")
-        if FontName:
-            sString.Model.FontName = FontName
-        if FontWeight:
-            sString.Model.FontWeight = FontWeight
-        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
-
-        oDlgInfo.execute()
-
-    except Exception as e:
+        doc = LeenoUtils.getDocument()
+        if doc:
+            return doc.CurrentController.Frame.ContainerWindow
+    except Exception:
         pass
-        # DLG.chi(f"Errore in NotifyDialog(): {e}")
+    return None
+
+
+def messageBox(*, text, title='', msg_type=INFOBOX, buttons=BUTTONS_OK, parent=None):
+    """
+    Message box nativa LibreOffice (com.sun.star.awt.Toolkit.createMessageBox).
+    Restituisce il codice UNO di MessageBoxResults (es. YES=2, NO=3).
+    """
+    text = LeenoUtils.wrap_text(text) or "In allestimento..."
+    ctx = LeenoUtils.getComponentContext()
+    toolkit = ctx.ServiceManager.createInstanceWithContext(
+        "com.sun.star.awt.Toolkit", ctx)
+    return toolkit.createMessageBox(
+        parent if parent is not None else getParentWindow(),
+        msg_type,
+        buttons,
+        title or '',
+        text,
+    ).execute()
+
+
+def _mapBasicYesNo(uno_result):
+    """Converte YES/NO UNO nella convenzione dei vecchi dialog Basic (1=Sì, 0=No)."""
+    if uno_result == YES:
+        return 1
+    if uno_result == NO:
+        return 0
+    return uno_result
+
+
+def _mapBasicYesNoCancel(uno_result):
+    """Converte YES/NO/CANCEL UNO nella convenzione dei vecchi dialog Basic."""
+    if uno_result == YES:
+        return 1
+    if uno_result == NO:
+        return 0
+    if uno_result == CANCEL:
+        return 2
+    return uno_result
+
+
+def _iconMsgType(icon_type, default=INFOBOX):
+    return _ICON_TO_MSG_TYPE.get((icon_type or 'info').lower(), default)
+
+
+def NotifyDialog(*, IconType="info", Title=None, Text=None, MsgType=None,
+                 Image=None, FontName=None, FontWeight=100):
+    """
+    Mostra una message box informativa nativa LibreOffice.
+
+    IconType: 'info', 'warning', 'error', 'success', 'question'
+    MsgType: opzionale, constante com.sun.star.awt.MessageBoxType.*
+    Image, FontName, FontWeight: ignorati (solo compatibilità con chiamate legacy)
+    """
+    msg_type = MsgType if MsgType is not None else _iconMsgType(IconType)
+    messageBox(
+        text=LeenoUtils.wrap_text(Text) or "In allestimento...",
+        title=Title or (IconType or 'info').capitalize(),
+        msg_type=msg_type,
+        buttons=BUTTONS_OK,
+    )
+
 
 def box_notizia(*, Image, Title, Text):
-    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
-        HSizer(Items=[
-            ImageControl(Image=Image),
-            Spacer(),
-            FixedText(Text=Text)
-        ]),
-        Spacer(),
-        HSizer(Items=[
-            Spacer(),
-            Button(Label='Ok', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH, RetVal=1),
-            Spacer()
-        ])
-    ])
-    return dlg.run()
+    return Info(Title=Title, Text=Text)
+
+
 def notizia(*, Title='', Text=''):
-    return box_notizia(Image='Icons-Big/info.png', Title=Title, Text=Text)
+    return Info(Title=Title, Text=Text)
 
 #######################################################################
 
+def Critical(*, Title='', Text=''):
+    NotifyDialog(Title=Title, Text=Text, MsgType=ERRORBOX)
+
+
 def Exclamation(*, Title='', Text=''):
-    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/exclamation.png', Title=Title, Text=Text)
+    NotifyDialog(Title=Title, Text=Text, MsgType=WARNINGBOX)
+
 
 def Info(*, Title='', Text=''):
-    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/info.png', Title=Title, Text=Text)
+    NotifyDialog(Title=Title, Text=Text, MsgType=INFOBOX)
+
 
 def Ok(*, Title='', Text=''):
-    return NotifyDialog(Image= PL.LeenO_path() + '/python/pythonpath/Icons-Big/ok.png', Title=Title, Text=Text)
+    NotifyDialog(Title=Title, Text=Text, MsgType=INFOBOX)
 
 #######################################################################
 
 
 def DLG_ask(IconType="info", Image=None, Title=None, Text=None):
     """
-    Mostra una finestra di dialogo informativa in LibreOffice.
-
-    Parametri:
-        IconType: tipo di icona ('info', 'warning', 'error', 'success')
-        Image: percorso personalizzato dell'immagine (facoltativo)
-        Title: titolo della finestra
-        Text: testo del messaggio
+    Dialogo Sì/No nativo LibreOffice.
+    Restituisce 1 per Sì, 0 per No (convenzione dialog Basic UltimusFree2).
+    Image: ignorato (compatibilità legacy).
     """
-
-    try:
-        ctx = LeenoUtils.getComponentContext()
-        psm = ctx.ServiceManager
-        dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-        oDlgInfo = dp.createDialog(
-            "vnd.sun.star.script:UltimusFree2.DlgSiNo?language=Basic&location=application"
-        )
-
-        # Se non viene fornito un percorso personalizzato, seleziona in base al tipo
-        if not Image:
-            base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
-            icon_map = {
-                "info": "info.png",
-                "question": "question.png",
-                "warning": "exclamation.png",
-                "error": "exclamation.png",
-                "success": "ok.png",
-            }
-            Image = base_path + icon_map.get(IconType.lower(), "info.png")
-
-        # Imposta immagine, titolo e testo
-        oDlgInfo.getModel().ImageControl1.ImageURL = Image
-        oDlgInfo.Title = Title or IconType.capitalize()
-        sString = oDlgInfo.getControl("Text")
-        sString.Text = LeenoUtils.wrap_text(Text) or "In allestimento..."
-
-        return(oDlgInfo.execute())
-
-    except Exception as e:
-        # DLG.chi(f"Errore in NotifyDialog(): {e}")
-        pass
+    msg_type = QUERYBOX if IconType == 'question' else _iconMsgType(IconType, QUERYBOX)
+    result = messageBox(
+        text=Text,
+        title=Title or (IconType or 'info').capitalize(),
+        msg_type=msg_type,
+        buttons=BUTTONS_YES_NO + DEFAULT_BUTTON_NO,
+    )
+    return _mapBasicYesNo(result)
 
 
 def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
     """
-    Mostra un dialogo Sì / No / Cancel in LibreOffice.
-    Ritorna:
-        1 -> Sì
-        0 -> No
+    Dialogo Sì / No / Annulla nativo LibreOffice.
+    Restituisce 1 -> Sì, 0 -> No, 2 -> Annulla.
+    Image: ignorato (compatibilità legacy).
     """
-    ctx = LeenoUtils.getComponentContext()
-    psm = ctx.ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlgSiNoCancel = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.DlgSiNoCancel?language=Basic&location=application"
+    result = messageBox(
+        text=Text or "Procedere?",
+        title=Title or (IconType or 'question').capitalize(),
+        msg_type=QUERYBOX,
+        buttons=BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO,
     )
-
-    # Icona automatica
-    if not Image:
-        base_path = PL.LeenO_path() + "/python/pythonpath/Icons-Big/"
-        icon_map = {
-            "info": "info.png",
-            "question": "question.png",
-            "warning": "exclamation.png",
-            "error": "exclamation.png",
-            "success": "ok.png",
-        }
-        Image = base_path + icon_map.get(IconType.lower(), "info.png")
-
-    oDlgSiNoCancel.getModel().ImageControl1.ImageURL = Image
-    oDlgSiNoCancel.Title = Title or IconType.capitalize()
-    oDlgSiNoCancel.getControl("Text").Text = Text or "Procedere?"
-
-    # Imposta la proprietà "Cancel" sul tasto Cancel per farlo funzionare con ESC
-    try:
-        btnCancel = oDlgSiNoCancel.getControl("Cancel")
-        btnCancel.Model.Cancel = True
-    except:
-        pass
-
-    # Esegui la dialog
-    # result = oDlgSiNoCancel.execute()
-    return oDlgSiNoCancel.execute()
+    return _mapBasicYesNoCancel(result)
 
 
 def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):

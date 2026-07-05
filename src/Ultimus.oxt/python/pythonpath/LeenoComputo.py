@@ -1,4 +1,7 @@
 # pyrefly: ignore [missing-import]
+from LeenoContab import _leggi_dato_anagrafico
+import LeenoFormat
+# pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
 # pyrefly: ignore [missing-import]
 from com.sun.star.frame import XStatusListener
@@ -21,6 +24,8 @@ from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE
 import Dialogs
 
 import LeenoDialogs as DLG
+
+from undo_utils import with_undo
 
 import pyleeno as PL  #  RIMOSSO PER EVITARE IMPORT CIRCOLARE
 
@@ -717,3 +722,154 @@ class DatiVoce:
                 quantP, prezzo, importo, sic, mdo
             )
 
+
+@with_undo('Inserisci somme LAVORI e SICUREZZA')
+@LeenoUtils.no_refresh
+def MENU_inserisci_somme_lavori_sicurezza():
+    """
+    Inserisce le somme totali dei lavori e della sicurezza in fondo al foglio,
+    sotto le righe di riepilogo, in base al prefisso del codice_voce:
+    - Arancione tenue (0xFFEDD0) se il codice_voce inizia con 'VDS_'
+    - Viola tenue     (0xEDD5FF) per tutte le altre voci
+    """
+    # Colori tenui
+    COLORE_ARANCIONE = 0xFFEDD0  # VDS_
+    COLORE_VIOLA     = 0xEDD5FF  # tutte le altre
+    # COLORE_ARANCIONE = "comp sotto Euro Originale"
+    # COLORE_VIOLA     = "comp sotto Euro Originale"
+
+    oDoc = LeenoUtils.getDocument()
+    if not oDoc:
+        return
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_validi  = set(stili_computo) | set(stili_contab)
+
+    fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    row = 0
+    tot_righe = oSheet.Rows.Count
+
+    indirizzi_ordinarie = []
+    indirizzi_vds = []
+
+    while row < fine_doc and row < tot_righe:
+        stile = oSheet.getCellByPosition(0, row).CellStyle
+
+        if stile not in stili_validi:
+            row += 1
+            continue
+
+        # Circoscrive la voce e legge il codice dalla riga start+1, colonna 1
+        sStRange = circoscriveVoceComputo(oSheet, row)
+        if sStRange is None:
+            row += 1
+            continue
+
+        start_row = sStRange.RangeAddress.StartRow
+        end_row   = sStRange.RangeAddress.EndRow
+
+        codice_voce = oSheet.getCellByPosition(1, start_row + 1).String
+
+        # Estrarre l'indirizzo della cella importo
+        if oSheet.Name == 'CONTABILITA':
+            # colonna 15 corrisponde alla P
+            importo_addr = f"P{end_row + 1}"
+        else:
+            # colonna 18 corrisponde alla S
+            importo_addr = f"S{end_row + 1}"
+
+        if codice_voce.startswith('VDS_'):
+            # colore = COLORE_ARANCIONE
+            indirizzi_vds.append(importo_addr)
+        else:
+            # colore = COLORE_VIOLA
+            indirizzi_ordinarie.append(importo_addr)
+
+        # sStRange.CellBackColor = colore
+
+        # Avanza alla riga successiva dopo la fine della voce
+        row = end_row + 1
+
+    # LeenoUtils.DocumentRefresh(True)
+    
+    formula_ordinarie = "=" + "+".join(indirizzi_ordinarie) if indirizzi_ordinarie else "=0"
+    formula_vds = "=" + "+".join(indirizzi_vds) if indirizzi_vds else "=0"
+    
+    # pyrefly: ignore [missing-import]
+    import unohelper
+    # pyrefly: ignore [missing-import]
+    from com.sun.star.sheet import XRangeSelectionListener
+    # pyrefly: ignore [missing-import]
+    from com.sun.star.beans import PropertyValue
+
+    class VdsSumListener(unohelper.Base, XRangeSelectionListener):
+        def __init__(self, controller, f_ord, f_vds, c_ord, c_vds):
+            self.controller = controller
+            self.formula_ordinarie = f_ord
+            self.formula_vds = f_vds
+            self.color_ordinarie = c_ord
+            self.color_vds = c_vds
+        def done(self, event):
+            try:
+                doc = self.controller.Model
+                sheet = doc.CurrentController.getActiveSheet()
+                target_range = sheet.getCellRangeByName(event.RangeDescriptor)
+                
+                cell_left = target_range.getCellByPosition(0, 0)
+                
+                row_idx = cell_left.CellAddress.Row
+                col_idx = cell_left.CellAddress.Column
+                cell_right = sheet.getCellByPosition(col_idx + 1, row_idx)
+                cell_up = sheet.getCellByPosition(col_idx, row_idx - 1)
+                cell_up_right = sheet.getCellByPosition(col_idx + 1, row_idx - 1)
+
+                cell_up.String = "Lavori"
+                cell_up.CellBackColor = COLORE_VIOLA
+                cell_up_right.String = "Sicurezza"
+                cell_up_right.CellBackColor = COLORE_ARANCIONE
+
+                cell_left.Formula = self.formula_ordinarie
+                cell_right.Formula = self.formula_vds
+                
+                # Imposta la formattazione numero euro
+                cell_left.NumberFormat = 5
+                cell_right.NumberFormat = 5
+                # cell_ribasso.NumberFormat = 5
+                # DLG.mri(cell_left)
+                
+                cell_left.CellBackColor = self.color_ordinarie
+                cell_right.CellBackColor = self.color_vds
+                
+                cell_left.CharWeight = 150
+                cell_right.CharWeight = 150
+
+            except Exception as e:
+                DLG.error(f"Errore nell'inserimento delle somme: {e}")
+            finally:
+                self.unregister()
+
+        def aborted(self, event):
+            self.unregister()
+
+        def unregister(self):
+            self.controller.removeRangeSelectionListener(self)
+
+        def disposing(self, event):
+            pass
+
+    controller = oDoc.CurrentController
+    listener = VdsSumListener(controller, formula_ordinarie, formula_vds, COLORE_VIOLA, COLORE_ARANCIONE)
+    controller.addRangeSelectionListener(listener)
+
+    props = (
+        PropertyValue(Name="Title", Value="Seleziona la cella per le somme (Ordinarie sx, VDS dx)"),
+        PropertyValue(Name="CloseOnMouseRelease", Value=True),
+        PropertyValue(Name="SingleCellMode", Value=True),
+    )
+
+    controller.startRangeSelection(props)

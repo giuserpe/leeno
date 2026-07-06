@@ -6896,6 +6896,8 @@ def ins_voce_elenco():
 
 
 ########################################################################
+@LeenoUtils.no_refresh
+@with_undo("Rigenera voce")
 def rigenera_voce(row=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
@@ -6959,11 +6961,38 @@ def rigenera_voce(row=None):
 #            k += 1
 #            progress.setValue(k)
 
-            # elimina i collegamenti esterni
-            if oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a' or \
-                oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
-                "'" in oSheet.getCellByPosition(2, n).Formula:
-                ff = oSheet.getCellByPosition(2, n).Formula.split("'")
+            # rigenera le righe "vedi voce"
+            # controlla sia il valore calcolato (String) sia la formula grezza (.Formula),
+            # così funziona anche quando la formula è corrotta e mostra un errore
+            _cell_c = oSheet.getCellByPosition(2, n)
+            if '- vedi voce n.' in _cell_c.String or \
+                    '"- vedi voce n."' in _cell_c.Formula:
+                # estrae la riga di fine della voce referenziata dalla formula in col E (=J$<N>)
+                try:
+                    formula_e = oSheet.getCellByPosition(4, n).Formula  # es. =J$12
+                    vRif_sotto = int(formula_e.replace('=J$', '').strip()) - 1  # indice 0-based
+                    # cerca la riga di misura della voce referenziata (qualsiasi riga interna)
+                    vRif = vRif_sotto  # è la riga "sotto" della voce di riferimento
+                    vedi_voce_xpwe(oSheet, n, vRif)
+                except Exception:
+                    pass
+                rosso = 0
+                for x in range (5, 8):
+                    if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
+                        rosso = 1
+                        break
+                if rosso == 1:
+                    formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";-PRODUCT(E{n+1}:I{n+1}))']
+                else:
+                    formula = [f'=IF(PRODUCT(E{n+1}:I{n+1})=0;"";PRODUCT(E{n+1}:I{n+1}))']
+                formule.append(formula)
+                continue
+
+            # elimina i collegamenti esterni (link esterno = contiene "'percorso'#$Foglio")
+            _formula_c = oSheet.getCellByPosition(2, n).Formula
+            if oSheet.getCellByPosition(2, n).CellStyle in ('comp 1-a', 'comp 1-a ROSSO') and \
+                "'" in _formula_c and "#$" in _formula_c:
+                ff = _formula_c.split("'")
                 if len(ff) > 1:
                     oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
 
@@ -7059,12 +7088,45 @@ def rigenera_voce(row=None):
         for n in range (sopra + 2, sotto - 1):
 #            k += 1
 #            progress.setValue(k)
+            # rigenera le righe "vedi voce"
+            # controlla sia il valore calcolato (String) sia la formula grezza (.Formula),
+            # così funziona anche quando la formula è corrotta e mostra un errore
+            _cell_c = oSheet.getCellByPosition(2, n)
+            if '- vedi voce n.' in _cell_c.String or \
+                    '"- vedi voce n."' in _cell_c.Formula:
+                try:
+                    formula_e = oSheet.getCellByPosition(4, n).Formula  # es. =J$12
+                    vRif_sotto = int(formula_e.replace('=J$', '').strip()) - 1  # indice 0-based
+                    vRif = vRif_sotto  # è la riga "sotto" della voce di riferimento
+                    vedi_voce_xpwe(oSheet, n, vRif)
+                except Exception:
+                    pass
+                rosso = 0
+                for x in range (5, 8):
+                    if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
+                        rosso = 1
+                        break
+                if rosso == 1:
+                    formule.append(['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                                    str(n + 1) + ')>=0;"";PRODUCT(E' +
+                                    str(n + 1) + ':I' + str(n + 1) + ')*-1)', '',
+                                    '=IF(PRODUCT(E' + str(n+1) + ':I' +
+                                    str(n+1) + ')<=0;"";PRODUCT(E' + str(
+                                    n + 1) + ':I' + str(n+1) + '))'])
+                else:
+                    formule.append(['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                                    str(n + 1) + ')<=0;"";PRODUCT(E' +
+                                    str(n + 1) + ':I' + str(n + 1) + '))', '',
+                                    '=IF(PRODUCT(E' + str(n+1) + ':I' +
+                                    str(n+1) + ')>=0;"";PRODUCT(E' + str(
+                                    n + 1) + ':I' + str(n+1) + ')*-1)'])
+                continue
 
-            # elimina i collegamenti esterni
-            if oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a' or \
-                oSheet.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO' and \
-                "'" in oSheet.getCellByPosition(2, n).Formula:
-                ff = oSheet.getCellByPosition(2, n).Formula.split("'")
+            # elimina i collegamenti esterni (link esterno = contiene "'percorso'#$Foglio")
+            _formula_c = oSheet.getCellByPosition(2, n).Formula
+            if oSheet.getCellByPosition(2, n).CellStyle in ('comp 1-a', 'comp 1-a ROSSO') and \
+                "'" in _formula_c and "#$" in _formula_c:
+                ff = _formula_c.split("'")
                 if len(ff) > 1:
                     oSheet.getCellByPosition(2, n).Formula = ff[0] + ff[-1][1:]
 

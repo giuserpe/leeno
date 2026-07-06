@@ -5,10 +5,9 @@
   <dlg:style dlg:style-id="0" dlg:border="3d" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:border="simple" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="5" dlg:background-color="0xccff99" dlg:text-color="0x111111" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="6" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:text-color="0x111111" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="5" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="221" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label">
@@ -47,17 +46,17 @@
   <dlg:text dlg:style-id="0" dlg:id="Label8" dlg:tab-index="16" dlg:left="61" dlg:top="38" dlg:width="50" dlg:height="10" dlg:help-text="&amp;365.DlgMain.Label8.HelpText" dlg:value="&amp;366.DlgMain.Label8.Label" dlg:align="right" dlg:valign="center"/>
   <dlg:text dlg:style-id="0" dlg:id="Label9" dlg:tab-index="17" dlg:left="61" dlg:top="67" dlg:width="50" dlg:height="10" dlg:help-text="&amp;367.DlgMain.Label9.HelpText" dlg:value="&amp;368.DlgMain.Label9.Label" dlg:align="right" dlg:valign="center"/>
   <dlg:text dlg:style-id="2" dlg:id="Label10" dlg:tab-index="18" dlg:left="6" dlg:top="67" dlg:width="54" dlg:height="10" dlg:help-text="&amp;369.DlgMain.Label10.HelpText" dlg:value="&amp;370.DlgMain.Label10.Label" dlg:valign="center"/>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="-20" dlg:top="155" dlg:width="0" dlg:height="2" dlg:help-text="&amp;371.DlgMain.CommandButton11.HelpText" dlg:value="&amp;372.DlgMain.CommandButton11.Label">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="-20" dlg:top="155" dlg:width="0" dlg:height="2" dlg:help-text="&amp;371.DlgMain.CommandButton11.HelpText" dlg:value="&amp;372.DlgMain.CommandButton11.Label">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:img dlg:style-id="1" dlg:id="ImageControl1" dlg:tab-index="21" dlg:left="6" dlg:top="81" dlg:width="265" dlg:height="60" dlg:help-text="&amp;379.DlgMain.ImageControl1.HelpText"/>
-  <dlg:text dlg:style-id="4" dlg:id="Label_DDC" dlg:tab-index="22" dlg:left="41" dlg:top="204" dlg:width="230" dlg:height="12" dlg:help-text="&amp;380.DlgMain.Label_DDC.HelpText" dlg:value="&amp;381.DlgMain.Label_DDC.Label" dlg:valign="center"/>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton13" dlg:tab-index="23" dlg:left="6" dlg:top="204" dlg:width="30" dlg:height="12" dlg:help-text="&amp;382.DlgMain.CommandButton13.HelpText" dlg:value="&amp;383.DlgMain.CommandButton13.Label" dlg:valign="center" dlg:toggled="1">
+  <dlg:text dlg:style-id="3" dlg:id="Label_DDC" dlg:tab-index="22" dlg:left="41" dlg:top="204" dlg:width="230" dlg:height="12" dlg:help-text="&amp;380.DlgMain.Label_DDC.HelpText" dlg:value="&amp;381.DlgMain.Label_DDC.Label" dlg:valign="center"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton13" dlg:tab-index="23" dlg:left="6" dlg:top="204" dlg:width="30" dlg:height="12" dlg:help-text="&amp;382.DlgMain.CommandButton13.HelpText" dlg:value="&amp;383.DlgMain.CommandButton13.Label" dlg:valign="center" dlg:toggled="1">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.ssUltimus?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:style-id="2" dlg:id="Label13" dlg:tab-index="24" dlg:left="6" dlg:top="9" dlg:width="25" dlg:height="10" dlg:help-text="&amp;393.DlgMain.Label13.HelpText" dlg:value="&amp;394.DlgMain.Label13.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="0" dlg:id="Label12" dlg:tab-index="9" dlg:left="196" dlg:top="38" dlg:width="76" dlg:height="10" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label" dlg:valign="center" dlg:tabstop="false"/>
-  <dlg:text dlg:style-id="6" dlg:id="Label1" dlg:tab-index="20" dlg:left="92" dlg:top="217" dlg:width="178" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right" dlg:valign="center">
+  <dlg:text dlg:style-id="5" dlg:id="Label1" dlg:tab-index="20" dlg:left="92" dlg:top="217" dlg:width="178" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right" dlg:valign="center">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_S1?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:text>
   <dlg:textfield dlg:style-id="2" dlg:id="TextField1" dlg:tab-index="25" dlg:left="31" dlg:top="8" dlg:width="240" dlg:height="25" dlg:help-text="&amp;498.DlgMain.TextField1.HelpText" dlg:multiline="true" dlg:value="&amp;499.DlgMain.TextField1.Text"/>

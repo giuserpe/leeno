@@ -2675,7 +2675,7 @@ def scelta_viste_run():
 
         if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
             oDialog1.getControl('GeneraAtti').Enable = False
-            oDialog1.getControl('GeneraAtti').Label = 'Nessun SAL da generare'
+            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. #'
 
         # Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
@@ -4212,8 +4212,12 @@ def XPWE_out_run(elaborato, out_file):
                         oSheet.getCellByPosition(10, m).Value != 0:
                             Flags.text = '32768'
                     if elaborato in ('COMPUTO', 'VARIANTE'):
-                        if  oSheet.getCellByPosition(9, m).Value < 0:
+                        if oSheet.getCellByPosition(9, m).Value < 0:
                             Flags.text = '32769'
+                            # Primus interpreta il bit 0 (NEGATIVO) come indicatore di segno:
+                            # la Quantita deve essere in valore assoluto, altrimenti
+                            # Primus invertirebbe il segno già negativo → +0.22 anziché -0.22
+                            Quantita.text = str(abs(oSheet.getCellByPosition(9, m).Value))
             n = sotto + 1
 
     # #########################
@@ -8004,13 +8008,9 @@ def MENU_importa_stili():
     if Dialogs.DLG_ask(IconType="question",
         Title='Vuoi sostituire gli stili del documento?',
         Text="""
-► Scegli "Sì" per sostituire gli stili del documento selezionando
-    un file di riferimento (facoltativo). Se non selezioni alcun
-    file, verranno applicati gli stili predefiniti di LeenO.
+► Scegli "Sì" per sostituire gli stili del documento selezionando un file di riferimento (facoltativo). Se non selezioni alcun file, verranno applicati gli stili predefiniti di LeenO.
     ----
-    ⚠️  ATTENZIONE: l'applicazione di stili che visualizzano un
-    numero diverso di cifre decimali può influire sui risultati
-    dei calcoli, in funzione dell'opzione “Precisione come mostrato”.
+    ⚠️  ATTENZIONE: l'applicazione di stili che visualizzano un numero diverso di cifre decimali può influire sui risultati dei calcoli, in funzione dell'opzione “Precisione come mostrato”.
 
 ► Scegli "No" per mantenere gli stili attuali.
 """

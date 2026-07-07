@@ -4211,13 +4211,7 @@ def XPWE_out_run(elaborato, out_file):
                     if oSheet.getCellByPosition(4, m).Value > 0 and \
                         oSheet.getCellByPosition(10, m).Value != 0:
                             Flags.text = '32768'
-                    if elaborato in ('COMPUTO', 'VARIANTE'):
-                        if oSheet.getCellByPosition(9, m).Value < 0:
-                            Flags.text = '32769'
-                            # Primus interpreta il bit 0 (NEGATIVO) come indicatore di segno:
-                            # la Quantita deve essere in valore assoluto, altrimenti
-                            # Primus invertirebbe il segno già negativo → +0.22 anziché -0.22
-                            Quantita.text = str(abs(oSheet.getCellByPosition(9, m).Value))
+
             n = sotto + 1
 
     # #########################

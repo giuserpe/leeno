@@ -5659,3 +5659,2229 @@ File: LeenoDispatcher.py, Line: 284, Function: trigger
 File: LeenoToolbars.py, Line: 128, Function: Vedi
 ------------------------------------------------------------
 
+[2026-06-06 15:44:40]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.25-TESTING-20260603
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-06 23:02:20]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.26-TESTING-20260606
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-07 10:39:26]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-07 11:59:09]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1379'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 118, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1379, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-06-07 12:03:34]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1379'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 118, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1379, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-06-07 17:58:50]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: [Errno 2] No such file or directory: 'C:\\Users\\giuserpe\\AppData\\Roaming\\LibreOffice\\4\\user\\uno_packages\\cache\\uno_packages\\src\\Ultimus.oxt\\Accelerators.xcu'
+
+File: 'ElementTree.py'
+Line: '558'
+Function: 'parse'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12584, Function: MENU_debug
+File: pyleeno.py, Line: 12465, Function: sync
+File: ElementTree.py, Line: 1204, Function: parse
+File: ElementTree.py, Line: 558, Function: parse
+------------------------------------------------------------
+
+[2026-06-07 18:05:30]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '54'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 54, Function: DlgMain
+------------------------------------------------------------
+
+[2026-06-07 18:12:13]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '54'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 54, Function: DlgMain
+------------------------------------------------------------
+
+[2026-06-07 18:19:16]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.28-TESTING-20260607
+
+Errore: module 'pyleeno' has no attribute 'LeenO_path'
+
+File: 'Dialogs.py'
+Line: '2631'
+Function: 'Exclamation'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 67, Function: DlgMain
+File: Dialogs.py, Line: 2631, Function: Exclamation
+------------------------------------------------------------
+
+[2026-06-08 12:24:27]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'pyleeno.py'
+Line: '5880'
+Function: 'MENU_ricicla_misure'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 164, Function: wrapper
+File: pyleeno.py, Line: 5880, Function: MENU_ricicla_misure
+------------------------------------------------------------
+
+[2026-06-08 13:42:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1388'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 136, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1388, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-06-09 10:07:56]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '415'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 271, Function: MENU_invia_voce
+File: pyleeno.py, Line: 415, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-09 10:44:33]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: Couldn't convert <traceback object at 0x000002651EC5A080> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 8263, Function: MENU_filtra_codice
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-09 10:44:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: Couldn't convert <traceback object at 0x00000264E7C08F40> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 8268, Function: MENU_filtra_codice
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-09 10:44:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: Couldn't convert <traceback object at 0x00000264A1E5E340> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 83, Function: wrapper
+File: undo_utils.py, Line: 71, Function: wrapper
+File: pyleeno.py, Line: 8263, Function: MENU_filtra_codice
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-09 12:28:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: cannot access local variable 'lrow' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '809'
+Function: 'Ins_Categorie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 874, Function: MENU_Inser_SuperCapitolo
+File: pyleeno.py, Line: 809, Function: Ins_Categorie
+------------------------------------------------------------
+
+[2026-06-09 12:56:28]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: Couldn't convert <traceback object at 0x000002658F2E3280> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 974, Function: MENU_Inser_SuperCapitolo
+File: pyleeno.py, Line: 920, Function: Ins_Categorie
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-09 12:56:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.29-TESTING-20260607
+
+Errore: Couldn't convert <traceback object at 0x000002656D349140> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 974, Function: MENU_Inser_SuperCapitolo
+File: pyleeno.py, Line: 920, Function: Ins_Categorie
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-09 23:31:13]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.30-TESTING-20260609
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-10 08:28:19]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot unpack non-iterable NoneType object
+
+File: 'pyleeno.py'
+Line: '12575'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12575, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 09:39:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot unpack non-iterable NoneType object
+
+File: 'pyleeno.py'
+Line: '12577'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12577, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 09:44:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot unpack non-iterable NoneType object
+
+File: 'pyleeno.py'
+Line: '12577'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12577, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 10:01:41]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot unpack non-iterable NoneType object
+
+File: 'pyleeno.py'
+Line: '12577'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12577, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 12:31:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:31:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:31:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-06-10 12:31:36]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:31:42]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-06-10 12:31:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:32:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:32:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:33:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoBasicBridge.py, Line: 20, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 32, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoConfig.py, Line: 11, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:33:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:33:26]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-06-10 12:33:34]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:34:06]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoBasicBridge.py, Line: 20, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 32, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoConfig.py, Line: 11, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:34:18]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:34:27]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoBasicBridge.py, Line: 20, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 32, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoConfig.py, Line: 11, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:35:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 12:36:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+
+[2026-06-10 12:44:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: unexpected indent (pyleeno.py, line 12599)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: LeenoToolbars.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 9, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-06-10 13:45:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '415'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 271, Function: MENU_invia_voce
+File: pyleeno.py, Line: 415, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-10 13:53:29]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.32-TESTING-20260610
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '415'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 271, Function: MENU_invia_voce
+File: pyleeno.py, Line: 415, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-10 22:10:57]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '128'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoToolbars.py, Line: 128, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-10 22:47:03]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: cannot access local variable 'n' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '12575'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 12575, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 22:57:38]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: cannot unpack non-iterable NoneType object
+
+File: 'pyleeno.py'
+Line: '12583'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 12583, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 22:59:31]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoSheetUtils.py'
+Line: '611'
+Function: 'prossimaVoce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 12586, Function: MENU_debug
+File: LeenoSheetUtils.py, Line: 611, Function: prossimaVoce
+------------------------------------------------------------
+
+[2026-06-10 23:00:12]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoSheetUtils.py'
+Line: '611'
+Function: 'prossimaVoce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 12586, Function: MENU_debug
+File: LeenoSheetUtils.py, Line: 611, Function: prossimaVoce
+------------------------------------------------------------
+
+[2026-06-10 23:21:09]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: getCellByName
+
+File: 'pyleeno.py'
+Line: '12574'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 12574, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-10 23:41:29]
+OS: win32 / LibreOffice-26.2.3.2 / LeenO-3.26.0.33-TESTING-20260610
+
+Errore: name 'oSheet' is not defined
+
+File: 'pyleeno.py'
+Line: '12567'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12567, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-11 18:15:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.34-TESTING-20260611
+
+Errore: Type 22 is not supported!
+
+File: 'LeenoContab.py'
+Line: '158'
+Function: 'insertVoceContabilita'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoContab.py, Line: 658, Function: attiva_contabilita
+File: LeenoContab.py, Line: 633, Function: generaContabilita
+File: LeenoContab.py, Line: 158, Function: insertVoceContabilita
+------------------------------------------------------------
+
+[2026-06-12 08:31:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.35-TESTING-20260611
+
+Errore: cannot access local variable 'SR' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '4804'
+Function: 'Circoscrive_Analisi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: LeenoUtils.py, Line: 888, Function: wrapper
+File: pyleeno.py, Line: 5136, Function: MENU_elimina_voce
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: LeenoUtils.py, Line: 888, Function: wrapper
+File: pyleeno.py, Line: 5173, Function: elimina_voce
+File: pyleeno.py, Line: 4804, Function: Circoscrive_Analisi
+------------------------------------------------------------
+
+[2026-06-12 09:08:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.35-TESTING-20260611
+
+Errore: 'int' object has no attribute 'getCellByPosition'
+
+File: 'LeenoAnalysis.py'
+Line: '215'
+Function: 'copiaRigaAnalisi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: pyleeno.py, Line: 5581, Function: MENU_Copia_riga_Ent
+File: pyleeno.py, Line: 5643, Function: Copia_riga_Ent
+File: LeenoAnalysis.py, Line: 215, Function: copiaRigaAnalisi
+------------------------------------------------------------
+
+[2026-06-12 09:19:48]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.35-TESTING-20260611
+
+Errore: 'int' object has no attribute 'getCellByPosition'
+
+File: 'LeenoAnalysis.py'
+Line: '215'
+Function: 'copiaRigaAnalisi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: pyleeno.py, Line: 5581, Function: MENU_Copia_riga_Ent
+File: pyleeno.py, Line: 5643, Function: Copia_riga_Ent
+File: LeenoAnalysis.py, Line: 215, Function: copiaRigaAnalisi
+------------------------------------------------------------
+
+[2026-06-16 11:33:06]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.37-TESTING-20260616
+
+Errore: 
+
+File: 'LeenoSheetUtils.py'
+Line: '761'
+Function: 'adattaAltezzaRiga'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 3062, Function: MENU_riordina_ElencoPrezzi
+File: pyleeno.py, Line: 1845, Function: Menu_adattaAltezzaRiga
+File: LeenoUtils.py, Line: 888, Function: wrapper
+File: LeenoSheetUtils.py, Line: 761, Function: adattaAltezzaRiga
+------------------------------------------------------------
+
+[2026-06-16 13:37:14]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.38-TESTING-20260616
+
+Errore: 'NoneType' object has no attribute 'RangeAddress'
+
+File: 'LeenoContab.py'
+Line: '211'
+Function: 'insertVoceContabilita'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 7334, Function: MENU_nuova_voce_scelta
+File: LeenoContab.py, Line: 211, Function: insertVoceContabilita
+------------------------------------------------------------
+
+[2026-06-18 09:14:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: Couldn't convert <traceback object at 0x000001E26EB32980> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12609, Function: MENU_debug
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-18 09:23:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: Couldn't convert <traceback object at 0x000001E281594580> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12611, Function: MENU_debug
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-18 09:24:36]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: Couldn't convert <traceback object at 0x000001E2912ADBC0> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12611, Function: MENU_debug
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-18 09:25:59]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: Couldn't convert <traceback object at 0x000001E29F545580> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12614, Function: MENU_debug
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-18 09:28:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: Couldn't convert <traceback object at 0x000001E299E6FC80> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12616, Function: MENU_debug
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-18 09:30:50]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.42-TESTING-20260617
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '12568'
+Function: 'MENU_debug_giannelli'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12591, Function: MENU_debug
+File: pyleeno.py, Line: 12568, Function: MENU_debug_giannelli
+------------------------------------------------------------
+
+[2026-06-18 14:47:16]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: conversion not possible!
+
+File: 'LeenoA2.py'
+Line: '127'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 127, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 14:49:15]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: conversion not possible!
+
+File: 'LeenoA2.py'
+Line: '125'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 125, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 14:59:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: module 'Dialogs' has no attribute 'chi'
+
+File: 'LeenoA2.py'
+Line: '125'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 125, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 15:24:00]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: cannot access local variable 'ods_url' where it is not associated with a value
+
+File: 'LeenoA2.py'
+Line: '139'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 139, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 15:25:22]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: cannot access local variable 'ods_url' where it is not associated with a value
+
+File: 'LeenoA2.py'
+Line: '139'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 139, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 15:26:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: Unsupported URL <file:///W:/_dwg/_COMUNE_MT/DJ/2023_02_PNRR-QUADRIFOGLIO/@DL/SAL/%20COMPUTO......%E2%82%AC%201.005.267,84>: "type detection failed"
+
+File: 'LeenoA2.py'
+Line: '146'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 146, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 15:27:05]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: Unsupported URL <file:///W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/files/2023_02_PNRR-QUADRIFOGLIO-GE.ods>: "type detection failed"
+
+File: 'LeenoA2.py'
+Line: '147'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 147, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 15:29:33]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: Unsupported URL <W:\_dwg\_COMUNE_MT\DJ\2023_02_PNRR-QUADRIFOGLIO\@DL\SAL/2023_02_PNRR-QUADRIFOGLIO-GE_ADEGUAMENTO.ods>: "from LoadEnv::startLoading"
+
+File: 'LeenoA2.py'
+Line: '148'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 148, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 18:50:09]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.43-TESTING-20260618
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'string2Date' (most likely due to a circular import)
+
+File: 'PersistUtils.py'
+Line: '19'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 24, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 6, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 5, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoConfig.py, Line: 12, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: PersistUtils.py, Line: 19, Function: <module>
+------------------------------------------------------------
+
+[2026-06-18 22:33:52]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.44-TESTING-20260618
+
+Errore: Unsupported URL <W:\_dwg\207\M57_OLIVIERI\@TURISMO_E_GUSTO/M57_OLIVIERI_GE.ods>: "from LoadEnv::startLoading"
+
+File: 'LeenoA2.py'
+Line: '148'
+Function: 'MENU_riepilogo_a2_cartella'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 148, Function: MENU_riepilogo_a2_cartella
+------------------------------------------------------------
+
+[2026-06-18 23:18:31]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.44-TESTING-20260618
+
+Errore: Unsupported URL <file:///W:/_dwg/207/M56_lofrumento/COMPUTI/35/%20COMPUTO.........%E2%82%AC%2030.761,83>: "type detection failed"
+
+File: 'LeenoA2.py'
+Line: '149'
+Function: 'MENU_importi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoA2.py, Line: 149, Function: MENU_importi
+------------------------------------------------------------
+
+[2026-06-19 23:08:45]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.46-TESTING-20260619
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '417'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 417, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-19 23:10:51]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.46-TESTING-20260619
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '415'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 415, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-19 23:11:48]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.46-TESTING-20260619
+
+Errore: cannot access local variable 'start_row' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '417'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 340, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 417, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-22 10:59:21]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.47-TESTING-20260619
+
+Errore: Couldn't convert <traceback object at 0x00000217EAD23780> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-22 10:59:52]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.47-TESTING-20260619
+
+Errore: Couldn't convert <traceback object at 0x00000217958945C0> to a UNO type; caught exception: <class 'AttributeError'>: 'traceback' object has no attribute 'getTypes', traceback follows
+no traceback available
+
+
+File: 'uno.py'
+Line: '513'
+Function: '_uno_struct__setattr__'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 191, Function: __exit__
+File: uno.py, Line: 513, Function: _uno_struct__setattr__
+------------------------------------------------------------
+
+[2026-06-22 11:02:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.47-TESTING-20260619
+
+Errore: Errore UNO: 
+
+File: 'LeenoUtils.py'
+Line: '314'
+Function: 'no_refresh_context'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 339, Function: wrapper
+File: contextlib.py, Line: 158, Function: __exit__
+File: LeenoUtils.py, Line: 314, Function: no_refresh_context
+------------------------------------------------------------
+
+[2026-06-22 11:05:19]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.47-TESTING-20260619
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '525'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 331, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 525, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-22 11:05:45]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.47-TESTING-20260619
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '525'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 331, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 525, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-22 12:44:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.48-TESTING-20260622
+
+Errore: unsupported operand type(s) for +: 'NoneType' and 'int'
+
+File: 'pyleeno.py'
+Line: '451'
+Function: 'invia_voce'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 331, Function: wrapper
+File: pyleeno.py, Line: 273, Function: MENU_invia_voce
+File: pyleeno.py, Line: 451, Function: invia_voce
+------------------------------------------------------------
+
+[2026-06-22 22:08:14]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.50-TESTING-20260622
+
+Errore: adattaAltezzaRiga() takes from 0 to 2 positional arguments but 3 were given
+
+File: 'LeenoUtils.py'
+Line: '879'
+Function: 'wrapper'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: pyleeno.py, Line: 5638, Function: MENU_Copia_riga_Ent
+File: pyleeno.py, Line: 5716, Function: Copia_riga_Ent
+File: LeenoUtils.py, Line: 879, Function: wrapper
+------------------------------------------------------------
+
+[2026-06-23 16:39:45]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: CdP
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-23 16:40:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: CdP
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-23 16:40:23]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: Analisi di Prezzo
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-23 16:40:37]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: Elenco Prezzi
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-23 16:41:01]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: Elenco Prezzi
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-23 17:00:23]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.52-TESTING-20260623
+
+Errore: Nome del foglio non gestito: S2
+
+File: 'pyleeno.py'
+Line: '9229'
+Function: 'vista_configurazione'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 351, Function: wrapper
+File: pyleeno.py, Line: 12652, Function: MENU_debug
+File: pyleeno.py, Line: 9229, Function: vista_configurazione
+------------------------------------------------------------
+
+[2026-06-24 09:40:47]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.53-TESTING-20260623
+
+Errore: Impossibile trovare un editor (Antigravity o VS Code) su Windows. Assicurati che almeno uno sia installato.
+
+File: 'LeenoDialogs.py'
+Line: '480'
+Function: 'cerca_path_valido'
+
+(Errore automazione debug: Impossibile trovare un editor (Antigravity o VS Code) su Windows. Assicurati che almeno uno sia installato.)
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 789, Function: MENU_avvia_IDE
+File: pyleeno.py, Line: 810, Function: avvia_IDE
+File: LeenoDialogs.py, Line: 495, Function: apri_con_editor
+File: LeenoDialogs.py, Line: 480, Function: cerca_path_valido
+------------------------------------------------------------
+
+[2026-06-24 10:08:49]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.53-TESTING-20260623
+
+Errore: createViewCursor
+
+File: 'pyleeno.py'
+Line: '11288'
+Function: 'fissa'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 55, Function: DlgMain
+File: LeenoUtils.py, Line: 351, Function: wrapper
+File: pyleeno.py, Line: 10043, Function: DlgMain
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: pyleeno.py, Line: 11288, Function: fissa
+------------------------------------------------------------
+
+[2026-06-24 10:09:11]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.53-TESTING-20260623
+
+Errore: createViewCursor
+
+File: 'pyleeno.py'
+Line: '11288'
+Function: 'fissa'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 55, Function: DlgMain
+File: LeenoUtils.py, Line: 351, Function: wrapper
+File: pyleeno.py, Line: 10043, Function: DlgMain
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: pyleeno.py, Line: 11288, Function: fissa
+------------------------------------------------------------
+
+[2026-06-24 15:45:25]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoVariante.py'
+Line: '29'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 24, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoVariante.py, Line: 29, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 15:48:18]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoVariante.py'
+Line: '29'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 24, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoVariante.py, Line: 29, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 15:49:02]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoVariante.py'
+Line: '29'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 24, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoVariante.py, Line: 29, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 15:49:19]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoImport_XPWE.py'
+Line: '1070'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 1070, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 15:50:20]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoImport_XPWE.py'
+Line: '1070'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 1070, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 15:51:19]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.54-TESTING-20260624
+
+Errore: partially initialized module 'LeenoUtils' has no attribute 'no_refresh' (most likely due to a circular import)
+
+File: 'LeenoVariante.py'
+Line: '29'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 85, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: Dialogs.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoComputo.py, Line: 16, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoSheetUtils.py, Line: 19, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoAnalysis.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoEvents.py, Line: 8, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoBasicBridge.py, Line: 25, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 38, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoImport_XPWE.py, Line: 24, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoVariante.py, Line: 29, Function: <module>
+------------------------------------------------------------
+
+[2026-06-24 22:45:23]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.55-TESTING-20260624
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '9007'
+Function: 'autoexec_off'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 283, Function: autoexec_off
+File: LeenoUtils.py, Line: 321, Function: wrapper
+File: pyleeno.py, Line: 9007, Function: autoexec_off
+------------------------------------------------------------
+
+[2026-06-24 22:50:28]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.55-TESTING-20260624
+
+Errore: cancella_riepilogo_quantita() missing 1 required positional argument: 'oSheet'
+
+File: 'pyleeno.py'
+Line: '12698'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+File: pyleeno.py, Line: 12698, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-24 22:53:29]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.55-TESTING-20260624
+
+Errore: cancella_riepilogo_quantita() missing 1 required positional argument: 'oSheet'
+
+File: 'pyleeno.py'
+Line: '12699'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+File: pyleeno.py, Line: 12699, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-06-30 09:56:40]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.58-TESTING-20260629
+
+Errore: preserva_posizione.<locals>.decorator() missing 1 required positional argument: 'func'
+
+File: 'LeenoUtils.py'
+Line: '341'
+Function: 'wrapper'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+------------------------------------------------------------
+
+[2026-06-30 13:48:03]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.58-TESTING-20260629
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '129'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+File: LeenoToolbars.py, Line: 129, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-30 14:45:59]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.58-TESTING-20260629
+
+Errore: can only concatenate tuple (not "str") to tuple
+
+File: 'pyleeno.py'
+Line: '871'
+Function: 'Ins_Categorie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 910, Function: MENU_Inser_SuperCapitolo
+File: pyleeno.py, Line: 871, Function: Ins_Categorie
+------------------------------------------------------------
+
+[2026-06-30 16:17:39]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.60-TESTING-20260630
+
+Errore: module 'pyleeno' has no attribute 'dp'
+
+File: 'LeenoToolbars.py'
+Line: '129'
+Function: 'Vedi'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+File: LeenoToolbars.py, Line: 129, Function: Vedi
+------------------------------------------------------------
+
+[2026-06-30 16:53:43]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.61-TESTING-20260630
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1569'
+Function: 'vai_a_Scorciatoie'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoBasicBridge.py, Line: 136, Function: vai_a_Scorciatoie
+File: pyleeno.py, Line: 1569, Function: vai_a_Scorciatoie
+------------------------------------------------------------
+
+[2026-06-30 17:41:47]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.61-TESTING-20260630
+
+Errore: cannot import name 'chiudi_dialoghi' from partially initialized module 'pyleeno' (most likely due to a circular import) (C:\Users\TEST\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu1152867wg3.tmp_\LeenO.oxt\python\pythonpath\pyleeno.py)
+
+File: 'LeenoContab.py'
+Line: '9'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 78, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 9, Function: <module>
+------------------------------------------------------------
+
+[2026-06-30 17:57:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.61-TESTING-20260630
+
+Errore: cannot import name 'chiudi_dialoghi' from partially initialized module 'pyleeno' (most likely due to a circular import) (C:\Users\TEST\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu1152867wg3.tmp_\LeenO.oxt\python\pythonpath\pyleeno.py)
+
+File: 'LeenoContab.py'
+Line: '9'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 78, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 9, Function: <module>
+------------------------------------------------------------
+
+[2026-06-30 18:34:36]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.61-TESTING-20260630
+
+Errore: 
+
+File: 'LeenoSheetUtils.py'
+Line: '769'
+Function: 'adattaAltezzaRiga'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 321, Function: wrapper
+File: pyleeno.py, Line: 11091, Function: MENU_sistema_pagine
+File: LeenoUtils.py, Line: 914, Function: wrapper
+File: LeenoSheetUtils.py, Line: 769, Function: adattaAltezzaRiga
+------------------------------------------------------------
+
+[2026-06-30 18:41:55]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.61-TESTING-20260630
+
+Errore: cannot import name 'chiudi_dialoghi' from partially initialized module 'pyleeno' (most likely due to a circular import) (C:\Users\TEST\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\lu1152867wg3.tmp_\LeenO.oxt\python\pythonpath\pyleeno.py)
+
+File: 'LeenoContab.py'
+Line: '9'
+Function: '<module>'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 940, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 78, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoContab.py, Line: 9, Function: <module>
+------------------------------------------------------------
+
+[2026-07-01 23:31:56]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.64-TESTING-20260701
+
+Errore: name 'nCol' is not defined
+
+File: 'SheetUtils.py'
+Line: '485'
+Function: 'uFindString'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 341, Function: wrapper
+File: pyleeno.py, Line: 12732, Function: MENU_debug
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 72, Function: wrapper
+File: LeenoUtils.py, Line: 321, Function: wrapper
+File: LeenoComputo.py, Line: 811, Function: MENU_inserisci_somme_lavori_sicurezza
+File: SheetUtils.py, Line: 485, Function: uFindString
+------------------------------------------------------------
+
+[2026-07-02 00:23:30]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.64-TESTING-20260701
+
+Errore: expected ':' (Dialogs.py, line 2674)
+
+File: 'uno.py'
+Line: '346'
+Function: '_uno_import'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 90, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1387, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1360, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1331, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 935, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 999, Function: exec_module
+File: <frozen importlib._bootstrap>, Line: 488, Function: _call_with_frames_removed
+File: pyleeno.py, Line: 23, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoUtils.py, Line: 351, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+File: LeenoDialogs.py, Line: 10, Function: <module>
+File: uno.py, Line: 346, Function: _uno_import
+------------------------------------------------------------
+
+[2026-07-02 00:43:28]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.64-TESTING-20260701
+
+Errore: cannot access local variable 'Text' where it is not associated with a value
+
+File: 'pyleeno.py'
+Line: '12738'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 343, Function: wrapper
+File: pyleeno.py, Line: 12738, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-07-03 13:06:56]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.70-TESTING-20260702
+
+Errore: name 'sfsad' is not defined
+
+File: 'pyleeno.py'
+Line: '12727'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 343, Function: wrapper
+File: pyleeno.py, Line: 12727, Function: MENU_debug
+------------------------------------------------------------
+
+[2026-07-03 22:01:02]
+OS: win32 / LibreOffice-26.2.4.2 / LeenO-3.26.0.71-TESTING-20260703
+
+Errore: 'NoneType' object has no attribute 'inspect'
+
+File: 'LeenoDialogs.py'
+Line: '164'
+Function: 'mri'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 343, Function: wrapper
+File: pyleeno.py, Line: 12727, Function: MENU_debug
+File: LeenoDialogs.py, Line: 164, Function: mri
+------------------------------------------------------------
+

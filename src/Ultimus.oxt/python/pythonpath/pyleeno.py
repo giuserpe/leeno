@@ -4211,7 +4211,10 @@ def XPWE_out_run(elaborato, out_file):
                     if oSheet.getCellByPosition(4, m).Value > 0 and \
                         oSheet.getCellByPosition(10, m).Value != 0:
                             Flags.text = '32768'
-
+                    # NOTA: per COMPUTO/VARIANTE le righe 'vedi voce' usano
+                    # sempre Flags=32768: la Quantita porta già il segno corretto.
+                    # Impostare 32769 (=32768|1, bit 'sottrai') causerebbe una
+                    # doppia inversione del segno in Primus.
             n = sotto + 1
 
     # #########################
@@ -4236,7 +4239,7 @@ def XPWE_out_run(elaborato, out_file):
         of.write(riga)
         of.close()
         Dialogs.Exclamation(Title = 'INFORMAZIONE',
-        Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {out_file}'
+        Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file, max_len=60)}'
 '\n\n----\n'
 'XPWE è un formato XML di interscambio per Primus di ACCA.\n'
 'Prima di utilizzare questo file in Primus, assicurarsi che le percentuali \

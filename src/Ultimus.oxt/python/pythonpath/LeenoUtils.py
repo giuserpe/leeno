@@ -791,13 +791,13 @@ def convert_number_string(s: str) -> str:
 
 import textwrap
 
-def wrap_text(text: str, width=50) -> str:
+def wrap_text(text: str, width=55) -> str:
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
     return "\n".join(wrapped_lines)
 
-def wrap_path(path, max_len=50):
+def wrap_path(path, max_len=60):
     """Versione ultra-compatta per wrapping percorsi"""
     parts = path.split('\\')
     result = parts[0]

@@ -120,14 +120,12 @@ def sbloccaContabilita(oSheet, lrow):
 
     partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
     if partenza[2] == '#reg':
-        res = Dialogs.DLG_ask(IconType="question",
+        res = Dialogs.YesNoCancelDialog(IconType="question",
            Title="Voce già registrata",
-           Text= LeenoUtils.wrap_text(
-                "Lavorando in questo punto del foglio, comprometterai la validità "
-                "degli atti contabili già emessi.\n\n"
-                "Vuoi procedere?\n\n"
-                "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
-            )
+           Text= "Lavorando in questo punto del foglio,\n"
+                 "comprometterai la validità degli atti contabili già emessi.\n\n"
+                 "Vuoi procedere?\n\n"
+                 "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
         )
         if res == 1:
             LeenoGlobals.setGlobalVar('sblocca_computo', 1)

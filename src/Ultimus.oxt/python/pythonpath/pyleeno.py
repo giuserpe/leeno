@@ -2836,9 +2836,9 @@ def scelta_viste_run():
                 LeenoUtils.DocumentRefresh(False)
 
                 oSheet.getCellRangeByName('Z2').Formula = (
-                    f'=IFERROR(LET(t;N({col1}2);u;N({col2}2);'
-                    f'IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";'
-                    f't>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+                    f'=IFERROR(LET(a;N({col1}2);u;N({col2}2);'
+                    f'IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";'
+                    f'a>u;-(a-u)/a;a<u;(u-a)/a)));"--")'
                 )
 
                 oSheet.getCellRangeByName('X1').String = label
@@ -2847,7 +2847,7 @@ def scelta_viste_run():
                     formule.append([
                         f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
                         f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                        f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
+                        f'=IFERROR(LET(a;N({col1}{n});u;N({col2}{n});IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";a>u;-(a-u)/a;a<u;(u-a)/a)));"--")',
                     ])
 
                 n += 1
@@ -2873,9 +2873,9 @@ def scelta_viste_run():
                                         0, el, 1, el).Rows.IsVisible = False
 
                     oSheet.getCellRangeByName(f'Z{n}').Formula = (
-                        f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});'
-                        f'IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";'
-                        f't>u;-(t-u)/t;t<u;(u-t)/t)));"--")'
+                        f'=IFERROR(LET(a;N({col1}{n});u;N({col2}{n});'
+                        f'IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";'
+                        f'a>u;-(a-u)/a;a<u;(u-a)/a)));"--")'
                     )
 
                 LeenoSheetUtils.inserisciRigaRossa(oSheet)
@@ -3307,6 +3307,7 @@ def riordina_ElencoPrezzi_():
 ########################################################################
 
 @LeenoUtils.no_refresh
+@LeenoUtils.preserva_posizione(step=0)
 def MENU_doppioni():
     # Inizializza la progress bar
     oDoc = LeenoUtils.getDocument()
@@ -3360,7 +3361,6 @@ def MENU_doppioni():
             indicator.end()  # Chiude la progress bar
     LeenoUtils.ripristina_posizione()
 
-
 def EliminaVociDoppieElencoPrezzi():
     """
     Rimuove dall'elenco prezzi:
@@ -3368,7 +3368,6 @@ def EliminaVociDoppieElencoPrezzi():
     2. Voci duplicate (stessa chiave fino a MAX_COMPARE_COLS, esclusa colonna 1)
        - Per duplicati: mantiene righe con markup (col5) o prima riga
     """
-    LeenoUtils.memorizza_posizione()
     # --- CONFIGURAZIONE ---
     MARKUP_COL = 5             # Colonna markup/note
     FORMULA_CHECK_COL = 1      # Colonna B (indice 1)
@@ -3423,7 +3422,6 @@ def EliminaVociDoppieElencoPrezzi():
         )
         output_range.setDataArray(clean_data)
 
-    LeenoUtils.ripristina_posizione()
 
 ########################################################################
 
@@ -3542,7 +3540,7 @@ def XPWE_out_run(elaborato, out_file):
     if elaborato == 'CONTABILITA':
         TipoDocumento.text = '2'
     if TipoDocumento.text != '2':
-        if Dialogs.DLG_ask(
+        if Dialogs.YesNoCancelDialog(
             Title='',
             Text= 'Abilitando la contabilità nel formato XPWE,\n'
             'Primus potrà riconoscere e gestire correttamente le Voci della Sicurezza.\n\n'
@@ -4211,10 +4209,9 @@ def XPWE_out_run(elaborato, out_file):
                     if oSheet.getCellByPosition(4, m).Value > 0 and \
                         oSheet.getCellByPosition(10, m).Value != 0:
                             Flags.text = '32768'
-                    # NOTA: per COMPUTO/VARIANTE le righe 'vedi voce' usano
-                    # sempre Flags=32768: la Quantita porta già il segno corretto.
-                    # Impostare 32769 (=32768|1, bit 'sottrai') causerebbe una
-                    # doppia inversione del segno in Primus.
+                    if elaborato in ('COMPUTO', 'VARIANTE'):
+                        if  oSheet.getCellByPosition(9, m).Value < 0:
+                            Flags.text = '32769'
             n = sotto + 1
 
     # #########################
@@ -8010,6 +8007,8 @@ def MENU_importa_stili():
     ⚠️  ATTENZIONE: l'applicazione di stili che visualizzano un numero diverso di cifre decimali può influire sui risultati dei calcoli, in funzione dell'opzione “Precisione come mostrato”.
 
 ► Scegli "No" per mantenere gli stili attuali.
+ 
+ 
 """
     ) == 0:
         return

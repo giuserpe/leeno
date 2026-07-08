@@ -825,23 +825,28 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 row_idx = cell_left.CellAddress.Row
                 col_idx = cell_left.CellAddress.Column
                 cell_right = sheet.getCellByPosition(col_idx + 1, row_idx)
-                cell_up = sheet.getCellByPosition(col_idx, row_idx - 1)
-                cell_up_right = sheet.getCellByPosition(col_idx + 1, row_idx - 1)
+                cell_down = sheet.getCellByPosition(col_idx, row_idx + 1)
+                cell_down_right = sheet.getCellByPosition(col_idx + 1, row_idx + 1)
 
-                cell_up.String = "Lavori"
-                cell_up.CellBackColor = COLORE_VIOLA
-                cell_up_right.String = "Sicurezza"
-                cell_up_right.CellBackColor = COLORE_ARANCIONE
+                cell_left.String = "Lavori"
+                cell_left.HoriJustify = 2
+                cell_left.VertJustify = 2
+                cell_right.String = "Sicurezza"
+                cell_right.HoriJustify = 2
+                cell_right.VertJustify = 2
 
-                cell_left.Formula = self.formula_ordinarie
-                cell_right.Formula = self.formula_vds
-                
-                # Imposta la formattazione numero euro
-                cell_left.NumberFormat = 5
-                cell_right.NumberFormat = 5
-                # cell_ribasso.NumberFormat = 5
-                # DLG.mri(cell_left)
-                
+                cell_down.Formula = self.formula_ordinarie
+                cell_down.NumberFormat = 5
+                cell_down.CharWeight = 150
+                cell_down.CellBackColor = COLORE_VIOLA
+                cell_down.VertJustify = 2
+
+                cell_down_right.Formula = self.formula_vds
+                cell_down_right.NumberFormat = 5
+                cell_down_right.CharWeight = 150                
+                cell_down_right.CellBackColor = COLORE_ARANCIONE
+                cell_down_right.VertJustify = 2
+
                 cell_left.CellBackColor = self.color_ordinarie
                 cell_right.CellBackColor = self.color_vds
                 
@@ -867,9 +872,9 @@ def MENU_inserisci_somme_lavori_sicurezza():
     controller.addRangeSelectionListener(listener)
 
     props = (
-        PropertyValue(Name="Title", Value="Seleziona la cella per le somme (Ordinarie sx, VDS dx)"),
+        PropertyValue(Name="Title", Value="Seleziona la cella per le somme (Lavori sx, Sicurezza dx)"),
         PropertyValue(Name="CloseOnMouseRelease", Value=True),
         PropertyValue(Name="SingleCellMode", Value=True),
     )
 
-    controller.startRangeSelection(props)
+    oo = controller.startRangeSelection(props)

@@ -2675,7 +2675,7 @@ def scelta_viste_run():
 
         if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
             oDialog1.getControl('GeneraAtti').Enable = False
-            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. #'
+            oDialog1.getControl('GeneraAtti').Label = 'Nessun SAL da generare'
 
         # Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
@@ -2836,9 +2836,9 @@ def scelta_viste_run():
                 LeenoUtils.DocumentRefresh(False)
 
                 oSheet.getCellRangeByName('Z2').Formula = (
-                    f'=IFERROR(LET(a;N({col1}2);u;N({col2}2);'
-                    f'IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";'
-                    f'a>u;-(a-u)/a;a<u;(u-a)/a)));"--")'
+                    f'=IFERROR(LET(_a;N({col1}2);_u;N({col2}2);'
+                    f'IF(AND(_a=0;_u=0);"--";IFS(_u=0;-1;_a=0;1;_a=_u;"--";'
+                    f'_a>_u;-(_a-_u)/_a;_a<_u;(_u-_a)/_a)));"--")'
                 )
 
                 oSheet.getCellRangeByName('X1').String = label
@@ -2847,7 +2847,7 @@ def scelta_viste_run():
                     formule.append([
                         f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
                         f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                        f'=IFERROR(LET(a;N({col1}{n});u;N({col2}{n});IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";a>u;-(a-u)/a;a<u;(u-a)/a)));"--")',
+                        f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
                     ])
 
                 n += 1
@@ -2873,9 +2873,7 @@ def scelta_viste_run():
                                         0, el, 1, el).Rows.IsVisible = False
 
                     oSheet.getCellRangeByName(f'Z{n}').Formula = (
-                        f'=IFERROR(LET(a;N({col1}{n});u;N({col2}{n});'
-                        f'IF(AND(a=0;u=0);"--";IFS(u=0;-1;a=0;1;a=u;"--";'
-                        f'a>u;-(a-u)/a;a<u;(u-a)/a)));"--")'
+                        f'=IFERROR(LET(_c;N({col1}{n});_u;N({col2}{n});IF(AND(_c=0;_u=0);"--";IFS(_u=0;-1;_c=0;1;_c=_u;"--";_c>_u;-(_c-_u)/_c;_c<_u;(_u-_c)/_c)));"--")'
                     )
 
                 LeenoSheetUtils.inserisciRigaRossa(oSheet)
@@ -3075,7 +3073,12 @@ def genera_sommario():
 
     # attiva la progressbar
     indicator = oDoc.getCurrentController().getStatusIndicator()
+    oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+
+    # --- Controllo doppioni ---
+    start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
     ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
     for n in range(4, ultima_voce + 1):
@@ -3540,7 +3543,7 @@ def XPWE_out_run(elaborato, out_file):
     if elaborato == 'CONTABILITA':
         TipoDocumento.text = '2'
     if TipoDocumento.text != '2':
-        if Dialogs.YesNoCancelDialog(
+        if Dialogs.DLG_ask(
             Title='',
             Text= 'Abilitando la contabilità nel formato XPWE,\n'
             'Primus potrà riconoscere e gestire correttamente le Voci della Sicurezza.\n\n'

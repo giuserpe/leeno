@@ -452,51 +452,30 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-08 21:48</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2a8464cc48d155356fe546c5a7dce13fd05e5659" target="_blank" rel="noopener"><code>2a8464c</code></a></td>
-                <td class="commit-msg">chore(versioning): bump a 3.26.0.77‑TESTING‑20260708
+                <td>2026-07-09 20:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/2c82a0189e9d841ad53d587d8ca65b6c24c55999" target="_blank" rel="noopener"><code>2c82a01</code></a></td>
+                <td class="commit-msg">chore(versioning): bump a 3.26.0.78‑TESTING‑20260709
 
 - aggiorna description.xml
 - aggiorna leeno_version_code</td>
             </tr>
             <tr>
-                <td>2026-07-08 21:46</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2322dcd532fca0c4cee8d2f82b564c269678a497" target="_blank" rel="noopener"><code>2322dcd</code></a></td>
-                <td class="commit-msg">fix(dialogs): applica wrap_text a DLG_ask e YesNoCancelDialog
+                <td>2026-07-09 20:49</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ea2397d2acc780653151cea08300190a44601a81" target="_blank" rel="noopener"><code>ea2397d</code></a></td>
+                <td class="commit-msg">fix(viste): ripristina label SAL e corregge dialogo XPWE
 
-- aggiunge wrapping automatico (width=50) ai testi dei dialoghi
-- sostituisce BUTTONS_YES_NO_CANCEL con BUTTONS_YES_NO per maggiore coerenza
-
-fix(computo): migliora inserimento somme Lavori/Sicurezza
-- sposta etichette su riga corrente con allineamenti centrati
-- applica formule su riga successiva (down/down_right)
-- imposta NumberFormat, CharWeight, colori e VertJustify
-- aggiorna titolo selezione range
-
-fix(contab): usa YesNoCancelDialog per voci registrate
-- sostituisce DLG_ask con dialogo a tre opzioni
-- semplifica testo senza wrap esplicito
-
-refactor(utils): amplia wrap_text (55) e wrap_path (60)
-
-fix(viste): normalizza formule LET(t;…) → LET(a;…) in scelta_viste_run
-
-feat(doppioni): aggiunge preserva_posizione a MENU_doppioni
-- rimuove memorizza/ripristina posizione superflui
-
-fix(xpwe): corregge flag 32769 per quantità negative in COMPUTO/VARIANTE
-
-style(importa_stili): migliora formattazione testo dialogo</td>
+- riporta la label "Genera SAL n. #" quando non è presente un totale valido
+- sostituisce DLG_ask con YesNoCancelDialog in XPWE_out_run per coerenza con conferme a tre opzioni</td>
             </tr>
             <tr>
-                <td>2026-07-07 20:50</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2ef025579add39834605ab15bc2b3588b657219d" target="_blank" rel="noopener"><code>2ef0255</code></a></td>
-                <td class="commit-msg">fix(core): corregge inversione di segno nelle righe 'vedi voce' in export XPWE
+                <td>2026-07-09 20:46</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/2e1a0df4642284d3a7edc2d4a07014431ecfbe5b" target="_blank" rel="noopener"><code>2e1a0df</code></a></td>
+                <td class="commit-msg">fix(contab): aggiunge controllo garanzia e corregge ricerca riga infortuni
 
-Per le righe con riferimento 'vedi voce n.' in COMPUTO/VARIANTE, la Quantita
-viene gia' esportata col segno corretto (es. -0.22). Il blocco rimosso impostava
-Flags='32769' (32768=image|1=sottrai) che causava una doppia inversione in Primus,
-trasformando -0.22 in +0.22. Le righe 'vedi voce' usano sempre Flags='32768'.</td>
+- introduce lettura aliquota garanzia tramite _leggi_dato_anagrafico
+- aggiunge "Garanzia" alle allerte quando valore mancante o zero
+- corregge etichetta di ricerca per infortuni:
+  'Ritenuta infortuni' → 'Ritenute per infortuni:'</td>
             </tr>
                     </tbody>
                 </table>
@@ -520,8 +499,8 @@ trasformando -0.22 in +0.22. Le righe 'vedi voce' usano sempre Flags='32768'.</t
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-08 21:50 UTC</p>
-                <p>Build Commit: <code>2a8464c</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-09 20:50 UTC</p>
+                <p>Build Commit: <code>2c82a01</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

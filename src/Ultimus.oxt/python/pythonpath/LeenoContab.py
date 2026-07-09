@@ -2399,6 +2399,7 @@ def EseguiContabilita(oDoc):
         aliquota_iva_check = _leggi_iva_da_S2(oS2)
         aliquota_anticipo_check = _leggi_anticipo_da_S2(oS2)
         aliquota_infortuni_check = _leggi_infortuni_da_S2(oS2)
+        aliquota_garanzie_check = _leggi_dato_anagrafico(oS2, 'garanzia:')
 
         allerte = []
         if aliquota_infortuni_check == 0:
@@ -2407,6 +2408,8 @@ def EseguiContabilita(oDoc):
             allerte.append("Recupero Anticipazione")
         if aliquota_iva_check == 0:
             allerte.append("I.V.A.")
+        if aliquota_garanzie_check == 0 or aliquota_garanzie_check == '':
+            allerte.append("Garanzia")
 
         if allerte:
             msg = "I seguenti valori mancano o sono impostati a 0:\n- " + "\n- ".join(allerte) + "\n\nVuoi procedere ugualmente?\n\n(Scegliendo 'No', verrà annullata l'intera generazione degli atti in corso)"
@@ -2681,7 +2684,7 @@ def _leggi_infortuni_da_S2(oS2):
     try:
         # Cerca direttamente l'etichetta specifica in colonna A o B
         for col in (0, 1):
-            row_inf = SheetUtils.uFindStringCol('Ritenuta infortuni', col, oS2, start=0)
+            row_inf = SheetUtils.uFindStringCol('Ritenute per infortuni:', col, oS2, start=0)
             if row_inf is not None:
                 inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
                 return inf_val

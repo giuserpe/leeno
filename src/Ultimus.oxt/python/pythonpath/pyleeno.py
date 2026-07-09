@@ -2675,7 +2675,7 @@ def scelta_viste_run():
 
         if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
             oDialog1.getControl('GeneraAtti').Enable = False
-            oDialog1.getControl('GeneraAtti').Label = 'Nessun SAL da generare'
+            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. #'
 
         # Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
@@ -3543,7 +3543,7 @@ def XPWE_out_run(elaborato, out_file):
     if elaborato == 'CONTABILITA':
         TipoDocumento.text = '2'
     if TipoDocumento.text != '2':
-        if Dialogs.DLG_ask(
+        if Dialogs.YesNoCancelDialog(
             Title='',
             Text= 'Abilitando la contabilità nel formato XPWE,\n'
             'Primus potrà riconoscere e gestire correttamente le Voci della Sicurezza.\n\n'

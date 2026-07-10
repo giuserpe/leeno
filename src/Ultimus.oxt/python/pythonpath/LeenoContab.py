@@ -1623,6 +1623,39 @@ def GeneraSAL(oDoc, dati):
     # Unpack dei dati
     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
 
+    # Filtra ed esclude le voci con quantità pari a 0 e ricollega la numerazione progressiva
+    filtered_datiSAL = []
+    n_ord = 1
+    for row in datiSAL:
+        try:
+            q = float(row[3])
+        except (ValueError, TypeError):
+            q = 0.0
+        if q != 0.0:
+            parts = row[0].split('\n')
+            art = parts[1] if len(parts) > 1 else row[0]
+            new_row = list(row)
+            new_row[0] = f"{n_ord}\n{art}"
+            filtered_datiSAL.append(new_row)
+            n_ord += 1
+
+    filtered_datiSAL_VDS = []
+    for row in datiSAL_VDS:
+        try:
+            q = float(row[3])
+        except (ValueError, TypeError):
+            q = 0.0
+        if q != 0.0:
+            parts = row[0].split('\n')
+            art = parts[1] if len(parts) > 1 else row[0]
+            new_row = list(row)
+            new_row[0] = f"{n_ord}\n{art}"
+            filtered_datiSAL_VDS.append(new_row)
+            n_ord += 1
+
+    datiSAL = filtered_datiSAL
+    datiSAL_VDS = filtered_datiSAL_VDS
+
     if not datiSAL and not datiSAL_VDS:
         return
 
@@ -1782,6 +1815,12 @@ def GeneraSAL(oDoc, dati):
     # --- 5. CHIUSURA CON FILLER E RIEPILOGO ---
     oDoc.calculate()
     fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial)
+
+    # Richiesta emissione Stato Finale
+    # In accordo con lo stile di LeenO, mostra un messaggio di richiesta con questo testo: "Vuoi emettere lo Stato Finale?".
+    ans = Dialogs.YesNoCancelDialog(IconType="question", Title="Emissione Stato Finale", Text="Vuoi emettere lo Stato Finale?")
+    if ans == 1:
+        fineFirme = GeneraStatoFinale(oDoc, oSalSheet, fineFirme + 1, nSal, insRowRiepilogo)
 
     # --- 5. NamedRange ---
     # Escludiamo la riga "segue SAL" (insRow) dall'area del NamedRange
@@ -1977,6 +2016,152 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
 
     # Restituisce (ultima riga del blocco, inizio riepilogo) per NamedRange e S2
     return currRow - 1, insRow
+
+def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
+    '''
+    Genera la pagina di Riepilogo dello Stato Finale dei Lavori.
+    '''
+    fcol = 0
+    ncol = "F"
+
+    oS2 = oDoc.getSheets().getByName('S2')
+    markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+    yS2, xS2 = markerS2[0], markerS2[1]
+    col_sal = yS2 + nSal
+    s2_col = _col_letter(col_sal)
+
+    # Conteggio certificati precedenti
+    num_prev_certs = nSal - 1
+    total_rows = 8 + num_prev_certs + 18
+
+    # Inserimento righe fisiche
+    oSalSheet.getRows().insertByIndex(start_row, total_rows)
+
+    # Salto pagina all'inizio dello Stato Finale
+    oSalSheet.getRows().getByIndex(start_row).IsStartOfNewPage = True
+
+    # Stile bordi laterali per tutta la pagina
+    oSalSheet.getCellRangeByPosition(0, start_row, 5, start_row + total_rows - 1).CellStyle = "Ultimus_centro_bordi_lati"
+
+    # Altezza righe uniforme
+    for i in range(total_rows):
+        oSalSheet.getRows().getByIndex(start_row + i).Height = 500
+
+    r = start_row
+
+    # Titolo
+    oSalSheet.getCellByPosition(fcol + 1, r + 1).String = "RIEPILOGO STATO FINALE DEI LAVORI"
+    oSalSheet.getCellByPosition(fcol + 1, r + 1).CellStyle = "Ultimus_centro_Dsottolineato"
+
+    # Totale Netto dei Lavori
+    oSalSheet.getCellByPosition(fcol + 1, r + 3).String = "TOTALE NETTO DEI LAVORI euro"
+    oSalSheet.getCellByPosition(fcol + 1, r + 3).CellStyle = "Ultimus_destra"
+    oSalSheet.getCellByPosition(5, r + 3).Formula = f"=F{insRowRiepilogo + 14}"
+    oSalSheet.getCellByPosition(5, r + 3).CellStyle = "ULTIMUS"
+
+    # Detrazione Acconti
+    oSalSheet.getCellByPosition(fcol + 1, r + 5).String = "A DEDURRE ACCONTI GIA' CORRISPOSTI:"
+    oSalSheet.getCellByPosition(fcol + 1, r + 5).CellStyle = "Ultimus_destra"
+
+    # Anticipazione
+    oSalSheet.getCellByPosition(fcol + 1, r + 6).String = "ANTICIPAZIONE euro"
+    oSalSheet.getCellByPosition(fcol + 1, r + 6).CellStyle = "Ultimus_destra"
+
+    r_anticipo = None
+    for i in range(40):
+        riga = xS2 + i
+        cell_text = oS2.getCellByPosition(4, riga).String.lower()
+        if "anticipazione" in cell_text:
+            r_anticipo = i
+            break
+
+    if r_anticipo is not None:
+        oSalSheet.getCellByPosition(5, r + 6).Formula = f"=$S2.{_col_letter(yS2 + nSal)}{xS2 + r_anticipo + 1}"
+    else:
+        oSalSheet.getCellByPosition(5, r + 6).Value = 0.0
+    oSalSheet.getCellByPosition(5, r + 6).CellStyle = "ULTIMUS"
+
+    # Certificati di Pagamento
+    oSalSheet.getCellByPosition(fcol + 1, r + 7).String = "CERTIFICATI DI PAGAMENTO:"
+    oSalSheet.getCellByPosition(fcol + 1, r + 7).CellStyle = "Ultimus_destra"
+
+    # Trova la riga dei certificati in S2
+    r_certif = None
+    for i in range(40):
+        riga = xS2 + i
+        cell_text = oS2.getCellByPosition(4, riga).String.lower()
+        if "certificato di pagamento" in cell_text:
+            r_certif = i
+            break
+
+    cert_rows = []
+    r_curr = r + 8
+    for i in range(1, nSal):
+        data_val = oS2.getCellByPosition(yS2 + i, xS2 + 2).String
+        data_str = data_val if data_val else "__/__/____"
+
+        oSalSheet.getCellByPosition(fcol + 1, r_curr).String = f"Certificato N.{i} del {data_str} euro"
+        oSalSheet.getCellByPosition(fcol + 1, r_curr).CellStyle = "Ultimus_destra"
+
+        if r_certif is not None:
+            oSalSheet.getCellByPosition(5, r_curr).Formula = f"=$S2.{_col_letter(yS2 + i)}{xS2 + r_certif + 1}"
+        else:
+            oSalSheet.getCellByPosition(5, r_curr).Value = 0.0
+        oSalSheet.getCellByPosition(5, r_curr).CellStyle = "ULTIMUS"
+
+        cert_rows.append(r_curr)
+        r_curr += 1
+
+    # Sommano certificati
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 1).String = "SOMMANO CERTIFICATI DI PAGAMENTO euro"
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 1).CellStyle = "Ultimus_destra"
+    if cert_rows:
+        oSalSheet.getCellByPosition(5, r_curr + 1).Formula = f"=SUM(F{cert_rows[0] + 1}:F{cert_rows[-1] + 1})"
+    else:
+        oSalSheet.getCellByPosition(5, r_curr + 1).Value = 0.0
+    oSalSheet.getCellByPosition(5, r_curr + 1).CellStyle = "ULTIMUS"
+
+    # Sommano detrazioni
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 3).String = "SOMMANO LE DETRAZIONI euro"
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 3).CellStyle = "Ultimus_destra"
+    oSalSheet.getCellByPosition(5, r_curr + 3).Formula = f"=F{r + 7}+F{r_curr + 2}"
+    oSalSheet.getCellByPosition(5, r_curr + 3).CellStyle = "ULTIMUS"
+
+    # Credito complessivo
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 5).String = "RISULTA IL CREDITO COMPLESSIVO DELL'IMPRESA euro"
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 5).CellStyle = "Ultimus_destra"
+    oSalSheet.getCellByPosition(5, r_curr + 5).Formula = f"=F{r + 4}-F{r_curr + 4}"
+    oSalSheet.getCellByPosition(5, r_curr + 5).CellStyle = "Ultimus_destra_totali"
+
+    # Firme
+    luogo_raw = _leggi_dato_anagrafico(oS2, 'Località')
+    ultimo_token = luogo_raw.split(" ")[-1] if luogo_raw else ""
+    luogo = f"{ultimo_token}, " if ultimo_token else "Data, "
+
+    impresa = _leggi_dato_anagrafico(oS2, 'Appaltatore') or _leggi_dato_anagrafico(oS2, 'Impresa')
+    dl = _leggi_dato_anagrafico(oS2, 'Direttore Lavori') or _leggi_dato_anagrafico(oS2, 'Direttore dei Lavori')
+
+    # Data
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 8).String = f"{luogo}{date.today().strftime('%d/%m/%Y')}"
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 8).CellStyle = "Ultimus_sx_italic"
+
+    # Impresa
+    oSalSheet.getCellByPosition(1, r_curr + 10).String = f"L'Impresa\n{impresa}"
+    #centrato
+    oSalSheet.getCellByPosition(1, r_curr + 10).HoriJustify = 2
+    oSalSheet.getCellByPosition(1, r_curr + 10).IsTextWrapped = True
+
+    # Direttore Lavori
+    oSalSheet.getCellByPosition(1, r_curr + 14).String = f"Il Direttore dei Lavori\n{dl}"
+    #centrato
+    oSalSheet.getCellByPosition(1, r_curr + 14).HoriJustify = 2
+    oSalSheet.getCellByPosition(1, r_curr + 14).IsTextWrapped = True
+
+    # Riga finale di chiusura
+    oSalSheet.getCellRangeByPosition(fcol, r_curr + 17, fcol + 5, r_curr + 17).CellStyle = "Ultimus_"
+
+    return start_row + total_rows - 1
+
 
 
 def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
@@ -2386,6 +2571,7 @@ def EseguiContabilita(oDoc):
         from pyleeno import oDialog1
         while oDialog1.getControl('a_voce').Text == '&1367.Dialogviste_N.a_voce.Text':
             try:
+
                 oDialog1.endExecute()
             except:
                 oDialog1.dispose()

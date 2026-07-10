@@ -12,18 +12,22 @@ import Dialogs
 import LeenoDialogs as DLG
 def MENU_generaVariante():
     oDoc = LeenoUtils.getDocument()
-    clear = False
-    if Dialogs.DLG_ask(
+    res = Dialogs.YesNoCancelDialog(
         IconType="question",
         Title='AVVISO!',
-Text='''Vuoi svuotare la VARIANTE appena generata?
+        Text='''Vuoi svuotare la VARIANTE appena generata?
 
 Se decidi di continuare, cancellerai tutte le voci di misurazione \
 eventualmente già presenti nel foglio di destinazione.
 
 Procedo con lo svuotamento?'''
-    ) == 1:
+    )
+    if res == 1:
         clear = True
+    elif res == 0:
+        clear = False
+    else:
+        return
     generaVariante(oDoc, clear)
 
 @LeenoUtils.no_refresh

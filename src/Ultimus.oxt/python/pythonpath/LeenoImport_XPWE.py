@@ -636,13 +636,14 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
 
     overwrite_flag = False
     if overlap:
-        res = Dialogs.DLG_ask(IconType="warning", Title="Voci già presenti", 
-            Text="Attenzione: nell'Elenco Prezzi sono già presenti alcune voci con codice identico a quelle in importazione.\n\nProcedendo, queste voci verranno SOVRASCRITTE con i nuovi dati.\n\nVuoi procedere con la sovrascrittura?")
+        res = Dialogs.YesNoCancelDialog(IconType="warning", Title="Voci già presenti",
+            Text="Attenzione: nell'Elenco Prezzi sono già presenti alcune voci con codice identico a quelle in importazione.\n\nScegli 'Sì' per sovrascrivere le voci esistenti con i nuovi dati.\nScegli 'No' per mantenere le voci esistenti e saltare l'importazione di tali voci.\nScegli 'Annulla' per interrompere l'importazione interamente.")
         if res == 1:
             overwrite_flag = True
-        else:
-            # Se l'utente risponde No, disabilitiamo la sovrascrittura. Verranno saltate.
+        elif res == 0:
             overwrite_flag = False
+        else:
+            return None, None
 
     tot_skipped = 0
     tot_overwritten = 0
@@ -1221,6 +1222,8 @@ def XPWE_import(filename = None):
             indicator.Text = "Compilazione Elenco Prezzi..."
             indicator.Value = 60
         skipped_count, overwritten_count = compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=indicator)
+        if skipped_count is None:
+            return
 
         oSheet_ep = oDoc.getSheets().getByName('Elenco Prezzi')
         oSheet_ep.getCellRangeByName('E2').Formula = '=COUNT(E:E) & " prezzi"'

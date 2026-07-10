@@ -2758,10 +2758,13 @@ def scelta_viste_run():
                 seen.add(key)
                 
             if ha_doppioni:
-                if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!!!", \
-                    Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nVuoi avviare la procedura di eliminazione prima di procedere?") == 1:
+                res = Dialogs.YesNoCancelDialog(IconType="question", Title="ATTENZIONE!!!", \
+                    Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nScegli 'Sì' per eliminare i doppioni prima di procedere.\nScegli 'No' per procedere senza eliminare.\nScegli 'Annulla' per interrompere l'operazione.")
+                if res == 1:
                     MENU_doppioni()
                     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+                elif res == 2:
+                    return
         # --- Fine controllo doppioni ---
 
         oDialog1 = dp.createDialog(
@@ -5870,17 +5873,17 @@ def sblocca_cont():
             if partenza[2] == '':
                 pass
             if partenza[2] == '#reg':
-                if Dialogs.DLG_ask(Title='Avviso: Voce già registrata!',
-
+                res = Dialogs.YesNoCancelDialog(IconType="question", Title='Avviso: Voce già registrata!',
                 Text= """Lavorando in questo punto del foglio,
 comprometterai la validità degli atti contabili già emessi.
 
 Vuoi procedere?
 
-SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""") == 0:
-                    pass
-                else:
+SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""")
+                if res == 1:
                     LeenoGlobals.setGlobalVar('sblocca_computo', 1)
+                else:
+                    LeenoGlobals.setGlobalVar('sblocca_computo', 0)
         # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
 
 
@@ -11103,15 +11106,18 @@ def MENU_sistema_pagine(msg = True):
     except:
         return
     if msg:
-        if Dialogs.DLG_ask(IconType="question",Title='AVVISO!',
+        res = Dialogs.YesNoCancelDialog(IconType="question",Title='AVVISO!',
             Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
 Le formattazioni dirette impostate durante il lavoro andranno perse.
 
 Per ripristinare i colori, tipici dei fogli di LeenO, basterà selezionare
 le celle ed usare "CTRL+M".
 
-Prima di procedere, vuoi il fondo bianco in tutte le celle?''') == 1:
+Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
+        if res == 1:
             LeenoSheetUtils.SbiancaCellePrintArea()
+        elif res == 2:
+            return
 
     oSheet = oDoc.CurrentController.ActiveSheet
     # adatta solo la riga corrente (non l'intero foglio) per evitare freeze su EP grandi
@@ -11528,19 +11534,20 @@ def trova_np():
     if max_np > 0 and add_prefix:
         message = f"Sono stati trovati {len(np_codes_found)} codici con prefisso NPxx_ esistente.\n"
         message += f"Il numero progressivo più alto trovato è NP{max_np:02d}_.\n\n"
-        message += "Vuoi iniziare la numerazione da NP{:02d}_?".format(max_np + 1)
+        message += "Scegli:\n"
+        message += f"• 'Sì' per iniziare la numerazione da NP{max_np + 1:02d}_\n"
+        message += "• 'No' per resettare la numerazione partendo da NP01_\n"
+        message += "• 'Annulla' per non aggiungere nuovi prefissi NP."
 
-        if Dialogs.DLG_ask(Title='Prefissi NP esistenti trovati',
-                            Text=message) == 1:
+        res = Dialogs.YesNoCancelDialog(Title='Prefissi NP esistenti trovati',
+                            Text=message)
+        if res == 1:
             np_counter = max_np + 1
+        elif res == 0:
+            np_counter = 1
         else:
-            # L'utente vuole resettare la numerazione
-            if Dialogs.DLG_ask(IconType="question",Title='Conferma',
-                                Text='Vuoi resettare la numerazione partendo da NP01_?') == 1:
-                np_counter = 1
-            else:
-                add_prefix = False
-                Dialogs.Info(Title='Operazione annullata', Text='Non verranno aggiunti nuovi prefissi NP.')
+            add_prefix = False
+            Dialogs.Info(Title='Operazione annullata', Text='Non verranno aggiunti nuovi prefissi NP.')
 
     # Seconda passata per applicare i nuovi prefissi
     indicator.Value = 2

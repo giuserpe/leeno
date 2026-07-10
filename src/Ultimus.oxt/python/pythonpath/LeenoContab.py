@@ -1531,6 +1531,39 @@ def GeneraSAL(oDoc, dati):
     # Unpack dei dati
     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
 
+    # Filtra ed esclude le voci con quantità pari a 0 e ricollega la numerazione progressiva
+    filtered_datiSAL = []
+    n_ord = 1
+    for row in datiSAL:
+        try:
+            q = float(row[3])
+        except (ValueError, TypeError):
+            q = 0.0
+        if q != 0.0:
+            parts = row[0].split('\n')
+            art = parts[1] if len(parts) > 1 else row[0]
+            new_row = list(row)
+            new_row[0] = f"{n_ord}\n{art}"
+            filtered_datiSAL.append(new_row)
+            n_ord += 1
+
+    filtered_datiSAL_VDS = []
+    for row in datiSAL_VDS:
+        try:
+            q = float(row[3])
+        except (ValueError, TypeError):
+            q = 0.0
+        if q != 0.0:
+            parts = row[0].split('\n')
+            art = parts[1] if len(parts) > 1 else row[0]
+            new_row = list(row)
+            new_row[0] = f"{n_ord}\n{art}"
+            filtered_datiSAL_VDS.append(new_row)
+            n_ord += 1
+
+    datiSAL = filtered_datiSAL
+    datiSAL_VDS = filtered_datiSAL_VDS
+
     if not datiSAL and not datiSAL_VDS:
         return
 

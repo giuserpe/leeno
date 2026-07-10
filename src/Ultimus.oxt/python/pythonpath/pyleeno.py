@@ -2624,11 +2624,14 @@ def scelta_viste_run():
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 for n in range(4, ultima_voce + 2):
-                    formule.append([
-                        f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
-                        f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                        f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
-                    ])
+                    if not oSheet.getCellByPosition(0, n - 1).String.strip():
+                        formule.append(["", "", ""])
+                    else:
+                        formule.append([
+                            f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
+                            f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
+                            f'=IFERROR(LET(t;N({col1}{n});u;N({col2}{n});IF(AND(t=0;u=0);"--";IFS(u=0;-1;t=0;1;t=u;"--";t>u;-(t-u)/t;t<u;(u-t)/t)));"--")',
+                        ])
 
                 n += 1
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)

@@ -2712,7 +2712,7 @@ def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
     Image: ignorato (compatibilità legacy).
     """
     result = messageBox(
-        text=Text or "Procedere?",
+        text=LeenoUtils.wrap_text(Text, width=50) or "Procedere?",
         title=Title or (IconType or 'question').capitalize(),
         msg_type=QUERYBOX,
         buttons=BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO,

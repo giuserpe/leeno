@@ -36,3 +36,8 @@ Leeno.e4p
 __init__.py
 *_COMAU*
 src/Ultimus.oxt/pythonpath/leeno_error.log
+
+# Script locali di gestione ambiente di sviluppo (non versionati)
+leeno_test_jules.bat
+leeno_restore_dev.bat
+leeno_pull.bat

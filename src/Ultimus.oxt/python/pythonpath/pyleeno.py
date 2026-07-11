@@ -2759,7 +2759,7 @@ def scelta_viste_run():
                 
             if ha_doppioni:
                 res = Dialogs.YesNoCancelDialog(IconType="question", Title="ATTENZIONE!!!", \
-                    Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nScegli 'Sì' per eliminare i doppioni prima di procedere.\nScegli 'No' per procedere senza eliminare.\nScegli 'Annulla' per interrompere l'operazione.")
+                    Text="Sono presenti dei doppioni in Elenco Prezzi.\n\nScegli 'Sì' per eliminare i doppioni prima di procedere.\n\nScegli 'No' per procedere senza eliminare.\n\nScegli 'Annulla' per interrompere l'operazione.\n\n\n")
                 if res == 1:
                     MENU_doppioni()
                     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress

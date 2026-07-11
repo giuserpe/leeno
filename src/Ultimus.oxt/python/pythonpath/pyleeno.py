@@ -2846,6 +2846,14 @@ def scelta_viste_run():
 
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
+
+                y = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+                if y is None:
+                    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+                    y = ultima_voce + 1
+                else:
+                    ultima_voce = y - 1
+
                 for n in range(4, ultima_voce + 2):
                     formule.append([
                         f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
@@ -2853,7 +2861,7 @@ def scelta_viste_run():
                         f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
                     ])
 
-                n += 1
+                n = y + 1
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
                 formule = tuple(formule)
                 oDoc.enableAutomaticCalculation(False)
@@ -2867,7 +2875,7 @@ def scelta_viste_run():
                         if DLG.DlgSiNo(
                                 "Nascondo eventuali voci non ancora contabilizzate?"
                         ) == 2:
-                            for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
+                            for el in range(3, y):
                                 if oSheet.getCellByPosition(20, el).Value == 0:
                                     oCellRangeAddr.StartRow = el
                                     oCellRangeAddr.EndRow = el
@@ -2884,14 +2892,14 @@ def scelta_viste_run():
                 return oDialog1.dispose()
 
             # evidenzia le quantità eccedenti il VI/V — lettura batch per performance
-            endRow = SheetUtils.getUsedArea(oSheet).EndRow
+            limit_row = ultima_voce
             voci_in_eccesso = set()
 
-            if endRow > 3:
+            if limit_row >= 3:
                 # Lettura batch anziché getCellByPosition per ogni riga
-                valori_A = oSheet.getCellRangeByPosition(0, 3, 0, endRow - 1).getDataArray()
-                valori_X_Y = oSheet.getCellRangeByPosition(23, 3, 24, endRow - 1).getDataArray()
-                valori_perc = oSheet.getCellRangeByPosition(25, 3, 25, endRow - 1).getDataArray()
+                valori_A = oSheet.getCellRangeByPosition(0, 3, 0, limit_row).getDataArray()
+                valori_X_Y = oSheet.getCellRangeByPosition(23, 3, 24, limit_row).getDataArray()
+                valori_perc = oSheet.getCellRangeByPosition(25, 3, 25, limit_row).getDataArray()
 
                 righe_da_colorare = []
                 voci_spuntate = set()
@@ -2979,14 +2987,14 @@ def scelta_viste_run():
 
             # Copia formato da Z2 al range — senza clipboard
             source_cell = oSheet.getCellRangeByName('Z2')
-            target_range = oSheet.getCellRangeByPosition(25, 3, 25, ER + 1)
+            target_range = oSheet.getCellRangeByPosition(25, 3, 25, y)
             target_range.CellStyle = source_cell.CellStyle
             target_range.NumberFormat = source_cell.NumberFormat
 
             _primaCella()
-            oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = COLORE_COLONNE_RAFFRONTO
+            oSheet.getCellRangeByPosition(11, 3, 13, y).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
-            oSheet.getCellRangeByName(f'A{n+1}:Z{n+1}').CharWeight = BOLD
+            oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -3080,7 +3088,15 @@ def genera_sommario():
 
     # --- Controllo doppioni ---
     start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
-    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    y = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+    if y is None:
+        ultima_voce_idx = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+        y = ultima_voce_idx + 1
+    else:
+        ultima_voce_idx = y - 1
+
+    ultima_voce = ultima_voce_idx + 1
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
@@ -3120,7 +3136,7 @@ def genera_sommario():
             ]
         formule.append(stringa)
     indicator.end()
-    oRange = oSheet.getCellRangeByPosition(11, 3, 21, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce_idx)
     formule = tuple(tuple(riga) for riga in formule)
 
     oDoc.enableAutomaticCalculation(False)
@@ -7536,7 +7552,11 @@ def inizializza_elenco():
     }
 
     #ridefinisce area nominata per precauzione
-    last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
+    y_init = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+    if y_init is None:
+        last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+    else:
+        last_row = y_init + 1
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
 

@@ -452,30 +452,27 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-11 21:29</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/fd50903efb710b552afed28c60aae516bea250b3" target="_blank" rel="noopener"><code>fd50903</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.81‑TESTING‑20260711
+                <td>2026-07-11 22:38</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/e1d5bfa6dd674c9769b6cdec95dab85e24c63fd9" target="_blank" rel="noopener"><code>e1d5bfa</code></a></td>
+                <td class="commit-msg">Merge pull request #11 from giuserpe/jules-1162986694955076655-25dc3f68
 
-fix(ui): applica wrap_text ai dialoghi e migliora messaggio doppioni
-- YesNoCancelDialog ora usa wrap_text(width=50)
-- aggiorna testo avviso doppioni con spaziatura coerente
-
-fix(core): migliora gestione doppioni in scelta_viste_run
-- aggiorna testo del dialogo con separatori e newline aggiuntivi</td>
+Evita sovrascrittura firme in Elenco Prezzi nel raffronto</td>
             </tr>
             <tr>
-                <td>2026-07-10 22:51</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d15155fc8276d2a91fdc48737e2e89603f847e2f" target="_blank" rel="noopener"><code>d15155f</code></a></td>
-                <td class="commit-msg">Merge pull request #10 from giuserpe/jules-2888112173092772959-28bd4306
+                <td>2026-07-11 22:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d0af1fc7e6ea087e70b820144565135d676747d2" target="_blank" rel="noopener"><code>d0af1fc</code></a></td>
+                <td class="commit-msg">fix(core): evita sovrascrittura formule e stili di raffronto
 
-Sostituzione DLG_ask con YesNoCancelDialog dove appropriato</td>
+Nella scelta del raffronto in scelta_viste_run() e in genera_sommario() per il foglio Elenco Prezzi, non inserisce formule o colori e non modifica lo stile delle celle se la colonna A è vuota (es. firme), mantenendo il TOTALE su 'Fine elenco'.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-07-10 22:48</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e293d646cc630615d922a8c9e48abcb410b1997d" target="_blank" rel="noopener"><code>e293d64</code></a></td>
-                <td class="commit-msg">refactor(ui): sostituisce DLG_ask con YesNoCancelDialog dove appropriato
+                <td>2026-07-11 22:12</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/288e4b92244462539390e32a6c4f3a2ecaf6c67f" target="_blank" rel="noopener"><code>288e4b9</code></a></td>
+                <td class="commit-msg">fix(core): evita formule e colori di raffronto se la prima colonna è vuota
 
-Consente agli utenti di interrompere operazioni complesse (come la generazione di una variante, l'importazione di file XPWE o la stampa) tramite la scelta esplicita di annullamento, riducendo l'uso di dialoghi binari limitati e nidificati.
+Nella scelta del raffronto in scelta_viste_run() e in genera_sommario() per il foglio Elenco Prezzi, impedisce l'inserimento di formule e formati nelle righe in cui la colonna A è vuota (es. riga firma/data), mantenendo il TOTALE sulla riga 'Fine elenco'.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
@@ -501,8 +498,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-11 22:36 UTC</p>
-                <p>Build Commit: <code>d0af1fc</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-11 22:39 UTC</p>
+                <p>Build Commit: <code>e1d5bfa</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

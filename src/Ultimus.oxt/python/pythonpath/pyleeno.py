@@ -2990,23 +2990,29 @@ def scelta_viste_run():
                         if oRangesVerde.Count > 0:
                             oRangesVerde.CellBackColor = int(COLORE_VERDE_SPUNTA)
 
-            # Copia formato da Z2 al range — senza clipboard
+            # Copia formato da Z2 al range — senza clipboard, preservando lo stile delle righe vuote/firme
             source_cell = oSheet.getCellRangeByName('Z2')
-            target_range = oSheet.getCellRangeByPosition(25, 3, 25, ER + 1)
-            target_range.CellStyle = source_cell.CellStyle
-            target_range.NumberFormat = source_cell.NumberFormat
+            for idx in range(3, ER + 1):
+                if oSheet.getCellByPosition(0, idx).String.strip() != '':
+                    cell_z = oSheet.getCellByPosition(25, idx)
+                    cell_z.CellStyle = source_cell.CellStyle
+                    cell_z.NumberFormat = source_cell.NumberFormat
+                    oSheet.getCellRangeByPosition(11, idx, 13, idx).CellBackColor = COLORE_COLONNE_RAFFRONTO
+
+            # Applica formato anche alla riga del TOTALE "Fine elenco"
+            cell_z_tot = oSheet.getCellByPosition(25, ER + 1)
+            cell_z_tot.CellStyle = source_cell.CellStyle
+            cell_z_tot.NumberFormat = source_cell.NumberFormat
 
             _primaCella()
-            oSheet.getCellRangeByPosition(11, 3, 13, ER + 1).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
             oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
-            # Ripulisce e ripristina a 'Default' le colonne 11-25 per le righe con prima colonna vuota (es. firme)
+            # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
             for idx in range(3, y):
                 if oSheet.getCellByPosition(0, idx).String.strip() == '':
                     oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
                     oSheet.getCellRangeByPosition(11, idx, 25, idx).CellBackColor = -1
-                    oSheet.getCellRangeByPosition(11, idx, 25, idx).CellStyle = 'Default'
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -3111,7 +3117,7 @@ def genera_sommario():
         # Recupera lo stile (necessario .CellStyle, il contenuto della cella potrebbe essere diverso)
         cell_style = oSheet.getCellByPosition(0, n-1).CellStyle
 
-        if oSheet.getCellByPosition(0, n - 1).String.strip() == '' or cell_style == "Ultimus_centro":
+        if oSheet.getCellByPosition(0, n-1).String.strip() == '' or cell_style == "Ultimus_centro":
             # Se la cella è vuota o lo stile è "Ultimus_centro", inserisci formula vuota
             stringa = [""] * 11
         else:
@@ -3149,12 +3155,11 @@ def genera_sommario():
     finally:
         oDoc.enableAutomaticCalculation(True)
 
-    # Ripulisce e ripristina a 'Default' le colonne 11-21 per le righe con prima colonna vuota (es. firme)
+    # Ripulisce le colonne 11-21 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
     for idx in range(3, ultima_voce + 1):
         if oSheet.getCellByPosition(0, idx).String.strip() == '':
             oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
             oSheet.getCellRangeByPosition(11, idx, 21, idx).CellBackColor = -1
-            oSheet.getCellRangeByPosition(11, idx, 21, idx).CellStyle = 'Default'
     return
 
 ########################################################################

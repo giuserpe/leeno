@@ -2821,12 +2821,14 @@ def scelta_viste_run():
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow + 1
             ER = oRangeAddress.EndRow - 1
+            ultima_voce = ER
+            y = ER + 1
+            n = ER + 2
 
             formule = []
 
             oSheet.getCellRangeByName('X2').Formula = '=IF(N(U2)>N(T2); N(U2)-N(T2); "")'
             oSheet.getCellRangeByName('Y2').Formula = '=IF(N(T2)>N(U2); N(T2)-N(U2); "")'
-            ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
             if has_raffronto:
                 col1, col2, label = RAFFRONTO_MAP[raffronto]
@@ -2838,6 +2840,14 @@ def scelta_viste_run():
                 # altrimenti tutte le operazioni successive avvengono con UI attiva
                 LeenoUtils.DocumentRefresh(False)
 
+                # Fetch updated range coordinates from the redefined named-area 'elenco_prezzi'
+                oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+                SR = oRangeAddress.StartRow + 1
+                ER = oRangeAddress.EndRow - 1
+                ultima_voce = ER
+                y = ER + 1
+                n = ER + 2
+
                 oSheet.getCellRangeByName('Z2').Formula = (
                     f'=IFERROR(LET(_a;N({col1}2);_u;N({col2}2);'
                     f'IF(AND(_a=0;_u=0);"--";IFS(_u=0;-1;_a=0;1;_a=_u;"--";'
@@ -2847,13 +2857,16 @@ def scelta_viste_run():
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 for n in range(4, ultima_voce + 2):
-                    formule.append([
-                        f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
-                        f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                        f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
-                    ])
+                    if oSheet.getCellByPosition(0, n - 1).String.strip() == '':
+                        formule.append(["", "", ""])
+                    else:
+                        formule.append([
+                            f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
+                            f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
+                            f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
+                        ])
 
-                n += 1
+                n = ER + 2
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
                 formule = tuple(formule)
                 oDoc.enableAutomaticCalculation(False)
@@ -2867,7 +2880,7 @@ def scelta_viste_run():
                         if DLG.DlgSiNo(
                                 "Nascondo eventuali voci non ancora contabilizzate?"
                         ) == 2:
-                            for el in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
+                            for el in range(3, ER + 1):
                                 if oSheet.getCellByPosition(20, el).Value == 0:
                                     oCellRangeAddr.StartRow = el
                                     oCellRangeAddr.EndRow = el
@@ -2884,14 +2897,14 @@ def scelta_viste_run():
                 return oDialog1.dispose()
 
             # evidenzia le quantità eccedenti il VI/V — lettura batch per performance
-            endRow = SheetUtils.getUsedArea(oSheet).EndRow
+            limit_row = ultima_voce
             voci_in_eccesso = set()
 
-            if endRow > 3:
+            if limit_row >= 3:
                 # Lettura batch anziché getCellByPosition per ogni riga
-                valori_A = oSheet.getCellRangeByPosition(0, 3, 0, endRow - 1).getDataArray()
-                valori_X_Y = oSheet.getCellRangeByPosition(23, 3, 24, endRow - 1).getDataArray()
-                valori_perc = oSheet.getCellRangeByPosition(25, 3, 25, endRow - 1).getDataArray()
+                valori_A = oSheet.getCellRangeByPosition(0, 3, 0, limit_row).getDataArray()
+                valori_X_Y = oSheet.getCellRangeByPosition(23, 3, 24, limit_row).getDataArray()
+                valori_perc = oSheet.getCellRangeByPosition(25, 3, 25, limit_row).getDataArray()
 
                 righe_da_colorare = []
                 voci_spuntate = set()
@@ -2977,16 +2990,29 @@ def scelta_viste_run():
                         if oRangesVerde.Count > 0:
                             oRangesVerde.CellBackColor = int(COLORE_VERDE_SPUNTA)
 
-            # Copia formato da Z2 al range — senza clipboard
+            # Copia formato da Z2 al range — senza clipboard, preservando lo stile delle righe vuote/firme
             source_cell = oSheet.getCellRangeByName('Z2')
-            target_range = oSheet.getCellRangeByPosition(25, 3, 25, ER + 1)
-            target_range.CellStyle = source_cell.CellStyle
-            target_range.NumberFormat = source_cell.NumberFormat
+            for idx in range(3, ER + 1):
+                if oSheet.getCellByPosition(0, idx).String.strip() != '':
+                    cell_z = oSheet.getCellByPosition(25, idx)
+                    cell_z.CellStyle = source_cell.CellStyle
+                    cell_z.NumberFormat = source_cell.NumberFormat
+                    oSheet.getCellRangeByPosition(11, idx, 13, idx).CellBackColor = COLORE_COLONNE_RAFFRONTO
+
+            # Applica formato anche alla riga del TOTALE "Fine elenco"
+            cell_z_tot = oSheet.getCellByPosition(25, ER + 1)
+            cell_z_tot.CellStyle = source_cell.CellStyle
+            cell_z_tot.NumberFormat = source_cell.NumberFormat
 
             _primaCella()
-            oSheet.getCellRangeByPosition(11, 3, 13, ER+1).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
-            oSheet.getCellRangeByName(f'A{n+1}:Z{n+1}').CharWeight = BOLD
+            oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
+
+            # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
+            for idx in range(3, y):
+                if oSheet.getCellByPosition(0, idx).String.strip() == '':
+                    oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
+                    oSheet.getCellRangeByPosition(11, idx, 25, idx).CellBackColor = -1
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -3080,19 +3106,19 @@ def genera_sommario():
 
     # --- Controllo doppioni ---
     start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
-    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+    ultima_voce = end_row
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
-    for n in range(4, ultima_voce + 1):
+    for n in range(4, ultima_voce + 2):
         if n % 100 == 0:  # Aggiorna indicatore ogni 100 righe per risparmiare tempo UI
             indicator.Value = n
 
         # Recupera lo stile (necessario .CellStyle, il contenuto della cella potrebbe essere diverso)
         cell_style = oSheet.getCellByPosition(0, n-1).CellStyle
 
-        if cell_style == "Ultimus_centro":
-            # Se lo stile è "Ultimus_centro", inserisci formula vuota
+        if oSheet.getCellByPosition(0, n-1).String.strip() == '' or cell_style == "Ultimus_centro":
+            # Se la cella è vuota o lo stile è "Ultimus_centro", inserisci formula vuota
             stringa = [""] * 11
         else:
             stringa = [
@@ -3120,7 +3146,7 @@ def genera_sommario():
             ]
         formule.append(stringa)
     indicator.end()
-    oRange = oSheet.getCellRangeByPosition(11, 3, 21, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce)
     formule = tuple(tuple(riga) for riga in formule)
 
     oDoc.enableAutomaticCalculation(False)
@@ -3128,6 +3154,12 @@ def genera_sommario():
         oRange.setFormulaArray(formule)
     finally:
         oDoc.enableAutomaticCalculation(True)
+
+    # Ripulisce le colonne 11-21 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
+    for idx in range(3, ultima_voce + 1):
+        if oSheet.getCellByPosition(0, idx).String.strip() == '':
+            oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
+            oSheet.getCellRangeByPosition(11, idx, 21, idx).CellBackColor = -1
     return
 
 ########################################################################

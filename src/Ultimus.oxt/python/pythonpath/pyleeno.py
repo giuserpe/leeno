@@ -2821,12 +2821,14 @@ def scelta_viste_run():
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow + 1
             ER = oRangeAddress.EndRow - 1
+            ultima_voce = ER
+            y = ER + 1
+            n = ER + 2
 
             formule = []
 
             oSheet.getCellRangeByName('X2').Formula = '=IF(N(U2)>N(T2); N(U2)-N(T2); "")'
             oSheet.getCellRangeByName('Y2').Formula = '=IF(N(T2)>N(U2); N(T2)-N(U2); "")'
-            ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
             if has_raffronto:
                 col1, col2, label = RAFFRONTO_MAP[raffronto]
@@ -2838,6 +2840,14 @@ def scelta_viste_run():
                 # altrimenti tutte le operazioni successive avvengono con UI attiva
                 LeenoUtils.DocumentRefresh(False)
 
+                # Fetch updated range coordinates from the redefined named-area 'elenco_prezzi'
+                oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+                SR = oRangeAddress.StartRow + 1
+                ER = oRangeAddress.EndRow - 1
+                ultima_voce = ER
+                y = ER + 1
+                n = ER + 2
+
                 oSheet.getCellRangeByName('Z2').Formula = (
                     f'=IFERROR(LET(_a;N({col1}2);_u;N({col2}2);'
                     f'IF(AND(_a=0;_u=0);"--";IFS(_u=0;-1;_a=0;1;_a=_u;"--";'
@@ -2846,14 +2856,6 @@ def scelta_viste_run():
 
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
-
-                y = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-                if y is None:
-                    ultima_voce = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-                    y = ultima_voce + 1
-                else:
-                    ultima_voce = y - 1
-
                 for n in range(4, ultima_voce + 2):
                     formule.append([
                         f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
@@ -2861,7 +2863,7 @@ def scelta_viste_run():
                         f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
                     ])
 
-                n = y + 1
+                n = ER + 2
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
                 formule = tuple(formule)
                 oDoc.enableAutomaticCalculation(False)
@@ -2875,7 +2877,7 @@ def scelta_viste_run():
                         if DLG.DlgSiNo(
                                 "Nascondo eventuali voci non ancora contabilizzate?"
                         ) == 2:
-                            for el in range(3, y):
+                            for el in range(3, ER + 1):
                                 if oSheet.getCellByPosition(20, el).Value == 0:
                                     oCellRangeAddr.StartRow = el
                                     oCellRangeAddr.EndRow = el
@@ -2987,12 +2989,12 @@ def scelta_viste_run():
 
             # Copia formato da Z2 al range — senza clipboard
             source_cell = oSheet.getCellRangeByName('Z2')
-            target_range = oSheet.getCellRangeByPosition(25, 3, 25, y)
+            target_range = oSheet.getCellRangeByPosition(25, 3, 25, ER + 1)
             target_range.CellStyle = source_cell.CellStyle
             target_range.NumberFormat = source_cell.NumberFormat
 
             _primaCella()
-            oSheet.getCellRangeByPosition(11, 3, 13, y).CellBackColor = COLORE_COLONNE_RAFFRONTO
+            oSheet.getCellRangeByPosition(11, 3, 13, ER + 1).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
             oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
@@ -3088,19 +3090,11 @@ def genera_sommario():
 
     # --- Controllo doppioni ---
     start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
-
-    y = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-    if y is None:
-        ultima_voce_idx = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-        y = ultima_voce_idx + 1
-    else:
-        ultima_voce_idx = y - 1
-
-    ultima_voce = ultima_voce_idx + 1
+    ultima_voce = end_row
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
-    for n in range(4, ultima_voce + 1):
+    for n in range(4, ultima_voce + 2):
         if n % 100 == 0:  # Aggiorna indicatore ogni 100 righe per risparmiare tempo UI
             indicator.Value = n
 
@@ -3136,7 +3130,7 @@ def genera_sommario():
             ]
         formule.append(stringa)
     indicator.end()
-    oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce_idx)
+    oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce)
     formule = tuple(tuple(riga) for riga in formule)
 
     oDoc.enableAutomaticCalculation(False)
@@ -7552,11 +7546,7 @@ def inizializza_elenco():
     }
 
     #ridefinisce area nominata per precauzione
-    y_init = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-    if y_init is None:
-        last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
-    else:
-        last_row = y_init + 1
+    last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
 

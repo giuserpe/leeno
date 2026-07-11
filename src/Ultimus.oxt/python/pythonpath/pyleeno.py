@@ -2857,11 +2857,14 @@ def scelta_viste_run():
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 for n in range(4, ultima_voce + 2):
-                    formule.append([
-                        f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
-                        f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                        f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
-                    ])
+                    if oSheet.getCellByPosition(0, n - 1).String.strip() == '':
+                        formule.append(["", "", ""])
+                    else:
+                        formule.append([
+                            f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
+                            f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
+                            f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
+                        ])
 
                 n = ER + 2
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
@@ -2998,6 +3001,13 @@ def scelta_viste_run():
 
             oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
+            # Ripulisce e ripristina a 'Default' le colonne 11-25 per le righe con prima colonna vuota (es. firme)
+            for idx in range(3, y):
+                if oSheet.getCellByPosition(0, idx).String.strip() == '':
+                    oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
+                    oSheet.getCellRangeByPosition(11, idx, 25, idx).CellBackColor = -1
+                    oSheet.getCellRangeByPosition(11, idx, 25, idx).CellStyle = 'Default'
+
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDialog1 = dp.createDialog(
@@ -3101,8 +3111,8 @@ def genera_sommario():
         # Recupera lo stile (necessario .CellStyle, il contenuto della cella potrebbe essere diverso)
         cell_style = oSheet.getCellByPosition(0, n-1).CellStyle
 
-        if cell_style == "Ultimus_centro":
-            # Se lo stile è "Ultimus_centro", inserisci formula vuota
+        if oSheet.getCellByPosition(0, n - 1).String.strip() == '' or cell_style == "Ultimus_centro":
+            # Se la cella è vuota o lo stile è "Ultimus_centro", inserisci formula vuota
             stringa = [""] * 11
         else:
             stringa = [
@@ -3138,6 +3148,13 @@ def genera_sommario():
         oRange.setFormulaArray(formule)
     finally:
         oDoc.enableAutomaticCalculation(True)
+
+    # Ripulisce e ripristina a 'Default' le colonne 11-21 per le righe con prima colonna vuota (es. firme)
+    for idx in range(3, ultima_voce + 1):
+        if oSheet.getCellByPosition(0, idx).String.strip() == '':
+            oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
+            oSheet.getCellRangeByPosition(11, idx, 21, idx).CellBackColor = -1
+            oSheet.getCellRangeByPosition(11, idx, 21, idx).CellStyle = 'Default'
     return
 
 ########################################################################

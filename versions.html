@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.82-TESTING-20260712.oxt">LeenO-3.26.0.82-TESTING-20260712.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.83-TESTING-20260712.oxt">LeenO-3.26.0.83-TESTING-20260712.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">5.6MB</td>
+                <td class="col-extra">2026-07-12 09:51</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.83-TESTING-20260712.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.82-TESTING-20260712.oxt">LeenO-3.26.0.82-TESTING-20260712.oxt</a> </td>
                 <td class="col-dim">5.6MB</td>
                 <td class="col-extra">2026-07-11 22:45</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.78-TESTING-20260709.oxt">LeenO-3.26.0.78-TESTING-20260709.oxt</a> </td>
-                <td class="col-dim">5.6MB</td>
-                <td class="col-extra">2026-07-09 16:34</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.78-TESTING-20260709.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,29 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-12 09:53</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c165b7c224ce60ae58d037704c345e74c85960ee" target="_blank" rel="noopener"><code>c165b7c</code></a></td>
+                <td class="commit-msg">Merge pull request #12 from giuserpe/jules-957222653737915828-a02a5f57
+
+refactor(core): migliora la funzione inserisciRigaRossa</td>
+            </tr>
+            <tr>
+                <td>2026-07-12 09:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/4478dd2c0c7e88c726e0a26d67f82416a6a3b827" target="_blank" rel="noopener"><code>4478dd2</code></a></td>
+                <td class="commit-msg">refactor(core): migliora la funzione inserisciRigaRossa
+
+Evita cicli ridondanti e lenti per la ricerca di righe esistenti usando uFindStringCol per trovare rapidamente se la riga rossa di chiusura è già presente. Inoltre, ottimizza il calcolo dell'ultima riga utilizzata evitandone il calcolo ripetuto all'interno del loop.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-11 22:38</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/e1d5bfa6dd674c9769b6cdec95dab85e24c63fd9" target="_blank" rel="noopener"><code>e1d5bfa</code></a></td>
                 <td class="commit-msg">Merge pull request #11 from giuserpe/jules-1162986694955076655-25dc3f68
 
 Evita sovrascrittura firme in Elenco Prezzi nel raffronto</td>
-            </tr>
-            <tr>
-                <td>2026-07-11 22:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d0af1fc7e6ea087e70b820144565135d676747d2" target="_blank" rel="noopener"><code>d0af1fc</code></a></td>
-                <td class="commit-msg">fix(core): evita sovrascrittura formule e stili di raffronto
-
-Nella scelta del raffronto in scelta_viste_run() e in genera_sommario() per il foglio Elenco Prezzi, non inserisce formule o colori e non modifica lo stile delle celle se la colonna A è vuota (es. firme), mantenendo il TOTALE su 'Fine elenco'.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-11 22:12</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/288e4b92244462539390e32a6c4f3a2ecaf6c67f" target="_blank" rel="noopener"><code>288e4b9</code></a></td>
-                <td class="commit-msg">fix(core): evita formule e colori di raffronto se la prima colonna è vuota
-
-Nella scelta del raffronto in scelta_viste_run() e in genera_sommario() per il foglio Elenco Prezzi, impedisce l'inserimento di formule e formati nelle righe in cui la colonna A è vuota (es. riga firma/data), mantenendo il TOTALE sulla riga 'Fine elenco'.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -498,8 +496,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-12 09:51 UTC</p>
-                <p>Build Commit: <code>4478dd2</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-12 09:53 UTC</p>
+                <p>Build Commit: <code>c165b7c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

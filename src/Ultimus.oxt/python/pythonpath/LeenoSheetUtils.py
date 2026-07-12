@@ -632,35 +632,45 @@ def inserisciRigaRossa(oSheet):
     Errore se il foglio non è un foglio di LeenO
     '''
     lrow = 0
+    oDoc = LeenoUtils.getDocument()
     nome = oSheet.Name
     if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        # Controllo preventivo veloce: se la riga rossa c'è già, esce subito
+        if SheetUtils.uFindStringCol('Fine Computo', 0, oSheet, start=2, equal=1) is not None:
+            return
+
         lrow = cercaUltimaVoce(oSheet) + 2
-        for n in range(lrow, SheetUtils.getLastUsedRow(oSheet) + 2):
+        last_used = SheetUtils.getLastUsedRow(oSheet)
+        for n in range(lrow, last_used + 2):
             if oSheet.getCellByPosition(0, n).CellStyle == 'Riga_rossa_Chiudi':
                 return
         oSheet.getRows().insertByIndex(lrow, 1)
         oSheet.getCellByPosition(0, lrow).String = 'Fine Computo'
         oSheet.getCellRangeByPosition(0, lrow, 34, lrow).CellStyle = 'Riga_rossa_Chiudi'
-        oSheet.getCellByPosition(2, lrow
-        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
+        oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
     elif nome == 'Analisi di Prezzo':
+        # Controllo preventivo veloce: se la riga rossa c'è già, esce subito
+        if SheetUtils.uFindStringCol('Fine ANALISI', 0, oSheet, start=2, equal=1) is not None:
+            return
+
         lrow = cercaUltimaVoce(oSheet) + 2
         oSheet.getCellByPosition(0, lrow).String = 'Fine ANALISI'
         oSheet.getCellRangeByPosition(0, lrow, 10, lrow).CellStyle = 'Riga_rossa_Chiudi'
-        oSheet.getCellByPosition(1, lrow
-        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
-        oDoc = LeenoUtils.getDocument()
+        oSheet.getCellByPosition(1, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
         # ~oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
         SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
                       '$A$3:$K$' + str(SheetUtils.getUsedArea(oSheet).EndRow), 'analisi')
     elif nome == 'Elenco Prezzi':
+        # Controllo preventivo veloce: se la riga rossa c'è già, esce subito
+        if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet, start=2, equal=1) is not None:
+            return
+
         lrow = cercaUltimaVoce(oSheet)
         if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':
             lrow += 1
 
         oSheet.getCellByPosition(0, lrow).String = 'Fine elenco'
-        oSheet.getCellByPosition(1, lrow
-        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
+        oSheet.getCellByPosition(1, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
         oSheet.getCellRangeByPosition(0, lrow, 9, lrow).CellStyle = 'Riga_rossa_Chiudi'
         # oSheet.getCellRangeByPosition(11, lrow, 25, lrow).CellStyle = 'EP statistiche_q'

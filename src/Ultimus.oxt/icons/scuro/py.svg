@@ -7,8 +7,8 @@
    id="svg_py"
    xmlns="http://www.w3.org/2000/svg">
   <!-- Upper snake (originally blue, let's make it dark gray/black) -->
-  <path d="M 16,3 C 10,3 9,4 9,8 L 9,11 L 16,11 L 16,12.5 L 11,12.5 C 7,12.5 5,14.5 5,18.5 C 5,22.5 7,24 11,24 L 13.5,24 L 13.5,22 C 13.5,19 15.5,17 18.5,17 L 23.5,17 L 23.5,16 C 23.5,11.5 21.5,9.5 17.5,9.5 L 16,9.5 L 16,8 C 16,4.5 21,3 16,3 Z" fill="#000000" stroke="#000000" stroke-width="1" stroke-linejoin="round" />
-  <circle cx="12.5" cy="6.5" r="1" fill="#ffffff" />
+  <path d="M 16,3 C 10,3 9,4 9,8 L 9,11 L 16,11 L 16,12.5 L 11,12.5 C 7,12.5 5,14.5 5,18.5 C 5,22.5 7,24 11,24 L 13.5,24 L 13.5,22 C 13.5,19 15.5,17 18.5,17 L 23.5,17 L 23.5,16 C 23.5,11.5 21.5,9.5 17.5,9.5 L 16,9.5 L 16,8 C 16,4.5 21,3 16,3 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" />
+  <circle cx="12.5" cy="6.5" r="1" fill="#000000" />
 
   <!-- Lower snake (originally yellow, let's make it red/white) -->
   <path d="M 16,29 C 22,29 23,28 23,24 L 23,21 L 16,21 L 16,19.5 L 21,19.5 C 25,19.5 27,17.5 27,13.5 C 27,9.5 25,8 21,8 L 18.5,8 L 18.5,10 C 18.5,13 16.5,15 13.5,15 L 8.5,15 L 8.5,16 C 8.5,20.5 10.5,22.5 14.5,22.5 L 16,22.5 L 16,24 C 16,27.5 11,29 16,29 Z" fill="#de1010" stroke="#de1010" stroke-width="1" stroke-linejoin="round" />

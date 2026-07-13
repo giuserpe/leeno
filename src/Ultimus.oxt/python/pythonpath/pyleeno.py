@@ -4731,7 +4731,7 @@ def firme_in_calce(rowF=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         #  oSheet.getCellByPosition(rowF,0).Rows.IsManualPageBreak = True
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    # LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 def gantt():
     # Ottieni il documento corrente e prepara il percorso del file di output

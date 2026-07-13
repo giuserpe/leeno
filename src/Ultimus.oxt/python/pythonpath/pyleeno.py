@@ -2828,7 +2828,7 @@ def scelta_viste_run():
 
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow + 1
-            ER = oRangeAddress.EndRow - 1
+            ER = oRangeAddress.EndRow
             ultima_voce = ER
             y = ER + 1
             n = ER + 2
@@ -2851,7 +2851,7 @@ def scelta_viste_run():
                 # Fetch updated range coordinates from the redefined named-area 'elenco_prezzi'
                 oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                 SR = oRangeAddress.StartRow + 1
-                ER = oRangeAddress.EndRow - 1
+                ER = oRangeAddress.EndRow
                 y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
                 if y_real is None:
                     y_real = ER + 1
@@ -3129,7 +3129,7 @@ def genera_sommario():
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
 
     # --- Controllo doppioni ---
-    start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow - 1
+    start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow
     ultima_voce = end_row
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso

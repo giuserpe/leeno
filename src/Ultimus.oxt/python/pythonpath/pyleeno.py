@@ -4345,10 +4345,15 @@ def firme_in_calce(rowF=None):
     else:
         datafirme = datafirme + ", "
 
+    inserted_start = None
+    inserted_end = None
+
     if oSheet.Name == "CONTABILITA":
         if rowF == None:
             rowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
         oSheet.getRows().insertByIndex(rowF, 11)
+        inserted_start = rowF
+        inserted_end = rowF + 11 - 1
         riga_corrente = rowF + 1
 
     # INSERISCI LA DATA E IL PROGETTISTA
@@ -4381,6 +4386,8 @@ def firme_in_calce(rowF=None):
             oSheet.getRows().removeByIndex(rowF, rowE - rowF)
         riga_corrente = rowF + 1
         oSheet.getRows().insertByIndex(rowF, 15)
+        inserted_start = rowF
+        inserted_end = rowF + 15 - 1
         oSheet.getCellRangeByPosition(0, rowF, 25, rowF + 15 -
                                       1).CellStyle = "Ultimus_centro"
         oSheet.getCellRangeByPosition(0, rowF + 15 - 1, 25, rowF + 15 -
@@ -4441,6 +4448,8 @@ def firme_in_calce(rowF=None):
             ss = 9
             col = 'J'
         oSheet.getRows().insertByIndex(rowF, 17)
+        inserted_start = rowF
+        inserted_end = rowF + 17 - 1
         oSheet.getCellRangeByPosition(0, rowF, ss,
                                       rowF + 17 - 1).CellStyle = 'ULTIMUS'
         # raggruppo i righi di mirura
@@ -4578,6 +4587,7 @@ def firme_in_calce(rowF=None):
 
         for key, value in categorie_ordinate.items():
             oSheet.getRows().insertByIndex(riga_corrente, 1)
+            inserted_end += 1
             oSheet.getCellByPosition(1, riga_corrente).String = key
             oSheet.getCellByPosition(2, riga_corrente).String = value
             oSheet.getCellByPosition(11, riga_corrente).Formula = f'=S{riga_corrente + 1}/S{oRow}*100'
@@ -4731,6 +4741,8 @@ def firme_in_calce(rowF=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         #  oSheet.getCellByPosition(rowF,0).Rows.IsManualPageBreak = True
+    if inserted_start is not None and inserted_end is not None:
+        oSheet.getCellRangeByPosition(0, inserted_start, 0, inserted_end).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 def gantt():

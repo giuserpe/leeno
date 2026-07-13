@@ -2440,6 +2440,14 @@ def voce_breve_ep():
 # @LeenoUtils.no_refresh
 @LeenoUtils.release_ram
 @preserva_posizione(step=0) 
+def get_elenco_prezzi_last_row_index(oSheet):
+    y_find = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+    if y_find is not None:
+        for n in range(y_find - 1, 2, -1):
+            if oSheet.getCellByPosition(0, n).String.strip() != "":
+                return n
+    return LeenoSheetUtils.cercaUltimaVoce(oSheet)
+
 def scelta_viste():
     with LeenoUtils.DocumentRefreshContext(False):
         scelta_viste_run()
@@ -2844,11 +2852,11 @@ def scelta_viste_run():
                 oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                 SR = oRangeAddress.StartRow + 1
                 ER = oRangeAddress.EndRow - 1
-                ultima_voce = ER
                 y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
                 if y_real is None:
                     y_real = ER + 1
-                y = ER + 1
+                ultima_voce = y_real - 1
+                y = y_real
                 n = y_real + 1
 
                 oSheet.getCellRangeByName('Z2').Formula = (
@@ -2859,7 +2867,7 @@ def scelta_viste_run():
 
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
-                L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+                L_last = get_elenco_prezzi_last_row_index(oSheet)
                 for n in range(4, L_last + 2):
                     if oSheet.getCellByPosition(0, n - 1).String.strip() == '':
                         formule.append(["", "", ""])
@@ -2999,7 +3007,7 @@ def scelta_viste_run():
 
             # Copia formato da Z2 al range — senza clipboard, preservando lo stile delle righe vuote/firme
             source_cell = oSheet.getCellRangeByName('Z2')
-            L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            L_last = get_elenco_prezzi_last_row_index(oSheet)
             for idx in range(3, ER + 1):
                 if idx > L_last:
                     continue
@@ -3022,6 +3030,7 @@ def scelta_viste_run():
             oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
             # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
+            y = y_real
             for idx in range(3, y):
                 if idx > L_last:
                     continue
@@ -3125,7 +3134,7 @@ def genera_sommario():
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
-    L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    L_last = get_elenco_prezzi_last_row_index(oSheet)
     for n in range(4, ultima_voce + 2):
         if n % 100 == 0:  # Aggiorna indicatore ogni 100 righe per risparmiare tempo UI
             indicator.Value = n
@@ -3202,7 +3211,7 @@ def riordina_ElencoPrezzi():
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
-    last_row = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1)
+    last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -3259,7 +3268,7 @@ def riordina_ElencoPrezzi_():
         return
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
-    last_row = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1)
+    last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -7586,7 +7595,7 @@ def inizializza_elenco():
     }
 
     #ridefinisce area nominata per precauzione
-    last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
+    last_row = get_elenco_prezzi_last_row_index(oSheet) + 1
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
 
@@ -7712,7 +7721,7 @@ def inizializza_elenco():
         'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)]
         # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
     }
-    L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    L_last = get_elenco_prezzi_last_row_index(oSheet)
     if y is not None and y > 3:
         for style_name, ranges in STILI_COLONNE.items():
             for col_start, col_end in ranges:

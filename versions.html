@@ -371,7 +371,7 @@
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 /download?path=&files=LeenO-3.26.0.90-TESTING-20260713.oxt">LeenO-3.26.0.90-TESTING-20260713.oxt</a> <span class="badge">ULTIMA</span></td>
                 <td class="col-dim">5.5MB</td>
-                <td class="col-extra">2026-07-13 20:55</td>
+                <td class="col-extra">2026-07-13 21:55</td>
                 <td style="text-align: right;">
                     <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
 /download?path=&files=LeenO-3.26.0.90-TESTING-20260713.oxt" class="btn-download-link" download>
@@ -452,6 +452,16 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-13 21:56</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/96694b89d81a64fbf2c34bcc6159f7a3999131ef" target="_blank" rel="noopener"><code>96694b8</code></a></td>
+                <td class="commit-msg">fix(core): ripristina altezza ottimale righe inserite in firme_in_calce
+
+- rimuove DocumentRefreshContext per evitare blocchi e comportamenti non deterministici
+- applica OptimalHeight a tutte le righe inserite (inserted_start → inserted_end)
+- sostituisce vecchia logica su getCellRangeByPosition con iterazione diretta sulle righe
+- mantiene adattaAltezzaRiga solo dove necessario</td>
+            </tr>
+            <tr>
                 <td>2026-07-13 21:46</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/27f1b7defdeb88688cd7fc3ceb3366d785baa5ad" target="_blank" rel="noopener"><code>27f1b7d</code></a></td>
                 <td class="commit-msg">fix(core): risolve conflitto di merge in pyleeno.py
@@ -465,13 +475,6 @@ inserted_start/inserted_end e riattiva adattaAltezzaRiga.</td>
                 <td class="commit-msg">Merge pull request #17 from giuserpe/jules-6645877706770703329-72ceb559
 
 feat(core): applica altezza ottimale alle nuove righe in firme_in_calce</td>
-            </tr>
-            <tr>
-                <td>2026-07-13 21:31</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3f812ee56cf0e22407fd5fc1c0194b92db8b36b5" target="_blank" rel="noopener"><code>3f812ee</code></a></td>
-                <td class="commit-msg">feat(core): applica altezza ottimale alle nuove righe in firme_in_calce
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +498,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-13 21:46 UTC</p>
-                <p>Build Commit: <code>27f1b7d</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-13 21:57 UTC</p>
+                <p>Build Commit: <code>96694b8</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

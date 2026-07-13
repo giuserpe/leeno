@@ -2844,11 +2844,11 @@ def scelta_viste_run():
                 oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                 SR = oRangeAddress.StartRow + 1
                 ER = oRangeAddress.EndRow - 1
-                ultima_voce = ER
                 y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
                 if y_real is None:
                     y_real = ER + 1
-                y = ER + 1
+                ultima_voce = y_real - 1
+                y = y_real
                 n = y_real + 1
 
                 oSheet.getCellRangeByName('Z2').Formula = (
@@ -3022,6 +3022,7 @@ def scelta_viste_run():
             oSheet.getCellRangeByName(f'A{n}:Z{n}').CharWeight = BOLD
 
             # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
+            y = y_real
             for idx in range(3, y):
                 if idx > L_last:
                     continue
@@ -3202,7 +3203,7 @@ def riordina_ElencoPrezzi():
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
-    last_row = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1)
+    last_row = str(LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1)
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -3259,7 +3260,7 @@ def riordina_ElencoPrezzi_():
         return
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
-    last_row = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) + 1)
+    last_row = str(LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1)
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -7586,11 +7587,7 @@ def inizializza_elenco():
     }
 
     #ridefinisce area nominata per precauzione
-    y_find = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-    if y_find is not None:
-        last_row = y_find + 1
-    else:
-        last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+    last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
 

@@ -4326,8 +4326,8 @@ Verifica che il file di destinazione non sia già in uso!''')
 ########################################################################
 
 def MENU_firme_in_calce():
-    with LeenoUtils.DocumentRefreshContext(False):
-        firme_in_calce(rowF=None)
+    # with LeenoUtils.DocumentRefreshContext(False):
+    firme_in_calce(rowF=None)
 
 def firme_in_calce(rowF=None):
     '''
@@ -4372,6 +4372,8 @@ def firme_in_calce(rowF=None):
         oRange = oSheet.getCellRangeByPosition (2, riga_corrente, 40, riga_corrente)
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
+        for _r in range(inserted_start, inserted_end + 1):
+            oSheet.getRows().getByIndex(_r).OptimalHeight = True
 
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         if rowF == None:
@@ -4420,6 +4422,8 @@ def firme_in_calce(rowF=None):
         oSheet.getCellByPosition(
             1, riga_corrente + 6
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
+        for _r in range(inserted_start, inserted_end + 1):
+            oSheet.getRows().getByIndex(_r).OptimalHeight = True
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         if rowF == None:
@@ -4741,9 +4745,8 @@ def firme_in_calce(rowF=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         #  oSheet.getCellByPosition(rowF,0).Rows.IsManualPageBreak = True
-    if inserted_start is not None and inserted_end is not None:
-        oSheet.getCellRangeByPosition(0, inserted_start, 0, inserted_end).Rows.OptimalHeight = True
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        for _r in range(inserted_start, inserted_end + 1):
+            oSheet.getRows().getByIndex(_r).OptimalHeight = True
 
 def gantt():
     # Ottieni il documento corrente e prepara il percorso del file di output

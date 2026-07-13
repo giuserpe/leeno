@@ -2845,8 +2845,11 @@ def scelta_viste_run():
                 SR = oRangeAddress.StartRow + 1
                 ER = oRangeAddress.EndRow - 1
                 ultima_voce = ER
+                y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+                if y_real is None:
+                    y_real = ER + 1
                 y = ER + 1
-                n = ER + 2
+                n = y_real + 1
 
                 oSheet.getCellRangeByName('Z2').Formula = (
                     f'=IFERROR(LET(_a;N({col1}2);_u;N({col2}2);'
@@ -2856,7 +2859,8 @@ def scelta_viste_run():
 
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
-                for n in range(4, ultima_voce + 2):
+                L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+                for n in range(4, L_last + 2):
                     if oSheet.getCellByPosition(0, n - 1).String.strip() == '':
                         formule.append(["", "", ""])
                     else:
@@ -2866,7 +2870,10 @@ def scelta_viste_run():
                             f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
                         ])
 
-                n = ER + 2
+                for n in range(L_last + 2, ultima_voce + 2):
+                    formule.append(["", "", ""])
+
+                n = y_real + 1
                 oRange = oSheet.getCellRangeByPosition(23, 3, 25, ultima_voce)
                 formule = tuple(formule)
                 oDoc.enableAutomaticCalculation(False)
@@ -2992,7 +2999,10 @@ def scelta_viste_run():
 
             # Copia formato da Z2 al range — senza clipboard, preservando lo stile delle righe vuote/firme
             source_cell = oSheet.getCellRangeByName('Z2')
+            L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             for idx in range(3, ER + 1):
+                if idx > L_last:
+                    continue
                 if oSheet.getCellByPosition(0, idx).String.strip() != '':
                     cell_z = oSheet.getCellByPosition(25, idx)
                     cell_z.CellStyle = source_cell.CellStyle
@@ -3000,7 +3010,10 @@ def scelta_viste_run():
                     oSheet.getCellRangeByPosition(11, idx, 13, idx).CellBackColor = COLORE_COLONNE_RAFFRONTO
 
             # Applica formato anche alla riga del TOTALE "Fine elenco"
-            cell_z_tot = oSheet.getCellByPosition(25, ER + 1)
+            y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+            if y_real is None:
+                y_real = ER + 1
+            cell_z_tot = oSheet.getCellByPosition(25, y_real)
             cell_z_tot.CellStyle = source_cell.CellStyle
             cell_z_tot.NumberFormat = source_cell.NumberFormat
 
@@ -3010,6 +3023,8 @@ def scelta_viste_run():
 
             # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
             for idx in range(3, y):
+                if idx > L_last:
+                    continue
                 if oSheet.getCellByPosition(0, idx).String.strip() == '':
                     oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
                     oSheet.getCellRangeByPosition(11, idx, 25, idx).CellBackColor = -1
@@ -3110,6 +3125,7 @@ def genera_sommario():
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
+    L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
     for n in range(4, ultima_voce + 2):
         if n % 100 == 0:  # Aggiorna indicatore ogni 100 righe per risparmiare tempo UI
             indicator.Value = n
@@ -3117,8 +3133,8 @@ def genera_sommario():
         # Recupera lo stile (necessario .CellStyle, il contenuto della cella potrebbe essere diverso)
         cell_style = oSheet.getCellByPosition(0, n-1).CellStyle
 
-        if oSheet.getCellByPosition(0, n-1).String.strip() == '' or cell_style == "Ultimus_centro":
-            # Se la cella è vuota o lo stile è "Ultimus_centro", inserisci formula vuota
+        if n - 1 > L_last or oSheet.getCellByPosition(0, n-1).String.strip() == '' or cell_style == "Ultimus_centro":
+            # Se la cella è vuota o lo stile è "Ultimus_centro", o se siamo oltre l'ultima voce di prezzo, inserisci formula vuota
             stringa = [""] * 11
         else:
             stringa = [
@@ -3157,6 +3173,8 @@ def genera_sommario():
 
     # Ripulisce le colonne 11-21 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
     for idx in range(3, ultima_voce + 1):
+        if idx > L_last:
+            continue
         if oSheet.getCellByPosition(0, idx).String.strip() == '':
             oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
             oSheet.getCellRangeByPosition(11, idx, 21, idx).CellBackColor = -1
@@ -7694,12 +7712,13 @@ def inizializza_elenco():
         'EP statistiche_q': [(11, 13), (15, 17), (19, 21), (23, 24)]
         # 'EP statistiche': [(13, 13), (17, 17), (21, 21), (25, 25)]
     }
+    L_last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
     if y is not None and y > 3:
         for style_name, ranges in STILI_COLONNE.items():
             for col_start, col_end in ranges:
                 oSheet.getCellRangeByPosition(
                     col_start, 3,
-                    col_end, y - 1
+                    col_end, L_last
                 ).CellStyle = style_name
 
 

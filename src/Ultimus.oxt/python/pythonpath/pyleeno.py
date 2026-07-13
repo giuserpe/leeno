@@ -7586,7 +7586,11 @@ def inizializza_elenco():
     }
 
     #ridefinisce area nominata per precauzione
-    last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
+    y_find = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
+    if y_find is not None:
+        last_row = y_find + 1
+    else:
+        last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
     SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
 

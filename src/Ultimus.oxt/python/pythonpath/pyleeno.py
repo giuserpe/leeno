@@ -5964,6 +5964,116 @@ SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""")
 ########################################################################
 
 
+def MENU_evidenzia_in_elenco():
+    '''
+    Evidenzia le voci selezionate in Elenco Prezzi.
+    '''
+    evidenzia_voci_in_elenco_prezzi()
+
+
+def evidenzia_voci_in_elenco_prezzi():
+    '''
+    Selezionate una serie di voci in COMPUTO, VARIANTE o CONTABILITA,
+    evidenzia le rispettive voci in Elenco Prezzi.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        Dialogs.Exclamation(
+            Title="ATTENZIONE!",
+            Text="Questa funzione è attiva solo nei fogli COMPUTO, VARIANTE o CONTABILITA."
+        )
+        return
+
+    selected_rows = set()
+    try:
+        ranges = oDoc.getCurrentSelection().getRangeAddresses()
+        for r_addr in ranges:
+            for r in range(r_addr.StartRow, r_addr.EndRow + 1):
+                selected_rows.add(r)
+    except AttributeError:
+        try:
+            r_addr = oDoc.getCurrentSelection().getRangeAddress()
+            for r in range(r_addr.StartRow, r_addr.EndRow + 1):
+                selected_rows.add(r)
+        except AttributeError:
+            row = LeggiPosizioneCorrente()[1]
+            if row is not None:
+                selected_rows.add(row)
+
+    if not selected_rows:
+        Dialogs.Exclamation(
+            Title="ATTENZIONE!",
+            Text="Nessuna riga selezionata."
+        )
+        return
+
+    articoli = set()
+    processed_rows = set()
+    for row in sorted(selected_rows):
+        if row in processed_rows:
+            continue
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
+        if sStRange is not None:
+            sr = sStRange.RangeAddress.StartRow
+            er = sStRange.RangeAddress.EndRow
+            for r in range(sr, er + 1):
+                processed_rows.add(r)
+            art_code = oSheet.getCellByPosition(1, sr + 1).String.strip()
+            if art_code and art_code != "Cod. Art.?":
+                articoli.add(art_code)
+
+    if not articoli:
+        Dialogs.Info(
+            Title="INFORMAZIONE",
+            Text="Nessun codice articolo valido trovato nella selezione."
+        )
+        return
+
+    oSheetEP = oDoc.getSheets().getByName("Elenco Prezzi")
+    oSheetEP.IsVisible = True
+    GotoSheet('Elenco Prezzi')
+
+    L_last = get_elenco_prezzi_last_row_index(oSheetEP)
+    if L_last < 2:
+        Dialogs.Exclamation(
+            Title="ATTENZIONE!",
+            Text="L'Elenco Prezzi risulta vuoto o non inizializzato."
+        )
+        return
+
+    codici_range = oSheetEP.getCellRangeByPosition(0, 2, 0, L_last)
+    dati_A = codici_range.getDataArray()
+
+    map_codici_to_row = {}
+    for idx, row_data in enumerate(dati_A):
+        if row_data and row_data[0]:
+            codice = str(row_data[0]).strip()
+            if codice:
+                map_codici_to_row[codice.lower()] = 2 + idx
+
+    rows_to_highlight = []
+    for art in articoli:
+        row_ep = map_codici_to_row.get(art.lower())
+        if row_ep is not None:
+            rows_to_highlight.append(row_ep)
+
+    if not rows_to_highlight:
+        Dialogs.Info(
+            Title="INFORMAZIONE",
+            Text="Nessuna delle voci selezionate è stata trovata in Elenco Prezzi."
+        )
+        return
+
+    oRanges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+    for r_ep in sorted(rows_to_highlight):
+        cell_range = oSheetEP.getCellRangeByPosition(0, r_ep, 30, r_ep)
+        oRanges.addRangeAddress(cell_range.RangeAddress, False)
+
+    oDoc.CurrentController.select(oRanges)
+
+
 def MENU_cerca_in_elenco():
     '''
     Evidenzia il codice di elenco prezzi della voce corrente.

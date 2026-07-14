@@ -452,6 +452,24 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-14 10:04</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c84d9446d0a9040132171f7d0cb222cf543d91b1" target="_blank" rel="noopener"><code>c84d944</code></a></td>
+                <td class="commit-msg">Merge pull request #18 from giuserpe/jules-2963954710860098331-60707e12
+
+Aggiunge evidenziazione di voci selezionate in Elenco Prezzi</td>
+            </tr>
+            <tr>
+                <td>2026-07-14 09:21</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/942bd578819e08a696465b2d5a4a2bf90647b4c2" target="_blank" rel="noopener"><code>942bd57</code></a></td>
+                <td class="commit-msg">feat(core): aggiunge evidenzia_voci_in_elenco_prezzi
+
+Aggiunge una funzione per evidenziare/selezionare le voci corrispondenti nel foglio "Elenco Prezzi" partendo dalle voci attualmente selezionate nei fogli COMPUTO, VARIANTE o CONTABILITA.
+
+Questo risolve la necessità dell'utente di trovare e confrontare rapidamente più articoli contemporaneamente nel listino prezzi principale, migliorando notevolmente le prestazioni grazie all'uso delle API batch getDataArray() e SheetCellRanges.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-14 08:48</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/be5ce6a2513864a8674a6f48d4b2f3a1043ebfbf" target="_blank" rel="noopener"><code>be5ce6a</code></a></td>
                 <td class="commit-msg">fix(ui): rimuove codice morto in MENU_importi
@@ -463,24 +481,6 @@ fix(import): migliora messaggio sovrascrittura voci XPWE
 
 - aggiorna testo YesNoCancelDialog con elenco puntato (►)
 - mantiene logica di overwrite_flag e gestione Annulla invariata</td>
-            </tr>
-            <tr>
-                <td>2026-07-13 21:56</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/96694b89d81a64fbf2c34bcc6159f7a3999131ef" target="_blank" rel="noopener"><code>96694b8</code></a></td>
-                <td class="commit-msg">fix(core): ripristina altezza ottimale righe inserite in firme_in_calce
-
-- rimuove DocumentRefreshContext per evitare blocchi e comportamenti non deterministici
-- applica OptimalHeight a tutte le righe inserite (inserted_start → inserted_end)
-- sostituisce vecchia logica su getCellRangeByPosition con iterazione diretta sulle righe
-- mantiene adattaAltezzaRiga solo dove necessario</td>
-            </tr>
-            <tr>
-                <td>2026-07-13 21:46</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/27f1b7defdeb88688cd7fc3ceb3366d785baa5ad" target="_blank" rel="noopener"><code>27f1b7d</code></a></td>
-                <td class="commit-msg">fix(core): risolve conflitto di merge in pyleeno.py
-
-Accettata la versione remota che aggiunge il controllo su
-inserted_start/inserted_end e riattiva adattaAltezzaRiga.</td>
             </tr>
                     </tbody>
                 </table>
@@ -504,8 +504,8 @@ inserted_start/inserted_end e riattiva adattaAltezzaRiga.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-14 09:21 UTC</p>
-                <p>Build Commit: <code>942bd57</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-14 10:04 UTC</p>
+                <p>Build Commit: <code>c84d944</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

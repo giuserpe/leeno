@@ -18,8 +18,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -38,7 +38,7 @@
      inkscape:window-maximized="0"
      inkscape:pagecheckerboard="0"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#ffffff" />
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -83,3 +83,4 @@
     </g>
   </g>
 </svg>
+

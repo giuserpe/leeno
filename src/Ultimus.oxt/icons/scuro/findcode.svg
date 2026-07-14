@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -41,7 +41,7 @@
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#ffffff"
+     inkscape:deskcolor="#d1d1d1"
      showguides="true" />
   <metadata
      id="metadata5">
@@ -67,15 +67,15 @@
          d="M 0.11011393,3.4303676 H 8.2754088"
          id="path875" />
       <path
-         style="fill:none;stroke:#8896ab;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#919191;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.11011393,5.0104745 H 8.2754088"
          id="path879" />
       <path
-         style="fill:none;stroke:#8896ab;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#919191;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.11011393,6.5606697 H 8.2754088"
          id="path881" />
       <path
-         style="fill:none;stroke:#8896ab;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#919191;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="M 0.11011393,1.8571451 H 8.2754088"
          id="path1092" />
     </g>
@@ -97,3 +97,4 @@
     </g>
   </g>
 </svg>
+

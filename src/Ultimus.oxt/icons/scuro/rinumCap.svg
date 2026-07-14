@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -42,7 +42,7 @@
      inkscape:pagecheckerboard="0"
      showguides="false"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#ffffff" />
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -62,42 +62,42 @@
        id="g1"
        transform="translate(0.0622539,-0.10912261)">
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect4331"
          width="7"
          height="0.55000001"
          x="0.69999999"
          y="0.80000001" />
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect5285-2"
          width="5"
          height="0.55000001"
          x="2.7"
          y="2" />
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect5281"
          width="3"
          height="0.55000001"
          x="4.6999998"
          y="3.2" />
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect5283"
          width="7"
          height="0.55000001"
          x="0.69999999"
          y="4.8000002" />
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect5285"
          width="5"
          height="0.55000001"
          x="2.7"
          y="6" />
       <rect
-         style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+         style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
          id="rect1"
          width="3"
          height="0.55000001"
@@ -111,3 +111,4 @@
        style="stroke-width:0.264583" />
   </g>
 </svg>
+

@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -43,7 +43,7 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#ffffff">
+     inkscape:deskcolor="#d1d1d1">
     <sodipodi:guide
        position="4.2094951,4.350716"
        orientation="1,0"
@@ -99,3 +99,4 @@
          y="5.3245049">[...]</tspan></text>
   </g>
 </svg>
+

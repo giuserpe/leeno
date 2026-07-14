@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -71,16 +71,17 @@
          y="4.932229"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.97852px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.843266;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
     <path
-       style="fill:none;stroke:#8896ab;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#919191;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.14190979,4.8557775 H 8.3552974"
        id="path875" />
     <path
-       style="fill:none;stroke:#8896ab;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#919191;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.14190979,6.4432776 H 8.3552974"
        id="path1184" />
     <path
-       style="fill:none;stroke:#8896ab;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#919191;stroke-width:0.732599;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 0.14190979,8.0307777 H 8.3552974"
        id="path1186" />
   </g>
 </svg>
+

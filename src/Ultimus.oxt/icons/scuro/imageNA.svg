@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#121a23"
-     bordercolor="#8896ab"
+     pagecolor="#000000"
+     bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -41,7 +41,7 @@
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#ffffff" />
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -71,14 +71,14 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2753px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ffffff;fill-opacity:1;stroke-width:1.59807;stroke-miterlimit:4;stroke-dasharray:none" /></text>
     <text
        xml:space="preserve"
-       style="font-size:7.1829px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:none;fill:#8896ab;stroke-width:0.264583"
+       style="font-size:7.1829px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:none;fill:#666666;stroke-width:0.264583"
        x="1.0228429"
        y="7.1508169"
        id="text1"
        transform="scale(1.1233886,0.89016393)"><tspan
          sodipodi:role="line"
          id="tspan1"
-         style="font-style:normal;font-weight:normal;fill:#8896ab;stroke-width:0.264583"
+         style="font-style:normal;font-weight:normal;fill:#666666;stroke-width:0.264583"
          x="1.0228429"
          y="7.1508169">#</tspan></text>
     <g
@@ -97,3 +97,4 @@
     </g>
   </g>
 </svg>
+

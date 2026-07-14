@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
-     bordercolor="#666666"
+     pagecolor="#121a23"
+     bordercolor="#8896ab"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -43,7 +43,7 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1">
+     inkscape:deskcolor="#ffffff">
     <sodipodi:guide
        position="4.8090667,7.96544"
        orientation="0,-1"
@@ -94,7 +94,7 @@
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:5.47918px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.471362;stroke-miterlimit:4;stroke-dasharray:none">+</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.47807px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.47807px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#ff6b50;fill-opacity:1;stroke:none;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none"
            x="3.1296158"
            y="8.216404"
            id="text1039-6"
@@ -103,7 +103,7 @@
              id="tspan1037-0"
              x="3.1296158"
              y="8.216404"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.34613px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ff0000;fill-opacity:1;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none">-</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.34613px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';fill:#ff6b50;fill-opacity:1;stroke-width:0.631972;stroke-miterlimit:4;stroke-dasharray:none">-</tspan></text>
       </g>
       <g
          id="g1"
@@ -129,4 +129,3 @@
     </g>
   </g>
 </svg>
-

@@ -7,11 +7,11 @@
    id="svg_falegname"
    xmlns="http://www.w3.org/2000/svg">
   <!-- Wood block -->
-  <rect x="4" y="22" width="24" height="6" rx="1" fill="#8c8c8c" stroke="#000000" stroke-width="2" />
+  <rect x="4" y="22" width="24" height="6" rx="1" fill="#8896ab" stroke="#1a2010" stroke-width="2" />
   <!-- Carpenter hammer -->
   <!-- Hammer handle -->
-  <path d="M 12,22 L 20,8" stroke="#000000" stroke-width="3.5" stroke-linecap="round" />
-  <path d="M 12,22 L 20,8" stroke="#de1010" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 12,22 L 20,8" stroke="#1a2010" stroke-width="3.5" stroke-linecap="round" />
+  <path d="M 12,22 L 20,8" stroke="#ff4d2e" stroke-width="1.5" stroke-linecap="round" />
   <!-- Hammer head -->
-  <path d="M 16,5 L 26,11 L 24,14 L 14,8 Z" fill="#ffffff" stroke="#000000" stroke-width="2" stroke-linejoin="round" />
+  <path d="M 16,5 L 26,11 L 24,14 L 14,8 Z" fill="#ffffff" stroke="#1a2010" stroke-width="2" stroke-linejoin="round" />
 </svg>

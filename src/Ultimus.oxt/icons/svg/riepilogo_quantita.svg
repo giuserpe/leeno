@@ -16,12 +16,12 @@
   <sodipodi:namedview
      id="namedview6"
      pagecolor="#ffffff"
-     bordercolor="#000000"
+     bordercolor="#1a2010"
      borderopacity="0.25"
      inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
+     inkscape:deskcolor="#ffffff"
      inkscape:zoom="25.21875"
      inkscape:cx="16.019827"
      inkscape:cy="16"
@@ -42,7 +42,7 @@
        width="3.1808178"
        height="2.7375641"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect1"
        style="stroke-width:0.983626" />
     <rect
@@ -51,7 +51,7 @@
        width="3.1808178"
        height="2.7375641"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect2"
        style="stroke-width:0.983626" />
     <rect
@@ -60,7 +60,7 @@
        width="3.1808178"
        height="2.7375641"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect3"
        style="stroke-width:0.983626" />
     <!-- Text row indicators -->
@@ -70,7 +70,7 @@
        width="7.4219079"
        height="1.8250427"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect4"
        style="stroke-width:0.983626" />
     <rect
@@ -79,7 +79,7 @@
        width="7.4219079"
        height="1.8250427"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect5"
        style="stroke-width:0.983626" />
     <rect
@@ -88,12 +88,12 @@
        width="7.4219079"
        height="1.8250427"
        rx="0.53013629"
-       fill="#000000"
+       fill="#1a2010"
        id="rect6"
        style="stroke-width:0.983626" />
     <!-- Greek Sigma Symbol Σ on the right representing sum/summary/quantities -->
     <path
-       fill="#000000"
+       fill="#1a2010"
        d="m 17.931797,6.6529656 h 11.662999 v 3.1938243 h -6.891772 l 4.24109,5.4751291 -4.24109,5.475127 h 6.891772 v 3.193825 H 17.931797 V 21.253307 L 23.23316,15.321919 17.931797,9.3905297 Z"
        id="sigma"
        style="stroke-width:0.983626" />

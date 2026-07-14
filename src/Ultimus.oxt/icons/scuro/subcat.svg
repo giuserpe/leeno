@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
-     bordercolor="#666666"
+     pagecolor="#121a23"
+     bordercolor="#8896ab"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -43,7 +43,7 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1">
+     inkscape:deskcolor="#ffffff">
     <sodipodi:guide
        position="4.2404721,9.7516585"
        orientation="1,0"
@@ -86,14 +86,14 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="7"
        height="1.2"
        x=".7"
        y="1" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#ffffff;stroke-width:0.0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect4331"
        width="5"
        height="1.2"
@@ -109,4 +109,3 @@
 
   </g>
 </svg>
-

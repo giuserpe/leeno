@@ -111,19 +111,7 @@ def MENU_importi():
         "vnd.sun.star.script:UltimusFree2.Dlg_importi?language=Basic&location=application"
     )
 
-    combobox = oDlg.getControl('ComboBox1')
-    # ~DLG.chi(fogli)
-
-    # ~combobox.Text = testo_completo
-
     listbox = oDlg.getControl('ListBox1')
-
-    # ~combobox = tabelle_dati.combobox
-    # ~listbox = tabelle_dati.listbox
-    lista_righe = testo_completo.split('\n')
-    import LeenoDialogs as DLG
-    # DLG.chi(lista_righe)
-    # listbox.removeItems(0, len(listbox.Items))
     oDlg.Title = righe[0]
     listbox.addItems(righe[4:], 0)
 

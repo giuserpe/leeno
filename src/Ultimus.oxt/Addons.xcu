@@ -101,6 +101,23 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ma31" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_evidenzia_in_elenco</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/findcode</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Evidenzia voci in Elenco Prezzi</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
         <node oor:name="Ma35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1771,6 +1788,23 @@
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Trova voce in Elenco Prezzi o Analisi di Prezzo</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m22b" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_evidenzia_in_elenco</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/findcode</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Evidenzia voci in Elenco Prezzi</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

@@ -142,6 +142,14 @@ def vai_a_ElencoPrezzi():
     PL.vai_a_ElencoPrezzi()
 
 
+def evidenzia_voci_in_elenco_prezzi():
+    '''
+    evidenzia_voci_in_elenco_prezzi
+    '''
+    callAlert()
+    PL.evidenzia_voci_in_elenco_prezzi()
+
+
 def inizializza_analisi():
     '''
     inizializza_analisi

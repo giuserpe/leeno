@@ -1398,6 +1398,8 @@ def GeneraRegistro(oDoc, dati):
 
                 # Filler tra sezioni
                 num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000)
+                if num_filler > 0:
+                    oRegSheet.getCellRangeByPosition(0, current_row + num_filler, 9, current_row + num_filler).CellStyle = "Ultimus_"
                 current_row += num_filler + 1
 
             # Titolo nuova sezione

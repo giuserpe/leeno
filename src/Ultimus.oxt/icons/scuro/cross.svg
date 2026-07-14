@@ -21,8 +21,8 @@
      id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
-     bordercolor="#666666"
+     pagecolor="#121a23"
+     bordercolor="#8896ab"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -41,7 +41,7 @@
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="0"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#ffffff" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -62,28 +62,28 @@
      id="layer2"
      inkscape:label="segni">
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5279"
        width="7.0"
        height="0.5"
        x=".8"
        y="1" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5281"
        width="7.0"
        height="0.5"
        x=".8"
        y="3" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5283"
        width="7.0"
        height="0.5"
        x=".8"
        y="5" />
     <rect
-       style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#ff6b50;fill-opacity:1;stroke:#ff6b50;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5285"
        width="7.0"
        height="1"
@@ -91,4 +91,3 @@
        y="7" />
   </g>
 </svg>
-

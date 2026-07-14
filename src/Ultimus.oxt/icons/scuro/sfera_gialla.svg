@@ -8,9 +8,9 @@
    xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="yellowSphere" cx="35%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#ffe259" />
-      <stop offset="70%" stop-color="#ffa751" />
-      <stop offset="100%" stop-color="#cc7a1e" />
+      <stop offset="0%" stop-color="#ffb703" />
+      <stop offset="70%" stop-color="#ffb703" />
+      <stop offset="100%" stop-color="#ffb703" />
     </radialGradient>
   </defs>
   <circle cx="16" cy="16" r="12" fill="url(#yellowSphere)" stroke="#ffffff" stroke-width="2" />

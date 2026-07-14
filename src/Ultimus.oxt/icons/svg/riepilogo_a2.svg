@@ -7,12 +7,12 @@
    id="svg_riepilogo_a2"
    xmlns="http://www.w3.org/2000/svg">
   <!-- Grid/Axes -->
-  <line x1="6" y1="26" x2="28" y2="26" stroke="#000000" stroke-width="2" stroke-linecap="round" />
-  <line x1="6" y1="6" x2="6" y2="26" stroke="#000000" stroke-width="2" stroke-linecap="round" />
+  <line x1="6" y1="26" x2="28" y2="26" stroke="#1a2010" stroke-width="2" stroke-linecap="round" />
+  <line x1="6" y1="6" x2="6" y2="26" stroke="#1a2010" stroke-width="2" stroke-linecap="round" />
   <!-- Bar 1 (Computo) -->
-  <rect x="9" y="14" width="4" height="12" fill="#8c8c8c" stroke="#000000" stroke-width="1.5" />
+  <rect x="9" y="14" width="4" height="12" fill="#8896ab" stroke="#1a2010" stroke-width="1.5" />
   <!-- Bar 2 (Variante) -->
-  <rect x="16" y="8" width="4" height="18" fill="#de1010" stroke="#000000" stroke-width="1.5" />
+  <rect x="16" y="8" width="4" height="18" fill="#ff4d2e" stroke="#1a2010" stroke-width="1.5" />
   <!-- Bar 3 (Contabilità) -->
-  <rect x="23" y="11" width="4" height="15" fill="#ffffff" stroke="#000000" stroke-width="1.5" />
+  <rect x="23" y="11" width="4" height="15" fill="#ffffff" stroke="#1a2010" stroke-width="1.5" />
 </svg>

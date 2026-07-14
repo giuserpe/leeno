@@ -1619,7 +1619,7 @@ def setup_intestazioni_sal(oSheet, nSal, oDoc):
         oCell.Columns.Width = width
 
 
-def GeneraSAL(oDoc, dati):
+def GeneraSAL(oDoc, dati, stato_finale=False):
     # Unpack dei dati
     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
 
@@ -1814,12 +1814,9 @@ def GeneraSAL(oDoc, dati):
 
     # --- 5. CHIUSURA CON FILLER E RIEPILOGO ---
     oDoc.calculate()
-    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial)
+    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial, stato_finale=stato_finale)
 
-    # Richiesta emissione Stato Finale
-    # In accordo con lo stile di LeenO, mostra un messaggio di richiesta con questo testo: "Vuoi emettere lo Stato Finale?".
-    ans = Dialogs.YesNoCancelDialog(IconType="question", Title="Emissione Stato Finale", Text="Vuoi emettere lo Stato Finale?")
-    if ans == 1:
+    if stato_finale:
         fineFirme = GeneraStatoFinale(oDoc, oSalSheet, fineFirme + 1, nSal, insRowRiepilogo)
 
     # --- 5. NamedRange ---
@@ -1836,11 +1833,15 @@ def GeneraSAL(oDoc, dati):
     oSalSheet.getCellRangeByPosition(0, 0, 5, fineFirme).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oSalSheet)
 
-def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None):
+def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None, stato_finale=False):
     '''
     Genera la pagina di riepilogo del SAL con filler dinamico.
     Traduzione dal VBasic originale: usa calcolo posizionale Y
     per riempire fino a fine pagina, poi scrive il riepilogo.
+
+    Args:
+        stato_finale: se True, la pagina RIEPILOGO SAL non includerà le firme
+                      (verranno inserite nella pagina Stato Finale).
     '''
     fcol = 0
     ncol = "F"  # Colonna degli importi (indice 5)
@@ -2003,17 +2004,20 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
 
     currRow = insRow + 14
 
+    # --- 5. FIRME (prima del filler finale, colonna B) ---
+    # Se stato_finale è True le firme vengono omesse: andranno nella pagina Stato Finale.
+    if not stato_finale:
+        currRow = firme_libretto(currRow, oSheet, col=1, aggiungi_spazio=False)
+
     # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
     num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)
     currRow += num_filler
 
-
     # Riga finale di chiusura (senza tratteggio, con bordi) richiesto dall'utente
     oSheet.getRows().insertByIndex(currRow, 1)
-    # oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_centro_bordi_lati"
     oSheet.getCellRangeByPosition(fcol, currRow, fcol + 5, currRow).CellStyle = "Ultimus_"
     currRow += 1
-
+    
     # Restituisce (ultima riga del blocco, inizio riepilogo) per NamedRange e S2
     return currRow - 1, insRow
 
@@ -2400,8 +2404,7 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
         oFillerRange = oSheet.getCellRangeByPosition(col, insertAt + 1, col, insertAt + num_righe - 1)
         oFillerRange.setDataArray(tuple((filler,) for _ in range(num_righe - 1)))
 
-    # Applica stile "Ultimus_" alla riga vuota successiva all'ultimo filler
-    oSheet.getCellRangeByPosition(0, insertAt + num_righe, last_col, insertAt + num_righe).CellStyle = "Ultimus_"
+    # (L'applicazione dello stile "Ultimus_" è delegata al chiamante se necessaria)
 
     return num_righe
 
@@ -2442,6 +2445,9 @@ def insrow():
     num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col)
 
     if num_righe > 0:
+        # Applica stile "Ultimus_" alla riga vuota successiva all'ultimo filler
+        oSheet.getCellRangeByPosition(0, insertAt + num_righe, last_col, insertAt + num_righe).CellStyle = "Ultimus_"
+        
         # Aggiorna l'area nominale per includere le nuove righe
         area_rif = f"$A${sRow+1}:$AJ${iRow + num_righe + 1}"
         SheetUtils.NominaArea(oDoc, oSheet.Name, area_rif, nomearea)
@@ -2474,10 +2480,17 @@ def _leggi_dato_anagrafico(oSheet, label):
     return ""
 
 
-def firme_libretto(lrowF=None, oSheet=None):
+def firme_libretto(lrowF=None, oSheet=None, col=None, aggiungi_spazio=True):
     """
     Inserisce i dati per le firme nel foglio specificato o in quello attivo,
     con spaziatura uniforme. Funziona per Contabilità, Registro e SAL.
+
+    Args:
+        lrowF:  indice di riga (0-based) da cui iniziare ad inserire le firme.
+        oSheet: foglio di destinazione; se None usa il foglio attivo.
+        col:    colonna (0-based) in cui scrivere le firme. Se None la colonna
+                viene scelta automaticamente in base al nome del foglio
+                (Registro→8, SAL→5, altri→2).
     """
     oDoc = LeenoUtils.getDocument()
 
@@ -2526,15 +2539,20 @@ def firme_libretto(lrowF=None, oSheet=None):
         firme.append(f"Il Direttore dei Lavori\n({dl})")
 
     # --- 4. Inserimento Righe e Scrittura ---
-    # Calcoliamo la colonna di destinazione in base al foglio
-    # Registro usa colonna I (8), SAL usa colonna F (5), Contabilità colonna C (2)
-    col = 2 # Default (CONTABILITA)
-    if oSheet.Name == "Registro": col = 8
-    elif oSheet.Name == "SAL": col = 5
+    # Colonna di destinazione: usa il parametro `col` se fornito,
+    # altrimenti sceglie in base al nome del foglio
+    # (Registro→I/8, SAL→F/5, Contabilità→C/2).
+    if col is None:
+        col = 2  # Default (CONTABILITA)
+        if oSheet.Name == "Registro": col = 8
+        elif oSheet.Name == "SAL": col = 5
 
     # Inserimento spazio fisico
     num_righe_firme = len(firme) * 3
     oSheet.getRows().insertByIndex(lrowF, num_righe_firme)
+
+    # Stile bordi laterali su tutte le colonne delle righe delle firme
+    oSheet.getCellRangeByPosition(0, lrowF, 5, lrowF + num_righe_firme - 1).CellStyle = "Ultimus_centro_bordi_lati"
 
     riga_corrente = lrowF + 1
     for firma in firme:
@@ -2549,8 +2567,11 @@ def firme_libretto(lrowF=None, oSheet=None):
 
         riga_corrente += 3
 
-    # Inserisce un ulteriore spazio finale prima del limite area stampa
-    oSheet.getRows().insertByIndex(riga_corrente - 2, 2)
+    # Inserisce un ulteriore spazio finale prima del limite area stampa solo se richiesto
+    if aggiungi_spazio:
+        oSheet.getRows().insertByIndex(riga_corrente - 2, 2)
+        # Se non si aggiunge spazio, riga_corrente si trova dopo l'area firme;
+        # altrimenti riga_corrente rimane invariato (poiché l'insert non aggiorna la var) ma le righe slittano in basso.
 
     # RESTITUISCE l'indice dell'ultima riga (fondamentale per area_sal e area_reg)
     return riga_corrente
@@ -2628,7 +2649,14 @@ def EseguiContabilita(oDoc):
 
         # 3. Passa i dati al SAL
         indicator.setText("Compilazione Stato Avanzamento Lavori (SAL)...")
-        GeneraSAL(oDoc, dati)
+        # Legge il flag StatoFinale dal controllo del dialogo (ancora aperto)
+        stato_finale = False
+        try:
+            from pyleeno import oDialog1 as _dlg
+            stato_finale = bool(_dlg.getControl('StatoFinale').State)
+        except Exception:
+            pass
+        GeneraSAL(oDoc, dati, stato_finale=stato_finale)
         indicator.setValue(4)
 
         # 4. Genera il Certificato di Pagamento

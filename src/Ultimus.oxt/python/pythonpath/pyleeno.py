@@ -2467,7 +2467,8 @@ def scelta_viste_run():
 
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
-    global oDialog1
+    global oDialog1, StatoFinale
+    StatoFinale = False
     if oSheet.Name in ('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog(
             'vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application'
@@ -2637,8 +2638,6 @@ def scelta_viste_run():
         else:
             oDialog1.getControl('a_voce').Enable = True
             oDialog1.getControl('da_voce').Enable = False
-        # oDialog1.getControl('a_voce').Enable = True
-        # oDialog1.getControl('da_voce').Enable = False
 
         # Inizio voce
         sString = oDialog1.getControl('TextField3')
@@ -2693,6 +2692,10 @@ def scelta_viste_run():
 
         if oDialog1.execute() == 0:
             return
+
+        # se StatoFinale è selezionato, imposta il flag di modulo
+        if oDialog1.getControl('StatoFinale').State == 1:
+            StatoFinale = True
 
         if oDialog1.getControl('Descrizione_condensata').State == 1:
             descrizione_in_una_colonna(False)

@@ -1,19 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="32"
-   height="32"
-   viewBox="0 0 32 32"
-   version="1.1"
-   id="svg_image15"
-   xmlns="http://www.w3.org/2000/svg">
-  <!-- Sheet background -->
-  <rect x="5" y="3" width="22" height="26" rx="2" fill="#ffffff" stroke="#1a2010" stroke-width="2" />
-  <!-- Folded corner effect or top lines -->
-  <line x1="9" y1="8" x2="23" y2="8" stroke="#1a2010" stroke-width="2" />
-  <!-- Grid representation -->
-  <rect x="9" y="12" width="14" height="12" fill="none" stroke="#8896ab" stroke-width="1.5" />
-  <line x1="9" y1="18" x2="23" y2="18" stroke="#8896ab" stroke-width="1.5" />
-  <line x1="16" y1="12" x2="16" y2="24" stroke="#8896ab" stroke-width="1.5" />
-  <!-- Accent color dot (Computo green/red or theme-consistent red) -->
-  <circle cx="21" cy="21" r="2" fill="#ff4d2e" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+
+<path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M14 3.5V8h4.5" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 12v5.5M9.3 14.8h5.5" stroke="#aad400" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
 </svg>

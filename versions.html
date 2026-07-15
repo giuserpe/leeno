@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.93-TESTING-20260714.oxt">LeenO-3.26.0.93-TESTING-20260714.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.94-TESTING-20260715.oxt">LeenO-3.26.0.94-TESTING-20260715.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">5.9MB</td>
+                <td class="col-extra">2026-07-15 11:49</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.94-TESTING-20260715.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.93-TESTING-20260714.oxt">LeenO-3.26.0.93-TESTING-20260714.oxt</a> </td>
                 <td class="col-dim">6.0MB</td>
                 <td class="col-extra">2026-07-14 21:29</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.88-TESTING-20260713.oxt">LeenO-3.26.0.88-TESTING-20260713.oxt</a> </td>
-                <td class="col-dim">5.5MB</td>
-                <td class="col-extra">2026-07-13 11:34</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.88-TESTING-20260713.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-15 15:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5121bb06c32b6edaa6757a26986b1263888a37e0" target="_blank" rel="noopener"><code>5121bb0</code></a></td>
+                <td class="commit-msg">docs: aggiunge workflow unificato e workflow PC Giuserpe/PC TEST
+
+- crea workflow_leeno_unificato.md con ciclo operativo completo
+- aggiunge workflow_pc_giuserpe.md per macchina admin
+- aggiunge workflow_pc_test.md per macchina di test
+- include regole git, procedure di merge, comandi di emergenza e note sul drive esterno
+
+fix(core): corregge calcolo end_row in riordina_ElencoPrezzi
+- usa EndRow reale della NamedRange senza sottrarre 1
+- rimuove codice legacy non più necessario</td>
+            </tr>
+            <tr>
                 <td>2026-07-14 21:41</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/af9a4fd1651a9254659956a4a8c712fcf930e49e" target="_blank" rel="noopener"><code>af9a4fd</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.93‑TESTING‑20260714
@@ -467,27 +481,6 @@ fix(contab): applica stile Ultimus_ dopo filler in GeneraRegistro
 
 - aggiorna description.xml
 - aggiorna leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-07-14 20:46</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2a95192aa34955fbd9712a551937a5204f013b6b" target="_blank" rel="noopener"><code>2a95192</code></a></td>
-                <td class="commit-msg">feat(contab): integra flusso Stato Finale nel SAL e rende firme opzionali
-
-- aggiunge parametro stato_finale a GeneraSAL
-- sposta la logica di emissione Stato Finale fuori dal dialogo Yes/No
-- passa stato_finale a firme_contabili_sal per omettere le firme nel riepilogo SAL
-- aggiorna firme_libretto con:
-  • scelta colonna parametrica
-  • stile bordi laterali per righe firme
-  • spazio finale opzionale
-- delega applicazione stile "Ultimus_" al chiamante in _riempi_pagina
-- aggiorna insrow per ripristinare stile finale dopo filler
-
-feat(core): collega flag StatoFinale dal dialogo scelta_viste al modulo contabile
-
-- introduce variabile globale StatoFinale
-- legge lo stato del controllo 'StatoFinale' nel dialogo
-- passa il flag a GeneraSAL in EseguiContabilita</td>
             </tr>
                     </tbody>
                 </table>
@@ -511,8 +504,8 @@ feat(core): collega flag StatoFinale dal dialogo scelta_viste al modulo contabil
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-14 21:42 UTC</p>
-                <p>Build Commit: <code>af9a4fd</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-15 15:36 UTC</p>
+                <p>Build Commit: <code>5121bb0</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

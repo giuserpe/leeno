@@ -11,7 +11,7 @@
   <g id="layer1">
     <!-- Tavolozza principale - più grande e semplice -->
     <ellipse
-       style="fill:#e0e0e0;stroke:#000000;stroke-width:0.4;stroke-opacity:1"
+       style="fill:#8fb200;stroke:#8fb200;stroke-width:0.4;stroke-opacity:1"
        id="palette-base"
        cx="4.2333"
        cy="4.7625"
@@ -20,7 +20,7 @@
 
     <!-- Campione grande rosso (sinistra) -->
     <circle
-       style="fill:#ff0000;stroke:#000000;stroke-width:0.2"
+       style="fill:#ff6b50;stroke:#8fb200;stroke-width:0.2"
        id="color-red"
        cx="2.8"
        cy="3.5"
@@ -28,7 +28,7 @@
 
     <!-- Campione grande nero (centro) -->
     <circle
-       style="fill:#000000;stroke:#000000;stroke-width:0.2"
+       style="fill:#8fb200;stroke:#8fb200;stroke-width:0.2"
        id="color-black"
        cx="4.7"
        cy="3.3"
@@ -36,7 +36,7 @@
 
     <!-- Campione grande grigio (destra) -->
     <circle
-       style="fill:#808080;stroke:#000000;stroke-width:0.2"
+       style="fill:#8fb200;stroke:#8fb200;stroke-width:0.2"
        id="color-gray"
        cx="6.3"
        cy="4.0"
@@ -44,7 +44,7 @@
 
     <!-- Foro per il pollice - più grande e visibile -->
     <ellipse
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.3"
+       style="fill:#ffffff;stroke:#8fb200;stroke-width:0.3"
        id="thumb-hole"
        cx="6.4"
        cy="6.2"

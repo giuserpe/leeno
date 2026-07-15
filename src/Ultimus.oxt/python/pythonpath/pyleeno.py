@@ -3214,15 +3214,15 @@ def riordina_ElencoPrezzi():
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
-    last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
+    # last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
+    # SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
+    # SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
 
     start_row = oRangeAddress.StartRow + 1
     start_col = 0
     end_col = oRangeAddress.EndColumn
-    end_row = oRangeAddress.EndRow - 1
+    end_row = oRangeAddress.EndRow
 
     if start_row == end_row:
         return

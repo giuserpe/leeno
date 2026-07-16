@@ -8,10 +8,11 @@ echo  LeenO - Ripristina/aggiorna dev
 echo  Percorso: %REPO_PATH%
 echo ============================================
 echo.
-echo IMPORTANTE: chiudi LibreOffice prima di continuare,
-echo altrimenti alcuni file potrebbero risultare bloccati.
+echo NOTA: LibreOffice puo' restare aperto durante pull/checkout.
+echo Va chiuso e riaperto solo se le modifiche toccano la UI
+echo (dialoghi .xdl, toolbar/menu, icone) - il codice Python puro
+echo viene ricaricato dinamicamente senza bisogno di riavvio.
 echo.
-pause
 
 cd /d "%REPO_PATH%"
 if errorlevel 1 (
@@ -27,6 +28,7 @@ git pull
 echo.
 echo ============================================
 echo  Ora sei su: dev, aggiornato all'ultimo commit.
-echo  Riapri LibreOffice per riprendere il lavoro.
+echo  Se necessario (modifiche a UI/dialoghi/toolbar/icone),
+echo  chiudi e riapri LibreOffice per vedere gli aggiornamenti.
 echo ============================================
 pause

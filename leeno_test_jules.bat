@@ -8,10 +8,11 @@ echo  LeenO - Passa a branch Jules per test
 echo  Percorso: %REPO_PATH%
 echo ============================================
 echo.
-echo IMPORTANTE: chiudi LibreOffice prima di continuare,
-echo altrimenti alcuni file potrebbero risultare bloccati.
+echo NOTA: LibreOffice puo' restare aperto durante pull/checkout.
+echo Va chiuso e riaperto solo se le modifiche toccano la UI
+echo (dialoghi .xdl, toolbar/menu, icone) - il codice Python puro
+echo viene ricaricato dinamicamente senza bisogno di riavvio.
 echo.
-pause
 
 cd /d "%REPO_PATH%"
 if errorlevel 1 (
@@ -46,7 +47,9 @@ if errorlevel 1 (
 echo.
 echo ============================================
 echo  Ora sei su: %BRANCH_NAME%
-echo  Riapri LibreOffice per testare.
+echo  Se la modifica tocca solo codice Python, LibreOffice
+echo  la vede senza riavvio. Per modifiche a UI/dialoghi/
+echo  toolbar/icone, chiudi e riapri LibreOffice.
 echo.
 echo  Al termine del test, lancia leeno_restore_dev.bat
 echo  per tornare su dev.

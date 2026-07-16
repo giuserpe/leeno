@@ -22,7 +22,7 @@
   <sodipodi:namedview
      id="base"
      pagecolor="#000000"
-     bordercolor="#666666"
+     bordercolor="#8896ab"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
@@ -62,28 +62,28 @@
      id="layer2"
      inkscape:label="segni">
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5279"
        width="7.0"
        height="0.5"
        x=".8"
        y="1" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5281"
        width="7.0"
        height="0.5"
        x=".8"
        y="3" />
     <rect
-       style="fill:#919191;fill-opacity:1;stroke:#919191;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5283"
        width="7.0"
        height="0.5"
        x=".8"
        y="5" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       style="fill:#f0f4e0;fill-opacity:1;stroke:#f0f4e0;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect5285"
        width="7.0"
        height="1"

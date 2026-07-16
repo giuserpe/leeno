@@ -13,7 +13,7 @@
                 <span class="word-wrap"><span class="word-inner">EVOLUTO</span></span>
             </h1>
             <p class="hero-subtitle" id="heroSubtitle">
-                Software open-source per computi metrici estimativi su LibreOffice Calc.
+                <b>LeenO</b> è il software open-source per computi metrici estimativi su LibreOffice Calc.
                 <br>
                 <span class="version-badge">v3.26.0 &mdash; Maggio 2026</span>
             </p>

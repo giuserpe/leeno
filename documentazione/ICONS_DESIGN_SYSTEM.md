@@ -338,7 +338,7 @@ Per garantire un'implementazione impeccabile all'interno di LibreOffice Calc:
 4.  **Nessuno Stile HTML:** Utilizzare gli attributi di presentazione SVG in linea (`stroke`, `fill`, `stroke-width`, `stroke-linecap="round"`, `stroke-linejoin="round"`) invece dei blocchi di stile CSS, evitando che i motori di layout di Calc ignorino gli stili.
 5.  **Nomi dei Codici Puliti:** Assicurarsi che i nomi dei file corrispondano alla loro descrizione semantica della famiglia anziché ai tag di layout, utilizzando il formato minuscolo snake_case (es. `nuova_voce.svg` invece di `image93.svg`).
 
-6.  # Addendum v2.1 — Correzioni Anti-Sovrapposizione e Anti-Confusione
+# Addendum v2.1 — Correzioni Anti-Sovrapposizione e Anti-Confusione
 
 **Da leggere insieme a "Specifica del Design System delle Icone di LeenO v2.0".**
 Questo addendum **sostituisce** la sezione 2 (Primitive) e la sezione 9 (Colore) dove in conflitto, e **aggiunge** una nuova sezione 2.5 e una sezione 11 (Checklist di validazione).
@@ -356,25 +356,20 @@ Queste regole hanno **priorità assoluta** su qualunque altra indicazione esteti
 - **Vietato**: rettangoli arrotondati (`rx` grande) usati come "barre piene" di colore saturo che assomigliano a pulsanti. Se serve un blocco pieno, l'altezza massima è 3px su griglia 24×24.
 
 ### B. Distanza minima tra elementi distinti
-- Tra due primitive/badge/frecce diverse deve esserci **uno spazio vuoto (nessun tracciato) di almeno 2px** su griglia 24×24, salvo il caso C (alone/knockout).
+- Tra due primitive/badge/frecce diverse deve esserci **uno spazio vuoto (nessun tracciato) di almeno 1px** su griglia 24×24, salvo il caso C (alone/knockout).
 - Nessuna forma può toccare o intersecare un'altra forma senza passare dalla regola C.
 
-### C. Regola dell'Alone (Knockout) per ogni intersezione
-Quando un badge, una freccia o un accento **deve** sovrapporsi a una forma di base (es. freccia che attraversa una barra, badge in basso a destra su un documento):
-1. Disegna prima un contorno "alone" con `stroke` colore Sfondo (`#F0F4E0`) o trasparenza piena (a seconda del tema), largo **stroke-width + 2px** rispetto all'elemento che sovrasta;
-2. Disegna sopra l'alone l'elemento in primo piano con i suoi colori normali.
+### C. Regola dell'Alone (Knockout) per ogni intersezione — [IMPLEMENTAZIONE AGGIORNATA, vedi sezione 12]
+Quando un badge, una freccia o un accento **deve** sovrapporsi a una forma di base (es. freccia che attraversa una barra, badge in basso a destra su un documento), il principio resta: *nessun elemento può intersecare un altro senza una separazione visiva netta*. Il **meccanismo** con cui ottenerla, però, non è più uno stroke colore-sfondo (approccio fragile), ma il layering di forme piene descritto nella sezione 12: si disegna prima una forma piena "cuscinetto" colore Sfondo/Bianco leggermente più grande dell'elemento in primo piano, poi sopra l'elemento in primo piano con i suoi colori normali. Il risultato visivo è lo stesso (un piccolo margine netto attorno all'elemento che si sovrappone), ma la costruzione è coerente con il resto dell'icona (solo fill, mai stroke) e non produce artefatti di bordo sfocato.
 
-Questa regola **non è più opzionale solo per il tema monocromatico** (come diceva la sezione 9B originale): si applica sempre, in ogni tema, ogni volta che due tracciati si incrociano. Senza questo alone i tratti si fondono e l'icona diventa illeggibile — è esattamente il difetto visto nella prima generazione.
+Senza questo cuscinetto i tratti si fondono e l'icona diventa illeggibile — è esattamente il difetto visto nella prima generazione.
 
 ### D. Un solo elemento "principale" per icona
 - Ogni icona ha **una sola forma primitiva dominante** (documento, cartella, lista, ecc.) + **al massimo un badge/accento** + **al massimo una freccia**.
 - Se un'icona richiede più di 3 elementi grafici distinti, va semplificata concettualmente prima, non compressa graficamente. Esempio: `esporta_gantt` non deve avere più di 3 barre orizzontali, mai 4+.
 
-### E. Tratti sempre stroke, mai fill saturo
-- Tutti gli elementi (incluse le barre/lines) usano `fill="none"` e solo `stroke`, tranne:
-  - piccoli badge circolari pieni (max 4px di diametro),
-  - il riempimento chiaro semi-opaco del contenitore (`#F0F4E0`), se esplicitamente richiesto dalla metafora.
-- **Vietato** riempire intere forme con colori saturi (Lime, Arancione, Blu) come blocco pieno grande: questi colori vanno usati solo per il tratto (stroke) o per badge piccoli.
+### E. [SUPERATA — vedi sezione 12] Costruzione a strati di fill, non stroke
+Questa regola è stata rivista dopo l'analisi delle icone reali di riferimento nella cartella Drive `1FKWfOENRWhc6CEeA8pIjt6FB2UjCibVc` (icone LibreOffice/Colibre): quel set **non usa mai l'attributo `stroke`**. Ogni "contorno", "anello" o "bordo" è ottenuto impilando forme piene (`fill`) di dimensione decrescente, mai tracciando una linea aperta che possa sovrapporsi ad un'altra. Vedi la sezione 12 per l'algoritmo esatto: sostituisce sia questa regola E sia il meccanismo dell'alone descritto in C, che va ora implementato come layering di fill invece che come stroke con margine colore-sfondo.
 
 ---
 
@@ -395,7 +390,7 @@ Prima di considerare un'icona completa, Jules deve rispondere SÌ a tutte le dom
 1. C'è **una sola** forma dominante e al massimo un badge + una freccia? (regola D)
 2. Ogni tratto ha `stroke-width` costante = 2px (o 1.5/1px solo per dettagli secondari dichiarati)?
 3. Nessun tratto satura più del 12% dell'area come blocco pieno colorato? (regola A/E)
-4. Tra ogni coppia di elementi distinti c'è almeno 2px di spazio vuoto, oppure un alone esplicito dove si intersecano? (regola B/C)
+4. Tra ogni coppia di elementi distinti c'è almeno 1px di spazio vuoto, oppure un alone esplicito dove si intersecano? (regola B/C)
 5. L'icona usa al massimo 2 colori oltre allo Scuro? (sezione 9)
 6. Renderizzando l'icona a 16×16px, ogni forma resta distinguibile senza fondersi con le altre? (test visivo esplicito, non assunto)
 7. Rimuovendo il colore (scala di grigi), l'icona è ancora comprensibile solo dai contorni?
@@ -404,12 +399,50 @@ Se un'icona fallisce il punto 6, il problema quasi sempre è che due tratti si t
 
 ---
 
+## 12. Regole Tecniche di Costruzione (ricavate dalle icone di riferimento LibreOffice)
+
+Analizzando i file SVG reali nella cartella `1FKWfOENRWhc6CEeA8pIjt6FB2UjCibVc` (es. `print.svg`, `runbasic.svg`, `radiomono2.svg`, `sc_aligntop.svg`, `odb_32_8.svg`) emergono regole tecniche precise, molto più rigorose di quelle stilistiche descritte finora. Jules deve seguire **esattamente** questo metodo di costruzione, non un'interpretazione libera.
+
+### 12.1 Nessuno stroke, solo fill impilati
+Nessuno dei file di riferimento usa `stroke` per il rendering (l'attributo `stroke-width` a volte presente è un residuo dell'editor, non produce un tratto visibile perché manca `stroke` con un colore). Ogni elemento è un `<path>` o `<rect>` con `fill` pieno. I "contorni" a 1px non sono linee: sono **forme piene sottratte/sovrapposte**. Da qui in avanti, ogni icona LeenO va costruita così: solo `fill`, mai `stroke` per il rendering finale.
+
+### 12.2 Griglia e dimensioni canoniche
+Il set di riferimento usa griglie diverse a seconda del contesto d'uso, non un'unica dimensione:
+- **32×32**: icone principali di documento/toolbar grande (es. `print.svg`, `runbasic.svg`, `odb_32_8.svg`).
+- **16×16**: icone di toolbar compatta (es. `sc_aligntop.svg`).
+- **13×13** (con un piccolo offset di traslazione, es. `translate(.5 -.5)`): glifi piccolissimi come indicatori radio/stato.
+
+Per LeenO: mantenere **24×24** come griglia di lavoro primaria (coerente con il resto del documento e con la UI di LibreOffice Calc), ma generare anche una variante **16×16** ottimizzata a parte per i casi di toolbar compatta, non un semplice ridimensionamento della 24×24 — a 16px i dettagli vanno semplificati (regola 12.4).
+
+### 12.3 Spessori "a linea" reali osservati
+Le barre sottili (es. le righe nell'icona `odb_32_8.svg`, i due rettangoli in `sc_aligntop.svg`) hanno altezza **1 unità su una griglia a 32** (~3% dell'altezza totale) o **1 unità su una griglia a 16** (~6% dell'altezza). Proporzionalmente su una griglia a 24, questo equivale a uno spessore di circa **0.75-1 unità**, non ai 2-3px "spessi" prodotti nel primo batch. Gli angoli di questi rettangoli sottili hanno un raggio (`rx`/`ry`) minimo, tra 0.4 e 0.5 unità su griglia 32 — un arrotondamento appena percettibile, non una pillola.
+
+**Regola pratica per LeenO**: ridurre lo spessore massimo delle barre/linee da 3px (regola 2.5.A) a **1.5px su griglia 24×24**, con `rx` massimo 0.4px — le barre devono restare nettamente sottili anche affiancate.
+
+### 12.4 Tecnica dell'anello (ring) per badge e cerchi
+Osservata in `radiomono2.svg` e `runbasic.svg`: un cerchio con "bordo" è in realtà **due o tre cerchi pieni concentrici sovrapposti**, ciascuno più piccolo del precedente di circa 0.5-1 unità di raggio:
+1. Cerchio esterno pieno, colore scuro/principale (raggio R).
+2. Cerchio pieno colore chiaro/sfondo sopra, raggio ≈ R − 1 unità (crea l'anello).
+3. Se serve un contenuto interno (icona play, pallino), cerchio o forma pieni colore accento, raggio ≈ R − 2/3 unità.
+
+Questa è la tecnica da usare per **qualunque badge circolare o "sigillo"** in LeenO (es. `documento_bollo`), al posto di un cerchio pieno unico con motivo interno che genera confusione: outer scuro → inner chiaro (anello) → piccola forma accento centrale, senza croce/reticolo interno.
+
+### 12.5 Forme con "buco" (fill-rule evenodd)
+Quando una forma ha una parte cava (es. una cornice, una lettera con contro-forma), i file di riferimento usano `fill-rule="evenodd"` su un unico path con il contorno esterno e quello interno, invece di sovrapporre più shape separate. Jules può scegliere l'uno o l'altro metodo (path unico con evenodd, oppure due path sovrapposti di colore alternato) ma **non deve mai lasciare il bordo interno "aperto"** (cioè uno stroke che delimita senza un fill che lo chiude): è un'altra causa comune di forme che sembrano "sfrangiate".
+
+### 12.6 Palette per ruolo, non per decorazione
+Nei file reali ogni colore ha un ruolo fisso indipendentemente dall'icona: scuro quasi-nero per struttura/linee (`#3a3a38`, non nero puro), chiaro quasi-bianco per i cutout (`#fafafa`, non bianco puro), un solo accento semantico per icona (blu per azioni informative, verde per esecuzione/successo, viola per dati/database, grigio per elementi secondari/disabilitati). Per LeenO questo conferma ed estende la regola 9 già approvata: mantenere lo scuro e il chiaro leggermente "sporcati" (non nero/bianco puro) per evitare contrasto eccessivo che a icone piccole appare come un bordo troppo duro.
+
+### 12.7 Checklist tecnica aggiuntiva (da unire alla sezione 11)
+8. L'SVG finale contiene attributi `stroke` con un colore impostato? Se sì, l'icona **non è conforme** — va ricostruita solo con `fill`.
+9. Ogni forma "sottile" (barra, linea) ha spessore ≤ 1.5px su griglia 24×24, non 2-3px?
+10. Ogni badge/cerchio con bordo è costruito con almeno 2 cerchi pieni concentrici (anello), non un singolo cerchio con stroke?
+
+---
+
 ## Nota sulle 4 icone del primo batch (da rigenerare con queste regole)
 
 - **`documento_bollo`**: il "timbro a cera" è stato interpretato come un mirino/reticolo a croce dentro un cerchio pieno arancione troppo grande — sembra un target, non un sigillo. Ridurre il cerchio a un timbro pieno piccolo (max 8×8px) senza croce interna, oppure sostituire con un motivo a "impronta" più organico (bordo irregolare leggero) e staccarlo dal bordo del documento con lo spazio minimo di 2px.
 - **`esporta_gantt`**: le barre sono troppo spesse (assomigliano a pillole) e si toccano/attraversano la freccia senza alone. Applicare regola A (barre max 3px altezza) + regola C (alone dove la freccia attraversa le barre).
-- **`importa_xml`**: la X di "XML" si sovrappone alla freccia di importazione senza spazio; applicare regola B, distanziando la scritta XML dalla freccia di almeno 2px, o spostando la freccia fuori dall'area di testo.
+- **`importa_xml`**: la X di "XML" si sovrappone alla freccia di importazione senza spazio; applicare regola B, distanziando la scritta XML dalla freccia di almeno 1px, o spostando la freccia fuori dall'area di testo.
 - **Icona con nastro/cerchio blu incrociato** (probabile `somma_colore` o `unisci_fogli`): il concetto di "evidenziatore" o "unione fogli" è stato reso come due forme a nastro che si intrecciano pesantemente — va semplificato a **una sola forma dominante** (regola D), es. per `somma_colore` un semplice profilo di evidenziatore con punta colorata e un piccolo `∑` accanto, senza intreccio.
-
-
----

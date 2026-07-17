@@ -1,9 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-  <!-- Document Shape with Margined borders -->
-  <path d="M5 3h10l4 4v14H5z" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Document Outer Shape -->
+  <!-- Left border -->
+  <rect x="5" y="3" width="1.5" height="18" fill="#F0F4E0" />
+  <!-- Bottom border -->
+  <rect x="5" y="19.5" width="14" height="1.5" fill="#F0F4E0" />
+  <!-- Right border -->
+  <rect x="17.5" y="7" width="1.5" height="14" fill="#F0F4E0" />
+  <!-- Top border -->
+  <rect x="5" y="3" width="10" height="1.5" fill="#F0F4E0" />
+  <!-- Slanted border -->
+  <path d="M15 3 L19 7 H17.5 V4.5 Z" fill="#F0F4E0" />
   <!-- Margins/Borders inside sheet -->
-  <path d="M8 6v12M8 6h8M8 18h8M16 6v12" stroke="#f0f4e0" stroke-width="1" stroke-dasharray="2 2" opacity="0.5" />
-  <!-- Wax Seal stamp outline -->
-  <circle cx="14" cy="14" r="3.5" stroke="#ff4d2e" stroke-width="2" fill="none" />
-  <path d="M14 12v4M12 14h4" stroke="#ff4d2e" stroke-width="1.5" stroke-linecap="round" />
+  <rect x="8" y="6" width="1" height="12" fill="#F0F4E0" opacity="0.2" />
+  <rect x="15" y="6" width="1" height="12" fill="#F0F4E0" opacity="0.2" />
+  <rect x="8" y="6" width="8" height="1" fill="#F0F4E0" opacity="0.2" />
+  <rect x="8" y="17" width="8" height="1" fill="#F0F4E0" opacity="0.2" />
+  <!-- Wax Seal Cutout (Halo) to prevent overlap of lines -->
+  <path d="M 8.5 13.5 C 8.5 10.7 10.7 8.5 13.5 8.5 C 16.3 8.5 18.5 10.7 18.5 13.5 C 18.5 15.0 17.5 18.0 15.5 19.0 L 14.5 19.5 L 12.5 19.5 L 11.5 19.0 C 9.5 18.0 8.5 15.0 8.5 13.5 Z" fill="#1A2010" />
+  <!-- Wax Seal Ribbons -->
+  <path d="M12 13 L10.5 18 L12.5 17 Z" fill="#FF4D2E" />
+  <path d="M15 13 L16.5 18 L14.5 17 Z" fill="#FF4D2E" />
+  <!-- Wax Seal Seal main body -->
+  <circle cx="13.5" cy="13.5" r="3.2" fill="#FF4D2E" />
 </svg>

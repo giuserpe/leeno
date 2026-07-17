@@ -1,13 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-  <!-- Multiple sheets merging into one -->
   <!-- Sheet 1 (Background left) -->
-  <path d="M4 8h8l3 3v8H4z" stroke="#808080" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <rect x="4" y="8" width="8" height="11" rx="0.4" fill="#808080" opacity="0.5" />
   <!-- Sheet 2 (Background right) -->
-  <path d="M12 4h6l3 3v8h-9z" stroke="#808080" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
+  <rect x="12" y="4" width="8" height="11" rx="0.4" fill="#808080" opacity="0.3" />
   <!-- Consolidated Front Sheet -->
-  <path d="M7 6h8l4 4v10H7z" stroke="#1a2010" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Fold -->
-  <path d="M15 6v4h4" stroke="#1a2010" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Merge Arrows -->
-  <path d="M11 15h4M14 12l3 3-3 3" stroke="#5d7400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Outer black border of front sheet -->
+  <rect x="7" y="6" width="10" height="13" rx="0.4" fill="#1A2010" />
+  <!-- Inner white fill of front sheet -->
+  <rect x="8.5" y="7.5" width="7" height="10" fill="#FFFFFF" />
+  <!-- Halo (Knockout) for Merge Arrows -->
+  <rect x="8" y="8.5" width="8.5" height="7.5" fill="#FFFFFF" />
+  <!-- Merge Arrow -->
+  <rect x="9" y="11.5" width="5" height="1.5" fill="#5D7400" />
+  <path d="M12.5 9.5 L15.5 12.25 L12.5 15 Z" fill="#5D7400" />
 </svg>

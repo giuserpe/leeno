@@ -1,11 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-  <!-- Document Shape -->
-  <path d="M5 3h10l4 4v14H5z" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Fold -->
-  <path d="M15 3v4h4" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- XML lettering represented with paths -->
-  <path d="M8 11l4 4M12 11l-4 4" stroke="#f0f4e0" stroke-width="1.5" stroke-linecap="round" />
-  <path d="M13 15v-4l2.5 2.5 2.5-2.5v4" stroke="#f0f4e0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Arrow pointing down (import) -->
-  <path d="M18 13v6M15 16l3 3 3-3" stroke="#aad400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Document Outer Shape -->
+  <rect x="5" y="3" width="1.5" height="18" fill="#F0F4E0" />
+  <rect x="5" y="19.5" width="14" height="1.5" fill="#F0F4E0" />
+  <rect x="17.5" y="7" width="1.5" height="14" fill="#F0F4E0" />
+  <rect x="5" y="3" width="10" height="1.5" fill="#F0F4E0" />
+  <path d="M15 3 L19 7 H17.5 V4.5 Z" fill="#F0F4E0" />
+  <!-- XML Lettering -->
+  <!-- X -->
+  <rect x="7" y="7" width="1" height="1" fill="#F0F4E0" />
+  <rect x="9" y="7" width="1" height="1" fill="#F0F4E0" />
+  <rect x="8" y="8" width="1" height="1" fill="#F0F4E0" />
+  <rect x="7" y="9" width="1" height="1" fill="#F0F4E0" />
+  <rect x="9" y="9" width="1" height="1" fill="#F0F4E0" />
+  <!-- M -->
+  <rect x="11" y="7" width="1" height="3" fill="#F0F4E0" />
+  <rect x="13" y="7" width="1" height="3" fill="#F0F4E0" />
+  <rect x="12" y="8" width="1" height="1" fill="#F0F4E0" />
+  <!-- L -->
+  <rect x="15" y="7" width="1" height="3" fill="#F0F4E0" />
+  <rect x="16" y="9" width="1" height="1" fill="#F0F4E0" />
+  <!-- Halo (Knockout) for Arrow -->
+  <rect x="9.5" y="10" width="8.5" height="9" fill="#1A2010" />
+  <!-- Import Arrow -->
+  <rect x="13" y="11" width="1.5" height="5" fill="#AAD400" />
+  <path d="M10.5 15 L13.75 18.5 L17 15 Z" fill="#AAD400" />
 </svg>

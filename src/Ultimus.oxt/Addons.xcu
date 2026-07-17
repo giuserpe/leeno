@@ -939,6 +939,9 @@
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuovo_usobollo</value>
                 </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/documento_bollo</value>
+                </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Documento UsoBollo</value>
                 </prop>
@@ -999,6 +1002,9 @@
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_ImportElencoPrezziXML</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/importa_xml</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa prezzario da formato XML</value>
@@ -1092,6 +1098,9 @@
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.gantt</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/esporta_gantt</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta dati in formato CSV per GanttProject</value>
@@ -1196,6 +1205,9 @@
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?SheetUtils.MENU_unisci_fogli</value>
                 </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/unisci_fogli</value>
+                </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Unisci tutti i fogli</value>
                 </prop>
@@ -1270,6 +1282,9 @@
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.somma_per_colore_nella_colonna</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/somma_colore</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Somma per Colore</value>

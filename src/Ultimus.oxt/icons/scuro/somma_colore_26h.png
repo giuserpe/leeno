@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Sigma (Summation) sign -->
+  <path d="M16 6H8l4 5-4 5h8" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Highlighter pen outline -->
+  <path d="M7 17l4 4 10-10-4-4z" stroke="#aad400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Highlighter tip/brush -->
+  <path d="M5 19l2-2 4 4-2 2z" stroke="#aad400" stroke-width="1.5" fill="#aad400" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Color Highlight Drop/indicator -->
+  <circle cx="16" cy="14" r="2" fill="#3b82f6" stroke="#3b82f6" stroke-width="1" />
+</svg>

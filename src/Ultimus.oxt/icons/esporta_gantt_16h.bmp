@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Gantt bars (staggered tasks) -->
+  <path d="M4 6h6" stroke="#5d7400" stroke-width="3" stroke-linecap="round" />
+  <path d="M9 11h7" stroke="#aad400" stroke-width="3" stroke-linecap="round" />
+  <path d="M13 16h6" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" />
+  <!-- Grid background lines -->
+  <path d="M4 4v16M12 4v16M20 4v16" stroke="#1a2010" stroke-width="1" stroke-dasharray="2 2" opacity="0.3" />
+  <!-- Export arrow -->
+  <path d="M16 11h6M19 8l3 3-3 3" stroke="#ff4d2e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

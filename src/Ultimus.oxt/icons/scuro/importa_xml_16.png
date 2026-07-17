@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Document Shape -->
+  <path d="M5 3h10l4 4v14H5z" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Fold -->
+  <path d="M15 3v4h4" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- XML lettering represented with paths -->
+  <path d="M8 11l4 4M12 11l-4 4" stroke="#f0f4e0" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M13 15v-4l2.5 2.5 2.5-2.5v4" stroke="#f0f4e0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Arrow pointing down (import) -->
+  <path d="M18 13v6M15 16l3 3 3-3" stroke="#aad400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

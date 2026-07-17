@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
   <!-- Sigma (Summation) sign -->
-  <path d="M16 6H8l4 5-4 5h8" stroke="#1a2010" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Highlighter pen outline -->
-  <path d="M7 17l4 4 10-10-4-4z" stroke="#5d7400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Highlighter tip/brush -->
-  <path d="M5 19l2-2 4 4-2 2z" stroke="#aad400" stroke-width="1.5" fill="#aad400" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Color Highlight Drop/indicator -->
-  <circle cx="16" cy="14" r="2" fill="#3b82f6" stroke="#3b82f6" stroke-width="1" />
+  <path d="M12 4 h6 v1.2 h-4.2 L16 8 L13.8 10 h4.2 v1.2 h-6 L14.5 8 Z" fill="#1A2010" />
+  <!-- Highlight smear / drop in Blu Info -->
+  <path d="M 3 20 C 3 19.5 5 19 7 19 C 9 19 10 19.5 10 20 Z" fill="#3B82F6" opacity="0.4" />
+  <!-- Highlighter pen body -->
+  <path d="M 6 18 L 14 10 L 16 12 L 8 20 Z" fill="#5D7400" />
+  <!-- Highlighter tip / brush (using Verde Primario with opacity to comply with max 2 colors rule) -->
+  <path d="M 4 20 L 6 18 L 8 20 L 6 22 Z" fill="#5D7400" opacity="0.8" />
+  <!-- Highlighter cap / end -->
+  <rect x="14" y="10" width="2" height="2" fill="#808080" />
 </svg>

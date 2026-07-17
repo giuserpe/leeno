@@ -1,10 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-  <!-- Gantt bars (staggered tasks) -->
-  <path d="M4 6h6" stroke="#5d7400" stroke-width="3" stroke-linecap="round" />
-  <path d="M9 11h7" stroke="#aad400" stroke-width="3" stroke-linecap="round" />
-  <path d="M13 16h6" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" />
   <!-- Grid background lines -->
-  <path d="M4 4v16M12 4v16M20 4v16" stroke="#1a2010" stroke-width="1" stroke-dasharray="2 2" opacity="0.3" />
-  <!-- Export arrow -->
-  <path d="M16 11h6M19 8l3 3-3 3" stroke="#ff4d2e" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <rect x="5" y="4" width="1" height="16" fill="#1A2010" opacity="0.1" />
+  <rect x="11" y="4" width="1" height="16" fill="#1A2010" opacity="0.1" />
+  <rect x="17" y="4" width="1" height="16" fill="#1A2010" opacity="0.1" />
+  <!-- Gantt bars (staggered tasks) all in Verde Primario to follow Rule 9 -->
+  <rect x="4" y="6" width="6" height="1.5" rx="0.4" fill="#5D7400" />
+  <rect x="8" y="11" width="7" height="1.5" rx="0.4" fill="#5D7400" />
+  <rect x="12" y="16" width="6" height="1.5" rx="0.4" fill="#5D7400" />
+  <!-- Halo (Knockout) for Arrow -->
+  <rect x="14.5" y="9.25" width="7" height="3.5" fill="#FFFFFF" />
+  <path d="M17.5 7 L23 11 L17.5 15 Z" fill="#FFFFFF" />
+  <!-- Export Arrow in Arancione Azione -->
+  <rect x="15.5" y="10.25" width="5.5" height="1.5" fill="#FF4D2E" />
+  <path d="M18.5 8 L21.5 11 L18.5 14 Z" fill="#FF4D2E" />
 </svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Multiple sheets merging into one -->
+  <!-- Sheet 1 (Background left) -->
+  <path d="M4 8h8l3 3v8H4z" stroke="#808080" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Sheet 2 (Background right) -->
+  <path d="M12 4h6l3 3v8h-9z" stroke="#808080" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
+  <!-- Consolidated Front Sheet -->
+  <path d="M7 6h8l4 4v10H7z" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Fold -->
+  <path d="M15 6v4h4" stroke="#f0f4e0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Merge Arrows -->
+  <path d="M11 15h4M14 12l3 3-3 3" stroke="#aad400" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

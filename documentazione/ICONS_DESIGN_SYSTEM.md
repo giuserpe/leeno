@@ -440,9 +440,123 @@ Nei file reali ogni colore ha un ruolo fisso indipendentemente dall'icona: scuro
 
 ---
 
-## Nota sulle 4 icone del primo batch (da rigenerare con queste regole)
+## Nota sulle 4 icone del primo batch (pilota, non da correggere singolarmente)
 
-- **`documento_bollo`**: il "timbro a cera" è stato interpretato come un mirino/reticolo a croce dentro un cerchio pieno arancione troppo grande — sembra un target, non un sigillo. Ridurre il cerchio a un timbro pieno piccolo (max 8×8px) senza croce interna, oppure sostituire con un motivo a "impronta" più organico (bordo irregolare leggero) e staccarlo dal bordo del documento con lo spazio minimo di 2px.
-- **`esporta_gantt`**: le barre sono troppo spesse (assomigliano a pillole) e si toccano/attraversano la freccia senza alone. Applicare regola A (barre max 3px altezza) + regola C (alone dove la freccia attraversa le barre).
-- **`importa_xml`**: la X di "XML" si sovrappone alla freccia di importazione senza spazio; applicare regola B, distanziando la scritta XML dalla freccia di almeno 1px, o spostando la freccia fuori dall'area di testo.
-- **Icona con nastro/cerchio blu incrociato** (probabile `somma_colore` o `unisci_fogli`): il concetto di "evidenziatore" o "unione fogli" è stato reso come due forme a nastro che si intrecciano pesantemente — va semplificato a **una sola forma dominante** (regola D), es. per `somma_colore` un semplice profilo di evidenziatore con punta colorata e un piccolo `∑` accanto, senza intreccio.
+Le 4 icone generate nel primo passaggio erano un **pilota tecnico**, utile per individuare i difetti, ma **non vanno corrette una per una**: vanno scartate e rigenerate da zero insieme a tutto il resto del set, seguendo la sezione 13 qui sotto, in modo che ogni icona (comprese queste 4) nasca fin dall'inizio con le regole 2.5/9/12 già applicate, invece di essere "aggiustata" sopra una base sbagliata.
+
+- **`documento_bollo`**: il "timbro a cera" era un mirino/reticolo dentro un cerchio pieno arancione troppo grande. Da rifare con la tecnica dell'anello (12.4): scuro → chiaro → piccola forma accento, senza croce interna.
+- **`esporta_gantt`**: barre troppo spesse (pillole) che si toccano con la freccia senza cuscinetto. Da rifare con barre ≤1.5px (12.3) e layering di fill al posto dello stroke.
+- **`importa_xml`**: la X di "XML" si sovrappone alla freccia senza spazio. Da rifare con almeno 1px di distanza o freccia spostata fuori dal testo.
+- **Icona con nastro/cerchio blu incrociato** (`somma_colore` o `unisci_fogli`): troppi elementi intrecciati (viola regola D, un solo elemento dominante). Da semplificare radicalmente.
+
+---
+
+## 13. Piano di Produzione Completa del Set — Da Zero
+
+Lo scopo di questa sezione è che Jules produca **l'intero inventario di icone di LeenO** (non solo le 4 del pilota), applicando fin dal primo tracciato le regole geometriche (2.5), cromatiche (9) e tecniche (12) già stabilite. Nessuna icona del vecchio set (`image8.svg`, `image93.svg`, `sfera_gialla.svg`, ecc.) va riutilizzata, ricolorata o adattata: **si riparte da un tracciato vuoto per ciascuna**.
+
+### 13.1 Regola di partenza pulita
+- Ignorare completamente gli asset legacy (bitmap, nomi `imageNN`, sfere colorate, metafore letterali come `falegname` o `caschetto`) come *riferimento visivo*: contano solo come mappa nome-vecchio → nome-nuovo → significato (sezioni 6-8 della specifica), non come punto di partenza grafico.
+- Ogni file nuovo usa il nome semantico snake_case definitivo (sezione 10.5), mai il nome legacy (`nuova_voce.svg`, non `image93.svg`).
+
+### 13.2 Costruire prima le primitive condivise, poi le famiglie
+Per evitare che 50 icone generate in sequenza divergano leggermente l'una dall'altra (il rischio principale generando un set così ampio), Jules deve procedere in quest'ordine:
+
+1. **Definire una volta sole le 3 primitive di base** (Documento, Cartella, Elenco/WBS — sezione 2.A) con le regole tecniche di sezione 12 (solo fill, spessori 1.5px, raggi coerenti), come "componenti" di riferimento.
+2. **Definire una volta sole le sovrapposizioni/badge standard** (Più, Meno/Elimina, Cerca, Avviso, Spunta — sezione 2.B) e le frecce (sezione 2.C), inclusa la tecnica dell'anello (12.4) per i badge circolari.
+3. Solo dopo aver fissato questi "mattoncini", generare ogni icona della sezione 13.3 **componendo** questi stessi mattoncini, senza ridisegnarli ogni volta leggermente diversi.
+
+Questo è l'equivalente grafico di riusare le stesse funzioni invece di riscrivere codice simile 50 volte: garantisce coerenza reale, non solo dichiarata.
+
+### 13.3 Manifest completo delle icone da produrre
+
+Produrre **tutte** le icone seguenti, raggruppate per famiglia semantica (sezione 6), più le 5 icone nuove (sezione 8). Per ciascuna: nome file definitivo, primitiva di base da riusare, badge/accento se presente.
+
+**Categoria 1 — Principale e Navigazione**
+- `leeno` — marchio piatto L+O intrecciate (Verde/Lime)
+- `manuale` — Documento + lettera "i"
+- `teleg` — aeroplano di carta, outline autonomo (nessuna primitiva documento)
+
+**Categoria 2 — WBS**
+- `supcat` — Cartella + numero romano "I"
+- `cat` — Cartella + numero romano "II"
+- `subcat` — Cartella + numero romano "III"
+- `struttura_on` — Elenco/WBS + indicatore espansione
+- `struttura_off` — Elenco/WBS + indicatore compressione
+- `rinumCap` — Elenco/WBS + simbolo "#"
+
+**Categoria 3 — Voci di Lavoro**
+- `nuova_voce` — Documento + badge Più
+- `voce_breve` — Documento + linea tratteggiata (forbici)
+- `vedivoce` — Documento + occhio
+- `pesca` — amo semplificato (autonomo)
+- `invia_voce_ep` — Documento + freccia uscente destra
+- `aggiungi_misura` — Documento + linea orizzontale + badge Più
+- `sposta_voce` — due frecce verticali opposte (autonomo)
+
+**Categoria 4 — Elenchi Prezzi**
+- `analisi_a_prezzo` — due Documenti sovrapposti + percorso freccia
+- `utili_maggiorazioni` — simbolo "%" (autonomo)
+- `elimina_doppioni` — due Documenti sovrapposti + badge Elimina
+- `riordina` — freccia verticale + lettere A/Z
+
+**Categoria 5 — Quantità e Contabilità**
+- `parz` — simbolo "∑" + parentesi
+- `inverti_segno` — "+"/"-" affiancati + freccia commutazione
+- `azzera` — cifra "0" grande (Arancione Azione)
+- `partita_provvisoria_piu` — pila schede + badge Più
+- `partita_provvisoria_meno` — pila schede + badge Meno
+- `strutt_voci_zero` — Elenco/WBS + "Ø"
+- `elimina_azzerate` — Documento + "0" + badge Elimina
+- `elimina_vuote` — Elenco/WBS multi-riga + badge Elimina
+
+**Categoria 6 — Layout, Fogli e Viste**
+- `scelta_viste` — monitor diviso verticalmente (autonomo)
+- `adattaH` — linea orizzontale + frecce esterne su/giù
+- `mostra_griglia` — griglia 3×3 (autonomo)
+- `copertine` — cartella ad anelli (autonomo)
+- `colore_tematico` — secchio di vernice + goccia Lime
+
+**Categoria 7 — Reporting e Stampa**
+- `riepilogo` — Documento + linee + penna stilografica
+- `riepilogo_quantita` — Documento + mini grafico a barre
+- `riepilogo_a2` — Documento + griglia matrice
+- `anteprima_stampa` — profilo stampante (autonomo)
+- `riga_rossa` — evidenziatore + linea di chiusura orizzontale
+
+**Categoria 8 — Utility e Configurazioni**
+- `config` — due ingranaggi annidati (autonomo)
+- `stringhe_numeri` — "A" + freccia + "1"
+- `sproteggi_tutto` — lucchetto aperto (Giallo Avviso)
+- `importa_stili` — pennello + scheda foglio
+- `numeri_lettere` — "123" + fumetto + "abc"
+
+**Categoria 9 — Sviluppatore e Import Legacy**
+- `python_debug` — logo Python semplificato (autonomo)
+- `refresh` — due frecce circolari a ciclo
+- `importa_dat` — parentesi codice "&lt;&gt;" + freccia import
+
+**Icone nuove (sezione 8 della specifica)**
+- `importa_xml` — Documento + testo "XML" + freccia entrante (badge/freccia con cuscinetto, regola 12.4/2.5.C)
+- `esporta_gantt` — barre Gantt (≤1.5px, regola 12.3) + freccia uscente destra
+- `documento_bollo` — Documento + timbro con tecnica ad anello (12.4), senza croce interna
+- `unisci_fogli` — due schede foglio che confluiscono in una (max 3 elementi, regola D)
+- `somma_colore` — "∑" + profilo evidenziatore, un solo elemento dominante
+
+Totale: **46 icone rinominate/riprogettate + 5 icone nuove = 51 icone**.
+
+### 13.4 Struttura di consegna
+- Generare ogni icona in **entrambi i temi**: `icons/svg/<nome>.svg` (chiaro) e `icons/scuro/<nome>.svg` (scuro), secondo la sezione 4.B.
+- Generare anche la variante compatta **16×16** per le icone destinate a toolbar (priorità Alta nella tabella di sezione 7), come file separato ottimizzato (non uno scale-down automatico), secondo la regola 12.2.
+- Nessun file con nome legacy (`imageNN.svg`, `sfera_gialla.svg`, ecc.) deve comparire nella consegna finale.
+
+### 13.5 Validazione di insieme (oltre alla checklist per singola icona, sezioni 11+12.7)
+Prima della consegna, Jules verifica l'intero set (non icona per icona) rispondendo SÌ a tutte queste domande:
+
+1. Tutte le icone che usano la primitiva Documento hanno **esattamente** le stesse proporzioni/piega d'angolo (sezione 2.A.1), non varianti leggermente diverse tra loro?
+2. Tutti i badge Più/Meno/Elimina hanno la stessa geometria in ogni icona in cui compaiono?
+3. Nessuna icona usa `stroke` con colore impostato (regola 12.1) in tutto il set?
+4. Il conteggio totale dei file consegnati corrisponde a 51 icone × 2 temi (+ variante 16×16 dove richiesta), senza mancanze né duplicati?
+5. Scansionando l'intero set in sequenza (come una sprite sheet), le icone appartenenti alla stessa famiglia semantica sono immediatamente riconoscibili come "parenti" tra loro?
+
+Se la risposta 1 o 2 è NO, il problema è quasi sempre che le primitive sono state ridisegnate a mano ogni volta invece di essere riusate come da regola 13.2 — tornare a quel passaggio prima di procedere oltre.

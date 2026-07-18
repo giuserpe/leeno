@@ -41,7 +41,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.scelta_viste</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image18</value>
+            <value>%origin%/icons/scelta_viste</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>VISTE</value>
@@ -75,7 +75,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_voce_breve</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/Corta</value>
+            <value>%origin%/icons/voce_breve</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Voce breve ON/OFF</value>
@@ -185,7 +185,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuova_voce_scelta</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image93</value>
+            <value>%origin%/icons/nuova_voce</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Nuova Voce scelta</value>
@@ -219,7 +219,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Copia_riga_Ent</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/compo</value>
+            <value>%origin%/icons/aggiungi_misura</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Aggiungi rigo di misura</value>
@@ -261,7 +261,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image37</value>
+            <value>%origin%/icons/sposta_voce</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
@@ -303,7 +303,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image8</value>
+            <value>%origin%/icons/struttura_on</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Struttura ON</value>
@@ -320,7 +320,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_off</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image9</value>
+            <value>%origin%/icons/struttura_off</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Elimina Strutture</value>
@@ -359,7 +359,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image21B</value>
+            <value>%origin%/icons/elimina_doppioni</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Elimina codici doppi in Elenco Prezzi</value>
@@ -416,7 +416,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoAnalysis.Inserisci_Utili</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/perc</value>
+            <value>%origin%/icons/utili_maggiorazioni</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Inserisci % Utili/Maggiorazioni</value>
@@ -450,7 +450,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_analisi_in_ElencoPrezzi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/2ep</value>
+            <value>%origin%/icons/analisi_a_prezzo</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Crea Nuovo Prezzo dall'Analisi</value>
@@ -764,7 +764,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoContab.MENU_partita_aggiungi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/part_agg</value>
+            <value>%origin%/icons/partita_provvisoria_piu</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Inserisci Partita Provvisoria</value>
@@ -781,7 +781,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoContab.MENU_partita_detrai</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/part_det</value>
+            <value>%origin%/icons/partita_provvisoria_meno</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Detrai Partita Provisoria</value>
@@ -822,7 +822,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_debug</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/py</value>
+            <value>%origin%/icons/python_debug</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>python debug</value>
@@ -847,7 +847,7 @@
             <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_fuf</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/falegname</value>
+            <value>%origin%/icons/importa_dat</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>importa DAT per Luca</value>
@@ -1317,7 +1317,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_converti_stringhe</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image16</value>
+                  <value>%origin%/icons/stringhe_numeri</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Converti Stringhe in Numeri</value>
@@ -1344,7 +1344,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_sproteggi_sheet_TUTTE</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image17</value>
+                  <value>%origin%/icons/sproteggi_tutto</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Sproteggi Tutto il file     Ctl Shift K</value>
@@ -1389,7 +1389,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_inserisci_Riga_rossa</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image100</value>
+                  <value>%origin%/icons/riga_rossa</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Inserisci riga rossa di chiusura</value>
@@ -1481,7 +1481,7 @@
                   <value>vnd.sun.star.script:UltimusFree2.InLettereFunc.In_Let?language=Basic&amp;location=application</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/sf_Ver</value>
+                  <value>%origin%/icons/numeri_lettere</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Numeri in lettere</value>
@@ -1537,7 +1537,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/vintage</value>
+              <value>%origin%/icons/copertine</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Gestione Copertine ...</value>
@@ -1551,7 +1551,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_mostra_tabs_computo</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/vintage</value>
+                  <value>%origin%/icons/copertine</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Mostra le Copertine del COMPUTO</value>
@@ -1569,7 +1569,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_mostra_tabs_contab</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/vintage</value>
+                  <value>%origin%/icons/copertine</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Mostra le Copertine di Contabilita'</value>
@@ -1682,7 +1682,7 @@
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image8</value>
+              <value>%origin%/icons/struttura_on</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Metti in struttura</value>
@@ -1700,7 +1700,7 @@
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_off</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image9</value>
+              <value>%origin%/icons/struttura_off</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Elimina Strutture</value>
@@ -1727,7 +1727,7 @@
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.sposta_voce</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image37</value>
+              <value>%origin%/icons/sposta_voce</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
@@ -1861,7 +1861,7 @@
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image21B</value>
+              <value>%origin%/icons/elimina_doppioni</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Elimina codici doppi in Elenco Prezzi</value>
@@ -1993,7 +1993,7 @@
               <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_importa_stili</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/sfera_gialla</value>
+              <value>%origin%/icons/importa_stili</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Importa Stili da altro file...</value>

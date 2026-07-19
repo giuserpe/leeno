@@ -21,6 +21,7 @@ LeenO è un'estensione (OXT) per LibreOffice Calc per la redazione di computi me
 - Per la selezione di file o cartelle, utilizza sempre `Dialogs.FileSelect()` o `Dialogs.FolderSelect()` quando disponibili, invece di dialoghi custom o librerie esterne.
 - Nessun output su stdout: usa il logging su file previsto dal progetto.
 - Non includere sezioni CLI nel codice dei moduli.
+- Quando è necessario, preferisci sempre i formati aperti .ODF.
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 

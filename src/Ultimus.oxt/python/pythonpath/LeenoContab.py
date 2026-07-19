@@ -2163,8 +2163,14 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     oSalSheet.getCellByPosition(1, r_curr + 14).HoriJustify = 2
     oSalSheet.getCellByPosition(1, r_curr + 14).IsTextWrapped = True
 
+    # Riempi pagina
+    curr_row = r_curr + 17
+    num_filler = _riempi_pagina(oSalSheet, curr_row, col=1, last_col=5, h_pagina=25850)
+    curr_row += num_filler
+    total_rows += num_filler
+
     # Riga finale di chiusura
-    oSalSheet.getCellRangeByPosition(fcol, r_curr + 17, fcol + 5, r_curr + 17).CellStyle = "Ultimus_"
+    oSalSheet.getCellRangeByPosition(fcol, curr_row, fcol + 5, curr_row).CellStyle = "Ultimus_"
 
     return start_row + total_rows - 1
 

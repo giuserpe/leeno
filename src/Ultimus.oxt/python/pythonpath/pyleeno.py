@@ -1408,7 +1408,7 @@ def mostra_fogli_principali():
     lista_fogli = oDoc.Sheets.ElementNames
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
-        for nome in ('cP_', 'cT_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO',
+        for nome in ('cP_', 'cT_', 'M1', 'S1', 'S5', 'QUADRO ECONOMICO',
                      '_LeenO', 'Scorciatoie'):
             if nome in el:
                 oDoc.getSheets().getByName(el).IsVisible = False
@@ -1424,7 +1424,7 @@ def MENU_mostra_tabs_contab():
     sproteggi_sheet_TUTTE()
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
-        for nome in ('cP_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO',
+        for nome in ('cP_', 'M1', 'S1', 'S5', 'QUADRO ECONOMICO',
                      '_LeenO', 'Scorciatoie'):
             if nome in el:
                 oDoc.getSheets().getByName(el).IsVisible = False
@@ -1440,7 +1440,7 @@ def MENU_mostra_tabs_computo():
     sproteggi_sheet_TUTTE()
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
-        for nome in ('cT_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO',
+        for nome in ('cT_', 'M1', 'S1', 'S5', 'QUADRO ECONOMICO',
                      '_LeenO', 'Scorciatoie'):
             if nome in el:
                 oDoc.getSheets().getByName(el).IsVisible = False

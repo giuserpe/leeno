@@ -55,6 +55,7 @@ def parseXML(data, defaultTitle=None):
             'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.regione.campania.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.calabriallpp.it/prezzario.xsd"': 'EASY',
+            'EASY="https://prezzario.regione.piemonte.it/prezzario.xsd"': 'EASY',
             'EASY="https://prezzario.regione.sardegna.it/prezzario/prezzario.xsd"': 'EASY',
         }
         # controlla se il file è di tipo conosciuto
@@ -85,6 +86,9 @@ def parseXML(data, defaultTitle=None):
     
     try:
         root = LeenoImport.stripXMLNamespaces(data)
+        del data
+        import gc
+        gc.collect()
     except Exception as e:
         Dialogs.Exclamation(
         Title="ERRORE xmlns:",
@@ -178,8 +182,10 @@ supportato nella prossima versione del programma""")
         # un po' di pulizia nel testo
         # desc = PL.clean_text (desc)
 
-        um = articolo.find('um').text
-        prezzo = articolo.find('prezzo').text
+        um_el = articolo.find('um')
+        um = um_el.text if um_el is not None else ''
+        prezzo_el = articolo.find('prezzo')
+        prezzo = prezzo_el.text if prezzo_el is not None else None
 
         # in 'sto benedetto prezzario ci sono numeri (grandi) con un punto
         # per separare le migliaia OLTRE al punto per separare i decimali
@@ -225,6 +231,11 @@ supportato nella prossima versione del programma""")
 
     # ritorna un dizionario contenente tutto il necessario
     # per costruire l'elenco prezzi
+    del root
+    del contenuto
+    del articoli
+    import gc
+    gc.collect()
     return {
         'titolo': titolo,
         'superCategorie': superCatList,

@@ -4,7 +4,9 @@
 from datetime import datetime, date
 import os
 import threading
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 
 from io import StringIO
@@ -74,6 +76,7 @@ def findXmlParser(xmlText):
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Calabria"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Campania"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Piemonte"': LeenoImport_XmlToscana.parseXML,
         'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
         'xsi:noNamespaceSchemaLocation="SAR24': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
@@ -259,13 +262,16 @@ Verrà tentata un'importazione utilizzando il formato XPWE."""
 
     else:
 
-        # ~ try:
-        dati = xmlParser(data, defaultTitle)
-        # ~ except Exception:
-            # ~ Dialogs.Exclamation(
-               # ~ Title="Errore nel file XML",
-               # ~ Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-            # ~ return
+        try:
+            dati = xmlParser(data, defaultTitle)
+            del data
+            import gc
+            gc.collect()
+        except Exception as e:
+            Dialogs.Exclamation(
+               Title="Errore nel file XML",
+               Text=f"Riscontrato errore nel file XML\n'{filename}'\nErrore: {e}\nControllarlo e riprovare")
+            return
 
         # il parser può gestirsi l'errore direttamente, nel qual caso
         # ritorna None ed occorre uscire

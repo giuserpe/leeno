@@ -452,6 +452,17 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-21 20:57</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/cb3bc346af5a74b6c2c9169f85c455ca0f3c982b" target="_blank" rel="noopener"><code>cb3bc34</code></a></td>
+                <td class="commit-msg">fix(import): aggiunge supporto Piemonte e migliora robustezza parser XML
+
+- aggiunge mapping 'autore="Regione Piemonte"' in findXmlParser
+- aggiunge namespace EASY Piemonte in LeenoImport_XmlToscana
+- gestisce correttamente campi <um> e <prezzo> mancanti
+- introduce try/except con messaggio dettagliato in caso di errore XML
+- libera memoria dopo parsing (del variabili + gc.collect)</td>
+            </tr>
+            <tr>
                 <td>2026-07-19 22:15</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/483f60369cf8e102ae1df4fd0bccc16dd3241d83" target="_blank" rel="noopener"><code>483f603</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.97‑TESTING‑20260720
@@ -465,11 +476,6 @@
                 <td class="commit-msg">docs: aggiorna file di mappatura funzioni e icone
 
 Rimosse duplicazioni testuali nelle descrizioni per una maggiore chiarezza.</td>
-            </tr>
-            <tr>
-                <td>2026-07-19 22:12</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/70c18ae48d341c0f11e01e5bd7328c86446eb449" target="_blank" rel="noopener"><code>70c18ae</code></a></td>
-                <td class="commit-msg">fix(core): ripristina visibilità del foglio S2</td>
             </tr>
                     </tbody>
                 </table>
@@ -493,8 +499,8 @@ Rimosse duplicazioni testuali nelle descrizioni per una maggiore chiarezza.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-19 22:15 UTC</p>
-                <p>Build Commit: <code>483f603</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-21 20:57 UTC</p>
+                <p>Build Commit: <code>cb3bc34</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

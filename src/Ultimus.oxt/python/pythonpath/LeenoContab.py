@@ -2950,7 +2950,8 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     perc_iva_str = f'{aliquota_iva * 100:.0f}'
 
     aliquota_anticipo = _leggi_anticipo_da_S2(oS2)
-    perc_anticipo_str = f'{aliquota_anticipo * 100:.0f}'
+    perc_anticipo_int = aliquota_anticipo * 100
+    perc_anticipo_str = f'{perc_anticipo_int:.3f}'
 
     aliquota_infortuni = _leggi_infortuni_da_S2(oS2)
 

@@ -1,111 +1,112 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="32"
-   height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   id="svg4"
    sodipodi:docname="invia_voce_ep.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/image_39.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs4" />
   <sodipodi:namedview
-     id="base"
+     id="namedview4"
      pagecolor="#ffffff"
-     bordercolor="#8896ab"
-     borderopacity="1.0"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
-     inkscape:cy="15.919056"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="33.625"
+     inkscape:cx="11.97026"
+     inkscape:cy="14.379182"
      inkscape:window-width="1920"
-     inkscape:window-height="996"
-     inkscape:window-x="-8"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     inkscape:current-layer="svg4" />
   <g
-     inkscape:label="Livello 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.2766px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#1a2010;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       x="-0.18222865"
-       y="8.3606367"
-       id="text1039"
-       transform="scale(1.0119569,0.98818439)"><tspan
-         sodipodi:role="line"
-         id="tspan1037"
-         x="-0.18222865"
-         y="8.3606367"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke:none;stroke-width:0.116055;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">DP</tspan></text>
-    <path
-       sodipodi:type="star"
-       style="fill:#1a2010;fill-opacity:1;stroke:#1a2010;stroke-width:0.0;stroke-linecap:square;paint-order:fill markers stroke"
-       id="path901"
-       inkscape:flatsided="false"
-       sodipodi:sides="3"
-       sodipodi:cx="28.082621"
-       sodipodi:cy="4.9228268"
-       sodipodi:r1="5.5817852"
-       sodipodi:r2="2.7908926"
-       sodipodi:arg1="1.5707963"
-       sodipodi:arg2="2.6179939"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 28.082621,10.504612 -2.416984,-4.186339 -2.416984,-4.1863387 4.833968,-1e-7 4.833967,-2e-7 -2.416984,4.1863391 z"
-       transform="matrix(0.31228832,0,0,0.31228832,-2.3328441,-0.37486579)"
-       inkscape:transform-center-y="0.43578159" />
+     id="g5"
+     transform="translate(-26.129739,0.08357394)"
+     style="fill:#1a2010;fill-opacity:1">
     <rect
-       style="fill:#1a2010;fill-opacity:1;stroke:#1a2010;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect847"
-       width="3.9332073"
-       height="0.4"
-       x="0.3"
-       y="0.3" />
+       x="28.291447"
+       y="4.2053428"
+       width="19.6"
+       height="2.2"
+       rx="0.5"
+       fill="#1a2010"
+       id="rect1-6"
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
-       style="fill:#1a2010;fill-opacity:1;stroke:#1a2010;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect1070"
-       width="3.9332073"
-       height="0.4"
-       x="0.3"
-       y="1.5" />
+       x="28.291447"
+       y="8.6053429"
+       width="16.072001"
+       height="2.2"
+       rx="0.5"
+       fill="#5D7400"
+       id="rect2-1"
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
-       style="fill:#1a2010;fill-opacity:1;stroke:#1a2010;stroke-width:0.3;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect1072"
-       width="3.9332073"
-       height="0.4"
-       x="0.3"
-       y="2.7" />
+       x="28.291447"
+       y="13.005342"
+       width="19.6"
+       height="2.2"
+       rx="0.5"
+       fill="#1a2010"
+       id="rect3-8"
+       style="fill:#1a2010;fill-opacity:1" />
+    <rect
+       x="28.368031"
+       y="17.427509"
+       width="19.6"
+       height="2.2"
+       rx="0.5"
+       fill="#1a2010"
+       id="rect3-8-2-9"
+       style="fill:#1a2010;fill-opacity:1" />
+  </g>
+  <g
+     id="g3"
+     transform="rotate(180,17.364312,17.421933)">
+    <circle
+       cx="17.5"
+       cy="17.5"
+       r="6.5"
+       fill="#f0f4e0"
+       id="circle3-2"
+       style="fill:#1a2010;fill-opacity:1" />
+    <circle
+       cx="17.5"
+       cy="17.5"
+       r="5.5999999"
+       fill="#20261a"
+       id="circle4"
+       style="fill:#f0f4e0;fill-opacity:1" />
+    <g
+       id="g1"
+       transform="matrix(1.0710147,-1.0710147,1.0710147,1.0710147,-19.525796,37.749806)">
+      <g
+         id="g2">
+        <rect
+           x="26.917807"
+           y="6.6796036"
+           width="3.0725765"
+           height="2.3044324"
+           rx="0.88632017"
+           fill="#5D7400"
+           id="rect3-6"
+           style="stroke-width:1.28024" />
+        <path
+           d="m 27.557927,4.6312196 -4.224793,3.200601 4.224793,3.2006014 z"
+           fill="#5D7400"
+           fill-rule="evenodd"
+           id="path3-8"
+           style="stroke-width:1.28024" />
+      </g>
+    </g>
   </g>
 </svg>

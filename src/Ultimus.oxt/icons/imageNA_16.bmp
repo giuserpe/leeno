@@ -2,98 +2,73 @@
 <svg
    width="32"
    height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 24 24"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   id="svg4"
    sodipodi:docname="imageNA.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/griglia3_16.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs4" />
   <sodipodi:namedview
-     id="base"
+     id="namedview4"
      pagecolor="#ffffff"
-     bordercolor="#8896ab"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="9.765625"
-     inkscape:cx="13.2096"
-     inkscape:cy="25.5488"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
+     bordercolor="#000000"
+     borderopacity="0.25"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Livello 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2753px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#1a2010;fill-opacity:1;stroke:none;stroke-width:1.59807;stroke-miterlimit:4;stroke-dasharray:none"
-       x="0.80233282"
-       y="8.5303087"
-       id="text1039"
-       transform="scale(1.0907085,0.91683525)"><tspan
-         sodipodi:role="line"
-         id="tspan1037"
-         x="0.80233282"
-         y="8.5303087"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2753px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#1a2010;fill-opacity:1;stroke-width:1.59807;stroke-miterlimit:4;stroke-dasharray:none" /></text>
-    <text
-       xml:space="preserve"
-       style="font-size:7.1829px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:none;fill:#8896ab;stroke-width:0.264583"
-       x="1.0228429"
-       y="7.1508169"
-       id="text1"
-       transform="scale(1.1233886,0.89016393)"><tspan
-         sodipodi:role="line"
-         id="tspan1"
-         style="font-style:normal;font-weight:normal;fill:#8896ab;stroke-width:0.264583"
-         x="1.0228429"
-         y="7.1508169">#</tspan></text>
-    <g
-       id="g2"
-       transform="rotate(-29.503261,5.403971,0.98155385)">
-      <circle
-         style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#1a2010;stroke-width:0.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="path3071"
-         cx="4.340416"
-         cy="2.4434485"
-         r="1.8258438" />
-      <path
-         style="fill:none;stroke:#1a2010;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-         d="M 4.340416,4.0976953 V 7.5814501"
-         id="path1" />
-    </g>
-  </g>
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="4.203125"
+     inkscape:cx="-14.750929"
+     inkscape:cy="32"
+     inkscape:window-width="1904"
+     inkscape:window-height="993"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4" />
+  <circle
+     cx="9.4"
+     cy="9.4"
+     r="5.8"
+     fill="#1A2010"
+     id="circle1" />
+  <circle
+     cx="9.4"
+     cy="9.4"
+     r="4.199999999999999"
+     fill="#F0F4E0"
+     id="circle2" />
+  <path
+     d="M12.83,14.46 L18.13,19.76 L19.76,18.13 L14.46,12.83 Z"
+     fill="#1A2010"
+     fill-rule="evenodd"
+     id="path2" />
+  <circle
+     cx="18.945941546018393"
+     cy="18.945941546018393"
+     r="1.058"
+     fill="#1A2010"
+     id="circle3" />
+  <circle
+     cx="9.3999996"
+     cy="9.3999996"
+     r="3.9368029"
+     fill="#ff4d2e"
+     id="circle4" />
+  <text
+     x="9.4"
+     y="9.7"
+     font-family="Arial, sans-serif"
+     font-size="5.6"
+     font-weight="900"
+     fill="#F0F4E0"
+     text-anchor="middle"
+     dominant-baseline="middle"
+     id="text4"
+     style="fill:#000000">!</text>
 </svg>

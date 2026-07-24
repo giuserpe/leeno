@@ -2,106 +2,74 @@
 <svg
    width="32"
    height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 24 24"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   id="svg2"
    sodipodi:docname="image37.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/image37_16.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
-     id="base"
+     id="namedview2"
      pagecolor="#ffffff"
-     bordercolor="#8896ab"
-     borderopacity="1.0"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="13.103573"
-     inkscape:cx="27.35895"
-     inkscape:cy="15.263013"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="16.8125"
+     inkscape:cx="20.371747"
+     inkscape:cy="18.765799"
      inkscape:window-width="1920"
-     inkscape:window-height="996"
-     inkscape:window-x="-8"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
-     showguides="true"
-     inkscape:guide-bbox="true"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1">
-    <sodipodi:guide
-       position="4.2576476,8.1240361"
-       orientation="1,0"
-       id="guide1201"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       position="-3.2695896,4.2119169"
-       orientation="0,-1"
-       id="guide1203"
-       inkscape:locked="false" />
-  </sodipodi:namedview>
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     inkscape:current-layer="svg2" />
   <g
-     inkscape:label="Livello 1"
-     inkscape:groupmode="layer"
-     id="layer1">
+     id="g5"
+     transform="matrix(1.1384452,0,0,1.1384452,-0.47837602,-1.6654841)">
     <g
-       id="g2"
-       style="fill:#1a2010">
-      <polygon
-         fill="#4a4a4a"
-         points="11.929,21.036 9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 11.939,13.321 "
-         transform="matrix(0.40687415,0,0,-0.40687415,-0.86313333,10.305438)"
-         id="polygon1"
-         style="fill:#1a2010;stroke-width:0.650283" />
-      <polygon
-         fill="#4a4a4a"
-         points="9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 11.939,13.321 11.929,21.036 "
-         transform="matrix(0.40687415,0,0,0.40687415,-0.86313333,-1.847896)"
-         id="polygon2"
-         style="fill:#1a2010;stroke-width:0.650283" />
+       id="g4">
+      <rect
+         x="6.0726762"
+         y="7.2814126"
+         width="2.0999999"
+         height="11.562081"
+         rx="0.80769229"
+         fill="#1a2010"
+         id="rect1"
+         style="stroke-width:1.74432" />
+      <path
+         d="m 4.1226766,8.8817844 3,-3.86 3.0000004,3.86 z"
+         fill="#1a2010"
+         fill-rule="evenodd"
+         id="path1" />
     </g>
     <g
-       id="g4"
-       transform="rotate(90,4.263481,4.228771)"
-       style="fill:#1a2010">
-      <polygon
-         fill="#4a4a4a"
-         points="11.939,13.321 11.929,21.036 9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 "
-         transform="matrix(0.40687415,0,0,-0.40687415,-0.86313333,10.305438)"
-         id="polygon3"
-         style="stroke-width:0.650283;fill:#1a2010" />
-      <polygon
-         fill="#4a4a4a"
-         points="11.929,21.036 9.8,21 12.6,25.2 15.4,21 13.325,21.024 13.32,13.305 11.939,13.321 "
-         transform="matrix(0.40687415,0,0,0.40687415,-0.86313333,-1.847896)"
-         id="polygon4"
-         style="stroke-width:0.650283;fill:#1a2010" />
+       id="g4-7"
+       transform="rotate(180,10.960893,12.003638)"
+       style="fill:#808080;fill-opacity:1">
+      <rect
+         x="6.0726762"
+         y="7.2814126"
+         width="2.0999999"
+         height="11.562081"
+         rx="0.80769229"
+         fill="#1a2010"
+         id="rect1-6"
+         style="fill:#808080;fill-opacity:1;stroke-width:1.74432" />
+      <path
+         d="m 4.1226766,8.8817844 3,-3.86 3.0000004,3.86 z"
+         fill="#1a2010"
+         fill-rule="evenodd"
+         id="path1-1"
+         style="fill:#808080;fill-opacity:1" />
     </g>
   </g>
 </svg>

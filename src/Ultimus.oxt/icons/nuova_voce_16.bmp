@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 24 24"
+   width="24"
+   height="24"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="nuova_voce.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs5" />
+  <sodipodi:namedview
+     id="namedview5"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="33.625"
+     inkscape:cx="11.98513"
+     inkscape:cy="14.379182"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
+  <rect
+     x="2.2"
+     y="4.9"
+     width="19.6"
+     height="3.0"
+     rx="0.5"
+     fill="#AAD400"
+     id="rect1" />
+  <rect
+     x="2.2"
+     y="10.5"
+     width="16.072"
+     height="3.0"
+     rx="0.5"
+     fill="#AAD400"
+     id="rect2" />
+  <rect
+     x="2.2"
+     y="16.1"
+     width="19.6"
+     height="3.0"
+     rx="0.5"
+     fill="#AAD400"
+     id="rect3" />
+  <g
+     id="g5"
+     transform="translate(0.20000076,0.20000076)">
+    <circle
+       cx="17.299999"
+       cy="17.299999"
+       r="6.5"
+       fill="#f0f4e0"
+       id="circle3" />
+    <circle
+       cx="17.299999"
+       cy="17.299999"
+       r="5.5999999"
+       fill="#20261a"
+       id="circle4" />
+    <rect
+       x="13.4"
+       y="15.688"
+       width="7.8000002"
+       height="3.224"
+       rx="0.96719998"
+       fill="#aad400"
+       id="rect4" />
+    <rect
+       x="15.688"
+       y="13.4"
+       width="3.224"
+       height="7.8000002"
+       rx="0.96719998"
+       fill="#aad400"
+       id="rect5" />
+  </g>
+</svg>

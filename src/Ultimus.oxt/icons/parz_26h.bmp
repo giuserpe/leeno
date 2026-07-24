@@ -2,89 +2,88 @@
 <svg
    width="32"
    height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 24 24"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   id="svg4"
    sodipodi:docname="parz.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/parz_26.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs4" />
   <sodipodi:namedview
-     id="base"
+     id="namedview4"
      pagecolor="#ffffff"
-     bordercolor="#8896ab"
-     borderopacity="1.0"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="16"
-     inkscape:cy="15.973019"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="16.8125"
+     inkscape:cx="12.431227"
+     inkscape:cy="19.479554"
      inkscape:window-width="1920"
-     inkscape:window-height="996"
-     inkscape:window-x="-8"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     inkscape:current-layer="svg4" />
   <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="segni">
-    <rect
-       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5279"
-       width="6"
-       height="0.5"
-       x=".8"
-       y="1" />
-    <rect
-       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5281"
-       width="6"
-       height="0.5"
-       x=".8"
-       y="3" />
-    <rect
-       style="fill:#1a2010;fill-opacity:1;stroke:#1a2010;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5283"
-       width="6"
-       height="0.5"
-       x="1.8"
-       y="5" />
-    <rect
-       style="fill:#8896ab;fill-opacity:1;stroke:#8896ab;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       id="rect5285"
-       width="6"
-       height="0.5"
-       x="0.8"
-       y="7" />
-
+     id="g5"
+     transform="translate(-26.129739,0.08357394)">
+    <g
+       id="g2">
+      <rect
+         x="28.291447"
+         y="4.2053428"
+         width="19.6"
+         height="2.2"
+         rx="0.5"
+         fill="#1a2010"
+         id="rect1-6"
+         style="fill:#808080;fill-opacity:1" />
+      <rect
+         x="28.291447"
+         y="8.6053429"
+         width="16.072001"
+         height="2.2"
+         rx="0.5"
+         fill="#5D7400"
+         id="rect2-1"
+         style="fill:#808080;fill-opacity:1" />
+      <rect
+         x="28.291447"
+         y="13.005342"
+         width="19.6"
+         height="2.2"
+         rx="0.5"
+         fill="#1a2010"
+         id="rect3-8"
+         style="fill:#808080;fill-opacity:1" />
+      <rect
+         x="28.368031"
+         y="17.427509"
+         width="19.6"
+         height="2.2"
+         rx="0.5"
+         fill="#1a2010"
+         id="rect3-8-2-9"
+         style="fill:#5D7400;fill-opacity:1" />
+    </g>
   </g>
+  <text
+     xml:space="preserve"
+     style="font-size:23.0669px;writing-mode:lr-tb;direction:ltr;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
+     x="5.3427334"
+     y="17.601439"
+     id="text1"
+     inkscape:highlight-color="#000000"><tspan
+       sodipodi:role="line"
+       id="tspan1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.0669px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
+       x="5.3427334"
+       y="17.601439">Σ</tspan></text>
 </svg>

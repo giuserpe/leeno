@@ -1,107 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="32"
-   height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 24 24"
+   width="24"
+   height="24"
    version="1.1"
-   id="svg8"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   id="svg4"
    sodipodi:docname="riepilogo.svg"
-   inkscape:export-filename="/media/part-dati/Immagini/icone_leeno/png/riepilogo_16.png"
-   inkscape:export-xdpi="104"
-   inkscape:export-ydpi="104"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+   xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs4" />
   <sodipodi:namedview
-     id="base"
-     pagecolor="#000000"
-     bordercolor="#8896ab"
-     borderopacity="1.0"
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="18.53125"
-     inkscape:cx="15.973019"
-     inkscape:cy="16"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
-     units="px"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="11.888233"
+     inkscape:cx="38.609607"
+     inkscape:cy="9.5472559"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:pagecheckerboard="0"
-     inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     inkscape:current-layer="svg4" />
   <g
-     inkscape:label="Livello 1"
-     inkscape:groupmode="layer"
-     id="layer1">
+     id="g4"
+     transform="translate(-21.303345,0.82498201)">
+    <rect
+       x="25.903345"
+       y="5.5470619"
+       width="14.8"
+       height="1.6"
+       rx="0.40000001"
+       fill="#808080"
+       id="rect1-8" />
+    <rect
+       x="25.903345"
+       y="2.802974"
+       width="14.8"
+       height="1.6"
+       rx="0.40000001"
+       fill="#808080"
+       id="rect1-9" />
+    <rect
+       x="25.903345"
+       y="8.4470615"
+       width="14.8"
+       height="1.6"
+       rx="0.40000001"
+       fill="#808080"
+       id="rect2-8" />
+    <rect
+       x="25.903345"
+       y="11.347062"
+       width="14.8"
+       height="2.8"
+       rx="0.5"
+       fill="#3b82f6"
+       id="rect3-2" />
     <path
-       style="fill:none;stroke:#f0f4e0;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 0.77517099,7.4969578 1.918885,6.3062926 3.023347,7.9359746 3.6604957,6.7576049 4.7076707,7.697788 5.6479086,6.4716461"
-       id="path1079" />
-    <g
-       id="g947">
-      <path
-         style="fill:none;stroke:#f0f4e0;stroke-width:0.351407;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 7.446448,0.36263151 5.7550399,5.1515291 5.7867525,6.1100711"
-         id="path1081" />
-      <path
-         style="fill:none;stroke:#f0f4e0;stroke-width:0.351407;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 8.1961157,0.50327723 6.5047076,5.2921748 5.8419132,6.1204198"
-         id="path1083" />
-    </g>
-    <path
-       style="fill:none;stroke:#f0f4e0;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.08611828,1.2558856 h 0.5"
-       id="path1088" />
-    <path
-       style="fill:none;stroke:#f0f4e0;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.08611828,3.7768148 h 0.5"
-       id="path1094" />
-    <path
-       style="fill:none;stroke:#f0f4e0;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.08611828,2.3927437 h 0.5"
-       id="path926" />
-    <g
-       id="g1"
-       transform="matrix(0.90617973,0,0,1,0.11904741,0)"
-       style="stroke-width:1.05049">
-      <path
-         style="fill:none;stroke:#f0f4e0;stroke-width:0.525246;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 1.268888,1.2532488 H 5.5299626"
-         id="path875" />
-      <path
-         style="fill:none;stroke:#f0f4e0;stroke-width:0.525246;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 1.268888,3.7736652 H 5.5299626"
-         id="path1080" />
-      <path
-         style="fill:none;stroke:#f0f4e0;stroke-width:0.525246;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 1.268888,2.4010767 H 5.5299626"
-         id="path924" />
-    </g>
+       d="m 26.082762,17.147062 q 2.452875,-2.2 4.767709,0 2.314834,2.2 4.90575,0 2.590915,-2.2 4.767709,0 v 1.3 q -2.452875,-2.2 -4.767709,0 -2.314834,2.2 -4.90575,0 -2.590915,-2.2 -4.767709,0 z"
+       fill="#1a2010"
+       id="path3-4"
+       style="fill:#f0f4e0;fill-opacity:1;stroke-width:1.03046" />
+    <polygon
+       id="polygon1943"
+       style="fill:#1a2010;fill-opacity:1;fill-rule:evenodd"
+       points="15.209,268.09 106.38,142.98 126.08,157.08 34.88,282.23 8.9034,297 "
+       transform="matrix(0.07721783,0,0,0.07721783,28.034985,-5.9971916)"
+       class="fil0" />
+    <polygon
+       id="polygon1945"
+       style="fill:#f0f4e0;fill-opacity:1;fill-rule:evenodd"
+       points="17.073,268.93 106.83,145.76 123.27,157.54 33.518,280.71 11.813,293.05 "
+       transform="matrix(0.07721783,0,0,0.07721783,28.034985,-5.9971916)"
+       class="fil1" />
   </g>
 </svg>
-

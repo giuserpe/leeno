@@ -1,8 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-
-<circle cx="8.5" cy="8.5" r="3.6" stroke="#aad400" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="16" cy="8.5" r="3.6" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="8.5" cy="16" r="3.6" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="16" cy="16" r="3.6" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="sfera_gialla.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="12.609375"
+     inkscape:cx="24.307311"
+     inkscape:cy="22.245353"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <circle
+     cx="16"
+     cy="16"
+     r="3.6"
+     stroke="#1a2010"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle4"
+     style="stroke:#ff4d2e;stroke-opacity:1" />
+  <circle
+     cx="16"
+     cy="8.5"
+     r="3.6"
+     stroke="#1a2010"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle2"
+     style="fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke-width:1.70025;stroke-dasharray:none;stroke:#3b82f6;stroke-opacity:1" />
+  <circle
+     cx="8.5"
+     cy="16"
+     r="3.6"
+     stroke="#1a2010"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle3"
+     style="stroke:#f4b400;stroke-opacity:1" />
+  <circle
+     cx="8.5"
+     cy="8.5"
+     r="3.6"
+     stroke="#5D7400"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle1" />
 </svg>

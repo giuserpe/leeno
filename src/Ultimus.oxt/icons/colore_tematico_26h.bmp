@@ -2,53 +2,74 @@
 <svg
    width="32"
    height="32"
-   viewBox="0 0 8.4666665 8.4666669"
+   viewBox="0 0 24 24"
    version="1.1"
-   id="svg8"
+   id="svg3"
+   sodipodi:docname="colore_tematico.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs id="defs2" />
-  <g id="layer1">
-    <!-- Tavolozza principale - più grande e semplice -->
-    <ellipse
-       style="fill:#aad400;stroke:#1a2010;stroke-width:0.4;stroke-opacity:1"
-       id="palette-base"
-       cx="4.2333"
-       cy="4.7625"
-       rx="3.4"
-       ry="3" />
-
-    <!-- Campione grande rosso (sinistra) -->
-    <circle
-       style="fill:#ff4d2e;stroke:#1a2010;stroke-width:0.2"
-       id="color-red"
-       cx="2.8"
-       cy="3.5"
-       r="1.2" />
-
-    <!-- Campione grande nero (centro) -->
-    <circle
-       style="fill:#1a2010;stroke:#1a2010;stroke-width:0.2"
-       id="color-black"
-       cx="4.7"
-       cy="3.3"
-       r="1.2" />
-
-    <!-- Campione grande grigio (destra) -->
-    <circle
-       style="fill:#8896ab;stroke:#1a2010;stroke-width:0.2"
-       id="color-gray"
-       cx="6.3"
-       cy="4.0"
-       r="1.2" />
-
-    <!-- Foro per il pollice - più grande e visibile -->
-    <ellipse
-       style="fill:#ffffff;stroke:#1a2010;stroke-width:0.3"
-       id="thumb-hole"
-       cx="6.4"
-       cy="6.2"
-       rx="0.75"
-       ry="1.2" />
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="16.8125"
+     inkscape:cx="16.654275"
+     inkscape:cy="18.052045"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <g
+     id="g4"
+     transform="rotate(-47.715491,12.934817,9.845515)"
+     inkscape:transform-center-x="0.53531598"
+     inkscape:transform-center-y="-0.11895911">
+    <path
+       d="m 5,8.5 h 14 l -2,11 H 7 Z m 1.76,0.8 h 10.48 l -1.68,8.6 H 8.44 Z"
+       fill="#1a2010"
+       fill-rule="evenodd"
+       id="path1" />
+    <rect
+       x="4.3000002"
+       y="6.5999999"
+       width="15.4"
+       height="2"
+       rx="0.69999999"
+       fill="#1a2010"
+       id="rect1" />
   </g>
+  <g
+     id="g3"
+     transform="rotate(-161.81418,12.464716,12.819389)"
+     inkscape:transform-center-x="0.71562768"
+     inkscape:transform-center-y="-2.1115276">
+    <circle
+       cx="19.200001"
+       cy="4.5999999"
+       r="2.3"
+       fill="#5D7400"
+       id="circle2" />
+    <path
+       d="m 17,5.4 h 4.4 l -2.2,4.2 z"
+       fill="#5D7400"
+       fill-rule="evenodd"
+       id="path3" />
+  </g>
+  <path
+     style="opacity:0.78;fill:#5d7400;fill-rule:evenodd;stroke:#5d7400;stroke-width:0.13484;paint-order:markers fill stroke;fill-opacity:1;stroke-opacity:1"
+     d="m 16.206299,21.739359 c -2.697851,-1.635918 -4.905184,-3.001472 -4.905184,-3.034564 0,-0.03309 0.373876,-0.47454 0.830836,-0.980995 l 0.830836,-0.920826 h 6.90917 6.909169 l 0.338105,0.449213 c 0.185958,0.247068 0.329721,0.482785 0.319474,0.523816 -0.02046,0.08192 -6.240021,6.937752 -6.293881,6.937752 -0.01834,0 -2.240673,-1.338478 -4.938525,-2.974396 z"
+     id="path2"
+     transform="scale(0.75)" />
 </svg>

@@ -272,7 +272,10 @@ def MENU_leeno_conf():
     cfg = Config()
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('S1'):
-        Toolbars.AllOff()
+        try: 
+            Toolbars.AllOff()
+        except Exception: 
+            pass
         return
     psm = LeenoUtils.getServiceManager()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")

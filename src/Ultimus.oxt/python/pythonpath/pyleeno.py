@@ -11752,6 +11752,15 @@ def trova_np():
         if val_base == 0 and val_confronto > 0:
             current_code = oSheet.getCellByPosition(0, el).String
 
+            # Escludi il codice "000" dalla numerazione NP
+            bare_code = re.sub(r'^(VDS_)?(NP\d{2}_)?', '', current_code)
+            if bare_code == '000':
+                oCellRangeAddr.StartRow = el
+                oCellRangeAddr.EndRow = el
+                oSheet.group(oCellRangeAddr, 1)
+                oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
+                continue
+
             # Verifica se il codice ha già un prefisso NPxx_
             has_np_prefix = bool(re.match(r'^(VDS_)?NP\d{2}', current_code))
 

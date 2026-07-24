@@ -825,8 +825,13 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 row_idx = cell_left.CellAddress.Row
                 col_idx = cell_left.CellAddress.Column
                 cell_right = sheet.getCellByPosition(col_idx + 1, row_idx)
+                cell_right_right = sheet.getCellByPosition(col_idx + 2, row_idx)
+                cell_right_2 = sheet.getCellByPosition(col_idx + 3, row_idx)
+                cell_right_3 = sheet.getCellByPosition(col_idx + 4, row_idx)
+
                 cell_down = sheet.getCellByPosition(col_idx, row_idx + 1)
                 cell_down_right = sheet.getCellByPosition(col_idx + 1, row_idx + 1)
+                cell_down_right_right = sheet.getCellByPosition(col_idx + 2, row_idx + 1)
 
                 cell_left.String = "Lavori"
                 cell_left.HoriJustify = 2
@@ -834,6 +839,16 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_right.String = "Sicurezza"
                 cell_right.HoriJustify = 2
                 cell_right.VertJustify = 2
+                cell_right_right.String = "%"
+                cell_right_right.HoriJustify = 2
+                cell_right_right.VertJustify = 2
+                cell_right_2.String = "Ribasso"
+                cell_right_2.HoriJustify = 2
+                cell_right_2.VertJustify = 2
+                cell_right_3.String = "Totale netto"
+                cell_right_3.HoriJustify = 2
+                cell_right_3.VertJustify = 2
+
 
                 cell_down.Formula = self.formula_ordinarie
                 cell_down.NumberFormat = 5
@@ -846,6 +861,49 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_down_right.CharWeight = 150                
                 cell_down_right.CellBackColor = COLORE_ARANCIONE
                 cell_down_right.VertJustify = 2
+
+                # Valore del ribasso da S2 a destra del risultato della Sicurezza
+                try:
+                    oS2 = doc.getSheets().getByName('S2')
+                    import SheetUtils
+                    res_rib = SheetUtils.uFindString("Ribasso:", oS2)
+                    if res_rib:
+                        valore_rib = oS2.getCellByPosition(2, res_rib[1]).Value
+                        cell_down_right_right.Value = valore_rib
+                        import LeenoFormat
+                        cell_down_right_right.NumberFormat = LeenoFormat.getNumFormat('0,000%')
+                        cell_down_right_right.CharWeight = 150
+                        cell_down_right_right.CellBackColor = COLORE_VIOLA
+                        cell_down_right_right.VertJustify = 2
+
+                        # Formula a destra del ribasso (= AO * AM)
+                        cell_result = sheet.getCellByPosition(col_idx + 3, row_idx + 1)
+                        from LeenoContab import _col_letter
+                        col_ao = _col_letter(col_idx + 2)
+                        col_am = _col_letter(col_idx)
+                        calc_row = row_idx + 2
+                        cell_result.Formula = f"=-{col_ao}{calc_row}*{col_am}{calc_row}"
+                        cell_result.NumberFormat = 5  # formato valuta rosso
+                        cell_result.CharWeight = 150
+                        cell_result.CellBackColor = COLORE_VIOLA
+                        cell_result.VertJustify = 2
+                        # Formula a destra del risultato della Sicurezza (=AP2+AN2+AM2)
+                        cell_result = sheet.getCellByPosition(col_idx + 4, row_idx + 1)
+                        from LeenoContab import _col_letter
+                        col_ap = _col_letter(col_idx + 3)
+                        col_an = _col_letter(col_idx + 1)
+                        col_am = _col_letter(col_idx)
+                        calc_row = row_idx + 2
+                        cell_result.Formula = f"={col_ap}{calc_row}+{col_an}{calc_row}+{col_am}{calc_row}"
+                        cell_result.NumberFormat = 5  # formato valuta
+                        cell_result.CharWeight = 150
+                        cell_result.VertJustify = 2
+                        cell_result.CellBackColor = COLORE_VERDE_SPUNTA
+
+                except Exception as e:
+                    # pyrefly: ignore [missing-import]
+                    import DLG
+                    DLG.chi(f"Errore nel recupero del ribasso da S2: {e}")
 
                 cell_left.CellBackColor = self.color_ordinarie
                 cell_right.CellBackColor = self.color_vds

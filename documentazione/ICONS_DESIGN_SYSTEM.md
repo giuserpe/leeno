@@ -560,3 +560,91 @@ Prima della consegna, Jules verifica l'intero set (non icona per icona) risponde
 5. Scansionando l'intero set in sequenza (come una sprite sheet), le icone appartenenti alla stessa famiglia semantica sono immediatamente riconoscibili come "parenti" tra loro?
 
 Se la risposta 1 o 2 è NO, il problema è quasi sempre che le primitive sono state ridisegnate a mano ogni volta invece di essere riusate come da regola 13.2 — tornare a quel passaggio prima di procedere oltre.
+
+---
+
+## 14. Stato dell'Implementazione e Ripulitura Completa (v2.2 - Sincronizzata)
+
+Nel corso del ciclo di sviluppo dell'estensione LeenO (Luglio 2026), l'intero sistema di icone è stato aggiornato, normalizzato e allineato con le specifiche del Design System descritte in questo documento.
+
+### 14.1 Riepilogo dell'Esecuzione
+
+1. **Rinominazione dei File Legacy**:
+   - Tutti i 31 file SVG originariamente denominati con codici numerici (`imageNN.svg`) o nomi gergali/obsoleti (`Caschetto.svg`, `Corta.svg`, etc.) sono stati ridenominati nei rispettivi nomi semantici snake_case (es. `duplica_sicurezza.svg`, `voce_breve.svg`).
+2. **Sincronizzazione ed Allineamento delle Cartelle dei Temi**:
+   - Entrambe le directory `icons/svg/` (Tema Chiaro) e `icons/scuro/` (Tema Scuro) contengono ora **esattamente gli stessi 62 file SVG**, senza alcuna sfasatura o mancanza.
+   - Per ciascuna icona è stato garantito il perfetto coordinamento visuale: le icone in `icons/svg/` usano come colore primario lo Scuro (`#1A2010`), mentre in `icons/scuro/` usano il colore di Sfondo chiaro (`#F0F4E0` o `#ffffff`), mantenendo inalterati e brillanti i colori di accento semantici (es. `#3B82F6` per azioni info, `#FF4D2E` per eliminazioni).
+3. **Aggiornamento di `Addons.xcu`**:
+   - Tutte le referenze nel file di configurazione dell'interfaccia dell'addon (`Addons.xcu`) sono state aggiornate per puntare ai nuovi nomi semantici e puliti delle icone (es. `%origin%/icons/scelta_viste` in sostituzione di `%origin%/icons/image18`).
+4. **Rigenerazione Automatica e Pulizia dei File BMP**:
+   - Tutti i file `.bmp` obsoleti/legacy e i duplicati derivanti da vecchie operazioni di packaging (es. file del tipo `_16_26h.bmp` o con vecchi nomi) sono stati completamente eliminati dalla cartella principale `src/Ultimus.oxt/icons/`.
+   - La cartella principale `icons/` è stata ripopolata a partire dal set sincronizzato `icons/svg/` copiando ciascun SVG nei 4 suffissi compatibili standard richiesti da LibreOffice (`_16.bmp`, `_16h.bmp`, `_26.bmp`, `_26h.bmp`).
+
+### 14.2 Elenco Completo delle Icone Sincronizzate (62 Asset)
+
+| Nome Icona | Primitiva o Categoria | Descrizione Funzionale |
+| :--- | :--- | :--- |
+| `leeno` | Principale | Dashboard / Menù Principale LeenO |
+| `manuale` | Principale | Manuale d'Uso (PDF) con badge 'i' |
+| `teleg` | Principale | Link al Canale Telegram di LeenO |
+| `supcat` | WBS | Inserimento SuperCategoria (Livello I) |
+| `cat` | WBS | Inserimento Categoria (Livello II) |
+| `subcat` | WBS | Inserimento SottoCategoria (Livello III) |
+| `struttura_on` | WBS | Attiva Albero di Struttura |
+| `struttura_off` | WBS | Disattiva/Elimina Albero di Struttura |
+| `rinumCap` | WBS | Rinumerazione Voci e Categorie |
+| `nuova_voce` | Voci | Inserimento rigo di Nuova Voce |
+| `voce_breve` | Voci | Attiva/Disattiva Descrizione Abbreviata |
+| `vedivoce` | Voci | Visualizza Voce Precedente / Referenziata |
+| `pesca` | Voci | Cattura/Eredita Codice |
+| `invia_voce_ep` | Voci | Invia Voci Selezionate all'Elenco Prezzi |
+| `aggiungi_misura` | Voci | Aggiunge un rigo di calcolo/misura |
+| `sposta_voce` | Voci | Sposta voce verticalmente (Su/Giù) |
+| `analisi_a_prezzo` | Elenco Prezzi | Crea Nuovo Prezzo dall'Analisi |
+| `utili_maggiorazioni` | Elenco Prezzi | Configura % Spese Generali e Utili |
+| `elimina_doppioni` | Elenco Prezzi | Rimuove codici duplicati in Elenco Prezzi |
+| `riordina` | Elenco Prezzi | Riordina l'Elenco Prezzi alfabeticamente |
+| `parz` | Contabilità | Inserisce rigo Subtotale Parziale |
+| `inverti_segno` | Contabilità | Cambia segno della quantità (+/-) |
+| `azzera` | Contabilità | Azzera le quantità delle voci |
+| `partita_provvisoria_piu` | Contabilità | Inserimento partita contabile provvisoria |
+| `partita_provvisoria_meno`| Contabilità | Detrazione partita contabile provvisoria |
+| `strutt_voci_zero` | Contabilità | Nasconde le voci con quantità pari a zero |
+| `elimina_azzerate` | Contabilità | Elimina voci di computo con quantità zero |
+| `elimina_vuote` | Contabilità | Elimina righe vuote nel foglio attivo |
+| `scelta_viste` | Viste | Selezione Layout Viste (Computo/Stampa) |
+| `adattaH` | Viste | Adatta altezza righe al testo |
+| `mostra_griglia` | Viste | Attiva/Disattiva griglia del foglio |
+| `copertine` | Viste | Visualizzazione/Gestione Copertine |
+| `colore_tematico` | Design System | Cambia colore tema da cella attiva |
+| `riepilogo` | Reporting | Firme in calce e riepilogo finale |
+| `riepilogo_quantita` | Reporting | Riepilogo quantitativo materiali |
+| `riepilogo_a2` | Reporting | Costi e Importi Computo/Variante/Contab |
+| `anteprima_stampa` | Reporting | Configura layout per anteprima di stampa |
+| `riga_rossa` | Reporting | Inserisce barra rossa di fine computo |
+| `config` | Utility | Preferenze e opzioni dell'estensione |
+| `stringhe_numeri` | Utility | Converte testo in numeri |
+| `sproteggi_tutto` | Utility | Sblocca/Sprotegge tutti i fogli |
+| `importa_stili` | Utility | Importa Stili da modello esterno |
+| `numeri_lettere` | Utility | Converte cifre in lettere (es. 100 -> cento) |
+| `python_debug` | Sviluppo | Shell di debug Python |
+| `refresh` | Sviluppo | Ricarica a caldo le configurazioni/addons |
+| `importa_dat` | Sviluppo | Importazione legacy di file DAT |
+| `importa_xml` | Nuova (v2.1) | Importazione listini in formato XML |
+| `esporta_gantt` | Nuova (v2.1) | Esportazione CSV per GanttProject |
+| `documento_bollo` | Nuova (v2.1) | Formattazione per Documento Uso Bollo |
+| `unisci_fogli` | Nuova (v2.1) | Unisce tutti i fogli del file attivo |
+| `somma_colore` | Nuova (v2.1) | Calcola totali basati sul colore di cella |
+| `menu_utility` | Extra | Icona del sottomenu Utility in Addons |
+| `nuovo_documento` | Extra | Icona per sottomenu 'Nuovo...' in Addons |
+| `cerca_errori` | Extra | Ricerca errori di computo/formule |
+| `duplica_sicurezza` | Extra | Duplica voce corrente in Sicurezza |
+| `gestione_decimali` | Extra | Impostazione arrotondamenti e decimali |
+| `elimina_righe` | Extra | Elimina le righe attive/selezionate |
+| `elimina_voce` | Extra | Elimina voce da elenco |
+| `trova_voce` | Extra | Cerca voce in Elenco Prezzi / Analisi |
+| `filtra_codice` | Extra | Filtra codice della voce corrente |
+| `ricicla` | Extra | Ricicla voce di computo |
+| `evidenzia` | Extra | Evidenzia voci in Elenco Prezzi |
+
+Tutte le icone ereditano e rispettano i vincoli di geometricità e contrasto definiti nell'Addendum v2.1.

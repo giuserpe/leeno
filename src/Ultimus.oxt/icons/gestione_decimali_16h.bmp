@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg2"
    sodipodi:docname="gestione_decimali.svg"
@@ -23,8 +20,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="23.776466"
-     inkscape:cx="11.566059"
-     inkscape:cy="11.671205"
+     inkscape:cx="9.7575478"
+     inkscape:cy="10.535628"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -32,32 +29,32 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <text
-     x="4.6274452"
-     y="13.018561"
+     x="5.1728668"
+     y="13.049484"
      font-family="Arial, sans-serif"
-     font-size="11.9063px"
+     font-size="11.5444px"
      font-weight="800"
-     fill="#f0f4e0"
+     fill="#1a2010"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text1"
-     style="stroke-width:1.19063">0</text>
+     style="stroke-width:1.15444">0</text>
   <circle
-     cx="8.9414196"
-     cy="16.947655"
-     r="1.3096983"
+     cx="9.2687645"
+     cy="16.344139"
+     r="1.2698822"
      fill="#808080"
      id="circle1"
-     style="stroke-width:1.19063" />
+     style="stroke-width:1.15444" />
   <text
-     x="16.533794"
-     y="13.018561"
+     x="16.717251"
+     y="13.049484"
      font-family="Arial, sans-serif"
-     font-size="11.9063px"
+     font-size="11.5444px"
      font-weight="800"
-     fill="#f0f4e0"
+     fill="#1a2010"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text2"
-     style="stroke-width:1.19063">00</text>
+     style="stroke-width:1.15444">00</text>
 </svg>

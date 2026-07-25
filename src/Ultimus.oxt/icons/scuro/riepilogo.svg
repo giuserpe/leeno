@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg4"
    sodipodi:docname="riepilogo.svg"
@@ -23,8 +20,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="11.888233"
-     inkscape:cx="38.609607"
-     inkscape:cy="9.5472559"
+     inkscape:cx="11.608117"
+     inkscape:cy="20.566555"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -32,56 +29,64 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
   <g
-     id="g4"
-     transform="translate(-21.303345,0.82498201)">
+     id="g5"
+     transform="matrix(1.1984139,0,0,1.0904261,-2.3809668,0.62908447)">
     <rect
-       x="25.903345"
-       y="5.5470619"
+       x="4.5999999"
+       y="4.8000002"
        width="14.8"
        height="1.6"
        rx="0.40000001"
-       fill="#808080"
-       id="rect1-8" />
+       fill="#7F7F7F"
+       id="rect1" />
     <rect
-       x="25.903345"
-       y="2.802974"
+       x="4.5999999"
+       y="2.0559123"
        width="14.8"
        height="1.6"
        rx="0.40000001"
-       fill="#808080"
+       fill="#7F7F7F"
        id="rect1-9" />
     <rect
-       x="25.903345"
-       y="8.4470615"
+       x="4.5999999"
+       y="7.6999998"
        width="14.8"
        height="1.6"
        rx="0.40000001"
-       fill="#808080"
-       id="rect2-8" />
+       fill="#7F7F7F"
+       id="rect2" />
     <rect
-       x="25.903345"
-       y="11.347062"
+       x="4.5999999"
+       y="10.6"
        width="14.8"
        height="2.8"
        rx="0.5"
        fill="#3b82f6"
-       id="rect3-2" />
+       id="rect3" />
     <path
-       d="m 26.082762,17.147062 q 2.452875,-2.2 4.767709,0 2.314834,2.2 4.90575,0 2.590915,-2.2 4.767709,0 v 1.3 q -2.452875,-2.2 -4.767709,0 -2.314834,2.2 -4.90575,0 -2.590915,-2.2 -4.767709,0 z"
-       fill="#1a2010"
-       id="path3-4"
-       style="fill:#f0f4e0;fill-opacity:1;stroke-width:1.03046" />
-    <polygon
-       id="polygon1943"
-       style="fill:#1a2010;fill-opacity:1;fill-rule:evenodd"
-       points="15.209,268.09 106.38,142.98 126.08,157.08 34.88,282.23 8.9034,297 "
-       transform="matrix(0.07721783,0,0,0.07721783,28.034985,-5.9971916)"
-       class="fil0" />
-    <polygon
-       id="polygon1945"
-       style="fill:#f0f4e0;fill-opacity:1;fill-rule:evenodd"
-       points="17.073,268.93 106.83,145.76 123.27,157.54 33.518,280.71 11.813,293.05 "
-       transform="matrix(0.07721783,0,0,0.07721783,28.034985,-5.9971916)"
-       class="fil1" />
+       d="m 4.779416,16.4 q 2.4528748,-2.2 4.7677091,0 2.3148339,2.2 4.9057499,0 2.590915,-2.2 4.767709,0 v 1.3 q -2.452875,-2.2 -4.767709,0 -2.314834,2.2 -4.9057499,0 -2.5909154,-2.2 -4.7677091,0 z"
+       fill="#E9EFDF"
+       id="path3"
+       style="stroke-width:1.03046" />
+  </g>
+  <g
+     id="g6"
+     transform="translate(-22.333008,-4.8787739)">
+    <g
+       id="g1"
+       transform="matrix(1.1909641,0,0,1.1909641,4.0710149,-2.3707896)">
+      <polygon
+         id="polygon1943"
+         style="fill:#000000;fill-rule:evenodd"
+         points="106.38,142.98 126.08,157.08 34.88,282.23 8.9034,297 15.209,268.09 "
+         transform="matrix(0.07721783,0,0,0.07721783,21.325902,-0.9663696)"
+         class="fil0" />
+      <polygon
+         id="polygon1945"
+         style="fill:#E9EFDF;fill-opacity:1;fill-rule:evenodd"
+         points="106.83,145.76 123.27,157.54 33.518,280.71 11.813,293.05 17.073,268.93 "
+         transform="matrix(0.07721783,0,0,0.07721783,21.325902,-0.9663696)"
+         class="fil1" />
+    </g>
   </g>
 </svg>

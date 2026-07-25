@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
+   width="32"
+   height="32"
    viewBox="0 0 24 24"
-   width="24"
-   height="24"
    version="1.1"
    id="svg4"
    sodipodi:docname="rinumCap.svg"
@@ -22,71 +22,74 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="16.8125"
-     inkscape:cx="11.717472"
-     inkscape:cy="16.089219"
+     inkscape:zoom="4.203125"
+     inkscape:cx="23.315985"
+     inkscape:cy="44.847584"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g4" />
-  <rect
-     x="2.2"
-     y="5.6"
-     width="19.6"
-     height="3.0"
-     rx="0.7"
-     fill="#808080"
-     id="rect1" />
-  <rect
-     x="2.2"
-     y="10.6"
-     width="17.0"
-     height="3.0"
-     rx="0.7"
-     fill="#808080"
-     id="rect2" />
-  <rect
-     x="2.2"
-     y="15.6"
-     width="14.4"
-     height="3.0"
-     rx="0.7"
-     fill="#808080"
-     id="rect3" />
+     inkscape:current-layer="svg4" />
   <g
-     id="g4"
-     transform="translate(5.5,5.5)">
-    <g
-       id="g1"
-       transform="translate(5.5)">
-      <circle
-         cx="6.5"
-         cy="12"
-         r="6.5"
-         fill="#1a2010"
-         id="circle3"
-         style="fill:#f0f4e0;fill-opacity:1" />
-      <circle
-         cx="6.5"
-         cy="12"
-         r="5.5999999"
-         fill="#f0f4e0"
-         id="circle4"
-         style="fill:#1a2010;fill-opacity:1" />
-      <text
-         x="6.2537918"
-         y="13.444995"
-         font-family="Arial, sans-serif"
-         font-size="9.57616px"
-         font-weight="800"
-         fill="#3b82f6"
-         text-anchor="middle"
-         dominant-baseline="middle"
-         id="text4"
-         transform="scale(1.041706,0.95996376)"
-         style="stroke-width:1.40827">#</text>
-    </g>
+     id="g2"
+     transform="translate(2.1999998)">
+    <rect
+       x="0"
+       y="5.0999999"
+       width="19.6"
+       height="3"
+       rx="0.60000002"
+       fill="#E9EFDF"
+       id="rect1"
+       style="fill:#1e3a8a;fill-opacity:1" />
+    <rect
+       x="0"
+       y="10.499999"
+       width="16.4"
+       height="3"
+       rx="0.60000002"
+       fill="#E9EFDF"
+       id="rect2"
+       style="fill:#3b82f6;fill-opacity:1" />
+    <rect
+       x="0"
+       y="15.9"
+       width="13.2"
+       height="3"
+       rx="0.60000002"
+       fill="#E9EFDF"
+       id="rect3"
+       style="fill:#93c5fd;fill-opacity:1" />
+  </g>
+  <g
+     id="g1"
+     transform="translate(-0.37130949,-0.41336788)">
+    <circle
+       cx="17.5"
+       cy="17.5"
+       r="6.5"
+       fill="#E9EFDF"
+       id="circle3"
+       style="fill:#E9EFDF;fill-opacity:1" />
+    <circle
+       cx="17.5"
+       cy="17.5"
+       r="5.5999999"
+       fill="#1B1F0B"
+       id="circle4-2"
+       style="fill:#1B1F0B;fill-opacity:1" />
+    <text
+       x="16.813393"
+       y="19.174377"
+       font-family="Arial, sans-serif"
+       font-size="9.57616px"
+       font-weight="800"
+       fill="#3b82f6"
+       text-anchor="middle"
+       dominant-baseline="middle"
+       id="text4"
+       transform="scale(1.041706,0.95996376)"
+       style="fill:#E9EFDF;fill-opacity:1;stroke-width:1.40827">#</text>
   </g>
 </svg>

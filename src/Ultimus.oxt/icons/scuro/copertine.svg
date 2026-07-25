@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg6"
    sodipodi:docname="copertine.svg"
@@ -22,9 +19,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="33.625"
-     inkscape:cx="11.98513"
-     inkscape:cy="12"
+     inkscape:zoom="23.776466"
+     inkscape:cx="14.215738"
+     inkscape:cy="13.816183"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -33,43 +30,43 @@
      inkscape:current-layer="svg6" />
   <path
      d="M4.00,2.00 L18.00,2.00 L18.00,22.00 L4.00,22.00 Z M5.60,3.60 L16.40,3.60 L16.40,20.40 L5.60,20.40 Z"
-     fill="#F0F4E0"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path1" />
   <circle
-     cx="7.394052"
-     cy="5.4107809"
-     r="1.3"
-     fill="#f0f4e0"
-     id="circle1" />
+     cx="7.4438396"
+     cy="5.5841169"
+     fill="#E9EFDF"
+     id="circle1"
+     r="1.3" />
   <circle
-     cx="7.394052"
-     cy="11.910781"
-     r="1.3"
-     fill="#f0f4e0"
-     id="circle2" />
+     cx="7.4438396"
+     cy="12.084117"
+     fill="#E9EFDF"
+     id="circle2"
+     r="1.3" />
   <circle
-     cx="7.394052"
-     cy="18.41078"
-     r="1.3"
-     fill="#f0f4e0"
-     id="circle3" />
+     cx="7.4438396"
+     cy="18.584116"
+     fill="#E9EFDF"
+     id="circle3"
+     r="1.3" />
   <circle
-     cx="7.394052"
-     cy="5.4107809"
-     r="0.55000001"
-     fill="#20261a"
-     id="circle4" />
+     cx="7.4438396"
+     cy="5.5841169"
+     fill="#1B1F0B"
+     id="circle4"
+     r="0.55000001" />
   <circle
-     cx="7.394052"
-     cy="11.910781"
-     r="0.55000001"
-     fill="#20261a"
-     id="circle5" />
+     cx="7.4438396"
+     cy="12.084117"
+     fill="#1B1F0B"
+     id="circle5"
+     r="0.55000001" />
   <circle
-     cx="7.394052"
-     cy="18.41078"
-     r="0.55000001"
-     fill="#20261a"
-     id="circle6" />
+     cx="7.4438396"
+     cy="18.584116"
+     fill="#1B1F0B"
+     id="circle6"
+     r="0.55000001" />
 </svg>

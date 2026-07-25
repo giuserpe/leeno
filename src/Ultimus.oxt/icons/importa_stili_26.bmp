@@ -5,7 +5,7 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg4"
-   sodipodi:docname="sfera_gialla.svg"
+   sodipodi:docname="importa_stili.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,7 +24,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="12.609375"
      inkscape:cx="24.307311"
-     inkscape:cy="22.245353"
+     inkscape:cy="22.166047"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -41,7 +41,7 @@
      stroke-linecap="round"
      stroke-linejoin="round"
      id="circle4"
-     style="stroke:#ff4d2e;stroke-opacity:1" />
+     style="stroke:#ff4d2e;stroke-opacity:1;fill:#ff4d2e;fill-opacity:1" />
   <circle
      cx="16"
      cy="8.5"
@@ -52,7 +52,7 @@
      stroke-linecap="round"
      stroke-linejoin="round"
      id="circle2"
-     style="fill:#000000;fill-opacity:0;fill-rule:evenodd;stroke-width:1.70025;stroke-dasharray:none;stroke:#3b82f6;stroke-opacity:1" />
+     style="fill:#3b82f6;fill-opacity:1;fill-rule:evenodd;stroke-width:1.70025;stroke-dasharray:none;stroke:#3b82f6;stroke-opacity:1" />
   <circle
      cx="8.5"
      cy="16"
@@ -63,15 +63,16 @@
      stroke-linecap="round"
      stroke-linejoin="round"
      id="circle3"
-     style="stroke:#f4b400;stroke-opacity:1" />
+     style="stroke:#f4b400;stroke-opacity:1;fill:#f4b400;fill-opacity:1" />
   <circle
      cx="8.5"
      cy="8.5"
-     r="3.6"
-     stroke="#5D7400"
+     r="3.5999999"
+     stroke="#8fb200"
      stroke-width="1.7"
      fill="none"
      stroke-linecap="round"
      stroke-linejoin="round"
-     id="circle1" />
+     id="circle1"
+     style="fill:#8fb200;fill-opacity:1" />
 </svg>

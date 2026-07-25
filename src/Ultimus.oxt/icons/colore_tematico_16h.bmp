@@ -59,16 +59,16 @@
        cx="19.200001"
        cy="4.5999999"
        r="2.3"
-       fill="#5D7400"
+       fill="#8fb200"
        id="circle2" />
     <path
        d="m 17,5.4 h 4.4 l -2.2,4.2 z"
-       fill="#5D7400"
+       fill="#8fb200"
        fill-rule="evenodd"
        id="path3" />
   </g>
   <path
-     style="opacity:0.78;fill:#5d7400;fill-rule:evenodd;stroke:#5d7400;stroke-width:0.13484;paint-order:markers fill stroke;fill-opacity:1;stroke-opacity:1"
+     style="opacity:0.78;fill:#8fb200;fill-rule:evenodd;stroke:#8fb200;stroke-width:0.13484;paint-order:markers fill stroke;fill-opacity:1;stroke-opacity:1"
      d="m 16.206299,21.739359 c -2.697851,-1.635918 -4.905184,-3.001472 -4.905184,-3.034564 0,-0.03309 0.373876,-0.47454 0.830836,-0.980995 l 0.830836,-0.920826 h 6.90917 6.909169 l 0.338105,0.449213 c 0.185958,0.247068 0.329721,0.482785 0.319474,0.523816 -0.02046,0.08192 -6.240021,6.937752 -6.293881,6.937752 -0.01834,0 -2.240673,-1.338478 -4.938525,-2.974396 z"
      id="path2"
      transform="scale(0.75)" />

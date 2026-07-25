@@ -2,6 +2,6 @@
 
 <path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M14 3.5V8h4.5" stroke="#1a2010" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12 12v5.5M9.3 14.8h5.5" stroke="#5D7400" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 12v5.5M9.3 14.8h5.5" stroke="#8fb200" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
 </svg>

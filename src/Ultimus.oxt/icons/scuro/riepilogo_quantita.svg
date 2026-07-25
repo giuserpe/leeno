@@ -1,3 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-<path d="M3.00,1.00 L12.50,1.00 L18.00,6.50 L18.00,23.00 L3.00,23.00 Z M4.60,2.60 L12.50,2.60 L16.40,6.50 L16.40,21.40 L4.60,21.40 Z" fill="#F0F4E0" fill-rule="evenodd"/><path d="M12.50,1.00 L18.00,6.50 L12.50,6.50 Z" fill="#F0F4E0" fill-rule="evenodd"/><rect x="6.4" y="15.0" width="2.6" height="3.0" rx="0.4" fill="#3B82F6"/><rect x="9.8" y="12.6" width="2.6" height="5.4" rx="0.4" fill="#F0F4E0"/><rect x="13.2" y="14.0" width="2.6" height="4.0" rx="0.4" fill="#3B82F6"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32" height="32" viewBox="0 0 24 24"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="riepilogo_quantita.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="11.888233"
+     inkscape:cx="0.58881754"
+     inkscape:cy="3.1543797"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <g
+     id="g4"
+     transform="translate(1.5)">
+    <path
+       d="m 3,1 h 9.5 L 18,6.5 V 23 H 3 Z m 1.6,1.6 h 7.9 l 3.9,3.9 V 21.4 H 4.6 Z"
+       fill="#E9EFDF"
+       fill-rule="evenodd"
+       id="path1" />
+    <path
+       d="M 12.5,1 18,6.5 h -5.5 z"
+       fill="#E9EFDF"
+       fill-rule="evenodd"
+       id="path2" />
+    <g
+       id="g5"
+       transform="translate(-0.5999999)">
+      <rect
+         x="6.4000001"
+         y="14.021892"
+         width="2.5999999"
+         height="3.9781084"
+         rx="0.40000001"
+         fill="#3b82f6"
+         id="rect2"
+         style="stroke-width:1.15154" />
+      <rect
+         x="9.8000002"
+         y="8.9122677"
+         width="2.5999999"
+         height="9.0877323"
+         rx="0.40000001"
+         fill="#E9EFDF"
+         id="rect3"
+         style="stroke-width:1.29727" />
+      <rect
+         x="13.2"
+         y="11.268346"
+         width="2.5999999"
+         height="6.7316537"
+         rx="0.40000001"
+         fill="#3b82f6"
+         id="rect4"
+         style="stroke-width:1.29727" />
+    </g>
+  </g>
 </svg>

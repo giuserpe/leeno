@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg4"
    sodipodi:docname="manuale.svg"
@@ -22,9 +19,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="11.888233"
-     inkscape:cx="-2.2711534"
-     inkscape:cy="14.257796"
+     inkscape:zoom="33.625"
+     inkscape:cx="11.98513"
+     inkscape:cy="14.379182"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -33,40 +30,41 @@
      inkscape:current-layer="svg4" />
   <path
      d="M3.50,1.00 L13.00,1.00 L18.50,6.50 L18.50,23.00 L3.50,23.00 Z M5.10,2.60 L13.00,2.60 L16.90,6.50 L16.90,21.40 L5.10,21.40 Z"
-     fill="#F0F4E0"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path1" />
   <path
      d="M13.00,1.00 L18.50,6.50 L13.00,6.50 Z"
-     fill="#F0F4E0"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path2" />
   <g
-     id="g4"
-     transform="translate(5.5,5.5)">
+     id="g1"
+     transform="translate(-0.29739777,-0.26765799)">
     <circle
-       cx="12"
-       cy="12"
+       cx="17.5"
+       cy="17.5"
        r="6.5"
-       fill="#f0f4e0"
-       id="circle2-5" />
+       fill="#1B1F0B"
+       id="circle2-5"
+       style="fill:#E9EFDF;fill-opacity:1" />
     <circle
-       cx="12"
-       cy="12"
+       cx="17.5"
+       cy="17.5"
        r="5.5999999"
-       fill="#20261a"
+       fill="#DFE5D9"
        id="circle3-5"
        style="fill:#3b82f6;fill-opacity:1" />
     <text
-       x="11.997268"
-       y="13.103721"
+       x="17.497269"
+       y="18.603722"
        font-family="Arial, sans-serif"
        font-size="11.1902px"
        font-weight="900"
-       fill="#20261a"
+       fill="#DFE5D9"
        text-anchor="middle"
        dominant-baseline="middle"
        id="text4"
-       style="stroke-width:1.5986">i</text>
+       style="fill:#1B1F0B;fill-opacity:1;stroke-width:1.5986">i</text>
   </g>
 </svg>

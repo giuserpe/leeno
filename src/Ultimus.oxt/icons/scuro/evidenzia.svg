@@ -15,7 +15,7 @@
      id="defs4" />
   <sodipodi:namedview
      id="namedview4"
-     pagecolor="#1a2010"
+     pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="0.25"
      inkscape:showpageshadow="2"
@@ -37,31 +37,31 @@
        cx="9.4"
        cy="9.4"
        r="5.8"
-       fill="#f0f4e0"
+       fill="#E9EFDF"
        id="circle1" />
     <circle
        cx="9.4"
        cy="9.4"
        r="4.199999999999999"
-       fill="#1a2010"
+       fill="#1B1F0B"
        id="circle2" />
     <circle
        cx="9.4"
        cy="9.4"
        r="3.5999999999999996"
-       fill="#808080"
+       fill="#7F7F7F"
        id="circle3"
        style="fill:#aad400;fill-opacity:1" />
   </g>
   <path
      d="M12.83,14.46 L18.13,19.76 L19.76,18.13 L14.46,12.83 Z"
-     fill="#f0f4e0"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path3" />
   <circle
      cx="18.945941546018393"
      cy="18.945941546018393"
      r="1.058"
-     fill="#f0f4e0"
+     fill="#E9EFDF"
      id="circle4" />
 </svg>

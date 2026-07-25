@@ -1,3 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-<circle cx="12" cy="12" r="9.5" fill="#F0F4E0"/><circle cx="12" cy="12" r="8.1" fill="#20261A"/><path d="M5.50,12.20 L18.00,6.50 L14.80,18.00 L10.60,13.60 L8.30,15.20 L7.80,11.40 Z" fill="#3B82F6" fill-rule="evenodd"/>
+<svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="9.5" fill="#E9EFDF"/><circle cx="12" cy="12" r="8.1" fill="#1B1F0B"/><path d="M5.50,12.20 L18.00,6.50 L14.80,18.00 L10.60,13.60 L8.30,15.20 L7.80,11.40 Z" fill="#3B82F6" fill-rule="evenodd"/>
 </svg>

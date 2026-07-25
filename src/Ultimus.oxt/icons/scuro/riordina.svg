@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg2"
    sodipodi:docname="riordina.svg"
@@ -22,61 +19,61 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="23.776466"
-     inkscape:cx="11.061358"
-     inkscape:cy="15.792928"
+     inkscape:zoom="11.888233"
+     inkscape:cx="18.758045"
+     inkscape:cy="4.1637812"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g3" />
+     inkscape:current-layer="g5" />
   <g
-     id="g4"
-     transform="matrix(1.1589277,0,0,1.1589277,0.55178369,-1.9071324)">
+     id="g5"
+     transform="matrix(1.1589277,0,0,1.1589277,20.573943,3.3830231)">
     <g
        id="g3"
-       transform="translate(0,1.1616793)">
+       transform="translate(-17.276452,-3.4030192)">
       <g
-         id="g5">
-        <g
-           id="g2"
-           transform="translate(0,0.0283207)">
-          <rect
-             x="5"
-             y="3"
-             width="2"
-             height="12.9"
-             rx="0.76923078"
-             fill="#f0f4e0"
-             id="rect1" />
-          <path
-             d="M 3.13,15.4 6,18.62 8.88,15.4 Z"
-             fill="#f0f4e0"
-             fill-rule="evenodd"
-             id="path1" />
-        </g>
-        <text
-           x="13.947734"
-           y="7.4814129"
-           font-family="Arial, sans-serif"
-           font-size="7.5px"
-           font-weight="800"
-           fill="#aad400"
-           text-anchor="middle"
-           dominant-baseline="middle"
-           id="text1">A</text>
-        <text
-           x="13.962382"
-           y="15.674721"
-           font-family="Arial, sans-serif"
-           font-size="7.5px"
-           font-weight="800"
-           fill="#aad400"
-           text-anchor="middle"
-           dominant-baseline="middle"
-           id="text2">Z</text>
+         id="g2"
+         transform="translate(0,0.0283207)"
+         style="fill:#E9EFDF;fill-opacity:1">
+        <rect
+           x="5"
+           y="3"
+           width="2"
+           height="12.9"
+           rx="0.76923078"
+           fill="#1B1F0B"
+           id="rect1-6"
+           style="fill:#E9EFDF;fill-opacity:1" />
+        <path
+           d="M 3.13,15.4 6,18.62 8.88,15.4 Z"
+           fill="#1B1F0B"
+           fill-rule="evenodd"
+           id="path1-1"
+           style="fill:#E9EFDF;fill-opacity:1" />
       </g>
+      <text
+         x="13.947734"
+         y="7.4814129"
+         font-family="Arial, sans-serif"
+         font-size="7.5px"
+         font-weight="800"
+         fill="#8fb200"
+         text-anchor="middle"
+         dominant-baseline="middle"
+         id="text1-8">A</text>
+      <text
+         x="13.962382"
+         y="15.674721"
+         font-family="Arial, sans-serif"
+         font-size="7.5px"
+         font-weight="800"
+         fill="#8fb200"
+         text-anchor="middle"
+         dominant-baseline="middle"
+         id="text2-9">Z</text>
     </g>
   </g>
 </svg>

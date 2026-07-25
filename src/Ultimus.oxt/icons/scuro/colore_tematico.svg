@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
+   width="32"
+   height="32"
    viewBox="0 0 24 24"
-   width="24"
-   height="24"
    version="1.1"
    id="svg3"
    sodipodi:docname="colore_tematico.svg"
@@ -22,29 +22,23 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="22.627417"
-     inkscape:cx="11.866136"
-     inkscape:cy="12.639534"
-     inkscape:window-width="958"
-     inkscape:window-height="1000"
-     inkscape:window-x="1913"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0"
+     inkscape:zoom="16.8125"
+     inkscape:cx="16.654275"
+     inkscape:cy="18.052045"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg3" />
-  <path
-     d="m 26.855019,6.8973978 v -3.2 h 1.4 v 3.2 z m 0.5,0 v -2.6 h 0.4 v 2.6 z"
-     fill="#f0f4e0"
-     fill-rule="evenodd"
-     id="path2"
-     style="fill:#f0f4e0;fill-opacity:1" />
   <g
      id="g4"
-     transform="rotate(-47.715491,12.554036,10.0789)"
+     transform="rotate(-47.715491,12.934817,9.845515)"
      inkscape:transform-center-x="0.53531598"
      inkscape:transform-center-y="-0.11895911">
     <path
        d="m 5,8.5 h 14 l -2,11 H 7 Z m 1.76,0.8 h 10.48 l -1.68,8.6 H 8.44 Z"
-       fill="#1a2010"
+       fill="#E9EFDF"
        fill-rule="evenodd"
        id="path1" />
     <rect
@@ -53,28 +47,29 @@
        width="15.4"
        height="2"
        rx="0.69999999"
-       fill="#1a2010"
+       fill="#E9EFDF"
        id="rect1" />
   </g>
   <g
      id="g3"
-     transform="rotate(-161.81418,12.29966,12.740503)"
+     transform="rotate(-161.81418,12.464716,12.819389)"
      inkscape:transform-center-x="0.71562768"
      inkscape:transform-center-y="-2.1115276">
     <circle
        cx="19.200001"
        cy="4.5999999"
        r="2.3"
-       fill="#aad400"
+       fill="#8fb200"
        id="circle2" />
     <path
        d="m 17,5.4 h 4.4 l -2.2,4.2 z"
-       fill="#aad400"
+       fill="#8fb200"
        fill-rule="evenodd"
        id="path3" />
   </g>
   <path
-     style="fill:#f0f4e0;fill-opacity:1;stroke-width:0.0441942"
-     d="M 11.093305,17.562739 C 7.2802447,15.18274 6.3989308,14.649802 6.3435591,14.690529 c -0.1380454,0.101535 -0.3564578,0.18081 -0.4981497,0.18081 -0.1896147,0 -0.3613191,-0.09943 -0.6868923,-0.397747 C 4.8964258,14.233439 4.8925859,14.226431 4.8382867,13.88922 4.7909213,13.595069 4.7925704,13.534013 4.8502234,13.447278 4.9281951,13.329976 13.821243,3.5376537 14.224296,3.1252886 14.6923,2.6464723 14.938575,2.643736 15.469444,3.1114544 c 0.189292,0.1667739 0.372462,0.3572276 0.407044,0.4232303 0.09215,0.1758778 0.07905,0.4826609 -0.02801,0.6558903 l -0.09089,0.1470619 3.357584,4.3905264 c 3.280432,4.2896387 3.355807,4.3925937 3.280235,4.4805077 -0.167001,0.194276 -6.307977,6.95402 -6.459241,7.110078 l -0.1611,0.166206 z m 6.805474,-1.697031 c 1.257698,-1.385487 2.334496,-2.570394 2.392885,-2.633127 l 0.10616,-0.114058 -2.611581,-3.5098638 C 16.349873,7.6782343 15.159629,6.0933324 15.141256,6.0866546 15.10431,6.0732266 8.1162258,13.738089 8.0875175,13.82353 c -0.01707,0.0508 7.4350995,4.595601 7.4966845,4.571945 0.01532,-0.0059 1.056879,-1.144279 2.314577,-2.529767 z"
-     id="path12" />
+     style="opacity:0.78;fill:#8fb200;fill-rule:evenodd;stroke:#8fb200;stroke-width:0.13484;paint-order:markers fill stroke;fill-opacity:1;stroke-opacity:1"
+     d="m 16.206299,21.739359 c -2.697851,-1.635918 -4.905184,-3.001472 -4.905184,-3.034564 0,-0.03309 0.373876,-0.47454 0.830836,-0.980995 l 0.830836,-0.920826 h 6.90917 6.909169 l 0.338105,0.449213 c 0.185958,0.247068 0.329721,0.482785 0.319474,0.523816 -0.02046,0.08192 -6.240021,6.937752 -6.293881,6.937752 -0.01834,0 -2.240673,-1.338478 -4.938525,-2.974396 z"
+     id="path2"
+     transform="scale(0.75)" />
 </svg>

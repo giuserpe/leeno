@@ -50,7 +50,7 @@
        width="16.072001"
        height="2.2"
        rx="0.5"
-       fill="#5D7400"
+       fill="#8fb200"
        id="rect2-1"
        style="fill:#1a2010;fill-opacity:1" />
     <rect
@@ -131,7 +131,7 @@
                    width="6.5850115"
                    height="2.3213375"
                    rx="0.20485973"
-                   fill="#5D7400"
+                   fill="#8fb200"
                    id="rect2-8-7"
                    style="fill:#f0f4e0;fill-opacity:1;stroke-width:0.657508" />
                 <rect
@@ -140,7 +140,7 @@
                    width="6.2876139"
                    height="1.3078067"
                    rx="0.19560769"
-                   fill="#5D7400"
+                   fill="#8fb200"
                    id="rect2-8"
                    style="fill:#3b82f6;fill-opacity:1;stroke-width:0.482245" />
               </g>

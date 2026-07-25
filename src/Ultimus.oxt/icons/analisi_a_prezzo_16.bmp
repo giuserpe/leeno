@@ -34,7 +34,7 @@
     <g
        id="g5-4"
        transform="matrix(0.82569671,0,0,1,-20.303746,-1.2003937)"
-       style="fill:#5D7400;fill-opacity:1">
+       style="fill:#8fb200;fill-opacity:1">
       <rect
          x="28.291447"
          y="4.2053428"
@@ -43,16 +43,16 @@
          rx="0.5"
          fill="#1a2010"
          id="rect1-6-3"
-         style="fill:#5D7400;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
       <rect
          x="28.291447"
          y="8.6053429"
          width="16.072001"
          height="2.2"
          rx="0.5"
-         fill="#5D7400"
+         fill="#8fb200"
          id="rect2-1-1"
-         style="fill:#5D7400;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
       <rect
          x="28.291447"
          y="13.005342"
@@ -61,7 +61,7 @@
          rx="0.5"
          fill="#1a2010"
          id="rect3-8-2"
-         style="fill:#5D7400;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
       <rect
          x="28.368031"
          y="17.427509"
@@ -70,7 +70,7 @@
          rx="0.5"
          fill="#1a2010"
          id="rect3-8-2-9-3"
-         style="fill:#5D7400;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
     </g>
     <g
        id="g5"
@@ -91,7 +91,7 @@
          width="16.072001"
          height="2.2"
          rx="0.5"
-         fill="#5D7400"
+         fill="#8fb200"
          id="rect2-1"
          style="fill:#1a2010;fill-opacity:1" />
       <rect
@@ -142,12 +142,12 @@
            width="3.0725765"
            height="2.3044324"
            rx="0.88632017"
-           fill="#5D7400"
+           fill="#8fb200"
            id="rect3-6"
            style="stroke-width:1.28024" />
         <path
            d="m 27.557927,4.6312196 -4.224793,3.200601 4.224793,3.2006014 z"
-           fill="#5D7400"
+           fill="#8fb200"
            fill-rule="evenodd"
            id="path3-8"
            style="stroke-width:1.28024" />

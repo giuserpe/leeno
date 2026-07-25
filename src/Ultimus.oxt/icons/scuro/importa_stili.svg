@@ -1,3 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-<path d="M4.50,2.00 L16.50,2.00 L16.50,22.00 L4.50,22.00 Z M6.10,3.60 L14.90,3.60 L14.90,20.40 L6.10,20.40 Z" fill="#F0F4E0" fill-rule="evenodd"/><rect x="4.5" y="7.4" width="12" height="3.2" rx="0.5" fill="#AAD400"/><rect x="4.5" y="13.4" width="12" height="3.2" rx="0.5" fill="#5D7400"/><rect x="18.4" y="3.0" width="3.2" height="2.2" rx="0.96" fill="#808080"/><rect x="18.4" y="6.4" width="3.2" height="2.2" rx="0.96" fill="#808080"/><rect x="18.4" y="9.8" width="3.2" height="2.2" rx="0.96" fill="#808080"/><rect x="18.4" y="13.200000000000001" width="3.2" height="2.2" rx="0.96" fill="#808080"/><rect x="18.4" y="16.6" width="3.2" height="2.2" rx="0.96" fill="#808080"/><rect x="18.4" y="20.0" width="3.2" height="1.0" rx="0.96" fill="#808080"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="importa_stili.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="12.609375"
+     inkscape:cx="24.307311"
+     inkscape:cy="22.166047"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <circle
+     cx="16"
+     cy="16"
+     r="3.6"
+     stroke="#E9EFDF"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle4"
+     style="stroke:#ff4d2e;stroke-opacity:1;fill:#ff4d2e;fill-opacity:1" />
+  <circle
+     cx="16"
+     cy="8.5"
+     r="3.6"
+     stroke="#E9EFDF"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle2"
+     style="fill:#3b82f6;fill-opacity:1;fill-rule:evenodd;stroke-width:1.70025;stroke-dasharray:none;stroke:#3b82f6;stroke-opacity:1" />
+  <circle
+     cx="8.5"
+     cy="16"
+     r="3.6"
+     stroke="#E9EFDF"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle3"
+     style="stroke:#f4b400;stroke-opacity:1;fill:#f4b400;fill-opacity:1" />
+  <circle
+     cx="8.5"
+     cy="8.5"
+     r="3.5999999"
+     stroke="#8fb200"
+     stroke-width="1.7"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="circle1"
+     style="fill:#8fb200;fill-opacity:1" />
 </svg>

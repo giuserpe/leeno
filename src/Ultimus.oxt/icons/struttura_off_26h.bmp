@@ -5,7 +5,7 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg3"
-   sodipodi:docname="image9.svg"
+   sodipodi:docname="struttura_off.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,44 +23,48 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="5.9441165"
-     inkscape:cx="0.58881753"
+     inkscape:cx="0.50470074"
      inkscape:cy="19.767446"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg3" />
+     inkscape:current-layer="g6" />
   <g
      id="g6"
-     transform="translate(-2.3841858e-7,0.0999999)">
-    <rect
-       x="2.2"
-       y="5"
-       width="19.6"
-       height="3"
-       rx="0.60000002"
-       fill="#1A2010"
-       id="rect1"
-       style="fill:#1e3a8a;fill-opacity:1" />
-    <rect
-       x="5.4000001"
-       y="10.4"
-       width="16.4"
-       height="3"
-       rx="0.60000002"
-       fill="#1A2010"
-       id="rect2"
-       style="fill:#3b82f6;fill-opacity:1" />
-    <rect
-       x="8.6000004"
-       y="15.8"
-       width="13.2"
-       height="3"
-       rx="0.60000002"
-       fill="#1A2010"
-       id="rect3"
-       style="fill:#93c5fd;fill-opacity:1" />
+     transform="translate(21.8,0.0999999)">
+    <g
+       id="g1"
+       transform="translate(-21.8)">
+      <rect
+         x="2.2"
+         y="5"
+         width="19.6"
+         height="3"
+         rx="0.60000002"
+         fill="#1A2010"
+         id="rect1"
+         style="fill:#1e3a8a;fill-opacity:1" />
+      <rect
+         x="2.2"
+         y="10.4"
+         width="16.4"
+         height="3"
+         rx="0.60000002"
+         fill="#1A2010"
+         id="rect2"
+         style="fill:#3b82f6;fill-opacity:1" />
+      <rect
+         x="2.2"
+         y="15.8"
+         width="13.2"
+         height="3"
+         rx="0.60000002"
+         fill="#1A2010"
+         id="rect3"
+         style="fill:#93c5fd;fill-opacity:1" />
+    </g>
   </g>
   <g
      id="g5"

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg5"
    sodipodi:docname="duplica_sicurezza.svg"
@@ -23,75 +20,131 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="11.888233"
-     inkscape:cx="12.281052"
-     inkscape:cy="8.5378544"
+     inkscape:cx="37.978731"
+     inkscape:cy="4.247898"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg5" />
-  <rect
-     x="2.2"
-     y="2.6"
-     width="19.6"
-     height="2.6"
-     rx="0.5"
-     fill="#F0F4E0"
-     id="rect1" />
-  <rect
-     x="2.2"
-     y="7.6"
-     width="16.072"
-     height="2.6"
-     rx="0.5"
-     fill="#F0F4E0"
-     id="rect2" />
-  <rect
-     x="2.2"
-     y="11.0"
-     width="19.6"
-     height="2.6"
-     rx="0.5"
-     fill="#F4B400"
-     id="rect3" />
-  <rect
-     x="2.2"
-     y="16.0"
-     width="16.072"
-     height="2.6"
-     rx="0.5"
-     fill="#F4B400"
-     id="rect4" />
+  <g
+     id="g1"
+     transform="translate(30.609058,-4.3530671)">
+    <g
+       id="g8"
+       transform="translate(-31.056408,4.9950509)">
+      <g
+         id="g5-4"
+         transform="matrix(0.82569671,0,0,1,-20.303746,-1.2003937)"
+         style="fill:#E9EFDF;fill-opacity:1">
+        <rect
+           x="28.291447"
+           y="4.2053428"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect1-6-3"
+           style="fill:#E9EFDF;fill-opacity:1" />
+        <rect
+           x="28.291447"
+           y="8.6053429"
+           width="16.072001"
+           height="2.2"
+           rx="0.5"
+           fill="#8fb200"
+           id="rect2-1-1"
+           style="fill:#E9EFDF;fill-opacity:1" />
+        <rect
+           x="28.291447"
+           y="13.005342"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect3-8-2"
+           style="fill:#E9EFDF;fill-opacity:1" />
+        <rect
+           x="28.368031"
+           y="17.427509"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect3-8-2-9-3"
+           style="fill:#E9EFDF;fill-opacity:1" />
+      </g>
+      <g
+         id="g5"
+         transform="matrix(0.82569671,0,0,1,-17.768753,0.08357394)"
+         style="fill:#f4b400;fill-opacity:1">
+        <rect
+           x="28.291447"
+           y="4.2053428"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect1-6"
+           style="fill:#f4b400;fill-opacity:1" />
+        <rect
+           x="28.291447"
+           y="8.6053429"
+           width="16.072001"
+           height="2.2"
+           rx="0.5"
+           fill="#8fb200"
+           id="rect2-1"
+           style="fill:#f4b400;fill-opacity:1" />
+        <rect
+           x="28.291447"
+           y="13.005342"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect3-8"
+           style="fill:#f4b400;fill-opacity:1" />
+        <rect
+           x="28.368031"
+           y="17.427509"
+           width="19.6"
+           height="2.2"
+           rx="0.5"
+           fill="#E9EFDF"
+           id="rect3-8-2-9"
+           style="fill:#f4b400;fill-opacity:1" />
+      </g>
+    </g>
+  </g>
   <circle
-     cx="17.128252"
-     cy="17.039034"
+     cx="17.009293"
+     cy="17.020447"
      r="6.5"
-     fill="#1a2010"
-     id="circle3-1"
-     style="fill:#f0f4e0;fill-opacity:1" />
+     fill="#E9EFDF"
+     id="circle3" />
   <circle
-     cx="17.128252"
-     cy="17.039034"
+     cx="17.009293"
+     cy="17.020447"
      r="5.5999999"
-     fill="#f0f4e0"
-     id="circle4-9-7"
-     style="fill:#000000;fill-opacity:1" />
+     fill="#1B1F0B"
+     id="circle4-9" />
   <path
-     d="m 17.128253,11.624534 4.517715,8.602044 h -9.03543 z"
+     d="m 17.009293,11.605948 4.517715,8.602044 h -9.03543 z"
      fill="#f4b400"
      fill-rule="evenodd"
-     id="path5-8-1"
+     id="path5-8"
      style="stroke-width:1.31329" />
   <text
-     x="17.126595"
-     y="17.716534"
+     x="17.007635"
+     y="17.697947"
      font-family="Arial, sans-serif"
      font-size="6.79185px"
      font-weight="900"
-     fill="#1a2010"
+     fill="#E9EFDF"
      text-anchor="middle"
      dominant-baseline="middle"
-     id="text5-8-1"
-     style="fill:#000000;fill-opacity:1;stroke-width:1.35837">!</text>
+     id="text5-8"
+     style="stroke-width:1.35837">!</text>
 </svg>

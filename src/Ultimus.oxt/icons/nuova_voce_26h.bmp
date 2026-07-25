@@ -31,14 +31,14 @@
   <g
      id="g1"
      transform="translate(27.161708,-6.7110833)"
-     style="fill:#5D7400;fill-opacity:1">
+     style="fill:#8fb200;fill-opacity:1">
     <g
        id="g5-1"
        transform="translate(-53.291447,6.7946572)"
-       style="fill:#5D7400;fill-opacity:1">
+       style="fill:#8fb200;fill-opacity:1">
       <g
          id="g2"
-         style="fill:#5D7400;fill-opacity:1">
+         style="fill:#8fb200;fill-opacity:1">
         <rect
            x="28.291447"
            y="4.2053428"
@@ -47,16 +47,16 @@
            rx="0.5"
            fill="#1a2010"
            id="rect1-6"
-           style="fill:#5D7400;fill-opacity:1" />
+           style="fill:#8fb200;fill-opacity:1" />
         <rect
            x="28.291447"
            y="8.6053429"
            width="16.072001"
            height="2.2"
            rx="0.5"
-           fill="#5D7400"
+           fill="#8fb200"
            id="rect2-1"
-           style="fill:#5D7400;fill-opacity:1" />
+           style="fill:#8fb200;fill-opacity:1" />
         <rect
            x="28.291447"
            y="13.005342"
@@ -65,7 +65,7 @@
            rx="0.5"
            fill="#1a2010"
            id="rect3-8"
-           style="fill:#5D7400;fill-opacity:1" />
+           style="fill:#8fb200;fill-opacity:1" />
         <rect
            x="28.368031"
            y="17.427509"
@@ -74,7 +74,7 @@
            rx="0.5"
            fill="#1a2010"
            id="rect3-8-2-9"
-           style="fill:#5D7400;fill-opacity:1" />
+           style="fill:#8fb200;fill-opacity:1" />
       </g>
     </g>
   </g>
@@ -96,7 +96,7 @@
      width="7.800000000000001"
      height="3.224"
      rx="0.9672000000000001"
-     fill="#5D7400"
+     fill="#8fb200"
      id="rect4" />
   <rect
      x="15.688"
@@ -104,6 +104,6 @@
      width="3.224"
      height="7.800000000000001"
      rx="0.9672000000000001"
-     fill="#5D7400"
+     fill="#8fb200"
      id="rect5" />
 </svg>

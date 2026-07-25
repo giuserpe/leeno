@@ -27,7 +27,7 @@
      inkscape:cy="19.479554"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
@@ -51,7 +51,7 @@
          width="16.072001"
          height="2.2"
          rx="0.5"
-         fill="#5D7400"
+         fill="#8fb200"
          id="rect2-1"
          style="fill:#808080;fill-opacity:1" />
       <rect
@@ -71,19 +71,19 @@
          rx="0.5"
          fill="#1a2010"
          id="rect3-8-2-9"
-         style="fill:#5D7400;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
     </g>
   </g>
   <text
      xml:space="preserve"
-     style="font-size:23.0669px;writing-mode:lr-tb;direction:ltr;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
-     x="5.3427334"
-     y="17.601439"
+     style="font-size:27.0184px;writing-mode:lr-tb;direction:ltr;fill:#1a2010;fill-opacity:1;stroke-width:2.25153"
+     x="4.2889481"
+     y="20.845612"
      id="text1"
      inkscape:highlight-color="#000000"><tspan
        sodipodi:role="line"
        id="tspan1"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.0669px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
-       x="5.3427334"
-       y="17.601439">Σ</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.0184px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke-width:2.25153"
+       x="4.2889481"
+       y="20.845612">Σ</tspan></text>
 </svg>

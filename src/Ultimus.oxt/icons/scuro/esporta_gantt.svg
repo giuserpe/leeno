@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 24 24"
-   width="24"
-   height="24"
+<svg width="32" height="32" viewBox="0 0 24 24"
    version="1.1"
    id="svg6"
    sodipodi:docname="esporta_gantt.svg"
@@ -22,12 +19,12 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="33.625"
-     inkscape:cx="11.98513"
-     inkscape:cy="12"
+     inkscape:zoom="16.8125"
+     inkscape:cx="8.7434944"
+     inkscape:cy="19.003717"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg6" />
@@ -35,17 +32,18 @@
      x="2.5"
      y="2.2"
      width="1.4"
-     height="17.0"
-     rx="0.4"
-     fill="#808080"
-     id="rect1" />
+     height="18.665428"
+     rx="0.40000001"
+     fill="#7F7F7F"
+     id="rect1"
+     style="stroke-width:1.04784" />
   <rect
      x="2.5"
-     y="18.0"
+     y="19.903345"
      width="15.5"
      height="1.4"
-     rx="0.4"
-     fill="#808080"
+     rx="0.40000001"
+     fill="#7F7F7F"
      id="rect2" />
   <rect
      x="5.2"
@@ -53,7 +51,7 @@
      width="7.0"
      height="3.0"
      rx="0.7"
-     fill="#AAD400"
+     fill="#8fb200"
      id="rect3" />
   <rect
      x="5.2"
@@ -71,35 +69,51 @@
      rx="0.7"
      fill="#FF4D2E"
      id="rect5" />
-  <circle
-     cx="18.7"
-     cy="17.3"
-     r="5.2"
-     fill="#F0F4E0"
-     id="circle5" />
-  <circle
-     cx="18.7"
-     cy="17.3"
-     r="3.9000000000000004"
-     fill="#20261A"
-     id="circle6" />
   <g
-     id="g1"
-     transform="translate(0.34014903,0.22057977)">
-    <rect
-       x="15.589219"
-       y="16.4"
-       width="3.3516729"
-       height="1.8"
-       rx="0.9668287"
-       fill="#3b82f6"
-       id="rect6"
-       style="stroke-width:1.18175" />
-    <path
-       d="m 17.608178,13.942989 4.60855,3.416491 -4.60855,3.416491 z"
-       fill="#3b82f6"
-       fill-rule="evenodd"
-       id="path6"
-       style="stroke-width:1.38147" />
+     id="g3"
+     transform="rotate(-90,9.5,36.5)">
+    <g
+       id="g1-9"
+       transform="matrix(1.0710147,-1.0710147,1.0710147,1.0710147,-19.525796,37.749806)">
+      <g
+         id="g1"
+         transform="rotate(-90,32.042603,20.299586)">
+        <circle
+           cx="17.5"
+           cy="17.5"
+           r="6.5"
+           fill="#1B1F0B"
+           id="circle3-2"
+           style="fill:#E9EFDF;fill-opacity:1"
+           transform="matrix(0.466847,0.466847,-0.466847,0.466847,26.738943,-8.5078244)" />
+        <circle
+           cx="17.5"
+           cy="17.5"
+           r="5.5999999"
+           fill="#DFE5D9"
+           id="circle4"
+           style="fill:#1B1F0B;fill-opacity:1"
+           transform="matrix(0.466847,0.466847,-0.466847,0.466847,26.738943,-8.5078244)" />
+        <g
+           id="g2"
+           style="fill:#3b82f6;fill-opacity:1">
+          <rect
+             x="26.917807"
+             y="6.6796036"
+             width="3.0725765"
+             height="2.3044324"
+             rx="0.88632017"
+             fill="#8fb200"
+             id="rect3-6"
+             style="fill:#3b82f6;fill-opacity:1;stroke-width:1.28024" />
+          <path
+             d="m 27.557927,4.6312196 -4.224793,3.200601 4.224793,3.2006014 z"
+             fill="#8fb200"
+             fill-rule="evenodd"
+             id="path3-8"
+             style="fill:#3b82f6;fill-opacity:1;stroke-width:1.28024" />
+        </g>
+      </g>
+    </g>
   </g>
 </svg>

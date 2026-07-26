@@ -268,7 +268,7 @@ def copiaRigaAnalisi(oSheet_or_row, lrow_or_num_righe=1):
                         oCellAddress = oSheet.getCellByPosition(0, current_row).getCellAddress()
                         oSheet.copyRange(oCellAddress, oRangeAddress)
 
-            PL._gotoCella(0, row)
+            PL._gotoCella(0, row + 1)
             if PL.LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
                 PL.pesca_cod()
         return lrow + num_righe

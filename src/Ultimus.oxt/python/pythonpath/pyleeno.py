@@ -3206,17 +3206,17 @@ def riordina_ElencoPrezzi():
     # with LeenoUtils.DocumentRefreshContext(False):
 
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    if oSheet.Name != 'Elenco Prezzi':
+    try:
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    except Exception:
         return
 
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
-    # last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
-    # SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
-    # SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
+    last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
 
     start_row = oRangeAddress.StartRow + 1

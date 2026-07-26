@@ -814,6 +814,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     PL.tante_analisi_in_ep()
+    PL.riordina_ElencoPrezzi()
 
 
 

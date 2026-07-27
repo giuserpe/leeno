@@ -1747,15 +1747,16 @@ def show_sheets(x=True):
     oDoc = LeenoUtils.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
     # for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
-    for nome in ('Elenco Prezzi', 'COMPUTO'):
-        oSheets.remove(nome)
+    for nome in ('Elenco Prezzi', 'COMPUTO', 'S2'):
+        if nome in oSheets:
+            oSheets.remove(nome)
     # oSheets.remove('Elenco Prezzi')
     # oSheets.remove('COMPUTO')
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
     for nome in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA',
-                 'Analisi di Prezzo'):
+                 'Analisi di Prezzo', 'S2'):
         try:
             oSheet = oDoc.getSheets().getByName(nome)
             oSheet.IsVisible = True
@@ -9816,7 +9817,8 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
-            oDoc.getSheets().getByName(el).IsVisible = False
+            if el != 'S2':
+                oDoc.getSheets().getByName(el).IsVisible = False
         # dal template 212
         flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR  # FORMATTED + HARDATTR
         indicator.setValue(4)

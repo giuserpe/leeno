@@ -276,17 +276,22 @@ def MENU_invia_voce():
 
     avviso_vedi_voce = False
     try:
-        # Rileva se CTRL è premuto: in tal caso forza nuova_voce=False
-        try:
-            VK_CONTROL = 0x11
-            is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
-            if is_ctrl:
-                if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 0:
-                    return
-        except Exception:
-            is_ctrl = False
-
         oDoc = LeenoUtils.getDocument()
+        oActiveSheet = oDoc.CurrentController.ActiveSheet if oDoc else None
+        active_sheet_name = oActiveSheet.Name if oActiveSheet else ""
+
+        is_ctrl = False
+        # Rileva se CTRL è premuto: ha effetto solo se l'invio parte da 'Elenco Prezzi'
+        if active_sheet_name == 'Elenco Prezzi':
+            try:
+                VK_CONTROL = 0x11
+                is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
+                if is_ctrl:
+                    if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 0:
+                        return
+            except Exception:
+                is_ctrl = False
+
         DP = LeenoGlobals.getGlobalVar('sUltimus')
         ddcDoc = LeenoUtils.findOpenDocument(DP) if DP else None
 

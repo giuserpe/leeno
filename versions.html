@@ -452,32 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-28 10:10</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ac991ff60805cc8440ef9cf5d63e81a938950b87" target="_blank" rel="noopener"><code>ac991ff</code></a></td>
+                <td class="commit-msg">Merge pull request #33 from giuserpe/jules-10649145872938913982-24be0345
+
+Ottimizzazione prestazioni invio voci tra documenti</td>
+            </tr>
+            <tr>
+                <td>2026-07-28 10:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/478c30b16301da46121e7baba54c8dfd90a3871d" target="_blank" rel="noopener"><code>478c30b</code></a></td>
+                <td class="commit-msg">perf(core): ottimizza l'invio delle voci tra documenti
+
+Disabilita temporaneamente il rinfresco e il ricalcolo automatico sia sul documento di origine che su quello di arrivo durante il trasferimento delle voci. Questo riduce drasticamente l'overhead causato dagli aggiornamenti della GUI e dai ricalcoli parziali per ogni singola operazione di scrittura o inserimento riga.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-28 09:53</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/446361c9acd72f8066bf06548edca551fb493450" target="_blank" rel="noopener"><code>446361c</code></a></td>
                 <td class="commit-msg">Merge pull request #32 from giuserpe/jules-347819981848730888-5963c7d4
 
 Correzione invio voce da Elenco Prezzi a Analisi di Prezzo</td>
-            </tr>
-            <tr>
-                <td>2026-07-28 09:43</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d7f99270bd47ae65a2eb812fc3c8460e5d7dfe0d" target="_blank" rel="noopener"><code>d7f9927</code></a></td>
-                <td class="commit-msg">fix(core): corregge invio voce da Elenco Prezzi a Analisi di Prezzo
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-28 04:29</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/4a3a3d8e8401971b8ef84f08a19227c4f98b18f4" target="_blank" rel="noopener"><code>4a3a3d8</code></a></td>
-                <td class="commit-msg">fix(core): mantiene visibile il foglio S2 nelle routine di gestione tab
-
-- In `mostra_fogli_principali`, `MENU_mostra_tabs_contab`,
-  `MENU_mostra_tabs_computo` e nella routine di inizializzazione:
-  esclude esplicitamente `S2` dall’occultamento automatico
-- In `show_sheets` protegge `S2` dalla rimozione dalla lista dei fogli
-- Aggiornati icone `trova_voce` e bump versione a 3.26.0.110-TESTING-20260727
-- Aggiornato manuale (`MANUALE_LeenO.fodt`)
-
-Evita che il foglio S2 venga nascosto insieme agli altri fogli di servizio.</td>
             </tr>
                     </tbody>
                 </table>
@@ -501,8 +496,8 @@ Evita che il foglio S2 venga nascosto insieme agli altri fogli di servizio.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-28 10:07 UTC</p>
-                <p>Build Commit: <code>478c30b</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-28 10:10 UTC</p>
+                <p>Build Commit: <code>ac991ff</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

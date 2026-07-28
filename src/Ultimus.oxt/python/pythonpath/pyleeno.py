@@ -2938,15 +2938,21 @@ def scelta_viste_run():
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 L_last = get_elenco_prezzi_last_row_index(oSheet)
-                for n in range(4, L_last + 2):
-                    if oSheet.getCellByPosition(0, n - 1).String.strip() == '':
+                if L_last >= 3:
+                    col_0_data = oSheet.getCellRangeByPosition(0, 3, 0, L_last).getDataArray()
+                    for n in range(4, L_last + 2):
+                        val = col_0_data[n - 4][0]
+                        if str(val).strip() == '':
+                            formule.append(["", "", ""])
+                        else:
+                            formule.append([
+                                f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
+                                f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
+                                f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
+                            ])
+                else:
+                    for n in range(4, L_last + 2):
                         formule.append(["", "", ""])
-                    else:
-                        formule.append([
-                            f'=IF(N({col2}{n})>N({col1}{n}); N({col2}{n})-N({col1}{n}); "")',
-                            f'=IF(N({col1}{n})>N({col2}{n}); N({col1}{n})-N({col2}{n}); "")',
-                            f'=IFERROR(LET(_b;N({col1}{n});_u;N({col2}{n});IF(AND(_b=0;_u=0);"--";IFS(_u=0;-1;_b=0;1;_b=_u;"--";_b>_u;-(_b-_u)/_b;_b<_u;(_u-_b)/_b)));"--")',
-                        ])
 
                 for n in range(L_last + 2, ultima_voce + 2):
                     formule.append(["", "", ""])
@@ -3020,12 +3026,12 @@ def scelta_viste_run():
                     if is_high_scost:
                         righe_da_colorare.append(3 + idx)
 
-                    # Applica colorazione alle righe eccedenti — Batch
-                    if righe_da_colorare:
-                        oRangesEP = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
-                        for el in righe_da_colorare:
-                            oRangesEP.addRangeAddress(oSheet.getCellRangeByPosition(0, el, 1, el).RangeAddress, False)
-                        oRangesEP.CellBackColor = int(COLORE_COLONNE_RAFFRONTO)
+                # Applica colorazione alle righe eccedenti — Batch (spostato fuori dal ciclo)
+                if righe_da_colorare:
+                    oRangesEP = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+                    for el in righe_da_colorare:
+                        oRangesEP.addRangeAddress(oSheet.getCellRangeByPosition(0, el, 1, el).RangeAddress, False)
+                    oRangesEP.CellBackColor = int(COLORE_COLONNE_RAFFRONTO)
 
                 # Applica colorazione al foglio CONTABILITA per le voci in eccesso (rosso) o spuntate (verde)
                 if (voci_in_eccesso or voci_spuntate) and oDoc.Sheets.hasByName('CONTABILITA'):
@@ -3037,6 +3043,37 @@ def scelta_viste_run():
 
                         oRangesRosso = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
                         oRangesVerde = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+
+                        # Pre-carica le righe con gli stili Start/End Attributo usando createSearchDescriptor
+                        start_attrib_rows = set()
+                        end_attrib_rows = set()
+                        try:
+                            search_start = oSheetCont.createSearchDescriptor()
+                            search_start.SearchStyles = True
+                            for st in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                                search_start.SearchString = st
+                                found = oSheetCont.findAll(search_start)
+                                if found:
+                                    for idx_f in range(found.Count):
+                                        addr = found.getByIndex(idx_f).RangeAddress
+                                        for r_f in range(addr.StartRow, addr.EndRow + 1):
+                                            start_attrib_rows.add(r_f)
+                        except Exception:
+                            pass
+
+                        try:
+                            search_end = oSheetCont.createSearchDescriptor()
+                            search_end.SearchStyles = True
+                            for st in ('Comp End Attributo', 'Comp End Attributo_R'):
+                                search_end.SearchString = st
+                                found = oSheetCont.findAll(search_end)
+                                if found:
+                                    for idx_f in range(found.Count):
+                                        addr = found.getByIndex(idx_f).RangeAddress
+                                        for r_f in range(addr.StartRow, addr.EndRow + 1):
+                                            end_attrib_rows.add(r_f)
+                        except Exception:
+                            pass
 
                         processed_end = -1  # fine dell'ultima voce già colorata
                         for idx, row_data in enumerate(dati_B):
@@ -3053,13 +3090,13 @@ def scelta_viste_run():
                                     target_color = "VERDE"
 
                                 if target_color:
-                                    # Individuazione voce: usiamo .CellStyle per precisione
+                                    # Individuazione voce: usiamo i set pre-caricati per precisione e velocità
                                     start_v = r
-                                    while start_v > 3 and oSheetCont.getCellByPosition(0, start_v).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                                    while start_v > 3 and start_v not in start_attrib_rows:
                                         start_v -= 1
 
                                     end_v = r
-                                    while end_v < contEndRow and oSheetCont.getCellByPosition(0, end_v).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
+                                    while end_v < contEndRow and end_v not in end_attrib_rows:
                                         end_v += 1
 
                                     oRangeV = oSheetCont.getCellRangeByPosition(39, start_v, 40, end_v)
@@ -3078,14 +3115,23 @@ def scelta_viste_run():
             # Copia formato da Z2 al range — senza clipboard, preservando lo stile delle righe vuote/firme
             source_cell = oSheet.getCellRangeByName('Z2')
             L_last = get_elenco_prezzi_last_row_index(oSheet)
-            for idx in range(3, ER + 1):
-                if idx > L_last:
-                    continue
-                if oSheet.getCellByPosition(0, idx).String.strip() != '':
-                    cell_z = oSheet.getCellByPosition(25, idx)
-                    cell_z.CellStyle = source_cell.CellStyle
-                    cell_z.NumberFormat = source_cell.NumberFormat
-                    oSheet.getCellRangeByPosition(11, idx, 13, idx).CellBackColor = COLORE_COLONNE_RAFFRONTO
+            max_idx = min(ER, L_last)
+            col_0_data = []
+            if max_idx >= 3:
+                col_0_data = oSheet.getCellRangeByPosition(0, 3, 0, max_idx).getDataArray()
+                oRangesColor = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+                oRangesZ = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+                for idx in range(3, max_idx + 1):
+                    if idx - 3 < len(col_0_data):
+                        val = col_0_data[idx - 3][0]
+                        if str(val).strip() != '':
+                            oRangesZ.addRangeAddress(oSheet.getCellByPosition(25, idx).RangeAddress, False)
+                            oRangesColor.addRangeAddress(oSheet.getCellRangeByPosition(11, idx, 13, idx).RangeAddress, False)
+                if oRangesZ.Count > 0:
+                    oRangesZ.CellStyle = source_cell.CellStyle
+                    oRangesZ.NumberFormat = source_cell.NumberFormat
+                if oRangesColor.Count > 0:
+                    oRangesColor.CellBackColor = COLORE_COLONNE_RAFFRONTO
 
             # Applica formato anche alla riga del TOTALE "Fine elenco"
             y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
@@ -3101,12 +3147,17 @@ def scelta_viste_run():
 
             # Ripulisce le colonne 11-25 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
             y = y_real
-            for idx in range(3, y):
-                if idx > L_last:
-                    continue
-                if oSheet.getCellByPosition(0, idx).String.strip() == '':
-                    oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
-                    oSheet.getCellRangeByPosition(11, idx, 25, idx).CellBackColor = -1
+            max_idx2 = min(y - 1, L_last)
+            if max_idx2 >= 3 and len(col_0_data) > 0:
+                oRangesClearColor = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+                for idx in range(3, max_idx2 + 1):
+                    if idx - 3 < len(col_0_data):
+                        val = col_0_data[idx - 3][0]
+                        if str(val).strip() == '':
+                            oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
+                            oRangesClearColor.addRangeAddress(oSheet.getCellRangeByPosition(11, idx, 25, idx).RangeAddress, False)
+                if oRangesClearColor.Count > 0:
+                    oRangesClearColor.CellBackColor = -1
 
 # Analisi di Prezzo
     elif oSheet.Name in ('Analisi di Prezzo'):
@@ -3205,14 +3256,36 @@ def genera_sommario():
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
 
     L_last = get_elenco_prezzi_last_row_index(oSheet)
+    col_0_data = []
+    ultimus_centro_rows = set()
+    if ultima_voce >= 3:
+        col_0_data = oSheet.getCellRangeByPosition(0, 3, 0, ultima_voce).getDataArray()
+        try:
+            oSubRange = oSheet.getCellRangeByPosition(0, 3, 0, ultima_voce)
+            search = oSubRange.createSearchDescriptor()
+            search.SearchStyles = True
+            search.SearchString = "Ultimus_centro"
+            found = oSubRange.findAll(search)
+            if found:
+                for idx_f in range(found.Count):
+                    sub_range = found.getByIndex(idx_f)
+                    addr = sub_range.RangeAddress
+                    for r_f in range(addr.StartRow, addr.EndRow + 1):
+                        ultimus_centro_rows.add(r_f)
+        except Exception:
+            pass
+
     for n in range(4, ultima_voce + 2):
         if n % 100 == 0:  # Aggiorna indicatore ogni 100 righe per risparmiare tempo UI
             indicator.Value = n
 
-        # Recupera lo stile (necessario .CellStyle, il contenuto della cella potrebbe essere diverso)
-        cell_style = oSheet.getCellByPosition(0, n-1).CellStyle
+        val_str = ""
+        if n - 4 < len(col_0_data):
+            val_str = str(col_0_data[n - 4][0]).strip()
 
-        if n - 1 > L_last or oSheet.getCellByPosition(0, n-1).String.strip() == '' or cell_style == "Ultimus_centro":
+        is_empty_or_beyond = (n - 1 > L_last or val_str == '' or (n - 1) in ultimus_centro_rows)
+
+        if is_empty_or_beyond:
             # Se la cella è vuota o lo stile è "Ultimus_centro", o se siamo oltre l'ultima voce di prezzo, inserisci formula vuota
             stringa = [""] * 11
         else:
@@ -3251,12 +3324,18 @@ def genera_sommario():
         oDoc.enableAutomaticCalculation(True)
 
     # Ripulisce le colonne 11-21 per le righe con prima colonna vuota (es. firme) senza alterare il loro stile
-    for idx in range(3, ultima_voce + 1):
-        if idx > L_last:
-            continue
-        if oSheet.getCellByPosition(0, idx).String.strip() == '':
-            oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
-            oSheet.getCellRangeByPosition(11, idx, 21, idx).CellBackColor = -1
+    if len(col_0_data) > 0:
+        oRangesClearColor = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+        for idx in range(3, ultima_voce + 1):
+            if idx > L_last:
+                continue
+            if idx - 3 < len(col_0_data):
+                val = col_0_data[idx - 3][0]
+                if str(val).strip() == '':
+                    oSheet.getCellRangeByPosition(11, idx, 21, idx).clearContents(VALUE + FORMULA + STRING)
+                    oRangesClearColor.addRangeAddress(oSheet.getCellRangeByPosition(11, idx, 21, idx).RangeAddress, False)
+        if oRangesClearColor.Count > 0:
+            oRangesClearColor.CellBackColor = -1
     return
 
 ########################################################################

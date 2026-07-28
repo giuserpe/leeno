@@ -259,13 +259,15 @@ def invia_voce_interno():
             GotoSheet('CONTABILITA')
             import LeenoContab
             LeenoContab.insertVoceContabilita(cod=codice_voce)
-            LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('CONTABILITA'), all=False)
+            ins_row = LeggiPosizioneCorrente()[1]
+            LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('CONTABILITA'), all=False, lrow=ins_row)
         else:
             # Per COMPUTO e VARIANTE la logica di inserimento è identica
             # Assicurati che ins_voce_computo inserisca nel foglio attivo
             GotoSheet(meta)
             LeenoComputo.ins_voce_computo(cod=codice_voce)
-            LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(meta), all=False)
+            ins_row = LeggiPosizioneCorrente()[1]
+            LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(meta), all=False, lrow=ins_row)
 
     # Pulizia finale della selezione blu
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
@@ -460,6 +462,7 @@ def invia_voce(ctrl_override=False):
                 start_row = sStRange.RangeAddress.StartRow
                 dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
             
+            LeenoSheetUtils.adattaAltezzaRiga(dccSheetDest, all=False, lrow=start_row)
             controller = ddcDoc.CurrentController
             controller.setFirstVisibleColumn(0)
             controller.setFirstVisibleRow(max(0, start_row - 10))

@@ -259,11 +259,23 @@ def invia_voce_interno():
             GotoSheet('CONTABILITA')
             import LeenoContab
             LeenoContab.insertVoceContabilita(cod=codice_voce)
+            ins_row = LeggiPosizioneCorrente()[1]
+            LeenoUtils.DocumentRefresh(True, oDoc)
+            try:
+                LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('CONTABILITA'), all=False, lrow=ins_row)
+            finally:
+                LeenoUtils.DocumentRefresh(False, oDoc)
         else:
             # Per COMPUTO e VARIANTE la logica di inserimento è identica
             # Assicurati che ins_voce_computo inserisca nel foglio attivo
             GotoSheet(meta)
             LeenoComputo.ins_voce_computo(cod=codice_voce)
+            ins_row = LeggiPosizioneCorrente()[1]
+            LeenoUtils.DocumentRefresh(True, oDoc)
+            try:
+                LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(meta), all=False, lrow=ins_row)
+            finally:
+                LeenoUtils.DocumentRefresh(False, oDoc)
 
     # Pulizia finale della selezione blu
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
@@ -317,9 +329,11 @@ def MENU_invia_voce():
     oActiveDoc = LeenoUtils.getDocument()
     if oActiveDoc is not None:
         oSheet = oActiveDoc.CurrentController.ActiveSheet
-        # Non adattare l'altezza quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA
+        # Non adattare l'altezza dell'intero foglio quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA, adatta solo la riga/voce inserita
         if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        else:
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False)
         LeenoUtils.DocumentRefresh(True, oActiveDoc)
 
     if avviso_vedi_voce:
@@ -456,6 +470,11 @@ def invia_voce(ctrl_override=False):
                 start_row = sStRange.RangeAddress.StartRow
                 dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
             
+            LeenoUtils.DocumentRefresh(True, ddcDoc)
+            try:
+                LeenoSheetUtils.adattaAltezzaRiga(dccSheetDest, all=False, lrow=start_row)
+            finally:
+                LeenoUtils.DocumentRefresh(False, ddcDoc)
             controller = ddcDoc.CurrentController
             controller.setFirstVisibleColumn(0)
             controller.setFirstVisibleRow(max(0, start_row - 10))
@@ -617,13 +636,12 @@ def invia_voce(ctrl_override=False):
             if not cerca_in_elenco_prezzi:
                 recupera_voce(art)
 
-            # Non adattare l'altezza delle righe quando il foglio di arrivo
-            # è COMPUTO, VARIANTE o CONTABILITA
-            # Menu_adattaAltezzaRiga()
-            # riga = dccSheet.getRows().getByIndex(row)
-            # if not riga.OptimalHeight:
-
-            #     riga.OptimalHeight = True
+            # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
+            LeenoUtils.DocumentRefresh(True, ddcDoc)
+            try:
+                LeenoSheetUtils.adattaAltezzaRiga(dccSheet, all=False, lrow=row)
+            finally:
+                LeenoUtils.DocumentRefresh(False, ddcDoc)
 
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")

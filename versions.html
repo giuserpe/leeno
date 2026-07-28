@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-28 09:53</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/446361c9acd72f8066bf06548edca551fb493450" target="_blank" rel="noopener"><code>446361c</code></a></td>
+                <td class="commit-msg">Merge pull request #32 from giuserpe/jules-347819981848730888-5963c7d4
+
+Correzione invio voce da Elenco Prezzi a Analisi di Prezzo</td>
+            </tr>
+            <tr>
+                <td>2026-07-28 09:43</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d7f99270bd47ae65a2eb812fc3c8460e5d7dfe0d" target="_blank" rel="noopener"><code>d7f9927</code></a></td>
+                <td class="commit-msg">fix(core): corregge invio voce da Elenco Prezzi a Analisi di Prezzo
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-28 04:29</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/4a3a3d8e8401971b8ef84f08a19227c4f98b18f4" target="_blank" rel="noopener"><code>4a3a3d8</code></a></td>
                 <td class="commit-msg">fix(core): mantiene visibile il foglio S2 nelle routine di gestione tab
@@ -464,31 +478,6 @@
 - Aggiornato manuale (`MANUALE_LeenO.fodt`)
 
 Evita che il foglio S2 venga nascosto insieme agli altri fogli di servizio.</td>
-            </tr>
-            <tr>
-                <td>2026-07-26 20:11</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/219faafa2e4ad5635b7ff08bdbde14189948b184" target="_blank" rel="noopener"><code>219faaf</code></a></td>
-                <td class="commit-msg">fix(analysis): corregge posizione cursore dopo copia riga analisi
-
-In `copiaRigaAnalisi` sposta il cursore a `row + 1` invece di `row`
-dopo l’operazione di copia, in modo che la cella attiva sia
-correttamente posizionata sulla riga successiva.</td>
-            </tr>
-            <tr>
-                <td>2026-07-26 20:10</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/631d9b2b3b1e528f2261fb5386d1964b7e2847af" target="_blank" rel="noopener"><code>631d9b2</code></a></td>
-                <td class="commit-msg">fix(import): richiama riordina_ElencoPrezzi dopo compilazione analisi
-
-- In `compilaAnalisiPrezzi` (LeenoImport_XPWE.py):
-  - Aggiunta chiamata a `PL.riordina_ElencoPrezzi()` dopo
-    `tante_analisi_in_ep()`
-
-- In `riordina_ElencoPrezzi` (pyleeno.py):
-  - Usa `getSheets().getByName('Elenco Prezzi')` invece del foglio attivo
-  - Riattiva l’aggiornamento dei range nominati `elenco_prezzi` e `Lista`
-
-Garantisce che l’Elenco Prezzi venga riordinato e i range nominati
-aggiornati correttamente dopo l’importazione delle analisi di prezzo.</td>
             </tr>
                     </tbody>
                 </table>
@@ -512,8 +501,8 @@ aggiornati correttamente dopo l’importazione delle analisi di prezzo.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-28 09:44 UTC</p>
-                <p>Build Commit: <code>d7f9927</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-28 09:54 UTC</p>
+                <p>Build Commit: <code>446361c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

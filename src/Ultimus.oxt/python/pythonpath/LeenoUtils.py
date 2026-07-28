@@ -346,6 +346,59 @@ def release_ram(func):
 
     return wrapper
 
+
+class preserve_clipboard_context:
+    """
+    Context manager per preservare il contenuto della clipboard di sistema.
+    All'ingresso salva lo stato corrente (XTransferable) della clipboard
+    e all'uscita lo ripristina, prevenendo la perdita di dati copiati dall'utente
+    durante operazioni interne che fanno uso della clipboard.
+    """
+    def __enter__(self):
+        self.transferable = None
+        self.clip = None
+        try:
+            ctx = getComponentContext()
+            if ctx is not None:
+                smgr = ctx.getServiceManager()
+                if smgr is not None:
+                    self.clip = smgr.createInstanceWithContext(
+                        "com.sun.star.datatransfer.clipboard.SystemClipboard", ctx
+                    )
+                    if self.clip is not None:
+                        self.transferable = self.clip.getContents()
+        except Exception:
+            # Gestione sicura degli errori per evitare di bloccare l'esecuzione principale
+            pass
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            if self.clip is not None and self.transferable is not None:
+                # Ripristina l'oggetto XTransferable originario nella clipboard
+                self.clip.setContents(self.transferable, None)
+        except Exception:
+            # Gestione sicura degli errori per evitare di mascherare l'eccezione originaria
+            pass
+        return False
+
+
+def preserve_clipboard(func):
+    """
+    Decorator che preserva il contenuto della clipboard durante l'esecuzione della funzione.
+
+    Uso:
+        @preserve_clipboard
+        def mia_funzione():
+            pass
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        with preserve_clipboard_context():
+            return func(*args, **kwargs)
+
+    return wrapper
+
 # ============================================================================
 # PROJECT IMPORTS
 # ============================================================================

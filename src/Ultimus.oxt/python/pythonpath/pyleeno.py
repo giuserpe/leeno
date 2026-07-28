@@ -218,6 +218,19 @@ def invia_voce_interno():
     codici = [oSheetEP.getCellByPosition(0, el).String for el in elenco]
     meta = oSheetEP.getCellRangeByName('C2').String
 
+    partenza = LeenoGlobals.getGlobalVar('partenza')
+    if partenza is not None and len(partenza) > 0 and partenza[0] == 'Analisi di Prezzo':
+        dest_sheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        dest_row = partenza[1]
+        if codici:
+            codice_voce = codici[0]
+            dest_sheet.getCellByPosition(0, dest_row).String = codice_voce
+            GotoSheet('Analisi di Prezzo')
+            _gotoCella(3, dest_row)
+            LeenoGlobals.setGlobalVar('partenza', None)
+            oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+            return True
+
     if meta == 'VARIANTE':
         # Chiamata alla nuova funzione: crea (se manca) ma NON svuota
         LeenoVariante.generaVariante(oDoc, clear=False)
@@ -386,7 +399,10 @@ def invia_voce(ctrl_override=False):
 
         # Cattura il codice articolo selezionato nel DP prima di qualsiasi inserimento
         pos_dp = LeggiPosizioneCorrente()[1]
-        codice_selezionato_dp = dccSheetEP.getCellByPosition(0, pos_dp).String
+        try:
+            codice_selezionato_dp = dccSheetEP.getCellByPosition(0, pos_dp).String
+        except Exception:
+            codice_selezionato_dp = ''
 
         if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
             recupera_voce(voce_da_inviare, row_src=row)
@@ -438,6 +454,12 @@ def invia_voce(ctrl_override=False):
             else:
                 ddcDoc.CurrentController.setFirstVisibleRow(3)
                 _gotoCella(1, 4)
+        elif nSheetDCC == 'Analisi di Prezzo':
+            dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
+            row_dest = pos_dp
+            if row_dest is not None:
+                dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
+                _gotoCella(3, row_dest)
         return avviso_vedi_voce
 
     # partenza

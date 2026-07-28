@@ -452,32 +452,29 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-28 11:54</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/988adb5026aa8ff983c24803a05ab916ded2d5b5" target="_blank" rel="noopener"><code>988adb5</code></a></td>
-                <td class="commit-msg">Merge pull request #34 from giuserpe/jules-11100812845086419442-dcf3cf72
+                <td>2026-07-28 13:57</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8d4bb7dec5f6c8e705c18f75b75e85507d927578" target="_blank" rel="noopener"><code>8d4bb7d</code></a></td>
+                <td class="commit-msg">Merge pull request #35 from giuserpe/fix-ottimizzazione-altezza-righe-voce-inserita-3354204359814815391
 
-Ottimizzazione di MENU_invia_voce() e correzione logica tasto CTRL</td>
+Adatta altezza ottimale delle righe della voce inserita dopo MENU_invia_voce</td>
             </tr>
             <tr>
-                <td>2026-07-28 11:51</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2a12be3dd4106b88f9f9abd0fc958646674ed7f7" target="_blank" rel="noopener"><code>2a12be3</code></a></td>
-                <td class="commit-msg">perf(core): ottimizza MENU_invia_voce e limita effetto CTRL a Elenco Prezzi
+                <td>2026-07-28 13:45</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c3592c31328547c17ea947d696199983b65938cd" target="_blank" rel="noopener"><code>c3592c3</code></a></td>
+                <td class="commit-msg">fix(core): adatta l'altezza ottimale delle righe della voce inserita nel foglio di destinazione
 
-Migliora robustezza del ripristino stato (pesca_auto e refresh documenti) tramite try...finally.
-Corregge la logica del tasto CTRL durante l'invio della voce (sostituzione) e ne limita
-l'effetto esclusivamente all'invio originato dal foglio 'Elenco Prezzi'.
-Introduce Dialogs.YesNoDialog in linea con le linee guida.
+Risolve definitivamente il problema per cui, dopo l'invio della voce tramite MENU_invia_voce(), non avveniva l'adattamento ottimale dell'altezza delle righe della voce inserita nel foglio di destinazione a causa dell'IsAdjustHeightEnabled disabilitato durante l'operazione.
+Ora l'adattamento viene applicato riabilitando temporaneamente il refresh del documento di destinazione.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-07-28 11:12</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/44c5a7c2a82f16edf2a9d454831c06143b9362c4" target="_blank" rel="noopener"><code>44c5a7c</code></a></td>
-                <td class="commit-msg">perf(core): ottimizza la funzione MENU_invia_voce ed evita inconsistenze di stato
+                <td>2026-07-28 13:26</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/701a9b4aa4b51d409561a233f2569583ac53fc38" target="_blank" rel="noopener"><code>701a9b4</code></a></td>
+                <td class="commit-msg">fix(core): adatta l'altezza ottimale delle righe della voce inserita nel foglio di destinazione
 
-Rende estremamente robusto il ripristino di 'pesca_auto' e del refresh del documento
-in caso di eccezione o uscita anticipata. Corregge inoltre la logica invertita nel
-controllo della sostituzione dell'articolo se premuto il tasto CTRL, e introduce YesNoDialog.
+Risolve in modo completo e definitivo il problema per cui, dopo l'invio della voce tramite MENU_invia_voce(), non avveniva l'adattamento ottimale dell'altezza delle righe della voce inserita nel foglio di destinazione.
+Ora l'adattamento locale e performante adattaAltezzaRiga(all=False, lrow) viene invocato esplicitamente sul foglio di arrivo del documento di destinazione (con il corretto puntamento all'indice di riga in cui la voce è stata inserita).
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
@@ -503,8 +500,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-28 13:45 UTC</p>
-                <p>Build Commit: <code>c3592c3</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-28 13:57 UTC</p>
+                <p>Build Commit: <code>8d4bb7d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

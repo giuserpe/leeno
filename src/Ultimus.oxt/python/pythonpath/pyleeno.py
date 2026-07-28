@@ -274,38 +274,39 @@ def MENU_invia_voce():
     stato = cfg.read('Generale', 'pesca_auto')
     cfg.write('Generale', 'pesca_auto', 0)
 
-    # Rileva se CTRL è premuto: in tal caso forza nuova_voce=False
-    try:
-        VK_CONTROL = 0x11
-        is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
-        if is_ctrl:
-            if Dialogs.DLG_ask(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 1:
-                cfg.write('Generale', 'pesca_auto', stato)
-                return
-    except Exception:
-        is_ctrl = False
-
-    oDoc = LeenoUtils.getDocument()
-    DP = LeenoGlobals.getGlobalVar('sUltimus')
-    ddcDoc = LeenoUtils.findOpenDocument(DP) if DP else None
-
-    # Disabilita il refresh su entrambi i documenti (sorgente e destinazione)
-    if ddcDoc is not None:
-        LeenoUtils.DocumentRefresh(False, ddcDoc)
-    if oDoc is not None:
-        LeenoUtils.DocumentRefresh(False, oDoc)
-
     avviso_vedi_voce = False
     try:
-        avviso_vedi_voce = invia_voce(ctrl_override=is_ctrl)
-    finally:
-        # Ripristina sempre il refresh su entrambi i documenti
-        if ddcDoc is not None:
-            LeenoUtils.DocumentRefresh(True, ddcDoc)
-        if oDoc is not None:
-            LeenoUtils.DocumentRefresh(True, oDoc)
+        # Rileva se CTRL è premuto: in tal caso forza nuova_voce=False
+        try:
+            VK_CONTROL = 0x11
+            is_ctrl = bool(ctypes.windll.user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
+            if is_ctrl:
+                if Dialogs.YesNoDialog(IconType="question", Title="ATTENZIONE!", Text="Il tasto CTRL è premuto. Vuoi procedere con la sostituzione dell'articolo selezionato?") == 0:
+                    return
+        except Exception:
+            is_ctrl = False
 
-    cfg.write('Generale', 'pesca_auto', stato)
+        oDoc = LeenoUtils.getDocument()
+        DP = LeenoGlobals.getGlobalVar('sUltimus')
+        ddcDoc = LeenoUtils.findOpenDocument(DP) if DP else None
+
+        # Disabilita il refresh su entrambi i documenti (sorgente e destinazione)
+        if ddcDoc is not None:
+            LeenoUtils.DocumentRefresh(False, ddcDoc)
+        if oDoc is not None:
+            LeenoUtils.DocumentRefresh(False, oDoc)
+
+        try:
+            avviso_vedi_voce = invia_voce(ctrl_override=is_ctrl)
+        finally:
+            # Ripristina sempre il refresh su entrambi i documenti
+            if ddcDoc is not None:
+                LeenoUtils.DocumentRefresh(True, ddcDoc)
+            if oDoc is not None:
+                LeenoUtils.DocumentRefresh(True, oDoc)
+
+    finally:
+        cfg.write('Generale', 'pesca_auto', stato)
 
     # Aggiorna il layout sul documento attivo finale
     oActiveDoc = LeenoUtils.getDocument()

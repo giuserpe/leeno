@@ -2705,6 +2705,14 @@ def DLG_ask(IconType="info", Image=None, Title=None, Text=None):
     return _mapBasicYesNo(result)
 
 
+def YesNoDialog(IconType="question", Title=None, Text=None):
+    """
+    Dialogo Sì/No nativo LibreOffice.
+    Restituisce 1 per Sì, 0 per No.
+    """
+    return DLG_ask(IconType=IconType, Title=Title, Text=Text)
+
+
 def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
     """
     Dialogo Sì / No / Annulla nativo LibreOffice.

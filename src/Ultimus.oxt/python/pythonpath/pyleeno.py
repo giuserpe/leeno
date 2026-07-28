@@ -282,6 +282,7 @@ def invia_voce_interno():
 
 
 ###############################################################################
+@LeenoUtils.preserve_clipboard
 def MENU_invia_voce():
     stato = cfg.read('Generale', 'pesca_auto')
     cfg.write('Generale', 'pesca_auto', 0)
@@ -10365,17 +10366,46 @@ def DlgMain():
     LeenoUtils.memorizza_posizione()
 
     oDoc = LeenoUtils.getDocument()
-    oDoc.unlockControllers()
+    if oDoc is None:
+        return
+    try:
+        oDoc.unlockControllers()
+    except Exception:
+        pass
     psm = LeenoUtils.getComponentContext().ServiceManager
+    if oDoc.CurrentController is None:
+        return
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
+        is_empty = False
         if(len(oDoc.getURL()) == 0 and
         SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
         SheetUtils.getUsedArea(oSheet).EndRow == 0):
-            oDoc.close(True)
-        creaComputo()
+            is_empty = True
+        
+        new_doc = creaComputo(0)
+        
+        if is_empty:
+            try:
+                oDoc.close(True)
+            except Exception:
+                pass
+                
+        oDoc = new_doc
+        oSheet = oDoc.CurrentController.ActiveSheet
+        
+        IconType = "error"
+        Title = 'ATTENZIONE!'
+        Text='''
+Prima di procedere è meglio dare un nome al file.
+
+Lavorando su un file senza nome
+potresti avere dei malfunzionamenti.
+'''
+        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+        
     Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDlgMain

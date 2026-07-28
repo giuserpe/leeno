@@ -875,7 +875,11 @@ def memorizza_posizione(step=0):
     """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
     ctx = getComponentContext()
     doc = getDocument()
+    if doc is None:
+        return
     controller = doc.getCurrentController()
+    if controller is None:
+        return
 
     # Ottieni la selezione corrente
     selection = controller.getSelection()

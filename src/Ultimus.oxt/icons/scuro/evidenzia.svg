@@ -5,7 +5,7 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg4"
-   sodipodi:docname="findcode - Copia.svg"
+   sodipodi:docname="evidenzia.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -22,36 +22,49 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="11.888233"
-     inkscape:cx="-5.5517083"
-     inkscape:cy="9.0425551"
+     inkscape:zoom="5.9441165"
+     inkscape:cx="-34.151417"
+     inkscape:cy="-2.4393869"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
+     inkscape:current-layer="svg4"
+     showguides="true">
+    <sodipodi:guide
+       position="1.8926278,7.0925252"
+       orientation="1,0"
+       id="guide1"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-4.4161315,22.044285"
+       orientation="0,-1"
+       id="guide2"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <g
-     id="g1">
+     id="g1"
+     transform="matrix(1.2936836,0,0,1.2936836,-2.7606258,-2.7606258)">
     <circle
-       cx="9.4"
-       cy="9.4"
-       r="5.8"
+       cx="9.3999996"
+       cy="9.3999996"
+       r="5.8000002"
        fill="#E9EFDF"
        id="circle1" />
     <circle
-       cx="9.4"
-       cy="9.4"
-       r="4.199999999999999"
+       cx="9.3999996"
+       cy="9.3999996"
+       r="4.1999998"
        fill="#1B1F0B"
        id="circle2" />
     <circle
-       cx="9.4"
-       cy="9.4"
-       r="3.5999999999999996"
+       cx="9.3999996"
+       cy="9.3999996"
+       r="3.5999999"
        fill="#7F7F7F"
        id="circle3"
-       style="fill:#aad400;fill-opacity:1" />
+       style="fill:#f4b400;fill-opacity:1" />
   </g>
   <path
      d="M12.83,14.46 L18.13,19.76 L19.76,18.13 L14.46,12.83 Z"

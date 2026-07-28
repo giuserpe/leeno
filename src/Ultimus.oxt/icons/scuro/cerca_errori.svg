@@ -5,7 +5,7 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg4"
-   sodipodi:docname="imageNA.svg"
+   sodipodi:docname="cerca_errori.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -22,27 +22,41 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4.203125"
-     inkscape:cx="-14.750929"
-     inkscape:cy="32"
+     inkscape:zoom="16.8125"
+     inkscape:cx="19.866171"
+     inkscape:cy="10.973978"
      inkscape:window-width="1904"
      inkscape:window-height="993"
      inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg4" />
+     inkscape:current-layer="svg4"
+     showguides="true">
+    <sodipodi:guide
+       position="1.8736059,21.858736"
+       orientation="1,0"
+       id="guide1"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-0.17843866,22.081784"
+       orientation="0,-1"
+       id="guide2"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <circle
-     cx="9.4"
-     cy="9.4"
-     r="5.8"
+     cx="9.3999996"
+     cy="9.3999996"
+     r="7.4505577"
      fill="#E9EFDF"
-     id="circle1" />
+     id="circle1"
+     style="stroke-width:1.28458" />
   <circle
-     cx="9.4"
-     cy="9.4"
-     r="4.199999999999999"
+     cx="9.3999996"
+     cy="9.3999996"
+     r="5.3952312"
      fill="#1B1F0B"
-     id="circle2" />
+     id="circle2"
+     style="stroke-width:1.28458" />
   <path
      d="M12.83,14.46 L18.13,19.76 L19.76,18.13 L14.46,12.83 Z"
      fill="#E9EFDF"
@@ -57,18 +71,19 @@
   <circle
      cx="9.3999996"
      cy="9.3999996"
-     r="3.9368029"
+     r="5.0571337"
      fill="#ff4d2e"
-     id="circle4" />
+     id="circle4"
+     style="stroke-width:1.28458" />
   <text
-     x="9.4"
-     y="9.7"
+     x="9.3999996"
+     y="9.7853737"
      font-family="Arial, sans-serif"
-     font-size="5.6"
+     font-size="7.19364px"
      font-weight="900"
      fill="#1B1F0B"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text4"
-     style="fill:#FFFFFF">!</text>
+     style="fill:#FFFFFF;stroke-width:1.28458">!</text>
 </svg>

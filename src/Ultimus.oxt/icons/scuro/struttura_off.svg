@@ -35,10 +35,9 @@
      id="g6"
      transform="translate(21.8,0.0999999)">
     <g
-       id="g1"
-       transform="translate(-21.8)">
+       id="g1">
       <rect
-         x="2.2"
+         x="-19.6"
          y="5"
          width="19.6"
          height="3"
@@ -47,7 +46,7 @@
          id="rect1"
          style="fill:#1e3a8a;fill-opacity:1" />
       <rect
-         x="2.2"
+         x="-18"
          y="10.4"
          width="16.4"
          height="3"
@@ -56,7 +55,7 @@
          id="rect2"
          style="fill:#3b82f6;fill-opacity:1" />
       <rect
-         x="2.2"
+         x="-16.4"
          y="15.8"
          width="13.2"
          height="3"

@@ -23,19 +23,18 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="8.9161746"
-     inkscape:cx="-1.626258"
-     inkscape:cy="15.1971"
+     inkscape:cx="-1.6823358"
+     inkscape:cy="15.084945"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg5" />
   <g
-     id="g2"
-     transform="translate(2.1999998)">
+     id="g2">
     <rect
-       x="0"
+       x="2.1999998"
        y="5.0999999"
        width="19.6"
        height="3"
@@ -44,7 +43,7 @@
        id="rect1-1"
        style="fill:#1e3a8a;fill-opacity:1" />
     <rect
-       x="0"
+       x="3.8000002"
        y="10.499999"
        width="16.4"
        height="3"
@@ -53,7 +52,7 @@
        id="rect2-4"
        style="fill:#3b82f6;fill-opacity:1" />
     <rect
-       x="0"
+       x="5.4000001"
        y="15.9"
        width="13.2"
        height="3"

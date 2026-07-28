@@ -622,7 +622,7 @@ def invia_voce(ctrl_override=False):
                 recupera_voce(art)
 
             # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
-            LeenoSheetUtils.adattaAltezzaRiga(dccSheet, all=False)
+            LeenoSheetUtils.adattaAltezzaRiga(dccSheet, all=False, lrow=row)
 
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")

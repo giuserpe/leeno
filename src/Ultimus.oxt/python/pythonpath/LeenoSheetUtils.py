@@ -710,14 +710,13 @@ def setAdatta():
 
 
 @LeenoUtils.preserva_posizione(step=0)
-def adattaAltezzaRiga(oSheet=False, all=True):
+def adattaAltezzaRiga(oSheet=False, all=True, lrow=None):
     """
     Adatta l'altezza delle righe al contenuto delle celle in modo ottimizzato.
     Versione bilanciata tra velocità e manutenibilità.
     """
     # Configurazioni (modificabili)
     import pyleeno as PL
-    lrow = PL.LeggiPosizioneCorrente()[1]
 
     STILI_CELLA = {
         'comp 1-a',
@@ -773,6 +772,22 @@ def adattaAltezzaRiga(oSheet=False, all=True):
                         oSheet.getRows().getByIndex(y).OptimalHeight = True
         else:
             # Se all=False, ci limitiamo alla riga corrente e adiacenti o all'intera voce se siamo in fogli speciali
+            if lrow is None:
+                try:
+                    doc = SheetUtils.getDocumentFromSheet(oSheet)
+                    active_sheet = doc.CurrentController.ActiveSheet
+                    if active_sheet.Name == oSheet.Name:
+                        pos = LeenoUtils.getCursorPosition(doc)
+                        if pos is not None:
+                            lrow = pos[0]
+                except Exception:
+                    pass
+            if lrow is None:
+                try:
+                    lrow = PL.LeggiPosizioneCorrente()[1]
+                except Exception:
+                    lrow = 0
+
             if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
                 import LeenoComputo
                 try:
@@ -781,11 +796,11 @@ def adattaAltezzaRiga(oSheet=False, all=True):
                         start_row = sStRange.RangeAddress.StartRow
                         end_row = sStRange.RangeAddress.EndRow
                     else:
-                        start_row = max(0, lrow - 1)
-                        end_row = min(usedArea.EndRow, lrow + 1)
+                        start_row = max(0, lrow - 15)
+                        end_row = min(usedArea.EndRow, lrow + 15)
                 except Exception:
-                    start_row = max(0, lrow - 1)
-                    end_row = min(usedArea.EndRow, lrow + 1)
+                    start_row = max(0, lrow - 15)
+                    end_row = min(usedArea.EndRow, lrow + 15)
             else:
                 start_row = max(0, lrow - 1)
                 end_row = min(usedArea.EndRow, lrow + 1)

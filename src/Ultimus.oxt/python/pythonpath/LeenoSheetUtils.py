@@ -772,10 +772,24 @@ def adattaAltezzaRiga(oSheet=False, all=True):
                     if oSheet.getCellByPosition(2, y).CellStyle in STILI_CELLA:
                         oSheet.getRows().getByIndex(y).OptimalHeight = True
         else:
-            # Se all=False, ci limitiamo alla riga corrente e adiacenti
-            start_row = max(0, lrow - 1)
-            end_row = min(usedArea.EndRow, lrow + 1)
-            # Adatta l'altezza ottimale solo per il piccolo range
+            # Se all=False, ci limitiamo alla riga corrente e adiacenti o all'intera voce se siamo in fogli speciali
+            if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                import LeenoComputo
+                try:
+                    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+                    if sStRange is not None:
+                        start_row = sStRange.RangeAddress.StartRow
+                        end_row = sStRange.RangeAddress.EndRow
+                    else:
+                        start_row = max(0, lrow - 1)
+                        end_row = min(usedArea.EndRow, lrow + 1)
+                except Exception:
+                    start_row = max(0, lrow - 1)
+                    end_row = min(usedArea.EndRow, lrow + 1)
+            else:
+                start_row = max(0, lrow - 1)
+                end_row = min(usedArea.EndRow, lrow + 1)
+            # Adatta l'altezza ottimale solo per il piccolo range o l'intera voce
             oSheet.getCellRangeByPosition(0, start_row, 0, end_row).Rows.OptimalHeight = True
 
         # --- RIPRISTINO PROTEZIONE ---

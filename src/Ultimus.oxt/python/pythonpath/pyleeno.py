@@ -270,7 +270,6 @@ def invia_voce_interno():
 
 
 ###############################################################################
-@LeenoUtils.no_refresh
 def MENU_invia_voce():
     stato = cfg.read('Generale', 'pesca_auto')
     cfg.write('Generale', 'pesca_auto', 0)
@@ -286,15 +285,36 @@ def MENU_invia_voce():
     except Exception:
         is_ctrl = False
 
-    avviso_vedi_voce = invia_voce(ctrl_override=is_ctrl)
+    oDoc = LeenoUtils.getDocument()
+    DP = LeenoGlobals.getGlobalVar('sUltimus')
+    ddcDoc = LeenoUtils.findOpenDocument(DP) if DP else None
+
+    # Disabilita il refresh su entrambi i documenti (sorgente e destinazione)
+    if ddcDoc is not None:
+        LeenoUtils.DocumentRefresh(False, ddcDoc)
+    if oDoc is not None:
+        LeenoUtils.DocumentRefresh(False, oDoc)
+
+    avviso_vedi_voce = False
+    try:
+        avviso_vedi_voce = invia_voce(ctrl_override=is_ctrl)
+    finally:
+        # Ripristina sempre il refresh su entrambi i documenti
+        if ddcDoc is not None:
+            LeenoUtils.DocumentRefresh(True, ddcDoc)
+        if oDoc is not None:
+            LeenoUtils.DocumentRefresh(True, oDoc)
 
     cfg.write('Generale', 'pesca_auto', stato)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    # Non adattare l'altezza quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    LeenoUtils.DocumentRefresh(True)
+
+    # Aggiorna il layout sul documento attivo finale
+    oActiveDoc = LeenoUtils.getDocument()
+    if oActiveDoc is not None:
+        oSheet = oActiveDoc.CurrentController.ActiveSheet
+        # Non adattare l'altezza quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA
+        if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+        LeenoUtils.DocumentRefresh(True, oActiveDoc)
 
     if avviso_vedi_voce:
         Dialogs.Exclamation(Title="ATTENZIONE!", Text="Nella voce inviata è presente un riferimento ad altra voce (vedi voce). Verifica attentamente!")

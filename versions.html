@@ -452,27 +452,34 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-28 10:10</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ac991ff60805cc8440ef9cf5d63e81a938950b87" target="_blank" rel="noopener"><code>ac991ff</code></a></td>
-                <td class="commit-msg">Merge pull request #33 from giuserpe/jules-10649145872938913982-24be0345
+                <td>2026-07-28 11:54</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/988adb5026aa8ff983c24803a05ab916ded2d5b5" target="_blank" rel="noopener"><code>988adb5</code></a></td>
+                <td class="commit-msg">Merge pull request #34 from giuserpe/jules-11100812845086419442-dcf3cf72
 
-Ottimizzazione prestazioni invio voci tra documenti</td>
+Ottimizzazione di MENU_invia_voce() e correzione logica tasto CTRL</td>
             </tr>
             <tr>
-                <td>2026-07-28 10:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/478c30b16301da46121e7baba54c8dfd90a3871d" target="_blank" rel="noopener"><code>478c30b</code></a></td>
-                <td class="commit-msg">perf(core): ottimizza l'invio delle voci tra documenti
+                <td>2026-07-28 11:51</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/2a12be3dd4106b88f9f9abd0fc958646674ed7f7" target="_blank" rel="noopener"><code>2a12be3</code></a></td>
+                <td class="commit-msg">perf(core): ottimizza MENU_invia_voce e limita effetto CTRL a Elenco Prezzi
 
-Disabilita temporaneamente il rinfresco e il ricalcolo automatico sia sul documento di origine che su quello di arrivo durante il trasferimento delle voci. Questo riduce drasticamente l'overhead causato dagli aggiornamenti della GUI e dai ricalcoli parziali per ogni singola operazione di scrittura o inserimento riga.
+Migliora robustezza del ripristino stato (pesca_auto e refresh documenti) tramite try...finally.
+Corregge la logica del tasto CTRL durante l'invio della voce (sostituzione) e ne limita
+l'effetto esclusivamente all'invio originato dal foglio 'Elenco Prezzi'.
+Introduce Dialogs.YesNoDialog in linea con le linee guida.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-07-28 09:53</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/446361c9acd72f8066bf06548edca551fb493450" target="_blank" rel="noopener"><code>446361c</code></a></td>
-                <td class="commit-msg">Merge pull request #32 from giuserpe/jules-347819981848730888-5963c7d4
+                <td>2026-07-28 11:12</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/44c5a7c2a82f16edf2a9d454831c06143b9362c4" target="_blank" rel="noopener"><code>44c5a7c</code></a></td>
+                <td class="commit-msg">perf(core): ottimizza la funzione MENU_invia_voce ed evita inconsistenze di stato
 
-Correzione invio voce da Elenco Prezzi a Analisi di Prezzo</td>
+Rende estremamente robusto il ripristino di 'pesca_auto' e del refresh del documento
+in caso di eccezione o uscita anticipata. Corregge inoltre la logica invertita nel
+controllo della sostituzione dell'articolo se premuto il tasto CTRL, e introduce YesNoDialog.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +503,8 @@ Correzione invio voce da Elenco Prezzi a Analisi di Prezzo</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-28 11:51 UTC</p>
-                <p>Build Commit: <code>2a12be3</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-28 11:54 UTC</p>
+                <p>Build Commit: <code>988adb5</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

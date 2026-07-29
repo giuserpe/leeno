@@ -1537,6 +1537,7 @@ def copia_sheet(nSheet, tag="_copia"):
 
 
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def copia_sheet_consolida():
     '''Copia il foglio corrente e ne consolida il contenuto'''
     oDoc = LeenoUtils.getDocument()

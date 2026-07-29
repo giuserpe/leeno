@@ -395,6 +395,7 @@ def Menu_computoSenzaPrezzi():
     salva_senza_prezzi()
 
 
+@LeenoUtils.preserve_clipboard
 def salva_senza_prezzi():
     """
     Salva il documento corrente con il suffisso '_senza_prezzi'

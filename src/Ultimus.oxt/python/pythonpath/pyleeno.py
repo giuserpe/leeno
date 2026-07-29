@@ -11720,16 +11720,20 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
 #     except:
 #         pass
 
-def fissa():
+def fissa(cols_freeze=None, rows_freeze=None):
     '''
     Fissa le righe nel foglio attivo usando le API UNO di SpreadsheetView.
     Evita che le prime righe rimangano nascoste dopo il freeze.
+    Supporta parametri facoltativi cols_freeze e rows_freeze passati da macro esterne o Basic.
     '''
     oDoc = LeenoUtils.getDocument()
     if not oDoc or not hasattr(oDoc, 'CurrentController'):
         return
 
     controller = oDoc.CurrentController
+    if not hasattr(controller, 'freezeAtPosition'):
+        return
+
     oSheet = controller.ActiveSheet
     if not oSheet:
         return
@@ -11747,20 +11751,53 @@ def fissa():
         'Scorciatoie':       (0, 1),
     }
 
-    cols_freeze, rows_freeze = SHEET_FREEZE_MAP.get(oSheet.Name, (0, 0))
+    # Se i parametri non sono forniti, recuperali dalla mappa in base al nome del foglio
+    if cols_freeze is None or rows_freeze is None:
+        cols_freeze, rows_freeze = SHEET_FREEZE_MAP.get(oSheet.Name, (0, 0))
+    else:
+        try:
+            cols_freeze = int(cols_freeze)
+            rows_freeze = int(rows_freeze)
+        except (ValueError, TypeError):
+            cols_freeze, rows_freeze = SHEET_FREEZE_MAP.get(oSheet.Name, (0, 0))
 
-    # Reset: rimuove blocchi esistenti
-    controller.freezeAtPosition(0, 0)
+    try:
+        # Se la finestra è divisa, rimuove la divisione per evitare conflitti con il freeze
+        if hasattr(controller, 'getIsWindowSplit') and controller.getIsWindowSplit():
+            controller.splitAtPosition(0, 0)
+    except Exception:
+        pass
 
-    # Porta la vista all'origine selezionando A1 —
-    # SpreadsheetView non ha createViewCursor(), ma select() su una cella
-    # è sufficiente a riposizionare la vista prima del freeze.
-    controller.select(oSheet.getCellByPosition(0, 0))
+    try:
+        # Reset: rimuove blocchi esistenti
+        controller.freezeAtPosition(0, 0)
+    except Exception:
+        pass
 
-    # if rows_freeze > 0 or cols_freeze > 0:
-    controller.freezeAtPosition(cols_freeze, rows_freeze)
+    # Riposiziona la vista all'origine assoluta (A1 in alto a sinistra)
+    # per garantire che le prime righe non rimangano nascoste dopo il freeze.
+    try:
+        if hasattr(controller, 'setFirstVisibleColumn'):
+            controller.setFirstVisibleColumn(0)
+        if hasattr(controller, 'setFirstVisibleRow'):
+            controller.setFirstVisibleRow(0)
+    except Exception:
+        pass
 
-    # Posiziona il cursore sulla prima cella navigabile (sotto/dopo il freeze)
+    # Porta anche la selezione della cella su A1 prima di applicare il freeze,
+    # offrendo un feedback visivo pulito ed evitando scroll involontari.
+    try:
+        controller.select(oSheet.getCellByPosition(0, 0))
+    except Exception:
+        pass
+
+    # Applica il blocco se richiesto
+    try:
+        controller.freezeAtPosition(cols_freeze, rows_freeze)
+    except Exception:
+        pass
+
+    # Seleziona la prima cella navigabile sotto/dopo il blocco per dare il focus all'area dati
     try:
         controller.select(oSheet.getCellByPosition(cols_freeze, rows_freeze))
     except Exception:

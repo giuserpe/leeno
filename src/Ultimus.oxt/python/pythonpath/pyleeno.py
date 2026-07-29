@@ -12517,8 +12517,7 @@ def sposta_voce(row=None, msg=1):
 
     # 3. Altezza ottimale (eseguita DOPO lo sblocco del controller)
     # Applichiamo l'altezza ottimale solo alle righe coinvolte nello spostamento
-    dest_range = oSheet.getCellRangeByPosition(0, dest_row, 250, dest_row + num_rows - 1)
-    dest_range.getRows().OptimalHeight = True
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=dest_row)
 
     # Ripristino visivo
     oDoc.CurrentController.setFirstVisibleRow(max(0, dest_row - 8))

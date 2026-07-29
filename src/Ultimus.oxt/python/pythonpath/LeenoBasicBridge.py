@@ -362,9 +362,9 @@ def ScriviNomeDocumentoPrincipale():
     PL.ScriviNomeDocumentoPrincipale()
 
 
-def fissa():
+def fissa(cols_freeze=None, rows_freeze=None):
     callAlert()
-    PL.fissa()
+    PL.fissa(cols_freeze, rows_freeze)
 
 
 def bak0(arg=None):

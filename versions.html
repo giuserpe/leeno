@@ -452,29 +452,26 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-29 08:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1bb4883f344254e223310af4bef6d23b3aef642d" target="_blank" rel="noopener"><code>1bb4883</code></a></td>
+                <td class="commit-msg">Merge pull request #39 from giuserpe/jules-8099586499064776246-7ad2ac93
+
+fix(computo): adatta altezza riga dopo spostamento
+Sostituisce dest_range.getRows().OptimalHeight = True con LeenoSheetUtils.adattaAltezzaRiga per applicare correttamente l'adattamento altezza riga ottimizzato ed evitare freeze o malfunzionamenti dovuti alla protezione del foglio.</td>
+            </tr>
+            <tr>
+                <td>2026-07-29 08:34</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/571dab223d3365e5870553e680ecacf4196fd224" target="_blank" rel="noopener"><code>571dab2</code></a></td>
+                <td class="commit-msg">fix(computo): adatta altezza riga ottimizzata dopo lo spostamento di una voce
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-29 08:17</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/6fe64a75117c15f3786ea40084f764968535c1a5" target="_blank" rel="noopener"><code>6fe64a7</code></a></td>
                 <td class="commit-msg">Merge pull request #38 from giuserpe/jules-9099509627548307742-d098b1c0
 
 refactor(core): applica il decoratore preserve_clipboard alle funzioni che modificano (scrivono) sulla clipboard internamente per logica di servizio, escludendo le funzioni di sola lettura e quelle che scrivono esplicitamente su richiesta dell'utente.</td>
-            </tr>
-            <tr>
-                <td>2026-07-29 07:53</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/327d60e85c89ae4eaccc0db282b89eca25b9c581" target="_blank" rel="noopener"><code>327d60e</code></a></td>
-                <td class="commit-msg">refactor(core): applica il decoratore preserve_clipboard alle funzioni che scrivono internamente
-
-Applica @LeenoUtils.preserve_clipboard solo alle funzioni che modificano o scrivono sulla clipboard come parte della loro logica interna (salva_senza_prezzi, MENU_SheetToDoc, copia_sheet_consolida, MENU_invia_voce). Esclude tutte le funzioni che solo leggono o che copiano/tagliano per scopi espliciti dell'utente.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-29 07:38</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3bcbc7e298c1c801c901ab7852191caccc684213" target="_blank" rel="noopener"><code>3bcbc7e</code></a></td>
-                <td class="commit-msg">refactor(core): applica il decoratore preserve_clipboard alle funzioni della clipboard
-
-Applica @LeenoUtils.preserve_clipboard a tutte le funzioni che leggono dalla clipboard o la usano solo internamente, preservando lo stato precedente per l'utente. Esclude le funzioni che copiano o tagliano per l'utente, come richiesto.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -498,8 +495,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-29 08:35 UTC</p>
-                <p>Build Commit: <code>571dab2</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-29 08:37 UTC</p>
+                <p>Build Commit: <code>1bb4883</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

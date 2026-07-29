@@ -326,7 +326,6 @@ def setTabColor(color):
     PL.setTabColor(color)
 
 
-@LeenoUtils.preserve_clipboard
 def paste_clip(arg=None, insCells=0):
     callAlert()
     PL.paste_clip(arg, insCells)

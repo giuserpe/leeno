@@ -1537,6 +1537,7 @@ def copia_sheet(nSheet, tag="_copia"):
 
 
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def copia_sheet_consolida():
     '''Copia il foglio corrente e ne consolida il contenuto'''
     oDoc = LeenoUtils.getDocument()
@@ -5994,6 +5995,7 @@ def Copia_riga_Ent(num_righe=None, target_row=None):
     return row
 
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def count_clipboard_lines():
     ctx = LeenoUtils.getComponentContext()
     smgr = ctx.getServiceManager()
@@ -6022,6 +6024,7 @@ def count_clipboard_lines():
     # Restituisce il valore
     return num_lines
 
+@LeenoUtils.preserve_clipboard
 @release_ram
 @with_undo()
 def paste_smart():
@@ -6821,6 +6824,7 @@ def delete_cells(direction='up'):
 
     dispatchHelper.executeDispatch(oFrame, ".uno:DeleteCell", "", 0, properties)
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def paste_clip(insCells=0, pastevalue=False, noformat=False):
     '''
     Incolla il contenuto della clipboard.
@@ -6866,6 +6870,7 @@ def paste_clip(insCells=0, pastevalue=False, noformat=False):
 ########################################################################
 
 
+@LeenoUtils.preserve_clipboard
 def paste_format():
     '''
     Incolla solo il formato della cella (corrisponde al flag 'T' di Paste Special).
@@ -12056,6 +12061,7 @@ def _show_results(var_total, cont_total):
 ###############################################################################
 ###############################################################################
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def MENU_hl():
     '''
     Sostituisce hyperlink alla stringa nella colonna in cui è la cella
@@ -12951,6 +12957,7 @@ def stop_all_scripts_and_close_dialogs():
 ########################################################################
 ########################################################################
 ########################################################################
+@LeenoUtils.preserve_clipboard
 def count_clipboard_lines():
         ctx = LeenoUtils.getComponentContext()
         smgr = ctx.getServiceManager()

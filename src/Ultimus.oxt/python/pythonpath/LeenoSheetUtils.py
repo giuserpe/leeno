@@ -1094,6 +1094,7 @@ def MENU_elimina_righe_vuote():
 # ###############################################################
 
 
+@LeenoUtils.preserve_clipboard
 def MENU_SheetToDoc():
     '''
     Copia il foglio corrente in un nuovo documento.

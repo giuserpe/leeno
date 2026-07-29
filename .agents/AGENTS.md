@@ -47,13 +47,38 @@ Senza questi parametri, un `pull` può segnare centinaia di file come "modificat
 - Quando devi manipolare o analizzare file di testo di grandi dimensioni, preferisci sempre l'utilizzo di librerie specializzate (come `pandas` per dati strutturati o `re`/`regex` per pattern) per ottenere prestazioni migliori, piuttosto che l'analisi manuale tramite stringhe o cicli in linguaggio naturale.
 - Preferisci sempre l'utilizzo di procedure batch (elaborazioni in blocco) per migliorare le prestazioni e ridurre i tempi di esecuzione, specialmente quando si interagisce con il documento.
 - Non usare `print()`: utilizza `DLG.chi()` per l'output di debug/log.
-- Per la selezione di file o cartelle, utilizza sempre `Dialogs.FileSelect()` invece di dialoghi custom o librerie esterne.
+- Per la selezione di file o cartelle, utilizza sempre `Dialogs.FileSelect()` o `Dialogs.FolderSelect()` quando disponibili, invece di dialoghi custom o librerie esterne.
 - Nessun output su stdout: usa il logging su file previsto dal progetto.
 - Non includere sezioni CLI nel codice dei moduli.
+- Quando è necessario, preferisci sempre i formati aperti .ODF.
+
+## Sicurezza dei moduli in `pythonpath/`
+
+`src/Ultimus.oxt/python/pythonpath/` è nel `sys.path` dell'estensione: qualunque file al suo interno può essere importato dal processo di LibreOffice per motivi indipendenti dal task che lo ha creato (esplorazione macro, `importlib.reload` di recupero in caso di errore, tool di indicizzazione). Per questo:
+
+- **Vietato codice con effetti collaterali a livello di modulo** (eseguito al semplice `import`, fuori da funzioni/classi) in qualunque file di questa cartella.
+- **Vietato sovrascrivere `sys.modules[...]` a livello di modulo.** Se un file lo fa (tipicamente per mockare `uno`/`unohelper`/moduli interni nei test) e viene importato anche solo una volta dentro LibreOffice, i moduli reali restano sostituiti da mock per l'intera sessione: effetti silenziosi, difficili da diagnosticare, che vanno da malfunzionamenti a blocchi (freeze) dell'intero processo.
+- **I file di test (`test_*.py`, `unittest`/`pytest`, mocking di `uno`) non vanno mai in `pythonpath/`.** Vanno in una cartella dedicata esclusa dal `sys.path` dell'estensione (es. `tests/`), oppure rimossi prima del merge su `dev` se non servono al funzionamento di LeenO. Attenzione particolare ai commit generati da agenti AI (es. Jules): possono aggiungere test funzionalmente corretti ma ignari di questo vincolo — vanno revisionati prima del merge, non dopo.
+- Qualunque mocking di `sys.modules` in un test deve essere temporaneo e ripristinato (es. `unittest.mock.patch.dict` come context manager), mai un'assegnazione diretta persistente.
+
+## Ciclo di vita dei documenti UNO
+
+- Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione: rischia un deadlock dell'intero processo (lo script attende `close()`, `close()` attende che lo script rilasci il documento). Se serve sostituire il documento corrente (es. aprendone uno nuovo da template), apri prima il nuovo e valuta la chiusura del vecchio come ultima istruzione della funzione, con un `return` immediato subito dopo per non riusare più l'oggetto ormai `disposed`.
+
+## Compatibilità delle proprietà custom del documento
+
+- Se rinomini una `UserDefinedProperty` del documento (es. `Versione` → `Versione_LeenO`), non lasciare letture dirette del vecchio nome senza `try/except`. Centralizza la lettura in un helper con fallback sul nome legacy: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare (eccezione non gestita che interrompe la funzione a metà, senza errore visibile all'utente).
+
+## Diagnosi di blocchi/freeze
+
+- Per isolare un freeze senza un ambiente di riproduzione remoto, instrumenta la funzione sospetta con `DLG.chi()` a ogni passaggio chiave: l'ultimo checkpoint visto prima del blocco localizza il tratto di codice responsabile.
+- Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
+- Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
 ### Formato
+
 ```
 <tipo>(<scope>): <descrizione in italiano>
 
@@ -62,17 +87,17 @@ Senza questi parametri, un `pull` può segnare centinaia di file come "modificat
 
 ### Tipi
 
-| Tipo | Quando |
-|------|--------|
-| `feat` | Nuova funzionalità |
-| `fix` | Correzione bug |
-| `docs` | Solo documentazione |
-| `style` | Formattazione, spazi, punti e virgola mancanti (no logica) |
+| Tipo       | Quando                                                            |
+| ---------- | ------------------------------------------------------------------ |
+| `feat`     | Nuova funzionalità                                                |
+| `fix`      | Correzione bug                                                    |
+| `docs`     | Solo documentazione                                               |
+| `style`    | Formattazione, spazi, punti e virgola mancanti (no logica)        |
 | `refactor` | Modifica del codice che non corregge bug né aggiunge funzionalità |
-| `perf` | Miglioramento prestazioni |
-| `test` | Aggiunta/modifica test |
-| `chore` | Manutenzione, aggiornamento dipendenze, versioning, build |
-| `revert` | Annullamento di un commit precedente |
+| `perf`     | Miglioramento prestazioni                                         |
+| `test`     | Aggiunta/modifica test                                            |
+| `chore`    | Manutenzione, aggiornamento dipendenze, versioning, build         |
+| `revert`   | Annullamento di un commit precedente                              |
 
 ### Scope Suggeriti (LeenO)
 
@@ -94,7 +119,7 @@ Identifica l'area principale colpita dalle modifiche:
 3. **Punteggiatura**: Nessun punto finale nell'intestazione
 4. **Breaking Change**: Aggiungi `!` dopo il tipo (es. `feat!: ...`) e descrivi in `BREAKING CHANGE:` nel corpo
 5. **Separazione**: Se le modifiche riguardano aree troppo diverse, suggerisci commit separati
-6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alla funzione `MENU_debug` nella generazione del messaggio di commit
+6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alle funzioni nel cui nome compare la stringa "\_debug" (es. `MENU_debug`) nella generazione del messaggio di commit
 
 ### Procedura Operativa
 

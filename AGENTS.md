@@ -8,8 +8,37 @@ LeenO è un'estensione (OXT) per LibreOffice Calc per la redazione di computi me
 
 ## Branch di lavoro
 
-- Il branch di sviluppo attivo è `dev`. Salvo diversa indicazione esplicita, ogni task deve partire da `dev`, non da `master`.
+- Il branch di sviluppo attivo è `dev` (default branch del repo). Salvo diversa indicazione esplicita, ogni task deve partire da `dev`, non da `master`.
 - `master` è il branch di release stabile: non aprire PR contro `master` senza istruzione esplicita.
+
+## Ambiente di sviluppo e macchine
+
+Il repository vive su un drive esterno con lettera `W:`, identica su tutte le macchine di lavoro: percorso fisso `W:\_dwg\ULTIMUSFREE\_SRC\leeno`. L'estensione compilata (OXT) viene caricata in LibreOffice tramite un symlink fisso puntato a questo percorso — per questo motivo il percorso del repo non è modificabile e va sempre rispettato così com'è.
+
+- **PC `giuserpe`** (nome letterale della macchina, non "Giuseppe"): amministratore locale. È la macchina dove avvengono commit, push, gestione dei task Jules, merge delle PR.
+- **PC TEST**: nessun privilegio di amministratore. Usato per test dell'estensione in LibreOffice e, occasionalmente, per editing diretto del codice.
+
+### File `.oxt` compilati
+
+I pacchetti `.oxt` generati (tramite `make_pack()` da LibreOffice Calc) vengono conservati nella cartella `OXT\`. Non è previsto l'uso di `bin2src.py`/`src2bin.py`: `src/Ultimus.oxt/` nel repo È GIÀ il sorgente diretto; `make_pack()` si limita a impacchettarlo in un `.oxt` installabile, con bump automatico di `description.xml` e `leeno_version_code`.
+
+### Workflow tipico di editing su PC TEST
+
+Quando il codice viene modificato direttamente su PC TEST (non tramite Jules):
+
+1. `git pull` su `dev` prima di iniziare
+2. Modifica del codice in locale
+3. `make_pack()` da LibreOffice Calc → produce l'OXT aggiornato, conservato in `OXT\`
+4. Il commit/push NON avviene da PC TEST: il file `.oxt` prodotto viene poi estratto e portato dentro `src/Ultimus.oxt/` su PC `giuserpe`, dove si esegue commit e push dopo revisione del diff
+
+### Configurazione git per evitare falsi positivi
+
+Su entrambe le macchine vanno impostati, fin dall'inizio:
+```
+git config core.autocrlf true
+git config core.fileMode false
+```
+Senza questi parametri, un `pull` può segnare centinaia di file come "modificati" per semplice rumore di line-ending/permessi — non contenuto reale. Verificare sempre con `git diff` prima di scartare o committare in massa.
 
 ## Regole del Progetto LeenO
 
@@ -22,6 +51,29 @@ LeenO è un'estensione (OXT) per LibreOffice Calc per la redazione di computi me
 - Nessun output su stdout: usa il logging su file previsto dal progetto.
 - Non includere sezioni CLI nel codice dei moduli.
 - Quando è necessario, preferisci sempre i formati aperti .ODF.
+
+## Sicurezza dei moduli in `pythonpath/`
+
+`src/Ultimus.oxt/python/pythonpath/` è nel `sys.path` dell'estensione: qualunque file al suo interno può essere importato dal processo di LibreOffice per motivi indipendenti dal task che lo ha creato (esplorazione macro, `importlib.reload` di recupero in caso di errore, tool di indicizzazione). Per questo:
+
+- **Vietato codice con effetti collaterali a livello di modulo** (eseguito al semplice `import`, fuori da funzioni/classi) in qualunque file di questa cartella.
+- **Vietato sovrascrivere `sys.modules[...]` a livello di modulo.** Se un file lo fa (tipicamente per mockare `uno`/`unohelper`/moduli interni nei test) e viene importato anche solo una volta dentro LibreOffice, i moduli reali restano sostituiti da mock per l'intera sessione: effetti silenziosi, difficili da diagnosticare, che vanno da malfunzionamenti a blocchi (freeze) dell'intero processo.
+- **I file di test (`test_*.py`, `unittest`/`pytest`, mocking di `uno`) non vanno mai in `pythonpath/`.** Vanno in una cartella dedicata esclusa dal `sys.path` dell'estensione (es. `tests/`), oppure rimossi prima del merge su `dev` se non servono al funzionamento di LeenO. Attenzione particolare ai commit generati da agenti AI (es. Jules): possono aggiungere test funzionalmente corretti ma ignari di questo vincolo — vanno revisionati prima del merge, non dopo.
+- Qualunque mocking di `sys.modules` in un test deve essere temporaneo e ripristinato (es. `unittest.mock.patch.dict` come context manager), mai un'assegnazione diretta persistente.
+
+## Ciclo di vita dei documenti UNO
+
+- Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione: rischia un deadlock dell'intero processo (lo script attende `close()`, `close()` attende che lo script rilasci il documento). Se serve sostituire il documento corrente (es. aprendone uno nuovo da template), apri prima il nuovo e valuta la chiusura del vecchio come ultima istruzione della funzione, con un `return` immediato subito dopo per non riusare più l'oggetto ormai `disposed`.
+
+## Compatibilità delle proprietà custom del documento
+
+- Se rinomini una `UserDefinedProperty` del documento (es. `Versione` → `Versione_LeenO`), non lasciare letture dirette del vecchio nome senza `try/except`. Centralizza la lettura in un helper con fallback sul nome legacy: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare (eccezione non gestita che interrompe la funzione a metà, senza errore visibile all'utente).
+
+## Diagnosi di blocchi/freeze
+
+- Per isolare un freeze senza un ambiente di riproduzione remoto, instrumenta la funzione sospetta con `DLG.chi()` a ogni passaggio chiave: l'ultimo checkpoint visto prima del blocco localizza il tratto di codice responsabile.
+- Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
+- Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
@@ -36,7 +88,7 @@ LeenO è un'estensione (OXT) per LibreOffice Calc per la redazione di computi me
 ### Tipi
 
 | Tipo       | Quando                                                            |
-| ---------- | ----------------------------------------------------------------- |
+| ---------- | ------------------------------------------------------------------ |
 | `feat`     | Nuova funzionalità                                                |
 | `fix`      | Correzione bug                                                    |
 | `docs`     | Solo documentazione                                               |
@@ -67,7 +119,7 @@ Identifica l'area principale colpita dalle modifiche:
 3. **Punteggiatura**: Nessun punto finale nell'intestazione
 4. **Breaking Change**: Aggiungi `!` dopo il tipo (es. `feat!: ...`) e descrivi in `BREAKING CHANGE:` nel corpo
 5. **Separazione**: Se le modifiche riguardano aree troppo diverse, suggerisci commit separati
-6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alle funzioni nel cui nome compare la stringa "\_debug" nella generazione del messaggio di commit
+6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alle funzioni nel cui nome compare la stringa "\_debug" (es. `MENU_debug`) nella generazione del messaggio di commit
 
 ### Procedura Operativa
 
@@ -76,6 +128,10 @@ Identifica l'area principale colpita dalle modifiche:
 3. **Identificazione Scope**: Scegli lo scope più calzante in base ai file modificati
 4. **Draft Messaggio**: Componi l'intestazione. Se la modifica non è auto-esplicativa, aggiungi un paragrafo di corpo dopo una riga vuota
 5. **Proponi Comando**: Mostra il comando finale: `git commit -m "..."` o `git commit -e` se serve un corpo esteso
+
+### Caso particolare: commit dopo editing su PC TEST
+
+Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione di un OXT da `OXT\` dentro `src/Ultimus.oxt/`), il diff viene sottoposto per intero a un assistente AI (Claude, Copilot o altro) prima di committare, seguendo comunque questa stessa procedura operativa. Se il diff copre aree molto ampie o eterogenee del codice, preferire più commit separati per area invece di un unico commit generico.
 
 ### Esempi
 

@@ -10065,7 +10065,7 @@ def adegua_tmpl():
     adegua_a = 219  # VERSIONE CORRENTE
 
     if ver_tmpl < adegua_a:
-        if Dialogs.YesNoCancelDialog(Title='Informazione',
+        if Dialogs.YesNoDialog(Title='Informazione',
         Text= '''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?''') == 0:
             Dialogs.Exclamation(Title = 'Avviso!',

@@ -452,27 +452,31 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-30 15:57</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/11afb5c3cb512fd87fb2d31c259a874deae32716" target="_blank" rel="noopener"><code>11afb5c</code></a></td>
+                <td class="commit-msg">Merge pull request #47 from giuserpe/dev-6171836073409543434
+
+Modificata la funzione autoexec_run() in pyleeno.py in modo da ispezionare la macro Basic Standard.Controllo.Controlla_Esistenza_LibUltimus del documento corrente. Se il nome del foglio "S2" è presente nell'array del ciclo For Each, viene rimosso automaticamente e il sorgente del modulo Basic aggiornato. Aggiunto test unitario dedicato in test_autoexec.py.</td>
+            </tr>
+            <tr>
+                <td>2026-07-30 15:52</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1c9596ab8ff8e4a9e7ff63b2e9ca1f9d0ec0825d" target="_blank" rel="noopener"><code>1c9596a</code></a></td>
+                <td class="commit-msg">fix(autoexec): cancella S2 da array Controlla_Esistenza_LibUltimus
+
+Modificata la funzione `autoexec_run()` in `pyleeno.py` in modo da ispezionare
+la macro Basic `Standard.Controllo.Controlla_Esistenza_LibUltimus` del documento corrente.
+Se il nome del foglio "S2" è presente nell'array del ciclo `For Each`, viene rimosso
+automaticamente e il sorgente del modulo Basic aggiornato.
+Aggiunto test unitario dedicato in `test_autoexec.py`.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-30 15:18</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/90ee8938a0f7cfe925c1572522e14d64a96a2200" target="_blank" rel="noopener"><code>90ee893</code></a></td>
                 <td class="commit-msg">Merge pull request #46 from giuserpe/dev-13554292394135371432
 
 Ottimizzazione e verifica Controlla_Esistenza_LibUltimus in Computo_LeenO.ods</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 15:14</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/144b3c793f2661b4907cb757f837e2e5a30d79eb" target="_blank" rel="noopener"><code>144b3c7</code></a></td>
-                <td class="commit-msg">refactor(template): ottimizza la sub Controlla_Esistenza_LibUltimus in Computo_LeenO.ods
-
-- Dichiara esplicitamente le variabili locali con Dim (oSheet, el) per evitare problemi di variabili implicite.
-- Utilizza direttamente GlobalScope.BasicLibraries per la verifica e caricamento della libreria UltimusFree2, eliminando l'istanziazione ridondante del servizio UNO ApplicationScriptLibraryContainer.
-- Migliora lo stile del codice Basic all'interno del modulo XML Controllo.xml.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-30 14:04</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b03e37dbcc84bb22cc6c60e08cd4f991a5e6fcf5" target="_blank" rel="noopener"><code>b03e37d</code></a></td>
-                <td class="commit-msg">Update</td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +500,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 15:53 UTC</p>
-                <p>Build Commit: <code>1c9596a</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 15:57 UTC</p>
+                <p>Build Commit: <code>11afb5c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

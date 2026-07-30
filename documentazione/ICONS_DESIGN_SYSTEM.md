@@ -75,9 +75,11 @@ Per garantire una resa nitida alle risoluzioni native del desktop, le icone sono
 - **Raggio dell'Angolo:**
   - Angoli esterni: raggio di `2px`.
   - Dettagli interni / giunti di piega: `1px` o netti a `0px` a seconda del contesto.
-- **Padding / Area di Sicurezza:**
+- **Padding / Area di Sicurezza (fase di progettazione):**
   - Margine di `2px` su tutti i lati della tela `24×24`.
   - Nessun punto di ancoraggio strutturale o elemento chiave deve trovarsi nell'area di sicurezza, a meno che non trabocchi intenzionalmente per l'equilibrio visivo (es. punte di freccia sottili).
+  - Questo margine resta la regola da seguire quando si **disegna** una nuova icona da zero, per garantire coerenza con il resto della famiglia durante la fase creativa.
+  - **Nota (v2.3):** in fase di **export/delivery**, questo margine viene poi rimosso automaticamente da uno script di ritaglio (vedi sezione 15) per massimizzare la leggibilità alle dimensioni piccole di toolbar. Il margine di sicurezza qui descritto è quindi una guida per il disegno, non la geometria del file SVG finale consegnato.
 - **Allineamento Ottico:** Centrato visivamente. Gli elementi orizzontali devono essere allineati lungo la linea centrale orizzontale della griglia; gli elementi verticali lungo la linea centrale verticale.
 
 ---
@@ -648,3 +650,33 @@ Nel corso del ciclo di sviluppo dell'estensione LeenO (Luglio 2026), l'intero si
 | `evidenzia` | Extra | Evidenzia voci in Elenco Prezzi |
 
 Tutte le icone ereditano e rispettano i vincoli di geometricità e contrasto definiti nell'Addendum v2.1.
+
+---
+
+## 15. Canvas di Export 48×48 px con Padding Azzerato (v2.3)
+
+Per migliorare la leggibilità delle icone quando la toolbar di LibreOffice è impostata su dimensione "piccola", tutti i 124 file SVG (62 icone × 2 temi, `icons/svg/` e `icons/scuro/`) sono stati aggiornati con un nuovo canvas di export e un ritaglio del margine di sicurezza.
+
+### 15.1 Cosa è cambiato
+
+- **Canvas:** `width`/`height` portati da `32×32` (o `24×24`/`65×65` nei rari casi non allineati) a **`48×48`** per tutti i file.
+- **Padding:** il margine di sicurezza di 2px descritto in sezione 3 è stato **rimosso in fase di export**, tramite un ritaglio del `viewBox` calcolato singolarmente per ciascuna icona (non un singolo crop uguale per tutte).
+
+### 15.2 Metodo di ritaglio (per icona, non uniforme)
+
+Un ritaglio uniforme (es. tagliare sempre "2px per lato" dal `viewBox 0 0 24 24` originale) è stato scartato dopo verifica: molte icone hanno badge d'angolo o elementi che già arrivano quasi a contatto con il bordo da un lato, mentre altre hanno margini più ampi e asimmetrici. Un crop fisso avrebbe tagliato via parte del disegno in diversi casi.
+
+Il metodo adottato, applicato singolarmente a ognuna delle 62 icone:
+
+1. **Render ad alta risoluzione** di ogni SVG (via `rsvg-convert`, con font Liberation Sans installati per una resa fedele anche delle icone basate su testo/lettere — es. `numeri_lettere`, `pesca`, `riordina`, `gestione_decimali`).
+2. **Calcolo del bounding box reale** del contenuto visibile (pixel non trasparenti), non della sola geometria vettoriale — necessario perché alcune icone usano `<text>` che non ha un bounding box vettoriale affidabile.
+3. **Nuovo `viewBox` quadrato**, centrato sul bounding box del contenuto, dimensionato in modo che il lato più lungo del disegno tocchi esattamente i due bordi corrispondenti (più un margine tecnico dello 0,5–1% per non perdere pixel per via dell'antialiasing).
+4. **Verifica visiva prima/dopo** per tutte le 62 icone (contact sheet), con controllo ravvicinato dei casi con fattore di zoom più alto, per escludere disegni tagliati o sbilanciati.
+
+Fattori di zoom risultanti: tra **0,97×** e **1,58×** a seconda dell'icona — nessun caso ha richiesto uno zoom estremo.
+
+### 15.3 Implicazioni per nuove icone future
+
+- In fase di **disegno**, continuare a seguire la griglia master 24×24 con margine di sicurezza 2px (sezione 3) — questo garantisce coerenza tra le icone e spazio di manovra per bilanciare badge/overlay.
+- Il ritaglio a bordo (padding zero) va applicato **solo in fase di export finale**, con lo stesso metodo per-icona descritto sopra (bounding box reale + crop quadrato centrato), non a mano e non con un unico crop fisso per l'intero set.
+- `icons/svg/` e `icons/scuro/` condividono sempre la stessa geometria (e quindi lo stesso `viewBox` ritagliato): un cambiamento di crop va propagato a entrambe le cartelle.

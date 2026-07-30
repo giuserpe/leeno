@@ -1,38 +1,70 @@
 LeenO - Computo metrico assistito con LibreOffice
-=====
-Estensione per LibreOffice basata su UltimusFree di Bartolomeo Aimar e
-distribuita con licenza LGPL.
+=================================================
 
-Cos’è LeenO
-===========
+[![Sito Ufficiale](https://img.shields.io/badge/Sito-LeenO.org-blue?style=flat-square)](https://leeno.org/)
+[![Licenza](https://img.shields.io/badge/Licenza-LGPL%20v3-green?style=flat-square)](https://leeno.org/licenza-2/)
+[![Telegram](https://img.shields.io/badge/Telegram-Group-blue?logo=telegram&style=flat-square)](https://t.me/leeno_computometrico)
+[![Facebook](https://img.shields.io/badge/Facebook-Group-blue?logo=facebook&style=flat-square)](https://m.facebook.com/groups/433206393972197)
+[![Donazioni](https://img.shields.io/badge/Sostienici-Dona-red?style=flat-square)](https://leeno.org/donazioni/)
+[![Liberapay](https://img.shields.io/badge/Liberapay-Dona-yellow?logo=liberapay&style=flat-square)](https://liberapay.com/leeno_computo/donate)
 
-LeenO è l’estensione per LibreOffice Calc specifica per la redazione di computi metrici e contabilità tecnica di cantiere. È un fork derivato da Ultimus che fu ideato e scritto da Bartolomeo Aimar, è coperto da Licenza LGPL  perciò se ne può fare un uso personale e professionale libero. E’ distribuito con nome LeenO.oxt.
-LeenO lavora con LibreOffice, quindi sotto tutte le piattaforme su cui è possibile installare questa office suite.
+**LeenO** è l’estensione open-source per LibreOffice Calc specifica per la redazione di computi metrici estimativi e contabilità tecnica di cantiere.
 
-LeenO, che eredita da LibreOffice tutte le sue funzionalità, ne completa l’offerta, proponendo all’ufficio tecnico un sistema integrato per la gestione delle progettazioni e degli appalti, a partire dalla organizzazione della documentazione a base di gara, fino alla gestione dell’appalto in fase di esecuzione dell’opera ed alla sua conclusione. Lavorando in ambiente Calc, LeenO consente un’ampia manovrabilità e personalizzazione degli elaborati.
+È un fork derivato da *Ultimus*, ideato e scritto da Bartolomeo Aimar, ed è coperto da Licenza LGPL v3. Può quindi essere utilizzato liberamente sia per scopi personali che professionali.
 
-LibreOffice genera e gestisce file in formato OpenDocument (ODF) che è lo Standard aperto ISO/IEC 26300:2015. LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo stesso standard. OpenDocument garantisce:
+Visita il sito ufficiale: [https://leeno.org/](https://leeno.org/)
 
-    interoperabilità senza barriere tecniche e legali anche tra sistemi operativi diversi,
-    scambio dei dati corretto e sicuro,
-    accesso agli stessi a lungo termine.
+---
 
-Le sue specifiche tecniche sono di pubblico dominio, per cui favorisce la concorrenza impedendo che queste siano detenute da un singolo produttore di software.
+## Caratteristiche Principali
 
-Per queste peculiarità LeenO è perfettamente in linea con le prescrizioni dettate dal comma 1. dell’art. 15 (Strumenti elettronici di contabilità e contabilità semplificata) del DM 7 marzo 2018 n.49 – Regolamento recante: «Approvazione delle linee guida sulle modalità di svolgimento delle funzioni del direttore dei lavori e del direttore dell’esecuzione».
+LeenO completa l’offerta di LibreOffice Calc proponendo all’ufficio tecnico un sistema integrato per la gestione delle progettazioni e degli appalti:
 
-LeenO è destinato ad utenti di LibreOffice Calc che vogliono guadagnare velocità nella compilazione dei documenti contabili tecnici senza perdere margini di controllo degli elaborati preferendo, proprio per questo, l’utilizzo di fogli di calcolo.
+*   **Automazione Completa:** Genera computi metrici, contabilità di cantiere, varianti e libretti delle misure automaticamente. Ogni calcolo e operazione è gestito da macro integrate e altamente ottimizzate.
+*   **Prezzari Regionali:** Accesso ai prezzari regionali aggiornati annualmente (es. Piemonte, Sardegna, Friuli Venezia Giulia, Umbria, Emilia Romagna, RFI, ecc.). Consente l'importazione rapida di elenchi prezzi di tutte le regioni ed enti.
+*   **Conforme al DM 49/2018:** Rispetta perfettamente le prescrizioni dell'art. 15 (Strumenti elettronici di contabilità e contabilità semplificata) del DM 7 marzo 2018 n.49.
+*   **Formato Aperto ed Interoperabile:** Lavorando in ambiente LibreOffice Calc, LeenO adotta lo standard aperto ISO/IEC 26300:2015 (OpenDocument Format - ODF), garantendo la massima interoperabilità tra diversi sistemi operativi, scambio corretto e sicuro dei dati e accessibilità a lungo termine.
 
-Installazione
-=============
+---
 
-Per poter permettere un versionamento del codice sono disponibili due
-script in python: bin2src.py e src2bin.py. Il primo permette di
-estrarre i sorgenti in modo da poterli versionare ed il secondo di
-archiviare i file sorgente in un nuovo ed aggiornato file di
-estensione di LibreOffice (.oxt) su cui poter lavorare.
+## Sostieni il Progetto (Donazioni)
 
-Una volta scaricato il sorgente è sufficiente lanciare dalla cartella
-radice della repository il seguente comando per iniziare:
+LeenO è gratuito per chi lo utilizza, ma richiede tempo, risorse e investimenti continui per essere mantenuto (server per i download, hosting, infrastruttura).
 
-  $ src2bin.py
+Se LeenO ti ha permesso di risparmiare ore di lavoro o costose licenze software annuali, considera di effettuare una donazione per assicurarne il futuro e lo sviluppo continuo:
+
+*   **Sito Web Ufficiale:** [Sostieni LeenO con una donazione su LeenO.org](https://leeno.org/donazioni/)
+*   **Liberapay:** [Dona tramite la piattaforma Liberapay](https://liberapay.com/leeno_computo/donate)
+
+---
+
+## Link Utili e Community
+
+Rimani in contatto con il progetto LeenO e unisciti alla nostra community di professionisti:
+
+*   **Sito Ufficiale:** [leeno.org](https://leeno.org/)
+*   **Documentazione (Manuale, guide, tutorial):** [Documentazione LeenO](https://leeno.org/category/documentazione/)
+*   **Forum di Supporto:** [Forum LeenO](https://leeno.org/forums/)
+*   **Canale Telegram:** [Telegram LeenO](https://t.me/leeno_computometrico)
+*   **Gruppo Facebook:** [Facebook LeenO](https://m.facebook.com/groups/433206393972197)
+*   **Pagina LibreOffice Extension:** [Extensions LibreOffice - LeenO](https://extensions.libreoffice.org/extensions/leeno-2)
+
+### Sviluppo & Codice Sorgente
+*   **GitHub:** [github.com/giuserpe/leeno](https://github.com/giuserpe/leeno)
+*   **GitLab:** [gitlab.com/giuserpe/leeno](https://gitlab.com/giuserpe/leeno)
+
+---
+
+## Installazione e Sviluppo
+
+Per gli sviluppatori e coloro che vogliono compilare l'estensione a partire dai file sorgente:
+
+È disponibile lo script `src2bin.py` per archiviare i file sorgente in un pacchetto di estensione LibreOffice (`.oxt`) aggiornato su cui poter lavorare.
+
+Dalla cartella radice del repository, esegui il comando:
+
+```bash
+python3 src2bin.py
+```
+
+L'estensione generata verrà salvata all'interno della cartella `bin/`.

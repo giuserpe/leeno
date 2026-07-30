@@ -452,6 +452,21 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-30 08:13</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3771268d6836a1591ac0497ae8bbda9d30148d7b" target="_blank" rel="noopener"><code>3771268</code></a></td>
+                <td class="commit-msg">Merge pull request #42 from giuserpe/jules-16621205955082093344-b8186b13
+
+Ottimizzazione e correzione MENU_copia_celle_visibili
+Risolve il problema del disallineamento e della traslazione delle colonne all'atto dell'incollaggio. La nuova implementazione rileva gli indici assoluti delle colonne e delle righe visibili all'interno della selezione, li raggruppa in blocchi contigui e copia le loro intersezioni sulle coordinate relative calcolate nel foglio temporaneo (tmp_clip) usando copyRange. Questo garantisce che la selezione incollata mantenga la struttura tabellare originale escludendo le sole righe e colonne nascoste.</td>
+            </tr>
+            <tr>
+                <td>2026-07-30 07:50</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/4615d4651ad9742097de30667c04768c219b2048" target="_blank" rel="noopener"><code>4615d46</code></a></td>
+                <td class="commit-msg">fix(core): ottimizza e corregge MENU_copia_celle_visibili
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-30 07:09</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/27581995d634e4c40e3e17b5eaf10c78469c0194" target="_blank" rel="noopener"><code>2758199</code></a></td>
                 <td class="commit-msg">icons: canvas 48x48 con padding azzerato per-icona (v2.3)
@@ -475,22 +490,6 @@ chore(meta): bump versione a 3.26.0.113‑TESTING‑20260730
 - aggiorna description.xml
 - aggiorna leeno_version_code</td>
             </tr>
-            <tr>
-                <td>2026-07-29 18:15</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/8f3ac9309f929c7004286c55972df066e48589dc" target="_blank" rel="noopener"><code>8f3ac93</code></a></td>
-                <td class="commit-msg">Merge pull request #41 from giuserpe/jules-16575569331714713603-b638a260
-
-Correzione comportamento fissa() per congelamento righe/colonne</td>
-            </tr>
-            <tr>
-                <td>2026-07-29 15:24</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c90b5849ab8d55397f1b1101eb0ca5ac6a3d2be9" target="_blank" rel="noopener"><code>c90b584</code></a></td>
-                <td class="commit-msg">fix(core): corregge comportamento di fissa per evitare righe nascoste
-
-Risolve il problema del freeze delle righe che a volte falliva o nascondeva le prime righe del foglio attivo. Ora fissa() rimuove i divisori attivi (splitAtPosition), scorre la vista all'origine (setFirstVisibleColumn/setFirstVisibleRow) e posiziona la selezione su A1 prima di applicare il blocco. Inoltre, supporta parametri facoltativi cols_freeze e rows_freeze per consentire chiamate sia con parametri che senza (tramite mappa predefinita).
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -513,8 +512,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 07:50 UTC</p>
-                <p>Build Commit: <code>4615d46</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 08:14 UTC</p>
+                <p>Build Commit: <code>3771268</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

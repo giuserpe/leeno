@@ -452,29 +452,27 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-30 17:37</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/31da6c714b3256e5fd3dfc29ba64c6d5a01b9441" target="_blank" rel="noopener"><code>31da6c7</code></a></td>
-                <td class="commit-msg">Merge pull request #48 from giuserpe/opt-adegua-tmpl-2983944514535953281
+                <td>2026-07-30 18:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/b836fb82498e64561e99000d4dfd25363773ccb1" target="_blank" rel="noopener"><code>b836fb8</code></a></td>
+                <td class="commit-msg">Merge pull request #49 from giuserpe/jules-9607991004929217148-dba1fddb
 
-ottimizza in modo significativo la funzione adegua_tmpl() in pyleeno.py per evitare l'overhead delle operazioni sulla GUI di LibreOffice, e aggiunge la funzione clean_basic_macro_s2() per pulire il file quando la versione del template è inferiore a 219.</td>
+Ottimizzazione della funzione adegua_tmpl() per velocizzare l'adeguamento del template su fogli di grandi dimensioni.
+1. Utilizzo di getFormulaArray() e setFormulaArray() per le operazioni in blocco.
+2. Esclusione del ricalcolo automatico dell'altezza riga all'interno dei cicli tramite il parametro adatta_riga di sistema_stili().</td>
             </tr>
             <tr>
-                <td>2026-07-30 17:35</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c4846e0dbdfe5193b7e20f94a50f6d748155b5eb" target="_blank" rel="noopener"><code>c4846e0</code></a></td>
-                <td class="commit-msg">Merge remote-tracking branch 'origin/dev' into opt-adegua-tmpl-2983944514535953281
+                <td>2026-07-30 18:31</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/0d4be38b18cb918e3699ae0cfcdbbe6657a688a0" target="_blank" rel="noopener"><code>0d4be38</code></a></td>
+                <td class="commit-msg">perf(core): ottimizza adegua_tmpl con chiamate batch e meno ridondanza
 
-# Conflicts:
-#	src/Ultimus.oxt/python/pythonpath/pyleeno.py</td>
+Il ciclo di adeguamento del template riscontrava forti rallentamenti a causa di continui accessi cella-per-cella e del ricalcolo ridondante delle altezze delle righe per ogni singola voce. L'uso delle API batch di formula e l'evitamento di calcoli di altezza riga non necessari all'interno dei cicli velocizzano drasticamente l'operazione.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-07-30 17:14</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/38dd8187436caa6c5ac9139e6644bd2ad33c4754" target="_blank" rel="noopener"><code>38dd818</code></a></td>
-                <td class="commit-msg">refactor(core): ottimizza adegua_tmpl e aggiunge clean_basic_macro_s2
-
-- Estrae la logica per la pulizia delle macro in clean_basic_macro_s2() e la riutilizza in autoexec_run()
-- Ottimizza adegua_tmpl() usando DocumentRefreshContext e disabilitando il calcolo automatico temporaneo
-- Ottimizza l'adeguamento visibilità dei fogli e rimuove i select lenti sulle celle
-- Aggiunge un fallback in sistema_stili() se row è None
+                <td>2026-07-30 17:58</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8c7048fcf1098a8873f96e73107fa2cbafeca0bb" target="_blank" rel="noopener"><code>8c7048f</code></a></td>
+                <td class="commit-msg">perf(core): ottimizza adegua_tmpl riducendo chiamate ridondanti e usando batch API
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
@@ -500,8 +498,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 18:32 UTC</p>
-                <p>Build Commit: <code>0d4be38</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 18:33 UTC</p>
+                <p>Build Commit: <code>b836fb8</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

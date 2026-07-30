@@ -9616,46 +9616,65 @@ def clean_basic_macro_s2():
     '''
     Rimuove 'S2' se presente nell'array in Standard.Controllo.Controlla_Esistenza_LibUltimus
     '''
+    #  LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
+    LeenoEvents.pulisci()
+    inizializza()
+    register_key_handler()
+    LeenoEvents.assegna()
+
+    SheetUtils.remove_bad_ranges()
+    SheetUtils.FixNamedArea()
+
+    # Rimuove 'S2' dall'Array(...) se presente in Standard.Controllo.Controlla_Esistenza_LibUltimus
+    # in un thread separato per evitare conflitti con la macro attualmente in esecuzione.
+    def _rimuovi_s2_da_array():
+        import time
+        time.sleep(1.0)
+        try:
+            oDoc = LeenoUtils.getDocument()
+            if oDoc.BasicLibraries.hasByName("Standard"):
+                lib = oDoc.BasicLibraries.getByName("Standard")
+                if lib.hasByName("Controllo"):
+                    code = lib.getByName("Controllo")
+                    import re
+                    sub_pattern = re.compile(r'(Sub\s+Controlla_Esistenza_LibUltimus.*?End\s+Sub)', re.DOTALL | re.IGNORECASE)
+                    match = sub_pattern.search(code)
+                    if match:
+                        sub_body = match.group(1)
+                        array_pattern = re.compile(r'(Array\s*\(\s*([^)]*)\s*\))', re.IGNORECASE | re.DOTALL)
+                        array_match = array_pattern.search(sub_body)
+                        if array_match:
+                            full_array_expr = array_match.group(1)
+                            array_contents = array_match.group(2)
+                            elements = array_contents.split(',')
+                            target_found = False
+                            new_elements = []
+                            for el in elements:
+                                cleaned = el.strip()
+                                if cleaned.startswith('&quot;') and cleaned.endswith('&quot;'):
+                                    val = cleaned[6:-6]
+                                elif cleaned.startswith('&apos;') and cleaned.endswith('&apos;'):
+                                    val = cleaned[6:-6]
+                                else:
+                                    val = cleaned.strip('\"\'')
+                                if val.upper() == 'S2':
+                                    target_found = True
+                                else:
+                                    new_elements.append(el)
+                            if target_found:
+                                new_array_contents = ','.join(new_elements)
+                                new_array_contents = re.sub(r',\s*,', ',', new_array_contents)
+                                new_array_contents = new_array_contents.strip().strip(',')
+                                new_array_expr = f'Array({new_array_contents})'
+                                new_sub_body = sub_body.replace(full_array_expr, new_array_expr)
+                                new_code = code.replace(match.group(1), new_sub_body)
+                                lib.replaceByName("Controllo", new_code)
+        except Exception:
+            pass
+
     try:
-        oDoc = LeenoUtils.getDocument()
-        if oDoc.BasicLibraries.hasByName("Standard"):
-            lib = oDoc.BasicLibraries.getByName("Standard")
-            if lib.hasByName("Controllo"):
-                code = lib.getByName("Controllo")
-                import re
-                sub_pattern = re.compile(r'(Sub\s+Controlla_Esistenza_LibUltimus.*?End\s+Sub)', re.DOTALL | re.IGNORECASE)
-                match = sub_pattern.search(code)
-                if match:
-                    sub_body = match.group(1)
-                    array_pattern = re.compile(r'(Array\s*\(\s*([^)]*)\s*\))', re.IGNORECASE | re.DOTALL)
-                    array_match = array_pattern.search(sub_body)
-                    if array_match:
-                        full_array_expr = array_match.group(1)
-                        array_contents = array_match.group(2)
-                        elements = array_contents.split(',')
-                        target_found = False
-                        new_elements = []
-                        for el in elements:
-                            cleaned = el.strip()
-                            if cleaned.startswith('&quot;') and cleaned.endswith('&quot;'):
-                                val = cleaned[6:-6]
-                            elif cleaned.startswith('&apos;') and cleaned.endswith('&apos;'):
-                                val = cleaned[6:-6]
-                            else:
-                                val = cleaned.strip('\"\'')
-                            if val.upper() == 'S2':
-                                target_found = True
-                            else:
-                                new_elements.append(el)
-                        if target_found:
-                            new_array_contents = ','.join(new_elements)
-                            new_array_contents = re.sub(r',\s*,', ',', new_array_contents)
-                            new_array_contents = new_array_contents.strip().strip(',')
-                            new_array_expr = f'Array({new_array_contents})'
-                            new_sub_body = sub_body.replace(full_array_expr, new_array_expr)
-                            new_code = code.replace(match.group(1), new_sub_body)
-                            lib.replaceByName("Controllo", new_code)
-                            return True
+        import threading
+        threading.Thread(target=_rimuovi_s2_da_array, daemon=True).start()
     except Exception:
         pass
     return False
@@ -11063,7 +11082,7 @@ def MENU_inserisci_nuova_riga_con_descrizione():
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
 
-@with_undo
+
 def MENU_elenco_puntato_misure():
     '''
     Aggiunge il trattino (-) alle righe di misura

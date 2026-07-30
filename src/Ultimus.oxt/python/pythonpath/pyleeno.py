@@ -7623,7 +7623,7 @@ def rigenera_tutte(arg=None, ):
 
 ########################################################################
 
-def sistema_stili(row=None):
+def sistema_stili(row=None, adatta_riga=True):
     '''
     Ripristina stili di cella per una singola voce in COMPUTO, VARIANTE e CONTABILITA.
     Ottimizzato per ridurre le chiamate al foglio di calcolo.
@@ -7824,7 +7824,8 @@ def sistema_stili(row=None):
         elif sheet_name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             _apply_computo_variante_contabilita_styles(oSheet, row)
 
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    if adatta_riga:
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 ########################################################################
 @LeenoUtils.no_refresh # Decoratore per disabilitare l'aggiornamento del documento
@@ -10201,19 +10202,20 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                         fine = SheetUtils.getUsedArea(oSheet).EndRow
                         oSheet.getCellRangeByPosition(3, 0, 4,
                                                       fine).clearContents(HARDATTR)
-                        for n in range(0, fine):
-                            if '=CONCATENATE("' in oSheet.getCellByPosition(
-                                    2, n).Formula and oSheet.getCellByPosition(
-                                        4, n).Type.value == 'EMPTY':
-                                oSheet.getCellByPosition(
-                                    4, n).Formula = oSheet.getCellByPosition(5,
-                                                                             n).Formula
-                                oSheet.getCellByPosition(5, n).String = ''
-                                oSheet.getCellByPosition(
-                                    9, n
-                                ).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
-                                    n + 1) + ')=0;"";PRODUCT(E' + str(
-                                        n + 1) + ':I' + str(n + 1) + '))'
+                        n = fine - 1
+                        if fine > 0:
+                            oRange = oSheet.getCellRangeByPosition(2, 0, 9, fine - 1)
+                            formulas = [list(row_form) for row_form in oRange.getFormulaArray()]
+                            changed = False
+                            for idx in range(fine):
+                                row_form = formulas[idx]
+                                if '=CONCATENATE("' in row_form[0] and row_form[2] == "":
+                                    row_form[2] = row_form[3]
+                                    row_form[3] = ""
+                                    row_form[7] = f'=IF(PRODUCT(E{idx + 1}:I{idx + 1})=0;"";PRODUCT(E{idx + 1}:I{idx + 1}))'
+                                    changed = True
+                            if changed:
+                                oRange.setFormulaArray(tuple(tuple(r) for r in formulas))
                     # sposto il vedivoce nella colonna E/
                         oSheet.getCellByPosition(31, 2).String = 'Super Cat'
                         oSheet.getCellByPosition(32, 2).String = 'Cat'
@@ -10221,7 +10223,7 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                         oSheet.getCellByPosition(28, 2).String = 'Materiali\ne Noli €'
                         row = 4
                         while row < n:
-                            sistema_stili(row)
+                            sistema_stili(row, adatta_riga=False)
                             row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
                             row += 1
                         rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
@@ -10306,18 +10308,19 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
                     oSheet.getCellRangeByPosition(3, 0, 4,
                                                   fine).clearContents(HARDATTR)
-                    for n in range(0, fine):
-                        if '=CONCATENATE("' in oSheet.getCellByPosition(
-                                2, n).Formula and oSheet.getCellByPosition(
-                                    4, n).Type.value == 'EMPTY':
-                            oSheet.getCellByPosition(
-                                4, n).Formula = oSheet.getCellByPosition(5, n).Formula
-                            oSheet.getCellByPosition(5, n).String = ''
-                            oSheet.getCellByPosition(
-                                9,
-                                n).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
-                                    n + 1) + ')=0;"";PRODUCT(E' + str(
-                                        n + 1) + ':I' + str(n + 1) + '))'
+                    if fine > 0:
+                        oRange = oSheet.getCellRangeByPosition(2, 0, 9, fine - 1)
+                        formulas = [list(row_form) for row_form in oRange.getFormulaArray()]
+                        changed = False
+                        for idx in range(fine):
+                            row_form = formulas[idx]
+                            if '=CONCATENATE("' in row_form[0] and row_form[2] == "":
+                                row_form[2] = row_form[3]
+                                row_form[3] = ""
+                                row_form[7] = f'=IF(PRODUCT(E{idx + 1}:I{idx + 1})=0;"";PRODUCT(E{idx + 1}:I{idx + 1}))'
+                                changed = True
+                        if changed:
+                            oRange.setFormulaArray(tuple(tuple(r) for r in formulas))
                 # sposto il vedivoce nella colonna E/
                     n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
                     oSheet.getCellByPosition(
@@ -10325,7 +10328,7 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                     # rigenera_tutte() affido la rigenerazione delle formule al menu Viste
                     row = 4
                     while row < n:
-                        sistema_stili(row)
+                        sistema_stili(row, adatta_riga=False)
                         row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
                         row += 1
                 for el in oDoc.Sheets.ElementNames:

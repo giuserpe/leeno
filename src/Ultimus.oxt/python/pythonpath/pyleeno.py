@@ -9630,7 +9630,7 @@ def clean_basic_macro_s2():
     # in un thread separato per evitare conflitti con la macro attualmente in esecuzione.
     def _rimuovi_s2_da_array():
         import time
-        time.sleep(1.0)
+        time.sleep(5.0)
         try:
             oDoc = LeenoUtils.getDocument()
             if oDoc.BasicLibraries.hasByName("Standard"):
@@ -9702,9 +9702,6 @@ def autoexec_run():
 
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
-
-    # Rimuove "S2" se presente nell'array in Standard.Controllo.Controlla_Esistenza_LibUltimus
-    clean_basic_macro_s2()
 
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')

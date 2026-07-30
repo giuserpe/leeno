@@ -452,6 +452,14 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-30 18:38</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/6c6bb319204f2ec919af016531ee9e5192441401" target="_blank" rel="noopener"><code>6c6bb31</code></a></td>
+                <td class="commit-msg">fix(core): usa YesNoCancelDialog in adegua_tmpl per coerenza UI
+
+- sostituisce DLG_ask con YesNoCancelDialog
+- mantiene invariata la logica di conferma per l’adeguamento template</td>
+            </tr>
+            <tr>
                 <td>2026-07-30 18:35</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/0094870bef411326bf6f92818c02ec59224d7354" target="_blank" rel="noopener"><code>0094870</code></a></td>
                 <td class="commit-msg">Change dialog function for version adjustment prompt</td>
@@ -464,15 +472,6 @@
 Ottimizzazione della funzione adegua_tmpl() per velocizzare l'adeguamento del template su fogli di grandi dimensioni.
 1. Utilizzo di getFormulaArray() e setFormulaArray() per le operazioni in blocco.
 2. Esclusione del ricalcolo automatico dell'altezza riga all'interno dei cicli tramite il parametro adatta_riga di sistema_stili().</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 18:31</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0d4be38b18cb918e3699ae0cfcdbbe6657a688a0" target="_blank" rel="noopener"><code>0d4be38</code></a></td>
-                <td class="commit-msg">perf(core): ottimizza adegua_tmpl con chiamate batch e meno ridondanza
-
-Il ciclo di adeguamento del template riscontrava forti rallentamenti a causa di continui accessi cella-per-cella e del ricalcolo ridondante delle altezze delle righe per ogni singola voce. L'uso delle API batch di formula e l'evitamento di calcoli di altezza riga non necessari all'interno dei cicli velocizzano drasticamente l'operazione.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +495,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 18:35 UTC</p>
-                <p>Build Commit: <code>0094870</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 18:38 UTC</p>
+                <p>Build Commit: <code>6c6bb31</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

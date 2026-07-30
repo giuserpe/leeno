@@ -7628,6 +7628,9 @@ def sistema_stili(row=None):
     Ripristina stili di cella per una singola voce in COMPUTO, VARIANTE e CONTABILITA.
     Ottimizzato per ridurre le chiamate al foglio di calcolo.
     '''
+    if row is None:
+        row = LeggiPosizioneCorrente()[1]
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     sheet_name = oSheet.Name  # Memorizza il nome per evitare chiamate ripetute
@@ -9609,6 +9612,75 @@ def sistema_aree():
 
 
 ########################################################################
+def clean_basic_macro_s2():
+    '''
+    Rimuove 'S2' se presente nell'array in Standard.Controllo.Controlla_Esistenza_LibUltimus
+    '''
+    #  LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
+    LeenoEvents.pulisci()
+    inizializza()
+    register_key_handler()
+    LeenoEvents.assegna()
+
+    SheetUtils.remove_bad_ranges()
+    SheetUtils.FixNamedArea()
+
+    # Rimuove 'S2' dall'Array(...) se presente in Standard.Controllo.Controlla_Esistenza_LibUltimus
+    # in un thread separato per evitare conflitti con la macro attualmente in esecuzione.
+    def _rimuovi_s2_da_array():
+        import time
+        time.sleep(1.0)
+        try:
+            oDoc = LeenoUtils.getDocument()
+            if oDoc.BasicLibraries.hasByName("Standard"):
+                lib = oDoc.BasicLibraries.getByName("Standard")
+                if lib.hasByName("Controllo"):
+                    code = lib.getByName("Controllo")
+                    import re
+                    sub_pattern = re.compile(r'(Sub\s+Controlla_Esistenza_LibUltimus.*?End\s+Sub)', re.DOTALL | re.IGNORECASE)
+                    match = sub_pattern.search(code)
+                    if match:
+                        sub_body = match.group(1)
+                        array_pattern = re.compile(r'(Array\s*\(\s*([^)]*)\s*\))', re.IGNORECASE | re.DOTALL)
+                        array_match = array_pattern.search(sub_body)
+                        if array_match:
+                            full_array_expr = array_match.group(1)
+                            array_contents = array_match.group(2)
+                            elements = array_contents.split(',')
+                            target_found = False
+                            new_elements = []
+                            for el in elements:
+                                cleaned = el.strip()
+                                if cleaned.startswith('&quot;') and cleaned.endswith('&quot;'):
+                                    val = cleaned[6:-6]
+                                elif cleaned.startswith('&apos;') and cleaned.endswith('&apos;'):
+                                    val = cleaned[6:-6]
+                                else:
+                                    val = cleaned.strip('\"\'')
+                                if val.upper() == 'S2':
+                                    target_found = True
+                                else:
+                                    new_elements.append(el)
+                            if target_found:
+                                new_array_contents = ','.join(new_elements)
+                                new_array_contents = re.sub(r',\s*,', ',', new_array_contents)
+                                new_array_contents = new_array_contents.strip().strip(',')
+                                new_array_expr = f'Array({new_array_contents})'
+                                new_sub_body = sub_body.replace(full_array_expr, new_array_expr)
+                                new_code = code.replace(match.group(1), new_sub_body)
+                                lib.replaceByName("Controllo", new_code)
+        except Exception:
+            pass
+
+    try:
+        import threading
+        threading.Thread(target=_rimuovi_s2_da_array, daemon=True).start()
+    except Exception:
+        pass
+    return False
+
+
+########################################################################
 def autoexec():
     autoexec_run()
     # oDoc = LeenoUtils.getDocument()
@@ -9630,37 +9702,8 @@ def autoexec_run():
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
 
-    # Rimuove il ciclo For Each se presente in Standard.Controllo.Controlla_Esistenza_LibUltimus
-    # in un thread separato per evitare conflitti con la macro attualmente in esecuzione.
-    def clean_basic_macro_s2():
-        import time
-        time.sleep(1.0)
-        try:
-            oDoc = LeenoUtils.getDocument()
-            if oDoc.BasicLibraries.hasByName("Standard"):
-                lib = oDoc.BasicLibraries.getByName("Standard")
-                if lib.hasByName("Controllo"):
-                    code = lib.getByName("Controllo")
-                    import re
-                    sub_pattern = re.compile(r'(Sub\s+Controlla_Esistenza_LibUltimus.*?End\s+Sub)', re.DOTALL | re.IGNORECASE)
-                    match = sub_pattern.search(code)
-                    if match:
-                        sub_body = match.group(1)
-                        for_pattern = re.compile(r'(For\s+Each\s+(\w+)\s+In\s+Array\s*\((.*?)\).*?Next(?:\s+\2)?)', re.DOTALL | re.IGNORECASE)
-                        for_match = for_pattern.search(sub_body)
-                        if for_match:
-                            full_loop = for_match.group(1)
-                            new_sub_body = sub_body.replace(full_loop, '')
-                            new_code = code.replace(match.group(1), new_sub_body)
-                            lib.replaceByName("Controllo", new_code)
-        except Exception:
-            pass
-
-    try:
-        import threading
-        threading.Thread(target=clean_basic_macro_s2, daemon=True).start()
-    except Exception:
-        pass
+    # Rimuove "S2" se presente nell'array in Standard.Controllo.Controlla_Esistenza_LibUltimus
+    clean_basic_macro_s2()
 
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
@@ -10018,7 +10061,7 @@ def adegua_tmpl():
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec')  # rinvia a autoexec in basic
 
-    adegua_a = 217  # VERSIONE CORRENTE
+    adegua_a = 219  # VERSIONE CORRENTE
 
     if ver_tmpl < adegua_a:
         if Dialogs.DLG_ask(Title='Informazione',
@@ -10038,271 +10081,272 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
         indicator.start('Adeguamento del lavoro in corso...', 10)
         indicator.setValue(0)
 
-        ############
-        # aggiungi stili di cella
-        indicator.setValue(1)
-        for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
-                   'comp 1-a peso', 'comp 1-a', 'Blu',
-                   'Comp-Variante num sotto'):
-            oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
-            if not oDoc.StyleFamilies.getByName('CellStyles').hasByName(el):
-                oDoc.StyleFamilies.getByName('CellStyles').insertByName(
-                    el, oStileCella)
-                oStileCella.ParentStyle = 'comp 1-a'
-        indicator.setValue(2)
-        for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
-                   'comp 1-a peso', 'comp 1-a', 'Blu',
-                   'Comp-Variante num sotto'):
-            oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
-            if not oDoc.StyleFamilies.getByName("CellStyles").hasByName(el + ' ROSSO'):
-                oDoc.StyleFamilies.getByName('CellStyles').insertByName(
-                    el + ' ROSSO', oStileCella)
-                oStileCella.ParentStyle = 'comp 1-a'
+        # Applica clean_basic_macro_s2 se ver_tmpl < 219
+        if ver_tmpl < 219:
+            clean_basic_macro_s2()
+
+        was_calc_enabled = oDoc.isAutomaticCalculationEnabled()
+        if was_calc_enabled:
+            oDoc.enableAutomaticCalculation(False)
+
+        try:
+            with LeenoUtils.DocumentRefreshContext(False):
+                ############
+                # aggiungi stili di cella
+                indicator.setValue(1)
+                for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
+                           'comp 1-a peso', 'comp 1-a', 'Blu',
+                           'Comp-Variante num sotto'):
+                    oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
+                    if not oDoc.StyleFamilies.getByName('CellStyles').hasByName(el):
+                        oDoc.StyleFamilies.getByName('CellStyles').insertByName(
+                            el, oStileCella)
+                        oStileCella.ParentStyle = 'comp 1-a'
+                indicator.setValue(2)
+                for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
+                           'comp 1-a peso', 'comp 1-a', 'Blu',
+                           'Comp-Variante num sotto'):
+                    oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
+                    if not oDoc.StyleFamilies.getByName("CellStyles").hasByName(el + ' ROSSO'):
+                        oDoc.StyleFamilies.getByName('CellStyles').insertByName(
+                            el + ' ROSSO', oStileCella)
+                        oStileCella.ParentStyle = 'comp 1-a'
+                        oDoc.StyleFamilies.getByName("CellStyles").getByName(
+                            el + ' ROSSO').CharColor = 16711680
+
+                indicator.setValue(3)
+                oSheetS1 = oDoc.getSheets().getByName('S1')
+                oSheetS1.getCellRangeByName('S1.H291').Value = adegua_a
+                oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
+
+                # Ottimizzazione visibilità dei fogli:
+                # Mostra solo S2 ed evitalo per gli altri fogli per evitare ridondanza
+                oDoc.getSheets().getByName('S2').IsVisible = True
+                oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('S2'))
+                for el in oDoc.Sheets.ElementNames:
+                    if el != 'S2':
+                        oDoc.getSheets().getByName(el).IsVisible = False
+
+                # dal template 212
+                flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR  # FORMATTED + HARDATTR
+                indicator.setValue(4)
+                oSheetM1 = oDoc.getSheets().getByName('M1')
+                oSheetM1.getCellRangeByName('B23:E30').clearContents(flags)
+                oSheetM1.getCellRangeByName('B23:E30').CellStyle = 'M1 scritte noP'
+
+                # dal template 208
+                # > adegua le formule delle descrizioni di voci
+                oSheetS1.getCellRangeByName(
+                    'G334'
+                ).String = '[Computo e Variante] Vedi Voce: PRIMI caratteri della voce'
+                oSheetS1.getCellRangeByName('H334').Value = 50
+                oSheetS1.getCellRangeByName(
+                    'I334'
+                ).String = "Quanti caratteri della descrizione vuoi visualizzare usando il Vedi Voce?"
+                oSheetS1.getCellRangeByName(
+                    'G335'
+                ).String = '[Contabilità] Descrizioni abbreviate: PRIMI caratteri della voce'
+                oSheetS1.getCellRangeByName('H335').Value = 100
+                oSheetS1.getCellRangeByName(
+                    'I335'
+                ).String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+                oSheetS1.getCellRangeByName(
+                    'G336'
+                ).String = 'Descrizioni abbreviate: primi caratteri della voce'
+                oSheetS1.getCellRangeByName('H336').Value = 120
+                oSheetS1.getCellRangeByName(
+                    'I336'
+                ).String = "[Contabilità] Descrizioni abbreviate: ULTIMI caratteri della voce"
+                oSheetS1.getCellRangeByName(
+                    'G337'
+                ).String = 'Descrizioni abbreviate: primi caratteri della voce'
+                oSheetS1.getCellRangeByName('H337').Value = 100
+                oSheetS1.getCellRangeByName(
+                    'I337'
+                ).String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+                oSheetS1.getCellRangeByName(
+                    'G338'
+                ).String = 'Descrizioni abbreviate: ultimi caratteri della voce'
+                oSheetS1.getCellRangeByName('H338').Value = 120
+                oSheetS1.getCellRangeByName(
+                    'I338'
+                ).String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
+                oSheetS1.getCellRangeByName('L25').String = ''
+                oSheetS1.getCellRangeByName('G297:G338').CellStyle = 'Setvar b'
+                oSheetS1.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
+                oSheetS1.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
+                oSheetS1.getCellRangeByName('H319:H326').CellStyle = 'Setvar C_3'
+                oSheetS1.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
+                oSheetS1.getCellRangeByName('H323').CellStyle = 'Setvar C'
                 oDoc.StyleFamilies.getByName("CellStyles").getByName(
-                    el + ' ROSSO').CharColor = 16711680
-############
-# copia gli stili di cella dal template, ma non va perché tocca lavorare sulla FormatString - quando imparerò
-#  sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ods'
-#  styles = oDoc.getStyleFamilies()
-#  styles.loadStylesFromURL(sUrl, [])
-############
-        indicator.setValue(3)
-        oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellRangeByName('S1.H291').Value = \
-            oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
-        for el in oDoc.Sheets.ElementNames:
-            oDoc.getSheets().getByName(el).IsVisible = True
-            oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
-            if el != 'S2':
-                oDoc.getSheets().getByName(el).IsVisible = False
-        # dal template 212
-        flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR  # FORMATTED + HARDATTR
-        indicator.setValue(4)
-        GotoSheet('M1')
-        oSheet = oDoc.getSheets().getByName('M1')
-        oSheet.getCellRangeByName('B23:E30').clearContents(flags)
-        oSheet.getCellRangeByName('B23:E30').CellStyle = 'M1 scritte noP'
-        # dal template 208
-        # > adegua le formule delle descrizioni di voci
-        GotoSheet('S1')
-        oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellRangeByName(
-            'G334'
-        ).String = '[Computo e Variante] Vedi Voce: PRIMI caratteri della voce'
-        oSheet.getCellRangeByName('H334').Value = 50
-        oSheet.getCellRangeByName(
-            'I334'
-        ).String = "Quanti caratteri della descrizione vuoi visualizzare usando il Vedi Voce?"
-        oSheet.getCellRangeByName(
-            'G335'
-        ).String = '[Contabilità] Descrizioni abbreviate: PRIMI caratteri della voce'
-        oSheet.getCellRangeByName('H335').Value = 100
-        oSheet.getCellRangeByName(
-            'I335'
-        ).String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
-        oSheet.getCellRangeByName(
-            'G336'
-        ).String = 'Descrizioni abbreviate: primi caratteri della voce'
-        oSheet.getCellRangeByName('H336').Value = 120
-        oSheet.getCellRangeByName(
-            'I336'
-        ).String = "[Contabilità] Descrizioni abbreviate: ULTIMI caratteri della voce"
-        oSheet.getCellRangeByName(
-            'G337'
-        ).String = 'Descrizioni abbreviate: primi caratteri della voce'
-        oSheet.getCellRangeByName('H337').Value = 100
-        oSheet.getCellRangeByName(
-            'I337'
-        ).String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
-        oSheet.getCellRangeByName(
-            'G338'
-        ).String = 'Descrizioni abbreviate: ultimi caratteri della voce'
-        oSheet.getCellRangeByName('H338').Value = 120
-        oSheet.getCellRangeByName(
-            'I338'
-        ).String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
-        oSheet.getCellRangeByName('L25').String = ''
-        oSheet.getCellRangeByName('G297:G338').CellStyle = 'Setvar b'
-        oSheet.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
-        oSheet.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
-        oSheet.getCellRangeByName('H319:H326').CellStyle = 'Setvar C_3'
-        oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
-        oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
-        oDoc.StyleFamilies.getByName("CellStyles").getByName(
-            'Setvar C_3').NumberFormat = LeenoFormat.getNumFormat('0,00%')  # percentuale
-        # < adegua le formule delle descrizioni di voci
-        # dal 209 cambia nome di custom propierty
-        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
-        if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
-            oUDP.removeProperty('Versione LeenO')
-        if oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"):
-            oUDP.removeProperty('Versione_LeenO')
-        oUDP.addProperty('Versione_LeenO',
-                         MAYBEVOID + REMOVEABLE + MAYBEDEFAULT,
-                         str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
-                         str(LeenoGlobals.getGlobalVar('Lminor')) + '.x')
-        indicator.setValue(5)
-        for el in ('COMPUTO', 'VARIANTE'):
-            if oDoc.getSheets().hasByName(el):
-                GotoSheet(el)
-                oSheet = oDoc.getSheets().getByName(el)
-                # sposto il vedivoce nella colonna E
-                fine = SheetUtils.getUsedArea(oSheet).EndRow
-                oSheet.getCellRangeByPosition(3, 0, 4,
-                                              fine).clearContents(HARDATTR)
-                for n in range(0, fine):
-                    if '=CONCATENATE("' in oSheet.getCellByPosition(
-                            2, n).Formula and oSheet.getCellByPosition(
-                                4, n).Type.value == 'EMPTY':
-                        oSheet.getCellByPosition(
-                            4, n).Formula = oSheet.getCellByPosition(5,
-                                                                     n).Formula
-                        oSheet.getCellByPosition(5, n).String = ''
-                        oSheet.getCellByPosition(
-                            9, n
-                        ).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
-                            n + 1) + ')=0;"";PRODUCT(E' + str(
-                                n + 1) + ':I' + str(n + 1) + '))'
-            # sposto il vedivoce nella colonna E/
-                oSheet.getCellByPosition(31, 2).String = 'Super Cat'
-                oSheet.getCellByPosition(32, 2).String = 'Cat'
-                oSheet.getCellByPosition(33, 2).String = 'Sub Cat'
-                oSheet.getCellByPosition(28, 2).String = 'Materiali\ne Noli €'
-                row = 4
-                while row < n:
-                    oDoc.CurrentController.select(
-                        oSheet.getCellByPosition(0, row))
-                    sistema_stili()
-                    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-                    row += 1
-                rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
-                # 214 aggiorna stili di cella per ogni colonna
-                test = SheetUtils.getUsedArea(oSheet).EndRow + 1
-                for y in range(0, test):
-                    # aggiorna formula vedi voce #214
-                    if ver_tmpl > 214:
-                        break
-                    if(oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and
-                       oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and
-                       oSheet.getCellByPosition(5, y).Type.value == 'FORMULA'):
-                        try:
-                            vRif = int(
+                    'Setvar C_3').NumberFormat = LeenoFormat.getNumFormat('0,00%')  # percentuale
+                # < adegua le formule delle descrizioni di voci
+
+                # dal 209 cambia nome di custom propierty
+                oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
+                if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
+                    oUDP.removeProperty('Versione LeenO')
+                if oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"):
+                    oUDP.removeProperty('Versione_LeenO')
+                oUDP.addProperty('Versione_LeenO',
+                                 MAYBEVOID + REMOVEABLE + MAYBEDEFAULT,
+                                 str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+                                 str(LeenoGlobals.getGlobalVar('Lminor')) + '.x')
+                indicator.setValue(5)
+                for el in ('COMPUTO', 'VARIANTE'):
+                    if oDoc.getSheets().hasByName(el):
+                        GotoSheet(el)
+                        oSheet = oDoc.getSheets().getByName(el)
+                        # sposto il vedivoce nella colonna E
+                        fine = SheetUtils.getUsedArea(oSheet).EndRow
+                        oSheet.getCellRangeByPosition(3, 0, 4,
+                                                      fine).clearContents(HARDATTR)
+                        for n in range(0, fine):
+                            if '=CONCATENATE("' in oSheet.getCellByPosition(
+                                    2, n).Formula and oSheet.getCellByPosition(
+                                        4, n).Type.value == 'EMPTY':
                                 oSheet.getCellByPosition(
-                                    5, y).Formula.split('=J$')[-1]) - 1
-                        except Exception:
-                            vRif = int(
+                                    4, n).Formula = oSheet.getCellByPosition(5,
+                                                                             n).Formula
+                                oSheet.getCellByPosition(5, n).String = ''
                                 oSheet.getCellByPosition(
-                                    5, y).Formula.split('=J')[-1]) - 1
-                        if oSheet.getCellByPosition(9, y).Value < 0:
-                            _gotoCella(2, y)
-                            inverti = 1
-                        oSheet.getCellByPosition(5, y).String = ''
-                        vedi_voce_xpwe(oSheet, y, vRif)
-                        try:
-                            inverti
-                            inverti_segno()
-                        except Exception:
-                            pass
-                    if '=J' in oSheet.getCellByPosition(5, y).Formula:
-                        if '$' in oSheet.getCellByPosition(5, y).Formula:
-                            n = oSheet.getCellByPosition(
-                                5, y).Formula.split('$')[1]
-                        else:
-                            n = oSheet.getCellByPosition(
-                                5, y).Formula.split('J')[1]
-                        oSheet.getCellByPosition(5, y).Formula = '=J$' + n
-#  contatta il canale Telegram
-#  https://t.me/leeno_computometrico''', 'AVVISO!')
-        indicator.setValue(6)
-        GotoSheet('S5')
-        oSheet = oDoc.getSheets().getByName('S5')
-        oSheet.getCellRangeByPosition(
-            0, 0, 250,
-            SheetUtils.getUsedArea(oSheet).EndRow).clearContents(EDITATTR +
-                                                          FORMATTED + HARDATTR)
-        oSheet.getCellRangeByName('C10').Formula = \
-            '=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);\
-            VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;\
-            elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;\
-            elenco_prezzi;2;FALSE());$S1.$H$338)))'
-        oSheet.getCellRangeByName('C24').Formula = \
-            '=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;\
-            elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;\
-            2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;\
-            FALSE());$S1.$H$336)))'
-        oSheet.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
-        oSheet.getCellRangeByName('S12').Formula = '=IF(VLOOKUP(B10;elenco_prezzi;3;FALSE())="%";J12*L12/100;J12*L12)'
-        oSheet.getCellRangeByName('P27').Formula = '=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";J27*N27/100;J27*N27)'
-        #
-        oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
-        oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
-        oSheet.getCellRangeByName('AC27').Formula = '=P27-AE27'
-        oSheet.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
+                                    9, n
+                                ).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
+                                    n + 1) + ')=0;"";PRODUCT(E' + str(
+                                        n + 1) + ':I' + str(n + 1) + '))'
+                    # sposto il vedivoce nella colonna E/
+                        oSheet.getCellByPosition(31, 2).String = 'Super Cat'
+                        oSheet.getCellByPosition(32, 2).String = 'Cat'
+                        oSheet.getCellByPosition(33, 2).String = 'Sub Cat'
+                        oSheet.getCellByPosition(28, 2).String = 'Materiali\ne Noli €'
+                        row = 4
+                        while row < n:
+                            sistema_stili(row)
+                            row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+                            row += 1
+                        rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
+                        # 214 aggiorna stili di cella per ogni colonna
+                        test = SheetUtils.getUsedArea(oSheet).EndRow + 1
+                        for y in range(0, test):
+                            # aggiorna formula vedi voce #214
+                            if ver_tmpl > 214:
+                                break
+                            if(oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and
+                               oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and
+                               oSheet.getCellByPosition(5, y).Type.value == 'FORMULA'):
+                                try:
+                                    vRif = int(
+                                        oSheet.getCellByPosition(
+                                            5, y).Formula.split('=J$')[-1]) - 1
+                                except Exception:
+                                    vRif = int(
+                                        oSheet.getCellByPosition(
+                                            5, y).Formula.split('=J')[-1]) - 1
+                                if oSheet.getCellByPosition(9, y).Value < 0:
+                                    _gotoCella(2, y)
+                                    inverti = 1
+                                oSheet.getCellByPosition(5, y).String = ''
+                                vedi_voce_xpwe(oSheet, y, vRif)
+                                try:
+                                    inverti
+                                    inverti_segno()
+                                except Exception:
+                                    pass
+                            if '=J' in oSheet.getCellByPosition(5, y).Formula:
+                                if '$' in oSheet.getCellByPosition(5, y).Formula:
+                                    n = oSheet.getCellByPosition(
+                                        5, y).Formula.split('$')[1]
+                                else:
+                                    n = oSheet.getCellByPosition(
+                                        5, y).Formula.split('J')[1]
+                                oSheet.getCellByPosition(5, y).Formula = '=J$' + n
 
-        oSheet.getCellRangeByName('J11').Formula = '=IF(PRODUCT(E11:I11)=0;"";PRODUCT(E11:I11))'
-        oSheet.getCellRangeByName('J25').CellStyle = 'Blu'
-        oSheet.getCellRangeByName('J25').Formula = '=IF(PRODUCT(E25:I25)<=0;"";PRODUCT(E25:I25))'
+                indicator.setValue(6)
+                oSheetS5 = oDoc.getSheets().getByName('S5')
+                oSheetS5.getCellRangeByPosition(
+                    0, 0, 250,
+                    SheetUtils.getUsedArea(oSheetS5).EndRow).clearContents(EDITATTR +
+                                                                  FORMATTED + HARDATTR)
+                oSheetS5.getCellRangeByName('C10').Formula = \
+                    '=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);\
+                    VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;\
+                    elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;\
+                    elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                oSheetS5.getCellRangeByName('C24').Formula = \
+                    '=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;\
+                    elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;\
+                    2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;\
+                    FALSE());$S1.$H$336)))'
+                oSheetS5.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
+                oSheetS5.getCellRangeByName('S12').Formula = '=IF(VLOOKUP(B10;elenco_prezzi;3;FALSE())="%";J12*L12/100;J12*L12)'
+                oSheetS5.getCellRangeByName('P27').Formula = '=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";J27*N27/100;J27*N27)'
+                #
+                oSheetS5.getCellRangeByName('AC12').Formula = '=S12-AE12'
+                oSheetS5.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
+                oSheetS5.getCellRangeByName('AC27').Formula = '=P27-AE27'
+                oSheetS5.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
 
-        oSheet.getCellRangeByName('L25').CellStyle = 'Blu ROSSO'
-        oSheet.getCellRangeByName('L25').Formula = '=IF(PRODUCT(E25:I25)>=0;"";PRODUCT(E25:I25)*-1)'
+                oSheetS5.getCellRangeByName('J11').Formula = '=IF(PRODUCT(E11:I11)=0;"";PRODUCT(E11:I11))'
+                oSheetS5.getCellRangeByName('J25').CellStyle = 'Blu'
+                oSheetS5.getCellRangeByName('J25').Formula = '=IF(PRODUCT(E25:I25)<=0;"";PRODUCT(E25:I25))'
 
-        oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
-        oSheet.getCellRangeByName('L26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
-        oSheet.getCellRangeByName('L26').CellStyle = 'Comp-Variante num sotto ROSSO'
+                oSheetS5.getCellRangeByName('L25').CellStyle = 'Blu ROSSO'
+                oSheetS5.getCellRangeByName('L25').Formula = '=IF(PRODUCT(E25:I25)>=0;"";PRODUCT(E25:I25)*-1)'
 
-        # CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA
-        indicator.setValue(7)
-        if oDoc.getSheets().hasByName('CONTABILITA'):
-            GotoSheet('CONTABILITA')
-            oSheet = oDoc.getSheets().getByName('CONTABILITA')
-            # sposto il vedivoce nella colonna E
-            fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
-            oSheet.getCellRangeByPosition(3, 0, 4,
-                                          fine).clearContents(HARDATTR)
-            for n in range(0, fine):
-                if '=CONCATENATE("' in oSheet.getCellByPosition(
-                        2, n).Formula and oSheet.getCellByPosition(
-                            4, n).Type.value == 'EMPTY':
+                oSheetS5.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
+                oSheetS5.getCellRangeByName('L26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
+                oSheetS5.getCellRangeByName('L26').CellStyle = 'Comp-Variante num sotto ROSSO'
+
+                # CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA
+                indicator.setValue(7)
+                if oDoc.getSheets().hasByName('CONTABILITA'):
+                    GotoSheet('CONTABILITA')
+                    oSheet = oDoc.getSheets().getByName('CONTABILITA')
+                    # sposto il vedivoce nella colonna E
+                    fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
+                    oSheet.getCellRangeByPosition(3, 0, 4,
+                                                  fine).clearContents(HARDATTR)
+                    for n in range(0, fine):
+                        if '=CONCATENATE("' in oSheet.getCellByPosition(
+                                2, n).Formula and oSheet.getCellByPosition(
+                                    4, n).Type.value == 'EMPTY':
+                            oSheet.getCellByPosition(
+                                4, n).Formula = oSheet.getCellByPosition(5, n).Formula
+                            oSheet.getCellByPosition(5, n).String = ''
+                            oSheet.getCellByPosition(
+                                9,
+                                n).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
+                                    n + 1) + ')=0;"";PRODUCT(E' + str(
+                                        n + 1) + ':I' + str(n + 1) + '))'
+                # sposto il vedivoce nella colonna E/
+                    n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
                     oSheet.getCellByPosition(
-                        4, n).Formula = oSheet.getCellByPosition(5, n).Formula
-                    oSheet.getCellByPosition(5, n).String = ''
-                    oSheet.getCellByPosition(
-                        9,
-                        n).Formula = '=IF(PRODUCT(E' + str(n + 1) + ':I' + str(
-                            n + 1) + ')=0;"";PRODUCT(E' + str(
-                                n + 1) + ':I' + str(n + 1) + '))'
-        # sposto il vedivoce nella colonna E/
-            n = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            oSheet.getCellByPosition(
-                28, n + 1).Formula = '=SUBTOTAL(9;AC3:AC' + str(n + 2)
-            # rigenera_tutte() affido la rigenerazione delle formule al menu Viste
-            row = 4
-            while row < n:
-                oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
-                sistema_stili()
-                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-                row += 1
-        for el in oDoc.Sheets.ElementNames:
-            oDoc.CurrentController.setActiveSheet(
-                oDoc.getSheets().getByName(el))
-            oSheet = oDoc.getSheets().getByName(el)
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-#        oDialogo_attesa.endExecute()  # chiude il dialogo
-        indicator.setValue(8)
-        mostra_fogli_principali()
-#    if Dialogs.DLG_ask(Title='Informazione',
-#        Text= '''Vuoi procedere con la rigenerazione di tutte le formule di ogni foglio?
-#        Questo richidere del tempo.''') == 1:
-        for el in ('COMPUTO',  'VARIANTE',  'CONTABILITA'):
-            try:
-                oSheet = oDoc.getSheets().getByName(el)
-                GotoSheet(el)
-                rigenera_tutte()
-            except:
-                pass
-        GotoSheet('COMPUTO')
-        indicator.hide()
-        Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
+                        28, n + 1).Formula = '=SUBTOTAL(9;AC3:AC' + str(n + 2)
+                    # rigenera_tutte() affido la rigenerazione delle formule al menu Viste
+                    row = 4
+                    while row < n:
+                        sistema_stili(row)
+                        row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+                        row += 1
+                for el in oDoc.Sheets.ElementNames:
+                    oSheet = oDoc.getSheets().getByName(el)
+                    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+                indicator.setValue(8)
+                mostra_fogli_principali()
+                for el in ('COMPUTO',  'VARIANTE',  'CONTABILITA'):
+                    try:
+                        oSheet = oDoc.getSheets().getByName(el)
+                        GotoSheet(el)
+                        rigenera_tutte()
+                    except:
+                        pass
+                GotoSheet('COMPUTO')
+                indicator.hide()
+                Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
+        finally:
+            if was_calc_enabled:
+                oDoc.enableAutomaticCalculation(True)
+
     oDoc.getSheets().getByName('S5').getCellRangeByName('F94').Formula = (
     '=SWITCH(E94; '
     '"Spese Generali"; $S1.$H$320; '

@@ -6,6 +6,7 @@ LeenO - Computo metrico assistito con LibreOffice
 [![Telegram](https://img.shields.io/badge/Telegram-Group-blue?logo=telegram&style=flat-square)](https://t.me/leeno_computometrico)
 [![Facebook](https://img.shields.io/badge/Facebook-Group-blue?logo=facebook&style=flat-square)](https://m.facebook.com/groups/433206393972197)
 [![Donazioni](https://img.shields.io/badge/Sostienici-Dona-red?style=flat-square)](https://leeno.org/donazioni/)
+[![Liberapay](https://img.shields.io/badge/Liberapay-Dona-yellow?logo=liberapay&style=flat-square)](https://liberapay.com/leeno_computo/donate)
 
 **LeenO** è l’estensione open-source per LibreOffice Calc specifica per la redazione di computi metrici estimativi e contabilità tecnica di cantiere.
 
@@ -32,7 +33,8 @@ LeenO è gratuito per chi lo utilizza, ma richiede tempo, risorse e investimenti
 
 Se LeenO ti ha permesso di risparmiare ore di lavoro o costose licenze software annuali, considera di effettuare una donazione per assicurarne il futuro e lo sviluppo continuo:
 
-*   **Dona ora:** [Sostieni LeenO con una donazione](https://leeno.org/donazioni/)
+*   **Sito Web Ufficiale:** [Sostieni LeenO con una donazione su LeenO.org](https://leeno.org/donazioni/)
+*   **Liberapay:** [Dona tramite la piattaforma Liberapay](https://liberapay.com/leeno_computo/donate)
 
 ---
 

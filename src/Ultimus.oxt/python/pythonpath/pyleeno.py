@@ -11049,7 +11049,7 @@ def MENU_inserisci_nuova_riga_con_descrizione():
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
 
-
+@with_undo
 def MENU_elenco_puntato_misure():
     '''
     Aggiunge il trattino (-) alle righe di misura

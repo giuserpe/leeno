@@ -126,7 +126,6 @@ def Vedi(arg=None):
         pass
 
     # DLG.chi(f"checkpoint 7 (prima di PL.dp): {time.time()-t0:.3f}s")
-    PL.fissa()
     PL.dp()
     # DLG.chi(f"checkpoint 8 (fine Vedi): {time.time()-t0:.3f}s")
 

@@ -452,26 +452,32 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-30 19:44</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/87e3a31114d0e3374c1827b8fe76a6bf1f02ba23" target="_blank" rel="noopener"><code>87e3a31</code></a></td>
+                <td class="commit-msg">Merge pull request #50 from giuserpe/jules-5437642611482055730-6fb04bad
+
+fix(core): evita errore StarBasic all'avvio con modelli obsoleti non adeguati</td>
+            </tr>
+            <tr>
+                <td>2026-07-30 19:43</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/b910de79015c92625f7ee70c5d18cfd8a8caefd7" target="_blank" rel="noopener"><code>b910de7</code></a></td>
+                <td class="commit-msg">fix(core): evita errore StarBasic all'avvio con modelli obsoleti non adeguati
+
+Rimuove la chiamata prematura a clean_basic_macro_s2() da autoexec_run()
+per evitare che il thread in background modifichi il modulo 'Controllo'
+mentre è in esecuzione quando l'adeguamento viene rifiutato.
+Incrementa inoltre lo sleep del thread da 1.0 a 5.0 secondi per garantire
+un'esecuzione sicura e non concorrente del rimpiazzo del codice.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-30 18:38</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/6c6bb319204f2ec919af016531ee9e5192441401" target="_blank" rel="noopener"><code>6c6bb31</code></a></td>
                 <td class="commit-msg">fix(core): usa YesNoCancelDialog in adegua_tmpl per coerenza UI
 
 - sostituisce DLG_ask con YesNoCancelDialog
 - mantiene invariata la logica di conferma per l’adeguamento template</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 18:35</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0094870bef411326bf6f92818c02ec59224d7354" target="_blank" rel="noopener"><code>0094870</code></a></td>
-                <td class="commit-msg">Change dialog function for version adjustment prompt</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 18:33</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b836fb82498e64561e99000d4dfd25363773ccb1" target="_blank" rel="noopener"><code>b836fb8</code></a></td>
-                <td class="commit-msg">Merge pull request #49 from giuserpe/jules-9607991004929217148-dba1fddb
-
-Ottimizzazione della funzione adegua_tmpl() per velocizzare l'adeguamento del template su fogli di grandi dimensioni.
-1. Utilizzo di getFormulaArray() e setFormulaArray() per le operazioni in blocco.
-2. Esclusione del ricalcolo automatico dell'altezza riga all'interno dei cicli tramite il parametro adatta_riga di sistema_stili().</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +501,8 @@ Ottimizzazione della funzione adegua_tmpl() per velocizzare l'adeguamento del te
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 19:43 UTC</p>
-                <p>Build Commit: <code>b910de7</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 19:44 UTC</p>
+                <p>Build Commit: <code>87e3a31</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

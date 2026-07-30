@@ -452,6 +452,22 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-30 07:09</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/f527fa8ac76badbca63a516d998b5b95ed911fa4" target="_blank" rel="noopener"><code>f527fa8</code></a></td>
+                <td class="commit-msg">icons: canvas 48x48 con padding azzerato per-icona (v2.3)
+
+- width/height di tutti i 124 SVG (icons/svg/ + icons/scuro/) portati
+  da 32x32 (alcuni 24x24/65x65) a 48x48, per migliorare la leggibilità
+  a dimensione toolbar "piccola"
+- viewBox ritagliato singolarmente per ciascuna delle 62 icone in base
+  al bounding box reale del disegno (render ad alta risoluzione,
+  crop quadrato centrato che tocca i bordi sul lato piu' lungo),
+  non un margine fisso uguale per tutte, per non tagliare badge
+  d'angolo o elementi asimmetrici
+- zoom risultante tra 0.97x e 1.58x a seconda dell'icona, verificato
+  visivamente icona per icona (prima/dopo) prima dell'applicazione</td>
+            </tr>
+            <tr>
                 <td>2026-07-29 18:15</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/8f3ac9309f929c7004286c55972df066e48589dc" target="_blank" rel="noopener"><code>8f3ac93</code></a></td>
                 <td class="commit-msg">Merge pull request #41 from giuserpe/jules-16575569331714713603-b638a260
@@ -466,14 +482,6 @@ Correzione comportamento fissa() per congelamento righe/colonne</td>
 Risolve il problema del freeze delle righe che a volte falliva o nascondeva le prime righe del foglio attivo. Ora fissa() rimuove i divisori attivi (splitAtPosition), scorre la vista all'origine (setFirstVisibleColumn/setFirstVisibleRow) e posiziona la selezione su A1 prima di applicare il blocco. Inoltre, supporta parametri facoltativi cols_freeze e rows_freeze per consentire chiamate sia con parametri che senza (tramite mappa predefinita).
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-29 08:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1bb4883f344254e223310af4bef6d23b3aef642d" target="_blank" rel="noopener"><code>1bb4883</code></a></td>
-                <td class="commit-msg">Merge pull request #39 from giuserpe/jules-8099586499064776246-7ad2ac93
-
-fix(computo): adatta altezza riga dopo spostamento
-Sostituisce dest_range.getRows().OptimalHeight = True con LeenoSheetUtils.adattaAltezzaRiga per applicare correttamente l'adattamento altezza riga ottimizzato ed evitare freeze o malfunzionamenti dovuti alla protezione del foglio.</td>
             </tr>
                     </tbody>
                 </table>
@@ -497,8 +505,8 @@ Sostituisce dest_range.getRows().OptimalHeight = True con LeenoSheetUtils.adatta
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 07:10 UTC</p>
-                <p>Build Commit: <code>024374a</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 07:19 UTC</p>
+                <p>Build Commit: <code>f527fa8</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

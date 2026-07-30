@@ -453,11 +453,14 @@
                         
             <tr>
                 <td>2026-07-30 08:13</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3771268d6836a1591ac0497ae8bbda9d30148d7b" target="_blank" rel="noopener"><code>3771268</code></a></td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5b39e539ee12bde9b25a7edaddbd5f4d7ad0e69a" target="_blank" rel="noopener"><code>5b39e53</code></a></td>
                 <td class="commit-msg">Merge pull request #42 from giuserpe/jules-16621205955082093344-b8186b13
 
-Ottimizzazione e correzione MENU_copia_celle_visibili
-Risolve il problema del disallineamento e della traslazione delle colonne all'atto dell'incollaggio. La nuova implementazione rileva gli indici assoluti delle colonne e delle righe visibili all'interno della selezione, li raggruppa in blocchi contigui e copia le loro intersezioni sulle coordinate relative calcolate nel foglio temporaneo (tmp_clip) usando copyRange. Questo garantisce che la selezione incollata mantenga la struttura tabellare originale escludendo le sole righe e colonne nascoste.</td>
+Ottimizza MENU_copia_celle_visibili per evitare la traslazione e lo
+spostamento delle colonne visibili non contigue all'atto dell'incollaggio.
+Inoltre, quando il range contiene delle formule, propone un dialogo
+interattivo per consentire all'utente di convertirle in valori semplici
+(stringhe e numeri) durante l'operazione di copia.</td>
             </tr>
             <tr>
                 <td>2026-07-30 07:50</td>
@@ -512,8 +515,8 @@ chore(meta): bump versione a 3.26.0.113‑TESTING‑20260730
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 08:14 UTC</p>
-                <p>Build Commit: <code>3771268</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 08:39 UTC</p>
+                <p>Build Commit: <code>5b39e53</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

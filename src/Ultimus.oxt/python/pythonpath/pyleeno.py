@@ -10070,6 +10070,10 @@ alla versione di LeenO installata?''') == 0:
 di LeenO installata, potresti avere dei malfunzionamenti!''')
 
             return
+
+        ch_rigenera = Dialogs.YesNoDialog(Title='Informazione',
+                                          Text='Vuoi rigenerare le formule?')
+
         sproteggi_sheet_TUTTE()
         if oDoc.getSheets().hasByName('S4'):
             oDoc.Sheets.removeByName('S4')
@@ -10223,7 +10227,8 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                             sistema_stili(row, adatta_riga=False)
                             row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
                             row += 1
-                        rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
+                        if ch_rigenera == 1:
+                            rigenera_tutte() # affido la rigenerazione delle formule al menu Viste
                         # 214 aggiorna stili di cella per ogni colonna
                         test = SheetUtils.getUsedArea(oSheet).EndRow + 1
                         for y in range(0, test):
@@ -10337,7 +10342,8 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                     try:
                         oSheet = oDoc.getSheets().getByName(el)
                         GotoSheet(el)
-                        rigenera_tutte()
+                        if ch_rigenera == 1:
+                            rigenera_tutte()
                     except:
                         pass
                 GotoSheet('COMPUTO')

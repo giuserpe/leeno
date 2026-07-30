@@ -11732,71 +11732,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
 
 
 ########################################################################
-# @LeenoUtils.no_refresh
+@LeenoUtils.preserva_posizione()
 @with_undo("Fissa Righe/Colonne")
-# def fissa():
-#     '''
-#     Fissa le righe e le colonne nel foglio attivo,
-#     evitando che le prime righe rimangano nascoste.
-#     Utilizza le proprietà UNO del controller per maggiore robustezza.
-#     '''
-#     oDoc = LeenoUtils.getDocument()
-#     if not oDoc or not hasattr(oDoc, 'CurrentController'):
-#         return
-
-#     controller = oDoc.CurrentController
-#     oSheet = controller.ActiveSheet
-#     if not oSheet:
-#         return
-
-#     # Reset visuale: rimuove blocchi e torna in cima
-#     controller.freezeAtPosition(0, 0)
-#     controller.setFirstVisibleColumn(0)
-#     controller.setFirstVisibleRow(0)
-
-#     # Mappa dei fogli e relative righe da bloccare
-#     sheet_configs = {
-#         'COMPUTO': (0, 3),
-#         'VARIANTE': (0, 3),
-#         'CONTABILITA': (0, 3),
-#         'Elenco Prezzi': (0, 3),
-#         'Analisi di Prezzo': (0, 2),
-#         'Registro': (0, 1),
-#         'SAL': (0, 1),
-#         'S2': (0, 1),
-#         'Lista 1': (0, 4),
-#         'Scorciatoie': (0, 1)
-#     }
-
-#     for sheet_name, config in sheet_configs.items():
-#         if oSheet.Name == sheet_name:
-#             cols_to_freeze, rows_to_freeze = config
-#             break
-#     else:
-#         rows_to_freeze = 0
-#         cols_to_freeze = 0
-
-
-#     if rows_to_freeze > 0:
-#         # Imposta il blocco tramite il metodo standard UNO (più robusto)
-#         try:
-#             controller.freezeAtPosition(0, rows_to_freeze)
-#         except Exception:
-#             # Fallback nel caso in cui freezeAtPosition fallisca
-#             try:
-#                 controller.SplitColumn = 0
-#                 controller.SplitRow = rows_to_freeze
-#                 controller.FreezePanes = True
-#             except Exception:
-#                 pass
-
-#     # Seleziona la prima cella sotto il blocco per dare il focus all'area dati
-#     try:
-#         oCell = oSheet.getCellByPosition(0, rows_to_freeze)
-#         controller.select(oCell)
-#     except:
-#         pass
-
 def fissa(cols_freeze=None, rows_freeze=None):
     '''
     Fissa le righe nel foglio attivo usando le API UNO di SpreadsheetView.

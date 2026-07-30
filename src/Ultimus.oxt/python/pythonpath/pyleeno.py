@@ -9630,6 +9630,49 @@ def autoexec_run():
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
 
+    # Rimuove "S2" se presente nell'array in Standard.Controllo.Controlla_Esistenza_LibUltimus
+    try:
+        oDoc = LeenoUtils.getDocument()
+        if oDoc.BasicLibraries.hasByName("Standard"):
+            lib = oDoc.BasicLibraries.getByName("Standard")
+            if lib.hasByName("Controllo"):
+                code = lib.getByName("Controllo")
+                import re
+                sub_pattern = re.compile(r'(Sub\s+Controlla_Esistenza_LibUltimus.*?End\s+Sub)', re.DOTALL | re.IGNORECASE)
+                match = sub_pattern.search(code)
+                if match:
+                    sub_body = match.group(1)
+                    array_pattern = re.compile(r'(Array\s*\(\s*([^)]*)\s*\))', re.IGNORECASE | re.DOTALL)
+                    array_match = array_pattern.search(sub_body)
+                    if array_match:
+                        full_array_expr = array_match.group(1)
+                        array_contents = array_match.group(2)
+                        elements = array_contents.split(',')
+                        target_found = False
+                        new_elements = []
+                        for el in elements:
+                            cleaned = el.strip()
+                            if cleaned.startswith('&quot;') and cleaned.endswith('&quot;'):
+                                val = cleaned[6:-6]
+                            elif cleaned.startswith('&apos;') and cleaned.endswith('&apos;'):
+                                val = cleaned[6:-6]
+                            else:
+                                val = cleaned.strip('\"\'')
+                            if val.upper() == 'S2':
+                                target_found = True
+                            else:
+                                new_elements.append(el)
+                        if target_found:
+                            new_array_contents = ','.join(new_elements)
+                            new_array_contents = re.sub(r',\s*,', ',', new_array_contents)
+                            new_array_contents = new_array_contents.strip().strip(',')
+                            new_array_expr = f'Array({new_array_contents})'
+                            new_sub_body = sub_body.replace(full_array_expr, new_array_expr)
+                            new_code = code.replace(match.group(1), new_sub_body)
+                            lib.replaceByName("Controllo", new_code)
+    except Exception:
+        pass
+
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
     if "Computo_LeenO.ods" not in LeenoUtils.getDocument().getURL():

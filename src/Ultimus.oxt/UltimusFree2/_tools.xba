@@ -61,19 +61,6 @@ Function fsGetSetting(sA)
    End Select
 End Function
 rem ----------------------------------------------------------------------
-Function LeenO_Path
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	End If
-	Dim pip As Object, extensionLocation As String
-	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
-	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-	sURL = (ConvertFromURL(extensionLocation))
-	LeenO_Path = extensionLocation &apos; full path
-End Function
-rem ----------------------------------------------------------------------
-
 Sub Protezione_area (foglio as string, nomearea as string) &apos;usato in annota_pagina_libretto
 	Dim rngClear As Object
 	Dim oSheet1 As Object
@@ -100,32 +87,4 @@ End Sub
 
 
 
-sub paste_format
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dim args1(5) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;Flags&quot;
-args1(0).Value = &quot;T&quot;
-args1(1).Name = &quot;FormulaCommand&quot;
-args1(1).Value = 0
-args1(2).Name = &quot;SkipEmptyCells&quot;
-args1(2).Value = false
-args1(3).Name = &quot;Transpose&quot;
-args1(3).Value = false
-args1(4).Name = &quot;AsLink&quot;
-args1(4).Value = false
-args1(5).Name = &quot;MoveMode&quot;
-args1(5).Value = 4
-
-dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
-
-end Sub
 </script:module>

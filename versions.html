@@ -452,21 +452,31 @@
                     <tbody>
                         
             <tr>
-                <td>2026-07-30 16:56</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1568c93ca9d6e59f0ce3d39c711faa5a65912102" target="_blank" rel="noopener"><code>1568c93</code></a></td>
-                <td class="commit-msg">update</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 15:58</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/f42722a8c1c5e1e14379663fc55284b66dbcbcf1" target="_blank" rel="noopener"><code>f42722a</code></a></td>
-                <td class="commit-msg">feat: add new core python modules for document management and toolbar interaction</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 15:57</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/11afb5c3cb512fd87fb2d31c259a874deae32716" target="_blank" rel="noopener"><code>11afb5c</code></a></td>
-                <td class="commit-msg">Merge pull request #47 from giuserpe/dev-6171836073409543434
+                <td>2026-07-30 17:37</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/31da6c714b3256e5fd3dfc29ba64c6d5a01b9441" target="_blank" rel="noopener"><code>31da6c7</code></a></td>
+                <td class="commit-msg">Merge pull request #48 from giuserpe/opt-adegua-tmpl-2983944514535953281
 
-Modificata la funzione autoexec_run() in pyleeno.py in modo da ispezionare la macro Basic Standard.Controllo.Controlla_Esistenza_LibUltimus del documento corrente. Se il nome del foglio "S2" è presente nell'array del ciclo For Each, viene rimosso automaticamente e il sorgente del modulo Basic aggiornato. Aggiunto test unitario dedicato in test_autoexec.py.</td>
+ottimizza in modo significativo la funzione adegua_tmpl() in pyleeno.py per evitare l'overhead delle operazioni sulla GUI di LibreOffice, e aggiunge la funzione clean_basic_macro_s2() per pulire il file quando la versione del template è inferiore a 219.</td>
+            </tr>
+            <tr>
+                <td>2026-07-30 17:35</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c4846e0dbdfe5193b7e20f94a50f6d748155b5eb" target="_blank" rel="noopener"><code>c4846e0</code></a></td>
+                <td class="commit-msg">Merge remote-tracking branch 'origin/dev' into opt-adegua-tmpl-2983944514535953281
+
+# Conflicts:
+#	src/Ultimus.oxt/python/pythonpath/pyleeno.py</td>
+            </tr>
+            <tr>
+                <td>2026-07-30 17:14</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/38dd8187436caa6c5ac9139e6644bd2ad33c4754" target="_blank" rel="noopener"><code>38dd818</code></a></td>
+                <td class="commit-msg">refactor(core): ottimizza adegua_tmpl e aggiunge clean_basic_macro_s2
+
+- Estrae la logica per la pulizia delle macro in clean_basic_macro_s2() e la riutilizza in autoexec_run()
+- Ottimizza adegua_tmpl() usando DocumentRefreshContext e disabilitando il calcolo automatico temporaneo
+- Ottimizza l'adeguamento visibilità dei fogli e rimuove i select lenti sulle celle
+- Aggiunge un fallback in sistema_stili() se row è None
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -490,8 +500,8 @@ Modificata la funzione autoexec_run() in pyleeno.py in modo da ispezionare la ma
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 17:36 UTC</p>
-                <p>Build Commit: <code>c4846e0</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-30 17:37 UTC</p>
+                <p>Build Commit: <code>31da6c7</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

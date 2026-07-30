@@ -6903,6 +6903,8 @@ def MENU_copia_celle_visibili():
     '''
     Copia negli appunti solo le celle visibili della selezione corrente.
     Utilizza un foglio temporaneo per consolidare i dati ed evitare celle vuote intermedie.
+    Raggruppa le colonne e le righe visibili in blocchi contigui per evitare disallineamenti
+    e traslazioni all'atto dell'incollaggio.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6914,45 +6916,120 @@ def MENU_copia_celle_visibili():
     else:
         oRangeAddress = selection.getRangeAddress()
 
-    # Uso del context manager per disabilitare il refresh ed evitare sfarfallii
+    # Definiamo oRange per verificare la presenza di formule
+    oRange = oSheet.getCellRangeByPosition(
+        oRangeAddress.StartColumn, oRangeAddress.StartRow,
+        oRangeAddress.EndColumn, oRangeAddress.EndRow
+    )
+
+    # Rilevamento delle colonne e righe visibili all'interno della selezione
+    visible_cols = []
+    for c in range(oRangeAddress.StartColumn, oRangeAddress.EndColumn + 1):
+        if oSheet.getColumns().getByIndex(c).IsVisible:
+            visible_cols.append(c)
+
+    visible_rows = []
+    for r in range(oRangeAddress.StartRow, oRangeAddress.EndRow + 1):
+        if oSheet.getRows().getByIndex(r).IsVisible:
+            visible_rows.append(r)
+
+    if not visible_cols or not visible_rows:
+        return
+
+    # Rilevamento di formule all'interno del range (tra le celle visibili o nel range totale)
+    has_formula = False
+    try:
+        formulas = oRange.getFormulaArray()
+        for row in formulas:
+            for cell_formula in row:
+                if cell_formula and cell_formula.startswith('='):
+                    has_formula = True
+                    break
+            if has_formula:
+                break
+    except Exception:
+        has_formula = False
+
+    convert_formulas = False
+    if has_formula:
+        # Mostra un dialogo Sì/No per chiedere la conversione delle formule
+        ans = Dialogs.YesNoDialog(
+            IconType="question",
+            Title="Converti formule",
+            Text="La selezione contiene delle formule. Vuoi convertirle in valori (stringhe e numeri) durante la copia?"
+        )
+        if ans == 1:
+            convert_formulas = True
+
+    # Funzione ausiliaria per identificare blocchi contigui di indici
+    def get_contiguous_blocks(indices):
+        if not indices:
+            return []
+        blocks = []
+        start = indices[0]
+        prev = indices[0]
+        for val in indices[1:]:
+            if val == prev + 1:
+                prev = val
+            else:
+                blocks.append((start, prev))
+                start = val
+                prev = val
+        blocks.append((start, prev))
+        return blocks
+
+    col_blocks = get_contiguous_blocks(visible_cols)
+    row_blocks = get_contiguous_blocks(visible_rows)
+
+    # Associazione delle destinazioni nel foglio temporaneo per i blocchi di colonne
+    dest_cols = []
+    current_dest_col = 0
+    for start, end in col_blocks:
+        width = end - start + 1
+        dest_cols.append((start, end, current_dest_col))
+        current_dest_col += width
+
+    # Associazione delle destinazioni nel foglio temporaneo per i blocchi di righe
+    dest_rows = []
+    current_dest_row = 0
+    for start, end in row_blocks:
+        height = end - start + 1
+        dest_rows.append((start, end, current_dest_row))
+        current_dest_row += height
+
     try:
         # Creazione o recupero foglio temporaneo
         if not oDoc.getSheets().hasByName('tmp_clip'):
             oDoc.getSheets().insertNewByName('tmp_clip', oDoc.Sheets.Count)
         tmp = oDoc.getSheets().getByName('tmp_clip')
 
-        # 1. Otteniamo solo le celle visibili dal range originale
-        oRange = oSheet.getCellRangeByPosition(
-            oRangeAddress.StartColumn, oRangeAddress.StartRow,
-            oRangeAddress.EndColumn, oRangeAddress.EndRow
-        )
-        visible_cells = oRange.queryVisibleCells()
+        # Copiamo ogni intersezione dei blocchi contigui nella corretta posizione di destinazione
+        for start_col, end_col, dest_col in dest_cols:
+            for start_row, end_row, dest_row in dest_rows:
+                addr = uno.createUnoStruct("com.sun.star.table.CellRangeAddress")
+                addr.Sheet = oRangeAddress.Sheet
+                addr.StartColumn = start_col
+                addr.EndColumn = end_col
+                addr.StartRow = start_row
+                addr.EndRow = end_row
 
-        # 2. Copiamo le celle visibili nel foglio temporaneo
-        # Nota: copyRange non supporta queryVisibleCells direttamente,
-        # quindi usiamo il metodo delle coordinate filtrate o il foglio d'appoggio.
-        dest_cursor_row = 0
-        for sub_range in visible_cells:
-            addr = sub_range.getRangeAddress()
-            rows_count = addr.EndRow - addr.StartRow + 1
-            cols_count = addr.EndColumn - addr.StartColumn + 1
+                dest_addr = tmp.getCellByPosition(dest_col, dest_row).getCellAddress()
+                tmp.copyRange(dest_addr, addr)
 
-            dest_addr = tmp.getCellByPosition(0, dest_cursor_row).getCellAddress()
-            tmp.copyRange(dest_addr, addr)
-            dest_cursor_row += rows_count
+        # Selezioniamo il range esatto consolidato
+        final_range = tmp.getCellRangeByPosition(0, 0, current_dest_col - 1, current_dest_row - 1)
 
-        # 3. Selezioniamo il risultato nel foglio tmp e copiamo
-        final_range = tmp.getCellRangeByPosition(0, 0, oRangeAddress.EndColumn - oRangeAddress.StartColumn, dest_cursor_row - 1)
+        # Se richiesto, convertiamo le formule in valori (stringhe e numeri)
+        if convert_formulas:
+            data = final_range.getDataArray()
+            final_range.setDataArray(data)
+
+        # Selezioniamo il range esatto consolidato e copiamo negli appunti
         oDoc.CurrentController.select(final_range)
-
-        # Dispatch del comando Copy tramite le utility
-        # ctx = LeenoUtils.getComponentContext()
-        # dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-        # dispatchHelper.executeDispatch(oDoc.CurrentController.Frame, ".uno:Copy", "", 0, ())
         comando('Copy')
 
     finally:
-        # Pulizia: rimuove il foglio e torna alla selezione originale
+        # Ripristino e pulizia del foglio temporaneo
         if oDoc.getSheets().hasByName('tmp_clip'):
             oDoc.getSheets().removeByName('tmp_clip')
 

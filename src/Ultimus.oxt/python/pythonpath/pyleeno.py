@@ -323,6 +323,18 @@ def MENU_invia_voce():
             if oDoc is not None:
                 LeenoUtils.DocumentRefresh(True, oDoc)
 
+            # Applica l'OptimalHeight alle righe inserite nel Documento Principale
+            # SOLO ora che il refresh è stato definitivamente riattivato: se lo si
+            # applica mentre il refresh è ancora disabilitato (o lo si ridisabilita
+            # subito dopo), l'adattamento dell'altezza riga viene di fatto ignorato.
+            pending = globals().get('_pending_altezza_invia_voce') or []
+            for oSheetPending, rowPending in pending:
+                try:
+                    LeenoSheetUtils.adattaAltezzaRiga(oSheetPending, all=False, lrow=rowPending)
+                except Exception:
+                    pass
+            globals()['_pending_altezza_invia_voce'] = []
+
     finally:
         cfg.write('Generale', 'pesca_auto', stato)
 
@@ -347,6 +359,15 @@ def invia_voce(ctrl_override=False):
     dal documento corrente al Documento Principale.
     '''
     # LeenoUtils.DocumentRefresh(False)
+
+    # Righe (foglio, indice) del Documento Principale a cui applicare
+    # OptimalHeight. Non viene fatto qui: con il refresh ancora disabilitato
+    # (IsAdjustHeightEnabled=False) l'impostazione di Rows.OptimalHeight è
+    # di fatto un no-op, o viene annullata se il refresh viene riabilitato e
+    # subito ridisabilitato. Va applicato da MENU_invia_voce() DOPO aver
+    # riattivato definitivamente il refresh.
+    global _pending_altezza_invia_voce
+    _pending_altezza_invia_voce = []
 
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -471,11 +492,7 @@ def invia_voce(ctrl_override=False):
                 start_row = sStRange.RangeAddress.StartRow
                 dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
             
-            LeenoUtils.DocumentRefresh(True, ddcDoc)
-            try:
-                LeenoSheetUtils.adattaAltezzaRiga(dccSheetDest, all=False, lrow=start_row)
-            finally:
-                LeenoUtils.DocumentRefresh(False, ddcDoc)
+            _pending_altezza_invia_voce.append((dccSheetDest, start_row))
             controller = ddcDoc.CurrentController
             controller.setFirstVisibleColumn(0)
             controller.setFirstVisibleRow(max(0, start_row - 10))
@@ -638,11 +655,8 @@ def invia_voce(ctrl_override=False):
                 recupera_voce(art)
 
             # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
-            LeenoUtils.DocumentRefresh(True, ddcDoc)
-            try:
-                LeenoSheetUtils.adattaAltezzaRiga(dccSheet, all=False, lrow=row)
-            finally:
-                LeenoUtils.DocumentRefresh(False, ddcDoc)
+            # (applicata più avanti da MENU_invia_voce, dopo la riattivazione del refresh)
+            _pending_altezza_invia_voce.append((dccSheet, row))
 
         if nSheetDCC in ('Elenco Prezzi'):
             # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -8652,13 +8666,16 @@ def MENU_vedi_voce():
         oSheet = oDoc.CurrentController.ActiveSheet
         row = LeggiPosizioneCorrente()[1]
 
-        if oSheet.getCellByPosition(2, row).String not in ('#N/A', '#RIF!', '#NAME?'):
-            if oSheet.getCellByPosition(2, row).Type.value != 'EMPTY':
-                if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-                    copia_riga_computo(row)
-                elif oSheet.Name in ('CONTABILITA'):
-                    copia_riga_contab(row)
-                row += 1
+        is_ctrl, is_shift = GetModifiers()
+
+        if not is_ctrl:
+            if oSheet.getCellByPosition(2, row).String not in ('#N/A', '#RIF!', '#NAME?'):
+                if oSheet.getCellByPosition(2, row).Type.value != 'EMPTY':
+                    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                        copia_riga_computo(row)
+                    elif oSheet.Name in ('CONTABILITA'):
+                        copia_riga_contab(row)
+                    row += 1
 
         if oSheet.getCellByPosition(2, row).CellStyle == 'comp 1-a':
             to = basic_LeenO('ListenersSelectRange.getRange',
@@ -13299,6 +13316,8 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    nuove_icone()
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     DLG.mri(oSheet)

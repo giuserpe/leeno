@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="48"
+   height="48"
+   viewBox="2.874 4.099 18.252 18.252"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="somma_colore.svg"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="6.3046875"
+     inkscape:cx="39.097893"
+     inkscape:cy="20.857497"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4" />
+  <g
+     id="g4"
+     transform="translate(1.2)">
+    <rect
+       x="4.5"
+       y="9.5"
+       width="3.4000001"
+       height="12.5"
+       rx="0.80000001"
+       fill="#8fb200"
+       id="rect1" />
+    <rect
+       x="13.7"
+       y="9.5"
+       width="3.4000001"
+       height="12.5"
+       rx="0.80000001"
+       fill="#ff4d2e"
+       id="rect3" />
+    <rect
+       x="9.1000004"
+       y="9.5"
+       width="3.4000001"
+       height="12.5"
+       rx="0.80000001"
+       fill="#3b82f6"
+       id="rect2" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:23.0669px;writing-mode:lr-tb;direction:ltr;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
+     x="5.4166975"
+     y="19.551931"
+     id="text1"
+     inkscape:highlight-color="#000000"><tspan
+       sodipodi:role="line"
+       id="tspan1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:23.0669px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke-width:1.92224"
+       x="5.4166975"
+       y="19.551931">Σ</tspan></text>
+</svg>

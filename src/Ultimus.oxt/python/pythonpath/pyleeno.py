@@ -198,7 +198,7 @@ def creaUsobollo():
 
 def MENU_nuovo_computo():
     '''Crea un nuovo computo vuoto.'''
-    creaComputo()
+    creaComputo(0)
 
 
 ########################################################################

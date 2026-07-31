@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-31 17:40</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/62e0f185719ce343cb71e2cad5bb09c6a2761cd3" target="_blank" rel="noopener"><code>62e0f18</code></a></td>
+                <td class="commit-msg">chore(meta): bump versione a 3.26.0.117‑TESTING‑20260731
+
+feat(icons): aggiunge nuovo set icone somme_sicurezza (colori + tema scuro)
+- introduce somme_sicurezza.svg in icons/svg/
+- aggiunge variante scura in icons/scuro/
+- genera automaticamente somme_sicurezza_16/16h/26/26h.bmp (SVG‑compatibili)
+
+fix(icons): rimuove duplicazione accidentale script rigenera_bmp_icone.py salvato come .bmp
+- quattro file rigenera_bmp_icone_*.bmp contengono codice Python anziché SVG/bitmap
+- da eliminare o rinominare correttamente (non validi come icone)</td>
+            </tr>
+            <tr>
                 <td>2026-07-31 15:40</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5a4f2f59e51f7f3b91d7c44d1680405b7b724ac0" target="_blank" rel="noopener"><code>5a4f2f5</code></a></td>
                 <td class="commit-msg">Merge pull request #52 from giuserpe/fix-scriptpy-disposed-exception-6311502732772901004
@@ -467,37 +481,6 @@ Gestione dell'eccezione DisposedException nella funzione ScriptPy in PY_bridge.x
 Aggiunge la gestione degli errori On Error GoTo ErrorHandler in ScriptPy per catturare com.sun.star.lang.DisposedException o altri errori dovuti alla disconnessione del bridge Python-UNO, visualizzando un messaggio amichevole ed evitando crash incontrollati della macro.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-07-31 15:00</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/734e8764b6097694cfee1a33847e33f3aaa92297" target="_blank" rel="noopener"><code>734e876</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.117‑TESTING‑20260731
-
-feat(icons): aggiunge rigenera_bmp_icone.py per generare bitmap SVG‑compatibili
-- rigenera _16.bmp, _16h.bmp, _26.bmp, _26h.bmp da sorgenti SVG
-- replica la logica dello script bash leeno_icons_2.sh
-- nessuna dipendenza esterna; compatibile Windows/Linux
-- supporta dry‑run, selezione icone, percorso svg personalizzato
-
-feat(ui): aggiunge voce di menu “Inserisci somme LAVORI e SICUREZZA”
-- nuova entry Ca62 in Addons.xcu con icona somme_sicurezza
-- aggiunge ImageIdentifier anche nella sezione contabilità
-
-fix(computo): corregge formula ribasso (rimozione segno negativo)
-- AO * AM deve essere positivo; elimina prefisso “‑”
-
-fix(contab): applica release_ram a funzioni SAL e atti contabili
-- MENU_AnnullaAttiContabili, MENU_AnnullaTuttiAttiContabili, GeneraAttiContabili
-- rimuove decoratore da generaContabilita per coerenza
-
-fix(core): applica OptimalHeight solo dopo refresh definitivo
-- introduce _pending_altezza_invia_voce
-- MENU_invia_voce applica adattaAltezzaRiga solo a refresh riattivato
-- evita no‑op causati da refresh disabilitato
-
-feat(core): modifica comportamento MENU_vedi_voce con tasto CTRL
-- se CTRL premuto, salta copia_riga_computo/contab
-- comportamento standard invariato senza CTRL</td>
             </tr>
                     </tbody>
                 </table>
@@ -521,8 +504,8 @@ feat(core): modifica comportamento MENU_vedi_voce con tasto CTRL
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-31 15:40 UTC</p>
-                <p>Build Commit: <code>5a4f2f5</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-31 17:40 UTC</p>
+                <p>Build Commit: <code>62e0f18</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

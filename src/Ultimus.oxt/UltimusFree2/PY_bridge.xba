@@ -20,6 +20,8 @@
 Function ScriptPy(sModulo As String, sFunzione As String, _
     Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant
 
+    On Error GoTo ErrorHandler
+
     &apos; rimuove &quot;.py&quot; dal nome modulo
     If Right(sModulo, 3) = &quot;.py&quot; Then
         sModulo = Left(sModulo, Len(sModulo) - 3)
@@ -39,6 +41,16 @@ Function ScriptPy(sModulo As String, sFunzione As String, _
                 &quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )
 
     ScriptPy = bridge.trigger(sModulo &amp; &quot;.&quot; &amp; sFunzione)
+
+    Exit Function
+
+ErrorHandler:
+    Dim sMsg As String
+    sMsg = &quot;Errore di runtime BASIC durante il richiamo della funzione Python &apos;&quot; &amp; sModulo &amp; &quot;.&quot; &amp; sFunzione &amp; &quot;&apos;:&quot; &amp; CHR$(10) &amp; CHR$(10) &amp; _
+           Error$ &amp; CHR$(10) &amp; CHR$(10) &amp; _
+           &quot;Se l&apos;errore persiste, prova a riavviare LibreOffice.&quot;
+    MsgBox(sMsg, 16, &quot;Errore di connessione Python (ScriptPy)&quot;)
+    Exit Function
 
 End Function
 

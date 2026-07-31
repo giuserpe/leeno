@@ -452,6 +452,24 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-31 07:57</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/df3cfbbe4ca371307f4ff50beb37331d87802535" target="_blank" rel="noopener"><code>df3cfbb</code></a></td>
+                <td class="commit-msg">chore(meta): bump versione a 3.26.0.115‑TESTING‑20260730
+
+feat(import): riconoscimento avanzato Basilicata e lettura XML con BOM
+- introduce isBasilicataXml per gestire formato storico e nuovo formato 2026
+- assegna LeenoImport_XmlBasilicata come parser prioritario
+- aggiunge _readXmlFile con rilevazione automatica codifica (UTF‑8/UTF‑8‑SIG/UTF‑16/UTF‑32)
+- evita corruzione del testo XML e falsi “tipo sconosciuto”
+- sostituisce lettura forzata UTF‑8 con BOM‑aware decoding
+
+fix(import): robustezza parser Basilicata
+- gestisce assenza di <pdf>, <anno>, <capitoli>, <categorie>, <voci>, <sottovoci>
+- evita crash su nodi mancanti o vuoti
+- supporta voci senza sottovoci (prezzo direttamente sotto <Voce>)
+- normalizza um, prezzo, manodopera con fallback sicuri</td>
+            </tr>
+            <tr>
                 <td>2026-07-30 20:07</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/b946bd6b24c386a12806d2d245f6391b0d9b81a2" target="_blank" rel="noopener"><code>b946bd6</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.115‑TESTING‑20260730
@@ -467,19 +485,6 @@ fix(core): aggiunge conferma rigenerazione formule in adegua_tmpl
                 <td class="commit-msg">Merge pull request #50 from giuserpe/jules-5437642611482055730-6fb04bad
 
 fix(core): evita errore StarBasic all'avvio con modelli obsoleti non adeguati</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 19:43</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b910de79015c92625f7ee70c5d18cfd8a8caefd7" target="_blank" rel="noopener"><code>b910de7</code></a></td>
-                <td class="commit-msg">fix(core): evita errore StarBasic all'avvio con modelli obsoleti non adeguati
-
-Rimuove la chiamata prematura a clean_basic_macro_s2() da autoexec_run()
-per evitare che il thread in background modifichi il modulo 'Controllo'
-mentre è in esecuzione quando l'adeguamento viene rifiutato.
-Incrementa inoltre lo sleep del thread da 1.0 a 5.0 secondi per garantire
-un'esecuzione sicura e non concorrente del rimpiazzo del codice.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -503,8 +508,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-30 20:07 UTC</p>
-                <p>Build Commit: <code>b946bd6</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-31 07:58 UTC</p>
+                <p>Build Commit: <code>df3cfbb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

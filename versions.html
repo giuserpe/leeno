@@ -452,6 +452,23 @@
                     <tbody>
                         
             <tr>
+                <td>2026-07-31 15:40</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5a4f2f59e51f7f3b91d7c44d1680405b7b724ac0" target="_blank" rel="noopener"><code>5a4f2f5</code></a></td>
+                <td class="commit-msg">Merge pull request #52 from giuserpe/fix-scriptpy-disposed-exception-6311502732772901004
+
+fix: gestisce eccezione di bridge dismesso in ScriptPy
+Gestione dell'eccezione DisposedException nella funzione ScriptPy in PY_bridge.xba per evitare i crash di runtime BASIC quando il bridge Python-UNO è disconnesso o dismesso.</td>
+            </tr>
+            <tr>
+                <td>2026-07-31 15:21</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/623507b177891573604632560b6039d7cc3e7d93" target="_blank" rel="noopener"><code>623507b</code></a></td>
+                <td class="commit-msg">fix(core): gestisce eccezione di bridge dismesso in ScriptPy
+
+Aggiunge la gestione degli errori On Error GoTo ErrorHandler in ScriptPy per catturare com.sun.star.lang.DisposedException o altri errori dovuti alla disconnessione del bridge Python-UNO, visualizzando un messaggio amichevole ed evitando crash incontrollati della macro.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-07-31 15:00</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/734e8764b6097694cfee1a33847e33f3aaa92297" target="_blank" rel="noopener"><code>734e876</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.117‑TESTING‑20260731
@@ -482,34 +499,6 @@ feat(core): modifica comportamento MENU_vedi_voce con tasto CTRL
 - se CTRL premuto, salta copia_riga_computo/contab
 - comportamento standard invariato senza CTRL</td>
             </tr>
-            <tr>
-                <td>2026-07-31 07:57</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/df3cfbbe4ca371307f4ff50beb37331d87802535" target="_blank" rel="noopener"><code>df3cfbb</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.115‑TESTING‑20260730
-
-feat(import): riconoscimento avanzato Basilicata e lettura XML con BOM
-- introduce isBasilicataXml per gestire formato storico e nuovo formato 2026
-- assegna LeenoImport_XmlBasilicata come parser prioritario
-- aggiunge _readXmlFile con rilevazione automatica codifica (UTF‑8/UTF‑8‑SIG/UTF‑16/UTF‑32)
-- evita corruzione del testo XML e falsi “tipo sconosciuto”
-- sostituisce lettura forzata UTF‑8 con BOM‑aware decoding
-
-fix(import): robustezza parser Basilicata
-- gestisce assenza di <pdf>, <anno>, <capitoli>, <categorie>, <voci>, <sottovoci>
-- evita crash su nodi mancanti o vuoti
-- supporta voci senza sottovoci (prezzo direttamente sotto <Voce>)
-- normalizza um, prezzo, manodopera con fallback sicuri</td>
-            </tr>
-            <tr>
-                <td>2026-07-30 20:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b946bd6b24c386a12806d2d245f6391b0d9b81a2" target="_blank" rel="noopener"><code>b946bd6</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.115‑TESTING‑20260730
-
-fix(core): aggiunge conferma rigenerazione formule in adegua_tmpl
-- introduce YesNoDialog per chiedere se rigenerare le formule
-- esegue rigenera_tutte solo se l’utente conferma
-- mantiene invariata la logica di adeguamento e aggiornamento fogli</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -532,8 +521,8 @@ fix(core): aggiunge conferma rigenerazione formule in adegua_tmpl
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-07-31 15:21 UTC</p>
-                <p>Build Commit: <code>623507b</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-07-31 15:40 UTC</p>
+                <p>Build Commit: <code>5a4f2f5</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

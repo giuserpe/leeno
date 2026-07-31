@@ -8652,13 +8652,16 @@ def MENU_vedi_voce():
         oSheet = oDoc.CurrentController.ActiveSheet
         row = LeggiPosizioneCorrente()[1]
 
-        if oSheet.getCellByPosition(2, row).String not in ('#N/A', '#RIF!', '#NAME?'):
-            if oSheet.getCellByPosition(2, row).Type.value != 'EMPTY':
-                if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-                    copia_riga_computo(row)
-                elif oSheet.Name in ('CONTABILITA'):
-                    copia_riga_contab(row)
-                row += 1
+        is_ctrl, is_shift = GetModifiers()
+
+        if not is_ctrl:
+            if oSheet.getCellByPosition(2, row).String not in ('#N/A', '#RIF!', '#NAME?'):
+                if oSheet.getCellByPosition(2, row).Type.value != 'EMPTY':
+                    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                        copia_riga_computo(row)
+                    elif oSheet.Name in ('CONTABILITA'):
+                        copia_riga_contab(row)
+                    row += 1
 
         if oSheet.getCellByPosition(2, row).CellStyle == 'comp 1-a':
             to = basic_LeenO('ListenersSelectRange.getRange',

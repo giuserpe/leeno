@@ -3,6 +3,7 @@
 """
 from datetime import datetime, date
 import os
+import re
 import threading
 # pyrefly: ignore [missing-import]
 import uno
@@ -63,6 +64,28 @@ def stripXMLNamespaces(data):
     return it.root
 
 
+def isBasilicataXml(xmlText):
+    '''
+    Riconosce i file XML della Regione Basilicata, sia nel formato storico
+    (radice <Prezzario> con <pdf>Prezzario_Regione_Basilicata...</pdf>)
+    sia nel nuovo formato 2026 (radice <Prezzario> con <anno>AAAA</anno>
+    al posto di <pdf>, es. INFRA_Prezzario_Regionale_Basilicata_2026.xml),
+    che condivide con quello storico la stessa struttura
+    capitoli/categorie/voci/sottovoci.
+    '''
+    if '<pdf>Prezzario_Regione_Basilicata' in xmlText:
+        return True
+
+    if (
+        re.search(r'<Prezzario\b', xmlText)
+        and re.search(r'<anno>\s*\d{4}\s*</anno>', xmlText)
+        and '<capitoli>' in xmlText
+        and '<sottovoci>' in xmlText
+    ):
+        return True
+
+    return False
+
 def findXmlParser(xmlText):
     '''
     fa un pre-esame del contenuto xml della stringa fornita
@@ -70,6 +93,12 @@ def findXmlParser(xmlText):
     (nel qual caso fornisce un parser adatto) oppure no
     (nel qual caso avvisa di inviare il file allo staff)
     '''
+
+    # il formato Basilicata richiede un riconoscimento più elaborato
+    # di un semplice confronto di sottostringa (vedi isBasilicataXml),
+    # quindi viene controllato per primo, separatamente dal dizionario
+    if isBasilicataXml(xmlText):
+        return LeenoImport_XmlBasilicata.parseXML
 
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
@@ -224,6 +253,33 @@ def MENU_ImportElencoPrezziXML():
     with LeenoUtils.DocumentRefreshContext(False):
         ImportElencoPrezziXML()
 
+def _readXmlFile(filename):
+    '''
+    Legge il contenuto di un file XML rilevando automaticamente la codifica
+    dal BOM (Byte Order Mark), invece di forzare sempre UTF-8.
+
+    Alcuni prezzari regionali (es. il nuovo formato Basilicata 2026) vengono
+    distribuiti in UTF-16: se il file viene letto forzando "utf8", il testo
+    risultante è corrotto (un carattere valido alternato a byte spuri) e
+    nessuna firma in findXmlParser() riesce più a riconoscerlo, anche se
+    è corretta: il file sembra "di tipo sconosciuto" pur non essendolo.
+    '''
+    with open(filename, 'rb') as file:
+        raw = file.read()
+
+    if raw.startswith(b'\xff\xfe\x00\x00') or raw.startswith(b'\x00\x00\xfe\xff'):
+        encoding = 'utf-32'
+    elif raw.startswith(b'\xff\xfe'):
+        encoding = 'utf-16-le'
+    elif raw.startswith(b'\xfe\xff'):
+        encoding = 'utf-16-be'
+    elif raw.startswith(b'\xef\xbb\xbf'):
+        encoding = 'utf-8-sig'
+    else:
+        encoding = 'utf-8'
+
+    return raw.decode(encoding, errors='ignore')
+
 def ImportElencoPrezziXML():
     '''
     Routine di importazione di un prezzario XML in tabella Elenco Prezzi
@@ -243,9 +299,8 @@ LibreOffice potrebbe sembrare bloccato.''')
     # come titolo di default
     defaultTitle = os.path.split(filename)[1]
 
-    # legge il file XML in una stringa
-    with open(filename, 'r', errors='ignore', encoding="utf8") as file:
-      data = file.read()
+    # legge il file XML in una stringa, rilevando la codifica dal BOM
+    data = _readXmlFile(filename)
 
     # cerca un parser adatto
     xmlParser = findXmlParser(data)

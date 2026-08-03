@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-03 06:18</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c37e27c2a7429c77fa3f8a9b5807e2314e486471" target="_blank" rel="noopener"><code>c37e27c</code></a></td>
+                <td class="commit-msg">feat(computo): icona e fix formule per somme LAVORI/SICUREZZA + robustezza
+
+- Aggiunta icona `somme_sicurezza` (SVG + set BMP) e collegamento in Addons.xcu
+- Script `rigenera_bmp_icone.py` per rigenerare i BMP da SVG anche su Windows
+- Corretta formula del ribasso in `MENU_inserisci_somme_lavori_sicurezza`
+  (rimosso il segno meno indesiderato)
+- In `ScriptPy` (PY_bridge): gestore errori BASIC più chiaro sul richiamo Python
+- In `invia_voce`/`MENU_invia_voce`: OptimalHeight applicato solo dopo il
+  riavvio definitivo del refresh (evita altezze riga ignorate)
+- Decoratori `release_ram` sistemati in contabilità; bump a 3.26.0.118-TESTING-20260731</td>
+            </tr>
+            <tr>
                 <td>2026-08-01 20:54</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/fe7522273ec92b2376cdf4a7f70b3104b0d3f201" target="_blank" rel="noopener"><code>fe75222</code></a></td>
                 <td class="commit-msg">Update</td>
@@ -463,20 +477,6 @@
 
 - aggiorna description.xml
 - aggiorna leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-07-31 17:40</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/62e0f185719ce343cb71e2cad5bb09c6a2761cd3" target="_blank" rel="noopener"><code>62e0f18</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.117‑TESTING‑20260731
-
-feat(icons): aggiunge nuovo set icone somme_sicurezza (colori + tema scuro)
-- introduce somme_sicurezza.svg in icons/svg/
-- aggiunge variante scura in icons/scuro/
-- genera automaticamente somme_sicurezza_16/16h/26/26h.bmp (SVG‑compatibili)
-
-fix(icons): rimuove duplicazione accidentale script rigenera_bmp_icone.py salvato come .bmp
-- quattro file rigenera_bmp_icone_*.bmp contengono codice Python anziché SVG/bitmap
-- da eliminare o rinominare correttamente (non validi come icone)</td>
             </tr>
                     </tbody>
                 </table>
@@ -500,8 +500,8 @@ fix(icons): rimuove duplicazione accidentale script rigenera_bmp_icone.py salvat
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-01 20:55 UTC</p>
-                <p>Build Commit: <code>fe75222</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-03 06:19 UTC</p>
+                <p>Build Commit: <code>f7d237c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

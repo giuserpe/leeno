@@ -389,7 +389,7 @@ def mostra_sal(uSal):
                     # ~ pass
 
     return
-
+@LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
 def MENU_AnnullaAttiContabili():
     '''
@@ -412,6 +412,7 @@ def MENU_AnnullaAttiContabili():
         PL._gotoCella(0,0)
         Dialogs.Info(Text=f"Atti del SAL n. {listaSal[-1]} annullati.")
 
+@LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
 def MENU_AnnullaTuttiAttiContabili():
     '''
@@ -630,7 +631,6 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
 
 # ###############################################################
 
-@LeenoUtils.release_ram
 def generaContabilita(oDoc):
     '''
     Mostra il foglio di contabilità, se presente
@@ -2586,6 +2586,7 @@ def firme_libretto(lrowF=None, oSheet=None, col=None, aggiungi_spazio=True):
 
 
 ########################################################################
+@LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
 def GeneraAttiContabili():
     oDoc = LeenoUtils.getDocument()

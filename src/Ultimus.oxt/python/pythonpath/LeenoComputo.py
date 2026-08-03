@@ -877,13 +877,13 @@ def MENU_inserisci_somme_lavori_sicurezza():
                         cell_down_right_right.CellBackColor = COLORE_VIOLA
                         cell_down_right_right.VertJustify = 2
 
-                        # Formula a destra del ribasso (= AO * AM)
+                        # "Ribasso" (= AO * AM)
                         cell_result = sheet.getCellByPosition(col_idx + 3, row_idx + 1)
                         from LeenoContab import _col_letter
                         col_ao = _col_letter(col_idx + 2)
                         col_am = _col_letter(col_idx)
                         calc_row = row_idx + 2
-                        cell_result.Formula = f"=-{col_ao}{calc_row}*{col_am}{calc_row}"
+                        cell_result.Formula = f"={col_ao}{calc_row}*{col_am}{calc_row}"
                         cell_result.NumberFormat = 5  # formato valuta rosso
                         cell_result.CharWeight = 150
                         cell_result.CellBackColor = COLORE_VIOLA

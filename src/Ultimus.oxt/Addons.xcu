@@ -698,6 +698,23 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ca62" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoComputo.MENU_inserisci_somme_lavori_sicurezza</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/somme_sicurezza</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci somme LAVORI e SICUREZZA</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
       </node>
     </node>
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
@@ -1285,6 +1302,9 @@
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoComputo.MENU_inserisci_somme_lavori_sicurezza</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/somme_sicurezza</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Inserisci somme LAVORI e SICUREZZA</value>

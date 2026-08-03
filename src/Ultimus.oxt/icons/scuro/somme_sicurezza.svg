@@ -5,7 +5,7 @@
    viewBox="2.874 4.099 18.252 18.252"
    version="1.1"
    id="svg4"
-   sodipodi:docname="somma_colore.svg"
+   sodipodi:docname="somme_sicurezza.svg"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,41 +23,44 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="6.3046875"
-     inkscape:cx="39.097893"
-     inkscape:cy="20.857497"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:cx="26.488228"
+     inkscape:cy="20.936803"
+     inkscape:window-width="933"
+     inkscape:window-height="1032"
+     inkscape:window-x="2309"
+     inkscape:window-y="183"
+     inkscape:window-maximized="0"
      inkscape:current-layer="g4" />
   <g
      id="g4"
      transform="translate(1.2)">
     <rect
        x="4.5"
-       y="9.5"
+       y="8.8968773"
        width="3.4000001"
-       height="12.5"
+       height="13.103123"
        rx="0.80000001"
        fill="#8fb200"
-       id="rect1" />
+       id="rect1"
+       style="fill:#f4b400;fill-opacity:1;stroke-width:1.02384" />
     <rect
        x="13.7"
-       y="9.5"
+       y="12.214052"
        width="3.4000001"
-       height="12.5"
+       height="9.7859478"
        rx="0.80000001"
        fill="#ff4d2e"
-       id="rect3" />
+       id="rect3"
+       style="stroke-width:0.884803" />
     <rect
        x="9.1000004"
-       y="9.5"
+       y="6.9065723"
        width="3.4000001"
-       height="12.5"
+       height="15.093428"
        rx="0.80000001"
        fill="#3b82f6"
-       id="rect2" />
+       id="rect2"
+       style="stroke-width:1.09885" />
   </g>
   <text
      xml:space="preserve"

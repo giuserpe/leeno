@@ -3,6 +3,7 @@ Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
 import functools
+import os
 # pyrefly: ignore [missing-import]
 import uno
 from SheetUtils import getLastUsedRow
@@ -32,6 +33,13 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     # legge il percorso del documento principale
     sUltimus = LeenoGlobals.getGlobalVar('sUltimus')
 
+    # sUltimus e' un global di processo: se il file a cui punta non esiste
+    # piu' (spostato, rinominato, riferimento di una sessione precedente),
+    # va trattato come non impostato invece di essere stampato come DP.
+    if sUltimus and not os.path.exists(sUltimus):
+        LeenoGlobals.setGlobalVar('sUltimus', '')
+        sUltimus = ''
+
     # dal foglio risale al documento proprietario
     oDoc = SheetUtils.getDocumentFromSheet(oSheet)
 
@@ -54,7 +62,10 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     if cell is None:
         return
 
-    oSheet.getCellRangeByName(cell).String = 'DP: ' + sUltimus
+    if sUltimus == '':
+        oSheet.getCellRangeByName(cell).String = 'DP: nessun Documento Principale impostato'
+    else:
+        oSheet.getCellRangeByName(cell).String = 'DP: ' + sUltimus
     oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
 
 # ###############################################################

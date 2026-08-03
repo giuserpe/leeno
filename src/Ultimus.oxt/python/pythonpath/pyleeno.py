@@ -9783,19 +9783,32 @@ def dp():
         'Analisi di Prezzo': 'A1'
     }
     oDoc = LeenoUtils.getDocument()
+    sUltimus = LeenoGlobals.getGlobalVar('sUltimus')
+    # sUltimus e' un global di processo (vive finche' soffice.bin resta aperto,
+    # sopravvive alla chiusura/apertura di singoli documenti): se il file a cui
+    # punta non esiste piu' (spostato, rinominato, sessione precedente), va
+    # trattato come non impostato invece di essere stampato come DP.
+    if sUltimus and not os.path.exists(sUltimus):
+        LeenoGlobals.setGlobalVar('sUltimus', '')
+        sUltimus = ''
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+            if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                 oSheet.getCellRangeByName(
                     "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP: Questo documento'
+            elif sUltimus == '':
+                oSheet.getCellRangeByName(
+                    "A1:AT1").clearContents(HARDATTR)
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP: nessun Documento Principale impostato'
             else:
                 oSheet.getCellRangeByName(
                     "A1:AT1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
-                    d[el]).String = 'DP:' + LeenoGlobals.getGlobalVar('sUltimus')
+                    d[el]).String = 'DP:' + sUltimus
 
         except Exception as e:
             #  DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")

@@ -123,22 +123,25 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oSheet.IsVisible = True
 
-        # Cerchiamo la riga di chiusura dell'ultima analisi presente
-        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
         urow = SheetUtils.getLastUsedRow(oSheet)
-        
+
         # Inizializziamo n alla fine dell'area usata come fallback
+        # (cursore non posizionato su una voce riconoscibile, foglio vuoto, ecc.)
         n = urow if urow >= 2 else 1
-        
-        # Scansioniamo solo indici validi (>= 2 per saltare gli header)
-        for n_scan in range(max(2, lrow), urow + 1):
+
+        # La nuova voce va inserita subito dopo la voce CORRENTE (dove si trova
+        # il cursore), non necessariamente dopo l'ultima voce del foglio: usiamo
+        # circoscriveAnalisi() per trovare i confini della voce sotto il cursore.
+        cursor_row = PL.LeggiPosizioneCorrente()[1]
+        if cursor_row is not None and oSheet.Name == oDoc.CurrentController.ActiveSheet.Name:
             try:
-                if oSheet.getCellByPosition(0, n_scan).CellStyle == 'An-sfondo-basso Att End':
-                    n = n_scan
-                    break
+                oCurrentVoce = circoscriveAnalisi(oSheet, cursor_row)
+                end_row = oCurrentVoce.RangeAddress.EndRow
+                if end_row > 0:
+                    n = end_row
             except Exception:
-                continue
-        
+                pass
+
         oRangeAddress = oDoc.NamedRanges.getByName('blocco_analisi').ReferredCells.RangeAddress
         # la riga dalla quale l'eventuale nuova scheda deve partire è n + 2
         startRow = n + 2

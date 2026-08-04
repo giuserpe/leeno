@@ -20,6 +20,7 @@
 
 # from scriptforge import CreateScriptService
 # from dcf_parser import generate_xpwe
+from Debug import aggiorna_configurazione_leeno
 from LeenoUtils import preserva_posizione
 from LeenoUtils import release_ram
 from LeenoSheetUtils import cancella_riepilogo_quantita
@@ -11585,7 +11586,7 @@ def nuove_icone(chiaro = True):
         shutil.copy(file_path, bmp_16)
         step += 1
 
-    Dialogs.Info(Title='Info', Text=f"Tema {e} di LeenO impostato con successo. Riavviare LibreOffice!")
+    aggiorna_configurazione_leeno()
     return
 
 def celle_colorate(flag = False):

@@ -273,7 +273,7 @@ def MENU_leeno_conf():
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('S1'):
         try: 
-            Toolbars.AllOff()
+            Toolbars.AllOff(oDoc=oDoc)
         except Exception: 
             pass
         return
@@ -373,7 +373,7 @@ def MENU_leeno_conf():
         PL.nuove_icone(False)
 
     import LeenoToolbars as Toolbars
-    Toolbars.Switch(False if oDlg_config.getControl('CheckBox3').State == 1 else True)
+    Toolbars.Switch(False if oDlg_config.getControl('CheckBox3').State == 1 else True, oDoc=oDoc)
 
     if oDlg_config.getControl('CheckBox4').State == 1:
         cfg.write('Generale', 'precisione_come_mostrato', 'True')

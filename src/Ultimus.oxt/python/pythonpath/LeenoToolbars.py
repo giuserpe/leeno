@@ -131,13 +131,20 @@ def Vedi(arg=None):
 
 
 
-def On(toolbarURL, flag):
+def On(toolbarURL, flag, oDoc=None):
     '''
     toolbarURL  { string } : indirizzo toolbar
     flag { integer } : 1 = acceso; 0 = spento
+    oDoc { document, opzionale } : documento già risolto dal chiamante.
+        Se non fornito, viene ricavato con LeenoUtils.getDocument()
+        (può fallire se richiamato subito dopo un dialogo modale).
     Visualizza o nascondi una toolbar
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        DLG.chi("Toolbars.On: nessun documento risolto, richiesta ignorata")
+        return
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if flag:
         oLayout.showElement(toolbarURL)
@@ -145,12 +152,17 @@ def On(toolbarURL, flag):
         oLayout.hideElement(toolbarURL)
 
 
-def Ordina():
+def Ordina(oDoc=None):
     '''
     @@ DA DOCUMENTARE
+    oDoc { document, opzionale } : documento già risolto dal chiamante.
     '''
     #  https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        DLG.chi("Toolbars.Ordina: nessun documento risolto, richiesta ignorata")
+        return
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     i = 0
     for aBar in _TOOLBAR_NAMES:
@@ -161,26 +173,38 @@ def Ordina():
         'DOCKINGAREA_RIGHT', Point(0, 0))
 
 
-def AllOn(flag=True):
+def AllOn(flag=True, oDoc=None):
     '''
     Accende o spegne tutte le toolbar di LeenO
+    oDoc { document, opzionale } : documento già risolto dal chiamante.
     '''
     for aBar in _TOOLBAR_NAMES:
-        On(aBar, flag)
+        On(aBar, flag, oDoc=oDoc)
 
 
-def AllOff():
+def AllOff(oDoc=None):
     '''
     Spegne tutte le toolbar di LeenO
+    oDoc { document, opzionale } : documento già risolto dal chiamante.
     '''
-    AllOn(False)
+    AllOn(False, oDoc=oDoc)
 
 
-def Switch(arg):
+def Switch(arg, oDoc=None):
     '''
     Nasconde o mostra le toolbar di Libreoffice.
+    oDoc { document, opzionale } : documento già risolto dal chiamante.
+        Va passato esplicitamente da chi lo ha già ottenuto prima
+        dell'esecuzione di un dialogo modale, perché subito dopo la
+        chiusura del dialogo LeenoUtils.getDocument() può non
+        individuare più il documento corrente (getCurrentComponent()
+        transitorio) e restituire None.
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        DLG.chi("Toolbars.Switch: nessun documento risolto, richiesta ignorata")
+        return
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     for el in oLayout.Elements:
         if el.ResourceURL not in _TOOLBAR_NAMES + (

@@ -6009,33 +6009,6 @@ def Copia_riga_Ent(num_righe=None, target_row=None):
     return row
 
 ########################################################################
-def count_clipboard_lines():
-    ctx = LeenoUtils.getComponentContext()
-    smgr = ctx.getServiceManager()
-    clip = smgr.createInstanceWithContext("com.sun.star.datatransfer.clipboard.SystemClipboard", ctx)
-
-    # Ottiene il contenuto della clipboard
-    transferable = clip.getContents()
-
-    # Cerca il formato text/plain
-    flavors = transferable.getTransferDataFlavors()
-
-    text = None
-    for flavor in flavors:
-        if "text/plain" in flavor.MimeType:
-            data = transferable.getTransferData(flavor)
-            # data è già uno str in UTF-16 → usalo direttamente
-            text = str(data)
-            break
-
-    if text is None:
-        return 0
-
-    # Conta le righe
-    num_lines = len(text.splitlines())
-
-    # Restituisce il valore
-    return num_lines
 
 @release_ram
 @with_undo()
@@ -12842,51 +12815,6 @@ def MENU_export_selected_range_to_odt():
     #     DLG.errore(f"Errore durante l'esportazione:\n{str(e)}")
 ########################################################################
 
-def struttura_Registro():
-    '''
-    Configura la struttura del Registro raggruppando
-    le righe in base alla presenza della stringa "VDS_" nella colonna A.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.removeAllManualPageBreaks()
-
-    oSheet.clearOutline()
-
-    row = SheetUtils.getLastUsedRow(oSheet)
-
-    start_group = None
-
-    for row in range(3, row + 1):
-        cell = oSheet.getCellByPosition(0, row)
-
-        # Ottieni il valore della cella come stringa (gestisce tutti i tipi di dati)
-        cell_value = ""
-        try:
-            cell_value = cell.getString()
-        except:
-            try:
-                cell_value = str(cell.getValue())
-            except:
-                cell_value = ""
-
-        oRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-        oRangeAddr.Sheet = oSheet.RangeAddress.Sheet
-
-        # Se la cella contiene "VDS_", inizia/continua un gruppo
-        if "VDS_" in cell_value:
-            if start_group is None:
-                start_group = row  # Inizio del blocco
-        else:
-            # Se troviamo una cella senza "VDS_" e c'è un gruppo aperto, chiudilo
-            if start_group is not None:
-                oRangeAddr.StartColumn = 0
-                oRangeAddr.EndColumn = oSheet.Columns.Count - 1
-                oRangeAddr.StartRow = start_group
-                oRangeAddr.EndRow = row - 1
-
-                oSheet.group(oRangeAddr, 1)
-                start_group = None
 
 def struttura_Registro():
     '''

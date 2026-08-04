@@ -4973,6 +4973,151 @@ def gantt():
     return
 ########################################################################
 
+def clean_markdown(val):
+    """
+    Pulisce e formatta una stringa per l'inclusione in una cella di tabella Markdown.
+    Sostituisce i ritorni a capo con tag <br> e scherma il carattere pipe '|'.
+    """
+    if val is None:
+        return ""
+    val_str = str(val)
+    # Rimpiazza i ritorni a capo con un break HTML per preservare la struttura di riga
+    val_str = val_str.replace('\r\n', ' <br> ').replace('\n', ' <br> ').replace('\r', ' <br> ')
+    # Escapa il carattere pipe '|' per non interrompere le colonne Markdown
+    val_str = val_str.replace('|', '\\|')
+    return val_str.strip()
+
+
+def MENU_esporta_markdown():
+    """
+    Esporta l'area selezionata di una tabella in formato Markdown.
+    La macro recupera l'intervallo selezionato dal controller attivo di Calc,
+    filtra per esportare solo le righe e colonne visibili, chiede conferma
+    per l'intestazione e salva il file risultante tramite FileSelect.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oController = oDoc.getCurrentController()
+    oSheet = oController.getActiveSheet()
+    oSel = oController.getSelection()
+
+    if oSel is None:
+        Dialogs.Exclamation(Title='Avviso!', Text='Nessuna selezione attiva.')
+        return
+
+    # Gestione delle selezioni multiple disgiunte
+    if oSel.supportsService("com.sun.star.sheet.SheetCellRanges"):
+        count = oSel.getCount()
+        if count == 0:
+            Dialogs.Exclamation(Title='Avviso!', Text='Nessuna selezione attiva.')
+            return
+        # Avverte l'utente ed esporta il primo intervallo
+        Dialogs.Info(Title='Avviso!', Text='La selezione contiene più intervalli disgiunti. Verrà esportato solo il primo intervallo.')
+        oRange = oSel.getByIndex(0)
+    elif oSel.supportsService("com.sun.star.sheet.SheetCellRange"):
+        oRange = oSel
+    else:
+        Dialogs.Exclamation(Title='Avviso!', Text='La selezione corrente non è un intervallo di celle valido.')
+        return
+
+    range_addr = oRange.getRangeAddress()
+    start_col = range_addr.StartColumn
+    end_col = range_addr.EndColumn
+    start_row = range_addr.StartRow
+    end_row = range_addr.EndRow
+
+    num_rows = end_row - start_row + 1
+    num_cols = end_col - start_col + 1
+
+    if num_rows == 0 or num_cols == 0:
+        Dialogs.Exclamation(Title='Avviso!', Text='L\'intervallo selezionato è vuoto.')
+        return
+
+    # Filtra solo colonne visibili
+    visible_cols = []
+    for c in range(num_cols):
+        abs_col = start_col + c
+        if oSheet.getColumns().getByIndex(abs_col).IsVisible:
+            visible_cols.append(c)
+
+    # Filtra solo righe visibili
+    visible_rows = []
+    for r in range(num_rows):
+        abs_row = start_row + r
+        if oSheet.getRows().getByIndex(abs_row).IsVisible:
+            visible_rows.append(r)
+
+    if not visible_cols or not visible_rows:
+        Dialogs.Exclamation(Title='Avviso!', Text='La selezione non contiene celle visibili.')
+        return
+
+    # Chiede all'utente se impostare la prima riga visibile come intestazione
+    usa_prima_riga_come_intestazione = False
+    if len(visible_rows) >= 2:
+        res = Dialogs.YesNoDialog(
+            IconType="question",
+            Title="Esporta in Markdown",
+            Text="Vuoi utilizzare la prima riga visibile selezionata come intestazione della tabella?"
+        )
+        if res == 1:
+            usa_prima_riga_come_intestazione = True
+
+    # Lettura delle celle con indicatore di progresso nativo se la selezione è grande
+    mostra_progresso = len(visible_rows) > 100
+    if mostra_progresso:
+        indicator = oController.getStatusIndicator()
+        indicator.start("Esportazione Markdown...", len(visible_rows))
+
+    data = []
+    for idx, r in enumerate(visible_rows):
+        if mostra_progresso:
+            indicator.setValue(idx)
+        row_data = []
+        for c in visible_cols:
+            cell = oRange.getCellByPosition(c, r)
+            row_data.append(cell.String)
+        data.append(row_data)
+
+    if mostra_progresso:
+        indicator.end()
+
+    # Generazione della struttura della tabella Markdown
+    if usa_prima_riga_come_intestazione:
+        headers = [clean_markdown(val) for val in data[0]]
+        rows = [[clean_markdown(val) for val in row] for row in data[1:]]
+    else:
+        headers = [f"Colonna {i+1}" for i in range(len(visible_cols))]
+        rows = [[clean_markdown(val) for val in row] for row in data]
+
+    # Composizione delle righe in formato Markdown
+    header_str = "| " + " | ".join(headers) + " |"
+    delimiter_str = "| " + " | ".join(["---"] * len(headers)) + " |"
+    body_strs = []
+    for row in rows:
+        body_strs.append("| " + " | ".join(row) + " |")
+
+    markdown_content = "\n".join([header_str, delimiter_str] + body_strs) + "\n"
+
+    # Selezione del percorso e salvataggio
+    out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1)
+    if not out_file:
+        return
+
+    try:
+        with open(out_file, 'w', encoding='utf-8', newline='') as f:
+            f.write(markdown_content)
+        Dialogs.Info(
+            Title='Esportazione completata',
+            Text=f'Il file è stato esportato correttamente in:\n\n{out_file}'
+        )
+    except Exception as e:
+        Dialogs.Exclamation(
+            Title='Errore!',
+            Text=f'Impossibile scrivere il file:\n{str(e)}'
+        )
+
+
+########################################################################
+
 def cancella_analisi_da_ep():
     '''
     cancella le voci in Elenco Prezzi che derivano da analisi

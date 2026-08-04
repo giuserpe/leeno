@@ -1156,6 +1156,30 @@
                   <value>_self</value>
                 </prop>
               </node>
+
+              <node oor:name="IE043" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+
+              <node oor:name="IE044" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_esporta_markdown</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Esporta selezione in formato Markdown...</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
             </node>
           </node>
 

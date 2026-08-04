@@ -2,6 +2,24 @@
 
 Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Claude Code, altri assistenti AI) che lavori sul repository LeenO. Va letto prima di qualsiasi task.
 
+## Indice
+
+- [Premesse](#premesse)
+- [Linee guida generali](#linee-guida-generali)
+- [Contesto del progetto](#contesto-del-progetto)
+- [Branch di lavoro](#branch-di-lavoro)
+- [Ambiente di sviluppo e macchine](#ambiente-di-sviluppo-e-macchine)
+- [Regole del Progetto LeenO](#regole-del-progetto-leeno)
+- [Sicurezza dei moduli in `pythonpath/`](#sicurezza-dei-moduli-in-pythonpath)
+- [Ciclo di vita dei documenti UNO](#ciclo-di-vita-dei-documenti-uno)
+- [Compatibilità delle proprietà custom del documento](#compatibilità-delle-proprietà-custom-del-documento)
+- [Diagnosi di blocchi/freeze](#diagnosi-di-bloccifreeze)
+- [Sistema icone](#sistema-icone)
+- [Consegna del lavoro per agenti senza credenziali di push](#consegna-del-lavoro-per-agenti-senza-credenziali-di-push)
+- [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato-lezioni-apprese-agosto-2026)
+- [Git Commit – Conventional Commits in Italiano](#git-commit--conventional-commits-in-italiano-leeno)
+- [Manutenzione di questo file](#manutenzione-di-questo-file)
+
 ## Premesse
 
 Non sei il mio assistente. Sei il mio consulente, che per caso è più intelligente di me. Segui queste regole in ogni risposta:
@@ -64,6 +82,13 @@ git config core.fileMode false
 
 Senza questi parametri, un `pull` può segnare centinaia di file come "modificati" per semplice rumore di line-ending/permessi — non contenuto reale. Verificare sempre con `git diff` prima di scartare o committare in massa.
 
+### Blocco dei file `.ods` durante operazioni git
+
+- Se un file `.ods` del repository (template, listino, foglio di test) è aperto in LibreOffice Calc mentre si esegue `git pull`, `git checkout` o `git stash pop`, l'operazione può fallire o lasciare un file parzialmente scritto: LibreOffice mantiene un lock (file nascosto `.~lock.<nome>.ods#`) e un handle sul contenuto in memoria che non coincide più con quello su disco dopo l'operazione git.
+- Prima di eseguire operazioni git che toccano `.ods` tracciati, chiudere il documento in LibreOffice (non solo minimizzarlo) oppure verificare l'assenza del file di lock (`.~lock.*.ods#`) nella cartella del repository.
+- Se un'operazione git segnala errori di permesso o file "in uso" su un `.ods`, non forzare con `git checkout --force` a documento ancora aperto: chiudere prima il documento, poi ripetere l'operazione.
+- Dopo un `pull` che ha aggiornato un `.ods` già aperto, riaprire il documento (chiudi e riapri) prima di modificarlo: LibreOffice non rileva automaticamente la sostituzione del file su disco e un salvataggio successivo rischia di sovrascrivere la versione aggiornata con quella in memoria, obsoleta.
+
 ## Regole del Progetto LeenO
 
 - Quando scrivi o modifichi codice, dai sempre la priorità assoluta alle API UNO di LibreOffice/OpenOffice rispetto a librerie esterne o macro standard basate su altri paradigmi. Utilizza i binding corretti (es. Python `uno`, `unohelper`) e rispetta le convenzioni del modello a oggetti UNO.
@@ -88,6 +113,7 @@ Senza questi parametri, un `pull` può segnare centinaia di file come "modificat
 ## Ciclo di vita dei documenti UNO
 
 - Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione: rischia un deadlock dell'intero processo (lo script attende `close()`, `close()` attende che lo script rilasci il documento). Se serve sostituire il documento corrente (es. aprendone uno nuovo da template), apri prima il nuovo e valuta la chiusura del vecchio come ultima istruzione della funzione, con un `return` immediato subito dopo per non riusare più l'oggetto ormai `disposed`.
+- **`LeenoUtils.getDocument()` può restituire `None` subito dopo un dialogo modale.** `getDocument()` si basa su `desktop.getCurrentComponent()` con fallback alla scansione di `desktop.getComponents()`; nell'istante immediatamente successivo alla chiusura di un dialogo (`oDlg.execute()`), il componente corrente può non essere ancora il foglio Calc atteso, e se nessun componente aperto supera il controllo `is_valid_calc()` la funzione torna `None`. Se una funzione ha già ottenuto un riferimento valido a `oDoc` prima di aprire il dialogo, quel riferimento va passato esplicitamente alle funzioni chiamate dopo la chiusura (es. come parametro opzionale `oDoc=`), invece di richiamare di nuovo `LeenoUtils.getDocument()` — che a quel punto rischia di risolvere `None` e generare `'NoneType' object has no attribute 'CurrentController'` a valle. Vedi il fix in `LeenoToolbars.py` (`Switch`, `On`, `Ordina`, `AllOn`, `AllOff`) e la relativa chiamata da `LeenoConfig.MENU_leeno_conf()`.
 
 ## Compatibilità delle proprietà custom del documento
 
@@ -98,6 +124,24 @@ Senza questi parametri, un `pull` può segnare centinaia di file come "modificat
 - Per isolare un freeze senza un ambiente di riproduzione remoto, instrumenta la funzione sospetta con `DLG.chi()` a ogni passaggio chiave: l'ultimo checkpoint visto prima del blocco localizza il tratto di codice responsabile.
 - Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
 - Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
+
+## Sistema icone
+
+- La specifica completa del design system (filosofia, primitive geometriche, palette colori, regole di export) vive in `documentazione/ICONS_DESIGN_SYSTEM.md`. Consultarla prima di creare o modificare icone: contiene, tra l'altro, la sezione 15 "Canvas di Export 48×48 px con Padding Azzerato", che descrive il crop del `viewBox` calcolato per-icona in uso dalla generazione corrente.
+- `icons/svg/` e `icons/scuro/` condividono sempre la stessa geometria (stesso `viewBox` ritagliato): differiscono solo per colore. Un cambiamento di crop o di bounding box va propagato a entrambe le cartelle nello stesso passaggio.
+- Il disegno segue la griglia master 24×24 con margine di sicurezza 2px; l'export finale usa invece un canvas quadrato 48×48 con `viewBox` ritagliato individualmente sul bounding box del contenuto (nessun crop fisso uguale per tutte le icone).
+- Per icone con badge d'angolo o elementi vicini al bordo, preferire una revisione icona per icona invece di un'operazione bulk automatica: il rischio di danno visivo (badge tagliato, asimmetria) è più alto che nelle icone semplici.
+- Modificare sempre gli SVG in modalità binaria (vedi "Preservazione del line-ending in QUALSIASI editing" più sotto): scritture in modalità testo normalizzano silenziosamente i fine-riga CRLF, producendo diff che toccano ogni riga di ogni file anche a parità di contenuto grafico.
+
+## Consegna del lavoro per agenti senza credenziali di push
+
+Un agente che lavora sul repository ma non ha credenziali di push dirette (o non deve committare per policy del task) consegna il lavoro così:
+
+1. **Formato zip, non bundle git.** Impacchettare i file modificati/creati in un archivio zip, con la struttura di cartelle che rispecchia la destinazione finale sotto `src/Ultimus.oxt/` (o la sottocartella pertinente), non l'intero repository.
+2. **Comandi espliciti di applicazione.** Fornire i comandi PowerShell per estrarre lo zip nel percorso corretto (`W:\_dwg\ULTIMUSFREE\_SRC\leeno\...`), così l'operazione è riproducibile senza ambiguità sul PC `giuserpe`.
+3. **Nessun commit/push automatico.** L'agente non deve mai tentare push diretti quando non richiesto esplicitamente: la revisione del diff e il commit restano un passaggio manuale su PC `giuserpe`, coerente con il workflow di editing su PC TEST descritto sopra.
+4. **Messaggio di commit proposto, non eseguito.** Se richiesto, l'agente propone l'intestazione e il corpo del commit secondo le convenzioni descritte sotto ("Git Commit – Conventional Commits in Italiano"), lasciando all'utente l'esecuzione del comando.
+5. **Verifica di integrità prima della consegna.** Prima di impacchettare, validare la sintassi Python (`python3 -c "import ast; ast.parse(...)"`) e, per i file con line-ending noto, confermare che il conteggio CRLF/LF non sia cambiato rispetto all'originale.
 
 ## Pulizia di codice morto e duplicato (lezioni apprese, agosto 2026)
 
@@ -181,3 +225,9 @@ Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione d
 - `refactor(import): ottimizza parsing file XPWE`
 - `chore(meta): bump versione a 3.25.x`
 - `docs: aggiorna istruzioni nel manuale per il nuovo listino`
+
+## Manutenzione di questo file
+
+- Il repository mantiene due copie di questo documento: `AGENTS.md` (root) e `.agents/AGENTS.md`. Devono restere identiche byte per byte in ogni momento.
+- Qualunque modifica a una copia va applicata anche all'altra **nello stesso commit**, mai in commit separati: una divergenza tra le due copie è di per sé un difetto da correggere, indipendentemente da quale delle due sia "più aggiornata".
+- Prima di proporre una modifica a questo file, verificare con `diff AGENTS.md .agents/AGENTS.md` che le due copie siano già allineate; se non lo sono, segnalarlo esplicitamente invece di limitarsi a modificarne una.

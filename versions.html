@@ -452,37 +452,43 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-04 11:44</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/8cce1190400efa40e37207f06d405a1fba9f6636" target="_blank" rel="noopener"><code>8cce119</code></a></td>
-                <td class="commit-msg">docs: aggiunge linee guida su pulizia codice morto e preservazione line-ending
+                <td>2026-08-04 15:56</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/4c26f862a0da986fb44692f51bb50b8ebedbfa23" target="_blank" rel="noopener"><code>4c26f86</code></a></td>
+                <td class="commit-msg">Merge pull request #53 from giuserpe/feat-esportazione-markdown-17692389619416288169
 
-- introduce sezione “Pulizia di codice morto e duplicato (lezioni apprese, agosto 2026)”
-- documenta rischi degli script usa‑e‑getta in pythonpath
-- aggiunge checklist pyflakes/AST per individuare redefinition e import inutili
-- descrive pattern ricorrenti nei moduli LeenoImport_Xml*
-- chiarisce come trattare variabili assegnate e mai usate nei moduli fratelli
-- aggiunge sezione sulla preservazione rigorosa dei line‑ending (CRLF/LF)
-- fornisce regole operative per editing sicuro con newline='' e controllo binario</td>
+Esportazione dell'area selezionata di una tabella in formato Markdown
+
+Implementata la macro MENU_esporta_markdown in pyleeno.py per esportare l'area selezionata di una tabella in formato Markdown (.md). La macro gestisce solo le celle visibili, chiede conferma per l'utilizzo della prima riga come intestazione, mostra un indicatore di progresso nativo per grandi intervalli e salva tramite FileSelect. Aggiunto anche il relativo filtro *.md in Dialogs.py e la voce nel menu di esportazione in Addons.xcu.</td>
             </tr>
             <tr>
-                <td>2026-08-04 10:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0ab5b18b8b19a14686af8b17a8b1a7528b5dc02c" target="_blank" rel="noopener"><code>0ab5b18</code></a></td>
-                <td class="commit-msg">chore(core): rimuove import inutili da LeenoGiornale
+                <td>2026-08-04 15:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/13e4e25fa898dc0b4d087dc338598b9f1e730549" target="_blank" rel="noopener"><code>13e4e25</code></a></td>
+                <td class="commit-msg">feat(ui): aggiunge macro per esportare selezione in formato Markdown
 
-- elimina locale, codecs, configparser, collections, os, unohelper, pyuno,
-  logging, shutil, base64, sys, time, copy, multiprocessing, threading
-- mantiene solo import effettivamente utilizzati (uno, PropertyValue)
+La nuova macro MENU_esporta_markdown() in pyleeno.py consente l'esportazione
+dell'area selezionata in Calc in formato Markdown (.md) tramite FileSelect.
+La macro:
+- Filtra ed esporta esclusivamente le celle visibili (IsVisible).
+- Propone come nome predefinito del FilePicker lo stesso nome del file corrente.
+- Gestisce la selezione della prima riga visibile come intestazione della tabella.
+- Mostra un indicatore di progresso nativo per selezioni grandi (>100 righe).
+- Integra la nuova voce nel menu di importazione/esportazione in Addons.xcu.
 
-chore(import): rimuove variabili non usate in LeenoImport_XmlToscana
-
-- elimina autore = intestazione.attrib['autore'] non più utilizzato
-- rimuove import superflui (re, StringIO, ET, codecs, shutil, LeenoUtils,
-  LeenoDialogs, SheetUtils, CellFlags)</td>
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-08-04 10:30</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/09709ae652bffb49d52fbb678ced2bbdf9150e7f" target="_blank" rel="noopener"><code>09709ae</code></a></td>
-                <td class="commit-msg">chore: remove unused file from codebase</td>
+                <td>2026-08-04 15:15</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1842674f0be186d93317d145e9ebc0d78abb2b15" target="_blank" rel="noopener"><code>1842674</code></a></td>
+                <td class="commit-msg">feat(ui): aggiunge macro per esportare selezione in formato Markdown
+
+La nuova macro MENU_esporta_markdown() consente l'esportazione dell'area
+selezionata in Calc in formato Markdown (.md) tramite FileSelect.
+Esporta esclusivamente le celle visibili (filtrando IsVisible per righe
+e colonne) e supporta la selezione della prima riga visibile come
+intestazione, l'indicatore di progresso nativo e la gestione delle
+selezioni multiple disgiunte.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -506,8 +512,8 @@ chore(import): rimuove variabili non usate in LeenoImport_XmlToscana
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-04 15:34 UTC</p>
-                <p>Build Commit: <code>13e4e25</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-04 15:56 UTC</p>
+                <p>Build Commit: <code>4c26f86</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

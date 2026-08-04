@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.119-TESTING-20260803.oxt">LeenO-3.26.0.119-TESTING-20260803.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.120-TESTING-20260804.oxt">LeenO-3.26.0.120-TESTING-20260804.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.5MB</td>
+                <td class="col-extra">2026-08-04 12:30</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.120-TESTING-20260804.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.119-TESTING-20260803.oxt">LeenO-3.26.0.119-TESTING-20260803.oxt</a> </td>
                 <td class="col-dim">4.3MB</td>
                 <td class="col-extra">2026-08-03 21:06</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.115-TESTING-20260730.oxt">LeenO-3.26.0.115-TESTING-20260730.oxt</a> </td>
-                <td class="col-dim">4.2MB</td>
-                <td class="col-extra">2026-07-30 20:06</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.115-TESTING-20260730.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,37 +452,35 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-04 19:46</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/86e6d6945da665164ac87f44d7f2670e63f27066" target="_blank" rel="noopener"><code>86e6d69</code></a></td>
+                <td class="commit-msg">Merge pull request #54 from giuserpe/refactor/leeno-export-13890155065378613099
+
+Refactor delle macro di esportazione in LeenoExport.py
+
+Refactoring completo per consolidare tutte le macro di esportazione dati, fogli e documenti (quali XPWE, Gantt, Markdown, ODT, SheetToDoc) all'interno di un modulo indipendente di nome LeenoExport.py. I riferimenti del menu di configurazione dell'interfaccia utente (Addons.xcu) e del ponte StarBasic (PY_bridge.xba) sono stati allineati di conseguenza per garantire l'integrità funzionale.</td>
+            </tr>
+            <tr>
+                <td>2026-08-04 19:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/6edc916ad500418d4eafd614a4716ab6aef117ae" target="_blank" rel="noopener"><code>6edc916</code></a></td>
+                <td class="commit-msg">refactor(core): estrae le macro di esportazione in LeenoExport.py
+
+Sposta tutte le macro dedicate all'esportazione di dati, fogli e documenti
+dal file pyleeno.py e LeenoSheetUtils.py a un nuovo modulo dedicato di
+nome LeenoExport.py.
+Aggiorna inoltre i dispatch URL all'interno del file di configurazione
+Addons.xcu e le chiamate di bridge BASIC all'interno di PY_bridge.xba
+per preservare l'integrità funzionale del software.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-04 15:58</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/537cc6668a7e7dca755df0e77f87da5124bfb7c8" target="_blank" rel="noopener"><code>537cc66</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.120‑TESTING‑20260804
 
 - aggiorna description.xml
 - aggiorna leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 15:56</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/4c26f862a0da986fb44692f51bb50b8ebedbfa23" target="_blank" rel="noopener"><code>4c26f86</code></a></td>
-                <td class="commit-msg">Merge pull request #53 from giuserpe/feat-esportazione-markdown-17692389619416288169
-
-Esportazione dell'area selezionata di una tabella in formato Markdown
-
-Implementata la macro MENU_esporta_markdown in pyleeno.py per esportare l'area selezionata di una tabella in formato Markdown (.md). La macro gestisce solo le celle visibili, chiede conferma per l'utilizzo della prima riga come intestazione, mostra un indicatore di progresso nativo per grandi intervalli e salva tramite FileSelect. Aggiunto anche il relativo filtro *.md in Dialogs.py e la voce nel menu di esportazione in Addons.xcu.</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 15:33</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/13e4e25fa898dc0b4d087dc338598b9f1e730549" target="_blank" rel="noopener"><code>13e4e25</code></a></td>
-                <td class="commit-msg">feat(ui): aggiunge macro per esportare selezione in formato Markdown
-
-La nuova macro MENU_esporta_markdown() in pyleeno.py consente l'esportazione
-dell'area selezionata in Calc in formato Markdown (.md) tramite FileSelect.
-La macro:
-- Filtra ed esporta esclusivamente le celle visibili (IsVisible).
-- Propone come nome predefinito del FilePicker lo stesso nome del file corrente.
-- Gestisce la selezione della prima riga visibile come intestazione della tabella.
-- Mostra un indicatore di progresso nativo per selezioni grandi (>100 righe).
-- Integra la nuova voce nel menu di importazione/esportazione in Addons.xcu.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -506,8 +504,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-04 19:36 UTC</p>
-                <p>Build Commit: <code>6edc916</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-04 19:46 UTC</p>
+                <p>Build Commit: <code>86e6d69</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

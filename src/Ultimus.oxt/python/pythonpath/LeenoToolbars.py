@@ -131,21 +131,59 @@ def Vedi(arg=None):
 
 
 
+def _get_layout_manager(oDoc, caller_name):
+    '''
+    Risolve in modo difensivo oDoc.CurrentController.getFrame().LayoutManager.
+
+    oDoc può essere:
+    - None: viene ricavato con LeenoUtils.getDocument()
+    - un riferimento valido ma "stantio" (es. passato da un chiamante che lo
+      ha ottenuto prima di un dialogo modale o di un'operazione che tocca la
+      configurazione, come Debug.aggiorna_configurazione_leeno() che può
+      arrivare a invocare desktop.terminate()): in questo caso l'accesso a
+      CurrentController può sollevare UnknownPropertyException/
+      DisposedException invece di restituire semplicemente None.
+
+    In caso di fallimento con oDoc fornito dal chiamante, si tenta UNA
+    ri-risoluzione fresca tramite LeenoUtils.getDocument() prima di
+    rinunciare. Ritorna (oLayout, oDoc_effettivo) oppure (None, None) se
+    nessun tentativo va a buon fine; il chiamante deve loggare e uscire.
+    '''
+    tried_fresh = False
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+        tried_fresh = True
+    try:
+        return oDoc.CurrentController.getFrame().LayoutManager, oDoc
+    except Exception as e:
+        if tried_fresh:
+            DLG.chi(f"Toolbars.{caller_name}: documento non utilizzabile ({e}), richiesta ignorata")
+            return None, None
+        # oDoc forniva dal chiamante non è più utilizzabile: un solo
+        # tentativo di ri-risoluzione fresca prima di arrendersi.
+        oDoc = LeenoUtils.getDocument()
+        if oDoc is None:
+            DLG.chi(f"Toolbars.{caller_name}: documento fornito non valido ({e}) e nessun documento alternativo trovato")
+            return None, None
+        try:
+            return oDoc.CurrentController.getFrame().LayoutManager, oDoc
+        except Exception as e2:
+            DLG.chi(f"Toolbars.{caller_name}: documento fornito non valido ({e}), ri-risoluzione fallita ({e2})")
+            return None, None
+
+
 def On(toolbarURL, flag, oDoc=None):
     '''
     toolbarURL  { string } : indirizzo toolbar
     flag { integer } : 1 = acceso; 0 = spento
     oDoc { document, opzionale } : documento già risolto dal chiamante.
-        Se non fornito, viene ricavato con LeenoUtils.getDocument()
-        (può fallire se richiamato subito dopo un dialogo modale).
+        Se non fornito, o se non più utilizzabile, viene ri-risolto con
+        LeenoUtils.getDocument().
     Visualizza o nascondi una toolbar
     '''
-    if oDoc is None:
-        oDoc = LeenoUtils.getDocument()
-    if oDoc is None:
-        DLG.chi("Toolbars.On: nessun documento risolto, richiesta ignorata")
+    oLayout, oDoc = _get_layout_manager(oDoc, "On")
+    if oLayout is None:
         return
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if flag:
         oLayout.showElement(toolbarURL)
     else:
@@ -158,12 +196,9 @@ def Ordina(oDoc=None):
     oDoc { document, opzionale } : documento già risolto dal chiamante.
     '''
     #  https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
-    if oDoc is None:
-        oDoc = LeenoUtils.getDocument()
-    if oDoc is None:
-        DLG.chi("Toolbars.Ordina: nessun documento risolto, richiesta ignorata")
+    oLayout, oDoc = _get_layout_manager(oDoc, "Ordina")
+    if oLayout is None:
         return
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
     i = 0
     for aBar in _TOOLBAR_NAMES:
         oLayout.dockWindow(aBar, 'DOCKINGAREA_TOP', Point(i, 4))
@@ -195,17 +230,20 @@ def Switch(arg, oDoc=None):
     Nasconde o mostra le toolbar di Libreoffice.
     oDoc { document, opzionale } : documento già risolto dal chiamante.
         Va passato esplicitamente da chi lo ha già ottenuto prima
-        dell'esecuzione di un dialogo modale, perché subito dopo la
-        chiusura del dialogo LeenoUtils.getDocument() può non
-        individuare più il documento corrente (getCurrentComponent()
-        transitorio) e restituire None.
+        dell'esecuzione di un dialogo modale. Anche così non è garanzia
+        assoluta: se tra la risoluzione di oDoc e questa chiamata è girata
+        una funzione che tocca la configurazione dell'estensione (es.
+        pyleeno.nuove_icone() -> Debug.aggiorna_configurazione_leeno(),
+        che può arrivare a invocare desktop.terminate()), il frame/
+        controller del documento può risultare smontato: in quel caso
+        oDoc.CurrentController solleva UnknownPropertyException invece di
+        essere semplicemente None. Per questo la risoluzione del
+        LayoutManager passa sempre da _get_layout_manager(), che tenta
+        anche una ri-risoluzione fresca del documento prima di rinunciare.
     '''
-    if oDoc is None:
-        oDoc = LeenoUtils.getDocument()
-    if oDoc is None:
-        DLG.chi("Toolbars.Switch: nessun documento risolto, richiesta ignorata")
+    oLayout, oDoc = _get_layout_manager(oDoc, "Switch")
+    if oLayout is None:
         return
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
     for el in oLayout.Elements:
         if el.ResourceURL not in _TOOLBAR_NAMES + (
                 'private:resource/menubar/menubar',

@@ -452,6 +452,24 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-04 20:32</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/b8a47ff00d8540d6a1d76a06b9704c780b0fb839" target="_blank" rel="noopener"><code>b8a47ff</code></a></td>
+                <td class="commit-msg">Merge pull request #55 from giuserpe/jules-13067331950948836397-28c2c2c0
+
+Correzione suggerimento nome ed estensione nell'esportazione Markdown
+
+Corretto il comportamento dell'esportazione in formato Markdown nel software. Ora viene suggerito lo stesso nome del foglio o del documento in uso (con fallback sul titolo del documento se non ancora salvato) e viene sempre assicurato che l'estensione del file esportato sia (.md), anche qualora l'utente non la digiti manualmente.</td>
+            </tr>
+            <tr>
+                <td>2026-08-04 20:31</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ae13198247540a01efe2bc7be4c1d925a93066da" target="_blank" rel="noopener"><code>ae13198</code></a></td>
+                <td class="commit-msg">fix(computo): corregge nome ed estensione nell'esportazione Markdown
+
+Risolve il problema per cui l'esportazione in formato Markdown non proponeva il nome corretto del file corrente e non garantiva l'estensione (.md) del file salvato. Sposta l'impostazione del nome predefinito alla fine della configurazione del FilePicker e assicura l'aggiunta dell'estensione .md al percorso di output.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-04 19:46</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/86e6d6945da665164ac87f44d7f2670e63f27066" target="_blank" rel="noopener"><code>86e6d69</code></a></td>
                 <td class="commit-msg">Merge pull request #54 from giuserpe/refactor/leeno-export-13890155065378613099
@@ -459,28 +477,6 @@
 Refactor delle macro di esportazione in LeenoExport.py
 
 Refactoring completo per consolidare tutte le macro di esportazione dati, fogli e documenti (quali XPWE, Gantt, Markdown, ODT, SheetToDoc) all'interno di un modulo indipendente di nome LeenoExport.py. I riferimenti del menu di configurazione dell'interfaccia utente (Addons.xcu) e del ponte StarBasic (PY_bridge.xba) sono stati allineati di conseguenza per garantire l'integrità funzionale.</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 19:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6edc916ad500418d4eafd614a4716ab6aef117ae" target="_blank" rel="noopener"><code>6edc916</code></a></td>
-                <td class="commit-msg">refactor(core): estrae le macro di esportazione in LeenoExport.py
-
-Sposta tutte le macro dedicate all'esportazione di dati, fogli e documenti
-dal file pyleeno.py e LeenoSheetUtils.py a un nuovo modulo dedicato di
-nome LeenoExport.py.
-Aggiorna inoltre i dispatch URL all'interno del file di configurazione
-Addons.xcu e le chiamate di bridge BASIC all'interno di PY_bridge.xba
-per preservare l'integrità funzionale del software.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-08-04 15:58</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/537cc6668a7e7dca755df0e77f87da5124bfb7c8" target="_blank" rel="noopener"><code>537cc66</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.120‑TESTING‑20260804
-
-- aggiorna description.xml
-- aggiorna leeno_version_code</td>
             </tr>
                     </tbody>
                 </table>
@@ -504,8 +500,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-04 20:31 UTC</p>
-                <p>Build Commit: <code>ae13198</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-04 20:33 UTC</p>
+                <p>Build Commit: <code>b8a47ff</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

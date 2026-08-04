@@ -99,6 +99,23 @@ Senza questi parametri, un `pull` può segnare centinaia di file come "modificat
 - Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
 - Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
 
+## Pulizia di codice morto e duplicato (lezioni apprese, agosto 2026)
+
+Durante una pulizia sistematica di `pythonpath/` con `pyflakes` e analisi AST mirata sono emersi pattern ricorrenti, utili come checklist per le pulizie future.
+
+- **Gli script "usa e getta" in `pythonpath/` sono il rischio più grave, non solo disordine.** Trovato `_fix_path.py`: a livello di modulo apriva `pyleeno.py` e lo riscriveva su disco sostituendo un range di righe hardcoded — se il modulo fosse mai stato importato dal processo di LibreOffice (vedi sezione "Sicurezza dei moduli in `pythonpath/`" sopra), avrebbe corrotto silenziosamente `pyleeno.py` con un range ormai disallineato. Stesso discorso per `benchmark.py`: path hardcoded (`W:\...`) e `print()` eseguiti a livello di modulo, quindi un `FileNotFoundError` per chiunque non abbia esattamente quel file. Regola operativa: uno script one-shot va eseguito ed eliminato subito dopo l'uso, mai lasciato in `pythonpath/`, nemmeno "per sicurezza".
+- **La redefinition nello stesso scope è un indicatore affidabile di codice morto.** `python3 -m pyflakes <file>` segnala "redefinition of unused X from line Y" quando una funzione (o import) viene ridefinita nello stesso modulo/classe prima di essere usata: la prima definizione non è mai raggiungibile. Trovati due casi reali in `pyleeno.py` (`count_clipboard_lines`, `struttura_Registro`, entrambe con una versione più vecchia "morta" prima di quella attiva). Va trattato come codice da rimuovere, non come nota di stile.
+- **I moduli `LeenoImport_Xml*.py` vengono clonati l'uno dall'altro** e spesso portano con sé l'intero header di import del file sorgente, incluso il blocco `from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED)`, quasi mai usato per intero nel nuovo file. Un giro di `pyflakes` sul singolo modulo appena clonato individua questi import morti in pochi secondi — utile farlo subito dopo aver creato un nuovo import regionale, non solo in sede di pulizia generale.
+- **Prima di rimuovere una variabile "assegnata e mai usata" apparentemente inutile, controllare i moduli fratelli.** Se lo stesso pattern (es. un campo estratto dall'XML ma non incluso nel titolo composto) si ripete identico in più moduli `LeenoImport_Xml*.py`, è quasi sempre una scelta di design ricorrente e non un refuso isolato — la rimozione va fatta comunque (il dato resta inutilizzato), ma senza trattarla come "correzione di un bug".
+
+### Preservazione del line-ending in QUALSIASI editing, non solo SVG
+
+La regola "SVG edits must use binary mode" (vedi sezione icone) vale in realtà per ogni file esistente, non solo per gli SVG: nello stesso `pythonpath/` convivono file CRLF (es. `LeenoGiornale.py`) e file LF puro (es. `LeenoImport_XmlToscana.py`), anche nella stessa cartella. Prima di editare un file:
+
+1. Verificare lo stile reale con un controllo binario (conteggio isolato di `\r\n` vs `\n`), mai assumerlo dal resto del repo o dal tipo di file.
+2. In Python, aprire in lettura/scrittura con `newline=''` per non far tradurre gli a-capo, e comporre il testo di sostituzione con lo stesso stile di fine riga del blocco che si sta sostituendo.
+3. Dopo la modifica, ricontrollare il conteggio CRLF/LF per confermare che non sia cambiato, prima di consegnare il file.
+
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
 ### Formato

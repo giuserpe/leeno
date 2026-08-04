@@ -142,7 +142,7 @@ Sub nascondi_voci_zero
 End Sub
 rem ######################################################################
 Sub MENU_export_selected_range_to_odt
-	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_export_selected_range_to_odt&quot;)
+	ScriptPy(&quot;LeenoExport&quot;,&quot;MENU_export_selected_range_to_odt&quot;)
 End Sub
 rem ######################################################################
 Sub richiesta_offerta

@@ -1062,6 +1062,9 @@ def MENU_esporta_markdown():
         base_name = os.path.basename(system_path)
         name_without_ext = os.path.splitext(base_name)[0]
         default_filename = name_without_ext + ".md"
+    elif hasattr(oDoc, 'Title') and oDoc.Title:
+        name_without_ext = os.path.splitext(oDoc.Title)[0]
+        default_filename = name_without_ext + ".md"
     else:
         default_filename = "tabella.md"
 
@@ -1069,6 +1072,10 @@ def MENU_esporta_markdown():
     out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1, defaultName=default_filename)
     if not out_file:
         return
+
+    # Garantisce che il file esportato abbia l'estensione .md
+    if not out_file.lower().endswith('.md'):
+        out_file += '.md'
 
     try:
         with open(out_file, 'w', encoding='utf-8', newline='') as f:

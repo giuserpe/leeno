@@ -2506,8 +2506,6 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None, de
     ctx = uno.getComponentContext()
     oFilePicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", ctx)
     oFilePicker.initialize((mode, ))
-    if defaultName:
-        oFilePicker.setDefaultName(defaultName)
 
     # try to get path from current document, if any
     # if not, look into config to fetch last used one
@@ -2526,6 +2524,10 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None, de
     except Exception as e:
         NotifyDialog(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
         return
+
+    if defaultName:
+        oFilePicker.setDefaultName(defaultName)
+
     if oFilePicker.execute():
         oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
         storeLastPath(oPath)

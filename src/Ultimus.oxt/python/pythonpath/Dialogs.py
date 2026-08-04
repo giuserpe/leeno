@@ -2473,7 +2473,7 @@ class Dialog(unohelper.Base, XJobExecutor,  XTopWindowListener):
 ## SOME COMMON DIALOGS
 ######################################################################
 
-def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
+def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None, defaultName=None):
     """
     titolo  { string }  : titolo del FilePicker
     est     { string }  : filtro di visualizzazione file
@@ -2506,6 +2506,8 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     ctx = uno.getComponentContext()
     oFilePicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", ctx)
     oFilePicker.initialize((mode, ))
+    if defaultName:
+        oFilePicker.setDefaultName(defaultName)
 
     # try to get path from current document, if any
     # if not, look into config to fetch last used one

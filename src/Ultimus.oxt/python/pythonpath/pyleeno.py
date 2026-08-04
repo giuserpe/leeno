@@ -5097,8 +5097,19 @@ def MENU_esporta_markdown():
 
     markdown_content = "\n".join([header_str, delimiter_str] + body_strs) + "\n"
 
+    # Ottieni il nome del file corrente come suggerimento predefinito
+    doc_url = oDoc.getURL()
+    default_filename = ""
+    if doc_url:
+        system_path = uno.fileUrlToSystemPath(doc_url)
+        base_name = os.path.basename(system_path)
+        name_without_ext = os.path.splitext(base_name)[0]
+        default_filename = name_without_ext + ".md"
+    else:
+        default_filename = "tabella.md"
+
     # Selezione del percorso e salvataggio
-    out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1)
+    out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1, defaultName=default_filename)
     if not out_file:
         return
 

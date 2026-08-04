@@ -1,19 +1,7 @@
-import re
 import Dialogs
 import pyleeno as PL
 
-from io import StringIO
-import xml.etree.ElementTree as ET
-
-import codecs
-import shutil
 import LeenoImport
-import LeenoUtils
-import LeenoDialogs as DLG
-import SheetUtils
-
-from com.sun.star.sheet.CellFlags import \
-    VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
 def parseXML(data, defaultTitle=None):
     '''
@@ -104,7 +92,6 @@ supportato nella prossima versione del programma""")
         return
 
     intestazione = root.find('intestazione')
-    autore = intestazione.attrib['autore']
     # versione = intestazione.attrib['versione']
 
     dettaglio = intestazione.find('dettaglio')

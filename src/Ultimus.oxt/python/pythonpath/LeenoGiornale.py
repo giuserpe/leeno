@@ -16,26 +16,13 @@
 #~ https://t.me/leeno_computometrico''', 'ERRORE!')
 
 #~ documentazione ufficiale: https://api.libreoffice.org/
-import locale
-import codecs
-import configparser
-import collections
 #~ import subprocess
 #~ import psutil
-import os, unohelper, pyuno, logging, shutil, base64, sys, uno
-import time
-import copy
-from multiprocessing import Process, freeze_support
-import threading
+import uno
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
-from datetime import datetime, date
 from com.sun.star.beans import PropertyValue
-from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 #~ from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
-from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
-                                          ANNOTATION, FORMULA, HARDATTR,
-                                          OBJECTS, EDITATTR, FORMATTED)
 
 import LeenoUtils
 import pyleeno as PL

@@ -42,34 +42,34 @@
          width="2.0999999"
          height="11.562081"
          rx="0.80769229"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect1"
          style="stroke-width:1.74432" />
       <path
          d="m 4.1226766,8.8817844 3,-3.86 3.0000004,3.86 z"
-         fill="#1a2010"
+         fill="#E9EFDF"
          fill-rule="evenodd"
          id="path1" />
     </g>
     <g
        id="g4-7"
        transform="rotate(180,10.960893,12.003638)"
-       style="fill:#808080;fill-opacity:1">
+       style="fill:#7F7F7F;fill-opacity:1">
       <rect
          x="6.0726762"
          y="7.2814126"
          width="2.0999999"
          height="11.562081"
          rx="0.80769229"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect1-6"
-         style="fill:#808080;fill-opacity:1;stroke-width:1.74432" />
+         style="fill:#7F7F7F;fill-opacity:1;stroke-width:1.74432" />
       <path
          d="m 4.1226766,8.8817844 3,-3.86 3.0000004,3.86 z"
-         fill="#1a2010"
+         fill="#E9EFDF"
          fill-rule="evenodd"
          id="path1-1"
-         style="fill:#808080;fill-opacity:1" />
+         style="fill:#7F7F7F;fill-opacity:1" />
     </g>
   </g>
 </svg>

@@ -38,7 +38,7 @@
      inkscape:transform-center-y="-0.11895911">
     <path
        d="m 5,8.5 h 14 l -2,11 H 7 Z m 1.76,0.8 h 10.48 l -1.68,8.6 H 8.44 Z"
-       fill="#1a2010"
+       fill="#E9EFDF"
        fill-rule="evenodd"
        id="path1" />
     <rect
@@ -47,7 +47,7 @@
        width="15.4"
        height="2"
        rx="0.69999999"
-       fill="#1a2010"
+       fill="#E9EFDF"
        id="rect1" />
   </g>
   <g

@@ -34,7 +34,7 @@
      font-family="Arial, sans-serif"
      font-size="11.5444px"
      font-weight="800"
-     fill="#1a2010"
+     fill="#E9EFDF"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text1"
@@ -43,7 +43,7 @@
      cx="9.2687645"
      cy="16.344139"
      r="1.2698822"
-     fill="#808080"
+     fill="#7F7F7F"
      id="circle1"
      style="stroke-width:1.15444" />
   <text
@@ -52,7 +52,7 @@
      font-family="Arial, sans-serif"
      font-size="11.5444px"
      font-weight="800"
-     fill="#1a2010"
+     fill="#E9EFDF"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text2"

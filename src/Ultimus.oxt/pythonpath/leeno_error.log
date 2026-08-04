@@ -7885,3 +7885,19 @@ File: pyleeno.py, Line: 12727, Function: MENU_debug
 File: LeenoDialogs.py, Line: 164, Function: mri
 ------------------------------------------------------------
 
+[2026-08-04 23:28:34]
+OS: win32 / LibreOffice-26.2.5.2 / LeenO-3.26.0.120-TESTING-20260804
+
+Errore: 'NoneType' object has no attribute 'NamedRanges'
+
+File: 'pyleeno.py'
+Line: '10519'
+Function: 'descrizione_in_una_colonna'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoConfig.py, Line: 407, Function: MENU_leeno_conf
+File: LeenoUtils.py, Line: 323, Function: wrapper
+File: pyleeno.py, Line: 10519, Function: descrizione_in_una_colonna
+------------------------------------------------------------
+

@@ -169,17 +169,17 @@ def creaComputo(arg=1):
         (opz, ))
 
     autoexec()
-    if arg == 1:
-        IconType = "error"
-        Title = 'ATTENZIONE!'
-        Text='''
-Prima di procedere è meglio dare un nome al file.
+#     if arg == 1:
+#         IconType = "error"
+#         Title = 'ATTENZIONE!'
+#         Text='''
+# Prima di procedere è meglio dare un nome al file.
 
-Lavorando su un file senza nome
-potresti avere dei malfunzionamenti.
-'''
-        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
-        DlgMain()
+# Lavorando su un file senza nome
+# potresti avere dei malfunzionamenti.
+# '''
+#         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+#         DlgMain()
     return document
 
 

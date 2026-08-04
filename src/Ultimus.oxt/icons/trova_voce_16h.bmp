@@ -50,31 +50,31 @@
        cx="9.3999996"
        cy="9.3999996"
        r="5.8000002"
-       fill="#1a2010"
+       fill="#E9EFDF"
        id="circle1" />
     <circle
        cx="9.3999996"
        cy="9.3999996"
        r="4.1999998"
-       fill="#f0f4e0"
+       fill="#1B1F0B"
        id="circle2" />
     <circle
        cx="9.3999996"
        cy="9.3999996"
        r="3.5999999"
-       fill="#808080"
+       fill="#7F7F7F"
        id="circle3"
        style="fill:#8fb200;fill-opacity:1" />
   </g>
   <path
      d="M12.83,14.46 L18.13,19.76 L19.76,18.13 L14.46,12.83 Z"
-     fill="#1A2010"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path3" />
   <circle
      cx="18.945941546018393"
      cy="18.945941546018393"
      r="1.058"
-     fill="#1A2010"
+     fill="#E9EFDF"
      id="circle4" />
 </svg>

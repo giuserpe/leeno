@@ -31,12 +31,12 @@
      inkscape:current-layer="svg3" />
   <path
      d="M3.00,1.00 L12.50,1.00 L18.00,6.50 L18.00,23.00 L3.00,23.00 Z M4.60,2.60 L12.50,2.60 L16.40,6.50 L16.40,21.40 L4.60,21.40 Z"
-     fill="#1A2010"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path1" />
   <path
      d="M12.50,1.00 L18.00,6.50 L12.50,6.50 Z"
-     fill="#1A2010"
+     fill="#E9EFDF"
      fill-rule="evenodd"
      id="path2" />
   <text
@@ -45,11 +45,11 @@
      font-family="Arial, sans-serif"
      font-size="5.85446px"
      font-weight="800"
-     fill="#1a2010"
+     fill="#E9EFDF"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text2"
-     style="fill:#000000;stroke-width:0.944268"
+     style="fill:#FFFFFF;stroke-width:0.944268"
      transform="scale(0.9442678,1.0590216)">XML</text>
   <g
      id="g3"
@@ -58,16 +58,16 @@
        cx="17.5"
        cy="17.5"
        r="6.5"
-       fill="#f0f4e0"
+       fill="#1B1F0B"
        id="circle3-2"
-       style="fill:#1a2010;fill-opacity:1" />
+       style="fill:#E9EFDF;fill-opacity:1" />
     <circle
        cx="17.5"
        cy="17.5"
        r="5.5999999"
-       fill="#20261a"
+       fill="#DFE5D9"
        id="circle4"
-       style="fill:#f0f4e0;fill-opacity:1" />
+       style="fill:#1B1F0B;fill-opacity:1" />
     <g
        id="g1"
        transform="matrix(1.0710147,-1.0710147,1.0710147,1.0710147,-19.525796,37.749806)">

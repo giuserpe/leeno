@@ -1108,7 +1108,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.gantt</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoExport.gantt</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta dati in formato CSV per GanttProject</value>
@@ -1123,7 +1123,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_XPWE_export</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoExport.MENU_XPWE_export</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta dati in archivio XPWE</value>
@@ -1171,7 +1171,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_esporta_markdown</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoExport.MENU_esporta_markdown</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta selezione in formato Markdown...</value>
@@ -1540,7 +1540,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.MENU_SheetToDoc</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoExport.MENU_SheetToDoc</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Copia Foglio corrente in Nuovo File</value>

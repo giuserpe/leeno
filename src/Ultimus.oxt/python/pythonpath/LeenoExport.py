@@ -11,8 +11,11 @@ import threading
 import codecs
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+# pyrefly: ignore [missing-import]
 import uno
+# pyrefly: ignore [missing-import]
 import unohelper
+# pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 
 # Local imports

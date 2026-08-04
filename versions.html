@@ -452,6 +452,14 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-04 21:27</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/52c19056a5823db8e89198e69ce0dbd4ddc24ef7" target="_blank" rel="noopener"><code>52c1905</code></a></td>
+                <td class="commit-msg">fix(ui): gestisce frame smontato in Toolbars dopo cambio tema
+
+Il fix precedente copriva solo oDoc=None. Dopo un cambio tema che
+passa da aggiorna_configurazione_leeno()/terminate(), il frame può risultare smontato: CurrentController ora è avvolto in try/except con ri-risoluzione.</td>
+            </tr>
+            <tr>
                 <td>2026-08-04 21:25</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/0654b785ad4f74949c9b1d5565fe59d14ef3d059" target="_blank" rel="noopener"><code>0654b78</code></a></td>
                 <td class="commit-msg">feat: add AGENTS.md documentation to define mandatory AI development conventions for LeenO</td>
@@ -467,11 +475,6 @@ sulla consegna del lavoro per agenti senza credenziali di push, nota
 sulla risoluzione di oDoc dopo un dialogo modale (vedi fix
 LeenoToolbars.Switch) e una nota di manutenzione sulla sincronia tra
 AGENTS.md e .agents/AGENTS.md.</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 21:16</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/de21e7580f0c0bdb5314f877917e40b7150d69d2" target="_blank" rel="noopener"><code>de21e75</code></a></td>
-                <td class="commit-msg">fix(ui): passa oDoc già risolto a Toolbars dopo il dialogo config</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +498,8 @@ AGENTS.md e .agents/AGENTS.md.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-04 21:25 UTC</p>
-                <p>Build Commit: <code>0654b78</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-04 21:27 UTC</p>
+                <p>Build Commit: <code>52c1905</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

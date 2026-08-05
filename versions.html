@@ -452,26 +452,34 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-05 08:15</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/fea801e2ded61d5b70580b5c518c6e4095935a6e" target="_blank" rel="noopener"><code>fea801e</code></a></td>
+                <td class="commit-msg">Merge pull request #56 from giuserpe/jules-14855310701536621489-d5ff47cd
+
+fix: evita sovrascrittura rigo di misura in Analisi di Prezzo
+
+Inviando una voce da "Elenco Prezzi" ad "Analisi di Prezzo" del DP, se nella colonna A del rigo di misura è presente una stringa vuota o diversa da "Cod. Art.?", viene inserito un nuovo rigo sotto quello corrente per ospitare la voce inviata.</td>
+            </tr>
+            <tr>
+                <td>2026-08-05 08:10</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/9a9a20c60dbc3c64fc290d0ef23256777a6865e2" target="_blank" rel="noopener"><code>9a9a20c</code></a></td>
+                <td class="commit-msg">fix: evita sovrascrittura rigo di misura in Analisi di Prezzo
+
+Inviando una voce da "Elenco Prezzi" ad "Analisi di Prezzo" del DP,
+se nella colonna A del rigo di misura è presente una stringa vuota
+o diversa da "Cod. Art.?", viene aggiunto un nuovo rigo di misura
+sotto quello corrente usando copiaRigaAnalisi. La voce trasferita
+occuperà quindi questo nuovo rigo inserito.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-05 06:36</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/3d795ee76b481a6f34e870d55fb2792139aab191" target="_blank" rel="noopener"><code>3d795ee</code></a></td>
                 <td class="commit-msg">chore(git): uniforma EOL repo via .gitattributes
 
 Introduce regole esplicite text/binary per tutti i tipi di file
 del progetto, evitando corruzioni CRLF su icone/XML/sorgenti.</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 06:21</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/280893b149d5a88a9ee5e0f5fd0e5f3321566e39" target="_blank" rel="noopener"><code>280893b</code></a></td>
-                <td class="commit-msg">chore(meta): incrementa versione a 3.26.0.121 e aggiorna icone</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 06:10</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0b86cc2e5d580bfd0bc7e8862e6ea5391549bf0e" target="_blank" rel="noopener"><code>0b86cc2</code></a></td>
-                <td class="commit-msg">fix(core): sposta nuove_icone in fondo a MENU_leeno_conf
-
-nuove_icone() può arrivare a chiamare desktop.terminate(); girava a metà
-funzione, rendendo instabile ogni chiamata successiva a oDoc. Aggiunge
-anche LeenoUtils.resolve_document() come fallback condiviso.</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +503,8 @@ anche LeenoUtils.resolve_document() come fallback condiviso.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-05 08:10 UTC</p>
-                <p>Build Commit: <code>9a9a20c</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-05 08:15 UTC</p>
+                <p>Build Commit: <code>fea801e</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

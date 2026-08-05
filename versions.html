@@ -452,6 +452,32 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-05 08:40</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8dcaa1e0c86985e7c8cf360524761560d0005ba9" target="_blank" rel="noopener"><code>8dcaa1e</code></a></td>
+                <td class="commit-msg">Merge pull request #57 from giuserpe/jules-14041591526507431837-78f1814e
+
+Applica valida_cella su colonna D del foglio Analisi di Prezzo
+
+Applica LeenoValidation.valida_cella() sul foglio di 'Analisi di Prezzo' per le celle della colonna D (indice 3) con stile 'An-lavoraz-input'.
+    Aggiornato LeenoValidation.valida_cella() per rilevare lo stile 'An-lavoraz-input' e delegare a valida_numeri_decimale().
+    Aggiornato copiaRigaAnalisi() in LeenoAnalysis.py per applicare valida_cella() a tutte le nuove righe create.
+    Aggiornato applica_validazione_decimale() per supportare la validazione batch di colonna D su 'Analisi di Prezzo'.
+    Aggiornato autoexec_run() in pyleeno.py per eseguire il batch di validazione anche sul foglio 'Analisi di Prezzo'.</td>
+            </tr>
+            <tr>
+                <td>2026-08-05 08:39</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c15a81e262da35eda543ff2c6097b96377f83a9d" target="_blank" rel="noopener"><code>c15a81e</code></a></td>
+                <td class="commit-msg">fix(computo): applica valida_cella su foglio Analisi di Prezzo per colonna D
+
+Assicura che la validazione decimale sia applicata alle celle della
+colonna D con lo stile "An-lavoraz-input" nel foglio di Analisi di Prezzo.
+Modifica LeenoValidation.valida_cella() affinché deleghi alla
+validazione decimale per tali celle, e integra questa chiamata in
+copiaRigaAnalisi() e applica_validazione_decimale() all'autoexec.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-05 08:15</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/fea801e2ded61d5b70580b5c518c6e4095935a6e" target="_blank" rel="noopener"><code>fea801e</code></a></td>
                 <td class="commit-msg">Merge pull request #56 from giuserpe/jules-14855310701536621489-d5ff47cd
@@ -459,27 +485,6 @@
 fix: evita sovrascrittura rigo di misura in Analisi di Prezzo
 
 Inviando una voce da "Elenco Prezzi" ad "Analisi di Prezzo" del DP, se nella colonna A del rigo di misura è presente una stringa vuota o diversa da "Cod. Art.?", viene inserito un nuovo rigo sotto quello corrente per ospitare la voce inviata.</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 08:10</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/9a9a20c60dbc3c64fc290d0ef23256777a6865e2" target="_blank" rel="noopener"><code>9a9a20c</code></a></td>
-                <td class="commit-msg">fix: evita sovrascrittura rigo di misura in Analisi di Prezzo
-
-Inviando una voce da "Elenco Prezzi" ad "Analisi di Prezzo" del DP,
-se nella colonna A del rigo di misura è presente una stringa vuota
-o diversa da "Cod. Art.?", viene aggiunto un nuovo rigo di misura
-sotto quello corrente usando copiaRigaAnalisi. La voce trasferita
-occuperà quindi questo nuovo rigo inserito.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-08-05 06:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3d795ee76b481a6f34e870d55fb2792139aab191" target="_blank" rel="noopener"><code>3d795ee</code></a></td>
-                <td class="commit-msg">chore(git): uniforma EOL repo via .gitattributes
-
-Introduce regole esplicite text/binary per tutti i tipi di file
-del progetto, evitando corruzioni CRLF su icone/XML/sorgenti.</td>
             </tr>
                     </tbody>
                 </table>
@@ -503,8 +508,8 @@ del progetto, evitando corruzioni CRLF su icone/XML/sorgenti.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-05 08:39 UTC</p>
-                <p>Build Commit: <code>c15a81e</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-05 08:40 UTC</p>
+                <p>Build Commit: <code>8dcaa1e</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

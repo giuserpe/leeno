@@ -9672,15 +9672,15 @@ def DlgMain():
         oDoc = new_doc
         oSheet = oDoc.CurrentController.ActiveSheet
         
-        IconType = "error"
-        Title = 'ATTENZIONE!'
-        Text='''
-Prima di procedere è meglio dare un nome al file.
+#         IconType = "error"
+#         Title = 'ATTENZIONE!'
+#         Text='''
+# Prima di procedere è meglio dare un nome al file.
 
-Lavorando su un file senza nome
-potresti avere dei malfunzionamenti.
-'''
-        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+# Lavorando su un file senza nome
+# potresti avere dei malfunzionamenti.
+# '''
+#         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
         
     Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")

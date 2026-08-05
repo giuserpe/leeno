@@ -34,7 +34,7 @@
      width="1.4"
      height="18.665428"
      rx="0.40000001"
-     fill="#7F7F7F"
+     fill="#808080"
      id="rect1"
      style="stroke-width:1.04784" />
   <rect
@@ -43,7 +43,7 @@
      width="15.5"
      height="1.4"
      rx="0.40000001"
-     fill="#7F7F7F"
+     fill="#808080"
      id="rect2" />
   <rect
      x="5.2"
@@ -82,17 +82,17 @@
            cx="17.5"
            cy="17.5"
            r="6.5"
-           fill="#1B1F0B"
+           fill="#f0f4e0"
            id="circle3-2"
-           style="fill:#E9EFDF;fill-opacity:1"
+           style="fill:#1a2010;fill-opacity:1"
            transform="matrix(0.466847,0.466847,-0.466847,0.466847,26.738943,-8.5078244)" />
         <circle
            cx="17.5"
            cy="17.5"
            r="5.5999999"
-           fill="#DFE5D9"
+           fill="#20261a"
            id="circle4"
-           style="fill:#1B1F0B;fill-opacity:1"
+           style="fill:#f0f4e0;fill-opacity:1"
            transform="matrix(0.466847,0.466847,-0.466847,0.466847,26.738943,-8.5078244)" />
         <g
            id="g2"

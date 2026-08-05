@@ -34,16 +34,16 @@
   <g
      id="g2"
      transform="translate(50.161708,-5.4610831)"
-     style="fill:#E9EFDF;fill-opacity:1">
+     style="fill:#1a2010;fill-opacity:1">
     <rect
        x="-48"
        y="9.75"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect1-6"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="-48"
        y="14.150001"
@@ -52,25 +52,25 @@
        rx="0.5"
        fill="#8fb200"
        id="rect2-1"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="-48"
        y="18.549999"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="-47.923416"
        y="22.972166"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8-2-9"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
   </g>
   <g
      id="g9"
@@ -94,7 +94,7 @@
                    cx="25.44533"
                    cy="-0.021029225"
                    r="5.8000002"
-                   fill="#1B1F0B"
+                   fill="#f0f4e0"
                    id="circle3"
                    transform="translate(3.0899874,12.021028)" />
                 <g
@@ -110,7 +110,7 @@
                      cx="15.4"
                      cy="15.4"
                      r="1.7"
-                     fill="#1B1F0B"
+                     fill="#f0f4e0"
                      id="circle5" />
                   <circle
                      cx="19.200001"
@@ -122,7 +122,7 @@
                      cx="19.200001"
                      cy="19.200001"
                      r="1.7"
-                     fill="#1B1F0B"
+                     fill="#f0f4e0"
                      id="circle7" />
                 </g>
                 <rect
@@ -133,7 +133,7 @@
                    rx="0.20485973"
                    fill="#8fb200"
                    id="rect2-8-7"
-                   style="fill:#1B1F0B;fill-opacity:1;stroke-width:0.657508" />
+                   style="fill:#f0f4e0;fill-opacity:1;stroke-width:0.657508" />
                 <rect
                    x="25.39151"
                    y="11.346097"

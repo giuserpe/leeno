@@ -40,9 +40,9 @@
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect1-6"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="28.291447"
        y="8.6053429"
@@ -51,23 +51,23 @@
        rx="0.5"
        fill="#8fb200"
        id="rect2-1"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="28.291447"
        y="13.005342"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <rect
        x="28.368031"
        y="17.427509"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8-2-9"
        style="fill:#8fb200;fill-opacity:1" />
   </g>
@@ -77,13 +77,13 @@
        cx="17.3"
        cy="17.3"
        r="6.5"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="circle3" />
     <circle
        cx="17.3"
        cy="17.3"
        r="5.6000000000000005"
-       fill="#1B1F0B"
+       fill="#F0F4E0"
        id="circle4" />
     <rect
        x="13.4"

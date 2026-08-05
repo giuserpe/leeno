@@ -1,0 +1,53 @@
+# .gitattributes — LeenO
+# Normalizza tutto il repo a LF, con eccezioni esplicite per i formati
+# binari basati su zip (oxt/ods/odt) e per le immagini raster vere.
+
+# Default: tutto ciò che git riconosce come testo -> LF
+* text=auto eol=lf
+
+# --- Sorgenti Python / Basic / web ---
+*.py            text eol=lf
+*.bas           text eol=lf
+*.xba           text eol=lf
+*.php           text eol=lf
+*.js            text eol=lf
+*.css           text eol=lf
+*.html          text eol=lf
+*.htm           text eol=lf
+*.json          text eol=lf
+*.md            text eol=lf
+*.txt           text eol=lf
+*.sh            text eol=lf
+*.gitattributes text eol=lf
+*.gitignore     text eol=lf
+
+# --- XML / config LibreOffice (component.xml, Addons.xcu, ecc.) ---
+*.xml           text eol=lf
+*.xcu           text eol=lf
+*.xcd           text eol=lf
+*.xcs           text eol=lf
+
+# --- Icone LeenO: SVG mascherati da .bmp, e SVG veri ---
+src/Ultimus.oxt/icons/*.bmp        text eol=lf
+src/Ultimus.oxt/icons/svg/*.svg    text eol=lf
+src/Ultimus.oxt/icons/scuro/*.svg  text eol=lf
+*.svg           text eol=lf
+
+# --- Windows batch/PowerShell: CRLF nativo (convenzione Windows) ---
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.ps1           text eol=crlf
+
+# --- Binari veri: MAI normalizzare EOL, MAI diff testuale ---
+*.oxt           binary
+*.ods           binary
+*.ots           binary
+*.odt           binary
+*.odp           binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.zip           binary
+*.pdf           binary

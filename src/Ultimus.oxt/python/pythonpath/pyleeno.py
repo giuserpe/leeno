@@ -5075,12 +5075,18 @@ def Copia_riga_Ent(num_righe=None, target_row=None):
     row_originale = row  # Salva il valore originale
     dettaglio_attivo = cfg.read('Generale', 'dettaglio') == '1'
 
+    def _copia_analisi_multi(r, n):
+        for i in range(n):
+            copiaRigaAnalisi(oSheet, r + i)
+        _gotoCella(0, r + n)
+        return r + n
+
     # Dizionario delle azioni per tipo di foglio
     azioni = {
         'COMPUTO': copia_riga_computo,
         'VARIANTE': copia_riga_computo,
         'CONTABILITA': copia_riga_contab,
-        'Analisi di Prezzo': copiaRigaAnalisi,
+        'Analisi di Prezzo': _copia_analisi_multi,
     }
 
     # Esegue l'azione appropriata in base al tipo di foglio

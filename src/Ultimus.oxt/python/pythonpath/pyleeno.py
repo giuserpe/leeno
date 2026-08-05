@@ -523,7 +523,7 @@ def invia_voce(ctrl_override=False):
             row_dest = pos_dp
             if row_dest is not None:
                 val_col_A = dccSheetDest.getCellByPosition(0, row_dest).String
-                if val_col_A == "" or val_col_A != "Cod. Art.?":
+                if not (val_col_A == "" or val_col_A == "Cod. Art.?" or ctrl_override):
                     # Aggiunge un nuovo rigo di misura sotto quello corrente
                     stile = dccSheetDest.getCellByPosition(0, row_dest).CellStyle
                     if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):

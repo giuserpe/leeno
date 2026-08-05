@@ -452,26 +452,27 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-05 11:04</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c13b334be5b7f4bf10a028f7876f44702eca6932" target="_blank" rel="noopener"><code>c13b334</code></a></td>
-                <td class="commit-msg">Merge pull request #59 from giuserpe/jules-11455891958266142816-228c3d97
-
-Proposta nome file predefinito in Markdown e splitting dei file oltre 3Mb
-
-- Corregge l'esportazione in formato Markdown affinché proponga correttamente il nome del file Calc corrente, impostando esplicitamente il filtro attivo nel FilePicker di LibreOffice per garantirne la visibilità.
-- Implementa la suddivisione automatica della tabella esportata in file da 2Mb ciascuno qualora il contenuto totale superi i 3Mb. Ciascun troncone generato mantiene l'intestazione originaria per risultare una tabella Markdown valida ed indipendente.</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 10:22</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/82a70104694006f94610703962fc69d95037c187" target="_blank" rel="noopener"><code>82a7010</code></a></td>
-                <td class="commit-msg">fix(computo): propone nome file predefinito in esportazione markdown e implementa split a 2Mb
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
                 <td>2026-08-05 09:30</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/6724268b36fd38cdfa0a01cad3a16fd2f1ed83fa" target="_blank" rel="noopener"><code>6724268</code></a></td>
                 <td class="commit-msg">chore(template): aggiorna modello Computo_LeenO.ods</td>
+            </tr>
+            <tr>
+                <td>2026-08-05 09:06</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/11ad77c9afbdd01e3f3076e526de65b4bb310a33" target="_blank" rel="noopener"><code>11ad77c</code></a></td>
+                <td class="commit-msg">Inviando una voce da "Elenco Prezzi" ad "Analisi di Prezzo" del DP, se nella colonna A del rigo di misura è presente una stringa vuota o "Cod. Art.?" o il tasto CTRL è premuto, il rigo corrente deve essere sovrapposto. Abbiamo modificato la logica in pyleeno.py per gestire correttamente questa casistica.</td>
+            </tr>
+            <tr>
+                <td>2026-08-05 08:40</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8dcaa1e0c86985e7c8cf360524761560d0005ba9" target="_blank" rel="noopener"><code>8dcaa1e</code></a></td>
+                <td class="commit-msg">Merge pull request #57 from giuserpe/jules-14041591526507431837-78f1814e
+
+Applica valida_cella su colonna D del foglio Analisi di Prezzo
+
+Applica LeenoValidation.valida_cella() sul foglio di 'Analisi di Prezzo' per le celle della colonna D (indice 3) con stile 'An-lavoraz-input'.
+    Aggiornato LeenoValidation.valida_cella() per rilevare lo stile 'An-lavoraz-input' e delegare a valida_numeri_decimale().
+    Aggiornato copiaRigaAnalisi() in LeenoAnalysis.py per applicare valida_cella() a tutte le nuove righe create.
+    Aggiornato applica_validazione_decimale() per supportare la validazione batch di colonna D su 'Analisi di Prezzo'.
+    Aggiornato autoexec_run() in pyleeno.py per eseguire il batch di validazione anche sul foglio 'Analisi di Prezzo'.</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +496,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-05 11:14 UTC</p>
-                <p>Build Commit: <code>ac6a8b8</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-05 15:58 UTC</p>
+                <p>Build Commit: <code>6724268</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

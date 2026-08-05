@@ -70,5 +70,77 @@ class TestAutoexecS2Removal(unittest.TestCase):
         self.assertNotIn('s2', new_code)
         self.assertNotIn('S2', new_code)
 
+# --- Mocking per i test di esportazione Markdown ---
+import sys
+import os
+from unittest.mock import MagicMock
+
+# Aggiunge il path della cartella corrente a sys.path per consentire l'importazione
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Salva i moduli originali se presenti per non interferire con altri contesti
+original_modules = {}
+mock_modules = [
+    'uno', 'unohelper', 'com', 'com.sun.star', 'com.sun.star.beans',
+    'LeenoUtils', 'SheetUtils', 'LeenoSheetUtils', 'LeenoComputo',
+    'LeenoFormat', 'LeenoGlobals', 'LeenoConfig', 'LeenoDialogs',
+    'Dialogs', 'pyleeno', 'Debug'
+]
+
+for mod in mock_modules:
+    if mod in sys.modules:
+        original_modules[mod] = sys.modules[mod]
+    sys.modules[mod] = MagicMock()
+
+
+class TestMarkdownExportSplitting(unittest.TestCase):
+    def test_no_split_under_3mb(self):
+        from LeenoExport import split_markdown_table
+        header = "| H1 | H2 |"
+        delimiter = "| --- | --- |"
+        rows = ["| R1 | R2 |", "| R3 | R4 |"]
+        parts = split_markdown_table(header, delimiter, rows, limit_3mb=100, limit_2mb=50)
+        self.assertEqual(len(parts), 1)
+        expected = ("| H1 | H2 |\n| --- | --- |\n| R1 | R2 |\n| R3 | R4 |\n").encode('utf-8')
+        self.assertEqual(parts[0], expected)
+
+    def test_split_over_3mb_into_2mb_parts(self):
+        from LeenoExport import split_markdown_table
+        header = "| H1 | H2 |"  # 11 chars
+        delimiter = "| --- | --- |"  # 13 chars
+        # Prefisso: 11 + 1 + 13 + 1 = 26 byte
+        rows = [
+            "| R1 | R2 |",  # 11 chars + 1 newline = 12 byte
+            "| R3 | R4 |",  # 12 byte
+            "| R5 | R6 |",  # 12 byte
+        ]
+        # Con limite 3mb = 40, limite 2mb = 45.
+        # Dimensione totale: 26 + 36 = 62 byte (> 40), quindi viene suddiviso.
+        # Parte 1: prefisso (26) + riga 1 (12) = 38 <= 45. La riga 2 sforerebbe (38 + 12 = 50 > 45).
+        # Parte 1 ha solo riga 1.
+        # Parte 2: prefisso (26) + riga 2 (12) = 38 <= 45. La riga 3 sforerebbe (50 > 45).
+        # Parte 2 ha solo riga 2.
+        # Parte 3: prefisso (26) + riga 3 (12) = 38 <= 45.
+        # Parte 3 ha solo riga 3.
+        parts = split_markdown_table(header, delimiter, rows, limit_3mb=40, limit_2mb=45)
+        self.assertEqual(len(parts), 3)
+        self.assertEqual(parts[0], ("| H1 | H2 |\n| --- | --- |\n| R1 | R2 |\n").encode('utf-8'))
+        self.assertEqual(parts[1], ("| H1 | H2 |\n| --- | --- |\n| R3 | R4 |\n").encode('utf-8'))
+        self.assertEqual(parts[2], ("| H1 | H2 |\n| --- | --- |\n| R5 | R6 |\n").encode('utf-8'))
+
+    def test_single_row_exceeding_limit(self):
+        # Caso in cui una singola riga supera da sola il limite di 2Mb
+        from LeenoExport import split_markdown_table
+        header = "| H1 |"  # 6 chars
+        delimiter = "| --- |"  # 7 chars
+        # Prefisso: 6 + 1 + 7 + 1 = 15 byte
+        rows = [
+            "| R1_molto_lunga |",  # 17 chars + 1 newline = 18 byte
+        ]
+        # limite 2mb = 30 (prefisso + riga = 15 + 18 = 33 > 30)
+        parts = split_markdown_table(header, delimiter, rows, limit_3mb=20, limit_2mb=30)
+        self.assertEqual(len(parts), 1)
+        self.assertEqual(parts[0], ("| H1 |\n| --- |\n| R1_molto_lunga |\n").encode('utf-8'))
+
 if __name__ == '__main__':
     unittest.main()

@@ -60,6 +60,21 @@ def Inserisci_Utili():
     oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, target_row))
 
 
+def calcola_codice_successivo(codice_corrente):
+    import re
+    if not codice_corrente:
+        return None
+    codice_corrente = codice_corrente.strip()
+    match = re.match(r"^(.*?)(\d+)$", codice_corrente)
+    if match:
+        prefix, num_str = match.groups()
+        num_len = len(num_str)
+        next_num = int(num_str) + 1
+        return f"{prefix}{next_num:0{num_len}d}"
+    else:
+        return codice_corrente + "1"
+
+
 def inizializza_analisi(oDoc=None, nuovaScheda=False):
     '''
     Prepara il foglio 'Analisi di Prezzo' copiandolo dal template master.
@@ -70,6 +85,34 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
     PL.chiudi_dialoghi()
     if oDoc is None:
         oDoc = LeenoUtils.getDocument()
+
+    # Trova il codice corrente se siamo su Analisi di Prezzo prima di ogni modifica
+    codice_corrente = None
+    try:
+        active_sheet = oDoc.CurrentController.ActiveSheet
+        if active_sheet and active_sheet.Name == 'Analisi di Prezzo':
+            lrow_curr = PL.LeggiPosizioneCorrente()[1]
+            try:
+                sStRange = circoscriveAnalisi(active_sheet, lrow_curr)
+                if sStRange:
+                    codice_corrente = active_sheet.getCellByPosition(0, sStRange.RangeAddress.StartRow + 2).String
+            except Exception:
+                pass
+
+            # Fallback: scansiona all'indietro per l'ultima scheda se non trovato o vuoto
+            if not codice_corrente or codice_corrente.strip() == "":
+                urow = SheetUtils.getLastUsedRow(active_sheet)
+                for row_idx in reversed(range(2, urow + 1)):
+                    try:
+                        if active_sheet.getCellByPosition(0, row_idx).CellStyle == 'An.1v-Att Start':
+                            temp_code = active_sheet.getCellByPosition(0, row_idx + 1).String
+                            if temp_code and temp_code.strip() != "":
+                                codice_corrente = temp_code
+                                break
+                    except Exception:
+                        continue
+    except Exception:
+        pass
 
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         # Costruisce il percorso del template
@@ -164,6 +207,11 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
         # Riga finale per la scrittura dati
         startRow = startRow + 1
         
+        if codice_corrente:
+            next_code = calcola_codice_successivo(codice_corrente)
+            if next_code:
+                oSheet.getCellByPosition(0, startRow + 1).String = next_code
+
         # Spostiamo il cursore sulla cella descrizione (colonna E = 4)
         oCell = oSheet.getCellByPosition(4, startRow)
         oDoc.CurrentController.setActiveSheet(oSheet)

@@ -8848,10 +8848,11 @@ def autoexec_run():
     # oDoc.CalcAsShown = True  # precisione come mostrato
     adegua_tmpl()  # esegue degli aggiustamenti del template
     oSheet = oDoc.CurrentController.ActiveSheet
-    for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO'):
+    for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO', 'Analisi di Prezzo'):
         try:
             GotoSheet(nome)
-            subst_str(' >(', ' ►(')
+            if nome != 'Analisi di Prezzo':
+                subst_str(' >(', ' ►(')
             applica_validazione_decimale()
         except Exception:
             pass

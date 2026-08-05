@@ -27,9 +27,10 @@ def debug_validation():
         oCell.String = 'Scegli...'
 
 
-def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
+def valida_cella(oCell, lista_val=None, titoloInput='', msgInput='', err=False):
     '''
     Imposta un elenco di valori a cascata (Validation LIST) su una cella.
+    Se la cella ha lo stile 'An-lavoraz-input', applica invece la validazione decimale.
 
     oCell       {object}  : oggetto cella (es. oSheet.getCellByPosition(0,0))
     lista_val   {string}  : stringa valori separati da punto e virgola: '"A";"B";"C"'
@@ -37,6 +38,16 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
     msgInput    {string}  : messaggio del tooltip di aiuto
     err         {boolean} : se True, impedisce l'inserimento di valori non in lista
     '''
+    try:
+        if getattr(oCell, 'CellStyle', None) == 'An-lavoraz-input':
+            valida_numeri_decimale(oCell, unprotect_if_needed=True)
+            return
+    except Exception:
+        pass
+
+    if lista_val is None:
+        lista_val = ""
+
     # Recuperiamo l'oggetto Validation esistente della cella
     oTabVal = oCell.Validation
 
@@ -122,19 +133,29 @@ def _imposta_validazione_decimale_su_intervallo(
 
 def applica_validazione_decimale():
     """
-    Applica validazione decimale alle colonne F, G, H, I con stile di cella che inizia con 'comp'.
+    Applica validazione decimale alle colonne F, G, H, I con stile di cella che inizia con 'comp',
+    oppure al foglio di Analisi di Prezzo alla colonna D con stile 'An-lavoraz-input'.
     Modalità batch: rileva blocchi contigui di celle per velocizzare l'operazione.
     """
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.getActiveSheet()
     lastrow = SheetUtils.getLastUsedRow(oSheet)
 
-    first_row = 4
-    cols_f_i = range(4, 9)  # colonne F..I (0-based)
-    comp_prefix = 'comp'
+    if oSheet.Name == 'Analisi di Prezzo':
+        first_row = 0
+        cols_to_check = [3]  # colonna D (0-based)
+        target_style = 'An-lavoraz-input'
+        is_match = lambda s: s == target_style
+        desc_msg = 'Applicazione validazione decimale Analisi (batch)...'
+    else:
+        first_row = 4
+        cols_to_check = range(4, 9)  # colonne F..I (0-based)
+        comp_prefix = 'comp'
+        is_match = lambda s: s.startswith(comp_prefix)
+        desc_msg = 'Applicazione validazione decimale (batch)...'
 
     indicator = oDoc.CurrentController.getStatusIndicator()
-    indicator.start('Applicazione validazione decimale (batch)...', len(cols_f_i))
+    indicator.start(desc_msg, len(cols_to_check))
 
     rng_sheet = oSheet.getCellRangeByPosition
 
@@ -147,7 +168,7 @@ def applica_validazione_decimale():
             with UndoContext('Applicazione validazione decimale'):
                 if lastrow >= first_row:
                     n_rows = lastrow - first_row + 1
-                    for i, col in enumerate(cols_f_i):
+                    for i, col in enumerate(cols_to_check):
                         indicator.setValue(i + 1)
                         oColRange = rng_sheet(col, first_row, col, lastrow)
                         col_cell = oColRange.getCellByPosition
@@ -155,7 +176,7 @@ def applica_validazione_decimale():
                         for rel_row in range(n_rows):
                             row = first_row + rel_row
                             stile = col_cell(0, rel_row).CellStyle
-                            if stile.startswith(comp_prefix):
+                            if is_match(stile):
                                 if start_row is None:
                                     start_row = row
                             elif start_row is not None:

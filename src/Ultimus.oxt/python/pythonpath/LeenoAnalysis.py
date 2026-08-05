@@ -271,6 +271,12 @@ def copiaRigaAnalisi(oSheet_or_row, lrow_or_num_righe=1):
                         oCellAddress = oSheet.getCellByPosition(0, current_row).getCellAddress()
                         oSheet.copyRange(oCellAddress, oRangeAddress)
 
+                # Applica validazione alle celle della colonna D appena create tramite LeenoValidation.valida_cella()
+                import LeenoValidation
+                for i in range(num_righe):
+                    current_row = lrow + i
+                    LeenoValidation.valida_cella(oSheet.getCellByPosition(3, current_row))
+
             PL._gotoCella(0, row + 1)
             if PL.LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
                 PL.pesca_cod()
@@ -317,6 +323,10 @@ def copiaRigaAnalisi(oSheet_or_row, lrow_or_num_righe=1):
                 oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
             oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
+
+            # Applica validazione alla cella della colonna D appena creata tramite LeenoValidation.valida_cella()
+            import LeenoValidation
+            LeenoValidation.valida_cella(oSheet.getCellByPosition(3, lrow))
 
 
 def MENU_impagina_analisi():

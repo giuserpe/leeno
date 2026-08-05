@@ -452,6 +452,19 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-05 06:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3d795ee76b481a6f34e870d55fb2792139aab191" target="_blank" rel="noopener"><code>3d795ee</code></a></td>
+                <td class="commit-msg">chore(git): uniforma EOL repo via .gitattributes
+
+Introduce regole esplicite text/binary per tutti i tipi di file
+del progetto, evitando corruzioni CRLF su icone/XML/sorgenti.</td>
+            </tr>
+            <tr>
+                <td>2026-08-05 06:21</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/280893b149d5a88a9ee5e0f5fd0e5f3321566e39" target="_blank" rel="noopener"><code>280893b</code></a></td>
+                <td class="commit-msg">chore(meta): incrementa versione a 3.26.0.121 e aggiorna icone</td>
+            </tr>
+            <tr>
                 <td>2026-08-05 06:10</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/0b86cc2e5d580bfd0bc7e8862e6ea5391549bf0e" target="_blank" rel="noopener"><code>0b86cc2</code></a></td>
                 <td class="commit-msg">fix(core): sposta nuove_icone in fondo a MENU_leeno_conf
@@ -459,19 +472,6 @@
 nuove_icone() può arrivare a chiamare desktop.terminate(); girava a metà
 funzione, rendendo instabile ogni chiamata successiva a oDoc. Aggiunge
 anche LeenoUtils.resolve_document() come fallback condiviso.</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 21:32</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/202054678cb89d5c0f16bb0701d8444e6deb4c60" target="_blank" rel="noopener"><code>2020546</code></a></td>
-                <td class="commit-msg">feat: add UI icons and pyleeno automation module to Ultimus extension</td>
-            </tr>
-            <tr>
-                <td>2026-08-04 21:27</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/52c19056a5823db8e89198e69ce0dbd4ddc24ef7" target="_blank" rel="noopener"><code>52c1905</code></a></td>
-                <td class="commit-msg">fix(ui): gestisce frame smontato in Toolbars dopo cambio tema
-
-Il fix precedente copriva solo oDoc=None. Dopo un cambio tema che
-passa da aggiorna_configurazione_leeno()/terminate(), il frame può risultare smontato: CurrentController ora è avvolto in try/except con ri-risoluzione.</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +495,8 @@ passa da aggiorna_configurazione_leeno()/terminate(), il frame può risultare sm
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-05 06:11 UTC</p>
-                <p>Build Commit: <code>0b86cc2</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-05 06:37 UTC</p>
+                <p>Build Commit: <code>3d795ee</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

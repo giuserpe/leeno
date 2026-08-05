@@ -522,6 +522,13 @@ def invia_voce(ctrl_override=False):
             dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
             row_dest = pos_dp
             if row_dest is not None:
+                val_col_A = dccSheetDest.getCellByPosition(0, row_dest).String
+                if val_col_A == "" or val_col_A != "Cod. Art.?":
+                    # Aggiunge un nuovo rigo di misura sotto quello corrente
+                    stile = dccSheetDest.getCellByPosition(0, row_dest).CellStyle
+                    if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
+                        copiaRigaAnalisi(dccSheetDest, row_dest)
+                        row_dest = row_dest + 1
                 dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
                 _gotoCella(3, row_dest)
         return avviso_vedi_voce

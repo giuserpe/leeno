@@ -367,11 +367,6 @@ def MENU_leeno_conf():
     if oDlg_config.getControl('CheckBox2').State != test:
         PL.show_sheets(True if oDlg_config.getControl('CheckBox2').State == 1 else False)
 
-    if oDlg_config.getControl('ComboBox1').getText() == 'Chiaro':
-        PL.nuove_icone(True)
-    elif oDlg_config.getControl('ComboBox1').getText() == 'Scuro':
-        PL.nuove_icone(False)
-
     import LeenoToolbars as Toolbars
     Toolbars.Switch(False if oDlg_config.getControl('CheckBox3').State == 1 else True, oDoc=oDoc)
 
@@ -404,7 +399,7 @@ def MENU_leeno_conf():
 
     Toolbars.Vedi()
     import pyleeno as PL
-    PL.descrizione_in_una_colonna(False if oDlg_config.getControl('CheckBox5').State == 1 else True)
+    PL.descrizione_in_una_colonna(False if oDlg_config.getControl('CheckBox5').State == 1 else True, oDoc=oDoc)
 
     cfg.write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
 
@@ -419,3 +414,14 @@ def MENU_leeno_conf():
     cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('ComboBox5').getText())
 
     PL.autorun()
+
+    # --- CAMBIO TEMA ICONE (per ultimo) ---
+    # nuove_icone() può arrivare, tramite Debug.aggiorna_configurazione_leeno(),
+    # a invocare desktop.terminate() (dialogo "vuoi riavviare adesso?"). Deve
+    # restare l'ultima operazione di questa funzione: qualunque codice
+    # successivo che tocchi oDoc/il frame rischierebbe di trovarlo smontato
+    # (UnknownPropertyException su CurrentController) o addirittura None.
+    if oDlg_config.getControl('ComboBox1').getText() == 'Chiaro':
+        PL.nuove_icone(True)
+    elif oDlg_config.getControl('ComboBox1').getText() == 'Scuro':
+        PL.nuove_icone(False)

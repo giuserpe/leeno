@@ -74,6 +74,48 @@ def getDocument():
         return None
 
 
+def resolve_document(oDoc=None):
+    '''
+    Risolve un documento Calc realmente utilizzabile, con un solo livello
+    di fallback.
+
+    getDocument() verifica solo che il documento abbia getSheets() e non
+    sia isDisposed, ma questo non basta: un documento può essere ancora
+    "vivo" a livello di modello (getSheets() funziona) mentre il suo
+    frame/controller è stato smontato (es. dopo che
+    Debug.aggiorna_configurazione_leeno() ha invocato desktop.terminate()
+    e la chiusura è stata bloccata a metà). In quel caso oDoc.CurrentController
+    solleva UnknownPropertyException/DisposedException invece di essere
+    semplicemente None.
+
+    Uso tipico: una funzione che riceve un oDoc già risolto da un chiamante
+    (per evitare di richiamare getDocument() dopo un dialogo modale o
+    un'operazione rischiosa) lo passa qui per un'ultima verifica prima
+    di usarlo, con fallback automatico a una risoluzione fresca.
+
+    oDoc { opzionale } : documento candidato, es. passato da un chiamante
+    Ritorna il documento utilizzabile, oppure None se nessun tentativo riesce.
+    '''
+    def is_usable(comp):
+        if comp is None:
+            return False
+        try:
+            comp.getSheets()
+            comp.CurrentController
+            return True
+        except Exception:
+            return False
+
+    if is_usable(oDoc):
+        return oDoc
+
+    fresh = getDocument()
+    if is_usable(fresh):
+        return fresh
+
+    return None
+
+
 def getServiceManager():
     '''
     Gets the service manager

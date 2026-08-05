@@ -133,43 +133,23 @@ def Vedi(arg=None):
 
 def _get_layout_manager(oDoc, caller_name):
     '''
-    Risolve in modo difensivo oDoc.CurrentController.getFrame().LayoutManager.
+    Risolve in modo difensivo oDoc.CurrentController.getFrame().LayoutManager,
+    delegando la validazione/fallback del documento a
+    LeenoUtils.resolve_document() (unica fonte di verità, usata anche da
+    altri moduli come pyleeno.descrizione_in_una_colonna).
 
-    oDoc può essere:
-    - None: viene ricavato con LeenoUtils.getDocument()
-    - un riferimento valido ma "stantio" (es. passato da un chiamante che lo
-      ha ottenuto prima di un dialogo modale o di un'operazione che tocca la
-      configurazione, come Debug.aggiorna_configurazione_leeno() che può
-      arrivare a invocare desktop.terminate()): in questo caso l'accesso a
-      CurrentController può sollevare UnknownPropertyException/
-      DisposedException invece di restituire semplicemente None.
-
-    In caso di fallimento con oDoc fornito dal chiamante, si tenta UNA
-    ri-risoluzione fresca tramite LeenoUtils.getDocument() prima di
-    rinunciare. Ritorna (oLayout, oDoc_effettivo) oppure (None, None) se
-    nessun tentativo va a buon fine; il chiamante deve loggare e uscire.
+    Ritorna (oLayout, oDoc_effettivo) oppure (None, None) se nessun
+    tentativo va a buon fine; il chiamante deve loggare e uscire.
     '''
-    tried_fresh = False
+    oDoc = LeenoUtils.resolve_document(oDoc)
     if oDoc is None:
-        oDoc = LeenoUtils.getDocument()
-        tried_fresh = True
+        DLG.chi(f"Toolbars.{caller_name}: nessun documento utilizzabile, richiesta ignorata")
+        return None, None
     try:
         return oDoc.CurrentController.getFrame().LayoutManager, oDoc
     except Exception as e:
-        if tried_fresh:
-            DLG.chi(f"Toolbars.{caller_name}: documento non utilizzabile ({e}), richiesta ignorata")
-            return None, None
-        # oDoc forniva dal chiamante non è più utilizzabile: un solo
-        # tentativo di ri-risoluzione fresca prima di arrendersi.
-        oDoc = LeenoUtils.getDocument()
-        if oDoc is None:
-            DLG.chi(f"Toolbars.{caller_name}: documento fornito non valido ({e}) e nessun documento alternativo trovato")
-            return None, None
-        try:
-            return oDoc.CurrentController.getFrame().LayoutManager, oDoc
-        except Exception as e2:
-            DLG.chi(f"Toolbars.{caller_name}: documento fornito non valido ({e}), ri-risoluzione fallita ({e2})")
-            return None, None
+        DLG.chi(f"Toolbars.{caller_name}: documento risolto ma non utilizzabile ({e})")
+        return None, None
 
 
 def On(toolbarURL, flag, oDoc=None):

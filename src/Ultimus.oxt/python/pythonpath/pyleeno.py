@@ -169,17 +169,17 @@ def creaComputo(arg=1):
         (opz, ))
 
     autoexec()
-#     if arg == 1:
-#         IconType = "error"
-#         Title = 'ATTENZIONE!'
-#         Text='''
-# Prima di procedere è meglio dare un nome al file.
+    if arg == 1:
+        IconType = "error"
+        Title = 'ATTENZIONE!'
+        Text='''
+Prima di procedere è meglio dare un nome al file.
 
-# Lavorando su un file senza nome
-# potresti avere dei malfunzionamenti.
-# '''
-#         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
-#         DlgMain()
+Lavorando su un file senza nome
+potresti avere dei malfunzionamenti.
+'''
+        Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+        DlgMain()
     return document
 
 
@@ -10503,16 +10503,22 @@ def sistema_cose():
 ########################################################################
 
 @LeenoUtils.no_refresh
-def descrizione_in_una_colonna(flag=False):
+def descrizione_in_una_colonna(flag=False, oDoc=None):
     '''
     Questa funzione consente di estendere su più colonne o ridurre ad una colonna lo spazio
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
 
     Args:
         flag (bool, optional): Se True, effettua l'unione delle celle. Se False, annulla l'unione.
-
+        oDoc (opzionale): documento già risolto dal chiamante (es. MENU_leeno_conf,
+            che lo passa per evitare una nuova LeenoUtils.getDocument() dopo
+            operazioni rischiose come pyleeno.nuove_icone()). Viene comunque
+            validato/ri-risolto tramite LeenoUtils.resolve_document().
     '''
-    oDoc = LeenoUtils.getDocument()
+    oDoc = LeenoUtils.resolve_document(oDoc)
+    if oDoc is None:
+        DLG.chi("descrizione_in_una_colonna: nessun documento utilizzabile, richiesta ignorata")
+        return
 
     fogli_lavoro = ['S5', 'COMPUTO', 'VARIANTE', 'CONTABILITA']
 

@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.121-TESTING-20260804.oxt">LeenO-3.26.0.121-TESTING-20260804.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.122-TESTING-20260805.oxt">LeenO-3.26.0.122-TESTING-20260805.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.2MB</td>
+                <td class="col-extra">2026-08-05 18:16</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.122-TESTING-20260805.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.121-TESTING-20260804.oxt">LeenO-3.26.0.121-TESTING-20260804.oxt</a> </td>
                 <td class="col-dim">4.2MB</td>
                 <td class="col-extra">2026-08-04 21:35</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.117-TESTING-20260731.oxt">LeenO-3.26.0.117-TESTING-20260731.oxt</a> </td>
-                <td class="col-dim">4.2MB</td>
-                <td class="col-extra">2026-07-31 14:56</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.117-TESTING-20260731.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,6 +452,16 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-05 18:16</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/837fffcbcf538ed8911e9acf868cebbeed86a3e0" target="_blank" rel="noopener"><code>837fffc</code></a></td>
+                <td class="commit-msg">fix(core): abilita copia multipla di righe Analisi di Prezzo
+
+- introduce funzione interna _copia_analisi_multi(r, n)
+- copia n righe consecutive tramite copiaRigaAnalisi
+- aggiorna la posizione corrente con _gotoCella
+- sostituisce copiaRigaAnalisi nel dispatcher di Copia_riga_Ent</td>
+            </tr>
+            <tr>
                 <td>2026-08-05 18:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/c4a80b49e401dec60ea17c0ca3a8fac5702f3d93" target="_blank" rel="noopener"><code>c4a80b4</code></a></td>
                 <td class="commit-msg">Durante l'inserimento di una nuova scheda di Analisi di Prezzo (ad esempio premendo Ctrl-Shift-N), rileva il codice della scheda attiva o dell'ultima scheda esistente nel foglio e lo incrementa numericamente (es. NP24 -> NP25) impostando il nuovo codice sul foglio copiato dal template.</td>
@@ -460,11 +470,6 @@
                 <td>2026-08-05 16:49</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/dbab722acf3ac5a024820b83d8fe300743c3b5de" target="_blank" rel="noopener"><code>dbab722</code></a></td>
                 <td class="commit-msg">chore: delete redundant or deprecated files</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 09:30</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6724268b36fd38cdfa0a01cad3a16fd2f1ed83fa" target="_blank" rel="noopener"><code>6724268</code></a></td>
-                <td class="commit-msg">chore(template): aggiorna modello Computo_LeenO.ods</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +493,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-05 18:02 UTC</p>
-                <p>Build Commit: <code>c4a80b4</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-05 18:17 UTC</p>
+                <p>Build Commit: <code>837fffc</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

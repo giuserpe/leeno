@@ -452,6 +452,14 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-06 08:26</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d2cec0e3434e6e39a42cdec43f18482c14062e32" target="_blank" rel="noopener"><code>d2cec0e</code></a></td>
+                <td class="commit-msg">fix(core): rimuove test Jules con side-effect a livello di modulo in pythonpath
+
+Sovrascrivevano sys.modules per pyleeno/Dialogs/LeenoUtils/uno al semplice
+import, disattivando silenziosamente l'estensione per l'intera sessione.</td>
+            </tr>
+            <tr>
                 <td>2026-08-06 08:22</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/93d769ecdf83af3c35bae1eb85b131f5039f0917" target="_blank" rel="noopener"><code>93d769e</code></a></td>
                 <td class="commit-msg">fix(core): rimuove test Jules con side-effect a livello di modulo in pythonpath
@@ -465,20 +473,6 @@ import, disattivando silenziosamente l'estensione per l'intera sessione.</td>
                 <td class="commit-msg">Merge pull request #61 from giuserpe/jules-12895299155745112282-2f205121
 
 Risoluzione freeze all'avvio e rinvio chiusura documento ospite (da accertare)</td>
-            </tr>
-            <tr>
-                <td>2026-08-06 08:12</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/89d0bf00c20fab658c546415a76a23f30d730e98" target="_blank" rel="noopener"><code>89d0bf0</code></a></td>
-                <td class="commit-msg">fix(core): risolve il deadlock e il malfunzionamento iniziale di DlgMain all'apertura del computo
-
-Risolve in modo definitivo la perdita di focus e il conseguente blocco/deadlock di LeenO all'avvio di LibreOffice premendo CTRL-0.
-
-1. Rimuove la chiamata sincrona a oDoc.close(True) sui fogli iniziale vuoti in DlgMain() e LeenoImport.py, eliminando alla radice i deadlock e le eccezioni del bridge UNO.
-2. Assicura che creaComputo() metta in primo piano e attivi il frame del nuovo computo prima dell'inizializzazione, consentendo un corretto recupero del document context.
-3. Abilita il passaggio esplicito del parametro oDoc alle routine di inizializzazione, pulizia ed assegnamento eventi, garantendo che vengano configurate esclusivamente sul nuovo computo.
-4. Potenzia register_key_handler() con un registro dei controller attivi per abilitare in modo affidabile e sicuro l'intercettazione dei tasti scorciatoia anche su computi multipli.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -502,8 +496,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-06 08:22 UTC</p>
-                <p>Build Commit: <code>93d769e</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-06 08:27 UTC</p>
+                <p>Build Commit: <code>d2cec0e</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

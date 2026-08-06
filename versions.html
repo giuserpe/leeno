@@ -452,6 +452,16 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-06 08:31</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/eb6bf06816aea64d3deadb80890469ba9482c28d" target="_blank" rel="noopener"><code>eb6bf06</code></a></td>
+                <td class="commit-msg">chore(core): aggiunge controllo CI contro test e mock sys.modules in pythonpath
+
+Blocca automaticamente PR/push su dev che aggiungono file test_*.py o
+assegnazioni a sys.modules[...] a livello di modulo dentro pythonpath/,
+per evitare la regressione già occorsa due volte (benchmark.py/_fix_path.py,
+test_autoexec.py di oggi).</td>
+            </tr>
+            <tr>
                 <td>2026-08-06 08:26</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/d2cec0e3434e6e39a42cdec43f18482c14062e32" target="_blank" rel="noopener"><code>d2cec0e</code></a></td>
                 <td class="commit-msg">fix(core): rimuove test Jules con side-effect a livello di modulo in pythonpath
@@ -466,13 +476,6 @@ import, disattivando silenziosamente l'estensione per l'intera sessione.</td>
 
 Sovrascrivevano sys.modules per pyleeno/Dialogs/LeenoUtils/uno al semplice
 import, disattivando silenziosamente l'estensione per l'intera sessione.</td>
-            </tr>
-            <tr>
-                <td>2026-08-06 08:17</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/de37c0b6e6b01fc7fd0d76434e09d715465fa294" target="_blank" rel="noopener"><code>de37c0b</code></a></td>
-                <td class="commit-msg">Merge pull request #61 from giuserpe/jules-12895299155745112282-2f205121
-
-Risoluzione freeze all'avvio e rinvio chiusura documento ospite (da accertare)</td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +499,8 @@ Risoluzione freeze all'avvio e rinvio chiusura documento ospite (da accertare)</
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-06 08:27 UTC</p>
-                <p>Build Commit: <code>d2cec0e</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-06 08:32 UTC</p>
+                <p>Build Commit: <code>eb6bf06</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

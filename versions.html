@@ -452,49 +452,41 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-06 06:28</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/885de61760eecd6de1b4a4e044f26e98ceb3c991" target="_blank" rel="noopener"><code>885de61</code></a></td>
-                <td class="commit-msg">feat(analysis): genera codice successivo per nuova scheda Analisi di Prezzo
-- introduce calcola_codice_successivo()
-- rileva codice corrente tramite circoscriveAnalisi o fallback su ultima scheda
-- assegna automaticamente il codice incrementato alla nuova scheda
-- migliora individuazione della riga di chiusura tramite stile 'An-sfondo-basso Att End'
-- posiziona il cursore sulla cella codice (colonna 0)
+                <td>2026-08-06 08:17</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/de37c0b6e6b01fc7fd0d76434e09d715465fa294" target="_blank" rel="noopener"><code>de37c0b</code></a></td>
+                <td class="commit-msg">Merge pull request #61 from giuserpe/jules-12895299155745112282-2f205121
 
-fix(analysis): semplifica copiaRigaAnalisi rimuovendo ramo duplicato e codice morto
-- elimina vecchia versione multi‑API (pyleeno/LeenoImport)
-- mantiene implementazione unica e coerente con gli stili attivi
-- preserva formule, stili e validazioni
-
-fix(dialogs): rimuove setCurrentFilter da FileSelect
-- evita selezione forzata del filtro che causava errori con estensioni non mappate
-
-chore(meta): bump versione a 3.26.0.123‑TESTING‑20260805
-- aggiorna description.xml
-- aggiorna leeno_version_code
-
-fix(core): abilita copia multipla righe Analisi di Prezzo in Copia_riga_Ent
-- sostituisce handler con _copia_analisi_multi</td>
+Risoluzione freeze all'avvio e rinvio chiusura documento ospite (da accertare)</td>
             </tr>
             <tr>
-                <td>2026-08-05 21:50</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/4750a618bb46e2d3565f9642421f8882ef35403a" target="_blank" rel="noopener"><code>4750a61</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.123‑TESTING‑20260805
+                <td>2026-08-06 08:12</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/89d0bf00c20fab658c546415a76a23f30d730e98" target="_blank" rel="noopener"><code>89d0bf0</code></a></td>
+                <td class="commit-msg">fix(core): risolve il deadlock e il malfunzionamento iniziale di DlgMain all'apertura del computo
 
-- aggiorna description.xml
-- aggiorna leeno_version_code</td>
+Risolve in modo definitivo la perdita di focus e il conseguente blocco/deadlock di LeenO all'avvio di LibreOffice premendo CTRL-0.
+
+1. Rimuove la chiamata sincrona a oDoc.close(True) sui fogli iniziale vuoti in DlgMain() e LeenoImport.py, eliminando alla radice i deadlock e le eccezioni del bridge UNO.
+2. Assicura che creaComputo() metta in primo piano e attivi il frame del nuovo computo prima dell'inizializzazione, consentendo un corretto recupero del document context.
+3. Abilita il passaggio esplicito del parametro oDoc alle routine di inizializzazione, pulizia ed assegnamento eventi, garantendo che vengano configurate esclusivamente sul nuovo computo.
+4. Potenzia register_key_handler() con un registro dei controller attivi per abilitare in modo affidabile e sicuro l'intercettazione dei tasti scorciatoia anche su computi multipli.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-08-05 20:28</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5cebd854180668e95a7c5ad0569e67280a7774ef" target="_blank" rel="noopener"><code>5cebd85</code></a></td>
-                <td class="commit-msg">docs: aggiunge sezione su diagnosi conflitti pull/merge e gestione della storia
+                <td>2026-08-06 07:52</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3b9429cdfc1d5669811b6b2db8a6ce8ed42490b2" target="_blank" rel="noopener"><code>3b9429c</code></a></td>
+                <td class="commit-msg">fix(core): riattiva l'inizializzazione del nuovo computo portando il focus sul foglio e registrando i tasti
 
-- introduce capitolo dedicato alla distinzione rumore/contenuto reale nei diff
-- documenta uso di git diff --stat e filtri whitespace per evitare scarti errati
-- aggiunge linee guida su reset, rebase, revert e force‑push con criteri chiari
-- chiarisce rischi di riscrittura storia e necessità di coordinamento su branch condivisi
-- descrive comportamento GitHub su merge PR rimossi dalla storia
-- introduce controllo di parità tra icons/svg/ e icons/scuro prima di ogni commit</td>
+Risolve in modo definitivo il problema per cui premendo CTRL-0 all'apertura di LibreOffice, il nuovo computo veniva visualizzato ma "non funzionava niente" (i pulsanti di DlgMain non rispondevano ed era impossibile utilizzare i comandi di LeenO).
+
+La causa risiedeva nel fatto che `loadComponentFromURL` caricava il nuovo documento in modo asincrono o in background rispetto alla finestra corrente. Di conseguenza, le successive chiamate ad `autoexec()` venivano eseguite sull'iniziale documento vuoto ("Senza nome 1") anziché sul computo effettivo.
+
+Questo intervento:
+1. Attiva e porta in primo piano tramite `toFront()` e `activate()` la finestra del nuovo computo non appena viene caricato, garantendo il corretto recupero del document context da parte di `LeenoUtils.getDocument()`.
+2. Estende `register_key_handler()` per supportare più documenti (anche concorrenti) registrando il key handler su ciascun nuovo controller attivo in modo univoco ed evitando registrazioni doppie.
+3. Rimuove la chiamata sincrona a `.close(True)` sul foglio iniziale vuoto per azzerare qualsiasi rischio di deadlock o distruzione imprevista del bridge UNO.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -518,8 +510,8 @@ fix(core): abilita copia multipla righe Analisi di Prezzo in Copia_riga_Ent
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-06 08:13 UTC</p>
-                <p>Build Commit: <code>89d0bf0</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-06 08:17 UTC</p>
+                <p>Build Commit: <code>de37c0b</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -10,15 +10,16 @@ import pyleeno as PL
 import LeenoDialogs as DLG
 
 
-def avvisoPassword():
+def avvisoPassword(oDoc=None):
     '''
     Mostra un avviso se il documento è protetto da password.
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     if LeenoUtils.isPasswordProtected(oDoc):
         DLG.MsgBox("ATTENZIONE: Questo documento o parte di esso è protetto da password.", "Sicurezza")
 
-def macro_SHEET(nSheet, nEvento, miamacro):
+def macro_SHEET(nSheet, nEvento, miamacro, oDoc=None):
     '''
     Attribuisce specifica macro ad evento di un foglio
     '''
@@ -40,7 +41,8 @@ def macro_SHEET(nSheet, nEvento, miamacro):
     
     oProp = [oProp0, oProp1]
 
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(nSheet)
     uno.invoke(
         oSheet.Events, 'replaceByName',
@@ -50,7 +52,7 @@ def macro_SHEET(nSheet, nEvento, miamacro):
 
 ########################################################################
 
-def macro_DOC(nEvento, miamacro):
+def macro_DOC(nEvento, miamacro, oDoc=None):
     '''
     Attribuisce specifica macro ad evento del documento
     '''
@@ -69,7 +71,8 @@ def macro_DOC(nEvento, miamacro):
     oProp.append(oProp1)
 
     properties = tuple(oProp)
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
    
     uno.invoke(
         oDoc.Events, 'replaceByName',
@@ -91,7 +94,7 @@ def macro_URL (modulo, miamacro):
 
 ########################################################################
 
-def assegna():
+def assegna(oDoc=None):
     '''
     Assegna le macro agli eventi del documento  dei fogli
     '''
@@ -102,37 +105,38 @@ def assegna():
     # ~OnRightClick
     # ~OnChange
     # ~OnCalculate
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
 
     '''sotto Linux l'assegnazione delle macro agli eventi deve passare attraverso Basic, quindi:'''
 
     # ~ macro_SHEET ("Elenco Prezzi", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
     try:
-        macro_SHEET ("Elenco Prezzi", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        macro_SHEET ("Elenco Prezzi", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
 
         if oDoc.getSheets().hasByName('Analisi di Prezzo'):
             # ~ macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-            macro_SHEET ("Analisi di Prezzo", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+            macro_SHEET ("Analisi di Prezzo", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
 
         # ~ macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-        macro_SHEET ("COMPUTO", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        macro_SHEET ("COMPUTO", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
 
         if oDoc.getSheets().hasByName("VARIANTE"):
             # ~ macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-            macro_SHEET ("VARIANTE", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+            macro_SHEET ("VARIANTE", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
 
         if oDoc.getSheets().hasByName("CONTABILITA"):
             # ~ macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
-            macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+            macro_SHEET ("CONTABILITA", "OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
         # macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
         # ~ macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
-        macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        macro_SHEET ("S1", "OnUnfocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
         # ~OnStartApp
         # ~OnCloseApp
         # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-        macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document", oDoc=oDoc)
         # ~OnLoadFinished
-        macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document", oDoc=oDoc)
         
         # Aggiunge l'avviso password all'apertura
         # NOTA: OnLoad può essere sovrascritto, verifichiamo se possiamo accodare o usare un altro evento
@@ -143,21 +147,21 @@ def assegna():
             # macro_DOC ("OnLoad", macro_URL("LeenoEvents", "avvisoPassword"))
             # Per non sovrascrivere il controllo esistente, chiamiamo la funzione direttamente 
             # se assegna() viene chiamata all'apertura.
-            avvisoPassword()
+            avvisoPassword(oDoc=oDoc)
         except:
             pass
-        macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
-        macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-        macro_DOC ("OnSave", 'vnd.sun.star.script:UltimusFree2.PY_bridge.bak0?language=Basic&location=application')
+        macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application", oDoc=oDoc)
+        macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application", oDoc=oDoc)
+        macro_DOC ("OnSave", 'vnd.sun.star.script:UltimusFree2.PY_bridge.bak0?language=Basic&location=application', oDoc=oDoc)
         # ~OnSaveDone
         # ~OnSaveFailed
-        macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
+        macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application", oDoc=oDoc)
         # ~OnSaveAsDone
-        macro_DOC ("OnSaveAsFailed", "vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&location=application")
+        macro_DOC ("OnSaveAsFailed", "vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&location=application", oDoc=oDoc)
         # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
         # ~OnCopyToDone
         # ~OnCopyToFailed
-        macro_DOC ("OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application')
+        macro_DOC ("OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
         # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
     except Exception as e:
         # ~ PL.DLG.chi(f'Errore: {e}')
@@ -169,7 +173,7 @@ def assegna():
         if "lista" in sheet_name.lower():  # Ignora maiuscole/minuscole
             try:
                 # DLG.chi(f'Assegno macro a {sheet_name}')
-                macro_SHEET(sheet_name, "OnRightClick", 'vnd.sun.star.script:UltimusFree2.PY_bridge.calendario_liste?language=Basic&location=application')
+                macro_SHEET(sheet_name, "OnRightClick", 'vnd.sun.star.script:UltimusFree2.PY_bridge.calendario_liste?language=Basic&location=application', oDoc=oDoc)
             except Exception as e:
                 # DLG.errore(e)
                 pass
@@ -186,12 +190,13 @@ def assegna():
 ########################################################################
 
 
-def pulisci():
+def pulisci(oDoc=None):
     '''
     Rimuove le macro dagli eventi del codumento e dei fogli.
     Assegna al document le macro per il controllo dell'esistenza di LeenO
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
 
     eventi = oDoc.CurrentController.ActiveSheet.Events.ElementNames
@@ -199,8 +204,8 @@ def pulisci():
     for nome in lista_fogli:
         for ev in eventi:
             
-            macro_SHEET(nome, ev, '')
+            macro_SHEET(nome, ev, '', oDoc=oDoc)
     for ev in eventi_doc:
-        macro_DOC(ev, '')
-    macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
+        macro_DOC(ev, '', oDoc=oDoc)
+    macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document", oDoc=oDoc)
+    macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document", oDoc=oDoc)

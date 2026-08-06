@@ -8052,10 +8052,11 @@ class LeenoKeyHandler(unohelper.Base, XKeyHandler):
 KEY_HANDLER = None
 REGISTERED_CONTROLLERS = []
 
-def register_key_handler():
+def register_key_handler(oDoc=None):
     global KEY_HANDLER, REGISTERED_CONTROLLERS
     try:
-        oDoc = LeenoUtils.getDocument()
+        if oDoc is None:
+            oDoc = LeenoUtils.getDocument()
         if oDoc is not None and oDoc.CurrentController is not None:
             controller = oDoc.CurrentController
             if controller not in REGISTERED_CONTROLLERS:
@@ -8814,23 +8815,25 @@ def clean_basic_macro_s2():
 
 
 ########################################################################
-def autoexec():
-    autoexec_run()
+def autoexec(oDoc=None):
+    autoexec_run(oDoc)
     # oDoc = LeenoUtils.getDocument()
     # if oDoc.isProtected():
     #     DLG.chi("Il documento è protetto da password")
     #     return True
 
 @LeenoUtils.no_refresh
-def autoexec_run():
+def autoexec_run(oDoc=None):
     '''
     questa è richiamata da creaComputo()
     '''
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     #  LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
-    LeenoEvents.pulisci()
-    inizializza()
-    register_key_handler()
-    LeenoEvents.assegna()
+    LeenoEvents.pulisci(oDoc)
+    inizializza(oDoc)
+    register_key_handler(oDoc)
+    LeenoEvents.assegna(oDoc)
 
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
@@ -9109,12 +9112,13 @@ def _vSintetica_core(oDoc, oSheet, flag):
 
 ########################################################################
 
-def inizializza():
+def inizializza(oDoc=None):
     '''
     Configura dati, versioni e menu a tendina all'avvio del documento.
     Lanciata solitamente da autoexec().
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
 
     # 1. Aggiornamento Copyright (Foglio nascosto e S1)
     current_year = str(datetime.now().year)

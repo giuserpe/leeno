@@ -948,55 +948,6 @@ def clean_markdown(val):
 
 
 
-def split_markdown_table(header_str, delimiter_str, body_strs, limit_3mb=3*1024*1024, limit_2mb=2*1024*1024):
-    """
-    Suddivide una tabella Markdown in più parti se supera limit_3mb.
-    Ciascuna parte includerà le intestazioni e non supererà limit_2mb (tranne nei casi
-    in cui una riga singola superi tale limite).
-    Restituisce una lista di bytes corrispondenti a ciascuna parte.
-    """
-    full_table = "\n".join([header_str, delimiter_str] + body_strs) + "\n"
-    encoded_full = full_table.encode('utf-8')
-    if len(encoded_full) <= limit_3mb:
-        return [encoded_full]
-
-    header_prefix = header_str + "\n" + delimiter_str + "\n"
-    prefix_encoded = header_prefix.encode('utf-8')
-    prefix_size = len(prefix_encoded)
-
-    parts = []
-    current_body_bytes = []
-    current_body_size = 0
-
-    for row in body_strs:
-        row_encoded = (row + "\n").encode('utf-8')
-        row_size = len(row_encoded)
-
-        if prefix_size + current_body_size + row_size > limit_2mb:
-            if current_body_bytes:
-                part_content = prefix_encoded + b"".join(current_body_bytes)
-                parts.append(part_content)
-                current_body_bytes = [row_encoded]
-                current_body_size = row_size
-            else:
-                # Caso limite: una singola riga supera da sola il limite di 2Mb
-                current_body_bytes.append(row_encoded)
-                current_body_size += row_size
-                part_content = prefix_encoded + b"".join(current_body_bytes)
-                parts.append(part_content)
-                current_body_bytes = []
-                current_body_size = 0
-        else:
-            current_body_bytes.append(row_encoded)
-            current_body_size += row_size
-
-    if current_body_bytes:
-        part_content = prefix_encoded + b"".join(current_body_bytes)
-        parts.append(part_content)
-
-    return parts
-
-
 def MENU_esporta_markdown():
     """
     Esporta l'area selezionata di una tabella in formato Markdown.
@@ -1104,34 +1055,24 @@ def MENU_esporta_markdown():
     for row in rows:
         body_strs.append("| " + " | ".join(row) + " |")
 
-    # Ottieni il nome del file corrente come suggerimento predefinito e percorso iniziale
-    doc_url = oDoc.getURL() if hasattr(oDoc, 'getURL') else ""
+    markdown_content = "\n".join([header_str, delimiter_str] + body_strs) + "\n"
+
+    # Ottieni il nome del file corrente come suggerimento predefinito
+    doc_url = oDoc.getURL()
     default_filename = ""
-    start_path = None
-    name_without_ext = ""
-
     if doc_url:
-        try:
-            system_path = uno.fileUrlToSystemPath(doc_url)
-            base_name = os.path.basename(system_path)
-            name_without_ext = os.path.splitext(base_name)[0]
-            start_path = os.path.dirname(system_path)
-        except Exception:
-            pass
-
-    if not name_without_ext:
-        if hasattr(oDoc, 'Title') and oDoc.Title:
-            name_without_ext = os.path.splitext(oDoc.Title)[0]
-        elif hasattr(oDoc, 'getTitle') and oDoc.getTitle():
-            name_without_ext = os.path.splitext(oDoc.getTitle())[0]
-
-    if not name_without_ext:
-        name_without_ext = "tabella"
-
-    default_filename = name_without_ext + ".md"
+        system_path = uno.fileUrlToSystemPath(doc_url)
+        base_name = os.path.basename(system_path)
+        name_without_ext = os.path.splitext(base_name)[0]
+        default_filename = name_without_ext + ".md"
+    elif hasattr(oDoc, 'Title') and oDoc.Title:
+        name_without_ext = os.path.splitext(oDoc.Title)[0]
+        default_filename = name_without_ext + ".md"
+    else:
+        default_filename = "tabella.md"
 
     # Selezione del percorso e salvataggio
-    out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1, startPath=start_path, defaultName=default_filename)
+    out_file = Dialogs.FileSelect('Salva tabella Markdown con nome...', '*.md', 1, defaultName=default_filename)
     if not out_file:
         return
 
@@ -1140,32 +1081,12 @@ def MENU_esporta_markdown():
         out_file += '.md'
 
     try:
-        parts = split_markdown_table(header_str, delimiter_str, body_strs)
-        if len(parts) == 1:
-            with open(out_file, 'wb') as f:
-                f.write(parts[0])
-            Dialogs.Info(
-                Title='Esportazione completata',
-                Text=f'Il file è stato esportato correttamente in:\n\n{out_file}'
-            )
-        else:
-            base_dir = os.path.dirname(out_file)
-            file_name = os.path.basename(out_file)
-            name_without_ext, ext = os.path.splitext(file_name)
-
-            written_files = []
-            for i, part_content in enumerate(parts, 1):
-                part_filename = f"{name_without_ext}_part{i}{ext}"
-                part_path = os.path.join(base_dir, part_filename)
-                with open(part_path, 'wb') as f:
-                    f.write(part_content)
-                written_files.append(part_path)
-
-            paths_str = "\n".join([f"- {os.path.basename(f)}" for f in written_files])
-            Dialogs.Info(
-                Title='Esportazione completata',
-                Text=f'Il file originario superava i 3Mb ed è stato suddiviso in {len(written_files)} file da 2Mb:\n\n{paths_str}'
-            )
+        with open(out_file, 'w', encoding='utf-8', newline='') as f:
+            f.write(markdown_content)
+        Dialogs.Info(
+            Title='Esportazione completata',
+            Text=f'Il file è stato esportato correttamente in:\n\n{out_file}'
+        )
     except Exception as e:
         Dialogs.Exclamation(
             Title='Errore!',

@@ -60,6 +60,21 @@ def Inserisci_Utili():
     oDoc.CurrentController.select(oSheetAP.getCellByPosition(4, target_row))
 
 
+def calcola_codice_successivo(codice_corrente):
+    import re
+    if not codice_corrente:
+        return None
+    codice_corrente = codice_corrente.strip()
+    match = re.match(r"^(.*?)(\d+)$", codice_corrente)
+    if match:
+        prefix, num_str = match.groups()
+        num_len = len(num_str)
+        next_num = int(num_str) + 1
+        return f"{prefix}{next_num:0{num_len}d}"
+    else:
+        return codice_corrente + "1"
+
+
 def inizializza_analisi(oDoc=None, nuovaScheda=False):
     '''
     Prepara il foglio 'Analisi di Prezzo' copiandolo dal template master.
@@ -70,6 +85,34 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
     PL.chiudi_dialoghi()
     if oDoc is None:
         oDoc = LeenoUtils.getDocument()
+
+    # Trova il codice corrente se siamo su Analisi di Prezzo prima di ogni modifica
+    codice_corrente = None
+    try:
+        active_sheet = oDoc.CurrentController.ActiveSheet
+        if active_sheet and active_sheet.Name == 'Analisi di Prezzo':
+            lrow_curr = PL.LeggiPosizioneCorrente()[1]
+            try:
+                sStRange = circoscriveAnalisi(active_sheet, lrow_curr)
+                if sStRange:
+                    codice_corrente = active_sheet.getCellByPosition(0, sStRange.RangeAddress.StartRow + 2).String
+            except Exception:
+                pass
+            
+            # Fallback: scansiona all'indietro per l'ultima scheda se non trovato o vuoto
+            if not codice_corrente or codice_corrente.strip() == "":
+                urow = SheetUtils.getLastUsedRow(active_sheet)
+                for row_idx in reversed(range(2, urow + 1)):
+                    try:
+                        if active_sheet.getCellByPosition(0, row_idx).CellStyle == 'An.1v-Att Start':
+                            temp_code = active_sheet.getCellByPosition(0, row_idx + 1).String
+                            if temp_code and temp_code.strip() != "":
+                                codice_corrente = temp_code
+                                break
+                    except Exception:
+                        continue
+    except Exception:
+        pass
 
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         # Costruisce il percorso del template
@@ -123,25 +166,22 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oSheet.IsVisible = True
 
+        # Cerchiamo la riga di chiusura dell'ultima analisi presente
+        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
         urow = SheetUtils.getLastUsedRow(oSheet)
-
+        
         # Inizializziamo n alla fine dell'area usata come fallback
-        # (cursore non posizionato su una voce riconoscibile, foglio vuoto, ecc.)
         n = urow if urow >= 2 else 1
-
-        # La nuova voce va inserita subito dopo la voce CORRENTE (dove si trova
-        # il cursore), non necessariamente dopo l'ultima voce del foglio: usiamo
-        # circoscriveAnalisi() per trovare i confini della voce sotto il cursore.
-        cursor_row = PL.LeggiPosizioneCorrente()[1]
-        if cursor_row is not None and oSheet.Name == oDoc.CurrentController.ActiveSheet.Name:
+        
+        # Scansioniamo solo indici validi (>= 2 per saltare gli header)
+        for n_scan in range(max(2, lrow), urow + 1):
             try:
-                oCurrentVoce = circoscriveAnalisi(oSheet, cursor_row)
-                end_row = oCurrentVoce.RangeAddress.EndRow
-                if end_row > 0:
-                    n = end_row
+                if oSheet.getCellByPosition(0, n_scan).CellStyle == 'An-sfondo-basso Att End':
+                    n = n_scan
+                    break
             except Exception:
-                pass
-
+                continue
+        
         oRangeAddress = oDoc.NamedRanges.getByName('blocco_analisi').ReferredCells.RangeAddress
         # la riga dalla quale l'eventuale nuova scheda deve partire è n + 2
         startRow = n + 2
@@ -166,9 +206,13 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
         
         # Riga finale per la scrittura dati
         startRow = startRow + 1
+        if codice_corrente:
+            next_code = calcola_codice_successivo(codice_corrente)
+            if next_code:
+                oSheet.getCellByPosition(0, startRow).String = next_code
         
         # Spostiamo il cursore sulla cella descrizione (colonna E = 4)
-        oCell = oSheet.getCellByPosition(4, startRow)
+        oCell = oSheet.getCellByPosition(0, startRow)
         oDoc.CurrentController.setActiveSheet(oSheet)
         oDoc.CurrentController.select(oCell)
 
@@ -211,122 +255,47 @@ def circoscriveAnalisi(oSheet, lrow):
     # Restituisci l'intervallo trovato (250 colonne è un valore arbitrario)
     return oSheet.getCellRangeByPosition(0, start_row, 250, end_row)
 
-def copiaRigaAnalisi(oSheet_or_row, lrow_or_num_righe=1):
+def copiaRigaAnalisi(oSheet, lrow):
     '''
-    Inserisce una o più righe di misurazione in analisi di prezzo
-    Supporta sia la chiamata da LeenoImport (oSheet, lrow) che da pyleeno (row, num_righe)
+    Inserisce una nuova riga di misurazione in analisi di prezzo
     '''
-    import pyleeno as PL
-    
-    if isinstance(oSheet_or_row, int):
-        # Chiamata da pyleeno.py: (row, num_righe)
-        row = oSheet_or_row
-        num_righe = lrow_or_num_righe
-        
-        import LeenoUtils
-        with LeenoUtils.DocumentRefreshContext(False):
-            oDoc = LeenoUtils.getDocument()
-            oSheet = oDoc.CurrentController.ActiveSheet
-            lrow = row
-            
-            stile = oSheet.getCellByPosition(0, lrow).CellStyle
-            if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
-                lrow = lrow + 1
-                oSheet.getRows().insertByIndex(lrow, num_righe)
-                for i in range(num_righe):
-                    current_row = lrow + i
-                    # imposto gli stili
-                    oSheet.getCellByPosition(0, current_row).CellStyle = 'An-lavoraz-Cod-sx'
-                    oSheet.getCellRangeByPosition(1, current_row, 5, current_row).CellStyle = 'An-lavoraz-generica'
-                    oSheet.getCellByPosition(3, current_row).CellStyle = 'An-lavoraz-input'
-                    oSheet.getCellByPosition(6, current_row).CellStyle = 'An-senza'
-                    oSheet.getCellByPosition(7, current_row).CellStyle = 'An-senza-DX'
-                    # ci metto le formule
-                    oSheet.getCellByPosition(1, current_row).Formula = (
-                       '=IF(A' + str(current_row + 1) +
-                       '="";"";CONCATENATE("  ";VLOOKUP(A' +
-                       str(current_row + 1) + ';elenco_prezzi;2;FALSE());' '))')
-                    oSheet.getCellByPosition(2, current_row).Formula = (
-                       '=IF(A' + str(current_row + 1) + '="";"";" "&VLOOKUP(A' +
-                       str(current_row + 1) + ';elenco_prezzi;3;FALSE()))&" "')
-                    oSheet.getCellByPosition(3, current_row).Value = 0
-                    oSheet.getCellByPosition(4, current_row).Formula = (
-                       '=IF(A' + str(current_row + 1) + '="";0;VLOOKUP(A' +
-                       str(current_row + 1) + ';elenco_prezzi;5;FALSE()))')
-                    oSheet.getCellByPosition(5, current_row).Formula = (
-                       '=D' + str(current_row + 1) + '*E' + str(current_row + 1))
-                    oSheet.getCellByPosition(8, current_row).Formula = (
-                       '=IF(A' + str(current_row + 1) + '="";"";IF(VLOOKUP(A' +
-                       str(current_row + 1) + ';elenco_prezzi;6;FALSE())="";"";(VLOOKUP(A' +
-                       str(current_row + 1) + ';elenco_prezzi;6;FALSE()))))')
-                    oSheet.getCellByPosition(9, current_row).Formula = (
-                       '=IF(I' + str(current_row + 1) + '="";"";I' +
-                       str(current_row + 1) + '*F' + str(current_row + 1) + ')')
-                    oSheet.getCellByPosition(0, current_row).String = 'Cod. Art.?'
-
-                if oSheet.getCellByPosition(1, lrow - 1).CellStyle == 'An-lavoraz-dx-senza-bordi':
-                    for i in range(num_righe):
-                        current_row = lrow + i
-                        oRangeAddress = oSheet.getCellByPosition(0, current_row + 1).getRangeAddress()
-                        oCellAddress = oSheet.getCellByPosition(0, current_row).getCellAddress()
-                        oSheet.copyRange(oCellAddress, oRangeAddress)
-
-                # Applica validazione alle celle della colonna D appena create tramite LeenoValidation.valida_cella()
-                import LeenoValidation
-                for i in range(num_righe):
-                    current_row = lrow + i
-                    LeenoValidation.valida_cella(oSheet.getCellByPosition(3, current_row))
-
-            PL._gotoCella(0, row + 1)
-            if PL.LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
-                PL.pesca_cod()
-        return lrow + num_righe
-
-    else:
-        # Chiamata da LeenoImport_XPWE.py: (oSheet, lrow)
-        oSheet = oSheet_or_row
-        lrow = lrow_or_num_righe
-        
-        stile = oSheet.getCellByPosition(0, lrow).CellStyle
-        if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
-            lrow = lrow + 1
-            oSheet.getRows().insertByIndex(lrow, 1)
-            # imposto gli stili
-            oSheet.getCellByPosition(0, lrow).CellStyle = 'An-lavoraz-Cod-sx'
-            oSheet.getCellRangeByPosition(1, lrow, 5, lrow).CellStyle = 'An-lavoraz-generica'
-            oSheet.getCellByPosition(3, lrow).CellStyle = 'An-lavoraz-input'
-            oSheet.getCellByPosition(6, lrow).CellStyle = 'An-senza'
-            oSheet.getCellByPosition(7, lrow).CellStyle = 'An-senza-DX'
-            # ci metto le formule
-            oSheet.getCellByPosition(1, lrow).Formula = (
-               '=IF(A' + str(lrow + 1) +
-               '="";"";CONCATENATE("  ";VLOOKUP(A' +
-               str(lrow + 1) + ';elenco_prezzi;2;FALSE());' '))')
-            oSheet.getCellByPosition(2, lrow).Formula = (
-               '=IF(A' + str(lrow + 1) + '="";"";VLOOKUP(A' +
-               str(lrow + 1) + ';elenco_prezzi;3;FALSE()))')
-            oSheet.getCellByPosition(3, lrow).Value = 0
-            oSheet.getCellByPosition(4, lrow).Formula = (
-               '=IF(A' + str(lrow + 1) + '="";0;VLOOKUP(A' +
-               str(lrow + 1) + ';elenco_prezzi;5;FALSE()))')
-            oSheet.getCellByPosition(5, lrow).Formula = (
-               '=D' + str(lrow + 1) + '*E' + str(lrow + 1))
-            oSheet.getCellByPosition(8, lrow).Formula = (
-               '=IF(A' + str(lrow + 1) + '="";"";IF(VLOOKUP(A' +
-               str(lrow + 1) + ';elenco_prezzi;6;FALSE())="";"";(VLOOKUP(A' +
-               str(lrow + 1) + ';elenco_prezzi;6;FALSE()))))')
-            oSheet.getCellByPosition(9, lrow).Formula = (
-               '=IF(I' + str(lrow + 1) + '="";"";I' +
-               str(lrow + 1) + '*F' + str(lrow + 1) + ')')
-            if oSheet.getCellByPosition(1, lrow - 1).CellStyle == 'An-lavoraz-dx-senza-bordi':
-                oRangeAddress = oSheet.getCellByPosition(0, lrow + 1).getRangeAddress()
-                oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
-                oSheet.copyRange(oCellAddress, oRangeAddress)
-            oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
-
-            # Applica validazione alla cella della colonna D appena creata tramite LeenoValidation.valida_cella()
-            import LeenoValidation
-            LeenoValidation.valida_cella(oSheet.getCellByPosition(3, lrow))
+    stile = oSheet.getCellByPosition(0, lrow).CellStyle
+    if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
+        lrow = lrow + 1
+        oSheet.getRows().insertByIndex(lrow, 1)
+        # imposto gli stili
+        oSheet.getCellByPosition(0, lrow).CellStyle = 'An-lavoraz-Cod-sx'
+        oSheet.getCellRangeByPosition(1, lrow, 5, lrow).CellStyle = 'An-lavoraz-generica'
+        oSheet.getCellByPosition(3, lrow).CellStyle = 'An-lavoraz-input'
+        oSheet.getCellByPosition(6, lrow).CellStyle = 'An-senza'
+        oSheet.getCellByPosition(7, lrow).CellStyle = 'An-senza-DX'
+        # ci metto le formule
+        #  oDoc.enableAutomaticCalculation(False)
+        oSheet.getCellByPosition(1, lrow).Formula = (
+           '=IF(A' + str(lrow + 1) +
+           '="";"";CONCATENATE("  ";VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;2;FALSE());' '))')
+        oSheet.getCellByPosition(2, lrow).Formula = (
+           '=IF(A' + str(lrow + 1) + '="";"";VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;3;FALSE()))')
+        oSheet.getCellByPosition(3, lrow).Value = 0
+        oSheet.getCellByPosition(4,lrow).Formula = (
+           '=IF(A' + str(lrow + 1) + '="";0;VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;5;FALSE()))')
+        oSheet.getCellByPosition(5, lrow).Formula = (
+           '=D' + str(lrow + 1) + '*E' + str(lrow + 1))
+        oSheet.getCellByPosition(8, lrow).Formula = (
+           '=IF(A' + str(lrow + 1) + '="";"";IF(VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;6;FALSE())="";"";(VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;6;FALSE()))))')
+        oSheet.getCellByPosition(9, lrow).Formula = (
+           '=IF(I' + str(lrow + 1) + '="";"";I' +
+           str(lrow + 1) + '*F' + str(lrow + 1) + ')')
+        if oSheet.getCellByPosition(1, lrow - 1).CellStyle == 'An-lavoraz-dx-senza-bordi':
+            oRangeAddress = oSheet.getCellByPosition(0, lrow + 1).getRangeAddress()
+            oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
+            oSheet.copyRange(oCellAddress, oRangeAddress)
+        oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
 
 
 def MENU_impagina_analisi():

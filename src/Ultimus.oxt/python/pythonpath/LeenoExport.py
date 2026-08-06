@@ -948,6 +948,45 @@ def clean_markdown(val):
 
 
 
+def split_markdown_table(header, delimiter, rows, limit_3mb=3*1024*1024, limit_2mb=2*1024*1024):
+    """
+    Suddivide una tabella markdown in più parti se la dimensione totale supera limit_3mb.
+    Ogni parte ha dimensione massima di limit_2mb, e inizia con l'intestazione e il delimitatore.
+    Ritorna una lista di oggetti bytes, ciascuno dei quali è una tabella markdown valida.
+    """
+    prefix = f"{header}\n{delimiter}\n"
+    prefix_len = len(prefix.encode('utf-8'))
+
+    total_body = "\n".join(rows) + "\n" if rows else ""
+    total_size = len((prefix + total_body).encode('utf-8'))
+
+    if total_size <= limit_3mb:
+        return [(prefix + total_body).encode('utf-8')]
+
+    parts = []
+    current_rows = []
+    current_size = prefix_len
+
+    for row in rows:
+        row_str = f"{row}\n"
+        row_len = len(row_str.encode('utf-8'))
+
+        if current_size + row_len > limit_2mb and current_rows:
+            body_str = "".join(current_rows)
+            parts.append((prefix + body_str).encode('utf-8'))
+            current_rows = []
+            current_size = prefix_len
+
+        current_rows.append(row_str)
+        current_size += row_len
+
+    if current_rows:
+        body_str = "".join(current_rows)
+        parts.append((prefix + body_str).encode('utf-8'))
+
+    return parts
+
+
 def MENU_esporta_markdown():
     """
     Esporta l'area selezionata di una tabella in formato Markdown.
@@ -1055,8 +1094,6 @@ def MENU_esporta_markdown():
     for row in rows:
         body_strs.append("| " + " | ".join(row) + " |")
 
-    markdown_content = "\n".join([header_str, delimiter_str] + body_strs) + "\n"
-
     # Ottieni il nome del file corrente come suggerimento predefinito
     doc_url = oDoc.getURL()
     default_filename = ""
@@ -1081,12 +1118,26 @@ def MENU_esporta_markdown():
         out_file += '.md'
 
     try:
-        with open(out_file, 'w', encoding='utf-8', newline='') as f:
-            f.write(markdown_content)
-        Dialogs.Info(
-            Title='Esportazione completata',
-            Text=f'Il file è stato esportato correttamente in:\n\n{out_file}'
-        )
+        parts = split_markdown_table(header_str, delimiter_str, body_strs)
+        if len(parts) == 1:
+            with open(out_file, 'wb') as f:
+                f.write(parts[0])
+            Dialogs.Info(
+                Title='Esportazione completata',
+                Text=f'Il file è stato esportato correttamente in:\n\n{out_file}'
+            )
+        else:
+            base, ext = os.path.splitext(out_file)
+            success_files = []
+            for i, part in enumerate(parts):
+                part_file = f"{base}-part{i+1}{ext}"
+                with open(part_file, 'wb') as f:
+                    f.write(part)
+                success_files.append(part_file)
+            Dialogs.Info(
+                Title='Esportazione completata',
+                Text=f'Il file superava i 3MB ed è stato suddiviso in {len(parts)} parti:\n\n' + "\n".join(success_files)
+            )
     except Exception as e:
         Dialogs.Exclamation(
             Title='Errore!',

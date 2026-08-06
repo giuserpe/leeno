@@ -5368,13 +5368,14 @@ def pesca_cod():
         GotoSheet('Elenco Prezzi')
         try:
             if test == '':
-                oSheet = oDoc.CurrentController.ActiveSheet
+                oSheet = oDoc.getSheets().getByName("Elenco Prezzi")
                 y = SheetUtils.uFindStringCol(
-                    'ELENCO DEI COSTI ELEMENTARI', 1, oSheet) + 1
-                _gotoCella(0, y)
-            return
-        except:
+                    'ELENCO DEI COSTI ELEMENTARI', 1, oSheet)
+                if y is not None:
+                    _gotoCella(0, y + 1)
+        except Exception:
             pass
+        return
 
 ###
 

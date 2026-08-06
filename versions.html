@@ -452,6 +452,31 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-06 06:28</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/885de61760eecd6de1b4a4e044f26e98ceb3c991" target="_blank" rel="noopener"><code>885de61</code></a></td>
+                <td class="commit-msg">feat(analysis): genera codice successivo per nuova scheda Analisi di Prezzo
+- introduce calcola_codice_successivo()
+- rileva codice corrente tramite circoscriveAnalisi o fallback su ultima scheda
+- assegna automaticamente il codice incrementato alla nuova scheda
+- migliora individuazione della riga di chiusura tramite stile 'An-sfondo-basso Att End'
+- posiziona il cursore sulla cella codice (colonna 0)
+
+fix(analysis): semplifica copiaRigaAnalisi rimuovendo ramo duplicato e codice morto
+- elimina vecchia versione multi‑API (pyleeno/LeenoImport)
+- mantiene implementazione unica e coerente con gli stili attivi
+- preserva formule, stili e validazioni
+
+fix(dialogs): rimuove setCurrentFilter da FileSelect
+- evita selezione forzata del filtro che causava errori con estensioni non mappate
+
+chore(meta): bump versione a 3.26.0.123‑TESTING‑20260805
+- aggiorna description.xml
+- aggiorna leeno_version_code
+
+fix(core): abilita copia multipla righe Analisi di Prezzo in Copia_riga_Ent
+- sostituisce handler con _copia_analisi_multi</td>
+            </tr>
+            <tr>
                 <td>2026-08-05 21:50</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/4750a618bb46e2d3565f9642421f8882ef35403a" target="_blank" rel="noopener"><code>4750a61</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.123‑TESTING‑20260805
@@ -470,14 +495,6 @@
 - chiarisce rischi di riscrittura storia e necessità di coordinamento su branch condivisi
 - descrive comportamento GitHub su merge PR rimossi dalla storia
 - introduce controllo di parità tra icons/svg/ e icons/scuro prima di ogni commit</td>
-            </tr>
-            <tr>
-                <td>2026-08-05 18:18</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/8c97c6505ef7616adca9dc48f4173e108cdd4551" target="_blank" rel="noopener"><code>8c97c65</code></a></td>
-                <td class="commit-msg">chore(meta): bump versione a 3.26.0.122‑TESTING‑20260805
-
-- aggiorna description.xml
-- aggiorna leeno_version_code</td>
             </tr>
                     </tbody>
                 </table>
@@ -501,8 +518,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-06 06:15 UTC</p>
-                <p>Build Commit: <code>adb9add</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-06 06:29 UTC</p>
+                <p>Build Commit: <code>885de61</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

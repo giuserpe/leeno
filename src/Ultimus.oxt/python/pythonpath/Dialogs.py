@@ -2521,6 +2521,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None, de
     app = estensioni.get(est)
     try:
         oFilePicker.appendFilter(app, est)
+        oFilePicker.setCurrentFilter(app)
     except Exception as e:
         NotifyDialog(Title = 'ERRORE!', Text=f"Estensione '{est}' non presente in 'Dialogs.FileSelect': {str(e)}")
         return

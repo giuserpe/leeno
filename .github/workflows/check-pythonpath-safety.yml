@@ -1,0 +1,24 @@
+name: Verifica sicurezza pythonpath
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  check_pythonpath_safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Verifica assenza file di test e mock sys.modules in pythonpath/
+        run: python3 scripts/check_pythonpath_safety.py

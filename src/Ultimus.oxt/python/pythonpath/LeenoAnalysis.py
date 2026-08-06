@@ -276,8 +276,8 @@ def copiaRigaAnalisi(oSheet, lrow):
            '="";"";CONCATENATE("  ";VLOOKUP(A' +
            str(lrow + 1) + ';elenco_prezzi;2;FALSE());' '))')
         oSheet.getCellByPosition(2, lrow).Formula = (
-           '=IF(A' + str(lrow + 1) + '="";"";VLOOKUP(A' +
-           str(lrow + 1) + ';elenco_prezzi;3;FALSE()))')
+           '=IF(A' + str(lrow + 1) + '="";"";"  "&VLOOKUP(A' +
+           str(lrow + 1) + ';elenco_prezzi;3;FALSE())&" ")')
         oSheet.getCellByPosition(3, lrow).Value = 0
         oSheet.getCellByPosition(4,lrow).Formula = (
            '=IF(A' + str(lrow + 1) + '="";0;VLOOKUP(A' +

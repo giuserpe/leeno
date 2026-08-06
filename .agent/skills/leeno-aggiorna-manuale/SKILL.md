@@ -87,19 +87,30 @@ Essendo il file `MANUALE_LeenO.fodt` un file XML di grandi dimensioni (oltre 3 M
        print("Testo target non trovato")
    ```
 5. Scrivi il testo in **italiano chiaro e formale**, orientato all'utente finale (senza terminologia informatica, a meno che non si parli di tasti o menu).
+6. Evita gli usi ridondanti di "automatico"/"automaticamente" quando descrivono semplicemente un comportamento del software (es. "viene generato automaticamente" → "viene generato"): danno un'idea di rassicurazione superflua, dato che in un manuale è comunque implicito che sia il programma a farlo. Mantienili solo quando la parola è parte del significato della frase stessa (non un semplice descrittore di un'azione del software) o quando fa parte di un nome di comando/funzione già in uso nel manuale (es. "Pesca codice automatico").
 
 ### Fase 4: Aggiornamento del Tracking
 Una volta che la modifica al manuale è andata a buon fine, devi aggiornare il registro in modo che nessuno ripeta questo lavoro in futuro.
 1. Edita `documentazione/TRACKING_MANUALE.md` accodando una nuova riga alla tabella in fondo al file.
 2. La riga dovrà contenere: `| YYYY-MM-DD | Hash del commit o Nome del file modificato | Breve descrizione della modifica nel codice | Sezione del manuale in cui hai scritto |`
 
-### Fase 5: Rigenera la Mappa delle Sezioni
+### Fase 5: Aggiornamento dello "Stato di revisione"
+Ad **ogni** aggiornamento del manuale (anche se limitato a una sola sezione o a piccole correzioni), aggiorna anche la tabella "Stato di revisione" all'inizio del manuale (bookmark `__RefHeading___Toc12591_579480652`, colonne Numero / Data / Descrizione / Nome).
+1. Individua l'ultima riga della tabella (l'ultima `<table:table-row>` prima della chiusura `</table:table>`).
+2. Aggiungi una nuova riga con lo stesso stile delle celle della riga precedente (`Table5.A2` / `Table5.D2`), contenente:
+   - **Numero**: progressivo coerente con lo schema esistente (es. `3.26.xx-rev2.5`).
+   - **Data**: mese e anno correnti (es. `Agosto 2026`).
+   - **Descrizione**: riepilogo sintetico di tutte le modifiche apportate al manuale in questo aggiornamento (anche se coprono più sezioni o più fasi di lavoro svolte nella stessa sessione).
+   - **Nome**: lascia vuoto se non diversamente indicato dall'utente (segue la convenzione delle righe più recenti della tabella).
+3. Se nella stessa sessione vengono fatti più aggiornamenti al manuale, valuta se accorparli in un'unica riga di revisione invece di aggiungerne una per ogni singola modifica.
+
+### Fase 6: Rigenera la Mappa delle Sezioni
 Dopo aver modificato il manuale, rigenera sempre la mappa per mantenerla aggiornata:
 ```
 python .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py
 ```
 
-### Fase 6: Generazione del PDF
+### Fase 7: Generazione del PDF
 Dopo aver modificato il manuale e rigenerato la mappa, genera sempre il file PDF aggiornato che verrà distribuito all'interno dell'estensione OXT:
 ```
 python .agent/skills/leeno-aggiorna-manuale/scripts/genera_pdf.py
@@ -109,5 +120,5 @@ Questo script converte `documentazione/MANUALE_LeenO.fodt` in `src/Ultimus.oxt/M
 > [!IMPORTANT]
 > Il PDF deve essere rigenerato **ad ogni modifica** del manuale, altrimenti gli utenti riceveranno una versione non aggiornata nell'estensione.
 
-### Fase 7: Conclusione
-Comunica all'utente l'avvenuto aggiornamento del manuale, mostrando la porzione di testo inserita, e conferma l'avvenuta registrazione in `TRACKING_MANUALE.md` e la generazione del PDF.
+### Fase 8: Conclusione
+Comunica all'utente l'avvenuto aggiornamento del manuale, mostrando la porzione di testo inserita, e conferma l'avvenuta registrazione in `TRACKING_MANUALE.md`, l'aggiornamento dello "Stato di revisione" e la generazione del PDF.

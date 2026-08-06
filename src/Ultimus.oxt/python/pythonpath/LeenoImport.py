@@ -793,13 +793,6 @@ NOTA: Questo processo di importazione richiede la selezione di un file
         'articoli' : artList
     }
 
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if(len(oDoc.getURL()) == 0 and
-       SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
-       SheetUtils.getUsedArea(oSheet).EndRow == 0):
-        oDoc.close(True)
-
     # creo nuovo file di computo
     oDoc = PL.creaComputo(0)
     PL.GotoSheet("Elenco Prezzi")

@@ -168,6 +168,17 @@ def creaComputo(arg=1):
         LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
         (opz, ))
 
+    # Porta il focus sul nuovo documento e lo attiva
+    try:
+        if hasattr(document, "CurrentController") and document.CurrentController is not None:
+            frame = document.CurrentController.Frame
+            if frame is not None:
+                if hasattr(frame, "ContainerWindow") and frame.ContainerWindow is not None:
+                    frame.ContainerWindow.toFront()
+                frame.activate()
+    except Exception:
+        pass
+
     autoexec()
     if arg == 1:
         IconType = "error"
@@ -8039,16 +8050,22 @@ class LeenoKeyHandler(unohelper.Base, XKeyHandler):
 
 # Istanza globale del gestore
 KEY_HANDLER = None
+REGISTERED_CONTROLLERS = []
 
-def register_key_handler():
-    global KEY_HANDLER
-    if KEY_HANDLER is None:
-        try:
+def register_key_handler(oDoc=None):
+    global KEY_HANDLER, REGISTERED_CONTROLLERS
+    try:
+        if oDoc is None:
             oDoc = LeenoUtils.getDocument()
-            KEY_HANDLER = LeenoKeyHandler()
-            oDoc.CurrentController.addKeyHandler(KEY_HANDLER)
-        except:
-            pass
+        if oDoc is not None and oDoc.CurrentController is not None:
+            controller = oDoc.CurrentController
+            if controller not in REGISTERED_CONTROLLERS:
+                if KEY_HANDLER is None:
+                    KEY_HANDLER = LeenoKeyHandler()
+                controller.addKeyHandler(KEY_HANDLER)
+                REGISTERED_CONTROLLERS.append(controller)
+    except:
+        pass
 
 def GetModifiers():
     '''
@@ -8798,23 +8815,25 @@ def clean_basic_macro_s2():
 
 
 ########################################################################
-def autoexec():
-    autoexec_run()
+def autoexec(oDoc=None):
+    autoexec_run(oDoc)
     # oDoc = LeenoUtils.getDocument()
     # if oDoc.isProtected():
     #     DLG.chi("Il documento è protetto da password")
     #     return True
 
 @LeenoUtils.no_refresh
-def autoexec_run():
+def autoexec_run(oDoc=None):
     '''
     questa è richiamata da creaComputo()
     '''
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     #  LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
-    LeenoEvents.pulisci()
-    inizializza()
-    register_key_handler()
-    LeenoEvents.assegna()
+    LeenoEvents.pulisci(oDoc)
+    inizializza(oDoc)
+    register_key_handler(oDoc)
+    LeenoEvents.assegna(oDoc)
 
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
@@ -9093,12 +9112,13 @@ def _vSintetica_core(oDoc, oSheet, flag):
 
 ########################################################################
 
-def inizializza():
+def inizializza(oDoc=None):
     '''
     Configura dati, versioni e menu a tendina all'avvio del documento.
     Lanciata solitamente da autoexec().
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
 
     # 1. Aggiornamento Copyright (Foglio nascosto e S1)
     current_year = str(datetime.now().year)
@@ -9669,23 +9689,12 @@ def DlgMain():
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
-        is_empty = False
-        if(len(oDoc.getURL()) == 0 and
-        SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
-        SheetUtils.getUsedArea(oSheet).EndRow == 0):
-            is_empty = True
-        
+
         new_doc = creaComputo(0)
-        
-        if is_empty:
-            try:
-                oDoc.close(True)
-            except Exception:
-                pass
-                
+
         oDoc = new_doc
         oSheet = oDoc.CurrentController.ActiveSheet
-        
+
 #         IconType = "error"
 #         Title = 'ATTENZIONE!'
 #         Text='''
@@ -9695,7 +9704,7 @@ def DlgMain():
 # potresti avere dei malfunzionamenti.
 # '''
 #         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
-        
+
     Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDlgMain

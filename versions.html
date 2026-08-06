@@ -452,6 +452,14 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-06 08:22</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/93d769ecdf83af3c35bae1eb85b131f5039f0917" target="_blank" rel="noopener"><code>93d769e</code></a></td>
+                <td class="commit-msg">fix(core): rimuove test Jules con side-effect a livello di modulo in pythonpath
+
+Sovrascrivevano sys.modules per pyleeno/Dialogs/LeenoUtils/uno al semplice
+import, disattivando silenziosamente l'estensione per l'intera sessione.</td>
+            </tr>
+            <tr>
                 <td>2026-08-06 08:17</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/de37c0b6e6b01fc7fd0d76434e09d715465fa294" target="_blank" rel="noopener"><code>de37c0b</code></a></td>
                 <td class="commit-msg">Merge pull request #61 from giuserpe/jules-12895299155745112282-2f205121
@@ -469,22 +477,6 @@ Risolve in modo definitivo la perdita di focus e il conseguente blocco/deadlock 
 2. Assicura che creaComputo() metta in primo piano e attivi il frame del nuovo computo prima dell'inizializzazione, consentendo un corretto recupero del document context.
 3. Abilita il passaggio esplicito del parametro oDoc alle routine di inizializzazione, pulizia ed assegnamento eventi, garantendo che vengano configurate esclusivamente sul nuovo computo.
 4. Potenzia register_key_handler() con un registro dei controller attivi per abilitare in modo affidabile e sicuro l'intercettazione dei tasti scorciatoia anche su computi multipli.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-08-06 07:52</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3b9429cdfc1d5669811b6b2db8a6ce8ed42490b2" target="_blank" rel="noopener"><code>3b9429c</code></a></td>
-                <td class="commit-msg">fix(core): riattiva l'inizializzazione del nuovo computo portando il focus sul foglio e registrando i tasti
-
-Risolve in modo definitivo il problema per cui premendo CTRL-0 all'apertura di LibreOffice, il nuovo computo veniva visualizzato ma "non funzionava niente" (i pulsanti di DlgMain non rispondevano ed era impossibile utilizzare i comandi di LeenO).
-
-La causa risiedeva nel fatto che `loadComponentFromURL` caricava il nuovo documento in modo asincrono o in background rispetto alla finestra corrente. Di conseguenza, le successive chiamate ad `autoexec()` venivano eseguite sull'iniziale documento vuoto ("Senza nome 1") anziché sul computo effettivo.
-
-Questo intervento:
-1. Attiva e porta in primo piano tramite `toFront()` e `activate()` la finestra del nuovo computo non appena viene caricato, garantendo il corretto recupero del document context da parte di `LeenoUtils.getDocument()`.
-2. Estende `register_key_handler()` per supportare più documenti (anche concorrenti) registrando il key handler su ciascun nuovo controller attivo in modo univoco ed evitando registrazioni doppie.
-3. Rimuove la chiamata sincrona a `.close(True)` sul foglio iniziale vuoto per azzerare qualsiasi rischio di deadlock o distruzione imprevista del bridge UNO.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
@@ -510,8 +502,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-06 08:17 UTC</p>
-                <p>Build Commit: <code>de37c0b</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-06 08:22 UTC</p>
+                <p>Build Commit: <code>93d769e</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

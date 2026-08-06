@@ -168,6 +168,17 @@ def creaComputo(arg=1):
         LeenO_path() + '/template/leeno/Computo_LeenO.ods', "_blank", 0,
         (opz, ))
 
+    # Porta il focus sul nuovo documento e lo attiva
+    try:
+        if hasattr(document, "CurrentController") and document.CurrentController is not None:
+            frame = document.CurrentController.Frame
+            if frame is not None:
+                if hasattr(frame, "ContainerWindow") and frame.ContainerWindow is not None:
+                    frame.ContainerWindow.toFront()
+                frame.activate()
+    except Exception:
+        pass
+
     autoexec()
     if arg == 1:
         IconType = "error"
@@ -8039,16 +8050,21 @@ class LeenoKeyHandler(unohelper.Base, XKeyHandler):
 
 # Istanza globale del gestore
 KEY_HANDLER = None
+REGISTERED_CONTROLLERS = []
 
 def register_key_handler():
-    global KEY_HANDLER
-    if KEY_HANDLER is None:
-        try:
-            oDoc = LeenoUtils.getDocument()
-            KEY_HANDLER = LeenoKeyHandler()
-            oDoc.CurrentController.addKeyHandler(KEY_HANDLER)
-        except:
-            pass
+    global KEY_HANDLER, REGISTERED_CONTROLLERS
+    try:
+        oDoc = LeenoUtils.getDocument()
+        if oDoc is not None and oDoc.CurrentController is not None:
+            controller = oDoc.CurrentController
+            if controller not in REGISTERED_CONTROLLERS:
+                if KEY_HANDLER is None:
+                    KEY_HANDLER = LeenoKeyHandler()
+                controller.addKeyHandler(KEY_HANDLER)
+                REGISTERED_CONTROLLERS.append(controller)
+    except:
+        pass
 
 def GetModifiers():
     '''

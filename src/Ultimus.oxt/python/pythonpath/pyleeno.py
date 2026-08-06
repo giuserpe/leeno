@@ -9667,147 +9667,130 @@ def DlgMain():
         return
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
+    if not oDoc.getSheets().hasByName('S2'):
+        Toolbars.AllOff()
 
-    doc_to_close = None
+        new_doc = creaComputo(0)
+
+        oDoc = new_doc
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+#         IconType = "error"
+#         Title = 'ATTENZIONE!'
+#         Text='''
+# Prima di procedere è meglio dare un nome al file.
+
+# Lavorando su un file senza nome
+# potresti avere dei malfunzionamenti.
+# '''
+#         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
+
+    Toolbars.Vedi()
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    global oDlgMain
+    oDlgMain = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application"
+    )
+    LeenoGlobals.setGlobalVar('oDlgMain', oDlgMain)
+
+    oDlgMain.Title = 'Menù Principale (Ctrl+0)'
+
+    sUrl = LeenO_path() + '/icons/Immagine.png'
+    oDlgMain.getModel().ImageControl1.ImageURL = sUrl
+
+    sString = oDlgMain.getControl("CommandButton13")
     try:
-        if not oDoc.getSheets().hasByName('S2'):
-            Toolbars.AllOff()
-            is_empty = False
-            if(len(oDoc.getURL()) == 0 and
-            SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
-            SheetUtils.getUsedArea(oSheet).EndRow == 0):
-                is_empty = True
-
-            new_doc = creaComputo(0)
-
-            if is_empty:
-                doc_to_close = oDoc
-
-            oDoc = new_doc
-            oSheet = oDoc.CurrentController.ActiveSheet
-
-    #         IconType = "error"
-    #         Title = 'ATTENZIONE!'
-    #         Text='''
-    # Prima di procedere è meglio dare un nome al file.
-
-    # Lavorando su un file senza nome
-    # potresti avere dei malfunzionamenti.
-    # '''
-    #         Dialogs.NotifyDialog(IconType = IconType, Title = Title, Text = Text)
-
-        Toolbars.Vedi()
-        dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-        global oDlgMain
-        oDlgMain = dp.createDialog(
-            "vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application"
-        )
-        LeenoGlobals.setGlobalVar('oDlgMain', oDlgMain)
-
-        oDlgMain.Title = 'Menù Principale (Ctrl+0)'
-
-        sUrl = LeenO_path() + '/icons/Immagine.png'
-        oDlgMain.getModel().ImageControl1.ImageURL = sUrl
-
-        sString = oDlgMain.getControl("CommandButton13")
-        try:
-            if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
-                sString.setEnable(False)
-            else:
-                sString.setEnable(True)
-        except Exception:
-            pass
-
-        sString = oDlgMain.getControl("Label12")
-        sString.Text = version_code.read()[6:]
-
-        sString = oDlgMain.getControl("Label_DDC")
-        sString.Text = LeenoGlobals.getGlobalVar('sUltimus')
-
-        sString = oDlgMain.getControl("Label1")
-        sString.Text = version_code.read()[6:]
-
-        # sString.Text = (
-        #     str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
-        #     str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
-        #     LeenoGlobals.getGlobalVar('Lsubv'))
-
-        sString = oDlgMain.getControl("Label2")
-        try:
-            oSheet = oDoc.Sheets.getByName('S1')
-        except Exception:
-            return
-        sString.Text = oDoc.getDocumentProperties().getUserDefinedProperties(
-        ).Versione  # oSheet.getCellByPosition(7, 290).String
-        # sString = oDlgMain.getControl("Label14") # Oggetto del lavoro
-        sString = oDlgMain.getControl("TextField1")  # Oggetto del lavoro
-
-        sString.Text = oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String
-        try:
-            oSheet = oDoc.Sheets.getByName('COMPUTO')
-            sString = oDlgMain.getControl("Label8")
-            sString.Text = "€ {:,.2f}".format(
-                oSheet.getCellByPosition(18, 1).Value)
-        except Exception:
-            pass
-        try:
-            oSheet = oDoc.Sheets.getByName('VARIANTE')
-            sString = oDlgMain.getControl("Label5")
-            sString.Text = "€ {:,.2f}".format(
-                oSheet.getCellByPosition(18, 1).Value)
-        except Exception:
-            pass
-        try:
-            oSheet = oDoc.Sheets.getByName('CONTABILITA')
-            sString = oDlgMain.getControl("Label9")
-            sString.Text = "€ {:,.2f}".format(
-                oSheet.getCellByPosition(15, 1).Value)
-        except Exception:
-            pass
-        oDlgMain.getControl('CheckBox1').State = int(
-            cfg.read('Generale', 'dialogo'))
-        LeenoEvents.assegna()
-        oDlgMain.execute()
-        sString = oDlgMain.getControl("Label_DDC").Text
-        if oDlgMain.getControl('CheckBox1').State == 1:
-            cfg.write('Generale', 'dialogo', '1')
+        if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+            sString.setEnable(False)
         else:
-            cfg.write('Generale', 'dialogo', '0')
-        oDoc.Sheets.getByName('S2').getCellRangeByName(
-            'C3').String = oDlgMain.getControl("TextField1").Text
+            sString.setEnable(True)
+    except Exception:
+        pass
 
-        d = {
-            'COMPUTO': 'F1',
-            'VARIANTE': 'F1',
-            'Elenco Prezzi': 'A1',
-            'CONTABILITA': 'F1',
-            'Analisi di Prezzo': 'A1'
-        }
-        for el in d.keys():
-            try:
-                oSheet = oDoc.Sheets.getByName(el)
-                if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
-                    oSheet.getCellRangeByName(
-                        "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
-                    oSheet.getCellRangeByName(
-                        d[el]).String = 'DP: Questo documento'
-                else:
-                    oSheet.getCellRangeByName(
-                        "A1:AT1").clearContents(HARDATTR)
-                    oSheet.getCellRangeByName(
-                        d[el]).String = 'DP:' + LeenoGlobals.getGlobalVar('sUltimus')
+    sString = oDlgMain.getControl("Label12")
+    sString.Text = version_code.read()[6:]
 
-            except Exception:
-                pass
-        fissa()
-        LeenoUtils.ripristina_posizione()
-        LeenoUtils.DocumentRefresh(True)
-    finally:
-        if doc_to_close is not None:
-            try:
-                doc_to_close.close(True)
-            except Exception:
-                pass
+    sString = oDlgMain.getControl("Label_DDC")
+    sString.Text = LeenoGlobals.getGlobalVar('sUltimus')
+
+    sString = oDlgMain.getControl("Label1")
+    sString.Text = version_code.read()[6:]
+
+    # sString.Text = (
+    #     str(LeenoGlobals.getGlobalVar('Lmajor')) + '.' +
+    #     str(LeenoGlobals.getGlobalVar('Lminor')) + '.' +
+    #     LeenoGlobals.getGlobalVar('Lsubv'))
+
+    sString = oDlgMain.getControl("Label2")
+    try:
+        oSheet = oDoc.Sheets.getByName('S1')
+    except Exception:
+        return
+    sString.Text = oDoc.getDocumentProperties().getUserDefinedProperties(
+    ).Versione  # oSheet.getCellByPosition(7, 290).String
+    # sString = oDlgMain.getControl("Label14") # Oggetto del lavoro
+    sString = oDlgMain.getControl("TextField1")  # Oggetto del lavoro
+
+    sString.Text = oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String
+    try:
+        oSheet = oDoc.Sheets.getByName('COMPUTO')
+        sString = oDlgMain.getControl("Label8")
+        sString.Text = "€ {:,.2f}".format(
+            oSheet.getCellByPosition(18, 1).Value)
+    except Exception:
+        pass
+    try:
+        oSheet = oDoc.Sheets.getByName('VARIANTE')
+        sString = oDlgMain.getControl("Label5")
+        sString.Text = "€ {:,.2f}".format(
+            oSheet.getCellByPosition(18, 1).Value)
+    except Exception:
+        pass
+    try:
+        oSheet = oDoc.Sheets.getByName('CONTABILITA')
+        sString = oDlgMain.getControl("Label9")
+        sString.Text = "€ {:,.2f}".format(
+            oSheet.getCellByPosition(15, 1).Value)
+    except Exception:
+        pass
+    oDlgMain.getControl('CheckBox1').State = int(
+        cfg.read('Generale', 'dialogo'))
+    LeenoEvents.assegna()
+    oDlgMain.execute()
+    sString = oDlgMain.getControl("Label_DDC").Text
+    if oDlgMain.getControl('CheckBox1').State == 1:
+        cfg.write('Generale', 'dialogo', '1')
+    else:
+        cfg.write('Generale', 'dialogo', '0')
+    oDoc.Sheets.getByName('S2').getCellRangeByName(
+        'C3').String = oDlgMain.getControl("TextField1").Text
+
+    d = {
+        'COMPUTO': 'F1',
+        'VARIANTE': 'F1',
+        'Elenco Prezzi': 'A1',
+        'CONTABILITA': 'F1',
+        'Analisi di Prezzo': 'A1'
+    }
+    for el in d.keys():
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            if LeenoGlobals.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+                oSheet.getCellRangeByName(
+                    "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP: Questo documento'
+            else:
+                oSheet.getCellRangeByName(
+                    "A1:AT1").clearContents(HARDATTR)
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP:' + LeenoGlobals.getGlobalVar('sUltimus')
+
+        except Exception:
+            pass
+    fissa()
+    LeenoUtils.ripristina_posizione()
+    LeenoUtils.DocumentRefresh(True)
     return
 
 

@@ -736,6 +736,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
     # Colori tenui
     COLORE_ARANCIONE = 0xFFEDD0  # VDS_
     COLORE_VIOLA     = 0xEDD5FF  # tutte le altre
+    COLORE_AZZURRO   = 0xD0E5FF  # azzurro tenue per incidenza su contratto
     # COLORE_ARANCIONE = "comp sotto Euro Originale"
     # COLORE_VIOLA     = "comp sotto Euro Originale"
 
@@ -817,6 +818,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
             self.color_vds = c_vds
         def done(self, event):
             try:
+                from LeenoContab import _col_letter, trova_cella_contratto_S2
                 doc = self.controller.Model
                 sheet = doc.CurrentController.getActiveSheet()
                 target_range = sheet.getCellRangeByName(event.RangeDescriptor)
@@ -829,6 +831,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_right_right = sheet.getCellByPosition(col_idx + 2, row_idx)
                 cell_right_2 = sheet.getCellByPosition(col_idx + 3, row_idx)
                 cell_right_3 = sheet.getCellByPosition(col_idx + 4, row_idx)
+                cell_right_4 = sheet.getCellByPosition(col_idx + 5, row_idx)
 
                 cell_down = sheet.getCellByPosition(col_idx, row_idx + 1)
                 cell_down_right = sheet.getCellByPosition(col_idx + 1, row_idx + 1)
@@ -849,7 +852,9 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_right_3.String = "Totale netto"
                 cell_right_3.HoriJustify = 2
                 cell_right_3.VertJustify = 2
-
+                cell_right_4.String = "% su Contr."
+                cell_right_4.HoriJustify = 2
+                cell_right_4.VertJustify = 2
 
                 cell_down.Formula = self.formula_ordinarie
                 cell_down.NumberFormat = 5
@@ -879,7 +884,6 @@ def MENU_inserisci_somme_lavori_sicurezza():
 
                         # "Ribasso" (= AO * AM)
                         cell_result = sheet.getCellByPosition(col_idx + 3, row_idx + 1)
-                        from LeenoContab import _col_letter
                         col_ao = _col_letter(col_idx + 2)
                         col_am = _col_letter(col_idx)
                         calc_row = row_idx + 2
@@ -888,29 +892,70 @@ def MENU_inserisci_somme_lavori_sicurezza():
                         cell_result.CharWeight = 150
                         cell_result.CellBackColor = COLORE_VIOLA
                         cell_result.VertJustify = 2
+
                         # Formula a destra del risultato della Sicurezza (=AP2+AN2+AM2)
-                        cell_result = sheet.getCellByPosition(col_idx + 4, row_idx + 1)
-                        from LeenoContab import _col_letter
+                        cell_result_tot = sheet.getCellByPosition(col_idx + 4, row_idx + 1)
                         col_ap = _col_letter(col_idx + 3)
                         col_an = _col_letter(col_idx + 1)
                         col_am = _col_letter(col_idx)
-                        calc_row = row_idx + 2
-                        cell_result.Formula = f"={col_ap}{calc_row}+{col_an}{calc_row}+{col_am}{calc_row}"
-                        cell_result.NumberFormat = 5  # formato valuta
-                        cell_result.CharWeight = 150
-                        cell_result.VertJustify = 2
-                        cell_result.CellBackColor = COLORE_VERDE_SPUNTA
+                        cell_result_tot.Formula = f"={col_ap}{calc_row}+{col_an}{calc_row}+{col_am}{calc_row}"
+                        cell_result_tot.NumberFormat = 5  # formato valuta
+                        cell_result_tot.CharWeight = 150
+                        cell_result_tot.VertJustify = 2
+                        cell_result_tot.CellBackColor = COLORE_VERDE_SPUNTA
+
+                        # Rapporto in percentuale tra "Totale netto" e "Importo a contratto"
+                        cell_ratio = sheet.getCellByPosition(col_idx + 5, row_idx + 1)
+                        col_tot_netto = _col_letter(col_idx + 4)
+
+                        coords = trova_cella_contratto_S2(oS2)
+                        if coords:
+                            col_contr_let = _col_letter(coords[0])
+                            ref_contratto = f"$S2.${col_contr_let}${coords[1] + 1}"
+                            cell_ratio.Formula = f"={col_tot_netto}{calc_row}/{ref_contratto}"
+                        else:
+                            # Fallback to value lookup
+                            labels = ["importo netto di contratto", "importo di contratto", "importo contrattuale", "importo a contratto"]
+                            imp_contratto = 0.0
+                            for r in range(200):
+                                for col in (0, 1):
+                                    cell_txt = oS2.getCellByPosition(col, r).String.lower()
+                                    for label in labels:
+                                        if label in cell_txt:
+                                            v = oS2.getCellByPosition(2, r).Value
+                                            if v:
+                                                imp_contratto = v
+                                                break
+                                    if imp_contratto > 0: break
+                                if imp_contratto > 0: break
+                            if imp_contratto > 0:
+                                cell_ratio.Formula = f"={col_tot_netto}{calc_row}/{imp_contratto}"
+                            else:
+                                cell_ratio.Formula = f"={col_tot_netto}{calc_row}"
+
+                        cell_ratio.NumberFormat = LeenoFormat.getNumFormat('0,00%')
+                        cell_ratio.CharWeight = 150
+                        cell_ratio.CellBackColor = COLORE_AZZURRO
+                        cell_ratio.VertJustify = 2
 
                 except Exception as e:
                     # pyrefly: ignore [missing-import]
                     import DLG
                     DLG.chi(f"Errore nel recupero del ribasso da S2: {e}")
 
-                cell_left.CellBackColor = self.color_ordinarie
-                cell_right.CellBackColor = self.color_vds
+                cell_left.CellBackColor = COLORE_VIOLA
+                cell_right.CellBackColor = COLORE_ARANCIONE
+                cell_right_right.CellBackColor = COLORE_VIOLA
+                cell_right_2.CellBackColor = COLORE_VIOLA
+                cell_right_3.CellBackColor = COLORE_VERDE_SPUNTA
+                cell_right_4.CellBackColor = COLORE_AZZURRO
                 
                 cell_left.CharWeight = 150
                 cell_right.CharWeight = 150
+                cell_right_right.CharWeight = 150
+                cell_right_2.CharWeight = 150
+                cell_right_3.CharWeight = 150
+                cell_right_4.CharWeight = 150
 
             except Exception as e:
                 DLG.error(f"Errore nell'inserimento delle somme: {e}")

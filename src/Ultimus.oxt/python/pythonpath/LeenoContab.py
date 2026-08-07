@@ -1835,6 +1835,64 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
     oSalSheet.getCellRangeByPosition(0, 0, 5, fineFirme).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oSalSheet)
 
+def trova_r_S2(oS2, testo, start_offset=0, xS2=None):
+    """
+    Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2 nel foglio S2.
+    """
+    if xS2 is None:
+        markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+        if markerS2:
+            xS2 = markerS2[1]
+        else:
+            xS2 = 0
+    # Cerca nelle righe successive
+    for i in range(start_offset, 100):
+        riga = xS2 + i
+        try:
+            cell_text = oS2.getCellByPosition(4, riga).String.lower()
+            if testo.lower() in cell_text:
+                return riga
+        except Exception:
+            break
+    return None
+
+
+def trova_cella_contratto_S2(oS2):
+    """
+    Cerca la cella 'Importo a contratto' nel foglio S2 e ritorna una tupla (colonna, riga) o None.
+    Cerca prima in anagrafica (colonne 0 o 1, valore in colonna 2), poi nella tabella SITUAZIONE CONTABILE.
+    """
+    labels = ["importo netto di contratto", "importo di contratto", "importo contrattuale", "importo a contratto"]
+
+    # 1. Cerca in Anagrafica (col 0/1 -> valore col 2)
+    for r in range(200):
+        for col in (0, 1):
+            try:
+                cell_txt = oS2.getCellByPosition(col, r).String.lower()
+                for label in labels:
+                    if label in cell_txt:
+                        v = oS2.getCellByPosition(2, r).Value
+                        if v:
+                            return 2, r
+            except Exception:
+                pass
+
+    # 2. Cerca in Tabella SITUAZIONE CONTABILE
+    markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+    if markerS2:
+        yS2, xS2 = markerS2[0], markerS2[1]
+        for i in range(100):
+            riga = xS2 + i
+            try:
+                cell_text = oS2.getCellByPosition(4, riga).String.lower()
+                for label in labels:
+                    if label in cell_text:
+                        return yS2, riga
+            except Exception:
+                pass
+    return None
+
+
 def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None, stato_finale=False):
     '''
     Genera la pagina di riepilogo del SAL con filler dinamico.

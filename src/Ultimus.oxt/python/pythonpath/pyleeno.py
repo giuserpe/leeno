@@ -6123,13 +6123,18 @@ def MENU_numera_voci():
     Rinumera_TUTTI_Capitoli2(oSheet)
 
 @LeenoUtils.no_refresh # Disabilita il refresh del documento durante l'esecuzione della funzione
-def numera_voci():
+def numera_voci(oSheet=None):
     '''
     Rinumera tutte le voci dalla riga 4 alla fine del foglio.
     Utilizza setDataArray per la massima velocità e compatibilità con l'Undo.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet is None:
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+    # Evita di numerare e alterare fogli non computabili (es. Elenco Prezzi, Analisi di Prezzo, S1, S2)
+    if oSheet is None or oSheet.Name in ("Elenco Prezzi", "Analisi di Prezzo", "S1", "S2"):
+        return
 
     # 1. Definiamo l'area di lavoro (dalla riga 4 alla fine dell'area usata)
     # Nota: index 3 corrisponde alla riga 4 di Calc

@@ -452,6 +452,23 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-07 15:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/eb79205c394f670612392637d5a8f5fc091b8d73" target="_blank" rel="noopener"><code>eb79205</code></a></td>
+                <td class="commit-msg">fix(export): migliora robustezza XPWE_out_run e normalizza chiavi diz_ep
+
+- numera_voci() ora chiamato senza parametro oSheet_el
+- normalizza tutte le chiavi diz_ep con .strip() per evitare mismatch in IDEP
+- gestisce correttamente voci AP non trovate con messaggio esplicito DLG.chi()
+- aggiunge logging dettagliato sugli errori di esportazione singola voce AP
+- corregge inizializzazione di k (parte da n invece che n+1)
+- IDEP per voci di computo ora usa codice .strip() e segnala mancanza corrispondenza
+- migliora messaggi diagnostici per voci non importabili in Primus
+
+fix(core): silenzia errori non critici in bak()
+- rimuove DLG.chi su fallimento eliminazione file di backup
+- evita interruzioni inutili durante la pulizia dei backup</td>
+            </tr>
+            <tr>
                 <td>2026-08-07 11:53</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5f0be368d8570f5294559a16e0b0d5f4a3832543" target="_blank" rel="noopener"><code>5f0be36</code></a></td>
                 <td class="commit-msg">fix: update version number to 3.26.0.125-TESTING-20260807 in description.xml and leeno_version_code</td>
@@ -462,17 +479,6 @@
                 <td class="commit-msg">Merge pull request #65 from giuserpe/jules-15435829818230579208-8371137a
 
 Fix cancellazione codici in Elenco Prezzi durante XPWE_out()</td>
-            </tr>
-            <tr>
-                <td>2026-08-07 11:45</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/a4c5d89aa081c937544607a82a75ae5920e0d187" target="_blank" rel="noopener"><code>a4c5d89</code></a></td>
-                <td class="commit-msg">Fix cancellazione codici in Elenco Prezzi durante XPWE_out()
-
-Corretto l'errore per cui l'esecuzione di XPWE_out() svuotava la colonna A del foglio Elenco Prezzi (cancellando i codici di prezzo) se questo era il foglio attivo.
-- Modificata numera_voci(oSheet=None) in pyleeno.py per accettare un foglio specifico e ritornare immediatamente se il foglio è "Elenco Prezzi", "Analisi di Prezzo", "S1" o "S2".
-- Aggiornata la chiamata in XPWE_out_run in LeenoExport.py per passare esplicitamente il foglio target dell'esportazione (oSheet_el) a numera_voci().
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +502,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-07 11:53 UTC</p>
-                <p>Build Commit: <code>5f0be36</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-07 15:33 UTC</p>
+                <p>Build Commit: <code>eb79205</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

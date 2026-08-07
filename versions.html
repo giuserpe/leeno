@@ -452,26 +452,30 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-07 08:16</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8ce1dcbe6bb30ca64088e1b7211c192cce8f87a6" target="_blank" rel="noopener"><code>8ce1dcb</code></a></td>
+                <td class="commit-msg">Merge pull request #64 from giuserpe/jules-3954225661949186944-c21f215c
+
+Inserisce rapporto % su contratto in MENU_inserisci_somme_lavori_sicurezza</td>
+            </tr>
+            <tr>
+                <td>2026-08-07 08:11</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/0cc79c51245b1e7aebbc4988c99ad503427b80e0" target="_blank" rel="noopener"><code>0cc79c5</code></a></td>
+                <td class="commit-msg">Inserisce rapporto % su contratto in MENU_inserisci_somme_lavori_sicurezza
+
+- Aggiunte funzioni trova_r_S2 e trova_cella_contratto_S2 a livello di modulo in LeenoContab.py.
+- Aggiornato MENU_inserisci_somme_lavori_sicurezza() e VdsSumListener in LeenoComputo.py per inserire la colonna del rapporto in percentuale del Totale netto rispetto all'Importo a contratto da S2.
+- Utilizzati colori di sfondo organicamente coordinati per tutte le celle del riepilogo (viola, arancione, verde, azzurro).
+- Evitati import circolari ed errori di scope/namespace.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-06 19:37</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/a57c61dbf6deac4285975b7ff62c5b027f2c7c0f" target="_blank" rel="noopener"><code>a57c61d</code></a></td>
                 <td class="commit-msg">Merge pull request #63 from giuserpe/jules-2705549589232856203-ff47e28d
 
 fix: corregge pesca_cod() da Analisi di Prezzo</td>
-            </tr>
-            <tr>
-                <td>2026-08-06 19:30</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/aaa4f04bd59400caf7a7c9196ca3083dc199b2ce" target="_blank" rel="noopener"><code>aaa4f04</code></a></td>
-                <td class="commit-msg">fix: corregge il comportamento di pesca_cod() da Analisi di Prezzo
-
-Evita che la funzione `pesca_cod()`, avviata da un foglio 'Analisi di Prezzo' con cella codice vuota, fallisca silenziosamente a causa di un `TypeError` (derivante dal fatto che il foglio attivo non è ancora aggiornato a 'Elenco Prezzi' al momento della ricerca di 'ELENCO DEI COSTI ELEMENTARI').
-Otteniamo ora il foglio 'Elenco Prezzi' direttamente per nome, e garantiamo l'esecuzione del `return` per prevenire il fallimento con inserimento immediato del codice errato senza lo spostamento del cursore.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-08-06 15:59</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6b9db344da789237622f1f964497f1c5db39337f" target="_blank" rel="noopener"><code>6b9db34</code></a></td>
-                <td class="commit-msg">fix(version): update version to 3.26.0.124-TESTING-20260806</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +499,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-07 08:11 UTC</p>
-                <p>Build Commit: <code>0cc79c5</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-07 08:17 UTC</p>
+                <p>Build Commit: <code>8ce1dcb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

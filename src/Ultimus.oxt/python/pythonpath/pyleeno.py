@@ -117,9 +117,6 @@ from com.sun.star.beans import PropertyValue
 from com.sun.star.table.CellHoriJustify import RIGHT
 # pyrefly: ignore [missing-import]
 from com.sun.star.awt.FontSlant import ITALIC, NONE
-# pyrefly: ignore [missing-import]
-from com.sun.star.sheet.CellFlags import \
-    VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
 # pyrefly: ignore [missing-import]
 from com.sun.star.beans.PropertyAttribute import \
@@ -8848,17 +8845,17 @@ def dp():
             oSheet = oDoc.Sheets.getByName(el)
             if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                 oSheet.getCellRangeByName(
-                    "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
+                    "A1:P1").CellBackColor = 16773632  # 13434777 giallo
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP: Questo documento'
             elif sUltimus == '':
                 oSheet.getCellRangeByName(
-                    "A1:AT1").clearContents(HARDATTR)
+                    "A1:P1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP: nessun Documento Principale impostato'
             else:
                 oSheet.getCellRangeByName(
-                    "A1:AT1").clearContents(HARDATTR)
+                    "A1:P1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:' + sUltimus
 

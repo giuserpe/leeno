@@ -852,7 +852,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_right_3.String = "Totale netto"
                 cell_right_3.HoriJustify = 2
                 cell_right_3.VertJustify = 2
-                cell_right_4.String = "% su Contr."
+                cell_right_4.String = "% Avanzamento"
                 cell_right_4.HoriJustify = 2
                 cell_right_4.VertJustify = 2
 
@@ -933,7 +933,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
                             else:
                                 cell_ratio.Formula = f"={col_tot_netto}{calc_row}"
 
-                        cell_ratio.NumberFormat = LeenoFormat.getNumFormat('0,00%')
+                        cell_ratio.NumberFormat = LeenoFormat.getNumFormat('0,000%')
                         cell_ratio.CharWeight = 150
                         cell_ratio.CellBackColor = COLORE_AZZURRO
                         cell_ratio.VertJustify = 2

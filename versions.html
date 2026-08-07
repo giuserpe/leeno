@@ -452,21 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-07 11:51</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/e0f938d931abc87fc4e5d4a648563ce69e86c325" target="_blank" rel="noopener"><code>e0f938d</code></a></td>
+                <td class="commit-msg">Merge pull request #65 from giuserpe/jules-15435829818230579208-8371137a
+
+Fix cancellazione codici in Elenco Prezzi durante XPWE_out()</td>
+            </tr>
+            <tr>
+                <td>2026-08-07 11:45</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a4c5d89aa081c937544607a82a75ae5920e0d187" target="_blank" rel="noopener"><code>a4c5d89</code></a></td>
+                <td class="commit-msg">Fix cancellazione codici in Elenco Prezzi durante XPWE_out()
+
+Corretto l'errore per cui l'esecuzione di XPWE_out() svuotava la colonna A del foglio Elenco Prezzi (cancellando i codici di prezzo) se questo era il foglio attivo.
+- Modificata numera_voci(oSheet=None) in pyleeno.py per accettare un foglio specifico e ritornare immediatamente se il foglio è "Elenco Prezzi", "Analisi di Prezzo", "S1" o "S2".
+- Aggiornata la chiamata in XPWE_out_run in LeenoExport.py per passare esplicitamente il foglio target dell'esportazione (oSheet_el) a numera_voci().
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-07 08:56</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/15bdff61f3e70ced8bb446c0cd6801c3eb42fa31" target="_blank" rel="noopener"><code>15bdff6</code></a></td>
                 <td class="commit-msg">fix: update label from "% su Contr." to "% Avanzamento" and adjust number format in MENU_inserisci_somme_lavori_sicurezza</td>
-            </tr>
-            <tr>
-                <td>2026-08-07 08:28</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/78eb23787020520511afd51479b6e85d1c49b6f2" target="_blank" rel="noopener"><code>78eb237</code></a></td>
-                <td class="commit-msg">fix: update cell range from A1:AT1 to A1:P1 in dp() function</td>
-            </tr>
-            <tr>
-                <td>2026-08-07 08:16</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/8ce1dcbe6bb30ca64088e1b7211c192cce8f87a6" target="_blank" rel="noopener"><code>8ce1dcb</code></a></td>
-                <td class="commit-msg">Merge pull request #64 from giuserpe/jules-3954225661949186944-c21f215c
-
-Inserisce rapporto % su contratto in MENU_inserisci_somme_lavori_sicurezza</td>
             </tr>
                     </tbody>
                 </table>
@@ -490,8 +496,8 @@ Inserisce rapporto % su contratto in MENU_inserisci_somme_lavori_sicurezza</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-07 11:45 UTC</p>
-                <p>Build Commit: <code>a4c5d89</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-07 11:51 UTC</p>
+                <p>Build Commit: <code>e0f938d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

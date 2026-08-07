@@ -9884,7 +9884,8 @@ def bak():
             try:
                 os.remove(os.path.join(dir_bak_sys, fname))
             except Exception as e:
-                DLG.chi(f"Impossibile eliminare {fname}: {e}")
+                pass
+                # DLG.chi(f"Impossibile eliminare {fname}: {e}")
 
     return
 

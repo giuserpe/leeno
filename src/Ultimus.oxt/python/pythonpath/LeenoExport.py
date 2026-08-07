@@ -135,8 +135,7 @@ def XPWE_out_run(elaborato, out_file):
     # oDoc.enableAutomaticCalculation(False)
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
-    oSheet_el = oDoc.getSheets().getByName(elaborato)
-    numera_voci(oSheet_el)
+    numera_voci()
     top = Element('PweDocumento')
     #  intestazioni
     CopyRight = SubElement(top, 'CopyRight')
@@ -445,7 +444,7 @@ def XPWE_out_run(elaborato, out_file):
         Tariffa = SubElement(EPItem, 'Tariffa')
         id_tar = str(n)
         Tariffa.text = oSheet.getCellByPosition(0, n).String
-        diz_ep[oSheet.getCellByPosition(0, n).String] = id_tar
+        diz_ep[oSheet.getCellByPosition(0, n).String.strip()] = id_tar
         Articolo = SubElement(EPItem, 'Articolo')
         Articolo.text = ''
         DesRidotta = SubElement(EPItem, 'DesRidotta')
@@ -532,10 +531,15 @@ def XPWE_out_run(elaborato, out_file):
     try:
         lista_AP = list(set(lista_AP))
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-        k = n + 1
+        k = n
         for el in lista_AP:
+            k += 1
             try:
                 m = SheetUtils.uFindStringCol(el, 0, oSheet)
+                if m is None:
+                    DLG.chi(f'XPWE_out_run: voce con analisi "{el}" non trovata '
+                            'nel foglio "Analisi di Prezzo", esportazione saltata')
+                    continue
                 EPItem = SubElement(PweElencoPrezzi, 'EPItem')
                 EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem, 'TipoEP')
@@ -543,7 +547,7 @@ def XPWE_out_run(elaborato, out_file):
                 Tariffa = SubElement(EPItem, 'Tariffa')
                 id_tar = str(k)
                 Tariffa.text = oSheet.getCellByPosition(0, m).String
-                diz_ep[oSheet.getCellByPosition(0, m).String] = id_tar
+                diz_ep[oSheet.getCellByPosition(0, m).String.strip()] = id_tar
                 Articolo = SubElement(EPItem, 'Articolo')
                 Articolo.text = ''
                 DesRidotta = SubElement(EPItem, 'DesRidotta')
@@ -603,7 +607,7 @@ def XPWE_out_run(elaborato, out_file):
                         Tipo.text = '0'
                         IDEP = SubElement(EPARItem, 'IDEP')
                         IDEP.text = diz_ep.get(
-                            oSheet.getCellByPosition(0, x).String)
+                            oSheet.getCellByPosition(0, x).String.strip())
                         if IDEP.text is None:
                             IDEP.text = '-2'
                         Descrizione = SubElement(EPARItem, 'Descrizione')
@@ -629,7 +633,7 @@ def XPWE_out_run(elaborato, out_file):
                         Tipo.text = '1'
                         IDEP = SubElement(EPARItem, 'IDEP')
                         IDEP.text = diz_ep.get(
-                            oSheet.getCellByPosition(0, x).String)
+                            oSheet.getCellByPosition(0, x).String.strip())
                         if IDEP.text is None:
                             IDEP.text = '-2'
                         Descrizione = SubElement(EPARItem, 'Descrizione')
@@ -670,11 +674,11 @@ def XPWE_out_run(elaborato, out_file):
                 else:
                     IncMDO.text = str(
                         oSheet.getCellByPosition(8, m).Value * 100)
-                k += 1
-            except Exception:
-                pass
-    except Exception:
-        pass
+            except Exception as e:
+                DLG.chi(f'XPWE_out_run: errore esportando la voce con analisi '
+                        f'"{el}" (ID {k}): {e}')
+    except Exception as e:
+        DLG.chi(f'XPWE_out_run: errore nell\'esportazione delle voci con analisi: {e}')
     # if elaborato == 'Elenco_Prezzi':
     #     pass
     # else:
@@ -708,7 +712,13 @@ def XPWE_out_run(elaborato, out_file):
 
             IDEP = SubElement(VCItem, 'IDEP')
             IDEP.text = diz_ep.get(
-                oSheet.getCellByPosition(1, sopra + 1).String)
+                oSheet.getCellByPosition(1, sopra + 1).String.strip())
+            if IDEP.text is None:
+                DLG.chi(f'XPWE_out_run: nessuna corrispondenza in Elenco Prezzi/Analisi '
+                        f'per la voce di computo con codice '
+                        f'"{oSheet.getCellByPosition(1, sopra + 1).String}" '
+                        f'(riga {sopra + 1}): IDEP non valorizzato, la voce non sarà '
+                        f'importabile in Primus')
             ##########################
             Quantita = SubElement(VCItem, 'Quantita')
             Quantita.text = oSheet.getCellByPosition(9, sotto).String

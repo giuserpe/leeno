@@ -135,7 +135,8 @@ def XPWE_out_run(elaborato, out_file):
     # oDoc.enableAutomaticCalculation(False)
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
-    numera_voci()
+    oSheet_el = oDoc.getSheets().getByName(elaborato)
+    numera_voci(oSheet_el)
     top = Element('PweDocumento')
     #  intestazioni
     CopyRight = SubElement(top, 'CopyRight')

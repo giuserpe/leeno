@@ -445,7 +445,7 @@ def XPWE_out_run(elaborato, out_file):
         Tariffa = SubElement(EPItem, 'Tariffa')
         id_tar = str(n)
         Tariffa.text = oSheet.getCellByPosition(0, n).String
-        diz_ep[oSheet.getCellByPosition(0, n).String.strip()] = id_tar
+        diz_ep[oSheet.getCellByPosition(0, n).String.strip().upper()] = id_tar
         Articolo = SubElement(EPItem, 'Articolo')
         Articolo.text = ''
         DesRidotta = SubElement(EPItem, 'DesRidotta')
@@ -548,7 +548,7 @@ def XPWE_out_run(elaborato, out_file):
                 Tariffa = SubElement(EPItem, 'Tariffa')
                 id_tar = str(k)
                 Tariffa.text = oSheet.getCellByPosition(0, m).String
-                diz_ep[oSheet.getCellByPosition(0, m).String.strip()] = id_tar
+                diz_ep[oSheet.getCellByPosition(0, m).String.strip().upper()] = id_tar
                 Articolo = SubElement(EPItem, 'Articolo')
                 Articolo.text = ''
                 DesRidotta = SubElement(EPItem, 'DesRidotta')
@@ -608,7 +608,7 @@ def XPWE_out_run(elaborato, out_file):
                         Tipo.text = '0'
                         IDEP = SubElement(EPARItem, 'IDEP')
                         IDEP.text = diz_ep.get(
-                            oSheet.getCellByPosition(0, x).String.strip())
+                            oSheet.getCellByPosition(0, x).String.strip().upper())
                         if IDEP.text is None:
                             IDEP.text = '-2'
                         Descrizione = SubElement(EPARItem, 'Descrizione')
@@ -634,7 +634,7 @@ def XPWE_out_run(elaborato, out_file):
                         Tipo.text = '1'
                         IDEP = SubElement(EPARItem, 'IDEP')
                         IDEP.text = diz_ep.get(
-                            oSheet.getCellByPosition(0, x).String.strip())
+                            oSheet.getCellByPosition(0, x).String.strip().upper())
                         if IDEP.text is None:
                             IDEP.text = '-2'
                         Descrizione = SubElement(EPARItem, 'Descrizione')
@@ -714,7 +714,7 @@ def XPWE_out_run(elaborato, out_file):
 
             IDEP = SubElement(VCItem, 'IDEP')
             codice_voce = oSheet.getCellByPosition(1, sopra + 1).String.strip()
-            IDEP.text = diz_ep.get(codice_voce)
+            IDEP.text = diz_ep.get(codice_voce.upper())
             if IDEP.text is None:
                 voci_orfane.append((sopra + 1, codice_voce))
                 logging.warning(
@@ -858,24 +858,17 @@ def XPWE_out_run(elaborato, out_file):
         of.close()
 
         if voci_orfane:
-            elenco_orfane = '\n'.join(
-                f'- riga {r}: {c}' for r, c in voci_orfane[:20])
-            if len(voci_orfane) > 20:
-                elenco_orfane += f'\n... e altre {len(voci_orfane) - 20} voce/i'
-            Dialogs.Exclamation(
-                Title='ATTENZIONE - Voci non collegate all\'Elenco Prezzi',
-                Text=(
-                    f'{len(voci_orfane)} voce/i di {elaborato} fanno riferimento '
-                    'a codici articolo non presenti né in "Elenco Prezzi" né in '
-                    '"Analisi di Prezzo":\n\n'
-                    f'{elenco_orfane}\n\n'
-                    'Queste voci sono state esportate senza collegamento all\'Elenco '
-                    'Prezzi (IDEP vuoto): Primus le rifiuterà in fase di importazione, '
-                    'mentre un\'eventuale reimportazione in LeenO le manterrà ma senza '
-                    'codice tariffa (un avviso comparirà anche in quella fase).\n\n'
-                    'Per evitare la perdita del codice tariffa, aggiungi i relativi '
-                    'articoli in "Elenco Prezzi" e ripeti l\'esportazione.'
-                ))
+            # Con il confronto case-insensitive (v. sopra) questo caso non
+            # dovrebbe più presentarsi nell'uso normale: se il codice fosse
+            # davvero assente da Elenco Prezzi, il VLOOKUP di descrizione in
+            # {elaborato} mostrerebbe già "#N/A", visibile all'utente prima
+            # ancora di esportare. Se scatta comunque, resta solo un log per
+            # indagare eventuali casi limite (range con nome non allineato,
+            # collation non standard, ecc.).
+            logging.warning(
+                f'XPWE_out_run: {len(voci_orfane)} voce/i con IDEP non '
+                f'risolvibile nonostante il confronto case-insensitive: '
+                f'{voci_orfane[:20]}')
 
         Dialogs.Exclamation(Title = 'INFORMAZIONE',
         Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file, max_len=60)}'

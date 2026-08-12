@@ -133,6 +133,8 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
     Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
     partendo dalla posizione corrente del cursore.
     '''
+    if lrow is None or not isinstance(lrow, int):
+        return None
 
     # Inizializza le righe di inizio e fine al valore di partenza.
     start_row = lrow

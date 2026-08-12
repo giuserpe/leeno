@@ -5291,42 +5291,66 @@ def cerca_in_elenco():
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    sheet_name = oSheet.Name
+
+    if sheet_name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Registro',
+                          'Analisi di Prezzo', 'SAL', 'Elenco Prezzi'):
+        return
+
     row = LeggiPosizioneCorrente()[1]
-    if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Registro',
-                       'Analisi di Prezzo', 'SAL'):
-        if oSheet.Name == 'Analisi di Prezzo':
-            if oSheet.getCellByPosition(
-                    0, row).CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
-                codice_da_cercare = oSheet.getCellByPosition(0, row).String
+    if row is None:
+        return
+
+    codice_da_cercare = ""
+
+    if sheet_name in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Registro', 'Analisi di Prezzo', 'SAL'):
+        if sheet_name == 'Analisi di Prezzo':
+            cell = oSheet.getCellByPosition(0, row)
+            if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+                codice_da_cercare = cell.String
             else:
                 return
-        elif oSheet.Name in ('Registro','SAL'):
-            codice_da_cercare =oSheet.getCellByPosition(0, row).String.split('\n')[1]
+        elif sheet_name in ('Registro', 'SAL'):
+            cell_str = oSheet.getCellByPosition(0, row).String
+            parts = cell_str.split('\n')
+            if len(parts) > 1:
+                codice_da_cercare = parts[1]
+            else:
+                return
         else:
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
+            if not sStRange:
+                return
             sopra = sStRange.RangeAddress.StartRow
             codice_da_cercare = oSheet.getCellByPosition(1, sopra + 1).String
-        oSheet = oDoc.getSheets().getByName("Elenco Prezzi")
-        oSheet.IsVisible = True
+
+        oTargetSheet = oDoc.getSheets().getByName("Elenco Prezzi")
+        oTargetSheet.IsVisible = True
         GotoSheet('Elenco Prezzi')
-    elif oSheet.Name in ('Elenco Prezzi'):
-        if oSheet.getCellByPosition(1, row).Type.value == 'FORMULA':
+        oSheet = oTargetSheet
+    else:  # 'Elenco Prezzi'
+        cell_1 = oSheet.getCellByPosition(1, row)
+        if cell_1.Type.value == 'FORMULA':
             codice_da_cercare = oSheet.getCellByPosition(0, row).String
         else:
             return
-        oSheet = oDoc.getSheets().getByName("Analisi di Prezzo")
-        oSheet.IsVisible = True
+        oTargetSheet = oDoc.getSheets().getByName("Analisi di Prezzo")
+        oTargetSheet.IsVisible = True
         GotoSheet('Analisi di Prezzo')
+        oSheet = oTargetSheet
 
-    if codice_da_cercare == "Cod. Art.?":
+    if codice_da_cercare in ("Cod. Art.?", ""):
         return
-    if codice_da_cercare != '':
-        oCell = SheetUtils.uFindString(codice_da_cercare, oSheet)
+
+    oCell = SheetUtils.uFindString(codice_da_cercare, oSheet)
+    if oCell:
         try:
             oDoc.CurrentController.select(
                 oSheet.getCellRangeByPosition(oCell[0], oCell[1], 30, oCell[1]))
-        except:
-            _gotoCella(1,  2)
+        except Exception:
+            _gotoCella(1, 2)
+    else:
+        _gotoCella(1, 2)
     return
 
 ########################################################################

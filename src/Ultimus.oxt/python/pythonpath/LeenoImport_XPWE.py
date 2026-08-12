@@ -863,6 +863,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         testspcat = '0'            # per evitare duplicati supercategoria
         testcat = '0'              # per evitare duplicati categoria
         testsbcat = '0'            # per evitare duplicati sottocategoria
+        voci_senza_tariffa = []    # voci con IDEP non risolvibile in Elenco Prezzi
 
         # Se non c'è un indicatore passato, ne crea uno locale per fallback
         if not indicator:
@@ -967,8 +968,12 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             try:
                 tariffa = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
                 oSheet.getCellByPosition(1, lrow + 1).String = tariffa
-            except:
-                pass
+            except AttributeError:
+                voci_senza_tariffa.append((numeroVoce, el.get('id_vc')))
+                logging.warning(
+                    f"compilaComputo: nessun articolo trovato in Elenco Prezzi per "
+                    f"IDEP=\"{ID}\" (voce n.{numeroVoce}, id_vc={el.get('id_vc')}): "
+                    f"la riga è stata creata senza codice tariffa.")
 
             idVoceComputo = el.get('id_vc')
             mappaVociRighe[idVoceComputo] = lrow + 1
@@ -1040,6 +1045,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         except:
             pass
         PL.fissa()
+
+    return voci_senza_tariffa
 
 def MENU_XPWE_import(filename = None):
     try:
@@ -1249,7 +1256,7 @@ def XPWE_import(filename = None):
             return
 
         # compila il computo (80% -> 100% internally)
-        compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, indicator=indicator)
+        voci_senza_tariffa = compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, indicator=indicator)
 
         PL.GotoSheet(elaborato)
         oSheet_dest = oDoc.getSheets().getByName(elaborato)
@@ -1267,6 +1274,14 @@ def XPWE_import(filename = None):
             ok_msg += f'\n\nAttenzione: {skipped_count} voci di prezzo sono state ignorate perché già presenti (sovrascrittura non confermata).'
         if overwritten_count > 0:
             ok_msg += f'\n\nInfo: {overwritten_count} voci preesistenti in elenco prezzi sono state sovrascritte con i nuovi dati.'
+        if voci_senza_tariffa:
+            ok_msg += (
+                f'\n\nATTENZIONE: {len(voci_senza_tariffa)} voce/i sono state importate '
+                'SENZA codice tariffa perché il file XPWE non conteneva un collegamento '
+                'valido all\'Elenco Prezzi per quella voce (IDEP mancante). '
+                'Controlla le voci senza codice in Elenco Prezzi/Articolo e reinseriscile '
+                'manualmente se necessario.'
+            )
         
         Dialogs.Ok(Text=ok_msg)
         if 'giuserpe' not in os.getlogin():

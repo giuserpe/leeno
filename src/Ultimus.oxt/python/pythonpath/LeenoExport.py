@@ -9,6 +9,7 @@ import os
 import sys
 import threading
 import codecs
+import logging
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 # pyrefly: ignore [missing-import]
@@ -688,6 +689,7 @@ def XPWE_out_run(elaborato, out_file):
     oDoc.CurrentController.setActiveSheet(oSheet)
     Rinumera_TUTTI_Capitoli2(oSheet)
     nVCItem = 2
+    voci_orfane = []  # voci con IDEP non risolvibile (codice assente da Elenco Prezzi/Analisi)
     if indicator:
         indicator.Value = 6
         indicator.start(f'Esportazione di {elaborato} in corso...', LeenoSheetUtils.cercaUltimaVoce(oSheet))  # max progresso
@@ -711,14 +713,15 @@ def XPWE_out_run(elaborato, out_file):
             nVCItem += 1
 
             IDEP = SubElement(VCItem, 'IDEP')
-            IDEP.text = diz_ep.get(
-                oSheet.getCellByPosition(1, sopra + 1).String.strip())
+            codice_voce = oSheet.getCellByPosition(1, sopra + 1).String.strip()
+            IDEP.text = diz_ep.get(codice_voce)
             if IDEP.text is None:
-                DLG.chi(f'XPWE_out_run: nessuna corrispondenza in Elenco Prezzi/Analisi '
-                        f'per la voce di computo con codice '
-                        f'"{oSheet.getCellByPosition(1, sopra + 1).String}" '
-                        f'(riga {sopra + 1}): IDEP non valorizzato, la voce non sarà '
-                        f'importabile in Primus')
+                voci_orfane.append((sopra + 1, codice_voce))
+                logging.warning(
+                    f'XPWE_out_run: nessuna corrispondenza in Elenco Prezzi/Analisi '
+                    f'per la voce di computo con codice "{codice_voce}" '
+                    f'(riga {sopra + 1}): IDEP non valorizzato, la voce non sarà '
+                    f'importabile in Primus')
             ##########################
             Quantita = SubElement(VCItem, 'Quantita')
             Quantita.text = oSheet.getCellByPosition(9, sotto).String
@@ -853,6 +856,27 @@ def XPWE_out_run(elaborato, out_file):
         of = codecs.open(out_file, 'w', 'utf-8')
         of.write(riga)
         of.close()
+
+        if voci_orfane:
+            elenco_orfane = '\n'.join(
+                f'- riga {r}: {c}' for r, c in voci_orfane[:20])
+            if len(voci_orfane) > 20:
+                elenco_orfane += f'\n... e altre {len(voci_orfane) - 20} voce/i'
+            Dialogs.Exclamation(
+                Title='ATTENZIONE - Voci non collegate all\'Elenco Prezzi',
+                Text=(
+                    f'{len(voci_orfane)} voce/i di {elaborato} fanno riferimento '
+                    'a codici articolo non presenti né in "Elenco Prezzi" né in '
+                    '"Analisi di Prezzo":\n\n'
+                    f'{elenco_orfane}\n\n'
+                    'Queste voci sono state esportate senza collegamento all\'Elenco '
+                    'Prezzi (IDEP vuoto): Primus le rifiuterà in fase di importazione, '
+                    'mentre un\'eventuale reimportazione in LeenO le manterrà ma senza '
+                    'codice tariffa (un avviso comparirà anche in quella fase).\n\n'
+                    'Per evitare la perdita del codice tariffa, aggiungi i relativi '
+                    'articoli in "Elenco Prezzi" e ripeti l\'esportazione.'
+                ))
+
         Dialogs.Exclamation(Title = 'INFORMAZIONE',
         Text=f'Esportazione in formato XPWE eseguita con successo sul file:\n\n {LeenoUtils.wrap_path(out_file, max_len=60)}'
 '\n\n----\n'

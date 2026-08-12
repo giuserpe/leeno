@@ -452,33 +452,50 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-07 15:33</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/eb79205c394f670612392637d5a8f5fc091b8d73" target="_blank" rel="noopener"><code>eb79205</code></a></td>
-                <td class="commit-msg">fix(export): migliora robustezza XPWE_out_run e normalizza chiavi diz_ep
-
-- numera_voci() ora chiamato senza parametro oSheet_el
-- normalizza tutte le chiavi diz_ep con .strip() per evitare mismatch in IDEP
-- gestisce correttamente voci AP non trovate con messaggio esplicito DLG.chi()
-- aggiunge logging dettagliato sugli errori di esportazione singola voce AP
-- corregge inizializzazione di k (parte da n invece che n+1)
-- IDEP per voci di computo ora usa codice .strip() e segnala mancanza corrispondenza
-- migliora messaggi diagnostici per voci non importabili in Primus
-
-fix(core): silenzia errori non critici in bak()
-- rimuove DLG.chi su fallimento eliminazione file di backup
-- evita interruzioni inutili durante la pulizia dei backup</td>
+                <td>2026-08-12 11:51</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d88b4679a1b7eadae1af4a4209e3a5038d571715" target="_blank" rel="noopener"><code>d88b467</code></a></td>
+                <td class="commit-msg">fix: update version number to 3.26.0.126-TESTING-20260812 in description.xml and leeno_version_code</td>
             </tr>
             <tr>
-                <td>2026-08-07 11:53</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5f0be368d8570f5294559a16e0b0d5f4a3832543" target="_blank" rel="noopener"><code>5f0be36</code></a></td>
-                <td class="commit-msg">fix: update version number to 3.26.0.125-TESTING-20260807 in description.xml and leeno_version_code</td>
+                <td>2026-08-12 11:14</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/158b74b3848b31cb0e8c58670d6dba88e36f061a" target="_blank" rel="noopener"><code>158b74b</code></a></td>
+                <td class="commit-msg">fix(export): normalizza i codici articolo in maiuscolo durante l'esportazione XPWE
+
+- converte tutte le chiavi di diz_ep in uppercase per confronto case-insensitive
+- applica .strip().upper() in:
+  - costruzione diz_ep per Elenco Prezzi
+  - costruzione diz_ep per Analisi di Prezzo
+  - lookup IDEP in EPARItem (misure)
+  - lookup IDEP in VCItem (voci di computo)
+- riduce drasticamente i casi di IDEP non risolvibile dovuti a differenze di maiuscole/minuscole
+- sostituisce il precedente avviso dettagliato con un semplice logging.warning,
+  dato che con il confronto case-insensitive il caso diventa eccezionale</td>
             </tr>
             <tr>
-                <td>2026-08-07 11:51</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e0f938d931abc87fc4e5d4a648563ce69e86c325" target="_blank" rel="noopener"><code>e0f938d</code></a></td>
-                <td class="commit-msg">Merge pull request #65 from giuserpe/jules-15435829818230579208-8371137a
+                <td>2026-08-12 10:45</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/c8b8e8aa34749d463f2c7a677d7f024cef460a33" target="_blank" rel="noopener"><code>c8b8e8a</code></a></td>
+                <td class="commit-msg">fix(computo): gestisce lrow non valido in circoscriveVoceComputo
+- ritorna None se lrow è None o non è un intero
+- evita eccezioni nelle chiamate successive (cerca_in_elenco, XPWE_out_run)
 
-Fix cancellazione codici in Elenco Prezzi durante XPWE_out()</td>
+fix(export): aggiunge diagnostica e avvisi per voci orfane in XPWE_out_run
+- introduce lista voci_orfane con logging.warning
+- segnala fino a 20 voci non collegate a Elenco Prezzi/Analisi
+- mostra dialogo Exclamation con elenco e istruzioni per correggere i codici mancanti
+- normalizza codice_voce con .strip()
+- migliora gestione errori durante esportazione singole voci AP
+
+fix(import): traccia voci senza tariffa in compilaComputo
+- aggiunge voci_senza_tariffa con logging.warning
+- restituisce la lista al chiamante
+- XPWE_import mostra avviso finale sulle voci importate senza codice tariffa
+
+fix(core): migliora cerca_in_elenco con controlli robusti e routing corretto
+- valida sheet_name e row prima di procedere
+- gestisce correttamente fogli Registro/SAL con parsing multilinea
+- gestisce caso Elenco Prezzi → Analisi di Prezzo
+- evita ricerca per codici vuoti o “Cod. Art.?”
+- fallback sicuro con _gotoCella quando la ricerca non trova corrispondenze</td>
             </tr>
                     </tbody>
                 </table>
@@ -502,8 +519,8 @@ Fix cancellazione codici in Elenco Prezzi durante XPWE_out()</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-07 15:33 UTC</p>
-                <p>Build Commit: <code>eb79205</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-12 11:52 UTC</p>
+                <p>Build Commit: <code>d88b467</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

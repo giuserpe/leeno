@@ -434,8 +434,8 @@ def invia_voce(ctrl_override=False):
 
     def rompi_collegamenti_esterni(doc):
         '''
-        Rompe e rimuove tutti i collegamenti attivi a file esterni (SheetLinks, AreaLinks)
-        nel documento specificato.
+        Rompe e rimuove tutti i collegamenti attivi a file esterni (SheetLinks, AreaLinks,
+        e riferimenti esterni nelle formule di tutti i fogli).
         '''
         try:
             # 1. Rompe i collegamenti delle aree esterne (AreaLinks)
@@ -453,6 +453,30 @@ def invia_voce(ctrl_override=False):
                 for sheet in doc.getSheets():
                     if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
                         sheet.setLinkMode(SHEET_LINK_MODE_NONE)
+        except Exception:
+            pass
+
+        try:
+            # 3. Rimuove i riferimenti a file esterni dalle formule in tutti i fogli del documento
+            if hasattr(doc, "getSheets"):
+                for sheet in doc.getSheets():
+                    try:
+                        replace_desc = sheet.createReplaceDescriptor()
+                        replace_desc.SearchRegularExpression = True
+                        replace_desc.SearchType = 0  # Cerca nelle formule
+                        replace_desc.SearchCaseSensitive = False
+
+                        # Riferimenti quotati: 'file:///...'#
+                        replace_desc.SearchString = "'file:///[^']*'#"
+                        replace_desc.ReplaceString = ""
+                        sheet.replaceAll(replace_desc)
+
+                        # Riferimenti non quotati: file:///...#
+                        replace_desc.SearchString = "file:///[^'#]*#"
+                        replace_desc.ReplaceString = ""
+                        sheet.replaceAll(replace_desc)
+                    except Exception:
+                        pass
         except Exception:
             pass
 

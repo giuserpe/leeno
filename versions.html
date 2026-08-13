@@ -452,6 +452,11 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 12:44</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d87e2585948aeaaebff1494391e9e3cf35892f71" target="_blank" rel="noopener"><code>d87e258</code></a></td>
+                <td class="commit-msg">Aggiunge rompi_collegamenti_esterni(ddcDoc) al termine di invia_voce() per assicurare che nel documento di destinazione (DP) non rimangano attivi collegamenti a file esterni (sia AreaLinks che SheetLinks).</td>
+            </tr>
+            <tr>
                 <td>2026-08-13 11:33</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/66d9edfa1064200463ae86aba69a7223a8b38796" target="_blank" rel="noopener"><code>66d9edf</code></a></td>
                 <td class="commit-msg">Ottimizza invia_voce() per eseguire le operazioni in modalità batch/blocco.
@@ -461,11 +466,6 @@ getVociSelezionate ora legge le celle in blocco tramite getDataArray, e la sosti
                 <td>2026-08-13 11:07</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/ae6b76c553588a129bfc8bde09c4316fd10e526d" target="_blank" rel="noopener"><code>ae6b76c</code></a></td>
                 <td class="commit-msg">Aggiunge il supporto completo alla selezione multipla (sia per Elenco Prezzi che per fogli di computo COMPUTO, VARIANTE, CONTABILITA) in pyleeno.invia_voce() per l'invio sequenziale e corretto di più voci contemporaneamente, preservando l'intera logica esistente di copia e sostituzione con CTRL.</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 11:01</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/fd19280529149dd651e05570da5c12ccd99aa8c7" target="_blank" rel="noopener"><code>fd19280</code></a></td>
-                <td class="commit-msg">fix di invia_voce() per consentire il trasferimento completo delle analisi di prezzo e di tutti i relativi costi elementari quando si invia una voce da Elenco Prezzi a Elenco Prezzi (con o senza CTRL), rimuovendo il return anticipato e definendo correttamente dccSheet.</td>
             </tr>
                     </tbody>
                 </table>
@@ -489,8 +489,8 @@ getVociSelezionate ora legge le celle in blocco tramite getDataArray, e la sosti
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-13 11:57 UTC</p>
-                <p>Build Commit: <code>e94dff0</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 12:44 UTC</p>
+                <p>Build Commit: <code>d87e258</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -452,27 +452,25 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 09:39</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/75b40b8b087116fbfe6f05c6758d6a525a5f7d20" target="_blank" rel="noopener"><code>75b40b8</code></a></td>
+                <td class="commit-msg">Merge pull request #66 from giuserpe/jules-3564153086452624617-0bd7eb37
+
+fix(core): gestisce invia_voce EP->EP con CTRL per Analisi di Prezzo
+
+Risolto il problema in pyleeno.invia_voce() quando si invia una voce da Elenco Prezzi a Elenco Prezzi con CTRL premuto. Ora la voce di partenza viene assicurata all'Elenco Prezzi di arrivo, e nel DP tutte le ricorrenze della voce selezionata vengono sostituite dal codice della nuova voce in Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITA.</td>
+            </tr>
+            <tr>
+                <td>2026-08-13 09:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/26db1ca33f3d2c21ced33b8bc27b9d071d84cd11" target="_blank" rel="noopener"><code>26db1ca</code></a></td>
+                <td class="commit-msg">fix(core): gestisce invia_voce EP->EP con CTRL per Analisi di Prezzo
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-13 06:52</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/b49b7e8bc4b932fc472943e03525f7e6d3675de2" target="_blank" rel="noopener"><code>b49b7e8</code></a></td>
                 <td class="commit-msg">fix: update version number to 3.26.0.127-TESTING-20260813 in description.xml and leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 06:44</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d532bf0a46e01d956f8ce7ad48a7c6b0b207eb5b" target="_blank" rel="noopener"><code>d532bf0</code></a></td>
-                <td class="commit-msg">fix(core): centralizza inversione segno in invertiUnSegno e rimuove codice duplicato
-
-- elimina la vecchia logica locale di inverti_segno per COMPUTO, VARIANTE e CONTABILITA
-- sostituisce l’intero blocco condizionale con una singola chiamata a
-  LeenoSheetUtils.invertiUnSegno(oSheet, row)
-- mantiene il wrapper interattivo (selezione multipla, undo) senza duplicare
-  la logica di business
-- garantisce coerenza tra uso interattivo e import XPWE, che ora condividono
-  la stessa implementazione unica</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 06:40</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/fd64a3dd3cf5b887b2047a8712862e3ccf30ce28" target="_blank" rel="noopener"><code>fd64a3d</code></a></td>
-                <td class="commit-msg">inverti_segna</td>
             </tr>
                     </tbody>
                 </table>
@@ -496,8 +494,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-13 09:36 UTC</p>
-                <p>Build Commit: <code>26db1ca</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 09:39 UTC</p>
+                <p>Build Commit: <code>75b40b8</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -452,6 +452,11 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 11:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ae6b76c553588a129bfc8bde09c4316fd10e526d" target="_blank" rel="noopener"><code>ae6b76c</code></a></td>
+                <td class="commit-msg">Aggiunge il supporto completo alla selezione multipla (sia per Elenco Prezzi che per fogli di computo COMPUTO, VARIANTE, CONTABILITA) in pyleeno.invia_voce() per l'invio sequenziale e corretto di più voci contemporaneamente, preservando l'intera logica esistente di copia e sostituzione con CTRL.</td>
+            </tr>
+            <tr>
                 <td>2026-08-13 11:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/fd19280529149dd651e05570da5c12ccd99aa8c7" target="_blank" rel="noopener"><code>fd19280</code></a></td>
                 <td class="commit-msg">fix di invia_voce() per consentire il trasferimento completo delle analisi di prezzo e di tutti i relativi costi elementari quando si invia una voce da Elenco Prezzi a Elenco Prezzi (con o senza CTRL), rimuovendo il return anticipato e definendo correttamente dccSheet.</td>
@@ -464,13 +469,6 @@
 fix(core): gestisce invia_voce EP->EP con CTRL per Analisi di Prezzo
 
 Risolto il problema in pyleeno.invia_voce() quando si invia una voce da Elenco Prezzi a Elenco Prezzi con CTRL premuto. Ora la voce di partenza viene assicurata all'Elenco Prezzi di arrivo, e nel DP tutte le ricorrenze della voce selezionata vengono sostituite dal codice della nuova voce in Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITA.</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 09:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/26db1ca33f3d2c21ced33b8bc27b9d071d84cd11" target="_blank" rel="noopener"><code>26db1ca</code></a></td>
-                <td class="commit-msg">fix(core): gestisce invia_voce EP->EP con CTRL per Analisi di Prezzo
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -494,8 +492,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-13 11:06 UTC</p>
-                <p>Build Commit: <code>3149091</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 11:07 UTC</p>
+                <p>Build Commit: <code>ae6b76c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -5568,11 +5568,14 @@ def MENU_inverti_segno():
 @with_undo('Inverti segno delle misure')
 def inverti_segno(target_row=None):
     '''
-    Inverte il segno delle formule di quantità e gestisce lo stile ROSSO tramite suffisso.
+    Inverte il segno delle formule di quantità e gestisce lo stile ROSSO.
+    Wrapper interattivo (selezione multipla, undo) sopra l'implementazione
+    unica LeenoSheetUtils.invertiUnSegno(oSheet, lrow), che contiene la
+    logica di business condivisa anche con l'import XPWE.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    
+
     lista_righe = set()
     if target_row is not None:
         lista_righe.add(target_row)
@@ -5590,52 +5593,8 @@ def inverti_segno(target_row=None):
             for row in range(r.StartRow, r.EndRow + 1):
                 lista_righe.add(row)
 
-    # Elaborazione per fogli COMPUTO e VARIANTE
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        for row in sorted(list(lista_righe)):
-            cell_desc = oSheet.getCellByPosition(2, row)
-            style_desc = cell_desc.CellStyle
-
-            # Applichiamo la logica solo se la riga è di misurazione
-            if 'comp 1-a' in style_desc:
-                row_idx = str(row + 1)
-                cell_qta = oSheet.getCellByPosition(9, row)
-
-                if 'ROSSO' in style_desc:
-                    # Invertiamo a POSITIVO
-                    cell_qta.Formula = f'=IF(PRODUCT(E{row_idx}:I{row_idx})=0;"";PRODUCT(E{row_idx}:I{row_idx}))'
-                    # Rimuoviamo il suffisso ROSSO (tua logica originale)
-                    for x in range(2, 10):
-                        current_cell = oSheet.getCellByPosition(x, row)
-                        current_cell.CellStyle = current_cell.CellStyle.split(' ROSSO')[0]
-                else:
-                    # Invertiamo a NEGATIVO
-                    cell_qta.Formula = f'=IF(PRODUCT(E{row_idx}:I{row_idx})=0;"";-PRODUCT(E{row_idx}:I{row_idx}))'
-                    # Aggiungiamo il suffisso ROSSO (tua logica originale)
-                    for x in range(2, 10):
-                        current_cell = oSheet.getCellByPosition(x, row)
-                        current_cell.CellStyle = current_cell.CellStyle + ' ROSSO'
-
-    # Elaborazione per foglio CONTABILITA
-    elif oSheet.Name == 'CONTABILITA':
-        for row in sorted(list(lista_righe)):
-            if 'comp 1-a' in oSheet.getCellByPosition(2, row).CellStyle:
-                cell_9 = oSheet.getCellByPosition(9, row)
-                cell_11 = oSheet.getCellByPosition(11, row)
-
-                f1 = cell_9.Formula
-                f2 = cell_11.Formula
-                cell_11.Formula = f1
-                cell_9.Formula = f2
-                with LeenoUtils.DocumentRefreshContext(True):
-                    if cell_11.Value > 0:
-                        for x in range(2, 12):
-                            current_cell = oSheet.getCellByPosition(x, row)
-                            current_cell.CellStyle = current_cell.CellStyle + ' ROSSO'
-                    else:                        
-                        for x in range(2, 12):
-                            current_cell = oSheet.getCellByPosition(x, row)
-                            current_cell.CellStyle = current_cell.CellStyle.split(' ROSSO')[0]
+    for row in sorted(lista_righe):
+        LeenoSheetUtils.invertiUnSegno(oSheet, row)
 
 ########################################################################
 

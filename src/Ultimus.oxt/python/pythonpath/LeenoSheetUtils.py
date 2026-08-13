@@ -980,7 +980,9 @@ def invertiUnSegno(oSheet, lrow):
     '''
     Inverte il segno delle formule di quantità nel rigo di misurazione lrow.
     lrow    { int }  : riga di riferimento
-    usata con XPWE_it
+    Implementazione unica condivisa sia dall'import XPWE (LeenoImport_XPWE.py)
+    sia dal comando interattivo "Inverti segno" (pyleeno.inverti_segno(), che
+    fa da wrapper per selezione multipla/undo e delega a questa funzione).
     '''
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
@@ -1011,18 +1013,21 @@ def invertiUnSegno(oSheet, lrow):
         formula2 = oSheet.getCellByPosition(11, lrow).Formula
         oSheet.getCellByPosition(11, lrow).Formula = formula1
         oSheet.getCellByPosition(9, lrow).Formula = formula2
-        
-        # Gestione stili
-        is_negative = oSheet.getCellByPosition(11, lrow).String != ''
-        for x in range(2, 12):
-            cell = oSheet.getCellByPosition(x, lrow)
-            curr_style = cell.CellStyle
-            if is_negative:
-                if ' ROSSO' not in curr_style:
-                    cell.CellStyle = curr_style + ' ROSSO'
-            else:
-                if ' ROSSO' in curr_style:
-                    cell.CellStyle = curr_style.replace(' ROSSO', '')
+
+        # Gestione stili: il refresh esplicito è necessario per evitare di
+        # leggere il valore della cella prima che Calc abbia ricalcolato la
+        # formula appena scritta sopra.
+        with LeenoUtils.DocumentRefreshContext(True):
+            is_negative = oSheet.getCellByPosition(11, lrow).String != ''
+            for x in range(2, 12):
+                cell = oSheet.getCellByPosition(x, lrow)
+                curr_style = cell.CellStyle
+                if is_negative:
+                    if ' ROSSO' not in curr_style:
+                        cell.CellStyle = curr_style + ' ROSSO'
+                else:
+                    if ' ROSSO' in curr_style:
+                        cell.CellStyle = curr_style.replace(' ROSSO', '')
 
 
 # ###############################################################

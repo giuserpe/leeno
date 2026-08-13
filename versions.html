@@ -452,6 +452,22 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 17:21</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/f92e7a1ee4d5fdc74894a414b9372012bb55bbc1" target="_blank" rel="noopener"><code>f92e7a1</code></a></td>
+                <td class="commit-msg">feat(core): aggiungi LeenoNamedAreas.py per centralizzare la rigenerazione dei NamedArea
+
+Introduce un modulo dedicato che raggruppa la rigenerazione di tutti gli
+intervalli nominati necessari a LeenO in tre gruppi:
+- Gruppo A: range fissi legati all'ultima riga (elenco_prezzi, Lista,
+  elenco_variante, analisi, blocco_analisi, oneri_sicurezza)
+- Gruppo B: colonne calcolate su COMPUTO/VARIANTE/CONTABILITA
+  (equivalente a sistema_aree di pyleeno)
+- Gruppo C: diagnostica sola lettura sui range SAL dinamici
+
+Espone MENU_rigenera_NamedAreas() come voce di menu/toolbar.
+Nessun effetto collaterale a livello di modulo (compatibile pythonpath).</td>
+            </tr>
+            <tr>
                 <td>2026-08-13 12:44</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/d87e2585948aeaaebff1494391e9e3cf35892f71" target="_blank" rel="noopener"><code>d87e258</code></a></td>
                 <td class="commit-msg">Aggiunge rompi_collegamenti_esterni(ddcDoc) al termine di invia_voce() per assicurare che nel documento di destinazione (DP) non rimangano attivi collegamenti a file esterni (sia AreaLinks che SheetLinks).</td>
@@ -461,11 +477,6 @@
                 <td><a href="https://github.com/giuserpe/leeno/commit/66d9edfa1064200463ae86aba69a7223a8b38796" target="_blank" rel="noopener"><code>66d9edf</code></a></td>
                 <td class="commit-msg">Ottimizza invia_voce() per eseguire le operazioni in modalità batch/blocco.
 getVociSelezionate ora legge le celle in blocco tramite getDataArray, e la sostituzione con CTRL nei fogli del DP utilizza il motore di ricerca nativo createSearchDescriptor() / findAll() di Calc per massimizzare la velocità.</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 11:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ae6b76c553588a129bfc8bde09c4316fd10e526d" target="_blank" rel="noopener"><code>ae6b76c</code></a></td>
-                <td class="commit-msg">Aggiunge il supporto completo alla selezione multipla (sia per Elenco Prezzi che per fogli di computo COMPUTO, VARIANTE, CONTABILITA) in pyleeno.invia_voce() per l'invio sequenziale e corretto di più voci contemporaneamente, preservando l'intera logica esistente di copia e sostituzione con CTRL.</td>
             </tr>
                     </tbody>
                 </table>
@@ -489,8 +500,8 @@ getVociSelezionate ora legge le celle in blocco tramite getDataArray, e la sosti
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-13 13:36 UTC</p>
-                <p>Build Commit: <code>681cf43</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 17:22 UTC</p>
+                <p>Build Commit: <code>f92e7a1</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -452,6 +452,18 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 06:19</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/cc1a943c1730f0c5242024cddc98971f7aa11092" target="_blank" rel="noopener"><code>cc1a943</code></a></td>
+                <td class="commit-msg">fix(import): corregge inversione del segno per voci XPWE negative con riferimento "vedi voce"
+
+- gestisce correttamente il caso vedi_neg su fogli COMPUTO/VARIANTE
+- evita l’uso di invertiUnSegno() quando la riga è già marcata con stile 'ROSSO'
+  (il toggle invertirebbe nuovamente il segno, annullando l’inversione)
+- imposta direttamente la formula negativa:
+  =IF(PRODUCT(E:I)=0;"";-PRODUCT(E:I))
+- mantiene invertiUnSegno() per tutti gli altri casi non problematici</td>
+            </tr>
+            <tr>
                 <td>2026-08-12 11:51</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/d88b4679a1b7eadae1af4a4209e3a5038d571715" target="_blank" rel="noopener"><code>d88b467</code></a></td>
                 <td class="commit-msg">fix: update version number to 3.26.0.126-TESTING-20260812 in description.xml and leeno_version_code</td>
@@ -470,32 +482,6 @@
 - riduce drasticamente i casi di IDEP non risolvibile dovuti a differenze di maiuscole/minuscole
 - sostituisce il precedente avviso dettagliato con un semplice logging.warning,
   dato che con il confronto case-insensitive il caso diventa eccezionale</td>
-            </tr>
-            <tr>
-                <td>2026-08-12 10:45</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c8b8e8aa34749d463f2c7a677d7f024cef460a33" target="_blank" rel="noopener"><code>c8b8e8a</code></a></td>
-                <td class="commit-msg">fix(computo): gestisce lrow non valido in circoscriveVoceComputo
-- ritorna None se lrow è None o non è un intero
-- evita eccezioni nelle chiamate successive (cerca_in_elenco, XPWE_out_run)
-
-fix(export): aggiunge diagnostica e avvisi per voci orfane in XPWE_out_run
-- introduce lista voci_orfane con logging.warning
-- segnala fino a 20 voci non collegate a Elenco Prezzi/Analisi
-- mostra dialogo Exclamation con elenco e istruzioni per correggere i codici mancanti
-- normalizza codice_voce con .strip()
-- migliora gestione errori durante esportazione singole voci AP
-
-fix(import): traccia voci senza tariffa in compilaComputo
-- aggiunge voci_senza_tariffa con logging.warning
-- restituisce la lista al chiamante
-- XPWE_import mostra avviso finale sulle voci importate senza codice tariffa
-
-fix(core): migliora cerca_in_elenco con controlli robusti e routing corretto
-- valida sheet_name e row prima di procedere
-- gestisce correttamente fogli Registro/SAL con parsing multilinea
-- gestisce caso Elenco Prezzi → Analisi di Prezzo
-- evita ricerca per codici vuoti o “Cod. Art.?”
-- fallback sicuro con _gotoCella quando la ricerca non trova corrispondenze</td>
             </tr>
                     </tbody>
                 </table>
@@ -519,8 +505,8 @@ fix(core): migliora cerca_in_elenco con controlli robusti e routing corretto
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-12 11:52 UTC</p>
-                <p>Build Commit: <code>d88b467</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 06:19 UTC</p>
+                <p>Build Commit: <code>cc1a943</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

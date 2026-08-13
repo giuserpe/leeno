@@ -7901,3 +7901,18 @@ File: LeenoUtils.py, Line: 323, Function: wrapper
 File: pyleeno.py, Line: 10519, Function: descrizione_in_una_colonna
 ------------------------------------------------------------
 
+[2026-08-13 15:13:31]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.127-TESTING-20260813
+
+Errore: name 'rompi_collegamenti_esterni' is not defined
+
+File: 'pyleeno.py'
+Line: '12182'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12182, Function: MENU_debug
+------------------------------------------------------------
+

@@ -452,6 +452,12 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-13 11:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/66d9edfa1064200463ae86aba69a7223a8b38796" target="_blank" rel="noopener"><code>66d9edf</code></a></td>
+                <td class="commit-msg">Ottimizza invia_voce() per eseguire le operazioni in modalità batch/blocco.
+getVociSelezionate ora legge le celle in blocco tramite getDataArray, e la sostituzione con CTRL nei fogli del DP utilizza il motore di ricerca nativo createSearchDescriptor() / findAll() di Calc per massimizzare la velocità.</td>
+            </tr>
+            <tr>
                 <td>2026-08-13 11:07</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/ae6b76c553588a129bfc8bde09c4316fd10e526d" target="_blank" rel="noopener"><code>ae6b76c</code></a></td>
                 <td class="commit-msg">Aggiunge il supporto completo alla selezione multipla (sia per Elenco Prezzi che per fogli di computo COMPUTO, VARIANTE, CONTABILITA) in pyleeno.invia_voce() per l'invio sequenziale e corretto di più voci contemporaneamente, preservando l'intera logica esistente di copia e sostituzione con CTRL.</td>
@@ -460,15 +466,6 @@
                 <td>2026-08-13 11:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/fd19280529149dd651e05570da5c12ccd99aa8c7" target="_blank" rel="noopener"><code>fd19280</code></a></td>
                 <td class="commit-msg">fix di invia_voce() per consentire il trasferimento completo delle analisi di prezzo e di tutti i relativi costi elementari quando si invia una voce da Elenco Prezzi a Elenco Prezzi (con o senza CTRL), rimuovendo il return anticipato e definendo correttamente dccSheet.</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 09:39</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/75b40b8b087116fbfe6f05c6758d6a525a5f7d20" target="_blank" rel="noopener"><code>75b40b8</code></a></td>
-                <td class="commit-msg">Merge pull request #66 from giuserpe/jules-3564153086452624617-0bd7eb37
-
-fix(core): gestisce invia_voce EP->EP con CTRL per Analisi di Prezzo
-
-Risolto il problema in pyleeno.invia_voce() quando si invia una voce da Elenco Prezzi a Elenco Prezzi con CTRL premuto. Ora la voce di partenza viene assicurata all'Elenco Prezzi di arrivo, e nel DP tutte le ricorrenze della voce selezionata vengono sostituite dal codice della nuova voce in Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITA.</td>
             </tr>
                     </tbody>
                 </table>
@@ -492,8 +489,8 @@ Risolto il problema in pyleeno.invia_voce() quando si invia una voce da Elenco P
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-13 11:19 UTC</p>
-                <p>Build Commit: <code>570547a</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-13 11:34 UTC</p>
+                <p>Build Commit: <code>66d9edf</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -924,8 +924,25 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                         elif cell.Value < 0:
                             cell.Value = abs(cell.Value)
 
-                    # Inverte una sola volta
-                    LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+                    if vedi_neg and oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                        # Riga "vedi voce" con riferimento a voce negativa:
+                        # PL.vedi_voce_xpwe() ha già marcato lo stile ' ROSSO'
+                        # sulla riga come evidenziazione visiva. invertiUnSegno()
+                        # userebbe però quello stesso 'ROSSO' come flag di TOGGLE
+                        # (logica pensata per l'uso interattivo del menu "Vedi
+                        # voce", dove l'utente attiva/disattiva manualmente
+                        # l'inversione): trovandolo già presente, interpreta la
+                        # riga come "già invertita" e ripristina il segno
+                        # positivo, vanificando l'inversione. Impostiamo quindi
+                        # direttamente la formula col segno corretto, senza
+                        # passare da invertiUnSegno.
+                        oSheet.getCellByPosition(9, startRow).Formula = (
+                            '=IF(PRODUCT(E' + str(startRow + 1) + ':I' +
+                            str(startRow + 1) + ')=0;"";-PRODUCT(E' +
+                            str(startRow + 1) + ':I' + str(startRow + 1) + '))')
+                    else:
+                        # Inverte una sola volta
+                        LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
             except Exception:
                 pass
 

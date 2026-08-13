@@ -444,15 +444,15 @@ def invia_voce(ctrl_override=False):
                 el_y.append((el.StartRow, el.EndRow))
         except TypeError:
             el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
-        lista_righe = []
-        for y in el_y:
-            for el in range(y[0], y[1] + 1):
-                lista_righe.append(el)
         voci = []
-        for y in lista_righe:
-            code = oSheet.getCellByPosition(0, y).String
-            if code and code != "Cod. Art.?":
-                voci.append((code, y))
+        for start_row, end_row in el_y:
+            cell_range = oSheet.getCellRangeByPosition(0, start_row, 0, end_row)
+            data = cell_range.getDataArray()
+            for i, row_data in enumerate(data):
+                code = str(row_data[0])
+                y = start_row + i
+                if code and code != "Cod. Art.?":
+                    voci.append((code, y))
         return voci
 
     def getVociComputoSelezionate(oSheet):
@@ -578,20 +578,24 @@ def invia_voce(ctrl_override=False):
                             foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
                         except Exception:
                             continue
-                        last_row = SheetUtils.getLastUsedRow(foglio_dp)
-                        if nome_foglio == 'Analisi di Prezzo':
-                            for r in range(last_row + 1):
-                                cell = foglio_dp.getCellByPosition(0, r)
-                                if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
-                                    if cell.String.lower() == codice_selezionato_dp.lower():
-                                        cell.String = voce_da_inviare
-                                        cell.CellBackColor = COLORE_ROSSO_AVVISO
-                        else:
-                            for r in range(last_row + 1):
-                                cell = foglio_dp.getCellByPosition(1, r)
-                                if cell.String.lower() == codice_selezionato_dp.lower():
-                                    cell.String = voce_da_inviare
-                                    cell.CellBackColor = COLORE_ROSSO_AVVISO
+                        search_desc = foglio_dp.createSearchDescriptor()
+                        search_desc.SearchString = codice_selezionato_dp
+                        search_desc.SearchWords = True
+                        search_desc.SearchCaseSensitive = False
+                        found_ranges = foglio_dp.findAll(search_desc)
+                        if found_ranges:
+                            for range_addr in found_ranges.getRangeAddresses():
+                                for r in range(range_addr.StartRow, range_addr.EndRow + 1):
+                                    for c in range(range_addr.StartColumn, range_addr.EndColumn + 1):
+                                        cell = foglio_dp.getCellByPosition(c, r)
+                                        if nome_foglio == 'Analisi di Prezzo':
+                                            if c == 0 and cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+                                                cell.String = voce_da_inviare
+                                                cell.CellBackColor = COLORE_ROSSO_AVVISO
+                                        else:
+                                            if c == 1:
+                                                cell.String = voce_da_inviare
+                                                cell.CellBackColor = COLORE_ROSSO_AVVISO
                     ddcDoc.CurrentController.setFirstVisibleRow(3)
                     _gotoCella(1, 4)
                 else:

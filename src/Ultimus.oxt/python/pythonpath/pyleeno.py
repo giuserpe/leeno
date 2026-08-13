@@ -481,6 +481,7 @@ def invia_voce(ctrl_override=False):
         # 2. Gestione foglio di destinazione
         if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
+            dccSheet = dccSheetDest
             pos_dest = LeggiPosizioneCorrente()
             if pos_dest[1] > SheetUtils.getLastUsedRow(dccSheetDest):
                 Dialogs.Exclamation(Title='ATTENZIONE!',
@@ -551,7 +552,8 @@ def invia_voce(ctrl_override=False):
                         row_dest = row_dest + 1
                 dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
                 _gotoCella(3, row_dest)
-        return avviso_vedi_voce
+        # Rimosso return anticipato per permettere il flusso verso la copia dell'analisi se presente
+        # return avviso_vedi_voce
 
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):

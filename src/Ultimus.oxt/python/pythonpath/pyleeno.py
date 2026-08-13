@@ -508,19 +508,31 @@ def invia_voce(ctrl_override=False):
 
         elif nSheetDCC == 'Elenco Prezzi':
             if ctrl_override and codice_selezionato_dp:
+                # Assicura che la voce di partenza sia aggiunta all'Elenco Prezzi di arrivo (nel DP)
+                if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
+                    recupera_voce(voce_da_inviare, row_src=row)
+
                 # Con CTRL: sostituisce tutte le occorrenze del codice selezionato nel DP
-                # (nei fogli COMPUTO, VARIANTE e CONTABILITÀ) con il codice della voce di partenza
-                for nome_foglio in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                # (nei fogli Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITÀ) con il codice della voce di partenza
+                for nome_foglio in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'CONTABILITA'):
                     try:
                         foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
                     except Exception:
                         continue
                     last_row = SheetUtils.getLastUsedRow(foglio_dp)
-                    for r in range(last_row + 1):
-                        cell = foglio_dp.getCellByPosition(1, r)
-                        if cell.String.lower() == codice_selezionato_dp.lower():
-                            cell.String = voce_da_inviare
-                            cell.CellBackColor = COLORE_ROSSO_AVVISO
+                    if nome_foglio == 'Analisi di Prezzo':
+                        for r in range(last_row + 1):
+                            cell = foglio_dp.getCellByPosition(0, r)
+                            if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+                                if cell.String.lower() == codice_selezionato_dp.lower():
+                                    cell.String = voce_da_inviare
+                                    cell.CellBackColor = COLORE_ROSSO_AVVISO
+                    else:
+                        for r in range(last_row + 1):
+                            cell = foglio_dp.getCellByPosition(1, r)
+                            if cell.String.lower() == codice_selezionato_dp.lower():
+                                cell.String = voce_da_inviare
+                                cell.CellBackColor = COLORE_ROSSO_AVVISO
                 ddcDoc.CurrentController.setFirstVisibleRow(3)
                 _gotoCella(1, 4)
             else:

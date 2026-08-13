@@ -432,6 +432,30 @@ def invia_voce(ctrl_override=False):
                 analisi.append(oSheet.getCellByPosition(0, y).String)
         return (analisi)
 
+    def rompi_collegamenti_esterni(doc):
+        '''
+        Rompe e rimuove tutti i collegamenti attivi a file esterni (SheetLinks, AreaLinks)
+        nel documento specificato.
+        '''
+        try:
+            # 1. Rompe i collegamenti delle aree esterne (AreaLinks)
+            if hasattr(doc, "AreaLinks"):
+                area_links = doc.AreaLinks
+                while area_links.Count > 0:
+                    area_links.removeByIndex(0)
+        except Exception:
+            pass
+
+        try:
+            # 2. Rompe i collegamenti dei fogli esterni (SheetLinks) impostando il LinkMode a NONE
+            from com.sun.star.sheet.SheetLinkMode import NONE as SHEET_LINK_MODE_NONE
+            if hasattr(doc, "getSheets"):
+                for sheet in doc.getSheets():
+                    if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
+                        sheet.setLinkMode(SHEET_LINK_MODE_NONE)
+        except Exception:
+            pass
+
     def getVociSelezionate(oSheet):
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -826,6 +850,10 @@ def invia_voce(ctrl_override=False):
         else:
             dccSheet.getCellByPosition(1, row + 1).CellBackColor = COLORE_VERDE_SPUNTA
             _gotoCella(2, row + 1)
+    # Rompe tutti i collegamenti a file esterni rimasti attivi nel documento di destinazione (DP)
+    if 'ddcDoc' in locals() and ddcDoc is not None:
+        rompi_collegamenti_esterni(ddcDoc)
+
     # torno su partenza
     if cfg.read('Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)

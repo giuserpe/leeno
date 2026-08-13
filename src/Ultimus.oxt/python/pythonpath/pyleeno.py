@@ -432,6 +432,57 @@ def invia_voce(ctrl_override=False):
                 analisi.append(oSheet.getCellByPosition(0, y).String)
         return (analisi)
 
+    def getVociSelezionate(oSheet):
+        try:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+        except AttributeError:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+        el_y = []
+        try:
+            len(oRangeAddress)
+            for el in oRangeAddress:
+                el_y.append((el.StartRow, el.EndRow))
+        except TypeError:
+            el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+        lista_righe = []
+        for y in el_y:
+            for el in range(y[0], y[1] + 1):
+                lista_righe.append(el)
+        voci = []
+        for y in lista_righe:
+            code = oSheet.getCellByPosition(0, y).String
+            if code and code != "Cod. Art.?":
+                voci.append((code, y))
+        return voci
+
+    def getVociComputoSelezionate(oSheet):
+        try:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+        except AttributeError:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+        el_y = []
+        try:
+            len(oRangeAddress)
+            for el in oRangeAddress:
+                el_y.append((el.StartRow, el.EndRow))
+        except TypeError:
+            el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+            
+        voci = []
+        for start_r, end_r in el_y:
+            r = start_r
+            while r <= end_r:
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, r)
+                if not sStRange:
+                    r += 1
+                    continue
+                item_SR = sStRange.RangeAddress.StartRow
+                item_ER = sStRange.RangeAddress.EndRow
+                if not voci or voci[-1] != (item_SR, item_ER):
+                    voci.append((item_SR, item_ER))
+                r = item_ER + 1
+        return voci
+
     def recupera_voce (codice_da_cercare, row_src=None):
         '''
         recupra la voce di prezzo dal foglio di partenza
@@ -458,11 +509,9 @@ def invia_voce(ctrl_override=False):
     # partenza
     if oSheet.Name == 'Elenco Prezzi':
         analisi = getAnalisi(oSheet)
-        voce_da_inviare = oSheet.getCellByPosition(0, row).String
-
-        # Check "vedi voce" nella descrizione (colonna C -> indice 2)
-        if "vedi voce" in oSheet.getCellByPosition(2, row).String.lower():
-            avviso_vedi_voce = True
+        voci_selezionate = getVociSelezionate(oSheet)
+        if not voci_selezionate:
+            return False
 
         # 1. Focus su DP e verifica presenza codice in EP del DP
         _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
@@ -475,111 +524,102 @@ def invia_voce(ctrl_override=False):
         except Exception:
             codice_selezionato_dp = ''
 
-        if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
-            recupera_voce(voce_da_inviare, row_src=row)
+        for voce_da_inviare, row_src in voci_selezionate:
+            _gotoDoc(fpartenza)
+            # Check "vedi voce" nella descrizione (colonna C -> indice 2)
+            if "vedi voce" in oSheet.getCellByPosition(2, row_src).String.lower():
+                avviso_vedi_voce = True
 
-        # 2. Gestione foglio di destinazione
-        if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet = dccSheetDest
-            pos_dest = LeggiPosizioneCorrente()
-            if pos_dest[1] > SheetUtils.getLastUsedRow(dccSheetDest):
-                Dialogs.Exclamation(Title='ATTENZIONE!',
-                    Text="La posizione di destinazione non è corretta.")
-                return avviso_vedi_voce
+            _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
+            GotoSheet(nSheetDCC)
 
-            if cfg.read('Generale', 'nuova_voce') == 'True' and not ctrl_override:
-                MENU_nuova_voce_scelta()
+            if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
+                recupera_voce(voce_da_inviare, row_src=row_src)
+
+            # 2. Gestione foglio di destinazione
+            if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
+                dccSheet = dccSheetDest
                 pos_dest = LeggiPosizioneCorrente()
-                start_row = pos_dest[1]
-                dccSheetDest.getCellByPosition(pos_dest[0], start_row).String = voce_da_inviare
-                dccSheetDest.getCellByPosition(1, start_row).CellBackColor = COLORE_VERDE_SPUNTA
-                _gotoCella(pos_dest[0] + 1, start_row + 1)
-            else:
-                row_dest = LeggiPosizioneCorrente()[1]
-                LeenoComputo.cambia_articolo(dccSheetDest, row_dest, voce_da_inviare)
-                sStRange = LeenoComputo.circoscriveVoceComputo(dccSheetDest, row_dest)
-                start_row = sStRange.RangeAddress.StartRow
-                dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
-            
-            _pending_altezza_invia_voce.append((dccSheetDest, start_row))
-            controller = ddcDoc.CurrentController
-            controller.setFirstVisibleColumn(0)
-            controller.setFirstVisibleRow(max(0, start_row - 10))
+                if pos_dest[1] > SheetUtils.getLastUsedRow(dccSheetDest):
+                    Dialogs.Exclamation(Title='ATTENZIONE!',
+                        Text="La posizione di destinazione non è corretta.")
+                    return avviso_vedi_voce
 
-        elif nSheetDCC == 'Elenco Prezzi':
-            if ctrl_override and codice_selezionato_dp:
-                # Assicura che la voce di partenza sia aggiunta all'Elenco Prezzi di arrivo (nel DP)
-                if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
-                    recupera_voce(voce_da_inviare, row_src=row)
+                if cfg.read('Generale', 'nuova_voce') == 'True' and not ctrl_override:
+                    MENU_nuova_voce_scelta()
+                    pos_dest = LeggiPosizioneCorrente()
+                    start_row = pos_dest[1]
+                    dccSheetDest.getCellByPosition(pos_dest[0], start_row).String = voce_da_inviare
+                    dccSheetDest.getCellByPosition(1, start_row).CellBackColor = COLORE_VERDE_SPUNTA
+                    _gotoCella(pos_dest[0] + 1, start_row + 1)
+                else:
+                    row_dest = LeggiPosizioneCorrente()[1]
+                    LeenoComputo.cambia_articolo(dccSheetDest, row_dest, voce_da_inviare)
+                    sStRange = LeenoComputo.circoscriveVoceComputo(dccSheetDest, row_dest)
+                    start_row = sStRange.RangeAddress.StartRow
+                    dccSheetDest.getCellByPosition(1, start_row + 1).CellBackColor = COLORE_ROSSO_AVVISO
+                
+                _pending_altezza_invia_voce.append((dccSheetDest, start_row))
+                controller = ddcDoc.CurrentController
+                controller.setFirstVisibleColumn(0)
+                controller.setFirstVisibleRow(max(0, start_row - 10))
 
-                # Con CTRL: sostituisce tutte le occorrenze del codice selezionato nel DP
-                # (nei fogli Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITÀ) con il codice della voce di partenza
-                for nome_foglio in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'CONTABILITA'):
-                    try:
-                        foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
-                    except Exception:
-                        continue
-                    last_row = SheetUtils.getLastUsedRow(foglio_dp)
-                    if nome_foglio == 'Analisi di Prezzo':
-                        for r in range(last_row + 1):
-                            cell = foglio_dp.getCellByPosition(0, r)
-                            if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+            elif nSheetDCC == 'Elenco Prezzi':
+                if ctrl_override and codice_selezionato_dp:
+                    # Assicura che la voce di partenza sia aggiunta all'Elenco Prezzi di arrivo (nel DP)
+                    if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
+                        recupera_voce(voce_da_inviare, row_src=row_src)
+
+                    # Con CTRL: sostituisce tutte le occorrenze del codice selezionato nel DP
+                    # (nei fogli Analisi di Prezzo, COMPUTO, VARIANTE e CONTABILITÀ) con il codice della voce di partenza
+                    for nome_foglio in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                        try:
+                            foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
+                        except Exception:
+                            continue
+                        last_row = SheetUtils.getLastUsedRow(foglio_dp)
+                        if nome_foglio == 'Analisi di Prezzo':
+                            for r in range(last_row + 1):
+                                cell = foglio_dp.getCellByPosition(0, r)
+                                if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+                                    if cell.String.lower() == codice_selezionato_dp.lower():
+                                        cell.String = voce_da_inviare
+                                        cell.CellBackColor = COLORE_ROSSO_AVVISO
+                        else:
+                            for r in range(last_row + 1):
+                                cell = foglio_dp.getCellByPosition(1, r)
                                 if cell.String.lower() == codice_selezionato_dp.lower():
                                     cell.String = voce_da_inviare
                                     cell.CellBackColor = COLORE_ROSSO_AVVISO
-                    else:
-                        for r in range(last_row + 1):
-                            cell = foglio_dp.getCellByPosition(1, r)
-                            if cell.String.lower() == codice_selezionato_dp.lower():
-                                cell.String = voce_da_inviare
-                                cell.CellBackColor = COLORE_ROSSO_AVVISO
-                ddcDoc.CurrentController.setFirstVisibleRow(3)
-                _gotoCella(1, 4)
-            else:
-                ddcDoc.CurrentController.setFirstVisibleRow(3)
-                _gotoCella(1, 4)
-        elif nSheetDCC == 'Analisi di Prezzo':
-            dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
-            row_dest = pos_dp
-            if row_dest is not None:
-                val_col_A = dccSheetDest.getCellByPosition(0, row_dest).String
-                if not (val_col_A == "" or val_col_A == "Cod. Art.?" or ctrl_override):
-                    # Aggiunge un nuovo rigo di misura sotto quello corrente
-                    stile = dccSheetDest.getCellByPosition(0, row_dest).CellStyle
-                    if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
-                        copiaRigaAnalisi(dccSheetDest, row_dest)
-                        row_dest = row_dest + 1
-                dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
-                _gotoCella(3, row_dest)
+                    ddcDoc.CurrentController.setFirstVisibleRow(3)
+                    _gotoCella(1, 4)
+                else:
+                    ddcDoc.CurrentController.setFirstVisibleRow(3)
+                    _gotoCella(1, 4)
+            elif nSheetDCC == 'Analisi di Prezzo':
+                dccSheetDest = ddcDoc.getSheets().getByName(nSheetDCC)
+                row_dest = LeggiPosizioneCorrente()[1]
+                if row_dest is not None:
+                    val_col_A = dccSheetDest.getCellByPosition(0, row_dest).String
+                    if not (val_col_A == "" or val_col_A == "Cod. Art.?" or ctrl_override):
+                        # Aggiunge un nuovo rigo di misura sotto quello corrente
+                        stile = dccSheetDest.getCellByPosition(0, row_dest).CellStyle
+                        if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
+                            copiaRigaAnalisi(dccSheetDest, row_dest)
+                            row_dest = row_dest + 1
+                    dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
+                    _gotoCella(3, row_dest)
         # Rimosso return anticipato per permettere il flusso verso la copia dell'analisi se presente
         # return avviso_vedi_voce
 
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        if nSheetDCC in ('Elenco Prezzi'):
+            Dialogs.Exclamation(Title = 'ATTENZIONE!',
+            Text="Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
+            return avviso_vedi_voce
 
-        row = LeggiPosizioneCorrente()
-        dv = LeenoComputo.DatiVoce(oSheet, row[1])
-        art = dv.art
-        ER = dv.ER
-        SR = dv.SR
-
-        range_src = f'A{SR+1}:AL{ER+1}'
-
-        data = oSheet.getCellRangeByName(range_src).FormulaArray
-
-        if "vedi voce" in str(data).lower():
-            avviso_vedi_voce = True
-
-        oSheet.getCellByPosition(1, SR +1).CellBackColor = COLORE_VERDE_SPUNTA
-
-        oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
-        res_ep = SheetUtils.uFindString(art, oSheetEP)
-        if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
-            if art not in analisi:
-                analisi.append(art)
-
-        # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
             Dialogs.Exclamation(Title = 'ATTENZIONE!',
             Text='Il foglio di destinazione non è corretto.')
@@ -587,112 +627,118 @@ def invia_voce(ctrl_override=False):
                 oDoc.createInstance(
                     "com.sun.star.sheet.SheetCellRanges"))  # unselect
             return avviso_vedi_voce
+
+        voci_computo = getVociComputoSelezionate(oSheet)
+        if not voci_computo:
+            return False
+
         noVoce = LeenoGlobals.getGlobalVar('noVoce')
-        if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            comando('Copy')
-            prossima = LeenoSheetUtils.prossimaVoce(oSheet, ER, 1)
-            _gotoCella(0, prossima)
-    # arrivo
-            # DP = LeenoGlobals.getGlobalVar('sUltimus')
-            # ddcDoc = LeenoUtils.findOpenDocument(DP)
-            dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
-            dccSheet.getCellByPosition(1, SR + 1).CellBackColor = COLORE_VERDE_SPUNTA
-            _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-            row = LeggiPosizioneCorrente()[1]
+        dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
 
-            # dccv = LeenoComputo.DatiVoce(dccSheet, row)
-
-            if dccSheet.getCellByPosition(0, row).CellStyle in (noVoce + stili_computo + stili_contab):
-                row += 1
-            else:
-                return avviso_vedi_voce
-            # if dccSheet.getCellByPosition(0, row).CellStyle not in stili_computo + stili_contab + stili_cat:
-            try:
-                row = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
-            except Exception as e:
-                DLG.errore(e)
-
-            MENU_nuova_voce_scelta() # inserisce la nuova voce
-            # if nSheetDCC == 'CONTABILITA':
-            #     return
-
-            _gotoCella(0, row + 2) # posiziona sulla prima riga delle misure della voce
-            # return
-
-            if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
-                _gotoCella(0, row + 1) # posiziona sulla prima riga delle misure della voce
-
-            # COMPUTO/VARIANTE: ER-SR = N+2  → offset 3 → N-1 righe extra
-            # CONTABILITA:      ER-SR = N+3  → offset 4 → N-1 righe extra
-            # (CONTABILITA ha un footer in più: "Somma positivi e negativi")
-            _offset_misure = 3 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 4
-            Copia_riga_Ent(ER - SR - _offset_misure) # inserisce le righe per le misure
-
-            _gotoCella(0, row) # posiziona sulla riga della voce
-
-            _n_misure = ER - SR - (2 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 3)
-            # data contiene ER-SR+1 righe. Vogliamo copiare solo header(1) + articolo(1) + misure(_n_misure)
-            # tralasciando i footer per non sovrascrivere quelli specifici della destinazione (che hanno
-            # dimensioni e stili diversi tra COMPUTO e CONTABILITA).
-            data_to_paste = data[:_n_misure + 2]
-
-            if oSheet.Name == 'CONTABILITA' and dccSheet.Name in ('COMPUTO', 'VARIANTE'):
-                # Svuota la colonna L (indice 11) prima di incollare
-                cleaned_data = []
-                for riga in data_to_paste:
-                    riga_list = list(riga)
-                    if len(riga_list) > 11:
-                        riga_list[11] = ""
-                    cleaned_data.append(tuple(riga_list))
-                data_to_paste = tuple(cleaned_data)
-
-            if row == 4:
-                range_dest = f'A{row}:AL{row + _n_misure + 1}'
-            else:
-                range_dest = f'A{row+1}:AL{row+1 + _n_misure + 1}'
-
-            dccSheet.getCellRangeByName(range_dest).FormulaArray = data_to_paste
-
-            # FormulaArray trasferisce valori/formule ma NON gli stili.
-            # Lo stile ROSSO su col F/G/H indica che la riga di misura è negativa
-            # (PRODUCT positivo ma formula con segno -): va ripristinato manualmente
-            # sulle righe di destinazione corrispondenti a quelle negative nella sorgente.
-            for _i in range(_n_misure):
-                _src_r = SR + 2 + _i
-                _dst_r = row + 2 + _i
-                # Controlla stile ROSSO su col F(5), G(6), H(7) nella sorgente
-                if any('ROSSO' in oSheet.getCellByPosition(x, _src_r).CellStyle
-                       for x in range(5, 8)):
-                    # Applica ROSSO alle stesse colonne della destinazione (come invertiUnSegno)
-                    for x in range(2, 10):
-                        _stile = dccSheet.getCellByPosition(x, _dst_r).CellStyle
-                        if 'ROSSO' not in _stile:
-                            dccSheet.getCellByPosition(x, _dst_r).CellStyle = _stile + ' ROSSO'
-
-            rigenera_voce(row)
-            rigenera_parziali(False)
-
-            # se nella voce inserita la descrizione non risulta presente
-            # la voce di prezzo viene presa dal foglio di partenza
-
+        for SR, ER in voci_computo:
+            _gotoDoc(fpartenza)
+            dv = LeenoComputo.DatiVoce(oSheet, SR + 1)
             art = dv.art
-            ddcSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
 
-            cerca_in_elenco_prezzi = SheetUtils.uFindString(art, ddcSheet)
-            # recupera_voce(art)
+            range_src = f'A{SR+1}:AL{ER+1}'
+            data = oSheet.getCellRangeByName(range_src).FormulaArray
 
-            if not cerca_in_elenco_prezzi:
-                recupera_voce(art)
+            if "vedi voce" in str(data).lower():
+                avviso_vedi_voce = True
 
-            # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
-            # (applicata più avanti da MENU_invia_voce, dopo la riattivazione del refresh)
-            _pending_altezza_invia_voce.append((dccSheet, row))
+            oSheet.getCellByPosition(1, SR + 1).CellBackColor = COLORE_VERDE_SPUNTA
 
-        if nSheetDCC in ('Elenco Prezzi'):
-            # DLG.MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
-            Dialogs.Exclamation(Title = 'ATTENZIONE!',
-            Text="Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
-            return avviso_vedi_voce
+            oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
+            res_ep = SheetUtils.uFindString(art, oSheetEP)
+            if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
+                if art not in analisi:
+                    analisi.append(art)
+
+            if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
+                GotoSheet(nSheetDCC)
+                row = LeggiPosizioneCorrente()[1]
+
+                if dccSheet.getCellByPosition(0, row).CellStyle in (noVoce + stili_computo + stili_contab):
+                    row += 1
+                else:
+                    return avviso_vedi_voce
+                try:
+                    row = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
+                except Exception as e:
+                    DLG.errore(e)
+
+                MENU_nuova_voce_scelta() # inserisce la nuova voce
+
+                _gotoCella(0, row + 2) # posiziona sulla prima riga delle misure della voce
+
+                if dccSheet.getCellByPosition(0, LeggiPosizioneCorrente()[1]).CellStyle == 'Comp End Attributo':
+                    _gotoCella(0, row + 1) # posiziona sulla prima riga delle misure della voce
+
+                # COMPUTO/VARIANTE: ER-SR = N+2  → offset 3 → N-1 righe extra
+                # CONTABILITA:      ER-SR = N+3  → offset 4 → N-1 righe extra
+                # (CONTABILITA ha un footer in più: "Somma positivi e negativi")
+                _offset_misure = 3 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 4
+                Copia_riga_Ent(ER - SR - _offset_misure) # inserisce le righe per le misure
+
+                _gotoCella(0, row) # posiziona sulla riga della voce
+
+                _n_misure = ER - SR - (2 if oSheet.Name in ('COMPUTO', 'VARIANTE') else 3)
+                # data contiene ER-SR+1 righe. Vogliamo copiare solo header(1) + articolo(1) + misure(_n_misure)
+                # tralasciando i footer per non sovrascrivere quelli specifici della destinazione (che hanno
+                # dimensioni e stili diversi tra COMPUTO e CONTABILITA).
+                data_to_paste = data[:_n_misure + 2]
+
+                if oSheet.Name == 'CONTABILITA' and dccSheet.Name in ('COMPUTO', 'VARIANTE'):
+                    # Svuota la colonna L (indice 11) prima di incollare
+                    cleaned_data = []
+                    for riga in data_to_paste:
+                        riga_list = list(riga)
+                        if len(riga_list) > 11:
+                            riga_list[11] = ""
+                        cleaned_data.append(tuple(riga_list))
+                    data_to_paste = tuple(cleaned_data)
+
+                if row == 4:
+                    range_dest = f'A{row}:AL{row + _n_misure + 1}'
+                else:
+                    range_dest = f'A{row+1}:AL{row+1 + _n_misure + 1}'
+
+                dccSheet.getCellRangeByName(range_dest).FormulaArray = data_to_paste
+
+                # FormulaArray trasferisce valori/formule ma NON gli stili.
+                # Lo stile ROSSO su col F/G/H indica che la riga di misura è negativa
+                # (PRODUCT positivo ma formula con segno -): va ripristinato manualmente
+                # sulle righe di destinazione corrispondenti a quelle negative nella sorgente.
+                for _i in range(_n_misure):
+                    _src_r = SR + 2 + _i
+                    _dst_r = row + 2 + _i
+                    # Controlla stile ROSSO su col F(5), G(6), H(7) nella sorgente
+                    if any('ROSSO' in oSheet.getCellByPosition(x, _src_r).CellStyle
+                           for x in range(5, 8)):
+                        # Applica ROSSO alle stesse colonne della destinazione (come invertiUnSegno)
+                        for x in range(2, 10):
+                            _stile = dccSheet.getCellByPosition(x, _dst_r).CellStyle
+                            if 'ROSSO' not in _stile:
+                                dccSheet.getCellByPosition(x, _dst_r).CellStyle = _stile + ' ROSSO'
+
+                rigenera_voce(row)
+                rigenera_parziali(False)
+
+                # se nella voce inserita la descrizione non risulta presente
+                # la voce di prezzo viene presa dal foglio di partenza
+
+                ddcSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
+                cerca_in_elenco_prezzi = SheetUtils.uFindString(art, ddcSheetEP)
+
+                if not cerca_in_elenco_prezzi:
+                    recupera_voce(art)
+
+                # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
+                # (applicata più avanti da MENU_invia_voce, dopo la riattivazione del refresh)
+                _pending_altezza_invia_voce.append((dccSheet, row))
+
+        _gotoDoc(fpartenza)
         oDoc.CurrentController.select(
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect

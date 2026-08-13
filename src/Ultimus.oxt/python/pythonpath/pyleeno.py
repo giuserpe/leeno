@@ -12178,7 +12178,9 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
-    nuove_icone()
+    import LeenoNamedAreas as LNA
+    LNA.rigenera_fogli()
+    # nuove_icone()
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

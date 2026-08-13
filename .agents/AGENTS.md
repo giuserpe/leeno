@@ -15,9 +15,13 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Ciclo di vita dei documenti UNO](#ciclo-di-vita-dei-documenti-uno)
 - [Compatibilità delle proprietà custom del documento](#compatibilità-delle-proprietà-custom-del-documento)
 - [Diagnosi di blocchi/freeze](#diagnosi-di-bloccifreeze)
+- [Modulo XPWE (export/import PriMus)](#modulo-xpwe-exportimport-primus)
+- [Quirk minori UNO/ODF](#quirk-minori-unoodf)
+- [Pipeline di test automatizzato (headless UNO)](#pipeline-di-test-automatizzato-headless-uno)
 - [Sistema icone](#sistema-icone)
 - [Consegna del lavoro per agenti senza credenziali di push](#consegna-del-lavoro-per-agenti-senza-credenziali-di-push)
-- [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato-lezioni-apprese-agosto-2026)
+- [Preservazione del line-ending in qualsiasi editing](#preservazione-del-line-ending-in-qualsiasi-editing)
+- [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato)
 - [Git Commit – Conventional Commits in Italiano](#git-commit--conventional-commits-in-italiano-leeno)
 - [Manutenzione di questo file](#manutenzione-di-questo-file)
 
@@ -155,6 +159,7 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 - **Vietato sovrascrivere `sys.modules[...]` a livello di modulo.** Se un file lo fa (tipicamente per mockare `uno`/`unohelper`/moduli interni nei test) e viene importato anche solo una volta dentro LibreOffice, i moduli reali restano sostituiti da mock per l'intera sessione: effetti silenziosi, difficili da diagnosticare, che vanno da malfunzionamenti a blocchi (freeze) dell'intero processo.
 - **I file di test (`test_*.py`, `unittest`/`pytest`, mocking di `uno`) non vanno mai in `pythonpath/`.** Vanno in una cartella dedicata esclusa dal `sys.path` dell'estensione (es. `tests/`), oppure rimossi prima del merge su `dev` se non servono al funzionamento di LeenO. Attenzione particolare ai commit generati da agenti AI (es. Jules): possono aggiungere test funzionalmente corretti ma ignari di questo vincolo — vanno revisionati prima del merge, non dopo.
 - Qualunque mocking di `sys.modules` in un test deve essere temporaneo e ripristinato (es. `unittest.mock.patch.dict` come context manager), mai un'assegnazione diretta persistente.
+- **Questi vincoli sono applicati automaticamente in CI.** `scripts/check_pythonpath_safety.py` (analisi AST) e il workflow `.github/workflows/check-pythonpath-safety.yml` verificano ad ogni push/PR su `dev` l'assenza di file `test_*.py` in `pythonpath/` e di assegnazioni a `sys.modules[...]` a livello di modulo. Il controllo è nato dopo che un task Jules aveva inserito file di test con mock injection direttamente in `pythonpath/`, rompendo l'intera estensione. Un errore CI del tipo "Failed to resolve action download info" è quasi sempre transitorio: basta un re-run, non indica un problema nel codice.
 
 ## Ciclo di vita dei documenti UNO
 
@@ -171,6 +176,20 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 - Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
 - Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
 
+## Modulo XPWE (export/import PriMus)
+
+Tre bug reali già risolti (lookup case-sensitive su `diz_ep`, righe IDEP silenziosamente scartate, segno invertito su "vedi voce") hanno prodotto lezioni specifiche per `LeenoExport.py` e `LeenoImport_XPWE.py`. Prima di modificare questo modulo, leggere `documentazione/LESSONS_XPWE.md`.
+
+Regola da tenere a mente comunque, perché ricorre facilmente: `invertiUnSegno()` è un toggle pensato per uso interattivo, non per i percorsi di import — chiamarlo su una riga già impostata da `vedi_voce_xpwe()` inverte il segno una seconda volta.
+
+## Quirk minori UNO/ODF
+
+Due gotcha isolati, documentati con dettaglio in `documentazione/LESSONS_UNO_QUIRKS.md`: i nomi di stile interni LibreOffice possono essere anonimi (es. `uuuuu` invece di `'Comp TOTALI'`, causando fallimenti silenziosi in confronti `CellStyle == "nome leggibile"`); i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle F1 di COMPUTO/CONTABILITA se un file reale è stato usato come base — verificarle prima di distribuire un template.
+
+## Pipeline di test automatizzato (headless UNO)
+
+Test round-trip XPWE con istanze reali di LibreOffice, senza mock: gestione lifecycle del processo `soffice`, ordine di import (`Dialogs` per primo, per la catena circolare `pyleeno↔Debug↔Dialogs↔LeenoContab`), monkeypatch di `LeenO_path()`/`basic_LeenO()`. Dettagli completi in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
+
 ## Sistema icone
 
 - La specifica completa del design system (filosofia, primitive geometriche, palette colori, regole di export) vive in `documentazione/ICONS_DESIGN_SYSTEM.md`. Consultarla prima di creare o modificare icone: contiene, tra l'altro, la sezione 15 "Canvas di Export 48×48 px con Padding Azzerato", che descrive il crop del `viewBox` calcolato per-icona in uso dalla generazione corrente.
@@ -178,6 +197,8 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 - Il disegno segue la griglia master 24×24 con margine di sicurezza 2px; l'export finale usa invece un canvas quadrato 48×48 con `viewBox` ritagliato individualmente sul bounding box del contenuto (nessun crop fisso uguale per tutte le icone).
 - Per icone con badge d'angolo o elementi vicini al bordo, preferire una revisione icona per icona invece di un'operazione bulk automatica: il rischio di danno visivo (badge tagliato, asimmetria) è più alto che nelle icone semplici.
 - Modificare sempre gli SVG in modalità binaria (vedi "Preservazione del line-ending in QUALSIASI editing" più sotto): scritture in modalità testo normalizzano silenziosamente i fine-riga CRLF, producendo diff che toccano ogni riga di ogni file anche a parità di contenuto grafico.
+- **I file `.bmp` in `src/Ultimus.oxt/icons/` sono in realtà SVG/XML testuali**, con estensione `.bmp` solo per compatibilità con il sistema toolbar di LibreOffice. Vanno sempre trattati come testo (`text eol=lf` in `.gitattributes`), mai come file binari: aprirli o processarli come binari ne corrompe il contenuto XML.
+- **Per il calcolo del bounding box in fase di export, usare la pipeline `rsvg-convert` + PIL**, che renderizza correttamente anche gli elementi di testo. Evitare `svgelements` per questo calcolo: restituisce bounding box di dimensione zero per i nodi di testo, producendo crop errati.
 
 ## Consegna del lavoro per agenti senza credenziali di push
 
@@ -189,22 +210,21 @@ Un agente che lavora sul repository ma non ha credenziali di push dirette (o non
 4. **Messaggio di commit proposto, non eseguito.** Se richiesto, l'agente propone l'intestazione e il corpo del commit secondo le convenzioni descritte sotto ("Git Commit – Conventional Commits in Italiano"), lasciando all'utente l'esecuzione del comando.
 5. **Verifica di integrità prima della consegna.** Prima di impacchettare, validare la sintassi Python (`python3 -c "import ast; ast.parse(...)"`) e, per i file con line-ending noto, confermare che il conteggio CRLF/LF non sia cambiato rispetto all'originale.
 
-## Pulizia di codice morto e duplicato (lezioni apprese, agosto 2026)
+## Preservazione del line-ending in QUALSIASI editing
 
-Durante una pulizia sistematica di `pythonpath/` con `pyflakes` e analisi AST mirata sono emersi pattern ricorrenti, utili come checklist per le pulizie future.
-
-- **Gli script "usa e getta" in `pythonpath/` sono il rischio più grave, non solo disordine.** Trovato `_fix_path.py`: a livello di modulo apriva `pyleeno.py` e lo riscriveva su disco sostituendo un range di righe hardcoded — se il modulo fosse mai stato importato dal processo di LibreOffice (vedi sezione "Sicurezza dei moduli in `pythonpath/`" sopra), avrebbe corrotto silenziosamente `pyleeno.py` con un range ormai disallineato. Stesso discorso per `benchmark.py`: path hardcoded (`W:\...`) e `print()` eseguiti a livello di modulo, quindi un `FileNotFoundError` per chiunque non abbia esattamente quel file. Regola operativa: uno script one-shot va eseguito ed eliminato subito dopo l'uso, mai lasciato in `pythonpath/`, nemmeno "per sicurezza".
-- **La redefinition nello stesso scope è un indicatore affidabile di codice morto.** `python3 -m pyflakes <file>` segnala "redefinition of unused X from line Y" quando una funzione (o import) viene ridefinita nello stesso modulo/classe prima di essere usata: la prima definizione non è mai raggiungibile. Trovati due casi reali in `pyleeno.py` (`count_clipboard_lines`, `struttura_Registro`, entrambe con una versione più vecchia "morta" prima di quella attiva). Va trattato come codice da rimuovere, non come nota di stile.
-- **I moduli `LeenoImport_Xml*.py` vengono clonati l'uno dall'altro** e spesso portano con sé l'intero header di import del file sorgente, incluso il blocco `from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED)`, quasi mai usato per intero nel nuovo file. Un giro di `pyflakes` sul singolo modulo appena clonato individua questi import morti in pochi secondi — utile farlo subito dopo aver creato un nuovo import regionale, non solo in sede di pulizia generale.
-- **Prima di rimuovere una variabile "assegnata e mai usata" apparentemente inutile, controllare i moduli fratelli.** Se lo stesso pattern (es. un campo estratto dall'XML ma non incluso nel titolo composto) si ripete identico in più moduli `LeenoImport_Xml*.py`, è quasi sempre una scelta di design ricorrente e non un refuso isolato — la rimozione va fatta comunque (il dato resta inutilizzato), ma senza trattarla come "correzione di un bug".
-
-### Preservazione del line-ending in QUALSIASI editing, non solo SVG
-
-La regola "SVG edits must use binary mode" (vedi sezione icone) vale in realtà per ogni file esistente, non solo per gli SVG: nello stesso `pythonpath/` convivono file CRLF (es. `LeenoGiornale.py`) e file LF puro (es. `LeenoImport_XmlToscana.py`), anche nella stessa cartella. Prima di editare un file:
+Nello stesso `pythonpath/` convivono file CRLF (es. `LeenoGiornale.py`) e file LF puro (es. `LeenoImport_XmlToscana.py`), anche nella stessa cartella. Prima di editare un file:
 
 1. Verificare lo stile reale con un controllo binario (conteggio isolato di `\r\n` vs `\n`), mai assumerlo dal resto del repo o dal tipo di file.
 2. In Python, aprire in lettura/scrittura con `newline=''` per non far tradurre gli a-capo, e comporre il testo di sostituzione con lo stesso stile di fine riga del blocco che si sta sostituendo.
 3. Dopo la modifica, ricontrollare il conteggio CRLF/LF per confermare che non sia cambiato, prima di consegnare il file.
+
+Questa regola vale anche per gli SVG (vedi "Sistema icone" sopra), non solo per il codice Python.
+
+## Pulizia di codice morto e duplicato
+
+Checklist e pattern ricorrenti (script usa-e-getta pericolosi in `pythonpath/`, redefinition come segnale affidabile di codice morto, import ereditati nei cloni `LeenoImport_Xml*.py`, variabili apparentemente inutili da verificare sui moduli fratelli prima di rimuoverle) in `documentazione/LESSONS_CODE_QUALITY.md`.
+
+Regola operativa da ricordare sempre, senza bisogno di consultare il file: uno script one-shot in `pythonpath/` va eseguito ed eliminato subito dopo l'uso, mai lasciato "per sicurezza".
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
@@ -278,3 +298,4 @@ Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione d
 - Il repository mantiene due copie di questo documento: `AGENTS.md` (root) e `.agents/AGENTS.md`. Devono restere identiche byte per byte in ogni momento.
 - Qualunque modifica a una copia va applicata anche all'altra **nello stesso commit**, mai in commit separati: una divergenza tra le due copie è di per sé un difetto da correggere, indipendentemente da quale delle due sia "più aggiornata".
 - Prima di proporre una modifica a questo file, verificare con `diff AGENTS.md .agents/AGENTS.md` che le due copie siano già allineate; se non lo sono, segnalarlo esplicitamente invece di limitarsi a modificarne una.
+- **Lezioni specifiche per modulo/argomento non vanno inline in questo file**, ma in `documentazione/LESSONS_<ARGOMENTO>.md`, con un riferimento breve (poche righe, non il testo integrale) qui. Questo file va letto per intero ad ogni task: deve contenere solo regole invarianti o la singola regola operativa più importante di ogni argomento, non l'intero backlog di lezioni apprese. Se una sezione supera 10-15 righe per un singolo argomento non invariante, valutare l'estrazione in un file di dettaglio collegato.

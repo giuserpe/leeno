@@ -7916,3 +7916,28 @@ File: LeenoUtils.py, Line: 385, Function: wrapper
 File: pyleeno.py, Line: 12182, Function: MENU_debug
 ------------------------------------------------------------
 
+[2026-08-13 22:31:11]
+OS: win32 / LibreOffice-26.2.5.2 / LeenO-3.26.0.127-TESTING-20260813
+
+Errore: The following Basic script could not be found:
+library: 'UltimusFree2'
+module: '_variabili'
+method: 'autoexec'
+location: 'application'
+
+
+File: 'pyleeno.py'
+Line: '137'
+Function: 'basic_LeenO'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: pyleeno.py, Line: 210, Function: MENU_nuovo_computo
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: pyleeno.py, Line: 179, Function: creaComputo
+File: pyleeno.py, Line: 8829, Function: autoexec
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: pyleeno.py, Line: 8852, Function: autoexec_run
+File: pyleeno.py, Line: 137, Function: basic_LeenO
+------------------------------------------------------------
+

@@ -8825,6 +8825,20 @@
       <text:p text:style-name="P42"/>
      </table:table-cell>
     </table:table-row>
+    <table:table-row>
+     <table:table-cell table:style-name="Table5.A2" office:value-type="string">
+      <text:p text:style-name="P43">3.26.xx-rev2.7</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Table5.A2" office:value-type="string">
+      <text:p text:style-name="P44">Agosto 2026</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Table5.A2" office:value-type="string">
+      <text:p text:style-name="P41">Aggiunta sezione &quot;Riepilogo quantitativo&quot; con la funzione di cancellazione via CTRL; aggiunto paragrafo &quot;% Avanzamento&quot; nella sezione &quot;Inserisci somme LAVORI e SICUREZZA&quot;; aggiornata la sezione &quot;Invia Voce al DP&quot; con la selezione multipla e la rimozione dei collegamenti esterni</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="Table5.D2" office:value-type="string">
+      <text:p text:style-name="P42"/>
+     </table:table-cell>
+    </table:table-row>
    </table:table>
    <text:p text:style-name="OOoTextBody"/>
    <text:list xml:id="list125731331216969" text:continue-numbering="true" text:style-name="Numbering_20_1">
@@ -29259,10 +29273,14 @@
    <text:h text:style-name="OOoHeading_20_4" text:outline-level="4"><text:bookmark-start text:name="__RefHeading___Toc11387_3263472496"/>Somma per Colore nella Colonna<text:bookmark-end text:name="__RefHeading___Toc11387_3263472496"/></text:h>
    <text:p text:style-name="P353">Questa funzionalità permette di generare rapidamente un totale basato sulla colorazione delle celle, facilitando il computo di voci raggruppate visivamente.</text:p>
    <text:p text:style-name="P353"><text:soft-page-break/>Per utilizzare il comando: 1. Selezionare una cella nella colonna d’interesse che abbia il colore di sfondo desiderato (ad esempio, una cella evidenziata in giallo); 2. Attivare la funzione: LeenO eseguirà una scansione dell’intera colonna, individuando tutte le celle che presentano la medesima colorazione e che contengono valori numerici diversi da zero; 3. Il cursore si trasformerà in modalità selezione: è sufficiente fare clic sulla cella di destinazione dove si desidera visualizzare il risultato. LeenO inserirà nella cella scelta una formula di somma contenente i riferimenti a tutte le celle colorate individuate e applicherà ad essa lo stesso colore di sfondo.</text:p>
+   <text:h text:style-name="OOoHeading_20_4" text:outline-level="4"><text:bookmark-start text:name="__RefHeading___Riepilogo_quantitativo"/>Riepilogo quantitativo<text:bookmark-end text:name="__RefHeading___Riepilogo_quantitativo"/></text:h>
+   <text:p text:style-name="P353">Il comando <text:span text:style-name="T839">Riepilogo quantitativo</text:span> analizza il foglio attivo (COMPUTO, VARIANTE o CONTABILITÀ) e aggiunge, accanto a ogni voce, le colonne di riepilogo quantitativo che mostrano i totali provenienti dai tre elaborati. Il calcolo avviene in lettura diretta dal documento senza richiedere impostazioni aggiuntive.</text:p>
+   <text:p text:style-name="P353">Per <text:span text:style-name="T839">rimuovere</text:span> le colonne di riepilogo, avviare il comando tenendo premuto il tasto <text:span text:style-name="T839">CTRL</text:span>: le colonne vengono eliminate dal foglio corrente senza alterare i dati del computo.</text:p>
    <text:h text:style-name="OOoHeading_20_4" text:outline-level="4"><text:bookmark-start text:name="__RefHeading___Inserisci_somme_LAVORI_e_SICUREZZA"/>Inserisci somme LAVORI e SICUREZZA<text:bookmark-end text:name="__RefHeading___Inserisci_somme_LAVORI_e_SICUREZZA"/></text:h>
    <text:p text:style-name="P353">Questa funzionalità evidenzia cromaticamente le singole voci nel foglio in base al loro codice e ne raggruppa i totali.</text:p>
    <text:p text:style-name="P353">Vengono in particolare colorate (solitamente di arancione) le voci che presentano il prefisso <text:span text:style-name="T839">VDS_</text:span> (indicativo della Sicurezza) e con un altro colore (es. viola) tutte le altre voci (Lavori). Terminata la colorazione, il programma inviterà a selezionare una cella di destinazione. Al clic, verranno generate due intestazioni (&quot;Lavori&quot; e &quot;Sicurezza&quot;) con i rispettivi subtotali calcolati tramite formule, mantenendo così i collegamenti attivi con gli importi delle singole voci.</text:p>
    <text:p text:style-name="P353">Accanto ai due subtotali vengono ora aggiunte anche le colonne <text:span text:style-name="T839">Ribasso</text:span> e <text:span text:style-name="T839">Totale netto</text:span>: il valore del ribasso viene ripreso dal foglio S2, mentre il Totale netto somma Lavori e Sicurezza al netto del ribasso applicato, sempre tramite formule collegate ai dati del computo.</text:p>
+   <text:p text:style-name="P353">Viene inoltre calcolata la colonna <text:span text:style-name="T839">% Avanzamento</text:span>: esprime il rapporto percentuale tra il Totale netto del computo corrente e l&apos;importo a contratto definito nel foglio S2. Questo indicatore consente di leggere immediatamente il grado di avanzamento lavori rispetto al valore contrattuale, senza necessità di calcoli manuali.</text:p>
    <text:h text:style-name="OOoHeading_20_4" text:outline-level="4"><text:bookmark-start text:name="__RefHeading___Riepilogo_importi"/>Riepilogo importi<text:bookmark-end text:name="__RefHeading___Riepilogo_importi"/></text:h>
    <text:p text:style-name="P353">Questa funzionalità, accessibile dal menù <text:span text:style-name="T839">LeenO &gt; UTILITY...</text:span>, permette di ottenere un riepilogo rapido degli importi di tutti i file di LeenO presenti in una determinata cartella.</text:p>
    <text:p text:style-name="P353">Selezionando la cartella desiderata tramite l&apos;apposita finestra di dialogo, LeenO analizzerà tutti i file ODS contenuti al suo interno. Verrà quindi mostrata una finestra riepilogativa contenente i valori presenti nella cella A2 dei fogli COMPUTO, VARIANTE e CONTABILITA per ogni file. Cliccando su una delle voci nell&apos;elenco, sarà possibile aprire direttamente il file corrispondente.</text:p>
@@ -35143,6 +35161,8 @@
     <text:list-item>
      <text:p text:style-name="P424">Trasferimento <text:span text:style-name="T166">Analisi</text:span>: In associazione alle operazioni sopra descritte, la funzione è in grado di rintracciare ed esportare anche le schede di <text:span text:style-name="T166">Analisi di Prezzo</text:span> collegate alla voce, copiandole in modo integrato nel documento di destinazione.</text:p>
     </text:list-item>
+   <text:p text:style-name="P423"><text:span text:style-name="T166">Selezione multipla</text:span>: è possibile selezionare più voci contemporaneamente prima di avviare il trasferimento. LeenO elabora ciascuna voce in sequenza, replicando per ognuna la logica di copia, sostituzione e importazione nell&apos;Elenco Prezzi del DP. La selezione multipla è supportata sia dal foglio <text:span text:style-name="T166">Elenco Prezzi</text:span> sia dagli elaborati <text:span text:style-name="T166">COMPUTO / VARIANTE / CONTABILITÀ</text:span>.</text:p>
+   <text:p text:style-name="P423">Al termine del trasferimento, LeenO rimuove automaticamente tutti i collegamenti a file esterni eventualmente presenti nel documento di destinazione (AreaLinks e SheetLinks), convertendo i riferimenti in formule locali native. Questo evita che il DP richieda l&apos;aggiornamento di file sorgente esterni all&apos;apertura del documento.</text:p>
    </text:list>
    <text:h text:style-name="P425" text:outline-level="3"><text:bookmark-start text:name="__RefHeading__7511_13646895041"/>Accodare <text:span text:style-name="T1082">più</text:span> file di Computo<text:bookmark-end text:name="__RefHeading__7511_13646895041"/></text:h>
    <text:p text:style-name="P421"><text:span text:style-name="T1083">All’unione, quindi </text:span><text:span text:style-name="T1084">all</text:span><text:span text:style-name="T1083">’accodamento, di più lavori si </text:span><text:span text:style-name="T1085">provvede</text:span><text:span text:style-name="T1083"> ricorrendo alla combinazione di </text:span><text:span text:style-name="T3">esportazione ed importazione del formato XPWE.</text:span></text:p>

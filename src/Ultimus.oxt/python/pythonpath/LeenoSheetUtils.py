@@ -1174,7 +1174,12 @@ def cerca_errori():
 def riepilogo_quantita():
     """Inserisce colonne di riepilogo per Computo,
     Variante e Contabilità su ogni voce del foglio attivo."""
-
+    
+    is_ctrl, is_shift = PL.GetModifiers()
+    if is_ctrl:
+        cancella_riepilogo_quantita()
+        return
+    
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

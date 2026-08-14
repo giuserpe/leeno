@@ -452,30 +452,29 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-14 09:42</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/311d383b0096f944f0c1de3a52bf5386a00ec87c" target="_blank" rel="noopener"><code>311d383</code></a></td>
+                <td class="commit-msg">Merge pull request #67 from giuserpe/fix-rompi-collegamenti-esterni-13986008200894857502
+
+fix: Risolve il problema per cui pyleeno.rompi_collegamenti_esterni() non risultava efficace o causava errori a runtime:
+
+- Ristruttura la funzione definendola a livello di modulo (anziché annidata localmente) in pyleeno.py.
+- Estende la funzione per elaborare tutte le formule di tutti i fogli del foglio di calcolo, rimpiazzando i prefissi esterni (es. 'file:///[^']*'# e file:///[^'#]*#) con stringhe vuote.
+- Converte efficacemente tutti i collegamenti esterni in riferimenti locali nativi.</td>
+            </tr>
+            <tr>
+                <td>2026-08-14 09:24</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/7e1be6628b5bcf7db68bbd59ff8e431473363e3e" target="_blank" rel="noopener"><code>7e1be66</code></a></td>
+                <td class="commit-msg">fix(core): ristruttura e rende efficace la rottura dei collegamenti esterni
+
+Sposta la funzione `rompi_collegamenti_esterni` a livello di modulo per garantirne l'accessibilità globale. Ne ottimizza il comportamento pulendo le collezioni `AreaLinks`, disabilitando `SheetLinkMode` su tutti i fogli ed eseguendo una sostituzione a espressioni regolari per rimuovere i prefissi dei file esterni dalle formule, convertendole in riferimenti locali nativi.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-08-13 21:30</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/c5263659610cdce3ce4d0b25b20aef49297f26d7" target="_blank" rel="noopener"><code>c526365</code></a></td>
                 <td class="commit-msg">docs: riduce AGENTS.md a puntatori, sposta lezioni in file dedicati</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 20:52</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/214d832166450c7a73c3bcf6bab37f1f31d96051" target="_blank" rel="noopener"><code>214d832</code></a></td>
-                <td class="commit-msg">chore: update version to 3.26.0.128-TESTING-20260813 in description.xml and leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-08-13 17:21</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/f92e7a1ee4d5fdc74894a414b9372012bb55bbc1" target="_blank" rel="noopener"><code>f92e7a1</code></a></td>
-                <td class="commit-msg">feat(core): aggiungi LeenoNamedAreas.py per centralizzare la rigenerazione dei NamedArea
-
-Introduce un modulo dedicato che raggruppa la rigenerazione di tutti gli
-intervalli nominati necessari a LeenO in tre gruppi:
-- Gruppo A: range fissi legati all'ultima riga (elenco_prezzi, Lista,
-  elenco_variante, analisi, blocco_analisi, oneri_sicurezza)
-- Gruppo B: colonne calcolate su COMPUTO/VARIANTE/CONTABILITA
-  (equivalente a sistema_aree di pyleeno)
-- Gruppo C: diagnostica sola lettura sui range SAL dinamici
-
-Espone MENU_rigenera_NamedAreas() come voce di menu/toolbar.
-Nessun effetto collaterale a livello di modulo (compatibile pythonpath).</td>
             </tr>
                     </tbody>
                 </table>
@@ -499,8 +498,8 @@ Nessun effetto collaterale a livello di modulo (compatibile pythonpath).</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-14 09:25 UTC</p>
-                <p>Build Commit: <code>7e1be66</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-14 09:42 UTC</p>
+                <p>Build Commit: <code>311d383</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

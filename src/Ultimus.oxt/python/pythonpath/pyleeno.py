@@ -432,30 +432,6 @@ def invia_voce(ctrl_override=False):
                 analisi.append(oSheet.getCellByPosition(0, y).String)
         return (analisi)
 
-    def rompi_collegamenti_esterni(doc):
-        '''
-        Rompe e rimuove tutti i collegamenti attivi a file esterni (SheetLinks, AreaLinks)
-        nel documento specificato.
-        '''
-        try:
-            # 1. Rompe i collegamenti delle aree esterne (AreaLinks)
-            if hasattr(doc, "AreaLinks"):
-                area_links = doc.AreaLinks
-                while area_links.Count > 0:
-                    area_links.removeByIndex(0)
-        except Exception:
-            pass
-
-        try:
-            # 2. Rompe i collegamenti dei fogli esterni (SheetLinks) impostando il LinkMode a NONE
-            from com.sun.star.sheet.SheetLinkMode import NONE as SHEET_LINK_MODE_NONE
-            if hasattr(doc, "getSheets"):
-                for sheet in doc.getSheets():
-                    if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
-                        sheet.setLinkMode(SHEET_LINK_MODE_NONE)
-        except Exception:
-            pass
-
     def getVociSelezionate(oSheet):
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -861,6 +837,57 @@ def invia_voce(ctrl_override=False):
     return avviso_vedi_voce
 
 
+def rompi_collegamenti_esterni(doc=None):
+    '''
+    Rompe e rimuove tutti i collegamenti attivi a file esterni (SheetLinks, AreaLinks)
+    nel documento specificato.
+    '''
+    if doc is None:
+        doc = LeenoUtils.getDocument()
+    if doc is None:
+        return
+
+    try:
+        # 1. Rompe i collegamenti delle aree esterne (AreaLinks)
+        if hasattr(doc, "AreaLinks"):
+            area_links = doc.AreaLinks
+            while area_links.Count > 0:
+                area_links.removeByIndex(0)
+    except Exception:
+        pass
+
+    try:
+        # 2. Rompe i collegamenti dei fogli esterni (SheetLinks) impostando il LinkMode a NONE
+        from com.sun.star.sheet.SheetLinkMode import NONE as SHEET_LINK_MODE_NONE
+        if hasattr(doc, "getSheets"):
+            for sheet in doc.getSheets():
+                if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
+                    sheet.setLinkMode(SHEET_LINK_MODE_NONE)
+    except Exception:
+        pass
+
+    try:
+        # 3. Rompe le formule con link esterni sostituendole con riferimenti locali nativi
+        if hasattr(doc, "getSheets"):
+            for sheet in doc.getSheets():
+                try:
+                    replace = sheet.createReplaceDescriptor()
+                    replace.SearchRegularExpression = True
+                    replace.SearchType = 0  # 0 matches Formulas
+
+                    # Pattern 1: 'file:///[^']*'#
+                    replace.SearchString = "'file:///[^']*'#"
+                    replace.ReplaceString = ""
+                    sheet.replaceAll(replace)
+
+                    # Pattern 2: file:///[^'#]*#
+                    replace.SearchString = "file:///[^'#]*#"
+                    replace.ReplaceString = ""
+                    sheet.replaceAll(replace)
+                except Exception:
+                    pass
+    except Exception:
+        pass
 
 
 def codice_voce(row, cod=None):

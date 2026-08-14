@@ -6,7 +6,7 @@
    version="1.1"
    id="svg4"
    sodipodi:docname="parz.svg"
-   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,13 +24,13 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="16.8125"
      inkscape:cx="12.431227"
-     inkscape:cy="19.479554"
+     inkscape:cy="19.539033"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
+     inkscape:current-layer="g2" />
   <g
      id="g5"
      transform="translate(-26.129739,0.08357394)">
@@ -62,7 +62,7 @@
          rx="0.5"
          fill="#E9EFDF"
          id="rect3-8"
-         style="fill:#7F7F7F;fill-opacity:1" />
+         style="fill:#8fb200;fill-opacity:1" />
       <rect
          x="28.368031"
          y="17.427509"
@@ -71,7 +71,7 @@
          rx="0.5"
          fill="#E9EFDF"
          id="rect3-8-2-9"
-         style="fill:#8fb200;fill-opacity:1" />
+         style="fill:#7F7F7F;fill-opacity:1" />
     </g>
   </g>
   <text

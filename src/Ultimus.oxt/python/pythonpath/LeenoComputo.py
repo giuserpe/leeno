@@ -190,7 +190,7 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
 
     # Restituisce il range di celle individuato.
     if not misure:
-        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
+        return oSheet.getCellRangeByPosition(0, start_row, 43, end_row)
     else:
         end_offset = -2 if oSheet.Name == 'CONTABILITA' else -1
         return oSheet.getCellRangeByPosition(2, start_row + 2, 8, end_row + end_offset)

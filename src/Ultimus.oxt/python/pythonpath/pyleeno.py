@@ -9669,11 +9669,13 @@ def ods2pdf(oDoc, sFile):
     properties = tuple(oProp)
 
     # ods2pdf() esporta il documento live (non una copia usa-e-getta):
-    # per escludere le note dall'export dobbiamo disattivare
-    # temporaneamente PrintAnnotations sui page style effettivamente
-    # usati dai fogli esportati, ed è indispensabile ripristinare il
-    # valore originale subito dopo, altrimenti l'impostazione di stampa
-    # dell'utente resterebbe alterata in modo permanente.
+    # PrintAnnotations sotto sopprime solo l'elenco testuale delle note a
+    # fine pagina, NON l'indicatore visivo della nota sulla cella, che
+    # Calc include comunque nel rendering di export/stampa. Per escluderlo
+    # davvero rimuoviamo le annotazioni prima dell'export e le reinseriamo
+    # identiche subito dopo: è indispensabile farlo sempre (anche in caso
+    # di eccezione), altrimenti il documento dell'utente perderebbe le note
+    # in modo permanente.
     pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
     styleNames = set(sheet.PageStyle for sheet in oDoc.Sheets)
     origAnnotations = {}
@@ -9682,12 +9684,24 @@ def ods2pdf(oDoc, sFile):
         origAnnotations[styleName] = style.PrintAnnotations
         style.PrintAnnotations = False
 
+    savedAnnotations = []
+    for sheet in oDoc.Sheets:
+        annots = sheet.Annotations
+        for i in range(annots.getCount() - 1, -1, -1):
+            annot = annots.getByIndex(i)
+            savedAnnotations.append((sheet.Name, annot.Position, annot.Text.getString()))
+            annots.removeByIndex(i)
+
     try:
         dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
         dispatchHelper.executeDispatch(oFrame, '.uno:ExportToPDF', '', 0, properties)
     finally:
         for styleName, origVal in origAnnotations.items():
             pageStyles.getByName(styleName).PrintAnnotations = origVal
+        # reinserimento in ordine inverso rispetto alla rimozione, così da
+        # ripristinare posizioni/indici il più fedelmente possibile
+        for sheetName, pos, text in reversed(savedAnnotations):
+            oDoc.Sheets.getByName(sheetName).Annotations.insertNew(pos, text)
     return
 
 ########################################################################
@@ -12234,6 +12248,9 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    stampa_PDF()
+    return
+
     import LeenoNamedAreas as LNA
     LNA.rigenera_fogli()
     # nuove_icone()

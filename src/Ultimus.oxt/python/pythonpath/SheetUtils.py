@@ -273,6 +273,17 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
             nDoc.Sheets[pos].PrintAreas = sheet.PrintAreas
     nDoc.Sheets.removeByName(nDoc.Sheets[0].Name)
 
+    # PrintAnnotations sopra sopprime solo l'elenco testuale delle note a
+    # fine pagina: l'indicatore visivo della nota sulla cella viene comunque
+    # incluso da Calc nel rendering di stampa/export. nDoc è un documento
+    # usa-e-getta importato da importSheet(), che copia anche le
+    # annotazioni: le rimuoviamo esplicitamente per escluderle davvero
+    # dal PDF.
+    for nSheet in nDoc.Sheets:
+        annots = nSheet.Annotations
+        for i in range(annots.getCount() - 1, -1, -1):
+            annots.removeByIndex(i)
+
     # finally we must apply header/footers to page styles
     # we do it ONLY on page styles which already have
     # header or footer enabled. Other page styles (like cover ones)

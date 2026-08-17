@@ -9654,10 +9654,6 @@ def ods2pdf(oDoc, sFile):
     # necessario perché ods2pdf() è il percorso usato anche per stampare
     # atti contabili (giornale, registro) che devono restare idonei alla
     # conservazione a norma.
-    # SelectPdfVersion=2 forza l'export in PDF/A-2b invece del PDF generico:
-    # necessario perché ods2pdf() è il percorso usato anche per stampare
-    # atti contabili (giornale, registro) che devono restare idonei alla
-    # conservazione a norma.
     # NOTA: FilterData deve essere tipizzato esplicitamente come
     # sequence<PropertyValue> (uno.Any), altrimenti PyUNO lo marshalla come
     # sequence<any> generico e il filtro lo ignora in silenzio.
@@ -9671,8 +9667,27 @@ def ods2pdf(oDoc, sFile):
     oProp.append(oProp1)
     oProp.append(oProp2)
     properties = tuple(oProp)
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, '.uno:ExportToPDF', '', 0, properties)
+
+    # ods2pdf() esporta il documento live (non una copia usa-e-getta):
+    # per escludere le note dall'export dobbiamo disattivare
+    # temporaneamente PrintAnnotations sui page style effettivamente
+    # usati dai fogli esportati, ed è indispensabile ripristinare il
+    # valore originale subito dopo, altrimenti l'impostazione di stampa
+    # dell'utente resterebbe alterata in modo permanente.
+    pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+    styleNames = set(sheet.PageStyle for sheet in oDoc.Sheets)
+    origAnnotations = {}
+    for styleName in styleNames:
+        style = pageStyles.getByName(styleName)
+        origAnnotations[styleName] = style.PrintAnnotations
+        style.PrintAnnotations = False
+
+    try:
+        dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+        dispatchHelper.executeDispatch(oFrame, '.uno:ExportToPDF', '', 0, properties)
+    finally:
+        for styleName, origVal in origAnnotations.items():
+            pageStyles.getByName(styleName).PrintAnnotations = origVal
     return
 
 ########################################################################

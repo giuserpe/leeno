@@ -253,6 +253,15 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
         style = pageStyles.getByName(styleName)
         copyPageStyle(nDoc, style)
 
+    # nDoc è un documento usa-e-getta: disattiviamo la stampa delle note
+    # direttamente sui page style copiati, senza toccare il documento
+    # originale. Esclude le note dall'export PDF (sia come testo a fine
+    # pagina sia come annotazioni PDF cliccabili).
+    nPageStyles = nDoc.StyleFamilies.getByName('PageStyles')
+    for styleName in styleSet:
+        nStyle = nPageStyles.getByName(styleName)
+        nStyle.PrintAnnotations = False
+
     # copy required sheets on new document it
     # setting also the correct pagestyles...
     # and, if present, copy print area too

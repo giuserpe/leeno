@@ -320,8 +320,12 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
 
                 pageStyle.RightPageFooterContent = content
 
+    # SelectPdfVersion=2 forza l'export in PDF/A-2b: formato idoneo alla
+    # conservazione a norma degli atti contabili (registro, computo, ecc.),
+    # a differenza del PDF generico prodotto dal filtro senza FilterData.
     storeArgs = {
         'FilterName': 'calc_pdf_Export',
+        'FilterData': LeenoUtils.dictToProperties({'SelectPdfVersion': 2}),
     }
 
     destUrl = uno.systemPathToFileUrl(destPath)

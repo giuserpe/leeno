@@ -9650,9 +9650,16 @@ def ods2pdf(oDoc, sFile):
     oProp1 = PropertyValue()
     oProp1.Name = "FilterName"
     oProp1.Value = "calc_pdf_Export"
+    # SelectPdfVersion=2 forza l'export in PDF/A-2b invece del PDF generico:
+    # necessario perché ods2pdf() è il percorso usato anche per stampare
+    # atti contabili (giornale, registro) che devono restare idonei alla
+    # conservazione a norma.
+    oPropPdfA = PropertyValue()
+    oPropPdfA.Name = "SelectPdfVersion"
+    oPropPdfA.Value = 2
     oProp2 = PropertyValue()
     oProp2.Name = "FilterData"
-    oProp2.Value = ()
+    oProp2.Value = (oPropPdfA,)
     oProp.append(oProp0)
     oProp.append(oProp1)
     oProp.append(oProp2)

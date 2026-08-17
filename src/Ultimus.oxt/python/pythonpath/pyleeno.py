@@ -5407,6 +5407,8 @@ def MENU_cerca_in_elenco():
 def cerca_in_elenco():
     '''
     Evidenzia il codice di elenco prezzi della voce corrente.
+    Se il tasto CTRL è premuto, la ricerca avviene direttamente in Analisi di Prezzo
+    invece che in Elenco Prezzi.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -5415,6 +5417,8 @@ def cerca_in_elenco():
     if sheet_name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Registro',
                           'Analisi di Prezzo', 'SAL', 'Elenco Prezzi'):
         return
+
+    is_ctrl, _ = GetModifiers()
 
     row = LeggiPosizioneCorrente()[1]
     if row is None:
@@ -5443,9 +5447,10 @@ def cerca_in_elenco():
             sopra = sStRange.RangeAddress.StartRow
             codice_da_cercare = oSheet.getCellByPosition(1, sopra + 1).String
 
-        oTargetSheet = oDoc.getSheets().getByName("Elenco Prezzi")
+        nome_target = "Analisi di Prezzo" if is_ctrl else "Elenco Prezzi"
+        oTargetSheet = oDoc.getSheets().getByName(nome_target)
         oTargetSheet.IsVisible = True
-        GotoSheet('Elenco Prezzi')
+        GotoSheet(nome_target)
         oSheet = oTargetSheet
     else:  # 'Elenco Prezzi'
         cell_1 = oSheet.getCellByPosition(1, row)

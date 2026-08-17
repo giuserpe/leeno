@@ -9654,12 +9654,19 @@ def ods2pdf(oDoc, sFile):
     # necessario perché ods2pdf() è il percorso usato anche per stampare
     # atti contabili (giornale, registro) che devono restare idonei alla
     # conservazione a norma.
+    # SelectPdfVersion=2 forza l'export in PDF/A-2b invece del PDF generico:
+    # necessario perché ods2pdf() è il percorso usato anche per stampare
+    # atti contabili (giornale, registro) che devono restare idonei alla
+    # conservazione a norma.
+    # NOTA: FilterData deve essere tipizzato esplicitamente come
+    # sequence<PropertyValue> (uno.Any), altrimenti PyUNO lo marshalla come
+    # sequence<any> generico e il filtro lo ignora in silenzio.
     oPropPdfA = PropertyValue()
     oPropPdfA.Name = "SelectPdfVersion"
     oPropPdfA.Value = 2
     oProp2 = PropertyValue()
     oProp2.Name = "FilterData"
-    oProp2.Value = (oPropPdfA,)
+    oProp2.Value = uno.Any('[]com.sun.star.beans.PropertyValue', (oPropPdfA,))
     oProp.append(oProp0)
     oProp.append(oProp1)
     oProp.append(oProp2)

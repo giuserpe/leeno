@@ -323,9 +323,13 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
     # SelectPdfVersion=2 forza l'export in PDF/A-2b: formato idoneo alla
     # conservazione a norma degli atti contabili (registro, computo, ecc.),
     # a differenza del PDF generico prodotto dal filtro senza FilterData.
+    # NOTA: FilterData deve essere tipizzato esplicitamente come
+    # sequence<PropertyValue> (uno.Any), altrimenti PyUNO lo marshalla come
+    # sequence<any> generico e il filtro calc_pdf_Export lo ignora in
+    # silenzio, senza sollevare errore.
     storeArgs = {
         'FilterName': 'calc_pdf_Export',
-        'FilterData': LeenoUtils.dictToProperties({'SelectPdfVersion': 2}),
+        'FilterData': LeenoUtils.dictToProperties({'SelectPdfVersion': 2}, unoAny=True),
     }
 
     destUrl = uno.systemPathToFileUrl(destPath)

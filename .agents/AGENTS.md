@@ -16,6 +16,7 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Compatibilità delle proprietà custom del documento](#compatibilità-delle-proprietà-custom-del-documento)
 - [Diagnosi di blocchi/freeze](#diagnosi-di-bloccifreeze)
 - [Modulo XPWE (export/import PriMus)](#modulo-xpwe-exportimport-primus)
+- [Export PDF (PDF/A e note)](#export-pdf-pdfa-e-note)
 - [Quirk minori UNO/ODF](#quirk-minori-unoodf)
 - [Pipeline di test automatizzato (headless UNO)](#pipeline-di-test-automatizzato-headless-uno)
 - [Sistema icone](#sistema-icone)
@@ -181,6 +182,12 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 Tre bug reali già risolti (lookup case-sensitive su `diz_ep`, righe IDEP silenziosamente scartate, segno invertito su "vedi voce") hanno prodotto lezioni specifiche per `LeenoExport.py` e `LeenoImport_XPWE.py`. Prima di modificare questo modulo, leggere `documentazione/LESSONS_XPWE.md`.
 
 Regola da tenere a mente comunque, perché ricorre facilmente: `invertiUnSegno()` è un toggle pensato per uso interattivo, non per i percorsi di import — chiamarlo su una riga già impostata da `vedi_voce_xpwe()` inverte il segno una seconda volta.
+
+## Export PDF (PDF/A e note)
+
+`SheetUtils.pdfExport()` e `pyleeno.ods2pdf()` sono i due percorsi di export PDF. Prima di modificarli, leggere `documentazione/LESSONS_PDF_EXPORT.md`.
+
+Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nasconde l'indicatore visivo delle note sulla cella (solo l'elenco a fine pagina) — per escluderle davvero vanno rimosse (e, su documento live, reinserite dopo l'export).
 
 ## Quirk minori UNO/ODF
 

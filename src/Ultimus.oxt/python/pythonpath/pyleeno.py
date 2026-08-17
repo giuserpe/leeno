@@ -12248,9 +12248,6 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
-    stampa_PDF()
-    return
-
     import LeenoNamedAreas as LNA
     LNA.rigenera_fogli()
     # nuove_icone()

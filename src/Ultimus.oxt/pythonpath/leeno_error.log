@@ -7941,3 +7941,33 @@ File: pyleeno.py, Line: 8852, Function: autoexec_run
 File: pyleeno.py, Line: 137, Function: basic_LeenO
 ------------------------------------------------------------
 
+[2026-08-14 12:40:32]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.128-TESTING-20260813
+
+Errore: 
+
+File: 'undo_utils.py'
+Line: '74'
+Function: 'wrapper'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: undo_utils.py, Line: 84, Function: wrapper
+File: undo_utils.py, Line: 74, Function: wrapper
+------------------------------------------------------------
+
+[2026-08-14 12:45:18]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.128-TESTING-20260813
+
+Errore: module 'LeenoUtils' has no attribute 'rompi_collegamenti_esterni'
+
+File: 'pyleeno.py'
+Line: '12209'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12209, Function: MENU_debug
+------------------------------------------------------------
+

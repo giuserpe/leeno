@@ -11120,15 +11120,19 @@ def trova_ricorrenze():
     chiudi_dialoghi()
 
     def ricorrenze():
-        '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
+        '''Trova i codici di prezzo ricorrenti'''
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         struttura_off()
         last = SheetUtils.getUsedArea(oSheet).EndRow
         lista = []
         for n in range(3, last):
-            if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
-                lista.append(oSheet.getCellByPosition(1, n).String)
+            if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+                    lista.append(oSheet.getCellByPosition(1, n).String)
+            if oSheet.Name in ('Analisi di Prezzo'):
+                if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
+                    lista.append(oSheet.getCellByPosition(0, n).String)
         unici = (set(lista))
         for el in unici:
             lista.remove(el)
@@ -11158,6 +11162,13 @@ def trova_ricorrenze():
         Dialogs.Info(Title = 'Informazione',
         Text="Non ci sono voci di prezzo ricorrenti.")
         return
+    else:
+        lista_ricorrenze = "\n".join([s for s in lista_ricorrenze])
+        scelta = DLG.chi(lista_ricorrenze)
+        if scelta:
+            filtra_codice(scelta)
+    return
+    DLG.chiudi_dialoghi()
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg = dp.createDialog(
@@ -12253,6 +12264,8 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    from LeenoAnalysis import Main_Rinumera_Analisi_Selezionate
+    Main_Rinumera_Analisi_Selezionate()
     import LeenoNamedAreas as LNA
     LNA.rigenera_fogli()
     # nuove_icone()

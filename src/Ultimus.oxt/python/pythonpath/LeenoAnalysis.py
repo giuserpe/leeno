@@ -461,13 +461,13 @@ def _Rinumera_Analisi_Selezionate():
     oDoc = LeenoUtils.getDocument()
 
     if not oDoc.Sheets.hasByName("Analisi di Prezzo"):
-        DLG.chi("Il foglio 'Analisi di Prezzo' non esiste in questo documento.")
+        Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text="Il foglio 'Analisi di Prezzo' non esiste in questo documento.")
         return
 
     oSheetAP = oDoc.Sheets.getByName("Analisi di Prezzo")
 
     if oDoc.CurrentController.ActiveSheet.Name != "Analisi di Prezzo":
-        DLG.chi("Attivare il foglio 'Analisi di Prezzo' prima di lanciare il comando.")
+        Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text="Attivare il foglio 'Analisi di Prezzo' prima di lanciare il comando.")
         return
 
     # 1. Righe coperte dalla selezione corrente (gestisce anche selezioni multiple)
@@ -488,7 +488,7 @@ def _Rinumera_Analisi_Selezionate():
         righe_selezionate.update(range(start_row, end_row + 1))
 
     if not righe_selezionate:
-        DLG.chi("Nessuna selezione valida sul foglio 'Analisi di Prezzo'.")
+        Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text="Nessuna selezione valida sul foglio 'Analisi di Prezzo'.")
         return
 
     # 2. Individua tutte le schede del foglio (stesso algoritmo di _Riordina_Analisi_Alfabetico)
@@ -507,7 +507,7 @@ def _Rinumera_Analisi_Selezionate():
                     break
             if fine is None:
                 msg = f"Errore: scheda '{codice}' (riga {inizio + 1}) non ha riga di fine 'Analisi_Sfondo'"
-                DLG.chi(msg)
+                Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text=msg)
                 return
             schede.append((codice, inizio, fine))
             i = fine + 1
@@ -515,7 +515,7 @@ def _Rinumera_Analisi_Selezionate():
             i += 1
 
     if not schede:
-        DLG.chi("Nessuna scheda di analisi trovata nel foglio 'Analisi di Prezzo'.")
+        Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text="Nessuna scheda di analisi trovata nel foglio 'Analisi di Prezzo'.")
         return
 
     # 3. Filtra solo le schede intersecate dalla selezione, in ordine di riga (dall'alto in basso)
@@ -524,7 +524,7 @@ def _Rinumera_Analisi_Selezionate():
     ]
 
     if not schede_selezionate:
-        DLG.chi("Seleziona almeno una scheda di analisi (o una sua parte) prima di lanciare il comando.")
+        Dialogs.NotifyDialog(IconType="warning", Title='AVVISO!', Text="Seleziona almeno una scheda di analisi (o una sua parte) prima di lanciare il comando.")
         return
 
     # 4. Chiede il primo codice della nuova numerazione (prefisso + ID), es. 'ciccillo_66'
@@ -541,10 +541,7 @@ def _Rinumera_Analisi_Selezionate():
     # 5. Il prefisso e il numero di cifre dell'ID sono ricavati dal codice appena inserito
     match = re.match(r"^(.*?)(\d+)$", sPrimoCodice)
     if not match:
-        DLG.chi(
-            "Codice non valido: deve terminare con un numero (es. 'ciccillo_66'), "
-            "in modo da poter ricavare prefisso e ID di partenza."
-        )
+        Dialogs.Info(IconType="error", Title='ERRORE!', Text="Codice non valido: deve terminare con un numero (es. 'ciccillo_66'), in modo da poter ricavare prefisso e ID di partenza.")
         return
     prefix = match.group(1)
     width = len(match.group(2))
@@ -563,14 +560,14 @@ def _Rinumera_Analisi_Selezionate():
     if collisioni:
         msg = ("Mi fermo! I seguenti nuovi codici coinciderebbero con codici già "
                "presenti nel foglio:\n\t\t\t\t\t\t" + ", ".join(sorted(collisioni)))
-        DLG.chi(msg)
+        Dialogs.Info(IconType="error", Title='ERRORE!', Text=msg)
         return
     if len(set(nuovi_codici)) != len(nuovi_codici):
-        DLG.chi("Errore interno: la nuova numerazione genera codici duplicati.")
+        Dialogs.Info(IconType="error", Title='ERRORE!', Text="Errore interno: la nuova numerazione genera codici duplicati.")
         return
 
     # 8. Conferma prima di un'operazione che tocca più fogli
-    riepilogo = "\n".join(
+    riepilogo = " -- ".join(
         f"{s[0]} -> {n}" for s, n in zip(schede_selezionate, nuovi_codici)
     )
     if not Dialogs.YesNoDialog(
@@ -612,7 +609,5 @@ def _Rinumera_Analisi_Selezionate():
         if toccato:
             fogli_aggiornati += 1
 
-    DLG.chi(
-        f"Rinumerazione completata: {len(schede_selezionate)} scheda/e aggiornate, "
-        f"propagata su {fogli_aggiornati} foglio/i."
-    )
+    Dialogs.Info(Title='Rinumera Analisi di Prezzo', Text=f"Rinumerazione completata: {len(schede_selezionate)} scheda/e aggiornate, "
+        f"propagata su {fogli_aggiornati} foglio/i.")

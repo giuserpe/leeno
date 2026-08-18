@@ -6,7 +6,7 @@
    version="1.1"
    id="svg_py"
    sodipodi:docname="python_debug.svg"
-   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -22,9 +22,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="17.832349"
-     inkscape:cx="32.693393"
-     inkscape:cy="13.094181"
+     inkscape:zoom="12.609375"
+     inkscape:cx="30.889715"
+     inkscape:cy="14.63197"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -39,7 +39,7 @@
      stroke-width="1"
      stroke-linejoin="round"
      id="path1"
-     style="fill:#808080;fill-opacity:1;stroke:#808080;stroke-opacity:1" />
+     style="fill:#f4b400;fill-opacity:1;stroke:#f5b300;stroke-opacity:1;stroke-width:0.999765;stroke-dasharray:none" />
   <circle
      cx="12.5"
      cy="6.5"

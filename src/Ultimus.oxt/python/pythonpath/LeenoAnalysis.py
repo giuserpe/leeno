@@ -436,3 +436,183 @@ def _Riordina_Analisi_Alfabetico():
         oSheet.getRows().removeByIndex(original_inizio, nrighe)
 
     PL.MENU_struttura_on()
+
+
+def Main_Rinumera_Analisi_Selezionate():
+    _Rinumera_Analisi_Selezionate()
+
+
+@with_undo("Rinumera Analisi di Prezzo Selezionate")
+@LeenoUtils.no_refresh
+def _Rinumera_Analisi_Selezionate():
+    '''
+    Rinumera SOLO le schede di 'Analisi di Prezzo' intersecate dalla selezione
+    corrente, chiedendo il primo indice della nuova numerazione, e propaga la
+    sostituzione dei vecchi codici in 'Elenco Prezzi' (colonna A) e in tutti i
+    fogli il cui nome contiene 'COMPUTO', 'VARIANTE' o 'CONTABILITA' (colonna B).
+
+    Esempio: fornendo 'ciccillo_66' come primo codice ('ciccillo_' prefisso, 66 ID),
+    le schede selezionate diventano ciccillo_66, ciccillo_67, ..., ciccillo_##
+    (il numero di cifre dell'ID segue quello inserito, es. '066' -> 3 cifre).
+    '''
+    import re
+
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+
+    if not oDoc.Sheets.hasByName("Analisi di Prezzo"):
+        DLG.chi("Il foglio 'Analisi di Prezzo' non esiste in questo documento.")
+        return
+
+    oSheetAP = oDoc.Sheets.getByName("Analisi di Prezzo")
+
+    if oDoc.CurrentController.ActiveSheet.Name != "Analisi di Prezzo":
+        DLG.chi("Attivare il foglio 'Analisi di Prezzo' prima di lanciare il comando.")
+        return
+
+    # 1. Righe coperte dalla selezione corrente (gestisce anche selezioni multiple)
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    el_y = []
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            el_y.append((el.StartRow, el.EndRow))
+    except TypeError:
+        el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+
+    righe_selezionate = set()
+    for start_row, end_row in el_y:
+        righe_selezionate.update(range(start_row, end_row + 1))
+
+    if not righe_selezionate:
+        DLG.chi("Nessuna selezione valida sul foglio 'Analisi di Prezzo'.")
+        return
+
+    # 2. Individua tutte le schede del foglio (stesso algoritmo di _Riordina_Analisi_Alfabetico)
+    lLastUrow = SheetUtils.getLastUsedRow(oSheetAP)
+    schede = []  # Lista di tuple: (codice, riga_inizio, riga_fine)
+    i = 0
+    while i <= lLastUrow:
+        cell = oSheetAP.getCellByPosition(0, i)
+        if cell.CellStyle == "An.1v-Att Start":
+            inizio = i
+            codice = oSheetAP.getCellByPosition(0, i + 1).String
+            fine = None
+            for x in range(i + 1, lLastUrow + 1):
+                if oSheetAP.getCellByPosition(0, x).CellStyle == "Analisi_Sfondo":
+                    fine = x
+                    break
+            if fine is None:
+                msg = f"Errore: scheda '{codice}' (riga {inizio + 1}) non ha riga di fine 'Analisi_Sfondo'"
+                DLG.chi(msg)
+                return
+            schede.append((codice, inizio, fine))
+            i = fine + 1
+        else:
+            i += 1
+
+    if not schede:
+        DLG.chi("Nessuna scheda di analisi trovata nel foglio 'Analisi di Prezzo'.")
+        return
+
+    # 3. Filtra solo le schede intersecate dalla selezione, in ordine di riga (dall'alto in basso)
+    schede_selezionate = [
+        s for s in schede if righe_selezionate.intersection(range(s[1], s[2] + 1))
+    ]
+
+    if not schede_selezionate:
+        DLG.chi("Seleziona almeno una scheda di analisi (o una sua parte) prima di lanciare il comando.")
+        return
+
+    # 4. Chiede il primo codice della nuova numerazione (prefisso + ID), es. 'ciccillo_66'
+    codice_riferimento = (schede_selezionate[0][0] or "").strip()
+    sPrimoCodice = PL.InputBox(
+        sCella=codice_riferimento,
+        t=f"Primo codice della nuova numerazione, es. 'ciccillo_66' "
+          f"({len(schede_selezionate)} scheda/e selezionate)"
+    )
+    if not sPrimoCodice or not sPrimoCodice.strip():
+        return
+    sPrimoCodice = sPrimoCodice.strip()
+
+    # 5. Il prefisso e il numero di cifre dell'ID sono ricavati dal codice appena inserito
+    match = re.match(r"^(.*?)(\d+)$", sPrimoCodice)
+    if not match:
+        DLG.chi(
+            "Codice non valido: deve terminare con un numero (es. 'ciccillo_66'), "
+            "in modo da poter ricavare prefisso e ID di partenza."
+        )
+        return
+    prefix = match.group(1)
+    width = len(match.group(2))
+    primo_indice = int(match.group(2))
+
+    # 6. Genera la mappa vecchio_codice -> nuovo_codice, in ordine di riga
+    nuovi_codici = [
+        f"{prefix}{primo_indice + idx:0{width}d}"
+        for idx in range(len(schede_selezionate))
+    ]
+    mappa = {s[0]: n for s, n in zip(schede_selezionate, nuovi_codici)}
+
+    # 7. Verifica che i nuovi codici non collidano con codici di schede NON coinvolte
+    codici_non_toccati = {c for c, _, _ in schede if c not in mappa}
+    collisioni = codici_non_toccati.intersection(nuovi_codici)
+    if collisioni:
+        msg = ("Mi fermo! I seguenti nuovi codici coinciderebbero con codici già "
+               "presenti nel foglio:\n\t\t\t\t\t\t" + ", ".join(sorted(collisioni)))
+        DLG.chi(msg)
+        return
+    if len(set(nuovi_codici)) != len(nuovi_codici):
+        DLG.chi("Errore interno: la nuova numerazione genera codici duplicati.")
+        return
+
+    # 8. Conferma prima di un'operazione che tocca più fogli
+    riepilogo = "\n".join(
+        f"{s[0]} -> {n}" for s, n in zip(schede_selezionate, nuovi_codici)
+    )
+    if not Dialogs.YesNoDialog(
+        Title="Rinumera Analisi di Prezzo",
+        Text=f"Confermi la rinumerazione di {len(schede_selezionate)} scheda/e "
+             f"e la propagazione in Elenco Prezzi e nei fogli "
+             f"COMPUTO/VARIANTE/CONTABILITA?\n\n{riepilogo}"
+    ):
+        return
+
+    # 9. Applica i nuovi codici nel foglio 'Analisi di Prezzo'
+    for (codice, inizio, fine), nuovo_codice in zip(schede_selezionate, nuovi_codici):
+        oSheetAP.getCellByPosition(0, inizio + 1).String = nuovo_codice
+
+    # 10. Propaga la sostituzione dei codici in tutti gli altri fogli:
+    #     - 'Elenco Prezzi' (nome esatto): codice in colonna A, come in 'Analisi di Prezzo'
+    #     - fogli il cui nome contiene 'COMPUTO', 'VARIANTE' o 'CONTABILITA': codice in colonna B
+    nomi_target = ("COMPUTO", "VARIANTE", "CONTABILITA")
+    oSheets = oDoc.Sheets
+    fogli_aggiornati = 0
+    for nome_foglio in oSheets.ElementNames:
+        if nome_foglio == "Analisi di Prezzo":
+            continue
+        if nome_foglio == "Elenco Prezzi":
+            colonna_codice = 0
+        elif any(t in nome_foglio.upper() for t in nomi_target):
+            colonna_codice = 1
+        else:
+            continue
+        oSheet = oSheets.getByName(nome_foglio)
+        urow = SheetUtils.getLastUsedRow(oSheet)
+        toccato = False
+        for r in range(urow + 1):
+            oCell = oSheet.getCellByPosition(colonna_codice, r)
+            valore = oCell.String
+            if valore in mappa:
+                oCell.String = mappa[valore]
+                toccato = True
+        if toccato:
+            fogli_aggiornati += 1
+
+    DLG.chi(
+        f"Rinumerazione completata: {len(schede_selezionate)} scheda/e aggiornate, "
+        f"propagata su {fogli_aggiornati} foglio/i."
+    )

@@ -452,40 +452,33 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-18 20:59</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/406a1802e85ee65852c124d815858972a7bd5633" target="_blank" rel="noopener"><code>406a180</code></a></td>
-                <td class="commit-msg">fix(icons): corregge output script scuro e aggiorna python_debug
-- Aggiorna invert_icons_dark.py per puntare alla cartella '../scuro' di default
-- Modifica colori di riempimento e traccia in python_debug.svg</td>
+                <td>2026-08-18 22:31</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/8f69fb1df4c52e7bbfbd76562a2e2ebe98eb976a" target="_blank" rel="noopener"><code>8f69fb1</code></a></td>
+                <td class="commit-msg">Merge pull request #68 from giuserpe/refactor-price-analysis-to-leenoanalysis-6159744366737772727
+
+Trasferimento funzioni Analisi di Prezzo in LeenoAnalysis.py
+
+Trasferite tutte le funzioni relative alle Analisi di Prezzo da pyleeno.py a LeenoAnalysis.py con aggiornamento di dispatch e bridge. Aggiornate le funzioni di invio per sovrascrivere le voci esistenti in Elenco Prezzi ed evitare duplicati.</td>
             </tr>
             <tr>
-                <td>2026-08-18 20:13</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/acdb67bbac531763f4930b5a464970e67b783a2f" target="_blank" rel="noopener"><code>acdb67b</code></a></td>
-                <td class="commit-msg">fix(template): preserva i namespace ODF nel sync delle scorciatoie
-Modifica sync_shortcuts.py per estrarre dinamicamente i namespace e ripristinare il root tag originale in content.xml. Evita la rimozione silente del prefisso 'of:' che causava l'errore Err:510 nelle formule.</td>
+                <td>2026-08-18 22:27</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5eb24ec49c12cf2884908b9c8364b2168172626d" target="_blank" rel="noopener"><code>5eb24ec</code></a></td>
+                <td class="commit-msg">Move Price Analysis functions to LeenoAnalysis.py and prevent duplicates in EP
+
+- Move `cancella_analisi_da_ep`, `MENU_analisi_in_ElencoPrezzi`, `tante_analisi_in_ep`, `Circoscrive_Analisi`, `struttura_Analisi`, and `voce_breve_an` from `pyleeno.py` to `LeenoAnalysis.py`.
+- Update `MENU_analisi_in_ElencoPrezzi` and `tante_analisi_in_ep` to check if item codes already exist in 'Elenco Prezzi' and overwrite them in-place instead of creating duplicate rows.
+- Update callers in `Addons.xcu`, `LeenoBasicBridge.py`, and `LeenoImport_XPWE.py`. Re-export transferred functions in `pyleeno.py` for backward compatibility.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-08-18 16:26</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e06039067c88581f43047a0e8fd2f8985cd50c15" target="_blank" rel="noopener"><code>e060390</code></a></td>
-                <td class="commit-msg">fix(analysis): sostituisce DLG.chi con Dialogs.NotifyDialog/Info nei messaggi di errore
-- uniforma la gestione degli avvisi in _Rinumera_Analisi_Selezionate
-- usa IconType="warning" per condizioni bloccanti (foglio assente, selezione vuota, scheda senza fine)
-- usa IconType="error" per codici non validi o collisioni nella rinumerazione
-- migliora leggibilità del riepilogo usando separatore " -- "
-- aggiorna messaggio finale con Dialogs.Info
+                <td>2026-08-18 22:12</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/f6f4e8905ff1cba8d3ba942664fd0659339dcae0" target="_blank" rel="noopener"><code>f6f4e89</code></a></td>
+                <td class="commit-msg">Move Price Analysis functions from pyleeno.py to LeenoAnalysis.py
 
-feat(analysis): estende trova_ricorrenze alle Analisi di Prezzo
-- aggiunge rilevamento ricorrenze su celle con stile 'An-1_sigla'
-- mantiene logica esistente per COMPUTO/VARIANTE/CONTABILITA
-- aggiunge selezione del codice ricorrente e filtraggio tramite filtra_codice
+Transfer price analysis functions (`cancella_analisi_da_ep`, `MENU_analisi_in_ElencoPrezzi`, `tante_analisi_in_ep`, `Circoscrive_Analisi`, `struttura_Analisi`, `voce_breve_an`) from `pyleeno.py` to `LeenoAnalysis.py`. Update dispatcher in `Addons.xcu` and bridge/import modules (`LeenoBasicBridge.py`, `LeenoImport_XPWE.py`). Re-export functions in `pyleeno.py` for backward compatibility.
 
-fix(core): corregge flusso di trova_ricorrenze
-- aggiunge gestione esplicita del caso con ricorrenze trovate
-- mostra elenco ricorrenze tramite DLG.chi e applica filtra_codice se l’utente sceglie
-- evita uscita prematura e mantiene chiusura dialoghi coerente
-
-feat(debug): integra Main_Rinumera_Analisi_Selezionate in MENU_debug
-- consente test immediato della nuova rinumerazione analisi tramite menu debug</td>
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -509,8 +502,8 @@ feat(debug): integra Main_Rinumera_Analisi_Selezionate in MENU_debug
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-18 22:28 UTC</p>
-                <p>Build Commit: <code>5eb24ec</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-18 22:31 UTC</p>
+                <p>Build Commit: <code>8f69fb1</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

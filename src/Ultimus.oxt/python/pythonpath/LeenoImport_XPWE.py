@@ -813,7 +813,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
     # Assicura che ci sia una riga rossa di chiusura corretta
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-    PL.tante_analisi_in_ep()
+    LeenoAnalysis.tante_analisi_in_ep()
     PL.riordina_ElencoPrezzi()
 
 

@@ -611,3 +611,225 @@ def _Rinumera_Analisi_Selezionate():
 
     Dialogs.Info(Title='Rinumera Analisi di Prezzo', Text=f"Rinumerazione completata: {len(schede_selezionate)} scheda/e aggiornate, "
         f"propagata su {fogli_aggiornati} foglio/i.")
+
+
+def voce_breve_an():
+    '''
+    Ottimizza l'altezza delle celle di Analisi di Prezzo o visualizza solo
+    tre righe della descrizione.
+    '''
+    import LeenoConfig
+    cfg = LeenoConfig.Config()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ER = SheetUtils.getLastUsedRow(oSheet)
+
+    if not oSheet.getCellRangeByName('B3').Rows.OptimalHeight:
+        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    else:
+        altezza_base = oSheet.getCellRangeByName('B3').CharHeight * 66 / 3 * 2
+        nr_descrizione = float(cfg.read('Generale', 'altezza_celle'))
+
+        hriga = 100 + altezza_base * nr_descrizione  # Calcola l'altezza desiderata
+
+        for el in range(0, ER):
+            if oSheet.getCellByPosition(1, el).CellStyle == 'An-1-descr_':
+                oSheet.getCellByPosition(1, el).Rows.Height = hriga
+
+
+def cancella_analisi_da_ep():
+    '''
+    cancella le voci in Elenco Prezzi che derivano da analisi
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+    lista_an = []
+    for i in range(0, SheetUtils.getUsedArea(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, i).CellStyle == 'An-1_sigla':
+            lista_an.append(oSheet.getCellByPosition(0, i).String)
+    oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+    for i in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, i).String in lista_an:
+            oSheet.getRows().removeByIndex(i, 1)
+
+
+def MENU_analisi_in_ElencoPrezzi():
+    '''
+    Invia l'analisi in Elenco Prezzi.
+    '''
+    with LeenoUtils.DocumentRefreshContext(False):
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        if oSheet.Name != 'Analisi di Prezzo':
+            return
+        sStRange = circoscriveAnalisi(oSheet, PL.LeggiPosizioneCorrente()[1])
+        riga = sStRange.RangeAddress.StartRow + 2
+
+        codice = oSheet.getCellByPosition(0, riga - 1).String
+
+        oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+
+        target_row = 4
+        oSheet.getRows().insertByIndex(target_row, 1)
+
+        # Imposta codice e formule
+        oSheet.getCellByPosition(0, target_row).String = codice
+
+        formule = {
+            1: f"=$'Analisi di Prezzo'.B{riga}",
+            2: f"=$'Analisi di Prezzo'.C{riga}",
+            3: f"=$'Analisi di Prezzo'.K{riga}",
+            4: f"=$'Analisi di Prezzo'.G{riga}",
+            5: f"=$'Analisi di Prezzo'.I{riga}",
+            6: f"=$'Analisi di Prezzo'.J{riga}",
+            11: '=LET(_s; SUMIF(AA; A5; BB); IF(_s <> 0; _s; "--"))',
+            12: '=LET(_s; SUMIF(varAA; A5; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+            13: '=LET(_s; SUMIF(GG; A5; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
+        }
+
+        for col, formula in formule.items():
+            if col == 3 and oDoc.Sheets.getByName('Analisi di Prezzo').getCellByPosition(3, riga).Value == 0:
+                formula = ""
+            oSheet.getCellByPosition(col, target_row).Formula = formula
+        PL._gotoCella("A5")
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
+
+def tante_analisi_in_ep():
+    import uno
+    from com.sun.star.sheet.CellFlags import HARDATTR
+    PL.chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+
+    with LeenoUtils.DocumentRefreshContext(False):
+        # 1. Prepara dati dalla sheet Analisi
+        from com.sun.star.container import NoSuchElementException
+        try:
+            src_sheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        except NoSuchElementException:
+            return
+
+        used_area = SheetUtils.getUsedArea(src_sheet)
+        # PATCH CRUCIALI: Estendiamo last_row di 20 righe di sicurezza per non troncare
+        # l'ultima analisi se si trova a fine foglio senza righe vuote sotto.
+        last_row = used_area.EndRow + 20
+
+        SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo', f'$A$3:$K${last_row + 1}', 'analisi')
+
+        # Estrai dati in blocco (ora l'array è sufficientemente capiente)
+        data_range = src_sheet.getCellRangeByPosition(0, 0, 10, last_row)
+        data = data_range.getDataArray()
+
+        # 2. Costruisci lista analisi
+        lista_analisi = []
+        target_row = 4  # Riga 4 in Elenco Prezzi
+
+        for n, row in enumerate(data):
+            if n < 2:
+                continue
+
+            # Evita crash se andiamo oltre le righe fisiche reali della sheet
+            if n > last_row:
+                break
+
+            # Estrazione sicura delle stringhe
+            codice = str(row[0]).strip() if len(row) > 0 else ''
+            descrizione = str(row[1]).strip() if len(row) > 1 else ''
+
+            # Condizioni di salto repentine
+            if not codice or "Scrivi la descrizione" in descrizione:
+                continue
+
+            try:
+                cell_style = src_sheet.getCellByPosition(0, n).CellStyle
+            except Exception:
+                cell_style = ''
+
+            # Se la cella ha lo stile dell'identificatore dell'analisi
+            if cell_style and cell_style.startswith('An-1_sigla'):
+                lista_analisi.append([
+                    codice,                                        # Codice
+                    f"=$'Analisi di Prezzo'.B{n+1}",               # Descrizione
+                    f"=$'Analisi di Prezzo'.C{n+1}",               # Unità di misura
+                    f"=$'Analisi di Prezzo'.K{n+1}",               # Prezzo
+                    f"=$'Analisi di Prezzo'.G{n+1}",               # % Manodopera
+                    f"=$'Analisi di Prezzo'.I{n+1}",               # % Sicurezza
+                    '', '', '', '', '',                            # Vuoti intermedi
+                    f'=LET(_s; SUMIF(AA; A{target_row}; BB); IF(_s <> 0; _s; "--"))',
+                    f'=LET(_s; SUMIF(varAA; A{target_row}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+                    f'=LET(_s; SUMIF(GG; A{target_row}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
+                ])
+                target_row += 1
+
+        # 3. Inserisci in Elenco Prezzi
+        if not lista_analisi:
+            return
+
+        dest_sheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        dest_sheet.getRows().insertByIndex(4, len(lista_analisi))
+
+        # Scrittura fulminea in blocco delle formule
+        oRange = dest_sheet.getCellRangeByPosition(0, 4, 13, 4 + len(lista_analisi) - 1)
+        oRange.setFormulaArray(tuple(tuple(r) for r in lista_analisi))
+
+        oRange.clearContents(HARDATTR)
+
+    PL.GotoSheet('Elenco Prezzi')
+    LeenoSheetUtils.adattaAltezzaRiga(dest_sheet)
+
+
+def Circoscrive_Analisi(row):
+    '''
+    row    { int }  : riga di riferimento per la selezione dell'intera voce
+    Circoscrive una voce di analisi partendo dalla posizione corrente del cursore
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    return circoscriveAnalisi(oSheet, row)
+
+
+def struttura_Analisi():
+    '''
+    Configura la struttura del foglio di analisi dei prezzi raggruppando
+    le righe in base allo stile delle celle nella colonna A.
+    '''
+    import uno
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.removeAllManualPageBreaks()
+
+    oSheet.clearOutline()
+
+    row = SheetUtils.getLastUsedRow(oSheet)
+
+    start_group = None
+
+    for row in range(3, row + 1):
+        cell_style = oSheet.getCellByPosition(0, row).CellStyle
+
+        oRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oRangeAddr.Sheet = oSheet.RangeAddress.Sheet
+
+        # Se la cella NON ha lo stile 'An-1_sigla', inizia/continua un gruppo
+        if cell_style != 'An-1_sigla':
+            if start_group is None:
+                start_group = row  # Inizio del blocco
+        else:
+            # Se troviamo una cella con lo stile 'An-1_sigla' e c'è un gruppo aperto, chiudilo
+            if start_group is not None:
+                oRangeAddr.StartColumn = 0
+                oRangeAddr.EndColumn = oSheet.Columns.Count - 1
+                oRangeAddr.StartRow = start_group
+                oRangeAddr.EndRow = row - 1  # Fino alla riga precedente
+
+                oSheet.group(oRangeAddr, 1)  # Raggruppa
+                start_group = None  # Resetta
+
+    # Gestisci l'ultimo gruppo se rimasto aperto
+    if start_group is not None:
+        oRangeAddr.StartRow = start_group
+        oRangeAddr.EndRow = row
+        oSheet.group(oRangeAddr, 1)
+        oSheet.Rows.getByIndex(start_group).IsVisible = False

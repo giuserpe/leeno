@@ -657,6 +657,8 @@ def cancella_analisi_da_ep():
 def MENU_analisi_in_ElencoPrezzi():
     '''
     Invia l'analisi in Elenco Prezzi.
+    Se il codice dell'analisi è già presente in Elenco Prezzi, sovrascrive la riga esistente;
+    altrimenti ne inserisce una nuova a riga 4.
     '''
     with LeenoUtils.DocumentRefreshContext(False):
         oDoc = LeenoUtils.getDocument()
@@ -668,15 +670,25 @@ def MENU_analisi_in_ElencoPrezzi():
 
         codice = oSheet.getCellByPosition(0, riga - 1).String
 
-        oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
-        oDoc.CurrentController.setActiveSheet(oSheet)
+        ep_sheet = oDoc.Sheets.getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(ep_sheet)
 
-        target_row = 4
-        oSheet.getRows().insertByIndex(target_row, 1)
+        # Cerca se il codice esiste già in Elenco Prezzi (colonna A)
+        target_row = None
+        used_ep = SheetUtils.getUsedArea(ep_sheet)
+        for r_idx in range(4, used_ep.EndRow + 1):
+            if ep_sheet.getCellByPosition(0, r_idx).String.strip() == codice.strip():
+                target_row = r_idx
+                break
+
+        if target_row is None:
+            target_row = 4
+            ep_sheet.getRows().insertByIndex(target_row, 1)
 
         # Imposta codice e formule
-        oSheet.getCellByPosition(0, target_row).String = codice
+        ep_sheet.getCellByPosition(0, target_row).String = codice
 
+        row_num = target_row + 1
         formule = {
             1: f"=$'Analisi di Prezzo'.B{riga}",
             2: f"=$'Analisi di Prezzo'.C{riga}",
@@ -684,17 +696,17 @@ def MENU_analisi_in_ElencoPrezzi():
             4: f"=$'Analisi di Prezzo'.G{riga}",
             5: f"=$'Analisi di Prezzo'.I{riga}",
             6: f"=$'Analisi di Prezzo'.J{riga}",
-            11: '=LET(_s; SUMIF(AA; A5; BB); IF(_s <> 0; _s; "--"))',
-            12: '=LET(_s; SUMIF(varAA; A5; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
-            13: '=LET(_s; SUMIF(GG; A5; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
+            11: f'=LET(_s; SUMIF(AA; A{row_num}; BB); IF(_s <> 0; _s; "--"))',
+            12: f'=LET(_s; SUMIF(varAA; A{row_num}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+            13: f'=LET(_s; SUMIF(GG; A{row_num}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
         }
 
         for col, formula in formule.items():
             if col == 3 and oDoc.Sheets.getByName('Analisi di Prezzo').getCellByPosition(3, riga).Value == 0:
                 formula = ""
-            oSheet.getCellByPosition(col, target_row).Formula = formula
-        PL._gotoCella("A5")
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+            ep_sheet.getCellByPosition(col, target_row).Formula = formula
+        PL._gotoCella(f"A{row_num}")
+    LeenoSheetUtils.adattaAltezzaRiga(ep_sheet)
 
 
 def tante_analisi_in_ep():
@@ -712,33 +724,32 @@ def tante_analisi_in_ep():
             return
 
         used_area = SheetUtils.getUsedArea(src_sheet)
-        # PATCH CRUCIALI: Estendiamo last_row di 20 righe di sicurezza per non troncare
-        # l'ultima analisi se si trova a fine foglio senza righe vuote sotto.
         last_row = used_area.EndRow + 20
 
         SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo', f'$A$3:$K${last_row + 1}', 'analisi')
 
-        # Estrai dati in blocco (ora l'array è sufficientemente capiente)
         data_range = src_sheet.getCellRangeByPosition(0, 0, 10, last_row)
         data = data_range.getDataArray()
 
-        # 2. Costruisci lista analisi
-        lista_analisi = []
-        target_row = 4  # Riga 4 in Elenco Prezzi
+        dest_sheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        used_ep = SheetUtils.getUsedArea(dest_sheet)
+
+        # Mappa dei codici già presenti in Elenco Prezzi (codice -> riga 0-indexed)
+        codici_ep = {}
+        for r_idx in range(4, used_ep.EndRow + 1):
+            c_val = dest_sheet.getCellByPosition(0, r_idx).String.strip()
+            if c_val and c_val not in codici_ep:
+                codici_ep[c_val] = r_idx
+
+        nuove_analisi = []
 
         for n, row in enumerate(data):
-            if n < 2:
+            if n < 2 or n > last_row:
                 continue
 
-            # Evita crash se andiamo oltre le righe fisiche reali della sheet
-            if n > last_row:
-                break
-
-            # Estrazione sicura delle stringhe
             codice = str(row[0]).strip() if len(row) > 0 else ''
             descrizione = str(row[1]).strip() if len(row) > 1 else ''
 
-            # Condizioni di salto repentine
             if not codice or "Scrivi la descrizione" in descrizione:
                 continue
 
@@ -747,34 +758,53 @@ def tante_analisi_in_ep():
             except Exception:
                 cell_style = ''
 
-            # Se la cella ha lo stile dell'identificatore dell'analisi
             if cell_style and cell_style.startswith('An-1_sigla'):
-                lista_analisi.append([
-                    codice,                                        # Codice
-                    f"=$'Analisi di Prezzo'.B{n+1}",               # Descrizione
-                    f"=$'Analisi di Prezzo'.C{n+1}",               # Unità di misura
-                    f"=$'Analisi di Prezzo'.K{n+1}",               # Prezzo
-                    f"=$'Analisi di Prezzo'.G{n+1}",               # % Manodopera
-                    f"=$'Analisi di Prezzo'.I{n+1}",               # % Sicurezza
+                if codice in codici_ep:
+                    # Sovrascrivi riga esistente in Elenco Prezzi
+                    e_row = codici_ep[codice]
+                    r_num = e_row + 1
+                    formule_existing = {
+                        0: codice,
+                        1: f"=$'Analisi di Prezzo'.B{n+1}",
+                        2: f"=$'Analisi di Prezzo'.C{n+1}",
+                        3: f"=$'Analisi di Prezzo'.K{n+1}",
+                        4: f"=$'Analisi di Prezzo'.G{n+1}",
+                        5: f"=$'Analisi di Prezzo'.I{n+1}",
+                        11: f'=LET(_s; SUMIF(AA; A{r_num}; BB); IF(_s <> 0; _s; "--"))',
+                        12: f'=LET(_s; SUMIF(varAA; A{r_num}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+                        13: f'=LET(_s; SUMIF(GG; A{r_num}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
+                    }
+                    for col_idx, form in formule_existing.items():
+                        if col_idx == 0:
+                            dest_sheet.getCellByPosition(col_idx, e_row).String = form
+                        else:
+                            dest_sheet.getCellByPosition(col_idx, e_row).Formula = form
+                else:
+                    nuove_analisi.append((codice, n))
+
+        # 3. Inserisci le nuove analisi non ancora presenti
+        if nuove_analisi:
+            target_row = 4
+            dest_sheet.getRows().insertByIndex(target_row, len(nuove_analisi))
+            lista_nuove = []
+            for idx, (cod, n_idx) in enumerate(nuove_analisi):
+                r_num = target_row + idx + 1
+                lista_nuove.append([
+                    cod,                                           # Codice
+                    f"=$'Analisi di Prezzo'.B{n_idx+1}",           # Descrizione
+                    f"=$'Analisi di Prezzo'.C{n_idx+1}",           # Unità di misura
+                    f"=$'Analisi di Prezzo'.K{n_idx+1}",           # Prezzo
+                    f"=$'Analisi di Prezzo'.G{n_idx+1}",           # % Manodopera
+                    f"=$'Analisi di Prezzo'.I{n_idx+1}",           # % Sicurezza
                     '', '', '', '', '',                            # Vuoti intermedi
-                    f'=LET(_s; SUMIF(AA; A{target_row}; BB); IF(_s <> 0; _s; "--"))',
-                    f'=LET(_s; SUMIF(varAA; A{target_row}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
-                    f'=LET(_s; SUMIF(GG; A{target_row}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
+                    f'=LET(_s; SUMIF(AA; A{r_num}; BB); IF(_s <> 0; _s; "--"))',
+                    f'=LET(_s; SUMIF(varAA; A{r_num}; varBB); IFERROR(IF(_s; _s; "--"); "--"))',
+                    f'=LET(_s; SUMIF(GG; A{r_num}; G1G1); IFERROR(IF(_s; _s; "--"); "--"))'
                 ])
-                target_row += 1
 
-        # 3. Inserisci in Elenco Prezzi
-        if not lista_analisi:
-            return
-
-        dest_sheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        dest_sheet.getRows().insertByIndex(4, len(lista_analisi))
-
-        # Scrittura fulminea in blocco delle formule
-        oRange = dest_sheet.getCellRangeByPosition(0, 4, 13, 4 + len(lista_analisi) - 1)
-        oRange.setFormulaArray(tuple(tuple(r) for r in lista_analisi))
-
-        oRange.clearContents(HARDATTR)
+            oRange = dest_sheet.getCellRangeByPosition(0, target_row, 13, target_row + len(lista_nuove) - 1)
+            oRange.setFormulaArray(tuple(tuple(r) for r in lista_nuove))
+            oRange.clearContents(HARDATTR)
 
     PL.GotoSheet('Elenco Prezzi')
     LeenoSheetUtils.adattaAltezzaRiga(dest_sheet)

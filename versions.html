@@ -452,19 +452,40 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-18 07:09</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/a01d31806cd1d2ad8fbe817764c899d7c687e436" target="_blank" rel="noopener"><code>a01d318</code></a></td>
-                <td class="commit-msg">feat(computo): aggiunge Main_Rinumera_Analisi_Selezionateper rinumerazione selettiva analisi di prezzo con propagazione. Chiede prefisso e ID come unico codice nella rinumerazione analisi</td>
+                <td>2026-08-18 20:59</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/406a1802e85ee65852c124d815858972a7bd5633" target="_blank" rel="noopener"><code>406a180</code></a></td>
+                <td class="commit-msg">fix(icons): corregge output script scuro e aggiorna python_debug
+- Aggiorna invert_icons_dark.py per puntare alla cartella '../scuro' di default
+- Modifica colori di riempimento e traccia in python_debug.svg</td>
             </tr>
             <tr>
-                <td>2026-08-17 21:27</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/edd233024eb20ad89cf39ad52485065139a4358c" target="_blank" rel="noopener"><code>edd2330</code></a></td>
-                <td class="commit-msg">fix(computo): ricerca CTRL in cerca_in_elenco punta ad Analisi di Prezzo</td>
+                <td>2026-08-18 20:13</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/acdb67bbac531763f4930b5a464970e67b783a2f" target="_blank" rel="noopener"><code>acdb67b</code></a></td>
+                <td class="commit-msg">fix(template): preserva i namespace ODF nel sync delle scorciatoie
+Modifica sync_shortcuts.py per estrarre dinamicamente i namespace e ripristinare il root tag originale in content.xml. Evita la rimozione silente del prefisso 'of:' che causava l'errore Err:510 nelle formule.</td>
             </tr>
             <tr>
-                <td>2026-08-17 21:16</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ee4a75906738349a30b926561b313b673e893bc6" target="_blank" rel="noopener"><code>ee4a759</code></a></td>
-                <td class="commit-msg">fix: update version to 3.26.0.130-TESTING-20260817 in description.xml and leeno_version_code; update Computo_LeenO.ods</td>
+                <td>2026-08-18 16:26</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/e06039067c88581f43047a0e8fd2f8985cd50c15" target="_blank" rel="noopener"><code>e060390</code></a></td>
+                <td class="commit-msg">fix(analysis): sostituisce DLG.chi con Dialogs.NotifyDialog/Info nei messaggi di errore
+- uniforma la gestione degli avvisi in _Rinumera_Analisi_Selezionate
+- usa IconType="warning" per condizioni bloccanti (foglio assente, selezione vuota, scheda senza fine)
+- usa IconType="error" per codici non validi o collisioni nella rinumerazione
+- migliora leggibilità del riepilogo usando separatore " -- "
+- aggiorna messaggio finale con Dialogs.Info
+
+feat(analysis): estende trova_ricorrenze alle Analisi di Prezzo
+- aggiunge rilevamento ricorrenze su celle con stile 'An-1_sigla'
+- mantiene logica esistente per COMPUTO/VARIANTE/CONTABILITA
+- aggiunge selezione del codice ricorrente e filtraggio tramite filtra_codice
+
+fix(core): corregge flusso di trova_ricorrenze
+- aggiunge gestione esplicita del caso con ricorrenze trovate
+- mostra elenco ricorrenze tramite DLG.chi e applica filtra_codice se l’utente sceglie
+- evita uscita prematura e mantiene chiusura dialoghi coerente
+
+feat(debug): integra Main_Rinumera_Analisi_Selezionate in MENU_debug
+- consente test immediato della nuova rinumerazione analisi tramite menu debug</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +509,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-18 07:10 UTC</p>
-                <p>Build Commit: <code>a01d318</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-18 21:00 UTC</p>
+                <p>Build Commit: <code>406a180</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

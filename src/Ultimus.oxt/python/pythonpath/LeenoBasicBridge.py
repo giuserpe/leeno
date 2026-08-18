@@ -195,7 +195,7 @@ def tante_analisi_in_ep():
     tante_analisi_in_ep
     '''
     callAlert()
-    PL.tante_analisi_in_ep()
+    LeenoAnalysis.tante_analisi_in_ep()
 
 
 def analisi_in_ElencoPrezzi():
@@ -203,7 +203,7 @@ def analisi_in_ElencoPrezzi():
     analisi_in_ElencoPrezzi
     '''
     callAlert()
-    PL.analisi_in_ElencoPrezzi()
+    LeenoAnalysis.MENU_analisi_in_ElencoPrezzi()
 
 
 def inizializza_elenco():

@@ -16,7 +16,7 @@ TEMPLATE_FILE = os.path.join(BASE_DIR, "template", "leeno", "Computo_LeenO.ods")
 # Temporary working directory inside the repo (standard practice for LeenO tools)
 TEMP_DIR = os.path.join(REPO_ROOT, "temp_sync_shortcuts")
 
-# Namespaces
+# We dynamically register all namespaces later, but we need these for XPath queries in this script
 NS = {
     'oor': 'http://openoffice.org/2001/registry',
     'office': 'urn:oasis:names:tc:opendocument:xmlns:office:1.0',
@@ -25,10 +25,6 @@ NS = {
     'calcext': 'urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0',
     'style': 'urn:oasis:names:tc:opendocument:xmlns:style:1.0'
 }
-
-for prefix, uri in NS.items():
-    if prefix != '':
-        ET.register_namespace(prefix, uri)
 
 def format_shortcut_name(raw):
     parts = raw.split('_')
@@ -73,6 +69,22 @@ def sync():
         zip_ref.extractall(unzipped_path)
 
     content_xml = os.path.join(unzipped_path, "content.xml")
+    
+    # Read original root tag to preserve all namespaces perfectly
+    with open(content_xml, 'r', encoding='utf-8') as f:
+        xml_text = f.read()
+    import re
+    orig_root_tag_match = re.search(r'<office:document-content[^>]*>', xml_text)
+    orig_root_tag = orig_root_tag_match.group(0) if orig_root_tag_match else None
+
+    # Extract all namespaces to prevent corruption of prefix namespaces like 'of:'
+    namespaces = dict([
+        node for _, node in ET.iterparse(content_xml, events=['start-ns'])
+    ])
+    for prefix, uri in namespaces.items():
+        if prefix != '':
+            ET.register_namespace(prefix, uri)
+
     tree = ET.parse(content_xml)
     root = tree.getroot()
     sheet = root.find(".//table:table[@table:name='Scorciatoie']", NS)
@@ -152,6 +164,14 @@ def sync():
     for r in rows: sheet.append(r)
 
     tree.write(content_xml, encoding='utf-8', xml_declaration=True)
+
+    # Restore original root tag to ensure namespaces like 'of:' are preserved
+    if orig_root_tag:
+        with open(content_xml, 'r', encoding='utf-8') as f:
+            new_xml = f.read()
+        new_xml = re.sub(r'<office:document-content[^>]*>', orig_root_tag, new_xml, count=1)
+        with open(content_xml, 'w', encoding='utf-8') as f:
+            f.write(new_xml)
 
     # Re-zip
     bak_file = TEMPLATE_FILE + ".bak"

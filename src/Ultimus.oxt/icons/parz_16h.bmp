@@ -42,9 +42,9 @@
          width="19.6"
          height="2.2"
          rx="0.5"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect1-6"
-         style="fill:#808080;fill-opacity:1" />
+         style="fill:#7F7F7F;fill-opacity:1" />
       <rect
          x="28.291447"
          y="8.6053429"
@@ -53,14 +53,14 @@
          rx="0.5"
          fill="#8fb200"
          id="rect2-1"
-         style="fill:#808080;fill-opacity:1" />
+         style="fill:#7F7F7F;fill-opacity:1" />
       <rect
          x="28.291447"
          y="13.005342"
          width="19.6"
          height="2.2"
          rx="0.5"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect3-8"
          style="fill:#8fb200;fill-opacity:1" />
       <rect
@@ -69,21 +69,21 @@
          width="19.6"
          height="2.2"
          rx="0.5"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect3-8-2-9"
-         style="fill:#808080;fill-opacity:1" />
+         style="fill:#7F7F7F;fill-opacity:1" />
     </g>
   </g>
   <text
      xml:space="preserve"
-     style="font-size:27.0184px;writing-mode:lr-tb;direction:ltr;fill:#1a2010;fill-opacity:1;stroke-width:2.25153"
+     style="font-size:27.0184px;writing-mode:lr-tb;direction:ltr;fill:#E9EFDF;fill-opacity:1;stroke-width:2.25153"
      x="4.2889481"
      y="20.845612"
      id="text1"
      inkscape:highlight-color="#000000"><tspan
        sodipodi:role="line"
        id="tspan1"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.0184px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1a2010;fill-opacity:1;stroke-width:2.25153"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.0184px;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#E9EFDF;fill-opacity:1;stroke-width:2.25153"
        x="4.2889481"
        y="20.845612">Σ</tspan></text>
 </svg>

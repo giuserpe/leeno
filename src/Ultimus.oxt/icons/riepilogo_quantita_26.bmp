@@ -33,12 +33,12 @@
      transform="translate(1.5)">
     <path
        d="m 3,1 h 9.5 L 18,6.5 V 23 H 3 Z m 1.6,1.6 h 7.9 l 3.9,3.9 V 21.4 H 4.6 Z"
-       fill="#1a2010"
+       fill="#E9EFDF"
        fill-rule="evenodd"
        id="path1" />
     <path
        d="M 12.5,1 18,6.5 h -5.5 z"
-       fill="#1a2010"
+       fill="#E9EFDF"
        fill-rule="evenodd"
        id="path2" />
     <g
@@ -59,7 +59,7 @@
          width="2.5999999"
          height="9.0877323"
          rx="0.40000001"
-         fill="#1a2010"
+         fill="#E9EFDF"
          id="rect3"
          style="stroke-width:1.29727" />
       <rect

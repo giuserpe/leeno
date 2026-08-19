@@ -666,7 +666,7 @@ def MENU_analisi_in_ElencoPrezzi():
         if oSheet.Name != 'Analisi di Prezzo':
             return
         sStRange = circoscriveAnalisi(oSheet, PL.LeggiPosizioneCorrente()[1])
-        riga = sStRange.RangeAddress.StartRow + 2
+        riga = sStRange.RangeAddress.StartRow + 3
 
         codice = oSheet.getCellByPosition(0, riga - 1).String
 

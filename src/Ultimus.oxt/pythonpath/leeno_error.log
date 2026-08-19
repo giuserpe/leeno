@@ -7971,3 +7971,20 @@ File: LeenoUtils.py, Line: 385, Function: wrapper
 File: pyleeno.py, Line: 12209, Function: MENU_debug
 ------------------------------------------------------------
 
+[2026-08-18 10:40:59]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.130-TESTING-20260817
+
+Errore: module 'LeenoDialogs' has no attribute 'DialogLista'
+
+File: 'pyleeno.py'
+Line: '11166'
+Function: 'trova_ricorrenze'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12266, Function: MENU_debug
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: pyleeno.py, Line: 11166, Function: trova_ricorrenze
+------------------------------------------------------------
+

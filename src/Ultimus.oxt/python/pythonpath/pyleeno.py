@@ -2538,7 +2538,16 @@ Vuoi procedere comunque?'''
 
     lista = []
 
-    for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
+    elenco_prezzi_name = oDoc.getSheets().getByIndex(oRange.Sheet).Name
+    esclusi = {
+        "CdP", "M1", "S1", "S2", "S5", "copyright_LeenO", "cT_Doc_Ult",
+        "cT_SAL", "cT_CP_Bart", "cP_Cop", "cT_Cop", "cT_Doc_accorp",
+        "cT_Doc_CP_01", "Scorciatoie", "QE", elenco_prezzi_name
+    }
+
+    for tab in oDoc.getSheets().getElementNames():
+        if tab in esclusi:
+            continue
         try:
             oSheet = oDoc.getSheets().getByName(tab)
             ER = SheetUtils.getLastUsedRow(oSheet)
@@ -2600,11 +2609,6 @@ Vuoi procedere comunque?'''
         Title='Ricerca conclusa',
         Text=f"Eliminate {len(da_cancellare)} voci dall'elenco prezzi."
     )
-
-
-########################################################################
-
-
 
 
 ########################################################################
@@ -3030,6 +3034,7 @@ def scelta_viste_run():
 
             # Genera sommario solo se richiesto da checkbox E il raffronto
             # non lo farà comunque (evita doppia esecuzione)
+
             if oDialog1.getControl("CBSom").State == 1 and not has_raffronto:
                 genera_sommario()
                 # IMPORTANTE: ri-disabilita refresh dopo @no_refresh di genera_sommario
@@ -3279,6 +3284,51 @@ def scelta_viste_run():
             cell_z_tot = oSheet.getCellByPosition(25, y_real)
             cell_z_tot.CellStyle = source_cell.CellStyle
             cell_z_tot.NumberFormat = source_cell.NumberFormat
+
+            # Raggruppa e nasconde i costi elementari presenti in Analisi di Prezzo,
+            # e le righe con scostamento zero (entrambe le quantità a zero) se l'opzione è attiva
+            voci_costi = set()
+            if oDoc.Sheets.hasByName('Analisi di Prezzo'):
+                oSheetAP = oDoc.Sheets.getByName('Analisi di Prezzo')
+                er_ap = SheetUtils.getLastUsedRow(oSheetAP)
+                for r_ap in range(er_ap):
+                    cell = oSheetAP.getCellByPosition(0, r_ap)
+                    if cell.CellStyle == 'An-lavoraz-Cod-sx' and cell.String:
+                        voci_costi.add(cell.String.strip().lower())
+                
+            nascondi_zero = False
+            try:
+                nascondi_zero = (oDialog1.getControl("Nascondi_Scostamento_zero").State == 1)
+            except Exception:
+                pass
+
+            col_idx_map = {'T': 19, 'U': 20, 'V': 21}
+            col1_idx = col_idx_map.get(col1)
+            col2_idx = col_idx_map.get(col2)
+
+            oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
+            for el in range(3, max_idx + 1):
+                cell_code = oSheet.getCellByPosition(0, el).String.strip().lower()
+                if not cell_code:
+                    continue
+
+                is_costo = cell_code in voci_costi
+                is_zero = False
+                if nascondi_zero and col1_idx is not None and col2_idx is not None:
+                    val1 = oSheet.getCellByPosition(col1_idx, el).Value
+                    val2 = oSheet.getCellByPosition(col2_idx, el).Value
+                    if val1 == 0 and val2 == 0:
+                        is_zero = True
+
+                if is_costo or is_zero:
+                    oCellRangeAddr.StartRow = el
+                    oCellRangeAddr.EndRow = el
+                    try:
+                        oSheet.group(oCellRangeAddr, 1)
+                        oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
+                    except Exception:
+                        pass
 
             _primaCella()
 
@@ -12034,14 +12084,21 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
-    from LeenoAnalysis import Main_Rinumera_Analisi_Selezionate
-    Main_Rinumera_Analisi_Selezionate()
+    # stampa_PDF()
+    # return
+    
+    # from LeenoAnalysis import Main_Rinumera_Analisi_Selezionate
+    # Main_Rinumera_Analisi_Selezionate()
+    # return
+    oDoc = LeenoUtils.getDocument()
+    oSheets = list(oDoc.getSheets().getElementNames())
+    Dialogs.Info(Title='ATTENZIONE!', Text='\n'.join(oSheets))
+    return
+    oSheet = oDoc.CurrentController.ActiveSheet
     import LeenoNamedAreas as LNA
-    LNA.rigenera_fogli()
+    LNA.rigenera_elenco_prezzi()
     # nuove_icone()
     return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     DLG.mri(oSheet)
     return
 

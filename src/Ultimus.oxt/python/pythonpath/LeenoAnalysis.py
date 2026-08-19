@@ -541,7 +541,7 @@ def _Rinumera_Analisi_Selezionate():
     # 5. Il prefisso e il numero di cifre dell'ID sono ricavati dal codice appena inserito
     match = re.match(r"^(.*?)(\d+)$", sPrimoCodice)
     if not match:
-        Dialogs.Info(IconType="error", Title='ERRORE!', Text="Codice non valido: deve terminare con un numero (es. 'ciccillo_66'), in modo da poter ricavare prefisso e ID di partenza.")
+        Dialogs.Info(Title='ERRORE!', Text="Codice non valido: deve terminare con un numero (es. 'ciccillo_66'), in modo da poter ricavare prefisso e ID di partenza.")
         return
     prefix = match.group(1)
     width = len(match.group(2))
@@ -560,10 +560,10 @@ def _Rinumera_Analisi_Selezionate():
     if collisioni:
         msg = ("Mi fermo! I seguenti nuovi codici coinciderebbero con codici già "
                "presenti nel foglio:\n\t\t\t\t\t\t" + ", ".join(sorted(collisioni)))
-        Dialogs.Info(IconType="error", Title='ERRORE!', Text=msg)
+        Dialogs.Info(Title='ERRORE!', Text=msg)
         return
     if len(set(nuovi_codici)) != len(nuovi_codici):
-        Dialogs.Info(IconType="error", Title='ERRORE!', Text="Errore interno: la nuova numerazione genera codici duplicati.")
+        Dialogs.Info(Title='ERRORE!', Text="Errore interno: la nuova numerazione genera codici duplicati.")
         return
 
     # 8. Conferma prima di un'operazione che tocca più fogli
@@ -711,12 +711,14 @@ def MENU_analisi_in_ElencoPrezzi():
 
 def tante_analisi_in_ep():
     import uno
+    # pyrefly: ignore [missing-import]
     from com.sun.star.sheet.CellFlags import HARDATTR
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
 
     with LeenoUtils.DocumentRefreshContext(False):
         # 1. Prepara dati dalla sheet Analisi
+        # pyrefly: ignore [missing-import]
         from com.sun.star.container import NoSuchElementException
         try:
             src_sheet = oDoc.getSheets().getByName('Analisi di Prezzo')

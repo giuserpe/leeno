@@ -2884,7 +2884,6 @@ def scelta_viste_run():
             oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL da rimuovere"
             oDialog1.getControl('RimuoviTuttiSAL').Enable = False
             oDialog1.getControl('RimuoviTuttiSAL').Label = "Nessun SAL da rimuovere"
-            oDialog1.getControl('SituazioneContabile').Enable = False
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. 1'
 
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
@@ -12084,6 +12083,13 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    import LeenoNamedAreas as LNA
+    LNA.rigenera_tutto()
+    # nuove_icone()
+    return
+    import LeenoContab
+    LeenoContab.MENU_annulla_partite_provvisorie()
+    return
     # stampa_PDF()
     # return
     
@@ -12095,10 +12101,6 @@ def MENU_debug():
     Dialogs.Info(Title='ATTENZIONE!', Text='\n'.join(oSheets))
     return
     oSheet = oDoc.CurrentController.ActiveSheet
-    import LeenoNamedAreas as LNA
-    LNA.rigenera_elenco_prezzi()
-    # nuove_icone()
-    return
     DLG.mri(oSheet)
     return
 
@@ -12130,14 +12132,6 @@ def MENU_debug():
             oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
 
 
-def MENU_annulla_partite_provvisorie():
-    import LeenoContab
-    return LeenoContab.MENU_annulla_partite_provvisorie()
-
-
-def annulla_partite_provvisorie_sospese():
-    import LeenoContab
-    return LeenoContab.annulla_partite_provvisorie_sospese()
 
 
 ########################################################################

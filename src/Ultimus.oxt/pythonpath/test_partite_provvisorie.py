@@ -177,8 +177,8 @@ class TestPartiteProvvisorie(unittest.TestCase):
         # Verify new item measure rows
         # Row 1 of measures (r1 = 5 + 2 = 7)
         self.assertEqual(self.sheet.getCellByPosition(2, 7).String, 'DETRAE PARTITA PROVVISORIA')
-        # Row 2 formula set to opposite quantity
-        self.assertEqual(self.sheet.getCellByPosition(4, 8).Formula, '=-1*J$5')
+        # Verify invertiUnSegno was invoked for row r2 = 8
+        sys.modules['LeenoSheetUtils'].invertiUnSegno.assert_called_with(self.sheet, 8)
 
     def test_partially_offset_partita(self):
         mock_insert = MagicMock()
@@ -229,8 +229,10 @@ class TestPartiteProvvisorie(unittest.TestCase):
         count = LeenoContab.annulla_partite_provvisorie_sospese()
         self.assertEqual(count, 1)
 
-        # Residual is 40.0, so row 2 of newly inserted storno should have Value = -40.0
-        self.assertEqual(self.sheet.getCellByPosition(4, 13).Value, -40.0)
+        # Residual is 40.0, so row 2 of newly inserted storno had Value = 40.0 before invertiUnSegno
+        self.assertEqual(self.sheet.getCellByPosition(4, 13).Value, 40.0)
+        # Verify invertiUnSegno was invoked for row r2 = 13
+        sys.modules['LeenoSheetUtils'].invertiUnSegno.assert_called_with(self.sheet, 13)
 
 
 if __name__ == '__main__':

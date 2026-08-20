@@ -887,10 +887,10 @@ def annulla_partite_provvisorie_sospese():
             PL.vedi_voce_xpwe(oSheet, r2, p_item['SR'])
 
             p_sotto = p_item['ER']
-            if abs(Q_residual - p_item['Q_orig']) < 1e-4:
-                oSheet.getCellByPosition(4, r2).Formula = "=-1*J$" + str(p_sotto + 1)
-            else:
-                oSheet.getCellByPosition(4, r2).Value = -Q_residual
+            if abs(Q_residual - p_item['Q_orig']) >= 1e-4:
+                oSheet.getCellByPosition(4, r2).Value = Q_residual
+
+            LeenoSheetUtils.invertiUnSegno(oSheet, r2)
 
         PL.numera_voci(oSheet)
         return len(suspended_items)

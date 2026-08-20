@@ -229,10 +229,59 @@ class TestPartiteProvvisorie(unittest.TestCase):
         count = LeenoContab.annulla_partite_provvisorie_sospese()
         self.assertEqual(count, 1)
 
-        # Residual is 40.0, so row 2 of newly inserted storno had Value = 40.0 before invertiUnSegno
         self.assertEqual(self.sheet.getCellByPosition(4, 13).Value, 40.0)
-        # Verify invertiUnSegno was invoked for row r2 = 13
         sys.modules['LeenoSheetUtils'].invertiUnSegno.assert_called_with(self.sheet, 13)
+
+    def test_multiple_suspended_same_code_grouped(self):
+        mock_insert = MagicMock()
+        LeenoContab.insertVoceContabilita = mock_insert
+
+        # Setup item 1 (provisional Q=100, cod=NP.01)
+        self.sheet.getCellByPosition(0, 0).CellStyle = 'Comp Start Attributo'
+        self.sheet.getCellByPosition(0, 1).String = '1'
+        self.sheet.getCellByPosition(1, 1).String = 'NP.01'
+        self.sheet.getCellByPosition(2, 2).String = 'PARTITA PROVVISORIA 1'
+        self.sheet.getCellByPosition(9, 2).Value = 100.0
+        self.sheet.getCellByPosition(0, 4).CellStyle = 'Comp End Attributo'
+        self.sheet.getCellByPosition(9, 4).Value = 100.0
+
+        # Setup item 2 (provisional Q=50, cod=NP.01)
+        self.sheet.getCellByPosition(0, 5).CellStyle = 'Comp Start Attributo'
+        self.sheet.getCellByPosition(0, 6).String = '2'
+        self.sheet.getCellByPosition(1, 6).String = 'NP.01'
+        self.sheet.getCellByPosition(2, 7).String = 'PARTITA PROVVISORIA 2'
+        self.sheet.getCellByPosition(9, 7).Value = 50.0
+        self.sheet.getCellByPosition(0, 9).CellStyle = 'Comp End Attributo'
+        self.sheet.getCellByPosition(9, 9).Value = 50.0
+
+        last_row_state = [9]
+
+        def mock_cerca_ultima(sheet):
+            return last_row_state[0]
+
+        def mock_insert_impl(lrow=0, arg=1, cod=None):
+            last_row_state[0] = 15
+
+        mock_insert.side_effect = mock_insert_impl
+        sys.modules['LeenoSheetUtils'].cercaUltimaVoce.side_effect = mock_cerca_ultima
+        LeenoContab.LeenoSheetUtils.cercaUltimaVoce.side_effect = mock_cerca_ultima
+
+        def mock_circoscrive(sheet, row):
+            if row <= 4:
+                return MockRange(0, 4)
+            elif row <= 9:
+                return MockRange(5, 9)
+            else:
+                return MockRange(10, 15)
+
+        sys.modules['LeenoComputo'].circoscriveVoceComputo.side_effect = mock_circoscrive
+        LeenoContab.LeenoComputo.circoscriveVoceComputo.side_effect = mock_circoscrive
+
+        count = LeenoContab.annulla_partite_provvisorie_sospese()
+        self.assertEqual(count, 2)
+
+        # Only ONE insertVoceContabilita call for NP.01
+        mock_insert.assert_called_once_with(lrow=9, arg=1, cod='NP.01')
 
 
 if __name__ == '__main__':

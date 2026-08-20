@@ -865,11 +865,17 @@ def annulla_partite_provvisorie_sospese():
         if not suspended_items:
             return 0
 
-        for p_item in suspended_items:
-            Q_residual = p_item['Q_orig'] - p_item['Q_stornata']
+        # Raggruppa le partite provvisorie sospese per codice di prezzo
+        suspended_by_cod = {}
+        for p in suspended_items:
+            cod = p['cod']
+            if cod not in suspended_by_cod:
+                suspended_by_cod[cod] = []
+            suspended_by_cod[cod].append(p)
 
+        for cod, p_list in suspended_by_cod.items():
             last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            insertVoceContabilita(lrow=last_row, arg=1, cod=p_item['cod'])
+            insertVoceContabilita(lrow=last_row, arg=1, cod=cod)
 
             new_last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, new_last_row)
@@ -877,20 +883,25 @@ def annulla_partite_provvisorie_sospese():
                 continue
             new_SR = sStRange_new.RangeAddress.StartRow
 
+            # Prima riga di misura: intestazione DETRAE PARTITA PROVVISORIA
             r1 = new_SR + 2
             oSheet.getCellByPosition(2, r1).String = "DETRAE PARTITA PROVVISORIA"
             oSheet.getCellRangeByPosition(2, r1, 8, r1).CellBackColor = 16777113
 
-            # Inserisce una nuova riga di misurazione per il riferimento vedi_voce
-            PL.Copia_riga_Ent(num_righe=1, target_row=r1)
-            r2 = r1 + 1
-            PL.vedi_voce_xpwe(oSheet, r2, p_item['SR'])
+            r_curr = r1
+            for p_item in p_list:
+                Q_residual = p_item['Q_orig'] - p_item['Q_stornata']
 
-            p_sotto = p_item['ER']
-            if abs(Q_residual - p_item['Q_orig']) >= 1e-4:
-                oSheet.getCellByPosition(4, r2).Value = Q_residual
+                # Inserisce una nuova riga di misurazione per il riferimento vedi_voce
+                PL.Copia_riga_Ent(num_righe=1, target_row=r_curr)
+                r_curr += 1
 
-            LeenoSheetUtils.invertiUnSegno(oSheet, r2)
+                PL.vedi_voce_xpwe(oSheet, r_curr, p_item['SR'])
+
+                if abs(Q_residual - p_item['Q_orig']) >= 1e-4:
+                    oSheet.getCellByPosition(4, r_curr).Value = Q_residual
+
+                LeenoSheetUtils.invertiUnSegno(oSheet, r_curr)
 
         PL.numera_voci(oSheet)
         return len(suspended_items)

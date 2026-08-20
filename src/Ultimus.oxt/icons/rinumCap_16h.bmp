@@ -39,7 +39,7 @@
        width="19.6"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect1"
        style="fill:#1e3a8a;fill-opacity:1" />
     <rect
@@ -48,7 +48,7 @@
        width="16.4"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect2"
        style="fill:#3b82f6;fill-opacity:1" />
     <rect
@@ -57,7 +57,7 @@
        width="13.2"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect3"
        style="fill:#93c5fd;fill-opacity:1" />
   </g>
@@ -68,16 +68,16 @@
        cx="17.5"
        cy="17.5"
        r="6.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="circle3"
-       style="fill:#E9EFDF;fill-opacity:1" />
+       style="fill:#1a2010;fill-opacity:1" />
     <circle
        cx="17.5"
        cy="17.5"
        r="5.5999999"
-       fill="#1B1F0B"
+       fill="#f0f4e0"
        id="circle4-2"
-       style="fill:#1B1F0B;fill-opacity:1" />
+       style="fill:#f0f4e0;fill-opacity:1" />
     <text
        x="16.813393"
        y="19.174377"
@@ -89,6 +89,6 @@
        dominant-baseline="middle"
        id="text4"
        transform="scale(1.041706,0.95996376)"
-       style="fill:#E9EFDF;fill-opacity:1;stroke-width:1.40827">#</text>
+       style="fill:#1a2010;fill-opacity:1;stroke-width:1.40827">#</text>
   </g>
 </svg>

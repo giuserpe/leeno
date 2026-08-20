@@ -31,16 +31,16 @@
   <g
      id="g5"
      transform="translate(-26.129739,0.08357394)"
-     style="fill:#7F7F7F;fill-opacity:1">
+     style="fill:#808080;fill-opacity:1">
     <rect
        x="28.291447"
        y="4.2053428"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect1-6"
-       style="fill:#7F7F7F;fill-opacity:1" />
+       style="fill:#808080;fill-opacity:1" />
     <rect
        x="28.291447"
        y="8.6053429"
@@ -49,38 +49,38 @@
        rx="0.5"
        fill="#8fb200"
        id="rect2-1"
-       style="fill:#7F7F7F;fill-opacity:1" />
+       style="fill:#808080;fill-opacity:1" />
     <rect
        x="28.291447"
        y="13.005342"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8"
-       style="fill:#7F7F7F;fill-opacity:1" />
+       style="fill:#808080;fill-opacity:1" />
     <rect
        x="28.368031"
        y="17.427509"
        width="19.6"
        height="2.2"
        rx="0.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect3-8-2-9"
-       style="fill:#7F7F7F;fill-opacity:1" />
+       style="fill:#808080;fill-opacity:1" />
   </g>
   <circle
      cx="17.262081"
      cy="17.31041"
      r="6.5"
-     fill="#E9EFDF"
+     fill="#1a2010"
      id="circle3-0"
      style="fill:#ff4d2e;fill-opacity:1" />
   <circle
      cx="17.262081"
      cy="17.31041"
      r="5.5999999"
-     fill="#1B1F0B"
+     fill="#f0f4e0"
      id="circle4-9" />
   <text
      x="17.580246"

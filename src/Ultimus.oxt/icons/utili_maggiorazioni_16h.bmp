@@ -37,7 +37,7 @@
      font-family="Arial, sans-serif"
      font-size="18.4502px"
      font-weight="800"
-     fill="#E9EFDF"
+     fill="#1a2010"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text1"
@@ -50,13 +50,13 @@
        cx="17.299999"
        cy="17.299999"
        r="6.5"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="circle3" />
     <circle
        cx="17.299999"
        cy="17.299999"
        r="5.5999999"
-       fill="#1B1F0B"
+       fill="#f0f4e0"
        id="circle4" />
     <rect
        x="13.4"

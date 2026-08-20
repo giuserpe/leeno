@@ -37,16 +37,16 @@
       <g
          id="g5-4"
          transform="matrix(0.82569671,0,0,1,-20.303746,-1.2003937)"
-         style="fill:#E9EFDF;fill-opacity:1">
+         style="fill:#1a2010;fill-opacity:1">
         <rect
            x="28.291447"
            y="4.2053428"
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect1-6-3"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
         <rect
            x="28.291447"
            y="8.6053429"
@@ -55,25 +55,25 @@
            rx="0.5"
            fill="#8fb200"
            id="rect2-1-1"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
         <rect
            x="28.291447"
            y="13.005342"
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect3-8-2"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
         <rect
            x="28.368031"
            y="17.427509"
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect3-8-2-9-3"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
       </g>
       <g
          id="g5"
@@ -85,7 +85,7 @@
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect1-6"
            style="fill:#f4b400;fill-opacity:1" />
         <rect
@@ -103,7 +103,7 @@
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect3-8"
            style="fill:#f4b400;fill-opacity:1" />
         <rect
@@ -112,7 +112,7 @@
            width="19.6"
            height="2.2"
            rx="0.5"
-           fill="#E9EFDF"
+           fill="#1a2010"
            id="rect3-8-2-9"
            style="fill:#f4b400;fill-opacity:1" />
       </g>
@@ -122,13 +122,13 @@
      cx="17.009293"
      cy="17.020447"
      r="6.5"
-     fill="#E9EFDF"
+     fill="#1a2010"
      id="circle3" />
   <circle
      cx="17.009293"
      cy="17.020447"
      r="5.5999999"
-     fill="#1B1F0B"
+     fill="#f0f4e0"
      id="circle4-9" />
   <path
      d="m 17.009293,11.605948 4.517715,8.602044 h -9.03543 z"
@@ -142,7 +142,7 @@
      font-family="Arial, sans-serif"
      font-size="6.79185px"
      font-weight="900"
-     fill="#E9EFDF"
+     fill="#1a2010"
      text-anchor="middle"
      dominant-baseline="middle"
      id="text5-8"

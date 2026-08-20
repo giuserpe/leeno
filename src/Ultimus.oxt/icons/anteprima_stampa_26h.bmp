@@ -30,7 +30,7 @@
      inkscape:current-layer="svg2" />
   <path
      d="M3.00,8.00 L21.00,8.00 L21.00,16.50 L3.00,16.50 Z M4.60,9.60 L19.40,9.60 L19.40,14.90 L4.60,14.90 Z"
-     fill="#E9EFDF"
+     fill="#1A2010"
      fill-rule="evenodd"
      id="path1" />
   <rect
@@ -39,16 +39,16 @@
      width="10"
      height="5.2"
      rx="0.6"
-     fill="#E9EFDF"
+     fill="#1A2010"
      id="rect1"
-     style="fill:#7F7F7F;fill-opacity:1" />
+     style="fill:#808080;fill-opacity:1" />
   <rect
      x="7"
      y="17.6"
      width="10"
      height="4.2"
      rx="0.4"
-     fill="#7F7F7F"
+     fill="#808080"
      id="rect2"
      style="fill:#8fb200;fill-opacity:1" />
 </svg>

@@ -39,7 +39,7 @@
        width="2"
        height="8"
        rx="0.89999998"
-       fill="#E9EFDF"
+       fill="#1a2010"
        id="rect1" />
     <g
        id="g1"
@@ -48,18 +48,18 @@
          cx="12.152698"
          cy="5.2071271"
          r="1.8"
-         fill="#E9EFDF"
+         fill="#1a2010"
          id="circle1" />
       <circle
          cx="12.152698"
          cy="5.2071271"
          r="0.80000001"
-         fill="#1B1F0B"
+         fill="#f0f4e0"
          id="circle2" />
     </g>
     <path
        d="m 12.956308,9.474149 a 5.6,5.6 0 1 1 -6.4825251,4.548062 l 2.1726725,0.376821 a 3.4,3.4 0 1 0 3.9330316,-2.752211 z"
-       fill="#E9EFDF"
+       fill="#1a2010"
        fill-rule="evenodd"
        id="path2" />
   </g>

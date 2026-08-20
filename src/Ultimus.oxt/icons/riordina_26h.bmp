@@ -37,22 +37,22 @@
       <g
          id="g2"
          transform="translate(0,0.0283207)"
-         style="fill:#E9EFDF;fill-opacity:1">
+         style="fill:#1a2010;fill-opacity:1">
         <rect
            x="5"
            y="3"
            width="2"
            height="12.9"
            rx="0.76923078"
-           fill="#1B1F0B"
+           fill="#f0f4e0"
            id="rect1-6"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
         <path
            d="M 3.13,15.4 6,18.62 8.88,15.4 Z"
-           fill="#1B1F0B"
+           fill="#f0f4e0"
            fill-rule="evenodd"
            id="path1-1"
-           style="fill:#E9EFDF;fill-opacity:1" />
+           style="fill:#1a2010;fill-opacity:1" />
       </g>
       <text
          x="13.947734"

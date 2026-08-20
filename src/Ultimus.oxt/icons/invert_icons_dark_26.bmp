@@ -188,7 +188,7 @@ def main():
         print(f"ERRORE: la cartella non esiste: {input_dir}")
         sys.exit(1)
 
-    outdir = os.path.abspath(args.outdir) if args.outdir else os.path.join(input_dir, "dark")
+    outdir = os.path.abspath(args.outdir) if args.outdir else os.path.join(input_dir, "../scuro")
     if not args.dry_run:
         os.makedirs(outdir, exist_ok=True)
 

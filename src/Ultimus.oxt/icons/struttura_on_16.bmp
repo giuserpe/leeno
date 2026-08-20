@@ -39,7 +39,7 @@
        width="19.6"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect1-1"
        style="fill:#1e3a8a;fill-opacity:1" />
     <rect
@@ -48,7 +48,7 @@
        width="16.4"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect2-4"
        style="fill:#3b82f6;fill-opacity:1" />
     <rect
@@ -57,7 +57,7 @@
        width="13.2"
        height="3"
        rx="0.60000002"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="rect3-2"
        style="fill:#93c5fd;fill-opacity:1" />
   </g>
@@ -67,13 +67,13 @@
        cx="17.3"
        cy="17.3"
        r="6.5"
-       fill="#E9EFDF"
+       fill="#1A2010"
        id="circle3" />
     <circle
        cx="17.3"
        cy="17.3"
        r="5.6000000000000005"
-       fill="#1B1F0B"
+       fill="#F0F4E0"
        id="circle4" />
     <rect
        x="13.4"

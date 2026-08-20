@@ -759,7 +759,11 @@ def adattaAltezzaRiga(oSheet=False, all=True, lrow=None):
         if all:
             last_row = getLastUsedRow(oSheet)
             if last_row >= 0:
-                oSheet.getCellRangeByPosition(0, 0, 0, last_row).Rows.OptimalHeight = True
+                for r in range(0, last_row + 1):
+                    try:
+                        oSheet.getRows().getByIndex(r).OptimalHeight = True
+                    except Exception:
+                        pass
 
         # --- CASI SPECIALI ---
         if oSheet.Name in FOGLI_SPECIALI:
@@ -816,7 +820,11 @@ def adattaAltezzaRiga(oSheet=False, all=True, lrow=None):
                 start_row = max(0, lrow - 1)
                 end_row = min(usedArea.EndRow, lrow + 1)
             # Adatta l'altezza ottimale solo per il piccolo range o l'intera voce
-            oSheet.getCellRangeByPosition(0, start_row, 0, end_row).Rows.OptimalHeight = True
+            for r in range(start_row, end_row + 1):
+                try:
+                    oSheet.getRows().getByIndex(r).OptimalHeight = True
+                except Exception:
+                    pass
 
         # --- RIPRISTINO PROTEZIONE ---
         if is_protected:

@@ -12130,6 +12130,16 @@ def MENU_debug():
             oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
 
 
+def MENU_annulla_partite_provvisorie():
+    import LeenoContab
+    return LeenoContab.MENU_annulla_partite_provvisorie()
+
+
+def annulla_partite_provvisorie_sospese():
+    import LeenoContab
+    return LeenoContab.annulla_partite_provvisorie_sospese()
+
+
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 # g_exportedScripts = (MENU_debug)

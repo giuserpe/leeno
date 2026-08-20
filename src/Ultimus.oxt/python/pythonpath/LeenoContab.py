@@ -874,12 +874,18 @@ def annulla_partite_provvisorie_sospese():
                 suspended_by_cod[cod] = []
             suspended_by_cod[cod].append(p)
 
-        for cod, p_list in suspended_by_cod.items():
-            last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            insertVoceContabilita(lrow=last_row, arg=1, cod=cod)
+        # Determina la posizione corrente per l'inserimento subito dopo la voce corrente
+        try:
+            insert_pos = PL.LeggiPosizioneCorrente()[1]
+        except Exception:
+            insert_pos = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
-            new_last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, new_last_row)
+        for cod, p_list in suspended_by_cod.items():
+            insertVoceContabilita(lrow=insert_pos, arg=1, cod=cod)
+
+            sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, insert_pos)
+            if not sStRange_new:
+                sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
             if not sStRange_new:
                 continue
             new_SR = sStRange_new.RangeAddress.StartRow
@@ -905,6 +911,9 @@ def annulla_partite_provvisorie_sospese():
                 LeenoSheetUtils.invertiUnSegno(oSheet, r_curr)
 
             LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=new_SR)
+            sStRange_after = LeenoComputo.circoscriveVoceComputo(oSheet, new_SR)
+            if sStRange_after:
+                insert_pos = sStRange_after.RangeAddress.EndRow
 
         PL.numera_voci(oSheet)
         return len(suspended_items)

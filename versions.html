@@ -452,29 +452,36 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-20 10:06</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c88e833715e71fea389b2fb7c0926d32c1ca35ff" target="_blank" rel="noopener"><code>c88e833</code></a></td>
-                <td class="commit-msg">Update icon colors for improved visibility and consistency
+                <td>2026-08-20 11:45</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/bba655df6bee9039890c2d693ac2e4ba4ccff079" target="_blank" rel="noopener"><code>bba655d</code></a></td>
+                <td class="commit-msg">Merge pull request #69 from giuserpe/annulla-partite-provvisorie-338576194146881859
 
-- Changed fill color from #E9EFDF to #1a2010 for various elements in the icons to enhance contrast.
-- Updated fill color from #7F7F7F to #808080 for better readability in the icons.
-- Adjusted fill color from #1B1F0B to #f0f4e0 for circles in multiple icons to ensure a cohesive design.
-- Modified SVG elements in icons.</td>
+Implementata la macro annulla_partite_provvisorie_sospese() ed esportata tramite MENU_annulla_partite_provvisorie().
+
+- Scansiona le voci in CONTABILITA identificando quelle contenenti 'PARTITA PROVVISORIA'.
+- Verifica la presenza di storni già registrati ('DETRAE PARTITA PROVVISORIA') con riferimento vedi_voce() o medesimo codice di prezzo e ne calcola la quantità residua ancora sospesa.
+- Per ciascuna partita ancora sospesa, inserisce una nuova voce in fondo al foglio CONTABILITA con il medesimo codice di prezzo.
+- Popola la prima riga delle misure con 'DETRAE PARTITA PROVVISORIA' e la seconda riga con la formula vedi_voce() riferita alla voce originaria applicando il segno opposto sulla quantità residua con invertiUnSegno().
+- Le nuove voci di storno vengono inserite subito dopo la voce corrente.
+- Quando più partite provvisorie sospese condividono lo stesso codice di prezzo, viene creata un'unica nuova voce di detrazione per quel codice.</td>
             </tr>
             <tr>
-                <td>2026-08-19 15:44</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/297a4632d2b0f777ee6cb76ee6591cbb4fd4a5fc" target="_blank" rel="noopener"><code>297a463</code></a></td>
-                <td class="commit-msg">fix: remove IconType from Dialogs.Info calls for error messages</td>
+                <td>2026-08-20 10:55</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/7ea54d3330e28be0545d82e4e2276914ade1bc7d" target="_blank" rel="noopener"><code>7ea54d3</code></a></td>
+                <td class="commit-msg">fix: risolto bug in adattaAltezzaRiga passando a oSheet.getRows().getByIndex()
+
+Corretta la funzione LeenoSheetUtils.adattaAltezzaRiga() e la gestione delle righe in LeenoContab.py sostituendo l'accesso non valido a CellRange.Rows con oSheet.getRows().getByIndex(r).OptimalHeight = True per ciascuna riga dell'intervallo.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-08-19 11:51</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/66add10008130ffce86d9f430bf2cba9b9cbcdcc" target="_blank" rel="noopener"><code>66add10</code></a></td>
-                <td class="commit-msg">Update icon colors for improved visibility and consistency across the Ultimus project
+                <td>2026-08-20 10:39</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a020d629f8352c122210a66c48d917c8af3a6888" target="_blank" rel="noopener"><code>a020d62</code></a></td>
+                <td class="commit-msg">fix: adattaAltezzaRiga applicata correttamente su ciascun intervallo delle nuove voci inserite
 
-- Changed fill colors from #808080 to #7F7F7F for background rectangles in unisci_fogli icons.
-- Updated fill colors from #1a2010 to #E9EFDF for text and rectangles in utili_maggiorazioni icons.
-- Modified fill colors from #f0f4e0 to #1B1F0B for circles in various icons.
-- Adjusted text colors to enhance contrast and readability in voce_breve icons.</td>
+Garantito che LeenoSheetUtils.adattaAltezzaRiga e la proprieta Rows.OptimalHeight vengano applicate a tutte le righe di ciascuna nuova voce di storno generata.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -498,8 +505,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-20 10:55 UTC</p>
-                <p>Build Commit: <code>7ea54d3</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-20 11:46 UTC</p>
+                <p>Build Commit: <code>bba655d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

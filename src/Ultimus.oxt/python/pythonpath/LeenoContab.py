@@ -921,7 +921,9 @@ def annulla_partite_provvisorie_sospese():
             LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=new_SR)
             sStRange_after = LeenoComputo.circoscriveVoceComputo(oSheet, new_SR)
             if sStRange_after:
-                insert_pos = sStRange_after.RangeAddress.EndRow
+                end_R = sStRange_after.RangeAddress.EndRow
+                oSheet.getCellRangeByPosition(0, new_SR, 0, end_R).Rows.OptimalHeight = True
+                insert_pos = end_R
 
         PL.numera_voci(oSheet)
         return len(suspended_items)

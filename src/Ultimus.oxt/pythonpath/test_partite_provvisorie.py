@@ -35,6 +35,7 @@ class MockRange:
         self.RangeAddress.StartRow = start_row
         self.RangeAddress.EndRow = end_row
         self.CellBackColor = None
+        self.Rows = MagicMock()
 
 class MockSheet:
     def __init__(self, name="CONTABILITA"):

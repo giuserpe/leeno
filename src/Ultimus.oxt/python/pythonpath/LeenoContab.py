@@ -259,8 +259,11 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
     ###################################
 
     if oDoc.NamedRanges.hasByName('_Lib_' + str(nSal)):
-        if lrow - 1 == oSheet.getCellRangeByName('_Lib_' + str(nSal)).getRangeAddress().EndRow:
-            nSal += 1
+        try:
+            if lrow - 1 == oDoc.getCellRangeByName('_Lib_' + str(nSal)).getRangeAddress().EndRow:
+                nSal += 1
+        except Exception:
+            pass
 
     oSheet.getCellByPosition(23, sopra + 1).Value = nSal
     oSheet.getCellByPosition(23, sopra + 1).CellStyle = 'Sal'

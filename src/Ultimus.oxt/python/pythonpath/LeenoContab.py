@@ -732,33 +732,42 @@ def partita(testo):
 
 def MENU_partita_aggiungi():
     '''
-    @@ DA DOCUMENTARE
+    wrap di 'PARTITA PROVVISORIA'
     '''
     partita('PARTITA PROVVISORIA')
 
 
 def MENU_partita_detrai():
     '''
-    @@ DA DOCUMENTARE
+    wrap di 'DETRAE PARTITA PROVVISORIA'
     '''
-    partita('SI DETRAE PARTITA PROVVISORIA')
+    is_ctrl, is_shift = PL.GetModifiers()
+    if is_ctrl:
+        count, inserted_rows = annulla_partite_provvisorie_sospese()
+        if inserted_rows:
+            oDoc = LeenoUtils.getDocument()
+            oSheet = oDoc.getSheets().getByName('CONTABILITA')
+            for sr in inserted_rows:
+                LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=sr)
+    else:
+        partita('SI DETRAE PARTITA PROVVISORIA')
 
 
 def annulla_partite_provvisorie_sospese():
     '''
     Individua e annulla le partite provvisorie ancora sospese in CONTABILITA.
     Returns:
-        int: Numero di partite provvisorie sospese annullate.
+        tuple: (int: Numero di partite provvisorie sospese annullate, list: Righe di inizio delle voci inserite).
     '''
     oDoc = LeenoUtils.getDocument()
     try:
         oSheet = oDoc.getSheets().getByName('CONTABILITA')
     except Exception:
-        return 0
+        return 0, []
 
     lastRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
     if lastRow <= 1:
-        return 0
+        return 0, []
 
     is_protected = oSheet.isProtected()
     if is_protected:
@@ -864,7 +873,7 @@ def annulla_partite_provvisorie_sospese():
 
         suspended_items = [p for p in provisional_items if (p['Q_orig'] - p['Q_stornata']) > 1e-4]
         if not suspended_items:
-            return 0
+            return 0, []
 
         # Raggruppa le partite provvisorie sospese per codice di prezzo
         suspended_by_cod = {}
@@ -882,6 +891,7 @@ def annulla_partite_provvisorie_sospese():
         except Exception:
             insert_pos = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
+        inserted_rows = []
         for cod, p_list in suspended_by_cod.items():
             stile = oSheet.getCellByPosition(0, insert_pos).CellStyle
             if stile in stili_contab:
@@ -897,6 +907,7 @@ def annulla_partite_provvisorie_sospese():
             if not sStRange_new:
                 continue
             new_SR = sStRange_new.RangeAddress.StartRow
+            inserted_rows.append(new_SR)
 
             # Prima riga di misura: intestazione DETRAE PARTITA PROVVISORIA
             r1 = new_SR + 2
@@ -931,7 +942,7 @@ def annulla_partite_provvisorie_sospese():
                 insert_pos = end_R
 
         PL.numera_voci(oSheet)
-        return len(suspended_items)
+        return len(suspended_items), inserted_rows
     finally:
         if is_protected:
             oSheet.protect("")
@@ -944,7 +955,14 @@ def MENU_annulla_partite_provvisorie():
     Macro per individuare e annullare le partite provvisorie ancora sospese.
     '''
     with LeenoUtils.no_refresh_context():
-        count = annulla_partite_provvisorie_sospese()
+        count, inserted_rows = annulla_partite_provvisorie_sospese()
+    
+    if inserted_rows:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.getSheets().getByName('CONTABILITA')
+        for sr in inserted_rows:
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=sr)
+
     if count > 0:
         Dialogs.NotifyDialog(Title="Partite Provvisorie", Text=f"Annullate {count} partite provvisorie sospese.")
     else:

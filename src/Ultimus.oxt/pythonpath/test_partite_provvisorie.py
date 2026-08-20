@@ -89,8 +89,9 @@ class TestPartiteProvvisorie(unittest.TestCase):
 
         sys.modules['LeenoUtils'].getDocument.return_value = self.doc
         LeenoContab.LeenoUtils.getDocument.return_value = self.doc
-        sys.modules['LeenoGlobals'].getGlobalVar.return_value = 1
+        sys.modules['LeenoGlobals'].getGlobalVar.return_value = ['Comp Start Attributo', 'Comp End Attributo']
         sys.modules['LeenoSheetUtils'].cercaPartenza.return_value = (0, 0, '')
+        sys.modules['LeenoSheetUtils'].prossimaVoce.side_effect = lambda sheet, r: r + 1
         sys.modules['pyleeno'].LeggiPosizioneCorrente.return_value = (0, 4)
         LeenoContab.PL.LeggiPosizioneCorrente.return_value = (0, 4)
 
@@ -153,7 +154,7 @@ class TestPartiteProvvisorie(unittest.TestCase):
         LeenoContab.LeenoSheetUtils.cercaUltimaVoce.return_value = 4
 
         def mock_circoscrive(sheet, row):
-            if mock_insert.called:
+            if row >= 5:
                 return MockRange(5, 9)
             return MockRange(0, 4)
 
@@ -195,7 +196,7 @@ class TestPartiteProvvisorie(unittest.TestCase):
         LeenoContab.PL.LeggiPosizioneCorrente.return_value = (0, 9)
 
         def mock_circoscrive(sheet, row):
-            if mock_insert.called:
+            if row >= 10:
                 return MockRange(10, 14)
             if row <= 4:
                 return MockRange(0, 4)
@@ -237,7 +238,7 @@ class TestPartiteProvvisorie(unittest.TestCase):
         LeenoContab.PL.LeggiPosizioneCorrente.return_value = (0, 9)
 
         def mock_circoscrive(sheet, row):
-            if mock_insert.called:
+            if row >= 10:
                 return MockRange(10, 15)
             if row <= 4:
                 return MockRange(0, 4)

@@ -874,6 +874,8 @@ def annulla_partite_provvisorie_sospese():
                 suspended_by_cod[cod] = []
             suspended_by_cod[cod].append(p)
 
+        stili_contab = LeenoGlobals.getGlobalVar('stili_contab') + LeenoGlobals.getGlobalVar('stili_cat')
+
         # Determina la posizione corrente per l'inserimento subito dopo la voce corrente
         try:
             insert_pos = PL.LeggiPosizioneCorrente()[1]
@@ -881,9 +883,15 @@ def annulla_partite_provvisorie_sospese():
             insert_pos = LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
         for cod, p_list in suspended_by_cod.items():
+            stile = oSheet.getCellByPosition(0, insert_pos).CellStyle
+            if stile in stili_contab:
+                target_row = LeenoSheetUtils.prossimaVoce(oSheet, insert_pos)
+            else:
+                target_row = insert_pos
+
             insertVoceContabilita(lrow=insert_pos, arg=1, cod=cod)
 
-            sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, insert_pos)
+            sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, target_row)
             if not sStRange_new:
                 sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
             if not sStRange_new:

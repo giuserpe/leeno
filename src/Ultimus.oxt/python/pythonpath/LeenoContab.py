@@ -740,6 +740,174 @@ def MENU_partita_detrai():
     partita('SI DETRAE PARTITA PROVVISORIA')
 
 
+def annulla_partite_provvisorie_sospese():
+    '''
+    Individua e annulla le partite provvisorie ancora sospese in CONTABILITA.
+    Returns:
+        int: Numero di partite provvisorie sospese annullate.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    try:
+        oSheet = oDoc.getSheets().getByName('CONTABILITA')
+    except Exception:
+        return 0
+
+    lastRow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+    if lastRow <= 1:
+        return 0
+
+    is_protected = oSheet.isProtected()
+    if is_protected:
+        oSheet.unprotect("")
+
+    try:
+        provisional_items = []
+        storno_items = []
+
+        for n in range(0, lastRow):
+            cell_style = oSheet.getCellByPosition(0, n).CellStyle
+            if cell_style in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
+                if not sStRange:
+                    continue
+                sopra = sStRange.RangeAddress.StartRow
+                sotto = sStRange.RangeAddress.EndRow
+
+                num = oSheet.getCellByPosition(0, sopra + 1).String.strip()
+                cod = oSheet.getCellByPosition(1, sopra + 1).String.strip()
+
+                has_partita = False
+                has_detrae = False
+                partita_qty = 0.0
+                storno_qty = 0.0
+                ref_num = None
+
+                for m in range(sopra + 2, max(sopra + 2, sotto)):
+                    if m >= sotto:
+                        break
+                    cell_str = oSheet.getCellByPosition(2, m).String.upper()
+                    m_val = oSheet.getCellByPosition(9, m).Value
+
+                    if "PARTITA PROVVISORIA" in cell_str or "PARTITA IN CONTO PROVVISORIO" in cell_str:
+                        if "DETRAE" in cell_str:
+                            has_detrae = True
+                            storno_qty += abs(m_val)
+                        else:
+                            has_partita = True
+                            partita_qty += m_val
+                    elif "DETRAE" in cell_str:
+                        has_detrae = True
+                        storno_qty += abs(m_val)
+
+                    if "- VEDI VOCE N." in cell_str:
+                        try:
+                            ref_part = cell_str.split("- VEDI VOCE N.")[1].split()[0]
+                            ref_num = ref_part.rstrip('.-;,')
+                        except Exception:
+                            pass
+
+                total_item_qty = oSheet.getCellByPosition(9, sotto).Value
+
+                if has_partita and not has_detrae:
+                    qty = partita_qty if partita_qty != 0.0 else total_item_qty
+                    provisional_items.append({
+                        'SR': sopra,
+                        'ER': sotto,
+                        'num': num,
+                        'cod': cod,
+                        'Q_orig': qty,
+                        'Q_stornata': 0.0
+                    })
+                elif has_detrae:
+                    qty = storno_qty if storno_qty != 0.0 else abs(total_item_qty)
+                    storno_items.append({
+                        'SR': sopra,
+                        'ER': sotto,
+                        'num': num,
+                        'cod': cod,
+                        'Q_storno': qty,
+                        'ref_num': ref_num,
+                        'used_Q': 0.0
+                    })
+
+        # Corrispondenza storni -> partite provvisorie
+        # Passaggio 1: Riferimento esplicito via vedi_voce (ref_num)
+        for s_item in storno_items:
+            if s_item['ref_num']:
+                for p_item in provisional_items:
+                    if p_item['num'] == s_item['ref_num'] and p_item['cod'] == s_item['cod']:
+                        rem_storno = s_item['Q_storno'] - s_item['used_Q']
+                        rem_prov = p_item['Q_orig'] - p_item['Q_stornata']
+                        if rem_storno > 1e-4 and rem_prov > 1e-4:
+                            offset = min(rem_storno, rem_prov)
+                            p_item['Q_stornata'] += offset
+                            s_item['used_Q'] += offset
+
+        # Passaggio 2: Corrispondenza per codice tra storni rimanenti e partite provvisorie precedenti
+        for s_item in storno_items:
+            rem_storno = s_item['Q_storno'] - s_item['used_Q']
+            if rem_storno > 1e-4:
+                for p_item in provisional_items:
+                    if p_item['SR'] < s_item['SR'] and p_item['cod'] == s_item['cod']:
+                        rem_prov = p_item['Q_orig'] - p_item['Q_stornata']
+                        if rem_prov > 1e-4:
+                            offset = min(rem_storno, rem_prov)
+                            p_item['Q_stornata'] += offset
+                            s_item['used_Q'] += offset
+                            rem_storno -= offset
+                            if rem_storno <= 1e-4:
+                                break
+
+        suspended_items = [p for p in provisional_items if (p['Q_orig'] - p['Q_stornata']) > 1e-4]
+        if not suspended_items:
+            return 0
+
+        for p_item in suspended_items:
+            Q_residual = p_item['Q_orig'] - p_item['Q_stornata']
+
+            last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            insertVoceContabilita(lrow=last_row, arg=1, cod=p_item['cod'])
+
+            new_last_row = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            sStRange_new = LeenoComputo.circoscriveVoceComputo(oSheet, new_last_row)
+            if not sStRange_new:
+                continue
+            new_SR = sStRange_new.RangeAddress.StartRow
+
+            r1 = new_SR + 2
+            oSheet.getCellByPosition(2, r1).String = "DETRAE PARTITA PROVVISORIA"
+            oSheet.getCellRangeByPosition(2, r1, 8, r1).CellBackColor = 16777113
+
+            # Inserisce una nuova riga di misurazione per il riferimento vedi_voce
+            PL.Copia_riga_Ent(num_righe=1, target_row=r1)
+            r2 = r1 + 1
+            PL.vedi_voce_xpwe(oSheet, r2, p_item['SR'])
+
+            p_sotto = p_item['ER']
+            if abs(Q_residual - p_item['Q_orig']) < 1e-4:
+                oSheet.getCellByPosition(4, r2).Formula = "=-1*J$" + str(p_sotto + 1)
+            else:
+                oSheet.getCellByPosition(4, r2).Value = -Q_residual
+
+        PL.numera_voci(oSheet)
+        return len(suspended_items)
+    finally:
+        if is_protected:
+            oSheet.protect("")
+
+
+def MENU_annulla_partite_provvisorie():
+    '''
+    Macro per individuare e annullare le partite provvisorie ancora sospese.
+    '''
+    with LeenoUtils.no_refresh_context():
+        count = annulla_partite_provvisorie_sospese()
+    if count > 0:
+        Dialogs.NotifyDialog(Title="Partite Provvisorie", Text=f"Annullate {count} partite provvisorie sospese.")
+    else:
+        Dialogs.NotifyDialog(Title="Partite Provvisorie", Text="Nessuna partita provvisoria sospesa da annullare.")
+
+
 ########################################################################
 def struttura_CONTAB():
     '''

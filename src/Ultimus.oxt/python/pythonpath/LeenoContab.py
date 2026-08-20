@@ -28,6 +28,7 @@ import LeenoComputo
 import Dialogs
 import LeenoDialogs as DLG
 import pyleeno as PL
+from undo_utils import with_undo
 import LeenoEvents
 import LeenoBasicBridge
 # pyrefly: ignore [missing-import]
@@ -912,6 +913,8 @@ def annulla_partite_provvisorie_sospese():
             oSheet.protect("")
 
 
+@LeenoUtils.release_ram
+@with_undo("Annulla Partite Provvisorie Sospese")
 def MENU_annulla_partite_provvisorie():
     '''
     Macro per individuare e annullare le partite provvisorie ancora sospese.

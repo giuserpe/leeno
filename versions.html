@@ -452,36 +452,19 @@
                     <tbody>
                         
             <tr>
-                <td>2026-08-20 11:45</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/bba655df6bee9039890c2d693ac2e4ba4ccff079" target="_blank" rel="noopener"><code>bba655d</code></a></td>
-                <td class="commit-msg">Merge pull request #69 from giuserpe/annulla-partite-provvisorie-338576194146881859
-
-Implementata la macro annulla_partite_provvisorie_sospese() ed esportata tramite MENU_annulla_partite_provvisorie().
-
-- Scansiona le voci in CONTABILITA identificando quelle contenenti 'PARTITA PROVVISORIA'.
-- Verifica la presenza di storni già registrati ('DETRAE PARTITA PROVVISORIA') con riferimento vedi_voce() o medesimo codice di prezzo e ne calcola la quantità residua ancora sospesa.
-- Per ciascuna partita ancora sospesa, inserisce una nuova voce in fondo al foglio CONTABILITA con il medesimo codice di prezzo.
-- Popola la prima riga delle misure con 'DETRAE PARTITA PROVVISORIA' e la seconda riga con la formula vedi_voce() riferita alla voce originaria applicando il segno opposto sulla quantità residua con invertiUnSegno().
-- Le nuove voci di storno vengono inserite subito dopo la voce corrente.
-- Quando più partite provvisorie sospese condividono lo stesso codice di prezzo, viene creata un'unica nuova voce di detrazione per quel codice.</td>
+                <td>2026-08-20 15:46</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/550af61746e35c0431f84d190beefdc7e4c087ea" target="_blank" rel="noopener"><code>550af61</code></a></td>
+                <td class="commit-msg">fix: migliorata la gestione delle registrazioni provvisorie in contabilità, incluso l'altezza automatica delle righe.</td>
             </tr>
             <tr>
-                <td>2026-08-20 10:55</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/7ea54d3330e28be0545d82e4e2276914ade1bc7d" target="_blank" rel="noopener"><code>7ea54d3</code></a></td>
-                <td class="commit-msg">fix: risolto bug in adattaAltezzaRiga passando a oSheet.getRows().getByIndex()
-
-Corretta la funzione LeenoSheetUtils.adattaAltezzaRiga() e la gestione delle righe in LeenoContab.py sostituendo l'accesso non valido a CellRange.Rows con oSheet.getRows().getByIndex(r).OptimalHeight = True per ciascuna riga dell'intervallo.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+                <td>2026-08-20 15:44</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/6924d912d62317d630f7de5612ee0ba9ee0e2c96" target="_blank" rel="noopener"><code>6924d91</code></a></td>
+                <td class="commit-msg">fix: update Computo_LeenO.ods to resolve binary differences</td>
             </tr>
             <tr>
-                <td>2026-08-20 10:39</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/a020d629f8352c122210a66c48d917c8af3a6888" target="_blank" rel="noopener"><code>a020d62</code></a></td>
-                <td class="commit-msg">fix: adattaAltezzaRiga applicata correttamente su ciascun intervallo delle nuove voci inserite
-
-Garantito che LeenoSheetUtils.adattaAltezzaRiga e la proprieta Rows.OptimalHeight vengano applicate a tutte le righe di ciascuna nuova voce di storno generata.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+                <td>2026-08-20 15:44</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d201f7c725062bb0607f5f186d95750df7612584" target="_blank" rel="noopener"><code>d201f7c</code></a></td>
+                <td class="commit-msg">fix: update dialog elements and labels for improved clarity and functionality</td>
             </tr>
                     </tbody>
                 </table>
@@ -505,8 +488,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-20 11:46 UTC</p>
-                <p>Build Commit: <code>bba655d</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-20 15:47 UTC</p>
+                <p>Build Commit: <code>550af61</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

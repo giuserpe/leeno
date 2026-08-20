@@ -903,6 +903,8 @@ def annulla_partite_provvisorie_sospese():
 
                 LeenoSheetUtils.invertiUnSegno(oSheet, r_curr)
 
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False, lrow=new_SR)
+
         PL.numera_voci(oSheet)
         return len(suspended_items)
     finally:

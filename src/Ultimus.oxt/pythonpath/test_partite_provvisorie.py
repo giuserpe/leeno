@@ -179,6 +179,8 @@ class TestPartiteProvvisorie(unittest.TestCase):
         self.assertEqual(self.sheet.getCellByPosition(2, 7).String, 'DETRAE PARTITA PROVVISORIA')
         # Verify invertiUnSegno was invoked for row r2 = 8
         sys.modules['LeenoSheetUtils'].invertiUnSegno.assert_called_with(self.sheet, 8)
+        # Verify adattaAltezzaRiga was called for newly inserted entry
+        sys.modules['LeenoSheetUtils'].adattaAltezzaRiga.assert_called_with(self.sheet, all=False, lrow=5)
 
     def test_partially_offset_partita(self):
         mock_insert = MagicMock()

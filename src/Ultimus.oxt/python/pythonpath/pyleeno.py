@@ -1780,16 +1780,15 @@ def vai_a_Scorciatoie():
             oTemplate.close(True)
             return
 
-        # Determina la posizione di inserimento
-        try:
-            pos = oDoc.getSheets().getByName('Lista 1').getRangeAddress().Sheet + 1
-        except Exception:
-            pos = oDoc.getSheets().getCount()
-
         try:
             oDoc.getSheets().removeByName('Scorciatoie')
         except Exception:
             pass
+
+        # Dopo removeByName il conteggio fogli può essere diminuito:
+        # clampare pos per evitare IndexOutOfBoundsException
+        # pos = min(pos, oDoc.getSheets().getCount())
+        pos = oDoc.getSheets().getCount()
 
         oDoc.getSheets().importSheet(oTemplate, 'Scorciatoie', pos)
 

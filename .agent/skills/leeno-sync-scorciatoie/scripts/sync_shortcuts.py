@@ -120,6 +120,13 @@ def sync():
         ('Ctrl+Shift + Click', "Toolbar 'Struttura CONTAB': mostra Sotto Categoria", 'struttura_CONTAB'),
         ('Ctrl + Click', "Toolbar importazione XPWE: attiva importazione DCF speciale", 'MENU_XPWE_import'),
         ('Ctrl + Click', "Toolbar VDS: esegue MENU_costo_elementare_", 'MENU_prefisso_VDS_'),
+        ('Ctrl + Click', "Toolbar 'Inserisci SuperCategoria': applica lo stile di livello alla riga corrente senza inserirne una nuova", 'MENU_Inser_SuperCapitolo'),
+        ('Ctrl + Click', "Toolbar 'Inserisci Categoria': applica lo stile di livello alla riga corrente senza inserirne una nuova", 'MENU_Inser_Capitolo'),
+        ('Ctrl + Click', "Toolbar 'Inserisci SottoCategoria': applica lo stile di livello alla riga corrente senza inserirne una nuova", 'MENU_Inser_SottoCapitolo'),
+        ('Ctrl + Click', "Toolbar 'Trova voce in Elenco Prezzi o Analisi di Prezzo': cerca direttamente in Analisi di Prezzo", 'MENU_cerca_in_elenco'),
+        ('Ctrl + Click', "Toolbar 'Vedi voce precedente': inserisce solo il riferimento, senza duplicare la riga corrente", 'MENU_vedi_voce'),
+        ('Ctrl + Click', "Toolbar 'Riepilogo quantitativo': cancella il riepilogo invece di inserirlo", 'riepilogo_quantita'),
+        ('Ctrl + Click', "Toolbar 'Detrai Partita Provvisoria': annulla le partite provvisorie sospese", 'MENU_partita_detrai'),
     ]
 
     # Build rows

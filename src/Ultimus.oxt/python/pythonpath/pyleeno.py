@@ -12082,6 +12082,9 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    import LeenoTOL
+    LeenoTOL.MENU_leeno_aggiorna_riepilogo_tol()
+    return
     import LeenoNamedAreas as LNA
     LNA.rigenera_tutto()
     # nuove_icone()

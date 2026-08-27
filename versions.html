@@ -452,6 +452,28 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-27 13:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/9ee5eca880813affaa2649a1d8c3379283026ed9" target="_blank" rel="noopener"><code>9ee5eca</code></a></td>
+                <td class="commit-msg">feat(tol): aggiunge sfondo EP, larghezze colonne e formule Calc nel riepilogo TOL
+
+- introduce stile dedicato EP-sfondo per colonne A, E, G del foglio Riepilogo TOL
+- applica sfondo su blocchi di righe con buffer extra per continuità visiva
+- definisce larghezze colonna esplicite (unità 1/100 mm) per allineamento al template EP
+- riscrive scrittura del riepilogo con formule Calc:
+  • peso = C_riga / C_totale
+  • indice ribasato = It/I0*100
+  • contributo ponderato = peso * indice ribasato
+  • indice sintetico = somma contributi
+  • coefficiente revisione, eccedenza, Krev, SAL revisionale come formule
+- preserva eventuali valori manuali preesistenti per soglia alea e quota compensazione
+- aggiunge struttura righe con indici 1‑based per coerenza con interfaccia Calc
+- pulisce colonna A nelle righe dei totali per evitare residui da versioni precedenti
+
+fix(tol): migliora robustezza applicazione stili e larghezze
+- gestisce eccezioni con DLG.chi per stili mancanti o colonne non modificabili
+- evita interruzioni del ricalcolo in caso di stili non disponibili nel documento</td>
+            </tr>
+            <tr>
                 <td>2026-08-27 09:46</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/720bc17b112731b96e2ba480a349497725b8b6e6" target="_blank" rel="noopener"><code>720bc17</code></a></td>
                 <td class="commit-msg">feat(tol): riscrive modulo TOL con metodo indice sintetico ponderato e SAL revisionale
@@ -488,11 +510,6 @@ feat(core): migliora robustezza autoexec_run
                 <td><a href="https://github.com/giuserpe/leeno/commit/da58a7036e62a86ed3a257ccf6f8d3a457943e06" target="_blank" rel="noopener"><code>da58a70</code></a></td>
                 <td class="commit-msg">feat(template): update Computo_LeenO.ods with new data</td>
             </tr>
-            <tr>
-                <td>2026-08-26 11:54</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/9e6b44d1f4556cc43a39bbe2a8c490471db17a51" target="_blank" rel="noopener"><code>9e6b44d</code></a></td>
-                <td class="commit-msg">feat: add LeenoISTAT and LeenoTOL modules for TOL cost index retrieval and aggregation</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -515,8 +532,8 @@ feat(core): migliora robustezza autoexec_run
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-27 09:47 UTC</p>
-                <p>Build Commit: <code>720bc17</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-27 13:36 UTC</p>
+                <p>Build Commit: <code>9ee5eca</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

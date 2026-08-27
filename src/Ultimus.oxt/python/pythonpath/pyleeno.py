@@ -8685,11 +8685,17 @@ def autoexec(oDoc=None):
 @LeenoUtils.no_refresh
 def autoexec_run(oDoc=None):
     '''
-    questa è richiamata da creaComputo()
+    Richiamata da creaComputo().
+    Inizializza l'ambiente, le impostazioni globali e prepara i fogli principali.
     '''
     if oDoc is None:
         oDoc = LeenoUtils.getDocument()
-    #  LS.importa_stili_pagina_non_presenti() #troppo lenta con file grossi
+    
+    if oDoc is None:
+        DLG.chi("ERROR: Impossibile ottenere un riferimento valido a oDoc in autoexec_run")
+        return
+
+    # Inizializzazione eventi e gestori
     LeenoEvents.pulisci(oDoc)
     inizializza(oDoc)
     register_key_handler(oDoc)
@@ -8698,60 +8704,84 @@ def autoexec_run(oDoc=None):
     SheetUtils.remove_bad_ranges()
     SheetUtils.FixNamedArea()
 
-    # rinvia a autoexec in basic
+    # Rinvia ad autoexec in basic
     basic_LeenO('_variabili.autoexec')
-    if "Computo_LeenO.ods" not in LeenoUtils.getDocument().getURL():
+    
+    doc_url = oDoc.getURL()
+    if doc_url and "Computo_LeenO.ods" not in doc_url:
         bak0()
+        
     autorun()
     sistema_aree()
+
+    # Configurazione impostazioni globali del foglio di calcolo
     ctx = LeenoUtils.getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    # Usa i parametri della stampante per la formattazione del testo
-    oGSheetSettings.UsePrinterMetrics = True
+    if ctx:
+        oGSheetSettings = ctx.ServiceManager.createInstanceWithContext(
+            "com.sun.star.sheet.GlobalSheetSettings", ctx
+        )
+        if oGSheetSettings:
+            # Usa i parametri della stampante per la formattazione del testo
+            oGSheetSettings.UsePrinterMetrics = True
+            
+            # Imposta la direzione di movimento del cursore
+            move_dir = cfg.read('Generale', 'movedirection')
+            oGSheetSettings.MoveDirection = 0 if move_dir == '0' else 1
 
-    # attiva 'copia di backup', ma dall'apertura successiva di LibreOffice
-    node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
-    node.CreateBackup = True
-    node.commitChanges()
-    uso = int(cfg.read('Generale', 'conta_usi')) + 1
-
-    if uso == 10 or (uso % 50) == 0:
-        dlg_donazioni()
-    cfg.write('Generale', 'conta_usi', str(uso))
-    if cfg.read('Generale', 'movedirection') == '0':
-        oGSheetSettings.MoveDirection = 0
-    else:
-        oGSheetSettings.MoveDirection = 1
-    oDoc = LeenoUtils.getDocument()
-    #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
-    #  If both are set to TRUE via API calls then the last one set takes precedence.
+    # Attiva 'copia di backup' nel registro solo se necessario
     try:
-        oDoc.Wildcards = False
-    except Exception:
-        pass
-    oDoc.RegularExpressions = False
-    # oDoc.CalcAsShown = True  # precisione come mostrato
-    adegua_tmpl()  # esegue degli aggiustamenti del template
-    oSheet = oDoc.CurrentController.ActiveSheet
+        node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
+        if hasattr(node, "CreateBackup") and not node.CreateBackup:
+            node.CreateBackup = True
+            node.commitChanges()
+    except Exception as e:
+        DLG.chi(f"WARN: Impossibile aggiornare le impostazioni di backup nel registro: {e}")
+
+    # Gestione del contatore d'uso e donazioni
+    try:
+        uso = int(cfg.read('Generale', 'conta_usi')) + 1
+        if uso == 10 or (uso % 50) == 0:
+            dlg_donazioni()
+        cfg.write('Generale', 'conta_usi', str(uso))
+    except (ValueError, TypeError) as e:
+        DLG.chi(f"WARN: Errore nel conteggio usi: {e}")
+
+    # Disabilita Wildcards e Regular Expressions (mutuamente esclusivi)
+    try:
+        if hasattr(oDoc, "Wildcards"):
+            oDoc.Wildcards = False
+        if hasattr(oDoc, "RegularExpressions"):
+            oDoc.RegularExpressions = False
+    except Exception as e:
+        DLG.chi(f"WARN: Impossibile impostare Wildcards/RegularExpressions: {e}")
+
+    adegua_tmpl()  # Aggiustamenti del template
+
+    # Scrittura diretta sull'oggetto foglio per evitare attivazione GUI con GotoSheet
+    oSheets = oDoc.getSheets()
+    oSheets.getByName("Elenco Prezzi").getCellRangeByName("J3").String = "TOL"
+
+    # Elaborazione in batch sui fogli target senza cambiare la vista attiva
     for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO', 'Analisi di Prezzo'):
-        try:
-            GotoSheet(nome)
-            if nome != 'Analisi di Prezzo':
-                subst_str(' >(', ' ►(')
-            applica_validazione_decimale()
-        except Exception:
-            pass
-    GotoSheet(oSheet.Name)
+        if oSheets.hasByName(nome):
+            try:
+                if nome != 'Analisi di Prezzo':
+                    subst_str(' >(', ' ►(')
+                
+                applica_validazione_decimale()
+            except Exception as e:
+                DLG.chi(f"ERROR: Fallita elaborazione del foglio '{nome}': {e}\n{traceback.format_exc()}")
+
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
 
     dp()
 
-    if len(oDoc.getURL()) != 0:
-        # scegli cosa visualizzare all'avvio:
+    # Avvio dialogo iniziale se specificato e se il documento ha un percorso valido
+    if doc_url:
         vedi = cfg.read('Generale', 'dialogo')
         if vedi == '1':
-                DlgMain()
+            DlgMain()
 
 def dp():
     d = {

@@ -306,6 +306,50 @@ _STILE_PER_COLONNA = {
     9: 'numero',       # Contributo ponderato
 }
 
+# Stile di sfondo di Elenco Prezzi da applicare per intero alle colonne
+# A, E, G (TOL, Periodo I0, Periodo It) - nome dato esplicitamente dal
+# maintainer, non derivato a runtime come gli altri stili.
+_STILE_SFONDO_EP = 'EP-sfondo'
+_COLONNE_SFONDO_EP = (0, 4, 6)  # A, E, G
+_RIGHE_BUFFER_SFONDO = 20  # righe extra oltre l'ultima scritta, per continuita' visiva
+
+# Larghezze colonna (1/100 mm, stessa unita' di TableColumns.Width)
+_LARGHEZZE_COLONNE = {
+    0: 1150,   # A
+    1: 13660,  # B
+    2: 1815,   # C
+    3: 1432,   # D
+    4: 1432,   # E
+    5: 1432,   # F
+    6: 1432,   # G
+    7: 1432,   # H
+    8: 1432,   # I
+    9: 1432,   # J
+}
+
+
+def _applica_sfondo_ep(oSheet, riga_intestazione_0based, ultima_riga_0based):
+    riga_inizio = riga_intestazione_0based + 1  # esclude l'intestazione, che ha gia' il suo stile
+    for col in _COLONNE_SFONDO_EP:
+        try:
+            oRange = oSheet.getCellRangeByPosition(
+                col, riga_inizio, col, _RIGHE_BUFFER_SFONDO
+            )
+            oRange.CellStyle = _STILE_SFONDO_EP
+        except Exception as e:
+            DLG.chi(
+                "Impossibile applicare lo stile '%s' alla colonna %d: %s"
+                % (_STILE_SFONDO_EP, col, e)
+            )
+
+
+def _applica_larghezze_colonne(oSheet):
+    for col, larghezza in _LARGHEZZE_COLONNE.items():
+        try:
+            oSheet.getColumns().getByIndex(col).Width = larghezza
+        except Exception as e:
+            DLG.chi("Impossibile impostare la larghezza della colonna %d: %s" % (col, e))
+
 
 def _preleva_stili_riferimento(oSheetEP):
     """
@@ -361,7 +405,31 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
     """
     Ricalcola e riscrive per intero il foglio 'Riepilogo TOL' a partire
     dai dati correnti di 'Elenco Prezzi' e dal SAL corrente (cella V2).
-    Ritorna il dizionario prodotto da calcola_sal_revisionale().
+
+    A differenza della versione precedente, i passaggi di puro calcolo
+    interno al foglio (peso, indice ribasato, contributo ponderato,
+    indice sintetico, coefficiente di revisione, eccedenza, Krev, SAL
+    revisionale) sono scritti come FORMULE Calc, non come valori statici:
+    aprendo una cella se ne vede la provenienza esatta, e modificando a
+    mano un I0/It il foglio si ricalcola da solo.
+
+    Restano valori (non formule), perche' provengono da fonti esterne al
+    foglio che una formula Calc non puo' calcolare da sola:
+      - Importo per TOL (colonna C): aggregazione robusta da Python
+        (gestisce segnaposto/decimali in colonna J e la riga sentinella
+        'Fine elenco' - vedi aggrega_importi_per_tol)
+      - Periodo I0/It e Indice I0/It (colonne E,F,G,H): da LeenoISTAT
+      - Importo non classificato e Mese di aggiudicazione: da Python
+
+    Soglia alea (3%) e Quota compensazione (90%) sono scritte come celle
+    modificabili: se il foglio esiste gia' e contengono un valore diverso
+    da zero, quel valore viene preservato invece di essere sovrascritto
+    dal default, cosi' un'eventuale modifica manuale (es. per la Tabella C
+    alternativa) sopravvive ai ricalcoli successivi.
+
+    Ritorna il dizionario prodotto da calcola_sal_revisionale() (calcolato
+    comunque in Python, usato per il messaggio di avviso e come riscontro
+    indipendente rispetto a quanto il foglio ricalcola da solo).
     """
     riepilogo = calcola_sal_revisionale(oDoc, periodo_sal, mese_aggiudicazione)
     oSheet = _assicura_foglio_riepilogo(oDoc)
@@ -369,74 +437,122 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
     oSheetEP = oDoc.getSheets().getByName(SHEET_ELENCO_PREZZI)
     stili = _preleva_stili_riferimento(oSheetEP)
 
+    # Righe (1-based, come compaiono nell'interfaccia di Calc)
+    RIGA_HEADER = 1
+    RIGA_TOL_INIZIO = 2
+    RIGA_TOL_FINE = RIGA_TOL_INIZIO + len(riepilogo['righe']) - 1
+    RIGA_TOT_CLASSIFICATO = RIGA_TOL_FINE + 2
+    RIGA_NON_CLASSIFICATO = RIGA_TOT_CLASSIFICATO + 1
+    RIGA_MESE_AGG = RIGA_NON_CLASSIFICATO + 1
+    RIGA_SOGLIA = RIGA_MESE_AGG + 1
+    RIGA_QUOTA = RIGA_SOGLIA + 1
+    RIGA_INDICE_SINT = RIGA_QUOTA + 1
+    RIGA_COEFF = RIGA_INDICE_SINT + 1
+    RIGA_ECCEDENZA = RIGA_COEFF + 1
+    RIGA_KREV = RIGA_ECCEDENZA + 1
+    RIGA_IMPORTO_SAL = RIGA_KREV + 1
+    RIGA_SAL_REV = RIGA_IMPORTO_SAL + 1
+
     for col, titolo in enumerate(_INTESTAZIONI):
-        cella = oSheet.getCellByPosition(col, 0)
+        cella = oSheet.getCellByPosition(col, RIGA_HEADER - 1)
         cella.setString(titolo)
         _applica_stile(cella, stili, 'intestazione')
 
-    riga_corrente = 1
+    riga_corrente = RIGA_TOL_INIZIO
     for r in riepilogo['righe']:
-        cella_numero = oSheet.getCellByPosition(0, riga_corrente)
+        r_ = riga_corrente  # alias per leggibilita' nelle formule sotto
+
+        cella_numero = oSheet.getCellByPosition(0, r_ - 1)
         cella_numero.setValue(r['numero'])
         _applica_stile(cella_numero, stili, 'numero')
 
-        cella_desc = oSheet.getCellByPosition(1, riga_corrente)
+        cella_desc = oSheet.getCellByPosition(1, r_ - 1)
         cella_desc.setString(r['descrizione'])
         _applica_stile(cella_desc, stili, 'testo')
 
-        cella_importo = oSheet.getCellByPosition(2, riga_corrente)
+        cella_importo = oSheet.getCellByPosition(2, r_ - 1)
         cella_importo.setValue(r['importo'])
         _applica_stile(cella_importo, stili, 'valuta')
 
-        cella_peso = oSheet.getCellByPosition(3, riga_corrente)
-        cella_peso.setValue(r['peso'])
+        cella_peso = oSheet.getCellByPosition(3, r_ - 1)
+        cella_peso.setFormula(
+            '=IF($C$%d=0;0;C%d/$C$%d)' % (RIGA_TOT_CLASSIFICATO, r_, RIGA_TOT_CLASSIFICATO)
+        )
         _applica_stile(cella_peso, stili, 'percentuale')
 
         if r['periodo_i0']:
-            oSheet.getCellByPosition(4, riga_corrente).setString(r['periodo_i0'])
+            oSheet.getCellByPosition(4, r_ - 1).setString(r['periodo_i0'])
         if r['indice_i0'] is not None:
-            oSheet.getCellByPosition(5, riga_corrente).setValue(r['indice_i0'])
+            oSheet.getCellByPosition(5, r_ - 1).setValue(r['indice_i0'])
         if r['periodo_it']:
-            oSheet.getCellByPosition(6, riga_corrente).setString(r['periodo_it'])
+            oSheet.getCellByPosition(6, r_ - 1).setString(r['periodo_it'])
         if r['indice_it'] is not None:
-            oSheet.getCellByPosition(7, riga_corrente).setValue(r['indice_it'])
-        if r['indice_ribasato'] is not None:
-            oSheet.getCellByPosition(8, riga_corrente).setValue(r['indice_ribasato'])
-        if r['contributo_ponderato'] is not None:
-            oSheet.getCellByPosition(9, riga_corrente).setValue(r['contributo_ponderato'])
+            oSheet.getCellByPosition(7, r_ - 1).setValue(r['indice_it'])
+
+        cella_ribasato = oSheet.getCellByPosition(8, r_ - 1)
+        cella_ribasato.setFormula('=IF(OR(F%d="";F%d=0);"";H%d/F%d*100)' % (r_, r_, r_, r_))
+
+        cella_contributo = oSheet.getCellByPosition(9, r_ - 1)
+        cella_contributo.setFormula('=IF(I%d="";"";D%d*I%d)' % (r_, r_, r_))
 
         for col, ruolo in _STILE_PER_COLONNA.items():
             if col in (2, 3):
                 continue  # gia' applicati sopra (importo, peso)
-            _applica_stile(oSheet.getCellByPosition(col, riga_corrente), stili, ruolo)
+            _applica_stile(oSheet.getCellByPosition(col, r_ - 1), stili, ruolo)
 
         riga_corrente += 1
 
-    riga_corrente += 1  # riga vuota di separazione
-    etichette_totali = [
-        ('Importo totale classificato', riepilogo['importo_totale'], 'valuta'),
-        ("Importo non classificato (TOL mancante)", riepilogo['importo_non_classificato'], 'valuta'),
-        ('Mese di aggiudicazione (I0)', None, 'testo'),
-        ('Indice sintetico', riepilogo['indice_sintetico'], 'numero'),
-        ('Coefficiente di revisione', riepilogo['coeff_revisione'], 'percentuale'),
-        ("Eccedenza oltre soglia 3%", riepilogo['eccedenza'], 'percentuale'),
-        ('Krev (90% eccedenza)', riepilogo['krev'], 'percentuale'),
-        ('Importo SAL', riepilogo['importo_sal'], 'valuta'),
-        ('SAL REVISIONALE', riepilogo['sal_revisionale'], 'valuta'),
-    ]
-    for etichetta, valore, ruolo_valore in etichette_totali:
-        cella_etichetta = oSheet.getCellByPosition(0, riga_corrente)
+    def _scrivi_totale(riga, etichetta, ruolo_valore):
+        # colonna A svuotata esplicitamente: prima di questa modifica
+        # l'etichetta veniva scritta li'; un ricalcolo su un foglio gia'
+        # popolato dalla versione precedente lascerebbe altrimenti il
+        # testo vecchio in A oltre a quello nuovo in B.
+        oSheet.getCellByPosition(0, riga - 1).setString('')
+
+        cella_etichetta = oSheet.getCellByPosition(1, riga - 1)
         cella_etichetta.setString(etichetta)
         _applica_stile(cella_etichetta, stili, 'testo')
-
-        cella_valore = oSheet.getCellByPosition(2, riga_corrente)
-        if etichetta.startswith('Mese di aggiudicazione'):
-            cella_valore.setString(riepilogo['mese_aggiudicazione'])
-        else:
-            cella_valore.setValue(valore)
+        cella_valore = oSheet.getCellByPosition(2, riga - 1)
         _applica_stile(cella_valore, stili, ruolo_valore)
+        return cella_valore
 
-        riga_corrente += 1
+    _scrivi_totale(RIGA_TOT_CLASSIFICATO, 'Importo totale classificato', 'valuta') \
+        .setFormula('=SUM(C%d:C%d)' % (RIGA_TOL_INIZIO, RIGA_TOL_FINE))
+
+    _scrivi_totale(RIGA_NON_CLASSIFICATO, "Importo non classificato (TOL mancante)", 'valuta') \
+        .setValue(riepilogo['importo_non_classificato'])
+
+    _scrivi_totale(RIGA_MESE_AGG, 'Mese di aggiudicazione (I0)', 'testo') \
+        .setString(riepilogo['mese_aggiudicazione'])
+
+    cella_soglia = _scrivi_totale(RIGA_SOGLIA, 'Soglia alea (modificabile)', 'percentuale')
+    valore_soglia_esistente = cella_soglia.getValue()
+    cella_soglia.setValue(valore_soglia_esistente if valore_soglia_esistente else SOGLIA_ALEA)
+
+    cella_quota = _scrivi_totale(RIGA_QUOTA, 'Quota compensazione (modificabile)', 'percentuale')
+    valore_quota_esistente = cella_quota.getValue()
+    cella_quota.setValue(valore_quota_esistente if valore_quota_esistente else QUOTA_COMPENSAZIONE)
+
+    _scrivi_totale(RIGA_INDICE_SINT, 'Indice sintetico', 'numero') \
+        .setFormula('=SUM(J%d:J%d)' % (RIGA_TOL_INIZIO, RIGA_TOL_FINE))
+
+    _scrivi_totale(RIGA_COEFF, 'Coefficiente di revisione', 'percentuale') \
+        .setFormula('=(C%d-100)/100' % RIGA_INDICE_SINT)
+
+    _scrivi_totale(RIGA_ECCEDENZA, "Eccedenza oltre soglia", 'percentuale') \
+        .setFormula('=MAX(C%d-C%d;0)' % (RIGA_COEFF, RIGA_SOGLIA))
+
+    _scrivi_totale(RIGA_KREV, 'Krev (eccedenza * quota compensazione)', 'percentuale') \
+        .setFormula('=C%d*C%d' % (RIGA_ECCEDENZA, RIGA_QUOTA))
+
+    _scrivi_totale(RIGA_IMPORTO_SAL, 'Importo SAL', 'valuta') \
+        .setFormula("='%s'.V2" % SHEET_ELENCO_PREZZI)
+
+    _scrivi_totale(RIGA_SAL_REV, 'SAL REVISIONALE', 'valuta') \
+        .setFormula('=C%d*C%d' % (RIGA_IMPORTO_SAL, RIGA_KREV))
+
+    _applica_sfondo_ep(oSheet, RIGA_HEADER - 1, RIGA_SAL_REV - 1)
+    _applica_larghezze_colonne(oSheet)
 
     return riepilogo
 

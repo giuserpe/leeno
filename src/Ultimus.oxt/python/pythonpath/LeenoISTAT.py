@@ -35,7 +35,7 @@ import LeenoUtils
 import LeenoDialogs as DLG
 import Dialogs
 
-
+# https://esploradati.istat.it/databrowser/#/it/dw/categories/IT1,Z0400PRI,1.0/DCSC_INDICITOL/IT1,145_362_DCSC_INDICITOL_1,1.0
 DATAFLOW = 'IT1,145_362_DCSC_INDICITOL_1,1.0'
 BASE_URL = 'https://esploradati.istat.it/SDMXWS/rest/data/'
 

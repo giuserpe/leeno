@@ -12112,6 +12112,8 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()    
+    oSheet = oDoc.CurrentController.getActiveSheet()
     import LeenoTOL
     LeenoTOL.MENU_leeno_aggiorna_riepilogo_tol()
     return

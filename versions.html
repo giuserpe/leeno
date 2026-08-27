@@ -452,28 +452,46 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-27 09:46</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/720bc17b112731b96e2ba480a349497725b8b6e6" target="_blank" rel="noopener"><code>720bc17</code></a></td>
+                <td class="commit-msg">feat(tol): riscrive modulo TOL con metodo indice sintetico ponderato e SAL revisionale
+
+- aggiorna colonna TOL da AA→J e adegua COL_TOL, RIGA_DATI_INIZIO
+- introduce lettura mese di aggiudicazione da S2 con fallback su etichette multiple
+- aggiunge normalizzazione dei valori TOL (interi, decimali, virgola/punto)
+- implementa metodo completo dell’indice sintetico (Tabella B, Allegato II.2‑bis)
+  • peso_TOL, I0, It, indice ribasato, contributo ponderato
+  • coeff_revisione, eccedenza oltre soglia 3%, Krev (90%)
+- aggiunge lettura importo SAL (cella V2) e calcolo SAL revisionale
+- estende calcola_riepilogo → calcola_sal_revisionale con output completo
+- aggiunge stili dinamici: _preleva_stili_riferimento e _applica_stile
+- riscrive scrivi_foglio_riepilogo_tol con nuove colonne, stili e totali
+- aggiorna MENU_leeno_aggiorna_riepilogo_tol con nuovi messaggi e logica SAL
+
+fix(tol): gestisce correttamente valori non numerici, segnaposto e formati data
+- valida formato data GG/MM/AAAA con errori espliciti
+- evita classificazioni errate per valori decimali non interi (es. “4,3”)
+
+feat(core): migliora robustezza autoexec_run
+- aggiunge controllo oDoc None con messaggio chiaro
+- inizializza eventi e gestori con fallback sicuri
+- applica MoveDirection, UsePrinterMetrics solo se disponibili
+- aggiorna CreateBackup nel registro solo se necessario
+- gestisce contatore d’uso con fallback e warning
+- disabilita Wildcards/RegularExpressions con controlli di attributo
+- evita GotoSheet per scritture interne (J3 = “TOL”)
+- elabora fogli in batch con gestione errori dettagliata
+- avvia DlgMain solo se documento ha URL valido</td>
+            </tr>
+            <tr>
+                <td>2026-08-27 09:42</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/da58a7036e62a86ed3a257ccf6f8d3a457943e06" target="_blank" rel="noopener"><code>da58a70</code></a></td>
+                <td class="commit-msg">feat(template): update Computo_LeenO.ods with new data</td>
+            </tr>
+            <tr>
                 <td>2026-08-26 11:54</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/9e6b44d1f4556cc43a39bbe2a8c490471db17a51" target="_blank" rel="noopener"><code>9e6b44d</code></a></td>
                 <td class="commit-msg">feat: add LeenoISTAT and LeenoTOL modules for TOL cost index retrieval and aggregation</td>
-            </tr>
-            <tr>
-                <td>2026-08-24 19:54</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/be571a0c3cd631ef5b82acf75d7eee504a3c54ae" target="_blank" rel="noopener"><code>be571a0</code></a></td>
-                <td class="commit-msg">fix: update version number to 3.26.0.131-TESTING-20260824 in description.xml and leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-08-21 11:30</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e5195fb3718a2d639a52a2dd8c594e354298d77a" target="_blank" rel="noopener"><code>e5195fb</code></a></td>
-                <td class="commit-msg">docs(manuale): aggiorna sezioni per novità 2026-08-20
-
-Aggiornate le sezioni: "Trova voce in Elenco Prezzi/Analisi di Prezzo"
-(Ctrl cerca in AP), "Premesse" (manipolazioni finali e PDF/A-2b),
-"L'Analisi di Prezzo" (rinumerazione selettiva), "Sommari e Quadri di
-raffronto" (Nascondi scost. 0,00, pulizia voci estesa), "LA
-CONTABILITÀ" (Detrai Partita Provvisoria con annullamento automatico).
-
-Aggiornati TRACKING_MANUALE.md (nuova riga 2026-08-20) e
-MAPPA_SEZIONI.md (indice allineato alla struttura corrente del manuale).</td>
             </tr>
                     </tbody>
                 </table>
@@ -497,8 +515,8 @@ MAPPA_SEZIONI.md (indice allineato alla struttura corrente del manuale).</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-26 11:54 UTC</p>
-                <p>Build Commit: <code>9e6b44d</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-27 09:47 UTC</p>
+                <p>Build Commit: <code>720bc17</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

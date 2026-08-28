@@ -452,6 +452,16 @@
                     <tbody>
                         
             <tr>
+                <td>2026-08-28 06:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a2e405de208976b7f1ba2aa583d6dfaf60db8a2e" target="_blank" rel="noopener"><code>a2e405d</code></a></td>
+                <td class="commit-msg">fix(tol): applica sfondo EP solo alle righe TOL effettive
+
+- rimuove buffer fisso di 20 righe (_RIGHE_BUFFER_SFONDO)
+- riscrive _applica_sfondo_ep per usare il range reale RIGA_TOL_INIZIO → RIGA_TOL_FINE
+- evita applicazione di sfondo oltre le righe con dati, migliorando coerenza visiva
+- aggiorna chiamata in scrivi_foglio_riepilogo_tol con nuovi parametri 1‑based</td>
+            </tr>
+            <tr>
                 <td>2026-08-27 13:36</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/9ee5eca880813affaa2649a1d8c3379283026ed9" target="_blank" rel="noopener"><code>9ee5eca</code></a></td>
                 <td class="commit-msg">feat(tol): aggiunge sfondo EP, larghezze colonne e formule Calc nel riepilogo TOL
@@ -505,11 +515,6 @@ feat(core): migliora robustezza autoexec_run
 - elabora fogli in batch con gestione errori dettagliata
 - avvia DlgMain solo se documento ha URL valido</td>
             </tr>
-            <tr>
-                <td>2026-08-27 09:42</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/da58a7036e62a86ed3a257ccf6f8d3a457943e06" target="_blank" rel="noopener"><code>da58a70</code></a></td>
-                <td class="commit-msg">feat(template): update Computo_LeenO.ods with new data</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -532,8 +537,8 @@ feat(core): migliora robustezza autoexec_run
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-27 13:36 UTC</p>
-                <p>Build Commit: <code>9ee5eca</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-28 06:08 UTC</p>
+                <p>Build Commit: <code>a2e405d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

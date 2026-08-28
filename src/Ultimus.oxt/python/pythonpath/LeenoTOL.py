@@ -153,7 +153,10 @@ def leggi_mese_aggiudicazione(oDoc):
     if not grezzo:
         raise RuntimeError(
             "Data di aggiudicazione assente o non compilata in S2 "
-            "(etichette provate: %s)" % ', '.join(ETICHETTE_AGGIUDICAZIONE)
+            "(etichette provate: %s)."
+            "\n\nSOLUZIONE:\n"
+            "Apri Anagrafica Generale in S2, annota la data di aggiudicazione "
+            "utilizzando una delle etichette indicate e riprova." % ', '.join(ETICHETTE_AGGIUDICAZIONE)
         )
 
     try:

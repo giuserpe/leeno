@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.131-TESTING-20260824.oxt">LeenO-3.26.0.131-TESTING-20260824.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.132-TESTING-20260828.oxt">LeenO-3.26.0.132-TESTING-20260828.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.1MB</td>
+                <td class="col-extra">2026-08-28 19:04</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.132-TESTING-20260828.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.131-TESTING-20260824.oxt">LeenO-3.26.0.131-TESTING-20260824.oxt</a> </td>
                 <td class="col-dim">4.1MB</td>
                 <td class="col-extra">2026-08-24 19:53</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.123-TESTING-20260805.oxt">LeenO-3.26.0.123-TESTING-20260805.oxt</a> </td>
-                <td class="col-dim">4.2MB</td>
-                <td class="col-extra">2026-08-05 21:48</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.123-TESTING-20260805.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -451,6 +451,13 @@
                     </thead>
                     <tbody>
                         
+            <tr>
+                <td>2026-08-28 19:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1abe3a8e2e6555101adb0af59b2d04da2385e194" target="_blank" rel="noopener"><code>1abe3a8</code></a></td>
+                <td class="commit-msg">chore(meta): bump versione a 3.26.0.132‑TESTING‑20260828
+
+fix(tol): migliora messaggio errore data aggiudicazione con istruzioni operative</td>
+            </tr>
             <tr>
                 <td>2026-08-28 06:07</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/a2e405de208976b7f1ba2aa583d6dfaf60db8a2e" target="_blank" rel="noopener"><code>a2e405d</code></a></td>
@@ -483,38 +490,6 @@ fix(tol): migliora robustezza applicazione stili e larghezze
 - gestisce eccezioni con DLG.chi per stili mancanti o colonne non modificabili
 - evita interruzioni del ricalcolo in caso di stili non disponibili nel documento</td>
             </tr>
-            <tr>
-                <td>2026-08-27 09:46</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/720bc17b112731b96e2ba480a349497725b8b6e6" target="_blank" rel="noopener"><code>720bc17</code></a></td>
-                <td class="commit-msg">feat(tol): riscrive modulo TOL con metodo indice sintetico ponderato e SAL revisionale
-
-- aggiorna colonna TOL da AA→J e adegua COL_TOL, RIGA_DATI_INIZIO
-- introduce lettura mese di aggiudicazione da S2 con fallback su etichette multiple
-- aggiunge normalizzazione dei valori TOL (interi, decimali, virgola/punto)
-- implementa metodo completo dell’indice sintetico (Tabella B, Allegato II.2‑bis)
-  • peso_TOL, I0, It, indice ribasato, contributo ponderato
-  • coeff_revisione, eccedenza oltre soglia 3%, Krev (90%)
-- aggiunge lettura importo SAL (cella V2) e calcolo SAL revisionale
-- estende calcola_riepilogo → calcola_sal_revisionale con output completo
-- aggiunge stili dinamici: _preleva_stili_riferimento e _applica_stile
-- riscrive scrivi_foglio_riepilogo_tol con nuove colonne, stili e totali
-- aggiorna MENU_leeno_aggiorna_riepilogo_tol con nuovi messaggi e logica SAL
-
-fix(tol): gestisce correttamente valori non numerici, segnaposto e formati data
-- valida formato data GG/MM/AAAA con errori espliciti
-- evita classificazioni errate per valori decimali non interi (es. “4,3”)
-
-feat(core): migliora robustezza autoexec_run
-- aggiunge controllo oDoc None con messaggio chiaro
-- inizializza eventi e gestori con fallback sicuri
-- applica MoveDirection, UsePrinterMetrics solo se disponibili
-- aggiorna CreateBackup nel registro solo se necessario
-- gestisce contatore d’uso con fallback e warning
-- disabilita Wildcards/RegularExpressions con controlli di attributo
-- evita GotoSheet per scritture interne (J3 = “TOL”)
-- elabora fogli in batch con gestione errori dettagliata
-- avvia DlgMain solo se documento ha URL valido</td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -537,8 +512,8 @@ feat(core): migliora robustezza autoexec_run
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-08-28 06:08 UTC</p>
-                <p>Build Commit: <code>a2e405d</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-08-28 19:09 UTC</p>
+                <p>Build Commit: <code>1abe3a8</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

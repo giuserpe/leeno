@@ -311,7 +311,6 @@ _STILE_PER_COLONNA = {
 # maintainer, non derivato a runtime come gli altri stili.
 _STILE_SFONDO_EP = 'EP-sfondo'
 _COLONNE_SFONDO_EP = (0, 4, 6)  # A, E, G
-_RIGHE_BUFFER_SFONDO = 20  # righe extra oltre l'ultima scritta, per continuita' visiva
 
 # Larghezze colonna (1/100 mm, stessa unita' di TableColumns.Width)
 _LARGHEZZE_COLONNE = {
@@ -328,12 +327,19 @@ _LARGHEZZE_COLONNE = {
 }
 
 
-def _applica_sfondo_ep(oSheet, riga_intestazione_0based, ultima_riga_0based):
-    riga_inizio = riga_intestazione_0based + 1  # esclude l'intestazione, che ha gia' il suo stile
+def _applica_sfondo_ep(oSheet, riga_tol_inizio_1based, riga_tol_fine_1based):
+    """
+    Applica lo stile 'EP-sfondo' alle colonne A, E, G limitatamente alle
+    righe TOL (quelle con dati reali in quelle colonne) - non oltre,
+    non un buffer arbitrario: il range e' legato esplicitamente a
+    RIGA_TOL_INIZIO/RIGA_TOL_FINE, che riflettono il numero vero di TOL
+    codificate (LeenoISTAT.TOL_CODICI), non un valore fisso che smetterebbe
+    di essere corretto se quel numero cambiasse.
+    """
     for col in _COLONNE_SFONDO_EP:
         try:
             oRange = oSheet.getCellRangeByPosition(
-                col, riga_inizio, col, _RIGHE_BUFFER_SFONDO
+                col, riga_tol_inizio_1based - 1, col, riga_tol_fine_1based - 1
             )
             oRange.CellStyle = _STILE_SFONDO_EP
         except Exception as e:
@@ -551,7 +557,7 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
     _scrivi_totale(RIGA_SAL_REV, 'SAL REVISIONALE', 'valuta') \
         .setFormula('=C%d*C%d' % (RIGA_IMPORTO_SAL, RIGA_KREV))
 
-    _applica_sfondo_ep(oSheet, RIGA_HEADER - 1, RIGA_SAL_REV - 1)
+    _applica_sfondo_ep(oSheet, RIGA_TOL_INIZIO, RIGA_TOL_FINE)
     _applica_larghezze_colonne(oSheet)
 
     return riepilogo

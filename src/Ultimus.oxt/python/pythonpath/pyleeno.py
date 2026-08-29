@@ -8761,6 +8761,19 @@ def autoexec_run(oDoc=None):
     oSheets = oDoc.getSheets()
     oSheets.getByName("Elenco Prezzi").getCellRangeByName("J3").String = "TOL"
 
+    # Inserisce la riga "Data di aggiudicazione" in S2 subito prima di
+    # "Dati CONTRATTO 1" (riga 23, col B), se non è già presente (idempotente)
+    if oSheets.hasByName("S2"):
+        oS2 = oSheets.getByName("S2")
+        r_aggiud = SheetUtils.uFindStringCol(
+            "Data di aggiudicazione", 1, oS2, start=0, equal=1)
+        if r_aggiud is None:
+            r_contr = SheetUtils.uFindStringCol(
+                "Dati CONTRATTO 1", 1, oS2, start=0, equal=0) -1
+            if r_contr is not None:
+                oS2.getRows().insertByIndex(r_contr, 1)
+                oS2.getCellByPosition(1, r_contr).String = "Data di aggiudicazione"
+
     # Elaborazione in batch sui fogli target senza cambiare la vista attiva
     for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO', 'Analisi di Prezzo'):
         if oSheets.hasByName(nome):
@@ -12112,6 +12125,8 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    autoexec_run()
+    return
     oDoc = LeenoUtils.getDocument()    
     oSheet = oDoc.CurrentController.getActiveSheet()
     import LeenoTOL

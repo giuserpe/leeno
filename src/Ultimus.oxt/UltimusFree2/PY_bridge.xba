@@ -153,6 +153,10 @@ Sub trova_np
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;trova_np&quot;)
 End Sub
 rem ######################################################################
+Sub MENU_leeno_aggiorna_riepilogo_tol
+	ScriptPy(&quot;LeenoTOL&quot;,&quot;MENU_leeno_aggiorna_riepilogo_tol&quot;)
+End Sub
+rem ######################################################################
 Sub rigenera_tutte
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;rigenera_tutte&quot;)
 End Sub

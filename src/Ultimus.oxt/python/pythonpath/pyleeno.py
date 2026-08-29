@@ -8773,6 +8773,7 @@ def autoexec_run(oDoc=None):
             if r_contr is not None:
                 oS2.getRows().insertByIndex(r_contr, 1)
                 oS2.getCellByPosition(1, r_contr).String = "Data di aggiudicazione"
+                oS2.getCellByPosition(2, r_contr).CellStyle = "Dati-data"
 
     # Elaborazione in batch sui fogli target senza cambiare la vista attiva
     for nome in ('VARIANTE', 'CONTABILITA', 'COMPUTO', 'Analisi di Prezzo'):
@@ -10917,6 +10918,7 @@ def fissa(cols_freeze=None, rows_freeze=None):
         'S2':                (0, 1),
         'Lista 1':           (0, 4),
         'Scorciatoie':       (0, 1),
+        'Riepilogo TOL':     (0, 1),
     }
 
     # Se i parametri non sono forniti, recuperali dalla mappa in base al nome del foglio

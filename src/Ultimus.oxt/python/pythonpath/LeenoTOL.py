@@ -32,13 +32,10 @@ SHEET_RIEPILOGO = 'Riepilogo TOL'
 COL_TOL = 9            # J  (0-based: A=0 ... J=9)
 COL_IMPORTO_CONTAB = 21  # V  (0-based: V e' la 22a lettera -> indice 21)
 
-RIGA_DATI_INIZIO = 3  # 0-based: intestazioni a riga 3 (1-based, indice 2), dati da riga 4 (indice 3) - confermato dal maintainer
+RIGA_DATI_INIZIO = 3  # 0-based: intestazioni a riga 3 (1-based, indice 2), dati da riga 4 (indice 3)
 
-# Cella con l'importo dell'ultimo SAL calcolato (confermato dal maintainer:
-# equivalente al valore in colonna F sulla riga "T O T A L E €" del foglio SAL)
 CELLA_SAL = (COL_IMPORTO_CONTAB, 1)  # V2, 0-based (colonna V, riga 2 -> indice 1)
 
-# Etichette possibili del campo "tempo zero" in S2, provate in ordine
 ETICHETTE_AGGIUDICAZIONE = (
     'Data di aggiudicazione', 'Data aggiudicazione', 'Aggiudicazione',
 )
@@ -319,7 +316,7 @@ _COLONNE_SFONDO_EP = (0, 4, 6)  # A, E, G
 # Larghezze colonna (1/100 mm, stessa unita' di TableColumns.Width)
 _LARGHEZZE_COLONNE = {
     0: 1150,   # A
-    1: 13660,  # B
+    1: 14340,  # B
     2: 1815,   # C
     3: 1432,   # D
     4: 1432,   # E
@@ -416,27 +413,6 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
     Ricalcola e riscrive per intero il foglio 'Riepilogo TOL' a partire
     dai dati correnti di 'Elenco Prezzi' e dal SAL corrente (cella V2).
 
-    A differenza della versione precedente, i passaggi di puro calcolo
-    interno al foglio (peso, indice ribasato, contributo ponderato,
-    indice sintetico, coefficiente di revisione, eccedenza, Krev, SAL
-    revisionale) sono scritti come FORMULE Calc, non come valori statici:
-    aprendo una cella se ne vede la provenienza esatta, e modificando a
-    mano un I0/It il foglio si ricalcola da solo.
-
-    Restano valori (non formule), perche' provengono da fonti esterne al
-    foglio che una formula Calc non puo' calcolare da sola:
-      - Importo per TOL (colonna C): aggregazione robusta da Python
-        (gestisce segnaposto/decimali in colonna J e la riga sentinella
-        'Fine elenco' - vedi aggrega_importi_per_tol)
-      - Periodo I0/It e Indice I0/It (colonne E,F,G,H): da LeenoISTAT
-      - Importo non classificato e Mese di aggiudicazione: da Python
-
-    Soglia alea (3%) e Quota compensazione (90%) sono scritte come celle
-    modificabili: se il foglio esiste gia' e contengono un valore diverso
-    da zero, quel valore viene preservato invece di essere sovrascritto
-    dal default, cosi' un'eventuale modifica manuale (es. per la Tabella C
-    alternativa) sopravvive ai ricalcoli successivi.
-
     Ritorna il dizionario prodotto da calcola_sal_revisionale() (calcolato
     comunque in Python, usato per il messaggio di avviso e come riscontro
     indipendente rispetto a quanto il foglio ricalcola da solo).
@@ -513,10 +489,7 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
         riga_corrente += 1
 
     def _scrivi_totale(riga, etichetta, ruolo_valore):
-        # colonna A svuotata esplicitamente: prima di questa modifica
-        # l'etichetta veniva scritta li'; un ricalcolo su un foglio gia'
-        # popolato dalla versione precedente lascerebbe altrimenti il
-        # testo vecchio in A oltre a quello nuovo in B.
+
         oSheet.getCellByPosition(0, riga - 1).setString('')
 
         cella_etichetta = oSheet.getCellByPosition(1, riga - 1)
@@ -558,8 +531,19 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
     _scrivi_totale(RIGA_IMPORTO_SAL, 'Importo SAL', 'valuta') \
         .setFormula("='%s'.V2" % SHEET_ELENCO_PREZZI)
 
-    _scrivi_totale(RIGA_SAL_REV, 'SAL REVISIONALE', 'valuta') \
+    _scrivi_totale(RIGA_SAL_REV, 'SAL revisionale', 'valuta') \
         .setFormula('=C%d*C%d' % (RIGA_IMPORTO_SAL, RIGA_KREV))
+    
+    try:
+        oSheet.getCellByPosition(1, RIGA_SAL_REV - 1).CellStyle = 'CP_totale'
+        oSheet.getCellByPosition(2, RIGA_SAL_REV - 1).CellStyle = 'CP_totale'
+    except Exception:
+        pass
+
+    _applica_stile(oSheet.getCellByPosition(2, RIGA_SAL_REV), stili, 'Ultimus_destra_1')
+    _applica_stile(oSheet.getCellByPosition(2, RIGA_IMPORTO_SAL), stili, 'Ultimus_destra_1')
+    _applica_stile(oSheet.getCellByPosition(2, RIGA_KREV), stili, 'Ultimus_destra_1')
+
 
     _applica_sfondo_ep(oSheet, RIGA_TOL_INIZIO, RIGA_TOL_FINE)
     _applica_larghezze_colonne(oSheet)
@@ -603,21 +587,13 @@ def MENU_leeno_aggiorna_riepilogo_tol():
         )
         return
 
-    # Se il refresh era stato bloccato dal chiamante, lo riattiviamo,
-    # altrimenti OptimalHeight e GotoSheet non hanno alcun effetto reale.
     LeenoUtils.DocumentRefresh(True, oDoc)
 
-    # Perche' OptimalHeight abbia effetto, il foglio DEVE essere quello
-    # attivo. Quindi ci spostiamo sul foglio prima di calcolare le altezze.
     PL.GotoSheet('Riepilogo TOL')
 
-    # Forza il ricalcolo delle formule (SUM, riferimenti, ecc.) prima di
-    # adattare l'altezza. Senza questo, OptimalHeight vede le celle vuote.
     oDoc.calculateAll()
-
-    # Eseguiamo l'adattamento PRIMA di eventuali dialoghi modali (messageBox)
-    # per evitare il bug noto in cui getDocument() restituisce None.
     LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('Riepilogo TOL'))
+    PL.fissa()
 
     if riepilogo['importo_non_classificato'] != 0:
         Dialogs.messageBox(

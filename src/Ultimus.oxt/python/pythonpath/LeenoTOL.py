@@ -289,7 +289,7 @@ def calcola_sal_revisionale(oDoc, periodo_sal=None, mese_aggiudicazione=None):
 # ---------------------------------------------------------------------------
 
 _INTESTAZIONI = [
-    'TOL', 'Descrizione', 'Importo Contabilita\'', 'Peso %',
+    'TOL', 'Descrizione', 'Importo Contabilità', 'Peso %',
     'Periodo I0', 'Indice I0', 'Periodo It', 'Indice It',
     'Indice ribasato', 'Contributo ponderato',
 ]

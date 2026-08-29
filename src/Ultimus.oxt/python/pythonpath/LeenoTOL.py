@@ -14,6 +14,7 @@
     ricalcolato ad ogni chiamata di MENU_leeno_aggiorna_riepilogo_tol().
 """
 
+import LeenoSheetUtils
 import datetime
 
 import LeenoUtils
@@ -581,6 +582,8 @@ def MENU_leeno_aggiorna_riepilogo_tol():
     specifico usare scrivi_foglio_riepilogo_tol(oDoc, periodo_sal, ...)
     direttamente.
     """
+    import pyleeno as PL
+    PL.chiudi_dialoghi()
     oDoc = LeenoUtils.resolve_document()
     if oDoc is None:
         Dialogs.messageBox(
@@ -599,6 +602,22 @@ def MENU_leeno_aggiorna_riepilogo_tol():
             msg_type=Dialogs.ERRORBOX,
         )
         return
+
+    # Se il refresh era stato bloccato dal chiamante, lo riattiviamo,
+    # altrimenti OptimalHeight e GotoSheet non hanno alcun effetto reale.
+    LeenoUtils.DocumentRefresh(True, oDoc)
+
+    # Perche' OptimalHeight abbia effetto, il foglio DEVE essere quello
+    # attivo. Quindi ci spostiamo sul foglio prima di calcolare le altezze.
+    PL.GotoSheet('Riepilogo TOL')
+
+    # Forza il ricalcolo delle formule (SUM, riferimenti, ecc.) prima di
+    # adattare l'altezza. Senza questo, OptimalHeight vede le celle vuote.
+    oDoc.calculateAll()
+
+    # Eseguiamo l'adattamento PRIMA di eventuali dialoghi modali (messageBox)
+    # per evitare il bug noto in cui getDocument() restituisce None.
+    LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('Riepilogo TOL'))
 
     if riepilogo['importo_non_classificato'] != 0:
         Dialogs.messageBox(

@@ -12127,10 +12127,13 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
-    autoexec_run()
-    return
     oDoc = LeenoUtils.getDocument()    
     oSheet = oDoc.CurrentController.getActiveSheet()
+    import LeenoTOL
+    mio = LeenoTOL.scrivi_foglio_riepilogo_tol(oDoc, "2026-02")
+    DLG.chi(mio)
+    return
+
     import LeenoTOL
     LeenoTOL.MENU_leeno_aggiorna_riepilogo_tol()
     return

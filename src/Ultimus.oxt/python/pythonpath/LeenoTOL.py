@@ -603,3 +603,14 @@ def MENU_leeno_aggiorna_riepilogo_tol():
             title="Riepilogo TOL",
             msg_type=Dialogs.WARNINGBOX,
         )
+    risposta = Dialogs.YesNoDialog(
+        Title="Riepilogo TOL",
+        Text="Il riepilogo TOL è stato aggiornato.\n\n"
+             "Il periodo del SAL (It) è sempre l'ultimo indice ISTAT disponibile.\n\n"
+             "Vuoi consultare l'ultima versione degli indici sul sito ISTAT?",
+    )
+    url_istat = "https://esploradati.istat.it/databrowser/#/it/dw/categories/IT1,Z0400PRI,1.0/DCSC_INDICITOL/IT1,145_362_DCSC_INDICITOL_1,1.0"
+    if risposta == 1:
+        apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
+        apri.execute(url_istat, "", 0)
+

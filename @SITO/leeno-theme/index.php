@@ -18,7 +18,7 @@
                 <span class="version-badge">v3.26.0 &mdash; Maggio 2026</span>
             </p>
             <div class="hero-ctas">
-                <a href="<?php echo esc_url(home_url('/about-leeno/leeno/download/')); ?>" class="btn-hero">
+                <a href="<?php echo esc_url(home_url('/scarica-leeno/')); ?>" class="btn-hero">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7 10 12 15 17 10" />

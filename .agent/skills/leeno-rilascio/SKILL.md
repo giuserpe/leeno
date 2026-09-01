@@ -37,16 +37,16 @@ description: >
 3. Controllare/aggiornare versione in `description.xml`
 4. **Formato Versione**: In `leeno_version_code`, la versione DEVE seguire il formato previsto dal generatore CI:  
    `LeenO-X.Y.Z.B-TYPE-YYYYMMDD` (es. `LeenO-3.26.0.0-STABLE-20260516`).  
-   *Nota: Se il formato è errato, le GitHub Actions falliranno.*
+   _Nota: Se il formato è errato, le GitHub Actions falliranno._
 5. **Aggiornamento LeenO.update.xml**: Aggiornare versione e link download anche in `LeenO.update.xml`.
 6. Aggiornare info in `pkg-desc/description.txt`
 7. Rimuovere `def MENU_debug` (se presente)
-7. Cancellare `MANUALE_LeenO.pdf` dalla dir sorgente (se presente)
-8. Aggiungere `MANUALE_LeenO.pdf` aggiornato al pacchetto
-9. Pacchettizzare con **CTRL-SHIFT-G**
-10. **✅ Verificare**: assenza di `__pycache__` nel pacchetto OXT
-11. **✅ Verificare**: versione corretta in `leeno_version_code` nel pacchetto
-12. Rinominare il pacchetto come `LeenO-X.XX.X.oxt`
+8. Cancellare `MANUALE_LeenO.pdf` dalla dir sorgente (se presente)
+9. Aggiungere `MANUALE_LeenO.pdf` aggiornato al pacchetto
+10. Pacchettizzare con **CTRL-SHIFT-G**
+11. **✅ Verificare**: assenza di `__pycache__` nel pacchetto OXT
+12. **✅ Verificare**: versione corretta in `leeno_version_code` nel pacchetto
+13. Rinominare il pacchetto come `LeenO-X.XX.X.oxt`
 
 ## Fase D — Verifica finale
 
@@ -57,6 +57,7 @@ description: >
 ## Fase E — Pubblicazione Git
 
 1. Commit di tutti gli aggiornamenti su `dev`:
+
    ```
    git add .
    git commit -m "feat: rilascio versione X.XX.X"
@@ -64,15 +65,18 @@ description: >
    ```
 
 2. Merge in master:
+
    ```bash
    git checkout master
    git pull origin master  # Assicurarsi di essere aggiornati
    git merge dev
    ```
-   *Nota: Se il merge fallisce per file bloccati in `.vscode`, chiudere l'editor o usare un terminale esterno.*
-   *Nota: Se ci sono conflitti in `versions.html`, solitamente si preferisce la versione di `dev`: `git checkout --theirs versions.html`.*
+
+   _Nota: Se il merge fallisce per file bloccati in `.vscode`, chiudere l'editor o usare un terminale esterno._
+   _Nota: Se ci sono conflitti in `versions.html`, solitamente si preferisce la versione di `dev`: `git checkout --theirs versions.html`._
 
 3. Creare il tag annotato:
+
    ```
    git tag -a vX.XX.X -m 'Release LeenO versione X.XX.X'
    ```
@@ -95,7 +99,7 @@ description: >
    - Spostare la vecchia versione nella categoria **Archivio**
 3. Aggiornare la versione in [LeenO.update.xml](https://leeno.org/LeenO.update.xml)
 4. Eseguire [Sincronizza Filebase](https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&action=sync&no-ob=1)
-5. Correggere la versione nella [pagina download](https://leeno.org/about-leeno/leeno/download/)
+5. Correggere la versione nella [pagina download](https://leeno.org/scarica-leeno/)
 
 ## Fase G — Comunicazione
 
@@ -105,5 +109,6 @@ description: >
 4. Inviare **Newsletter** basata sullo stesso articolo.
 
 ---
+
 > [!TIP]
-> Durante la Fase A, puoi chiedere all'assistente: *"Usa la skill leeno-articolo-novita per preparare il post di rilascio"* per ottenere una bozza già pronta e orientata all'utente finale.
+> Durante la Fase A, puoi chiedere all'assistente: _"Usa la skill leeno-articolo-novita per preparare il post di rilascio"_ per ottenere una bozza già pronta e orientata all'utente finale.

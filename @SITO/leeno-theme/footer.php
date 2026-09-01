@@ -2,7 +2,7 @@
     <div class="footer-cta">
         <div class="container">
             <div class="footer-links-grid">
-                <a href="<?php echo esc_url(home_url('/about-leeno/leeno/download/')); ?>" class="footer-cta-card">
+                <a href="<?php echo esc_url(home_url('/scarica-leeno/')); ?>" class="footer-cta-card">
                     <div class="cta-card-header">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -52,7 +52,7 @@
             </div>
 
             <div class="footer-big-cta">
-                <a href="<?php echo esc_url(home_url('/about-leeno/leeno/download/')); ?>" class="btn-big">
+                <a href="<?php echo esc_url(home_url('/scarica-leeno/')); ?>" class="btn-big">
                     Scarica LeenO
                 </a>
                 <span class="btn-sub">LibreOffice Extension (.oxt) &mdash; Windows, macOS, Linux</span>

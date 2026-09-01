@@ -19,7 +19,7 @@ get_header();
                 <span class="sep" aria-hidden="true">›</span>
                 <a href="<?php echo esc_url( home_url('/about-leeno/') ); ?>">About LeenO</a>
                 <span class="sep" aria-hidden="true">›</span>
-                <a href="<?php echo esc_url( home_url('/about-leeno/leeno/download/') ); ?>">Download</a>
+                <a href="<?php echo esc_url( home_url('/scarica-leeno/') ); ?>">Download</a>
                 <span class="sep" aria-hidden="true">›</span>
                 <span class="current"><?php the_title(); ?></span>
             </nav>

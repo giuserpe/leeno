@@ -2279,7 +2279,7 @@
      <text:p text:style-name="P77"><text:span text:style-name="T56">fare il </text:span><text:span text:style-name="T48">Sincronizza Filebase:</text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T48">https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1</text:span></text:a><text:span text:style-name="T48"> </text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P78"><text:span text:style-name="T83">correggere la versione sotto </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/about-leeno/leeno/download/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T84">https://leeno.org/about-leeno/leeno/download/</text:span></text:a></text:p>
+     <text:p text:style-name="P78"><text:span text:style-name="T83">correggere la versione sotto </text:span><text:a xlink:type="simple" xlink:href="https://leeno.org/scarica-leeno/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link"><text:span text:style-name="T84">https://leeno.org/scarica-leeno/</text:span></text:a></text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="P79">Pubblicazione</text:p>
@@ -3026,7 +3026,7 @@
      <text:p text:style-name="P121">Fare <text:a xlink:type="simple" xlink:href="https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&amp;action=sync&amp;no-ob=1" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">Sincronizza Filebase</text:a></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P122">Correggere la versione nella <text:a xlink:type="simple" xlink:href="https://leeno.org/about-leeno/leeno/download/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">pagina download</text:a></text:p>
+     <text:p text:style-name="P122">Correggere la versione nella <text:a xlink:type="simple" xlink:href="https://leeno.org/scarica-leeno/" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">pagina download</text:a></text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="P105"><text:span text:style-name="Strong_20_Emphasis">Fase G — Comunicazione:</text:span></text:p>

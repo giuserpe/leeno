@@ -452,30 +452,37 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-04 21:47</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/7f3bfcd69943fe925a3b824d802af3e1bbec3368" target="_blank" rel="noopener"><code>7f3bfcd</code></a></td>
+                <td class="commit-msg">chore(meta): aggiorna versione a 3.26.0.137‑TESTING‑20260904
+- update di description.xml e leeno_version_code</td>
+            </tr>
+            <tr>
+                <td>2026-09-04 21:47</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/75be418c4c50e4c8426ebb8cc1816db0b342df6c" target="_blank" rel="noopener"><code>75be418</code></a></td>
+                <td class="commit-msg">feat(import): supporto ZIP per importazione prezzari XML
+- FileSelect ora include filtro combinato *.xml;*.zip
+- _readXmlFile riconosce archivi ZIP, estrae automaticamente il primo XML valido
+- aggiunta nuova firma 'settore cod="VEN26-01"' per parser Veneto
+- LeenoImport_XmlVeneto usa PL.clean_text per normalizzare input
+
+fix(import): migliora formattazione dei messaggi multi‑linea
+- stringhe di avviso convertite in literal con backslash per evitare indentazioni errate
+- migliora leggibilità dei messaggi ATTENZIONE nei vari import regionali
+
+feat(dialogs): aggiunge filtro “XML e ZIP” e filtro dedicato “ZIP”
+- migliora usabilità della selezione file per importazioni complesse
+
+fix(core): migliora autoexec_run per S2
+- assegna stile “Dati‑data” alla cella della nuova riga “Data di aggiudicazione”
+
+feat(core): estende freeze pane
+- aggiunge ‘Riepilogo TOL’ alla mappa di fissa() con blocco (0,1)</td>
+            </tr>
+            <tr>
                 <td>2026-09-01 22:39</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/afe634c81e2139e7215a036b8e718d59bdc431a4" target="_blank" rel="noopener"><code>afe634c</code></a></td>
                 <td class="commit-msg">chore(meta): bump versione a 3.26.0.136-TESTING-20260902</td>
-            </tr>
-            <tr>
-                <td>2026-09-01 22:39</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/edcfc32560a8678c791e89935d885794106351f5" target="_blank" rel="noopener"><code>edcfc32</code></a></td>
-                <td class="commit-msg">fix(sito): aggiorna URL pagina download a /scarica-leeno/
-
-Sostituisce il percorso /about-leeno/leeno/download/ con
-/scarica-leeno/ in header, footer, index, archivio-download,
-CHECKLIST-DEV-REL, MANUALE_LeenO e skill leeno-rilascio.</td>
-            </tr>
-            <tr>
-                <td>2026-08-30 16:35</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/01f660cf3a24c14e18b7d09458168d891c78add6" target="_blank" rel="noopener"><code>01f660c</code></a></td>
-                <td class="commit-msg">chore(meta): aggiorna versione a 3.26.0.135‑TESTING‑20260830
-- update di description.xml e leeno_version_code
-
-feat(tol): aggiunge prompt finale con link ISTAT nel riepilogo TOL
-- dopo l’aggiornamento del riepilogo, propone apertura del dataset ISTAT
-- apre il browser tramite SystemShellExecute se l’utente conferma
-
-feat(debug): estende MENU_debug con test diretto del riepilogo TOL</td>
             </tr>
                     </tbody>
                 </table>
@@ -499,8 +506,8 @@ feat(debug): estende MENU_debug con test diretto del riepilogo TOL</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-01 22:40 UTC</p>
-                <p>Build Commit: <code>afe634c</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-04 21:48 UTC</p>
+                <p>Build Commit: <code>7f3bfcd</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -110,6 +110,7 @@ def findXmlParser(xmlText):
         'xsi:noNamespaceSchemaLocation="SAR24': LeenoImport_XmlSardegna.parseXML,
         'autore="Regione Liguria"': LeenoImport_XmlLiguria.parseXML,
         'rks=': LeenoImport_XmlVeneto.parseXML,
+        'settore cod="VEN26-01"': LeenoImport_XmlVeneto.parseXML,
         '<pdf>Prezzario_Regione_Basilicata': LeenoImport_XmlBasilicata.parseXML,
         '<autore>Regione Lombardia': LeenoImport_XmlLombardia.parseXML,
         '<autore>LOM': LeenoImport_XmlLombardia.parseXML,
@@ -264,8 +265,17 @@ def _readXmlFile(filename):
     nessuna firma in findXmlParser() riesce più a riconoscerlo, anche se
     è corretta: il file sembra "di tipo sconosciuto" pur non essendolo.
     '''
-    with open(filename, 'rb') as file:
-        raw = file.read()
+    if filename.lower().endswith('.zip'):
+        import zipfile
+        with zipfile.ZipFile(filename, 'r') as zf:
+            xml_files = [name for name in zf.namelist() if name.lower().endswith('.xml')]
+            if not xml_files:
+                raise Exception(f"Nessun file XML trovato nell'archivio ZIP '{filename}'")
+            with zf.open(xml_files[0], 'r') as file:
+                raw = file.read()
+    else:
+        with open(filename, 'rb') as file:
+            raw = file.read()
 
     if raw.startswith(b'\xff\xfe\x00\x00') or raw.startswith(b'\x00\x00\xfe\xff'):
         encoding = 'utf-32'
@@ -286,7 +296,7 @@ def ImportElencoPrezziXML():
     '''
     LeenoUtils.DocumentRefresh(False)
 
-    filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
+    filename = Dialogs.FileSelect('Scegli il file XML o ZIP da importare', '*.xml;*.zip')
     if filename is None:
         return
 
@@ -373,7 +383,7 @@ Verrà tentata un'importazione utilizzando il formato XPWE."""
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''
+    oSheet.getCellByPosition(1, 3).String = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -426,7 +436,7 @@ supportato nella prossima versione del programma."""
         return
     Dialogs.Info(
         Title =f'Importate {len(dati["articoli"])} voci di Elenco Prezzi',
-        Text = '''
+        Text = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -820,7 +830,7 @@ NOTA: Questo processo di importazione richiede la selezione di un file
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''
+    oSheet.getCellByPosition(1, 3).String = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -862,7 +872,7 @@ Vuoi procedere comunque?''') == 0:
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
-        Text = '''
+        Text = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -1082,7 +1092,7 @@ def MENU_FVG():
         oSheet.getCellByPosition(12, 3).String = ''
         oSheet.getCellByPosition(13, 3).String = ''
         oSheet.getCellByPosition(0, 3).String = '000'
-        oSheet.getCellByPosition(1, 3).String = '''
+        oSheet.getCellByPosition(1, 3).String = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -1119,7 +1129,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili
         LeenoSheetUtils.adattaAltezzaRiga(oSheet)
         Dialogs.Info(
             Title = "Importazione eseguita con successo!",
-            Text = '''
+            Text = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -1281,7 +1291,7 @@ def MENU_PUGLIA():
     oSheet.getCellByPosition(12, 3).String = ''
     oSheet.getCellByPosition(13, 3).String = ''
     oSheet.getCellByPosition(0, 3).String = '000'
-    oSheet.getCellByPosition(1, 3).String = '''
+    oSheet.getCellByPosition(1, 3).String = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.
@@ -1318,7 +1328,7 @@ Vuoi procedere comunque?''') == 0:
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Info(
         Title = "Importazione eseguita con successo!",
-        Text = '''
+        Text = '''\
 ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo
    al contenuto del prezzario.

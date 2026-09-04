@@ -33,6 +33,7 @@ def parseXML(data, defaultTitle=None):
     '''
     #ripulisce il testo da caratteri non stampabili
     # data = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', data)
+    import pyleeno as PL
     data = PL.clean_text(data)
 
     # alcuni files sono degli XML-SIX con un bug

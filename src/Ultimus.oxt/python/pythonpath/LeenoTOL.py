@@ -577,23 +577,36 @@ def MENU_leeno_aggiorna_riepilogo_tol():
         )
         return
 
+    # 4 passi: calcolo dati, scrittura foglio, refresh, completamento
+    indicator = oDoc.getCurrentController().getStatusIndicator()
+    indicator.start("Riepilogo TOL...", 4)
+    PL.genera_sommario()
+
     try:
-        riepilogo = scrivi_foglio_riepilogo_tol(oDoc)
-    except RuntimeError as e:
-        Dialogs.messageBox(
-            text=str(e),
-            title="Riepilogo TOL - errore",
-            msg_type=Dialogs.ERRORBOX,
-        )
-        return
+        indicator.setValue(1)  # calcolo (incluso nella scrivi_foglio_riepilogo_tol)
+        try:
+            riepilogo = scrivi_foglio_riepilogo_tol(oDoc)
+        except RuntimeError as e:
+            Dialogs.messageBox(
+                text=str(e),
+                title="Riepilogo TOL - errore",
+                msg_type=Dialogs.ERRORBOX,
+            )
+            return
 
-    LeenoUtils.DocumentRefresh(True, oDoc)
+        indicator.setValue(2)  # refresh documento
+        LeenoUtils.DocumentRefresh(True, oDoc)
 
-    PL.GotoSheet('Riepilogo TOL')
+        PL.GotoSheet('Riepilogo TOL')
 
-    oDoc.calculateAll()
-    LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('Riepilogo TOL'))
-    PL.fissa()
+        indicator.setValue(3)  # calcolo formule e formattazione
+        oDoc.calculateAll()
+        LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('Riepilogo TOL'))
+        PL.fissa()
+
+        indicator.setValue(4)  # completato
+    finally:
+        indicator.end()
 
     if riepilogo['importo_non_classificato'] != 0:
         Dialogs.messageBox(

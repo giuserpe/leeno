@@ -2804,7 +2804,7 @@ def scelta_viste_run():
             _vSintetica_core(oDoc, oSheet, True)
 
 # CONTABILITA
-    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL', 'CdP'):
+    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
         GotoSheet('CONTABILITA')
         oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -12127,6 +12127,8 @@ def MENU_debug_giannelli():
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    genera_sommario()
+    return
     oDoc = LeenoUtils.getDocument()    
     oSheet = oDoc.CurrentController.getActiveSheet()
     import LeenoTOL

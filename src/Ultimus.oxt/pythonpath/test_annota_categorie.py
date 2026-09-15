@@ -130,6 +130,8 @@ class TestAnnotaCategorie(unittest.TestCase):
             mock_doc.CurrentController.ActiveSheet = sheet
             mock_get_doc.return_value = mock_doc
 
+            sys.modules['LeenoConfig'].Config.return_value.read.return_value = 'True'
+
             LeenoComputo.annota_categorie_voci(sheet)
 
             # Check that start_row (row 25) was annotated:
@@ -137,6 +139,28 @@ class TestAnnotaCategorie(unittest.TestCase):
             # Column B (index 1) should contain "2.4.1"
             self.assertEqual(sheet.getCellByPosition(2, 25).String, "OPERE EDILI | Rifacimenti | pavimento e rivestimenti")
             self.assertEqual(sheet.getCellByPosition(1, 25).String, "2.4.1")
+
+    def test_annota_categorie_voci_disabled(self):
+        rows_data = {}
+        rows_data[(0, 25)] = MockCell(cell_style='Comp Start Attributo')
+        sheet = MockSheet('COMPUTO', rows_data)
+
+        import LeenoComputo
+
+        with patch.object(LeenoComputo, 'circoscriveVoceComputo', side_effect=lambda s, r: MockRange(25, 28) if r == 25 else None), \
+             patch('LeenoSheetUtils.cercaUltimaVoce', return_value=30), \
+             patch('LeenoUtils.getDocument') as mock_get_doc:
+
+            mock_doc = MagicMock()
+            mock_doc.CurrentController.ActiveSheet = sheet
+            mock_get_doc.return_value = mock_doc
+
+            sys.modules['LeenoConfig'].Config.return_value.read.return_value = 'False'
+
+            LeenoComputo.annota_categorie_voci(sheet)
+
+            # Check that start_row was NOT annotated
+            self.assertEqual(sheet.getCellByPosition(2, 25).String, "")
 
 
 if __name__ == '__main__':

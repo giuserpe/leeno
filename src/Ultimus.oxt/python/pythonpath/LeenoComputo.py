@@ -1006,6 +1006,9 @@ def annota_categorie_voci(oSheet=None):
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
 
+    if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
+        return
+
     stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
     stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
     stili_validi  = set(stili_computo) | set(stili_contab)

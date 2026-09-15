@@ -162,6 +162,29 @@ class TestAnnotaCategorie(unittest.TestCase):
             # Check that start_row was NOT annotated
             self.assertEqual(sheet.getCellByPosition(2, 25).String, "")
 
+    def test_cancella_annotazioni_categorie_voci(self):
+        rows_data = {}
+        rows_data[(0, 25)] = MockCell(cell_style='Comp Start Attributo')
+        rows_data[(1, 25)] = MockCell(cell_style='Comp Start Attributo', string='2.4.1')
+        rows_data[(2, 25)] = MockCell(cell_style='Comp Start Attributo', string='OPERE EDILI | Rifacimenti | pavimento e rivestimenti')
+        sheet = MockSheet('COMPUTO', rows_data)
+
+        import LeenoComputo
+
+        with patch.object(LeenoComputo, 'circoscriveVoceComputo', side_effect=lambda s, r: MockRange(25, 28) if r == 25 else None), \
+             patch('LeenoSheetUtils.cercaUltimaVoce', return_value=30), \
+             patch('LeenoUtils.getDocument') as mock_get_doc:
+
+            mock_doc = MagicMock()
+            mock_doc.CurrentController.ActiveSheet = sheet
+            mock_get_doc.return_value = mock_doc
+
+            LeenoComputo.cancella_annotazioni_categorie_voci(sheet)
+
+            # Check that start_row annotations were cleared
+            self.assertEqual(sheet.getCellByPosition(1, 25).String, "")
+            self.assertEqual(sheet.getCellByPosition(2, 25).String, "")
+
 
 if __name__ == '__main__':
     unittest.main()

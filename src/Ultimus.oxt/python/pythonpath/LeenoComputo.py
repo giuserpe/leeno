@@ -1078,3 +1078,54 @@ def annota_categorie_voci(oSheet=None):
 def MENU_annota_categorie_voci():
     """Entry point per menu macro annota categorie voci."""
     annota_categorie_voci()
+
+
+@with_undo('Cancella annotazioni categorie voci')
+@LeenoUtils.no_refresh
+def cancella_annotazioni_categorie_voci(oSheet=None):
+    """
+    Cancella le annotazioni di categoria nel primo rigo (start_row) di ogni voce
+    di COMPUTO, VARIANTE o CONTABILITA (colonna B e colonna C).
+    """
+    if oSheet is None:
+        oDoc = LeenoUtils.getDocument()
+        if not oDoc:
+            return
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_validi  = set(stili_computo) | set(stili_contab)
+
+    fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    row = 0
+    tot_righe = oSheet.Rows.Count
+
+    while row <= fine_doc and row < tot_righe:
+        stile = oSheet.getCellByPosition(0, row).CellStyle
+
+        if stile not in stili_validi:
+            row += 1
+            continue
+
+        sStRange = circoscriveVoceComputo(oSheet, row)
+        if sStRange is None:
+            row += 1
+            continue
+
+        start_row = sStRange.RangeAddress.StartRow
+        end_row = sStRange.RangeAddress.EndRow
+
+        # Svuota i campi colonna B (indice 1) e colonna C (indice 2) del primo rigo della voce
+        oSheet.getCellByPosition(1, start_row).String = ""
+        oSheet.getCellByPosition(2, start_row).String = ""
+
+        row = end_row + 1
+
+
+def MENU_cancella_annotazioni_categorie_voci():
+    """Entry point per menu macro cancella annotazioni categorie voci."""
+    cancella_annotazioni_categorie_voci()

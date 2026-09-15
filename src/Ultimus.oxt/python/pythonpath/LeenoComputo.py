@@ -383,6 +383,7 @@ def ins_voce_computo(cod=None):
     PL._gotoCella(1, lrow + 1)
 
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
+    annota_categorie_voci(oSheet)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 

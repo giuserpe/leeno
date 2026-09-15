@@ -669,6 +669,7 @@ def MENU_umbria():
     oSheet.Columns.insertByIndex(4, 1)
     oSheet.getCellByPosition(4, 0).String = 'Incidenza MdO\n%'
     fine = SheetUtils.getLastUsedRow(oSheet) + 1
+    madre = ""
     for i in range(1, fine):
         oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String
         if len(oSheet.getCellByPosition(0, i).String.split('.')) == 1 and \
@@ -678,7 +679,7 @@ def MENU_umbria():
         oSheet.getCellByPosition(3, i).Type.value != 'EMPTY':
             mdo = oSheet.getCellByPosition(5, i).Value
             prz = oSheet.getCellByPosition(3, i).Value
-            oSheet.getCellByPosition(4, i).Value = mdo / prz
+            oSheet.getCellByPosition(4, i).Value = mdo / prz if prz else 0.0
         if len(oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
         oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
             madre = oSheet.getCellByPosition(1, i).String
@@ -687,7 +688,7 @@ def MENU_umbria():
             oSheet.getCellByPosition(1, i).String = madre +"\n- " + oSheet.getCellByPosition(1, i).String
             mdo = oSheet.getCellByPosition(5, i).Value
             prz = oSheet.getCellByPosition(3, i).Value
-            oSheet.getCellByPosition(4, i).Value = mdo / prz
+            oSheet.getCellByPosition(4, i).Value = mdo / prz if prz else 0.0
 #> codice di Lorenzo Vagnarelli
         if len(oSheet.getCellByPosition(0, i).String.split('.')) == 5 and \
         oSheet.getCellByPosition(3, i).Type.value == 'EMPTY':
@@ -697,7 +698,7 @@ def MENU_umbria():
             oSheet.getCellByPosition(1, i).String = madre +"\n- " + oSheet.getCellByPosition(1, i).String
             mdo = oSheet.getCellByPosition(5, i).Value
             prz = oSheet.getCellByPosition(3, i).Value
-            oSheet.getCellByPosition(4, i).Value = mdo / prz
+            oSheet.getCellByPosition(4, i).Value = mdo / prz if prz else 0.0
 #< codice di Lorenzo Vagnarelli
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(1, 0, 1, fine))
     PL.sistema_cose()

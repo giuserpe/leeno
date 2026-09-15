@@ -11675,6 +11675,7 @@ def sposta_voce(row=None, msg=1):
     # Ricalcolo finale necessario dopo aver riabilitato il calcolo automatico
     oDoc.calculateAll()
     numera_voci()
+    LeenoComputo.annota_categorie_voci(oSheet)
 
 def copia_stili_celle(sheet_src, range_src, sheet_dest, range_dest):
     '''
@@ -12176,9 +12177,26 @@ def MENU_debug():
     import LeenoComputo
     LeenoComputo.MENU_inserisci_somme_lavori_sicurezza()
     return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    row = SheetUtils.getLastUsedRow(oSheet) + 1
+
+
+def MENU_annota_categorie_voci():
+    import LeenoComputo
+    LeenoComputo.MENU_annota_categorie_voci()
+
+
+def annota_categorie_voci(oSheet=None):
+    import LeenoComputo
+    LeenoComputo.annota_categorie_voci(oSheet)
+
+
+def MENU_cancella_annotazioni_categorie_voci():
+    import LeenoComputo
+    LeenoComputo.MENU_cancella_annotazioni_categorie_voci()
+
+
+def cancella_annotazioni_categorie_voci(oSheet=None):
+    import LeenoComputo
+    LeenoComputo.cancella_annotazioni_categorie_voci(oSheet)
     # Scansiona tutte le righe da 0 a row - 1
     for i in range(0, row):
         # Verifica se il valore nella colonna I (indice 8) è maggiore di quello in colonna C (indice 2) alla riga i

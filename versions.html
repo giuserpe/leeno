@@ -452,6 +452,18 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-15 16:00</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/2f914d76eb2fb64872cc86ab77365d89b8f91799" target="_blank" rel="noopener"><code>2f914d7</code></a></td>
+                <td class="commit-msg">feat(computo): aggiunge annotazione automatica categorie su ogni voce
+
+Aggiunge annota_categorie_voci() che risale le righe genitore di ciascuna
+voce e scrive il percorso Super Categoria | Categoria | Sotto Categoria
+nella colonna C e il numero di riferimento piu profondo in colonna B.
+La funzione e controllata dal flag mostra_categorie in LeenoConfig e viene
+richiamata automaticamente dopo insertVoceContabilita e sposta_voce.
+Aggiunge anche la funzione speculare cancella_annotazioni_categorie_voci().</td>
+            </tr>
+            <tr>
                 <td>2026-09-07 15:58</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/36ea43c90c384738264d841bac9599b3d43d9aea" target="_blank" rel="noopener"><code>36ea43c</code></a></td>
                 <td class="commit-msg">feat(riepilogo): enhance TOL summary generation with progress indicator</td>
@@ -461,28 +473,6 @@
                 <td><a href="https://github.com/giuserpe/leeno/commit/7f3bfcd69943fe925a3b824d802af3e1bbec3368" target="_blank" rel="noopener"><code>7f3bfcd</code></a></td>
                 <td class="commit-msg">chore(meta): aggiorna versione a 3.26.0.137‑TESTING‑20260904
 - update di description.xml e leeno_version_code</td>
-            </tr>
-            <tr>
-                <td>2026-09-04 21:47</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/75be418c4c50e4c8426ebb8cc1816db0b342df6c" target="_blank" rel="noopener"><code>75be418</code></a></td>
-                <td class="commit-msg">feat(import): supporto ZIP per importazione prezzari XML
-- FileSelect ora include filtro combinato *.xml;*.zip
-- _readXmlFile riconosce archivi ZIP, estrae automaticamente il primo XML valido
-- aggiunta nuova firma 'settore cod="VEN26-01"' per parser Veneto
-- LeenoImport_XmlVeneto usa PL.clean_text per normalizzare input
-
-fix(import): migliora formattazione dei messaggi multi‑linea
-- stringhe di avviso convertite in literal con backslash per evitare indentazioni errate
-- migliora leggibilità dei messaggi ATTENZIONE nei vari import regionali
-
-feat(dialogs): aggiunge filtro “XML e ZIP” e filtro dedicato “ZIP”
-- migliora usabilità della selezione file per importazioni complesse
-
-fix(core): migliora autoexec_run per S2
-- assegna stile “Dati‑data” alla cella della nuova riga “Data di aggiudicazione”
-
-feat(core): estende freeze pane
-- aggiunge ‘Riepilogo TOL’ alla mappa di fissa() con blocco (0,1)</td>
             </tr>
                     </tbody>
                 </table>
@@ -506,8 +496,8 @@ feat(core): estende freeze pane
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-15 15:43 UTC</p>
-                <p>Build Commit: <code>58c9395</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-15 16:01 UTC</p>
+                <p>Build Commit: <code>2f914d7</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

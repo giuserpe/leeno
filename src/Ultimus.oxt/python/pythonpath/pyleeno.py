@@ -2696,9 +2696,12 @@ def scelta_viste_run():
                 oDialog1.getControl('CBMdo').State = True
         except:
             pass
-
-        if oSheet.getColumns().getByIndex(31).Columns.IsVisible:
-            oDialog1.getControl('CBCat').State = 1
+        
+        if cfg.read('Generale', 'mostra_categorie') == 'True':
+            oDialog1.getControl('mostra_categorie').State = 1
+        else:
+            oDialog1.getControl('mostra_categorie').State = 0
+            
         if oSheet.getColumns().getByIndex(38).Columns.IsVisible:
             oDialog1.getControl('CBFig').State = 1
 
@@ -2766,14 +2769,14 @@ def scelta_viste_run():
         else:
             oSheet.getColumns().getByIndex(28).Columns.IsVisible = True
 
-        if oDialog1.getControl('CBCat').State == 0:  # categorie
-            oSheet.getColumns().getByIndex(31).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(32).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(33).Columns.IsVisible = False
+        if oDialog1.getControl('mostra_categorie').State == 1:
+            cfg.write('Generale', 'mostra_categorie', 'True')
+            import LeenoComputo
+            LeenoComputo.annota_categorie_voci()
         else:
-            oSheet.getColumns().getByIndex(31).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(32).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(33).Columns.IsVisible = True
+            cfg.write('Generale', 'mostra_categorie', 'False')
+            import LeenoComputo
+            LeenoComputo.cancella_annotazioni_categorie_voci()
 
         if oDialog1.getControl("CBSic").State == 0:  # sicurezza
             oSheet.getColumns().getByIndex(17).Columns.IsVisible = False
@@ -2898,6 +2901,11 @@ def scelta_viste_run():
 
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
 
+        if cfg.read('Generale', 'mostra_categorie') == 'True':
+            oDialog1.getControl('mostra_categorie').State = 1
+        else:
+            oDialog1.getControl('mostra_categorie').State = 0
+
         if oDialog1.execute() == 0:
             return
 
@@ -2931,6 +2939,15 @@ def scelta_viste_run():
             cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
+
+        if oDialog1.getControl('mostra_categorie').State == 1:
+            cfg.write('Generale', 'mostra_categorie', 'True')
+            import LeenoComputo
+            LeenoComputo.annota_categorie_voci()
+        else:
+            cfg.write('Generale', 'mostra_categorie', 'False')
+            import LeenoComputo
+            LeenoComputo.cancella_annotazioni_categorie_voci()
 
         try:
             nSal = int(oDialog1.getControl('ComboBox1').getText())

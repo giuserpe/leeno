@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.137-TESTING-20260904.oxt">LeenO-3.26.0.137-TESTING-20260904.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.138-TESTING-20260915.oxt">LeenO-3.26.0.138-TESTING-20260915.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.2MB</td>
+                <td class="col-extra">2026-09-15 20:03</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.138-TESTING-20260915.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.137-TESTING-20260904.oxt">LeenO-3.26.0.137-TESTING-20260904.oxt</a> </td>
                 <td class="col-dim">4.2MB</td>
                 <td class="col-extra">2026-09-04 21:44</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.133-TESTING-20260829.oxt">LeenO-3.26.0.133-TESTING-20260829.oxt</a> </td>
-                <td class="col-dim">4.1MB</td>
-                <td class="col-extra">2026-08-29 11:24</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.133-TESTING-20260829.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,6 +452,19 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-15 20:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3d4be0dff8bf43fdf8d89cfb5b49fd792c74232a" target="_blank" rel="noopener"><code>3d4be0d</code></a></td>
+                <td class="commit-msg">feat(ui): aggiunge opzione 'mostra categorie' nel dialogo viste
+
+Sostituisce il controllo visibilità colonne 31-33 con un flag
+persistente in configurazione ('Generale/mostra_categorie').
+Aggiunge il checkbox 'mostra_categorie' in Dialogviste_N e
+riposiziona i controlli adiacenti. L'attivazione ora chiama
+LeenoComputo.annota_categorie_voci() /
+cancella_annotazioni_categorie_voci() in entrambi i rami
+(dialogo e contabilità). Bump versione a 3.26.0.138.</td>
+            </tr>
+            <tr>
                 <td>2026-09-15 17:55</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/9daf80e6eb1d5b29ab64bb2f8e128be1abb3a274" target="_blank" rel="noopener"><code>9daf80e</code></a></td>
                 <td class="commit-msg">fix(MENU_umbria): handle division by zero when calculating percentage</td>
@@ -467,11 +480,6 @@ nella colonna C e il numero di riferimento piu profondo in colonna B.
 La funzione e controllata dal flag mostra_categorie in LeenoConfig e viene
 richiamata automaticamente dopo insertVoceContabilita e sposta_voce.
 Aggiunge anche la funzione speculare cancella_annotazioni_categorie_voci().</td>
-            </tr>
-            <tr>
-                <td>2026-09-07 15:58</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/36ea43c90c384738264d841bac9599b3d43d9aea" target="_blank" rel="noopener"><code>36ea43c</code></a></td>
-                <td class="commit-msg">feat(riepilogo): enhance TOL summary generation with progress indicator</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +503,8 @@ Aggiunge anche la funzione speculare cancella_annotazioni_categorie_voci().</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-15 17:55 UTC</p>
-                <p>Build Commit: <code>9daf80e</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-15 20:07 UTC</p>
+                <p>Build Commit: <code>3d4be0d</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

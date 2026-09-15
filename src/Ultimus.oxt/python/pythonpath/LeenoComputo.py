@@ -383,6 +383,7 @@ def ins_voce_computo(cod=None):
     PL._gotoCella(1, lrow + 1)
 
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
+    annota_categorie_voci(oSheet)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 
@@ -984,3 +985,147 @@ def MENU_inserisci_somme_lavori_sicurezza():
     )
 
     oo = controller.startRangeSelection(props)
+
+
+@with_undo('Annota categorie voci')
+@LeenoUtils.no_refresh
+def annota_categorie_voci(oSheet=None):
+    """
+    Annota nel primo rigo di ogni voce (start_row da circoscriveVoceComputo)
+    di COMPUTO, VARIANTE o CONTABILITA:
+    - nella colonna C (indice 2) i titoli di Super Categoria, Categoria e Sotto Categoria
+      a cui la voce appartiene, separati da " | ".
+    - nella colonna B (indice 1) il numero della Super Categoria, Categoria o Sotto Categoria.
+    """
+    if oSheet is None:
+        oDoc = LeenoUtils.getDocument()
+        if not oDoc:
+            return
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+
+    if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
+        return
+
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_validi  = set(stili_computo) | set(stili_contab)
+
+    fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    row = 0
+    tot_righe = oSheet.Rows.Count
+
+    while row <= fine_doc and row < tot_righe:
+        stile = oSheet.getCellByPosition(0, row).CellStyle
+
+        if stile not in stili_validi:
+            row += 1
+            continue
+
+        sStRange = circoscriveVoceComputo(oSheet, row)
+        if sStRange is None:
+            row += 1
+            continue
+
+        start_row = sStRange.RangeAddress.StartRow
+        end_row = sStRange.RangeAddress.EndRow
+
+        # Risali per cercare le categorie genitore
+        super_cat_title, super_cat_num = "", ""
+        cat_title, cat_num = "", ""
+        sotto_cat_title, sotto_cat_num = "", ""
+
+        has_passed_cat = False
+
+        r = start_row - 1
+        while r >= 0:
+            c_style = oSheet.getCellByPosition(0, r).CellStyle
+            c_style_col1 = oSheet.getCellByPosition(1, r).CellStyle
+
+            if c_style == 'livello2 valuta' or c_style_col1 == 'livello2 valuta':
+                if not has_passed_cat and not sotto_cat_title:
+                    sotto_cat_title = oSheet.getCellByPosition(2, r).String
+                    sotto_cat_num = oSheet.getCellByPosition(1, r).String
+            elif c_style == 'Livello-1-scritta' or c_style_col1 == 'Livello-1-scritta':
+                has_passed_cat = True
+                if not cat_title:
+                    cat_title = oSheet.getCellByPosition(2, r).String
+                    cat_num = oSheet.getCellByPosition(1, r).String
+            elif c_style == 'Livello-0-scritta' or c_style_col1 == 'Livello-0-scritta':
+                if not super_cat_title:
+                    super_cat_title = oSheet.getCellByPosition(2, r).String
+                    super_cat_num = oSheet.getCellByPosition(1, r).String
+                break
+
+            r -= 1
+
+        # Costruisci i titoli separati da " | "
+        titoli = [t for t in (super_cat_title, cat_title, sotto_cat_title) if t]
+        str_titoli = " | ".join(titoli)
+
+        # Seleziona il numero piu profondo disponibile (Sotto Categoria -> Categoria -> Super Categoria)
+        num_cat = sotto_cat_num or cat_num or super_cat_num
+
+        # Annota nei campi del primo rigo della voce (start_row)
+        oSheet.getCellByPosition(2, start_row).String = str_titoli
+        oSheet.getCellByPosition(1, start_row).String = num_cat
+
+        row = end_row + 1
+
+
+def MENU_annota_categorie_voci():
+    """Entry point per menu macro annota categorie voci."""
+    annota_categorie_voci()
+
+
+@with_undo('Cancella annotazioni categorie voci')
+@LeenoUtils.no_refresh
+def cancella_annotazioni_categorie_voci(oSheet=None):
+    """
+    Cancella le annotazioni di categoria nel primo rigo (start_row) di ogni voce
+    di COMPUTO, VARIANTE o CONTABILITA (colonna B e colonna C).
+    """
+    if oSheet is None:
+        oDoc = LeenoUtils.getDocument()
+        if not oDoc:
+            return
+        oSheet = oDoc.CurrentController.ActiveSheet
+
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+
+    stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
+    stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
+    stili_validi  = set(stili_computo) | set(stili_contab)
+
+    fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+    row = 0
+    tot_righe = oSheet.Rows.Count
+
+    while row <= fine_doc and row < tot_righe:
+        stile = oSheet.getCellByPosition(0, row).CellStyle
+
+        if stile not in stili_validi:
+            row += 1
+            continue
+
+        sStRange = circoscriveVoceComputo(oSheet, row)
+        if sStRange is None:
+            row += 1
+            continue
+
+        start_row = sStRange.RangeAddress.StartRow
+        end_row = sStRange.RangeAddress.EndRow
+
+        # Svuota i campi colonna B (indice 1) e colonna C (indice 2) del primo rigo della voce
+        oSheet.getCellByPosition(1, start_row).String = ""
+        oSheet.getCellByPosition(2, start_row).String = ""
+
+        row = end_row + 1
+
+
+def MENU_cancella_annotazioni_categorie_voci():
+    """Entry point per menu macro cancella annotazioni categorie voci."""
+    cancella_annotazioni_categorie_voci()

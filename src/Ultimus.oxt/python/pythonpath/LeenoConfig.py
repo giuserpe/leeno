@@ -113,6 +113,7 @@ class Config(Borg):
             ('Generale', 'precisione_come_mostrato', '(bool)True'),
             ('Generale', 'nuova_voce', 'True'),
             ('Generale', 'applica_colori', 'True'),
+            ('Generale', 'mostra_categorie', 'True'),
 
             ('Generale', 'colorazione_categorie', 'Nessuno'),
 

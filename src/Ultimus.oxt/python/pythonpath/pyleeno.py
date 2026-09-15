@@ -11675,6 +11675,7 @@ def sposta_voce(row=None, msg=1):
     # Ricalcolo finale necessario dopo aver riabilitato il calcolo automatico
     oDoc.calculateAll()
     numera_voci()
+    LeenoComputo.annota_categorie_voci(oSheet)
 
 def copia_stili_celle(sheet_src, range_src, sheet_dest, range_dest):
     '''

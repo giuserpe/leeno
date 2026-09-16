@@ -1,0 +1,110 @@
+import unittest
+from unittest.mock import MagicMock
+import sys
+import os
+
+# Add pythonpath to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/Ultimus.oxt/python/pythonpath')))
+
+# Mock UNO modules to avoid import errors when running outside LibreOffice
+com_mock = MagicMock()
+sys.modules['com'] = com_mock
+sys.modules['com.sun'] = com_mock
+sys.modules['com.sun.star'] = com_mock
+sys.modules['com.sun.star.beans'] = com_mock
+sys.modules['uno'] = MagicMock()
+sys.modules['unohelper'] = MagicMock()
+sys.modules['LeenoUtils'] = MagicMock()
+
+import LeenoFormat
+
+
+class TestSostituisciStileColonna(unittest.TestCase):
+
+    def test_col_to_index(self):
+        self.assertEqual(LeenoFormat.col_to_index("A"), 0)
+        self.assertEqual(LeenoFormat.col_to_index("C"), 2)
+        self.assertEqual(LeenoFormat.col_to_index("Z"), 25)
+        self.assertEqual(LeenoFormat.col_to_index("AA"), 26)
+        self.assertEqual(LeenoFormat.col_to_index("AB"), 27)
+        self.assertEqual(LeenoFormat.col_to_index("c"), 2)
+        self.assertEqual(LeenoFormat.col_to_index(5), 5)
+        self.assertEqual(LeenoFormat.col_to_index("2"), 2)
+
+    def test_sostituisci_stile_colonna_with_multiple_found_ranges(self):
+        mock_doc = MagicMock()
+        mock_sheet = MagicMock()
+        mock_col = MagicMock()
+        mock_search_desc = MagicMock()
+
+        mock_doc.getSheets().getByName.return_value = mock_sheet
+        mock_sheet.getColumns().getByIndex.return_value = mock_col
+        mock_col.createSearchDescriptor.return_value = mock_search_desc
+
+        mock_item1 = MagicMock()
+        mock_item1.getRangeAddress.return_value.StartRow = 5
+        mock_item1.getRangeAddress.return_value.EndRow = 5
+        mock_item1.getRangeAddress.return_value.StartColumn = 2
+        mock_item1.getRangeAddress.return_value.EndColumn = 2
+
+        mock_item2 = MagicMock()
+        mock_item2.getRangeAddress.return_value.StartRow = 10
+        mock_item2.getRangeAddress.return_value.EndRow = 12
+        mock_item2.getRangeAddress.return_value.StartColumn = 2
+        mock_item2.getRangeAddress.return_value.EndColumn = 2
+
+        mock_found = MagicMock()
+        mock_found.Count = 2
+        mock_found.getByIndex.side_effect = [mock_item1, mock_item2]
+        mock_col.findAll.return_value = mock_found
+
+        count = LeenoFormat.sostituisci_stile_colonna(
+            nome_foglio="CONTABILITA",
+            colonna="C",
+            stile_origine="Comp-Bianche sopra_R",
+            stile_destinazione="Comp-Bianche sopraS",
+            oDoc=mock_doc
+        )
+
+        mock_doc.getSheets().getByName.assert_called_with("CONTABILITA")
+        mock_sheet.getColumns().getByIndex.assert_called_with(2) # 'C' is column index 2
+        self.assertTrue(mock_search_desc.SearchStyles)
+        self.assertEqual(mock_search_desc.SearchString, "Comp-Bianche sopra_R")
+        self.assertEqual(mock_item1.CellStyle, "Comp-Bianche sopraS")
+        self.assertEqual(mock_item2.CellStyle, "Comp-Bianche sopraS")
+        self.assertEqual(count, 4) # 1 row + 3 rows
+
+    def test_sostituisci_stile_colonna_with_single_found_cell(self):
+        mock_doc = MagicMock()
+        mock_sheet = MagicMock()
+        mock_col = MagicMock()
+        mock_search_desc = MagicMock()
+
+        mock_doc.getSheets().getByName.return_value = mock_sheet
+        mock_sheet.getColumns().getByIndex.return_value = mock_col
+        mock_col.createSearchDescriptor.return_value = mock_search_desc
+
+        # Single cell returned directly (no Count attribute)
+        mock_found = MagicMock(spec=['CellStyle', 'getRangeAddress'])
+        del mock_found.Count
+        mock_found.getRangeAddress.return_value.StartRow = 3
+        mock_found.getRangeAddress.return_value.EndRow = 3
+        mock_found.getRangeAddress.return_value.StartColumn = 2
+        mock_found.getRangeAddress.return_value.EndColumn = 2
+
+        mock_col.findAll.return_value = mock_found
+
+        count = LeenoFormat.sostituisci_stile_colonna(
+            nome_foglio=mock_sheet, # direct sheet object
+            colonna="C",
+            stile_origine="OldStyle",
+            stile_destinazione="NewStyle",
+            oDoc=mock_doc
+        )
+
+        self.assertEqual(mock_found.CellStyle, "NewStyle")
+        self.assertEqual(count, 1)
+
+
+if __name__ == '__main__':
+    unittest.main()

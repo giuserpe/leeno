@@ -117,13 +117,6 @@ def sostituisci_stile_colonna(nome_foglio, colonna, stile_origine, stile_destina
 
     oColRange = oSheet.getCellRangeByPosition(col_idx, 0, col_idx, max_row)
 
-    if hasattr(oColRange, "createReplaceDescriptor"):
-        replace = oColRange.createReplaceDescriptor()
-        replace.SearchStyles = True
-        replace.SearchString = stile_origine
-        replace.ReplaceString = stile_destinazione
-        return oColRange.replaceAll(replace)
-
     search = oColRange.createSearchDescriptor()
     search.SearchStyles = True
     search.SearchString = stile_origine

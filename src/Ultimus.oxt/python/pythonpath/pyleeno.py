@@ -4649,7 +4649,17 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
     # Verifichiamo la colonna dei totali (J, indice 9) per l'intero intervallo
     area_totali = oSheet.getCellRangeByPosition(9, SR, 9, ER)
     try:
-        if '$C$' in area_totali.queryDependents(False).AbsoluteName:
+        dependents = area_totali.queryDependents(False)
+        has_external_dependents = False
+        
+        if '$C$' in dependents.AbsoluteName:
+            sheet_index = oSheet.getRangeAddress().Sheet
+            for addr in dependents.RangeAddresses:
+                if addr.Sheet != sheet_index or addr.StartRow > ER:
+                    has_external_dependents = True
+                    break
+                    
+        if has_external_dependents:
             # Mostra graficamente le frecce delle dipendenze per aiutare l'utente
             _gotoCella(9, ER)
             comando('ClearArrowDependents')
@@ -4660,7 +4670,7 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
             # oDoc.CurrentController.select(oSheet.getCellByPosition(9, ER))
 
             Dialogs.Exclamation(Title='ATTENZIONE!',
-                Text="In questo blocco sono presenti voci da cui dipende almeno un 'Vedi Voce'.\n\n"
+                Text="In questo blocco sono presenti voci da cui dipende almeno un 'Vedi Voce' successivo alla selezione.\n\n"
                      "Cancellazione interrotta per sicurezza.")
             return
     except:
@@ -11407,11 +11417,12 @@ def MENU_filtro_descrizione():
     lista_y = []
     lista_y.append(2)
     for el in el_y:
-        y = el[0]
-        indicator.setValue(y)
-        lista_y.append(y)
-        y = el[1]
-        lista_y.append(y)
+        if el is not None:
+            y = el[0]
+            indicator.setValue(y)
+            lista_y.append(y)
+            y = el[1]
+            lista_y.append(y)
     if oSheet.Name == 'CONTABILITA':
         lista_y.append(fine - 2)
     else:

@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.138-TESTING-20260915.oxt">LeenO-3.26.0.138-TESTING-20260915.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.139-TESTING-20260916.oxt">LeenO-3.26.0.139-TESTING-20260916.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.2MB</td>
+                <td class="col-extra">2026-09-16 15:01</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.139-TESTING-20260916.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.138-TESTING-20260915.oxt">LeenO-3.26.0.138-TESTING-20260915.oxt</a> </td>
                 <td class="col-dim">4.2MB</td>
                 <td class="col-extra">2026-09-15 20:03</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.134-TESTING-20260829.oxt">LeenO-3.26.0.134-TESTING-20260829.oxt</a> </td>
-                <td class="col-dim">4.1MB</td>
-                <td class="col-extra">2026-08-29 20:38</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.134-TESTING-20260829.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,34 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-16 15:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/9b35b096959fc971c300e6a7e0667eab2652182f" target="_blank" rel="noopener"><code>9b35b09</code></a></td>
+                <td class="commit-msg">chore(meta): aggiorna versione a 3.26.0.139‑TESTING‑20260916
+- update di description.xml e leeno_version_code</td>
+            </tr>
+            <tr>
+                <td>2026-09-16 15:06</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/f32c02bf2fc712aa88889771abe8fa1ccd724d25" target="_blank" rel="noopener"><code>f32c02b</code></a></td>
+                <td class="commit-msg">refactor(computo): semplifica annotazione categorie e aggiorna stile template
+- rimuove il vincolo inutile sui fogli (COMPUTO/VARIANTE/CONTABILITA) perché la macro non può essere avviata da altri fogli
+- elimina la scrittura dei numeri categoria (super/cat/sotto), inutili
+- annota solo i titoli, racchiusi tra parentesi quadre
+- applica stile “Comp‑Bianche sopraS” se Versione ≥ 219
+
+feat(core): applica stile in S5
+- imposta “Comp‑Bianche sopraS” sulla cella C23 del foglio S5 durante autoexec_run</td>
+            </tr>
+            <tr>
                 <td>2026-09-16 06:27</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/dfdb7cb7548b2632f616dd7de67f961b36d323ff" target="_blank" rel="noopener"><code>dfdb7cb</code></a></td>
                 <td class="commit-msg">refactor(tests): remove obsolete test files for autoexec, partite provvisorie, and uno write</td>
-            </tr>
-            <tr>
-                <td>2026-09-15 20:29</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/01f6c295526a40448452e55514943e09059a62f6" target="_blank" rel="noopener"><code>01f6c29</code></a></td>
-                <td class="commit-msg">docs: aggiorna manuale con opzione 'Mostra categorie' nel dialogo Viste
-
-Aggiunto paragrafo nella sottosezione 'Suddivisione in Categorie'
-(IL COMPUTO METRICO E LA VARIANTE) che descrive la nuova opzione
-del dialogo Viste per annotare nelle colonne B e C di ogni voce
-il numero e il percorso di categoria (SuperCategoria | Categoria |
-SubCategoria). Aggiornata tabella 'Stato di revisione' (rev2.10,
-Settembre 2026). PDF rigenerato e mappa sezioni riallineata.</td>
-            </tr>
-            <tr>
-                <td>2026-09-15 20:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/3d4be0dff8bf43fdf8d89cfb5b49fd792c74232a" target="_blank" rel="noopener"><code>3d4be0d</code></a></td>
-                <td class="commit-msg">feat(ui): aggiunge opzione 'mostra categorie' nel dialogo viste
-
-Sostituisce il controllo visibilità colonne 31-33 con un flag
-persistente in configurazione ('Generale/mostra_categorie').
-Aggiunge il checkbox 'mostra_categorie' in Dialogviste_N e
-riposiziona i controlli adiacenti. L'attivazione ora chiama
-LeenoComputo.annota_categorie_voci() /
-cancella_annotazioni_categorie_voci() in entrambi i rami
-(dialogo e contabilità). Bump versione a 3.26.0.138.</td>
             </tr>
                     </tbody>
                 </table>
@@ -503,8 +496,8 @@ cancella_annotazioni_categorie_voci() in entrambi i rami
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-16 11:12 UTC</p>
-                <p>Build Commit: <code>12abd11</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-16 15:07 UTC</p>
+                <p>Build Commit: <code>9b35b09</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

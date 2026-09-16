@@ -8777,6 +8777,7 @@ def autoexec_run(oDoc=None):
     # Scrittura diretta sull'oggetto foglio per evitare attivazione GUI con GotoSheet
     oSheets = oDoc.getSheets()
     oSheets.getByName("Elenco Prezzi").getCellRangeByName("J3").String = "TOL"
+    oSheets.getByName("S5").getCellRangeByName("C23").CellStyle = 'Comp-Bianche sopraS'
 
     # Inserisce la riga "Data di aggiudicazione" in S2 subito prima di
     # "Dati CONTRATTO 1" (riga 23, col B), se non è già presente (idempotente)

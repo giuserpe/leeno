@@ -997,17 +997,17 @@ def annota_categorie_voci(oSheet=None):
       a cui la voce appartiene, separati da " | ".
     - nella colonna B (indice 1) il numero della Super Categoria, Categoria o Sotto Categoria.
     """
+    if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
+        return
+
     if oSheet is None:
         oDoc = LeenoUtils.getDocument()
         if not oDoc:
             return
         oSheet = oDoc.CurrentController.ActiveSheet
 
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        return
-
-    if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
-        return
+    # if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+    #     return
 
     stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
     stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
@@ -1047,16 +1047,16 @@ def annota_categorie_voci(oSheet=None):
             if c_style == 'livello2 valuta' or c_style_col1 == 'livello2 valuta':
                 if not has_passed_cat and not sotto_cat_title:
                     sotto_cat_title = oSheet.getCellByPosition(2, r).String
-                    sotto_cat_num = oSheet.getCellByPosition(1, r).String
+                    # sotto_cat_num = oSheet.getCellByPosition(1, r).String
             elif c_style == 'Livello-1-scritta' or c_style_col1 == 'Livello-1-scritta':
                 has_passed_cat = True
                 if not cat_title:
                     cat_title = oSheet.getCellByPosition(2, r).String
-                    cat_num = oSheet.getCellByPosition(1, r).String
+                    # cat_num = oSheet.getCellByPosition(1, r).String
             elif c_style == 'Livello-0-scritta' or c_style_col1 == 'Livello-0-scritta':
                 if not super_cat_title:
                     super_cat_title = oSheet.getCellByPosition(2, r).String
-                    super_cat_num = oSheet.getCellByPosition(1, r).String
+                    # super_cat_num = oSheet.getCellByPosition(1, r).String
                 break
 
             r -= 1
@@ -1066,11 +1066,14 @@ def annota_categorie_voci(oSheet=None):
         str_titoli = " | ".join(titoli)
 
         # Seleziona il numero piu profondo disponibile (Sotto Categoria -> Categoria -> Super Categoria)
-        num_cat = sotto_cat_num or cat_num or super_cat_num
+        # num_cat = sotto_cat_num or cat_num or super_cat_num
 
         # Annota nei campi del primo rigo della voce (start_row)
-        oSheet.getCellByPosition(2, start_row).String = str_titoli
-        oSheet.getCellByPosition(1, start_row).String = num_cat
+        oSheet.getCellByPosition(2, start_row).String = "[" + str_titoli + "]"
+        ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
+        if ver_tmpl >= 219:
+            oSheet.getCellByPosition(2, start_row).CellStyle = "Comp-Bianche sopraS"
+        # oSheet.getCellByPosition(1, start_row).String = num_cat
 
         row = end_row + 1
 

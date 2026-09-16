@@ -82,32 +82,53 @@ def col_to_index(col):
 
 def sostituisci_stile_colonna(nome_foglio, colonna, stile_origine, stile_destinazione, oDoc=None):
     '''
-    Nell'ambito di un foglio specificato, per una determinata colonna,
-    sostituisce uno stile di cella di origine con uno di destinazione.
+    Nell'ambito di uno sheet - solo per una specifica colonna,
+    sostituisce un dato stile di cella con uno diverso.
+    Esempio: foglio "CONTABILITA", colonna "C", stile cella "Comp-Bianche sopra_R" > "Comp-Bianche sopraS"
 
-    :param nome_foglio: str o object - Nome del foglio (es. "CONTABILITA") oppure oggetto foglio UNO
-    :param colonna: str o int - Colonna (es. "C", "AA" oppure indice 2)
-    :param stile_origine: str - Nome dello stile di cella da sostituire (es. "Comp-Bianche sopra_R")
-    :param stile_destinazione: str - Nome del nuovo stile di cella da applicare (es. "Comp-Bianche sopraS")
-    :param oDoc: oggetto documento Calc (opzionale)
-    :return: int - Numero di celle aggiornate
+    :param nome_foglio: str, object o None - Nome del foglio (es. "CONTABILITA"), oggetto foglio UNO,
+                        oppure None/stringa vuota per usare il foglio attivo.
+    :param colonna: str o int - Colonna (es. "C", "AA" oppure indice 0-based/1-based).
+    :param stile_origine: str - Nome dello stile di cella da sostituire.
+    :param stile_destinazione: str - Nome del nuovo stile di cella da applicare.
+    :param oDoc: oggetto documento Calc (opzionale).
+    :return: int - Numero di celle/intervalli modificati.
     '''
     if oDoc is None:
         oDoc = LeenoUtils.getDocument()
 
-    if isinstance(nome_foglio, str):
+    if not nome_foglio:
+        oSheet = oDoc.CurrentController.ActiveSheet
+    elif isinstance(nome_foglio, str):
         oSheet = oDoc.getSheets().getByName(nome_foglio)
     else:
         oSheet = nome_foglio
 
     col_idx = col_to_index(colonna)
-    oCol = oSheet.getColumns().getByIndex(col_idx)
 
-    search = oCol.createSearchDescriptor()
+    try:
+        import SheetUtils
+        max_row = SheetUtils.getLastUsedRow(oSheet)
+    except Exception:
+        max_row = 1048575
+
+    if max_row < 0:
+        max_row = 1048575
+
+    oColRange = oSheet.getCellRangeByPosition(col_idx, 0, col_idx, max_row)
+
+    if hasattr(oColRange, "createReplaceDescriptor"):
+        replace = oColRange.createReplaceDescriptor()
+        replace.SearchStyles = True
+        replace.SearchString = stile_origine
+        replace.ReplaceString = stile_destinazione
+        return oColRange.replaceAll(replace)
+
+    search = oColRange.createSearchDescriptor()
     search.SearchStyles = True
     search.SearchString = stile_origine
 
-    found = oCol.findAll(search)
+    found = oColRange.findAll(search)
     updated_count = 0
 
     if found is not None:

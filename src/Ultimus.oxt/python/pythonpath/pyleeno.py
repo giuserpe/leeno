@@ -9153,8 +9153,9 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
 
             return
 
-        ch_rigenera = Dialogs.YesNoDialog(Title='Informazione',
-                                          Text='Vuoi rigenerare le formule?')
+        # ch_rigenera = Dialogs.YesNoDialog(Title='Informazione',
+        #                                   Text='Vuoi rigenerare le formule?')
+        ch_rigenera = 0
 
         sproteggi_sheet_TUTTE()
         if oDoc.getSheets().hasByName('S4'):

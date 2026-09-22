@@ -1,0 +1,130 @@
+/* LeenO WP Filebase Compatibility — Foglio di stile
+ *
+ * ARCHITETTURA:
+ * Questo plugin genera HTML con le stesse classi di leeno-theme:
+ *   .leeno-table-wrap, .leeno-table, .btn-leeno-download,
+ *   .col-name, .col-date, .col-dim, .col-dl
+ *
+ * Quando leeno-theme è attivo, tutti gli stili sopra sono già definiti
+ * nel tema — non vengono ridefiniti qui per evitare conflitti.
+ *
+ * Questo foglio gestisce solo:
+ *   1. Variabili CSS di fallback (utili se il tema attivo è diverso)
+ *   2. Elementi esclusivi del plugin: .wpfb-badge, .wpfb-file-link,
+ *      .wpfb-file-size, .archivio-header, .archivio-ver-badge
+ *   3. Google Fonts (fallback, leeno-theme li carica già)
+ */
+
+/* ——— Fonts (fallback per temi diversi da leeno-theme) ——— */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ——— Variabili CSS di fallback ——— */
+:root {
+    --bg-primary:         var(--bg-primary,         #f0f4e0);
+    --bg-dark:            var(--bg-dark,             #121a23);
+    --bg-green:           var(--bg-green,            #0e1a08);
+    --accent-cyan:        var(--accent-cyan,         #aad400);
+    --accent-cyan-hover:  var(--accent-cyan-hover,   #8fb200);
+    --accent-rust:        var(--accent-rust,         #ff4d2e);
+    --accent-rust-hover:  var(--accent-rust-hover,   #ff6b50);
+    --text-primary:       var(--text-primary,        #ffffff);
+    --text-secondary:     var(--text-secondary,      #8896ab);
+    --text-dark:          var(--text-dark,           #1a2010);
+    --font-display:       var(--font-display,        'Space Grotesk', sans-serif);
+    --font-body:          var(--font-body,           'Inter', sans-serif);
+    --font-mono:          var(--font-mono,           'JetBrains Mono', monospace);
+}
+
+/* ——— Wrapper lista file ——— */
+.wpfb-file-list {
+    margin: 20px 0;
+}
+
+/* ——— Archivio header (identico al tema) ——— */
+.archivio-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+}
+
+.archivio-count {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dark);
+}
+
+/* ——— Badge versione inline ——— */
+.archivio-ver-badge {
+    display: inline-block;
+    background: var(--bg-dark);
+    color: var(--accent-cyan);
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* ——— Badge ULTIMA (elemento esclusivo del plugin) ——— */
+.wpfb-badge {
+    display: inline-block;
+    background: var(--accent-cyan);
+    color: #000;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* ——— Link file singolo (shortcode tag=file) ——— */
+.wpfb-file-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #455600;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: var(--font-body);
+    transition: color 0.2s;
+}
+
+.wpfb-file-link:hover {
+    color: var(--accent-rust);
+    text-decoration: underline;
+}
+
+.wpfb-file-link svg {
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+.wpfb-file-size {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+}
+
+/* ——— Fallback tabella (solo se leeno-theme NON è attivo) ——— */
+/* Se .leeno-table non è già definita dal tema, forniamo un minimo */
+.leeno-table-wrap:not(.theme-styled) .leeno-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+/* ——— Responsive: nascondi colonne secondarie su mobile ——— */
+@media (max-width: 768px) {
+    .leeno-table .col-date,
+    .leeno-table .col-dim {
+        display: none;
+    }
+}

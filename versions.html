@@ -452,25 +452,33 @@
                     <tbody>
                         
             <tr>
-                <td>2026-09-23 14:49</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/cd9270f32bbda890dc793b95ad0a1af4f763a0ea" target="_blank" rel="noopener"><code>cd9270f</code></a></td>
-                <td class="commit-msg">Update LeenO WP Filebase Compatibility plugin and theme integration
+                <td>2026-09-23 16:01</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/bd9acdaeb259999c98eabd2b5c74eda4d41084c7" target="_blank" rel="noopener"><code>bd9acda</code></a></td>
+                <td class="commit-msg">Merge pull request #72 from giuserpe/fix-wp-filebase-compat-fallback-985950682380274812
 
-- Updated plugin version to 1.3.0 and improved shortcode handling for file retrieval.
-- Removed dependency on WP Filebase plugin, replacing it with custom functions for file and category management.
-- Enhanced file listing and download functionality in the theme's archive and price list pages.
-- Improved error handling and user feedback for missing file catalogs.
-- Refactored database queries for better performance and compatibility with the new plugin structure.</td>
+Fix WP Filebase compatibility fallback on site prezzari and archivio pages</td>
             </tr>
             <tr>
-                <td>2026-09-23 07:21</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c06e2f2782ad39ed5044dc45732c30948912e43c" target="_blank" rel="noopener"><code>c06e2f2</code></a></td>
-                <td class="commit-msg">fix(version): update version to 3.26.0.143-TESTING-20260923</td>
+                <td>2026-09-23 15:55</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3a932e48ddcb4e1aa2c02c61e2d2a768432346e1" target="_blank" rel="noopener"><code>3a932e4</code></a></td>
+                <td class="commit-msg">fix(sito): register wpfilebase shortcode in theme functions for software download page
+
+- Add shortcode_exists('wpfilebase') check and register leeno_fc_shortcode on init action in functions.php.
+- Add leeno_fc_list and leeno_fc_single helper functions to theme functions.php.
+- Ensure pages using [wpfilebase] shortcode (like /scarica-leeno/) render download tables directly from disk without plugin dependence.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
             <tr>
-                <td>2026-09-23 07:20</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/2319cb5b243fd43688bbcae2f469c0876b52721c" target="_blank" rel="noopener"><code>2319cb5</code></a></td>
-                <td class="commit-msg">fix: update template path to use uno.fileUrlToSystemPath for consistency</td>
+                <td>2026-09-23 15:28</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/b9fedea26f0e44ca43de031dd09ac3696040eb07" target="_blank" rel="noopener"><code>b9fedea</code></a></td>
+                <td class="commit-msg">fix(sito): remove invalid nested plugin directory and fix WP Filebase header issue
+
+- Remove duplicate nested subfolder @SITO/leeno-filebase-compat/leeno-filebase-compat/ to resolve the 'plugin ha un'intestazione non valida' error when WordPress scans plugins.
+- Embed leeno_fc_* fallback functions in theme functions.php.
+- Remove hard blocking checks in page-prezzari.php and page-archivio-download.php.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -494,8 +502,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-23 15:56 UTC</p>
-                <p>Build Commit: <code>3a932e4</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-23 16:01 UTC</p>
+                <p>Build Commit: <code>bd9acda</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

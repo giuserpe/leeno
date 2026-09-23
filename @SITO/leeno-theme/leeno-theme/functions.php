@@ -516,3 +516,112 @@ if ( ! function_exists('leeno_fc_folder_list') ) {
         return leeno_fc_table($files);
     }
 }
+
+if ( ! function_exists('leeno_fc_descendant_cat_ids') ) {
+    function leeno_fc_descendant_cat_ids($cat) {
+        $cat = (int) $cat;
+        $ids = [$cat];
+        if (!$cat || !leeno_fc_cats_ready()) {
+            return $ids;
+        }
+        global $wpdb;
+        $table = leeno_fc_cats_table();
+        $path = leeno_fc_cat_relpath($cat);
+        if ($path === '') {
+            $children = $wpdb->get_col($wpdb->prepare(
+                "SELECT cat_id FROM {$table} WHERE cat_parent = %d",
+                $cat
+            ));
+            return array_map('intval', array_merge($ids, $children ?: []));
+        }
+        $like = $wpdb->esc_like($path) . '/%';
+        $children = $wpdb->get_col($wpdb->prepare(
+            "SELECT cat_id FROM {$table} WHERE cat_id = %d OR cat_path = %s OR cat_path LIKE %s",
+            $cat,
+            $path,
+            $like
+        ));
+        return array_map('intval', $children ?: $ids);
+    }
+}
+
+if ( ! function_exists('leeno_fc_single') ) {
+    function leeno_fc_single($id) {
+        global $wpdb;
+        if (!leeno_fc_ready()) {
+            return '';
+        }
+
+        $table = leeno_fc_files_table();
+        $file = $wpdb->get_row($wpdb->prepare(
+            "SELECT file_name, file_display_name, file_size, file_path, file_category
+             FROM {$table} WHERE file_id = %d",
+            $id
+        ), ARRAY_A);
+
+        if (!$file) {
+            return '';
+        }
+
+        $url  = leeno_fc_file_url($file);
+        $name = $file['file_display_name'] ?: $file['file_name'];
+        $size = $file['file_size'] ? leeno_fc_bytes($file['file_size']) : '';
+
+        $out  = '<a href="' . esc_url($url) . '" class="btn-leeno-download" download>';
+        $out .= leeno_fc_svg_dl();
+        $out .= '<span>' . esc_html($name);
+        if ($size) {
+            $out .= ' (' . esc_html($size) . ')';
+        }
+        $out .= '</span></a>';
+        return $out;
+    }
+}
+
+if ( ! function_exists('leeno_fc_list') ) {
+    function leeno_fc_list($cat, $descendants = false) {
+        global $wpdb;
+        if (!leeno_fc_ready()) {
+            return leeno_fc_folder_list($cat);
+        }
+
+        $table = leeno_fc_files_table();
+        $ids = $descendants ? leeno_fc_descendant_cat_ids($cat) : [(int) $cat];
+        $in  = implode(',', array_map('intval', $ids));
+        if ($in === '') {
+            return leeno_fc_folder_list($cat);
+        }
+
+        $files = $wpdb->get_results(
+            "SELECT file_name, file_display_name, file_size, file_date, file_path, file_category
+             FROM {$table}
+             WHERE file_category IN ({$in})
+             ORDER BY file_date DESC",
+            ARRAY_A
+        );
+
+        return empty($files) ? leeno_fc_folder_list($cat) : leeno_fc_table($files);
+    }
+}
+
+if ( ! function_exists('leeno_fc_shortcode') ) {
+    function leeno_fc_shortcode($atts) {
+        $atts = shortcode_atts(array('tag' => 'file', 'id' => ''), $atts);
+        $id = intval($atts['id']);
+
+        if ($atts['tag'] === 'file') {
+            return leeno_fc_single($id);
+        } elseif ($atts['tag'] === 'list') {
+            return leeno_fc_list($id, false);
+        } elseif ($atts['tag'] === 'browser') {
+            return leeno_fc_list($id, true);
+        }
+        return '';
+    }
+}
+
+add_action('init', function() {
+    if ( ! shortcode_exists('wpfilebase') ) {
+        add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+    }
+});

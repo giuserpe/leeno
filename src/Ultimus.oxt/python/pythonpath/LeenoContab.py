@@ -648,7 +648,7 @@ def generaContabilita(oDoc):
             oSheet = oDoc.Sheets.getByName('CONTABILITA')
         else:
             # Costruisce il percorso del template
-            template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+            template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
             
             # Carica il template in modalità nascosta
             oTemplate = None
@@ -3101,7 +3101,7 @@ def setup_foglio_CdP(oDoc):
     Ritorna l'oggetto sheet o None se fallisce.
     '''
     # Costruisce il percorso del template
-    template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+    template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
 
     # Determina la posizione di inserimento: a destra di SAL o alla fine
     pos = oDoc.getSheets().Count

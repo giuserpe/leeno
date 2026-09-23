@@ -10,6 +10,7 @@ import LeenoSheetUtils
 import LeenoEvents
 import DocUtils
 import Dialogs
+import uno
 import pyleeno as PL
 
 import LeenoDialogs as DLG
@@ -116,7 +117,7 @@ def inizializza_analisi(oDoc=None, nuovaScheda=False):
 
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         # Costruisce il percorso del template
-        template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+        template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
 
         # Carica il template in modalità nascosta
         oTemplate = DocUtils.loadDocument(template_path, Hidden=True)

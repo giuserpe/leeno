@@ -452,6 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-23 19:52</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/e8ce470770a98a5dbcada783a3108889fdbf02b7" target="_blank" rel="noopener"><code>e8ce470</code></a></td>
+                <td class="commit-msg">feat(site): aggiorna LeenO WP Filebase Compatibility a v1.5.0
+- neutralizza WP Filebase prima del caricamento tramite filtro option_active_plugins
+- aggiunge fallback robusto con rimozione shortcode e registrazione sicura su init (priorità 1)
+- introduce LEENO_FC_ROOT_REL e funzioni helper protette da function_exists
+- aggiunge gestione percorsi relativi, encoding, lookup per nome file e URL pubbliche
+- estende supporto categorie discendenti e fallback cartelle fisiche
+- migliora tabella file: badge versione, badge ULTIMA, estrazione versioni, layout identico a leeno-theme
+- aggiunge SVG download centralizzato e funzioni di normalizzazione path
+- incrementa versione plugin a 1.5.0
+
+feat(theme): aggiunge safety‑net shortcode wpfilebase nel tema
+- registra shortcode wpfilebase se il plugin non è attivo
+- rimuove shortcode legacy prima della registrazione per scavalcare WP Filebase rotto
+- priorità 1 per garantire override sicuro
+
+chore(meta): aggiorna versione a 3.26.0.141‑TESTING‑20260922
+- update di description.xml e leeno_version_code</td>
+            </tr>
+            <tr>
                 <td>2026-09-23 16:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/bd9acdaeb259999c98eabd2b5c74eda4d41084c7" target="_blank" rel="noopener"><code>bd9acda</code></a></td>
                 <td class="commit-msg">Merge pull request #72 from giuserpe/fix-wp-filebase-compat-fallback-985950682380274812
@@ -466,17 +487,6 @@ Fix WP Filebase compatibility fallback on site prezzari and archivio pages</td>
 - Add shortcode_exists('wpfilebase') check and register leeno_fc_shortcode on init action in functions.php.
 - Add leeno_fc_list and leeno_fc_single helper functions to theme functions.php.
 - Ensure pages using [wpfilebase] shortcode (like /scarica-leeno/) render download tables directly from disk without plugin dependence.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-09-23 15:28</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b9fedea26f0e44ca43de031dd09ac3696040eb07" target="_blank" rel="noopener"><code>b9fedea</code></a></td>
-                <td class="commit-msg">fix(sito): remove invalid nested plugin directory and fix WP Filebase header issue
-
-- Remove duplicate nested subfolder @SITO/leeno-filebase-compat/leeno-filebase-compat/ to resolve the 'plugin ha un'intestazione non valida' error when WordPress scans plugins.
-- Embed leeno_fc_* fallback functions in theme functions.php.
-- Remove hard blocking checks in page-prezzari.php and page-archivio-download.php.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
@@ -502,8 +512,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-23 16:01 UTC</p>
-                <p>Build Commit: <code>bd9acda</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-23 19:53 UTC</p>
+                <p>Build Commit: <code>e8ce470</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

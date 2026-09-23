@@ -43,7 +43,9 @@ function leeno_fc_ready() {
     static $ok = null;
     if ($ok === null) {
         $table = leeno_fc_files_table();
-        $ok = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+        $has_table = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+        $has_dir   = is_dir(leeno_fc_root_dir());
+        $ok = $has_table || $has_dir;
     }
     return $ok;
 }

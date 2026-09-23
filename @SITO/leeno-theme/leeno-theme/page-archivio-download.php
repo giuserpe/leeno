@@ -45,39 +45,46 @@ get_header();
         <?php else :
             global $wpdb;
 
+            $files = array();
             $files_table = $wpdb->prefix . 'wpfb_files';
             $cats_table  = $wpdb->prefix . 'wpfb_cats';
-            $has_repo    = (bool) $wpdb->get_var("SHOW COLUMNS FROM {$files_table} LIKE 'file_repository'");
+            $has_table   = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $files_table));
 
-            $cat_filter = "f.file_category IN (
-                        SELECT cat_id FROM {$cats_table}
-                        WHERE cat_id = 199 OR cat_parent = 199
-                    )
-                 OR f.file_category = 199";
+            if ( $has_table ) {
+                $has_repo = (bool) $wpdb->get_var("SHOW COLUMNS FROM {$files_table} LIKE 'file_repository'");
 
-            $where = $has_repo
-                ? "(f.file_repository = 199 OR {$cat_filter})"
-                : "({$cat_filter})";
+                $cat_filter = "f.file_category IN (
+                            SELECT cat_id FROM {$cats_table}
+                            WHERE cat_id = 199 OR cat_parent = 199
+                        )
+                     OR f.file_category = 199";
 
-            $files = $wpdb->get_results(
-                "SELECT f.*, c.cat_name
-                 FROM {$files_table} f
-                 LEFT JOIN {$cats_table} c ON f.file_category = c.cat_id
-                 WHERE {$where}
-                 ORDER BY f.file_date DESC, f.file_display_name ASC"
-            );
+                $where = $has_repo
+                    ? "(f.file_repository = 199 OR {$cat_filter})"
+                    : "({$cat_filter})";
 
-            if ( empty( $files ) ) {
                 $files = $wpdb->get_results(
                     "SELECT f.*, c.cat_name
                      FROM {$files_table} f
                      LEFT JOIN {$cats_table} c ON f.file_category = c.cat_id
-                     WHERE f.file_path LIKE 'LeenO/Archivio/%'
+                     WHERE {$where}
                      ORDER BY f.file_date DESC, f.file_display_name ASC"
                 );
+
+                if ( empty( $files ) ) {
+                    $files = $wpdb->get_results(
+                        "SELECT f.*, c.cat_name
+                         FROM {$files_table} f
+                         LEFT JOIN {$cats_table} c ON f.file_category = c.cat_id
+                         WHERE f.file_path LIKE 'LeenO/Archivio/%'
+                         ORDER BY f.file_date DESC, f.file_display_name ASC"
+                    );
+                }
             }
 
-            if ( empty( $files ) ) : ?>
+            if ( empty( $files ) && function_exists('leeno_fc_folder_list') ) :
+                echo leeno_fc_folder_list(199);
+            elseif ( empty( $files ) ) : ?>
                 <p class="prezzari-error">Nessun file trovato nella repository.</p>
 
                 <?php if ( current_user_can('administrator') ) :

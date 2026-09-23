@@ -3,7 +3,7 @@
  * Plugin Name: LeenO WP Filebase Compatibility
  * Plugin URI: https://leeno.org
  * Description: Interpreta shortcode [wpfilebase] legacy senza dipendere dal plugin WP Filebase
- * Version: 1.3.0
+ * Version: 1.5.0
  * Author: LeenO Team
  * License: GPL2
  * Text Domain: leeno-filebase-compat
@@ -13,12 +13,50 @@
 if (!defined('ABSPATH')) exit;
 
 define('LEENO_FC_URL', plugin_dir_url(__FILE__));
-define('LEENO_FC_VERSION', '1.3.0');
+define('LEENO_FC_VERSION', '1.5.0');
 define('LEENO_FC_ROOT_REL', 'uploads/filebase');
 
-add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+// -----------------------------------------------------------------------
+// NEUTRALIZZA WP FILEBASE PRIMA CHE VENGA CARICATO
+//
+// WP Filebase è broken su PHP 8+ e genera fatal error al caricamento.
+// L'hook option_active_plugins scatta PRIMA che WordPress carichi i plugin,
+// quindi rimuovendo il plugin dalla lista lo preveniamo del tutto.
+// Questo è il pattern WordPress-safe per sostituire/disabilitare un plugin rotto.
+// -----------------------------------------------------------------------
+add_filter('option_active_plugins', function($plugins) {
+    // Slug esatti noti del plugin WP Filebase (cartella/file-main.php)
+    $wpfb_exact = [
+        'wp-filebase/wp-filebase.php',
+        'wp-filebase/wpfilebase.php',
+        'wp-filebase-pro/wp-filebase-pro.php',
+        'wpfilebase/wpfilebase.php',
+        'wpfilebase/wp-filebase.php',
+    ];
+    // Ricerca per stringa parziale nella cartella (fallback robusto)
+    $filtered = [];
+    foreach ($plugins as $plugin) {
+        $in_exact = in_array($plugin, $wpfb_exact, true);
+        $in_partial = (
+            stripos($plugin, 'wpfilebase') !== false ||
+            stripos($plugin, 'wp-filebase') !== false
+        ) && $plugin !== plugin_basename(__FILE__);
+        if (!$in_exact && !$in_partial) {
+            $filtered[] = $plugin;
+        }
+    }
+    return $filtered;
+});
+
+// Registra lo shortcode con priorità 1 su init (defensive: rimuovi prima
+// nel caso WP Filebase fosse caricato in altro modo).
+add_action('init', function() {
+    remove_shortcode('wpfilebase');
+    add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+}, 1);
 add_action('wp_enqueue_scripts', 'leeno_fc_enqueue');
 
+if ( ! function_exists('leeno_fc_enqueue') ) {
 function leeno_fc_enqueue() {
     wp_enqueue_style(
         'leeno-fc',
@@ -27,17 +65,23 @@ function leeno_fc_enqueue() {
         LEENO_FC_VERSION
     );
 }
+}
 
+if ( ! function_exists('leeno_fc_files_table') ) {
 function leeno_fc_files_table() {
     global $wpdb;
     return (isset($wpdb) && is_object($wpdb) && isset($wpdb->prefix)) ? $wpdb->prefix . 'wpfb_files' : 'wp_wpfb_files';
 }
+}
 
+if ( ! function_exists('leeno_fc_cats_table') ) {
 function leeno_fc_cats_table() {
     global $wpdb;
     return (isset($wpdb) && is_object($wpdb) && isset($wpdb->prefix)) ? $wpdb->prefix . 'wpfb_cats' : 'wp_wpfb_cats';
 }
+}
 
+if ( ! function_exists('leeno_fc_ready') ) {
 function leeno_fc_ready() {
     global $wpdb;
     static $ok = null;
@@ -52,7 +96,9 @@ function leeno_fc_ready() {
     }
     return $ok;
 }
+}
 
+if ( ! function_exists('leeno_fc_cats_ready') ) {
 function leeno_fc_cats_ready() {
     global $wpdb;
     static $ok = null;
@@ -66,7 +112,9 @@ function leeno_fc_cats_ready() {
     }
     return $ok;
 }
+}
 
+if ( ! function_exists('leeno_fc_field') ) {
 function leeno_fc_field($file, $key) {
     if (is_array($file)) {
         if (isset($file[$key])) {
@@ -80,17 +128,23 @@ function leeno_fc_field($file, $key) {
     }
     return '';
 }
+}
 
+if ( ! function_exists('leeno_fc_root_dir') ) {
 function leeno_fc_root_dir() {
     return WP_CONTENT_DIR . '/' . LEENO_FC_ROOT_REL;
 }
+}
 
+if ( ! function_exists('leeno_fc_norm_rel') ) {
 function leeno_fc_norm_rel($rel) {
     $rel = str_replace('\\', '/', (string) $rel);
     $rel = preg_replace('#/+#', '/', $rel);
     return trim($rel, '/');
 }
+}
 
+if ( ! function_exists('leeno_fc_encode_rel') ) {
 function leeno_fc_encode_rel($rel) {
     $rel = leeno_fc_norm_rel($rel);
     if ($rel === '') {
@@ -99,7 +153,9 @@ function leeno_fc_encode_rel($rel) {
     $parts = array_map('rawurlencode', explode('/', $rel));
     return implode('/', $parts);
 }
+}
 
+if ( ! function_exists('leeno_fc_rel_url') ) {
 function leeno_fc_rel_url($rel) {
     $enc = leeno_fc_encode_rel($rel);
     if ($enc === '') {
@@ -107,7 +163,9 @@ function leeno_fc_rel_url($rel) {
     }
     return content_url('/' . LEENO_FC_ROOT_REL . '/' . $enc);
 }
+}
 
+if ( ! function_exists('leeno_fc_rel_exists') ) {
 function leeno_fc_rel_exists($rel) {
     $rel = leeno_fc_norm_rel($rel);
     if ($rel === '') {
@@ -116,7 +174,9 @@ function leeno_fc_rel_exists($rel) {
     $abs = leeno_fc_root_dir() . '/' . $rel;
     return is_file($abs);
 }
+}
 
+if ( ! function_exists('leeno_fc_cat_relpath') ) {
 function leeno_fc_cat_relpath($cat_id) {
     static $cache = [];
     $cat_id = (int) $cat_id;
@@ -142,7 +202,9 @@ function leeno_fc_cat_relpath($cat_id) {
     $cache[$cat_id] = $rel;
     return $rel;
 }
+}
 
+if ( ! function_exists('leeno_fc_index_by_name') ) {
 function leeno_fc_index_by_name() {
     static $index = null;
     if ($index !== null) {
@@ -180,7 +242,9 @@ function leeno_fc_index_by_name() {
     }
     return $index;
 }
+}
 
+if ( ! function_exists('leeno_fc_find_rel_by_name') ) {
 function leeno_fc_find_rel_by_name($filename) {
     $filename = basename((string) $filename);
     if ($filename === '' || $filename === '.' || $filename === '..') {
@@ -189,10 +253,12 @@ function leeno_fc_find_rel_by_name($filename) {
     $index = leeno_fc_index_by_name();
     return $index[$filename] ?? '';
 }
+}
 
 /**
  * URL pubblica del file. Accetta riga DB (oggetto o array) con file_path/file_name.
  */
+if ( ! function_exists('leeno_fc_file_url') ) {
 function leeno_fc_file_url($file) {
     $path = leeno_fc_norm_rel(leeno_fc_field($file, 'file_path'));
     $name = basename((string) leeno_fc_field($file, 'file_name'));
@@ -231,7 +297,9 @@ function leeno_fc_file_url($file) {
     }
     return '';
 }
+}
 
+if ( ! function_exists('leeno_fc_shortcode') ) {
 function leeno_fc_shortcode($atts) {
     $atts = shortcode_atts(array('tag' => 'file', 'id' => ''), $atts);
     $id = intval($atts['id']);
@@ -245,7 +313,9 @@ function leeno_fc_shortcode($atts) {
     }
     return '';
 }
+}
 
+if ( ! function_exists('leeno_fc_single') ) {
 function leeno_fc_single($id) {
     global $wpdb;
     if (!leeno_fc_ready()) {
@@ -276,7 +346,9 @@ function leeno_fc_single($id) {
     $out .= '</span></a>';
     return $out;
 }
+}
 
+if ( ! function_exists('leeno_fc_descendant_cat_ids') ) {
 function leeno_fc_descendant_cat_ids($cat) {
     $cat = (int) $cat;
     $ids = [$cat];
@@ -302,7 +374,9 @@ function leeno_fc_descendant_cat_ids($cat) {
     ));
     return array_map('intval', $children ?: $ids);
 }
+}
 
+if ( ! function_exists('leeno_fc_list') ) {
 function leeno_fc_list($cat, $descendants = false) {
     global $wpdb;
     if (!leeno_fc_ready()) {
@@ -326,7 +400,9 @@ function leeno_fc_list($cat, $descendants = false) {
 
     return empty($files) ? leeno_fc_folder_list($cat) : leeno_fc_table($files);
 }
+}
 
+if ( ! function_exists('leeno_fc_folder_list') ) {
 function leeno_fc_folder_list($cat = 0) {
     $rel = leeno_fc_cat_relpath((int) $cat);
     if ($rel === '') {
@@ -361,7 +437,9 @@ function leeno_fc_folder_list($cat = 0) {
     usort($files, fn($a, $b) => strtotime($b['file_date']) <=> strtotime($a['file_date']));
     return leeno_fc_table($files);
 }
+}
 
+if ( ! function_exists('leeno_fc_svg_dl') ) {
 function leeno_fc_svg_dl() {
     return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
          . ' stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -370,12 +448,14 @@ function leeno_fc_svg_dl() {
          . '<line x1="12" y1="15" x2="12" y2="3"/>'
          . '</svg>';
 }
+}
 
 /**
  * Genera la tabella file con classi identiche a leeno-theme
  * (page-archivio-download.php): .leeno-table-wrap, .leeno-table,
  * .col-name, .col-date, .col-dim, .col-dl, .btn-leeno-download.
  */
+if ( ! function_exists('leeno_fc_table') ) {
 function leeno_fc_table($files) {
     if (empty($files)) return '';
 
@@ -442,11 +522,14 @@ function leeno_fc_table($files) {
 
     return $html;
 }
+}
 
+if ( ! function_exists('leeno_fc_bytes') ) {
 function leeno_fc_bytes($b) {
     $u = ['B', 'KB', 'MB', 'GB'];
     $b = max($b, 0);
     $p = floor(($b ? log($b) : 0) / log(1024));
     $b /= (1 << (10 * $p));
     return round($b, 2) . ' ' . $u[$p];
+}
 }

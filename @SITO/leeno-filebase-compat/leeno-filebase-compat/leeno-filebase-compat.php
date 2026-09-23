@@ -30,21 +30,24 @@ function leeno_fc_enqueue() {
 
 function leeno_fc_files_table() {
     global $wpdb;
-    return $wpdb->prefix . 'wpfb_files';
+    return (isset($wpdb) && is_object($wpdb) && isset($wpdb->prefix)) ? $wpdb->prefix . 'wpfb_files' : 'wp_wpfb_files';
 }
 
 function leeno_fc_cats_table() {
     global $wpdb;
-    return $wpdb->prefix . 'wpfb_cats';
+    return (isset($wpdb) && is_object($wpdb) && isset($wpdb->prefix)) ? $wpdb->prefix . 'wpfb_cats' : 'wp_wpfb_cats';
 }
 
 function leeno_fc_ready() {
     global $wpdb;
     static $ok = null;
     if ($ok === null) {
-        $table = leeno_fc_files_table();
-        $has_table = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
-        $has_dir   = is_dir(leeno_fc_root_dir());
+        $has_table = false;
+        if (isset($wpdb) && is_object($wpdb) && method_exists($wpdb, 'get_var')) {
+            $table = leeno_fc_files_table();
+            $has_table = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+        }
+        $has_dir = is_dir(leeno_fc_root_dir());
         $ok = $has_table || $has_dir;
     }
     return $ok;
@@ -54,8 +57,12 @@ function leeno_fc_cats_ready() {
     global $wpdb;
     static $ok = null;
     if ($ok === null) {
-        $table = leeno_fc_cats_table();
-        $ok = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+        if (isset($wpdb) && is_object($wpdb) && method_exists($wpdb, 'get_var')) {
+            $table = leeno_fc_cats_table();
+            $ok = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+        } else {
+            $ok = false;
+        }
     }
     return $ok;
 }

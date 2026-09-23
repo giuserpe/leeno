@@ -40,15 +40,12 @@ get_header();
             <?php endif; ?>
 
             <?php
-        if ( ! function_exists('leeno_fc_ready') || ! leeno_fc_ready() ) : ?>
-            <p class="prezzari-error">Catalogo file non disponibile. Attiva il plugin LeenO WP Filebase Compatibility.</p>
-        <?php else :
             global $wpdb;
 
             $files = array();
-            $files_table = $wpdb->prefix . 'wpfb_files';
-            $cats_table  = $wpdb->prefix . 'wpfb_cats';
-            $has_table   = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $files_table));
+            $files_table = isset($wpdb->prefix) ? $wpdb->prefix . 'wpfb_files' : 'wp_wpfb_files';
+            $cats_table  = isset($wpdb->prefix) ? $wpdb->prefix . 'wpfb_cats' : 'wp_wpfb_cats';
+            $has_table   = (isset($wpdb) && is_object($wpdb)) ? (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $files_table)) : false;
 
             if ( $has_table ) {
                 $has_repo = (bool) $wpdb->get_var("SHOW COLUMNS FROM {$files_table} LIKE 'file_repository'");
@@ -169,7 +166,6 @@ get_header();
             </div>
 
             <?php endif; // files
-        endif; // leeno_fc_ready
         ?>
             </div><!-- .content-main -->
 

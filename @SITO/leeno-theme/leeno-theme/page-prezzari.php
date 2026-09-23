@@ -45,10 +45,6 @@ get_header();
             <?php endif; ?>
 
             <?php
-        if ( ! function_exists('leeno_fc_ready') || ! leeno_fc_ready() ) : ?>
-            <p class="prezzari-error">Catalogo file non disponibile. Attiva il plugin LeenO WP Filebase Compatibility.</p>
-        <?php else :
-
             global $wpdb;
 
             $all_files = array();
@@ -58,9 +54,11 @@ get_header();
             $has_table = (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $files_table));
 
             if ( $has_table ) {
+                $cats_table = isset($wpdb->prefix) ? $wpdb->prefix . 'wpfb_cats' : 'wp_wpfb_cats';
+
                 // Cerchiamo l'ID della categoria principale dei listini
                 $listini_cat_id = $wpdb->get_var(
-                    "SELECT cat_id FROM {$wpdb->prefix}wpfb_cats
+                    "SELECT cat_id FROM {$cats_table}
                      WHERE cat_name = 'Listini' OR cat_name = 'Prezzari'
                      LIMIT 1"
                 );
@@ -68,7 +66,7 @@ get_header();
                 $parent_id = $listini_cat_id ? (int)$listini_cat_id : 0;
 
                 // 1. Estraiamo tutte le categorie
-                $all_cats = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}wpfb_cats");
+                $all_cats = $wpdb->get_results("SELECT * FROM {$cats_table}");
                 if ( $all_cats ) {
                     foreach ( $all_cats as $c ) {
                         $cats_by_id[$c->cat_id] = $c;
@@ -76,7 +74,7 @@ get_header();
                 }
 
                 // 2. Estraiamo tutti i file
-                $all_files = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}wpfb_files ORDER BY file_display_name ASC");
+                $all_files = $wpdb->get_results("SELECT * FROM {$files_table} ORDER BY file_display_name ASC");
             }
 
             if ( empty( $all_files ) && function_exists('leeno_fc_folder_list') ) :
@@ -250,7 +248,6 @@ get_header();
                     <?php endforeach;
                 endif; // end if grouped empty
             endif; // end if all_files empty
-        endif; // leeno_fc_ready
         ?>
             </div><!-- .content-main -->
 

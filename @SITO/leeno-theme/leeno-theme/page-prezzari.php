@@ -45,16 +45,8 @@ get_header();
             <?php endif; ?>
 
             <?php
-        // ── Carica WP Filebase se non già caricato ──────────────────────────
-        if ( ! class_exists('WPFB_Core') ) {
-            $wpfb_path = WP_PLUGIN_DIR . '/wp-filebase/wp-filebase.php';
-            if ( file_exists( $wpfb_path ) ) {
-                include_once $wpfb_path;
-            }
-        }
-
-        if ( ! class_exists('WPFB_Core') ) : ?>
-            <p class="prezzari-error">Plugin WP Filebase non attivo.</p>
+        if ( ! function_exists('leeno_fc_ready') || ! leeno_fc_ready() ) : ?>
+            <p class="prezzari-error">Catalogo file non disponibile. Attiva il plugin LeenO WP Filebase Compatibility.</p>
         <?php else :
 
             global $wpdb;
@@ -104,9 +96,10 @@ get_header();
                         $curr = $cats_by_id[$curr]->cat_parent;
                     }
 
-                    // Se $parent_id è 0, tutto è valido (fallback)
+                    // Se $parent_id è 0, tieni solo i listini su disco (non tutto Filebase)
                     if ( $parent_id == 0 ) {
-                        $is_under_parent = true;
+                        $fpath = str_replace('\\', '/', (string) ($file->file_path ?? ''));
+                        $is_under_parent = (strpos($fpath, 'LeenO/public/listini/') === 0);
                     }
 
                     if ( ! $is_under_parent ) continue;
@@ -213,14 +206,7 @@ get_header();
                                             </thead>
                                             <tbody>
                                             <?php foreach ( $files as $file ) :
-                                                $dl_url = '';
-                                                if ( method_exists('WPFB_Core', 'GetUrl') ) {
-                                                    $dl_url = WPFB_Core::GetUrl( $file );
-                                                } elseif ( isset($file->file_url) ) {
-                                                    $dl_url = $file->file_url;
-                                                } else {
-                                                    $dl_url = home_url( '?wpfb_dl=' . $file->file_id );
-                                                }
+                                                $dl_url = leeno_fc_file_url( $file );
                                                 $name     = $file->file_display_name ?: $file->file_name;
                                                 $size     = size_format( $file->file_size, 1 );
                                             ?>
@@ -255,7 +241,7 @@ get_header();
                     <?php endforeach;
                 endif; // end if grouped empty
             endif; // end if all_files empty
-        endif; // WPFB_Core
+        endif; // leeno_fc_ready
         ?>
             </div><!-- .content-main -->
 

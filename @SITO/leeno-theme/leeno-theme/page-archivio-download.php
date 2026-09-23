@@ -40,31 +40,39 @@ get_header();
             <?php endif; ?>
 
             <?php
-        if ( ! class_exists('WPFB_Core') ) : ?>
-            <p class="prezzari-error">Plugin WP Filebase non attivo.</p>
+        if ( ! function_exists('leeno_fc_ready') || ! leeno_fc_ready() ) : ?>
+            <p class="prezzari-error">Catalogo file non disponibile. Attiva il plugin LeenO WP Filebase Compatibility.</p>
         <?php else :
             global $wpdb;
 
-            // Recupera tutti i file della repository 199, ordinati per data decrescente
-            $files = $wpdb->get_results(
-                "SELECT f.*, c.cat_name
-                 FROM {$wpdb->prefix}wpfb_files f
-                 LEFT JOIN {$wpdb->prefix}wpfb_cats c ON f.file_category = c.cat_id
-                 WHERE f.file_repository = 199
-                    OR f.file_category IN (
-                        SELECT cat_id FROM {$wpdb->prefix}wpfb_cats
+            $files_table = $wpdb->prefix . 'wpfb_files';
+            $cats_table  = $wpdb->prefix . 'wpfb_cats';
+            $has_repo    = (bool) $wpdb->get_var("SHOW COLUMNS FROM {$files_table} LIKE 'file_repository'");
+
+            $cat_filter = "f.file_category IN (
+                        SELECT cat_id FROM {$cats_table}
                         WHERE cat_id = 199 OR cat_parent = 199
                     )
+                 OR f.file_category = 199";
+
+            $where = $has_repo
+                ? "(f.file_repository = 199 OR {$cat_filter})"
+                : "({$cat_filter})";
+
+            $files = $wpdb->get_results(
+                "SELECT f.*, c.cat_name
+                 FROM {$files_table} f
+                 LEFT JOIN {$cats_table} c ON f.file_category = c.cat_id
+                 WHERE {$where}
                  ORDER BY f.file_date DESC, f.file_display_name ASC"
             );
 
-            // Fallback: cerca per cat_id = 199 direttamente
             if ( empty( $files ) ) {
                 $files = $wpdb->get_results(
                     "SELECT f.*, c.cat_name
-                     FROM {$wpdb->prefix}wpfb_files f
-                     LEFT JOIN {$wpdb->prefix}wpfb_cats c ON f.file_category = c.cat_id
-                     WHERE f.file_category = 199
+                     FROM {$files_table} f
+                     LEFT JOIN {$cats_table} c ON f.file_category = c.cat_id
+                     WHERE f.file_path LIKE 'LeenO/Archivio/%'
                      ORDER BY f.file_date DESC, f.file_display_name ASC"
                 );
             }
@@ -73,16 +81,17 @@ get_header();
                 <p class="prezzari-error">Nessun file trovato nella repository.</p>
 
                 <?php if ( current_user_can('administrator') ) :
-                    // Diagnostica per admin
+                    $repo_col = $has_repo ? ', file_repository' : '';
                     $sample = $wpdb->get_results(
-                        "SELECT file_id, file_display_name, file_category, file_repository, file_date
-                         FROM {$wpdb->prefix}wpfb_files
+                        "SELECT file_id, file_display_name, file_category, file_date{$repo_col}
+                         FROM {$files_table}
                          ORDER BY file_date DESC LIMIT 10"
                     );
                     echo '<div style="background:#1a2010;color:#aad400;font-family:monospace;font-size:11px;padding:12px 20px;margin:16px 0;border-left:4px solid #aad400">';
                     echo '<strong>DEBUG — ultimi 10 file nel DB:</strong><br>';
                     foreach ( $sample as $f ) {
-                        echo "ID={$f->file_id} | cat={$f->file_category} | repo={$f->file_repository} | data={$f->file_date} | " . esc_html($f->file_display_name) . "<br>";
+                        $repo = isset($f->file_repository) ? $f->file_repository : '—';
+                        echo "ID={$f->file_id} | cat={$f->file_category} | repo={$repo} | data={$f->file_date} | " . esc_html($f->file_display_name) . "<br>";
                     }
                     echo '</div>';
                 endif;
@@ -111,14 +120,7 @@ get_header();
                     </thead>
                     <tbody>
                     <?php foreach ( $files as $file ) :
-                        $dl_url  = '';
-                        if ( method_exists('WPFB_Core', 'GetUrl') ) {
-                            $dl_url = WPFB_Core::GetUrl( $file );
-                        } elseif ( isset($file->file_url) ) {
-                            $dl_url = $file->file_url;
-                        } elseif ( isset($file->file_id) ) {
-                            $dl_url = home_url( '/wp-content/plugins/wp-filebase/download.php?id=' . intval($file->file_id) );
-                        }
+                        $dl_url = leeno_fc_file_url( $file );
                         $name    = $file->file_display_name ?: $file->file_name;
                         $size    = size_format( $file->file_size, 1 );
                         $hits    = intval( $file->file_hits );
@@ -160,7 +162,7 @@ get_header();
             </div>
 
             <?php endif; // files
-        endif; // WPFB_Core
+        endif; // leeno_fc_ready
         ?>
             </div><!-- .content-main -->
 

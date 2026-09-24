@@ -11336,7 +11336,7 @@ def MENU_hl():
             if ':' in cell_string :
                 cell_string = cell_string.replace('"', '')
                 # Costruisci la formula per l'iperlink
-                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"►►►")' # >>>
+                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"Apri ↗")' # >>>
                 # Applica la formula all'interno della cella
                 oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
             elif '@' in cell_string :
@@ -11352,7 +11352,7 @@ def MENU_hl():
 def xref_path():
     '''
     Inserisce un hyperlink all'indirizzo di file selezionato; il
-    testo sarà "►►►"
+    testo sarà "Apri ↗"
     '''
     oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
@@ -11360,7 +11360,7 @@ def xref_path():
     file_path = Dialogs.FileSelect()
 
     selection = oDoc.CurrentSelection
-    selection.Formula = f'=HYPERLINK("{file_path}";"►►►")'
+    selection.Formula = f'=HYPERLINK("{file_path}";"Apri ↗")'
     return
 
 

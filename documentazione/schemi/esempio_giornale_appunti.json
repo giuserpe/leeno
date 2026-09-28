@@ -1,0 +1,36 @@
+{
+  "schema_version": "1",
+  "origine": "appunti-mobile",
+  "avviso": "Appunti di cantiere da consolidare in LeenO. Non costituiscono registro ufficiale.",
+  "generato_il": "2026-09-28T18:30:00+02:00",
+  "app_versione": "0.1.0",
+  "testata": {
+    "lavori": "Lavori di esempio",
+    "impresa": "Impresa Esempio S.r.l.",
+    "attori": [
+      { "funzione": "Direttore dei lavori", "nome": "Mario Rossi" },
+      { "funzione": "Capo cantiere", "nome": "Luca Bianchi" }
+    ]
+  },
+  "giornate": [
+    {
+      "data": "2026-09-28",
+      "modificato_il": "2026-09-28T18:25:00+02:00",
+      "campi": {
+        "meteo": "Sereno.",
+        "presenti": "Direttore dei lavori, capo cantiere.",
+        "annotazioni": "Scavo di sbancamento tratto A-B.\nPosa tubazione DN200.",
+        "operai": "2 operai specializzati, 3 operai comuni",
+        "attrezzature": "Mini pala, Dumper, Martello demolitore",
+        "contestazioni": "Nessuna."
+      }
+    },
+    {
+      "data": "2026-09-29",
+      "campi": {
+        "meteo": "Pioggia leggera.",
+        "annotazioni": "Lavori sospesi dalle 10:30 per pioggia."
+      }
+    }
+  ]
+}

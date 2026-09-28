@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leeno.org/schemi/giornale_appunti.v1.schema.json",
+  "title": "Appunti di cantiere per LeenO, schema v1",
+  "description": "Formato di scambio tra l'app mobile di raccolta appunti e il modulo di import di LeenO. Gli appunti non costituiscono registro ufficiale: il giornale dei lavori si consolida solo in LeenO.",
+  "type": "object",
+  "required": ["schema_version", "origine", "giornate"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1",
+      "description": "Versione dello schema. L'import rifiuta versioni che non conosce."
+    },
+    "origine": {
+      "const": "appunti-mobile",
+      "description": "Distingue le giornate importate da quelle create direttamente in LeenO."
+    },
+    "avviso": {
+      "type": "string",
+      "default": "Appunti di cantiere da consolidare in LeenO. Non costituiscono registro ufficiale."
+    },
+    "generato_il": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data e ora di esportazione, ISO 8601."
+    },
+    "app_versione": {
+      "type": "string"
+    },
+    "testata": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Dati generali del cantiere, tutti facoltativi. Utili per precompilare l'app; l'import non li richiede.",
+      "properties": {
+        "lavori": { "type": "string", "description": "Copertina: Lavori di" },
+        "impresa": { "type": "string", "description": "Copertina: Impresa esecutrice" },
+        "contratto": { "type": "string", "description": "Copertina: Contratto" },
+        "attori": {
+          "type": "array",
+          "description": "Elenco funzione e nominativo, come nel foglio attori.",
+          "items": {
+            "type": "object",
+            "required": ["funzione"],
+            "additionalProperties": false,
+            "properties": {
+              "funzione": { "type": "string" },
+              "nome": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "giornate": {
+      "type": "array",
+      "description": "Una voce per giorno. La data e' univoca nel file.",
+      "items": { "$ref": "#/$defs/giornata" }
+    }
+  },
+  "$defs": {
+    "testo": {
+      "type": "string",
+      "description": "Testo libero, puo' contenere a capo."
+    },
+    "giornata": {
+      "type": "object",
+      "required": ["data", "campi"],
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 (AAAA-MM-GG). L'import la converte nel formato 'Data: ...' della locale corrente, come fa nuovo_giorno()."
+        },
+        "modificato_il": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "campi": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Tutti facoltativi. Ordine e chiavi corrispondono al foglio GIORNALE; x-leeno-etichetta e' l'etichetta di colonna A cercata dall'import.",
+          "properties": {
+            "meteo":         { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Meteo:" },
+            "presenti":      { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Presenti/intervenuti:" },
+            "annotazioni":   { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Annotazioni, attività svolte:" },
+            "operai":        { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Qualifica e n. operai:" },
+            "attrezzature":  { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Attrezzature impiegate:" },
+            "provviste":     { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Provviste:" },
+            "rifiuti":       { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Rifiuto di materiali e/o manufatti:" },
+            "disposizioni":  { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Disposizioni e ordini di servizio del R.U.P. e del D.L.:" },
+            "relazione_rup": { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Relazione indirizzata al R.U.P.:" },
+            "verbali":       { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Verbali di accertamento e prove:" },
+            "contestazioni": { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Contestazioni, sospensioni e riprese lavori:" },
+            "varianti":      { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Varianti disposte, modifiche e/o aggiunte prezzi:" },
+            "infortuni":     { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Evento infortunistico:" },
+            "osservazioni":  { "$ref": "#/$defs/testo", "x-leeno-etichetta": "Osservazioni, prescrizioni, avvertenze della D.L.:" }
+          }
+        }
+      }
+    }
+  }
+}

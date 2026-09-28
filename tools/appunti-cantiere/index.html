@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f4e79">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Appunti di cantiere per LeenO</title>
+<style>
+:root { --bg:#f5f6f8; --fg:#1b1f24; --card:#fff; --line:#c9d0d8; --pri:#1f4e79; --onpri:#fff; --warn:#8a4b00; --danger:#a12622; }
+@media (prefers-color-scheme: dark) { :root { --bg:#14181d; --fg:#e6e9ed; --card:#1e242b; --line:#39434e; --pri:#6aa6d9; --onpri:#0d1620; --warn:#f0b35c; --danger:#ff8a84; } }
+* { box-sizing: border-box; }
+body { margin:0; font:16px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+header { background:var(--pri); color:var(--onpri); padding:.7rem 1rem; }
+header h1 { margin:0; font-size:1.1rem; }
+header p { margin:.2rem 0 0; font-size:.85rem; }
+main { max-width:40rem; margin:0 auto; padding:1rem; }
+section, .campo { margin-bottom:1rem; }
+label { display:block; font-weight:600; margin:.4rem 0 .2rem; }
+input, textarea { width:100%; font:inherit; padding:.6rem; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.4rem; }
+button { font:inherit; min-height:44px; padding:.5rem 1rem; margin:.3rem .3rem .3rem 0; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.4rem; }
+button.primary { background:var(--pri); color:var(--onpri); border-color:var(--pri); }
+button.danger { color:var(--danger); }
+.barra { display:flex; align-items:center; gap:.5rem; }
+.barra h2 { margin:0; font-size:1.05rem; text-transform:capitalize; }
+.lista { list-style:none; padding:0; margin:0 0 1rem; }
+.lista button { display:block; width:100%; text-align:left; margin:0 0 .4rem; }
+.lista span { display:block; font-size:.9rem; opacity:.75; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nota { font-size:.9rem; opacity:.8; }
+.alert { color:var(--warn); opacity:1; font-weight:600; }
+#msg { margin:0 1rem; padding:.6rem; border:1px solid var(--line); border-radius:.4rem; background:var(--card); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Appunti di cantiere per LeenO</h1>
+  <p>Appunti da consolidare in LeenO. Non è un registro ufficiale: il giornale dei lavori si tiene solo in LeenO.</p>
+</header>
+<p id="msg" role="status" hidden></p>
+<main id="app"></main>
+<datalist id="meteo"></datalist>
+<input type="file" id="file" accept=".json,application/json" hidden>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

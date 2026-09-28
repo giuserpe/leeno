@@ -11317,6 +11317,18 @@ def classify_hyperlink_target(cell_string):
     if not s or s.startswith('='):
         return None
 
+    # Titoli o intestazioni che terminano con due punti (escl. lettere di unita come C:)
+    if s.endswith(':') and not re.match(r'^[a-zA-Z]:$', s):
+        return None
+
+    # Punteggiatura di frasi o testi non presenti in percorsi file
+    if any(p in s for p in [',', ';', '!']):
+        return None
+
+    # Slash grammaticali del testo italiano (es. e/o, c/o, a/c, d/o, n/a)
+    if re.search(r'\b(e/o|c/o|a/c|d/o|n/a)\b', s, re.IGNORECASE):
+        return None
+
     # 1. Indirizzi Mail
     if s.lower().startswith('mailto:'):
         email_part = s[7:].strip()
@@ -11344,9 +11356,7 @@ def classify_hyperlink_target(cell_string):
         return (s, "Apri ↗")
     if s.startswith('/'):
         return (s, "Apri ↗")
-    if '\\' in s or '/' in s:
-        if not re.match(r'^\d{1,2}/\d{1,2}/\d{2,4}$', s):
-            return (s, "Apri ↗")
+
     try:
         if os.path.exists(s):
             return (s, "Apri ↗")
@@ -11359,6 +11369,18 @@ def classify_hyperlink_target(cell_string):
         'zip', 'rar', '7z', 'tar', 'gz', 'jpg', 'jpeg', 'png', 'gif', 'bmp',
         'svg', 'tif', 'tiff', 'mp3', 'mp4', 'avi', 'mkv', 'mov', 'wav'
     }
+
+    if '\\' in s or '/' in s:
+        if re.match(r'^\d{1,2}/\d{1,2}/\d{2,4}$', s):
+            return None
+        if s.endswith('/') or s.endswith('\\'):
+            return (s, "Apri ↗")
+        m = re.search(r'\.([a-zA-Z0-9]{2,5})$', s)
+        if m and m.group(1).lower() in common_exts:
+            return (s, "Apri ↗")
+        if ' ' not in s and ':' not in s:
+            return (s, "Apri ↗")
+
     m = re.match(r'^[^\s\\/:]+\.([a-zA-Z0-9]{2,5})$', s)
     if m:
         ext = m.group(1).lower()

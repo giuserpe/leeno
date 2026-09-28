@@ -74,6 +74,10 @@ class TestHyperlinkClassification(unittest.TestCase):
 
     def test_negative_cases(self):
         negative_cases = [
+            'Meteo:',
+            'Presenti/intervenuti:',
+            'Rifiuto di materiali e/o manufatti:',
+            'Varianti disposte, modifiche e/o aggiunte prezzi:',
             'Descrizione dei lavori di scavo',
             'Nota: verificare con la direzione lavori',
             'Ore 10:30',

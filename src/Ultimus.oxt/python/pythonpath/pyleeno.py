@@ -11304,10 +11304,74 @@ def _show_results(var_total, cont_total):
 ###############################################################################
 ###############################################################################
 ########################################################################
+def classify_hyperlink_target(cell_string):
+    '''
+    Riconosce se cell_string rappresenta un indirizzo mail, internet,
+    oppure un percorso/nome di file o cartella.
+    Restituisce la tupla (target_url, label) se riconosciuto, altrimenti None.
+    '''
+    if not cell_string:
+        return None
+
+    s = cell_string.strip().strip('"').strip("'")
+    if not s or s.startswith('='):
+        return None
+
+    # 1. Indirizzi Mail
+    if s.lower().startswith('mailto:'):
+        email_part = s[7:].strip()
+        if '@' in email_part:
+            return (f"mailto:{email_part}", "@>>")
+    elif '@' in s and not any(c in s for c in [' ', '\\', '/', ':', ';']):
+        if re.match(r'^[\w\.\+%-]+@[\w\.-]+\.[a-zA-Z]{2,}$', s):
+            return (f"mailto:{s}", "@>>")
+
+    # 2. Indirizzi Internet
+    s_lower = s.lower()
+    if s_lower.startswith(('http://', 'https://', 'ftp://', 'ftps://')):
+        return (s, "Apri ↗")
+    if s_lower.startswith('www.'):
+        return (f"http://{s}", "Apri ↗")
+    if re.match(r'^(?:[a-zA-Z0-9-]+\.)+(?:com|it|org|net|eu|edu|gov|io|co|info|biz|me|tv|app|dev)(?:/[^\s]*)?$', s, re.IGNORECASE):
+        return (f"https://{s}", "Apri ↗")
+
+    # 3. Nomi di File o Cartelle / Percorsi
+    if s_lower.startswith(('file://', 'file:///')):
+        return (s, "Apri ↗")
+    if re.match(r'^[a-zA-Z]:(?:[\\/].*)?$', s):
+        return (s, "Apri ↗")
+    if s.startswith('\\\\') or s.startswith('//'):
+        return (s, "Apri ↗")
+    if s.startswith('/'):
+        return (s, "Apri ↗")
+    if '\\' in s or '/' in s:
+        if not re.match(r'^\d{1,2}/\d{1,2}/\d{2,4}$', s):
+            return (s, "Apri ↗")
+    try:
+        if os.path.exists(s):
+            return (s, "Apri ↗")
+    except Exception:
+        pass
+
+    common_exts = {
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ods', 'odt', 'fodt', 'fods',
+        'csv', 'txt', 'rtf', 'dwg', 'dxf', 'dcf', 'xpwe', 'xml', 'json',
+        'zip', 'rar', '7z', 'tar', 'gz', 'jpg', 'jpeg', 'png', 'gif', 'bmp',
+        'svg', 'tif', 'tiff', 'mp3', 'mp4', 'avi', 'mkv', 'mov', 'wav'
+    }
+    m = re.match(r'^[^\s\\/:]+\.([a-zA-Z0-9]{2,5})$', s)
+    if m:
+        ext = m.group(1).lower()
+        if ext in common_exts or len(ext) >= 2:
+            return (s, "Apri ↗")
+
+    return None
+
+
 def MENU_hl():
     '''
     Sostituisce hyperlink alla stringa nella colonna in cui è la cella
-    selezionata, se questa è un indirizzo di file o cartella ctrl-shift-h
+    selezionata, se questa è un nome/indirizzo di file, cartella, internet o mail ctrl-shift-h
     '''
 
     # Ottieni il documento corrente e il foglio attivo
@@ -11316,37 +11380,34 @@ def MENU_hl():
 
     # Ottieni la posizione corrente della cella
     lcol = LeggiPosizioneCorrente()[0]
-    row= LeggiPosizioneCorrente()[1]
+    row = LeggiPosizioneCorrente()[1]
 
     # Ottieni la stringa nella cella corrente
-    cell_string = oSheet.getCellByPosition(lcol, row).String
+    oCell = oSheet.getCellByPosition(lcol, row)
+    cell_string = oCell.String
 
-    # Se la stringa non rappresenta un indirizzo (manca : e @), sovrascrivi con incolla
-    if ':' not in cell_string and '@' not in cell_string:
+    # Se la stringa nella cella corrente non rappresenta un indirizzo/percorso, incolla dagli appunti
+    if not classify_hyperlink_target(cell_string):
         comando("Paste")
+        cell_string = oSheet.getCellByPosition(lcol, row).String
 
     # Itera sulle righe del foglio, partendo dall'ultima e andando verso l'alto
-    for el in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow + 1)):
+    used_end_row = SheetUtils.getUsedArea(oSheet).EndRow
+    for el in reversed(range(0, used_end_row + 1)):
         try:
-            # Ottieni la stringa nella cella corrente
-            cell_string = oSheet.getCellByPosition(lcol, el).String
+            cell = oSheet.getCellByPosition(lcol, el)
+            # Salva celle già formattate come formula HYPERLINK
+            if cell.Formula and cell.Formula.upper().startswith("=HYPERLINK"):
+                continue
 
-            # Verifica se la stringa rappresenta un indirizzo di file o cartella
-            #  if cell_string[1] == ':' or cell_string[2] == ':' or cell_string[0:1] == '\\':
-            if ':' in cell_string :
-                cell_string = cell_string.replace('"', '')
-                # Costruisci la formula per l'iperlink
-                hyperlink_formula = '=HYPERLINK("' + cell_string + '";"Apri ↗")' # >>>
-                # Applica la formula all'interno della cella
-                oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
-            elif '@' in cell_string :
-                cell_string = cell_string.replace('"', '')
-                # Costruisci la formula per l'iperlink
-                hyperlink_formula = '=HYPERLINK("mailto:' + cell_string + '";"@>>")'
-                # Applica la formula all'interno della cella
-                oSheet.getCellByPosition(lcol, el).Formula = hyperlink_formula
-        except Exception as e:
-            # DLG.errore(e)
+            cell_string = cell.String
+            res = classify_hyperlink_target(cell_string)
+            if res:
+                target_url, label = res
+                target_url = target_url.replace('"', '')
+                hyperlink_formula = f'=HYPERLINK("{target_url}";"{label}")'
+                cell.Formula = hyperlink_formula
+        except Exception:
             pass
 
 def xref_path():

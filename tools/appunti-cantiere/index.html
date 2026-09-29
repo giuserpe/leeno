@@ -3,44 +3,84 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1f4e79">
+<meta name="theme-color" content="#121a23">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
-<title>Appunti di cantiere per LeenO</title>
+<title>Brogliaccio per LeenO</title>
 <style>
-:root { --bg:#f5f6f8; --fg:#1b1f24; --card:#fff; --line:#c9d0d8; --pri:#1f4e79; --onpri:#fff; --warn:#8a4b00; --danger:#a12622; }
-@media (prefers-color-scheme: dark) { :root { --bg:#14181d; --fg:#e6e9ed; --card:#1e242b; --line:#39434e; --pri:#6aa6d9; --onpri:#0d1620; --warn:#f0b35c; --danger:#ff8a84; } }
+:root { --bg:#f0f4e0; --fg:#1a2010; --card:#fff; --line:#cbd5a6; --head:#121a23; --acc:#aad400; --acc-h:#8fb200; --onacc:#1a2010;
+  --cta:#ff4d2e; --cta-h:#ff6b50; --lab:#5d7400; --sec:#5b6676; --warn:#a63a00;
+  --display:'Space Grotesk', system-ui, sans-serif; --body:'Inter', system-ui, sans-serif; }
+@media (prefers-color-scheme: dark) { :root:not([data-tema="chiaro"]) { --bg:#121a23; --fg:#f2f5e8; --card:#1a2430; --line:#2d3a49; --lab:#aad400; --sec:#8896ab; --warn:#ff9a80; } }
+:root[data-tema="scuro"] { --bg:#121a23; --fg:#f2f5e8; --card:#1a2430; --line:#2d3a49; --lab:#aad400; --sec:#8896ab; --warn:#ff9a80; }
 * { box-sizing: border-box; }
-body { margin:0; font:16px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
-header { background:var(--pri); color:var(--onpri); padding:.7rem 1rem; }
-header h1 { margin:0; font-size:1.1rem; }
-header p { margin:.2rem 0 0; font-size:.85rem; }
+body { margin:0; font:16px/1.45 var(--body); background:var(--bg); color:var(--fg); }
+header { background:var(--head); color:#fff; padding:.7rem 1rem; border-bottom:3px solid var(--acc); display:flex; align-items:flex-start; gap:.9rem; flex-wrap:wrap; }
+header .info { flex:1 1 auto; min-width:0; }
+button.tema { flex:none; font:600 .75rem var(--display); padding:.35rem .6rem; margin:0; color:#fff; background:transparent; border:1px solid rgba(255,255,255,.4); border-radius:2px; min-height:auto; }
+button.tema:hover { border-color:#fff; }
+header img { height:38px; width:auto; flex:none; }
+header h1 { margin:0; font:700 1.05rem var(--display); letter-spacing:.01em; }
+header p { margin:.15rem 0 0; font-size:.8rem; color:#8896ab; }
 main { max-width:40rem; margin:0 auto; padding:1rem; }
 section, .campo { margin-bottom:1rem; }
-label { display:block; font-weight:600; margin:.4rem 0 .2rem; }
-input, textarea { width:100%; font:inherit; padding:.6rem; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.4rem; }
-button { font:inherit; min-height:44px; padding:.5rem 1rem; margin:.3rem .3rem .3rem 0; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.4rem; }
-button.primary { background:var(--pri); color:var(--onpri); border-color:var(--pri); }
-button.danger { color:var(--danger); }
+label { display:block; font:600 .8rem var(--display); text-transform:uppercase; letter-spacing:.05em; color:var(--lab); margin:.5rem 0 .25rem; }
+input, textarea { width:100%; font:inherit; padding:.6rem; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:2px; }
+input:focus, textarea:focus, button:focus-visible { outline:2px solid var(--acc); outline-offset:1px; }
+button { font:600 .95rem var(--display); min-height:44px; padding:.5rem 1rem; margin:.3rem .3rem .3rem 0; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:2px; }
+button.primary { background:var(--acc); color:var(--onacc); border-color:var(--acc); }
+button.primary:hover { background:var(--acc-h); border-color:var(--acc-h); }
+button.cta { background:var(--cta); color:#fff; border-color:var(--cta); }
+button.cta:hover { background:var(--cta-h); border-color:var(--cta-h); }
+button.danger { color:var(--warn); border-color:var(--warn); background:transparent; }
 .barra { display:flex; align-items:center; gap:.5rem; }
-.barra h2 { margin:0; font-size:1.05rem; text-transform:capitalize; }
+.barra h2 { margin:0; font:700 1.05rem var(--display); text-transform:capitalize; }
 .lista { list-style:none; padding:0; margin:0 0 1rem; }
-.lista button { display:block; width:100%; text-align:left; margin:0 0 .4rem; }
-.lista span { display:block; font-size:.9rem; opacity:.75; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.nota { font-size:.9rem; opacity:.8; }
-.alert { color:var(--warn); opacity:1; font-weight:600; }
-#msg { margin:0 1rem; padding:.6rem; border:1px solid var(--line); border-radius:.4rem; background:var(--card); }
+.lista button { display:block; width:100%; text-align:left; margin:0 0 .4rem; border-left:4px solid var(--acc); }
+.lista strong { font-family:var(--display); text-transform:capitalize; }
+.lista span { display:block; font:400 .9rem var(--body); color:var(--sec); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nota { font-size:.9rem; color:var(--sec); }
+.cantiere-corrente { font:700 1.1rem var(--display); color:var(--cta); margin:0 0 .8rem; display:flex; align-items:baseline; gap:.4rem; }
+.cantiere-corrente .etichetta { font:600 .75rem var(--display); text-transform:uppercase; letter-spacing:.05em; color:var(--lab); }
+.alert { color:var(--warn); font-weight:600; }
+#msg { margin:.8rem 1rem 0; padding:.6rem; border:1px solid var(--line); border-left:4px solid var(--acc); background:var(--card); }
+footer.dona { max-width:40rem; margin:1.2rem auto 0; padding:0 1rem 1.4rem; text-align:center; }
+footer.dona a { display:inline-block; font:600 .85rem var(--display); color:var(--cta); text-decoration:none; border:1px solid var(--cta); border-radius:2px; padding:.55rem 1.2rem; }
+footer.dona a:hover { background:var(--cta); color:#fff; }
+#stampa { display:none; }
+@media print {
+  body > :not(#stampa) { display:none !important; }
+  body { background:#fff !important; }
+  #stampa { display:block !important; color:#000; font:11pt/1.4 var(--body); }
+  @page { size:A4; margin:18mm 16mm; }
+  #stampa .s-avviso { font-style:italic; font-size:9pt; border-bottom:1px solid #000; padding-bottom:6mm; margin-bottom:6mm; }
+  #stampa .s-intestazione { display:block; background:none; padding:0; border:0; }
+  #stampa h1 { font-size:14pt; margin:0 0 2mm; color:#000; }
+  #stampa .s-cantiere { font-size:12pt; font-weight:700; margin:0 0 2mm; }
+  #stampa .s-giorno { break-inside:avoid; margin-bottom:6mm; }
+  #stampa h2 { font-size:11pt; border-bottom:1px solid #000; margin:0 0 2mm; text-transform:capitalize; }
+  #stampa dt { font-weight:700; font-size:9pt; text-transform:uppercase; letter-spacing:.03em; margin-top:2mm; }
+  #stampa dd { margin:0 0 1mm; white-space:pre-wrap; }
+}
 </style>
 </head>
 <body>
 <header>
-  <h1>Appunti di cantiere per LeenO</h1>
-  <p>Appunti da consolidare in LeenO. Non è un registro ufficiale: il giornale dei lavori si tiene solo in LeenO.</p>
+  <img src="logo.png" alt="LeenO">
+  <div class="info">
+    <h1>Brogliaccio</h1>
+    <p>Appunti da consolidare in LeenO. Non è un registro ufficiale: il giornale dei lavori si tiene solo in LeenO.</p>
+  </div>
+  <button type="button" class="tema" id="tema"></button>
 </header>
 <p id="msg" role="status" hidden></p>
 <main id="app"></main>
+<footer class="dona">
+  <a href="https://leeno.org/donazioni/" target="_blank" rel="noopener">Sostieni LeenO: dona</a>
+</footer>
 <datalist id="meteo"></datalist>
 <input type="file" id="file" accept=".json,application/json" hidden>
+<div id="stampa" hidden></div>
 <script src="core.js"></script>
 <script src="app.js"></script>
 </body>

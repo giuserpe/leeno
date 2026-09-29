@@ -1,8 +1,8 @@
-/* Appunti di cantiere per LeenO: logica pura (schema JSON v1), senza DOM. */
+/* Brogliaccio per LeenO: logica pura (schema JSON v1), senza DOM. */
 (function (root) {
   'use strict';
-  var VERSIONE = '0.1.0';
-  var AVVISO = 'Appunti di cantiere da consolidare in LeenO. Non costituiscono registro ufficiale.';
+  var VERSIONE = '0.1.10';
+  var AVVISO = 'Brogliaccio da consolidare in LeenO. Non costituisce registro ufficiale.';
   // chiave JSON, etichetta a video: stesso ordine del foglio GIORNALE
   var CAMPI = [
     ['meteo', 'Meteo'],

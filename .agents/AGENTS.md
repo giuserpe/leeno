@@ -24,6 +24,7 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Preservazione del line-ending in qualsiasi editing](#preservazione-del-line-ending-in-qualsiasi-editing)
 - [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato)
 - [Git Commit – Conventional Commits in Italiano](#git-commit--conventional-commits-in-italiano-leeno)
+- [Privacy e controllo locale dei dati](#privacy-e-controllo-locale-dei-dati)
 - [Manutenzione di questo file](#manutenzione-di-questo-file)
 
 ## Premesse
@@ -299,6 +300,26 @@ Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione d
 - `refactor(import): ottimizza parsing file XPWE`
 - `chore(meta): bump versione a 3.25.x`
 - `docs: aggiorna istruzioni nel manuale per il nuovo listino`
+
+## Privacy e controllo locale dei dati
+
+LeenO è pensato per professionisti che trattano dati di lavoro e di terzi: privacy e controllo locale dei dati sono principi di progetto, non optional.
+
+### Riservatezza dei dati personali
+
+- **Nessun dato personale deve essere pubblicato**: né nel repository (codice, commit, messaggi di commit, issue, PR, branch), né nella documentazione, nei template, nei listini, negli articoli o nei file di esempio.
+- Sono dati personali, a titolo esemplificativo: nomi e cognomi, codici fiscali, indirizzi, recapiti (email, telefono), dati di committenti, imprese, progettisti e direttori dei lavori, oltre a percorsi di file che contengono nomi di persone o di progetti reali.
+- Per test, esempi e template usare solo dati fittizi o anonimizzati. Prima di distribuire un `.ods` verificare che celle, proprietà del documento, metadati e note non contengano riferimenti a progetti o persone reali (vedi anche "Quirk minori UNO/ODF").
+- Log, output di debug e report di errore non devono includere dati personali né contenuti dei documenti dell'utente.
+- Se un dato personale finisce in un commit già presente su `origin/<branch>`, non basta un commit successivo che lo rimuove: segnalarlo subito e seguire la procedura per la rimozione dalla storia (vedi "Reset, rebase, revert, force-push: quale usare").
+
+### Divieto di funzioni di IA generativa
+
+- **È vietato includere in LeenO funzioni di intelligenza artificiale generativa**: nessun modello linguistico o generativo, integrato o richiamato tramite API/servizi remoti, e nessuna funzione che invii contenuti dei documenti dell'utente a servizi esterni per elaborazione di questo tipo.
+- Il divieto vale per codice, dipendenze, template e dialoghi, e non può essere aggirato con impostazioni opzionali o disattivate per default.
+- Il progetto punta su elaborazione deterministica, privacy e controllo locale dei dati: le funzioni di LeenO devono funzionare in locale, senza trasmettere dati dell'utente all'esterno.
+- Questo divieto riguarda il prodotto LeenO, non gli strumenti usati per svilupparlo: l'uso di agenti AI nel flusso di lavoro resta regolato dalle sezioni di questo file, ma il codice prodotto non deve introdurre funzioni di IA generativa né dipendenze da servizi di questo tipo.
+- Se un task richiede o suggerisce una funzione di questo tipo, l'agente non la implementa: segnala il conflitto con questa regola e chiede conferma.
 
 ## Manutenzione di questo file
 

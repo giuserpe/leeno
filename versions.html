@@ -369,7 +369,20 @@
                         
             <tr>
                 <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.145-TESTING-20260928.oxt">LeenO-3.26.0.145-TESTING-20260928.oxt</a> <span class="badge">ULTIMA</span></td>
+/download?path=&files=LeenO-3.26.0.146-TESTING-20260930.oxt">LeenO-3.26.0.146-TESTING-20260930.oxt</a> <span class="badge">ULTIMA</span></td>
+                <td class="col-dim">4.2MB</td>
+                <td class="col-extra">2026-09-30 21:57</td>
+                <td style="text-align: right;">
+                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.146-TESTING-20260930.oxt" class="btn-download-link" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Scarica
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
+/download?path=&files=LeenO-3.26.0.145-TESTING-20260928.oxt">LeenO-3.26.0.145-TESTING-20260928.oxt</a> </td>
                 <td class="col-dim">4.2MB</td>
                 <td class="col-extra">2026-09-28 14:32</td>
                 <td style="text-align: right;">
@@ -419,19 +432,6 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td class="col-name"><a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.141-TESTING-20260922.oxt">LeenO-3.26.0.141-TESTING-20260922.oxt</a> </td>
-                <td class="col-dim">4.2MB</td>
-                <td class="col-extra">2026-09-22 15:12</td>
-                <td style="text-align: right;">
-                    <a href="https://dev.leeno.org/index.php/s/jLnxqWRzSD7MqFB/download?path=&files=
-/download?path=&files=LeenO-3.26.0.141-TESTING-20260922.oxt" class="btn-download-link" download>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Scarica
-                    </a>
-                </td>
-            </tr>
                     </tbody>
                 </table>
             </div>
@@ -452,31 +452,28 @@
                     <tbody>
                         
             <tr>
+                <td>2026-09-30 22:00</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/06e1146c6a686edef1c0f3fc11b35b829638f614" target="_blank" rel="noopener"><code>06e1146</code></a></td>
+                <td class="commit-msg">chore: update version to 3.26.0.146-TESTING-20260930</td>
+            </tr>
+            <tr>
+                <td>2026-09-30 21:59</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/664a881bb7101d58474bcb33eadc835e6e3c805a" target="_blank" rel="noopener"><code>664a881</code></a></td>
+                <td class="commit-msg">feat(giornale): supporto per l'importazione di pacchetti ZIP con foto integrati
+
+- Esteso il dialogo di selezione file per supportare filtri e formati sia JSON che ZIP (*.json;*.zip).
+- Aggiunta la funzione `leggi_pacchetto()` per gestire la lettura di file sia JSON che pacchetti ZIP.
+- Implementata la logica di estrazione foto (`_estrai_foto()`) nella sottocartella `foto_giornale/<AAAAMMGG>/` gestendo duplicati e sovrascritture in sicurezza.
+- Aggiunto il collegamento ipertestuale (`=HYPERLINK`) automatico nell'etichetta "Annotazioni" del foglio Giornale Lavori per accedere rapidamente alle foto del giorno.
+- Refactorizzato `_scrivi_campi()` ed estratto `_confini_blocco()` per un calcolo più pulito dei blocchi di riga.
+- Aggiornato l'esito dell'importazione per notificare l'avvenuta estrazione delle foto su disco.</td>
+            </tr>
+            <tr>
                 <td>2026-09-30 08:18</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5bdc2e2740348b790ba10128c8adc5e6b8ff337b" target="_blank" rel="noopener"><code>5bdc2e2</code></a></td>
                 <td class="commit-msg">Merge pull request #74 from giuserpe/jules-17475232679640439803-dc3cf1cc
 
 fix: rimuove workaround per WP Document Revisions issue #732</td>
-            </tr>
-            <tr>
-                <td>2026-09-29 15:21</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/80c1f0259206207d58d27ad8cc3aa3e2ef26afb6" target="_blank" rel="noopener"><code>80c1f02</code></a></td>
-                <td class="commit-msg">fix: rimuove workaround per WP Document Revisions issue #732
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-09-29 13:01</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/11ab0227a7c55e84a7d734c8b2994019c320415b" target="_blank" rel="noopener"><code>11ab022</code></a></td>
-                <td class="commit-msg">feat(tools/brogliaccio): rebranding in "Brogliaccio" e supporto multi-cantiere
-
-- Effettuato rebranding da "Appunti di cantiere" a "Brogliaccio per LeenO" (v0.1.10).
-- Introdotta la gestione multi-cantiere con isolamento dei dati per ciascun cantiere.
-- Aggiunta la funzionalità di stampa A4 / esportazione PDF diretta dal browser.
-- Implementato l'avviso di privacy/GDPR prima di esportare o stampare se sono presenti eventi infortunistici (dati sulla salute).
-- Introdotto il selettore del tema grafico (automatico, chiaro, scuro) con salvataggio delle preferenze in localStorage.
-- Allineata la grafica e la palette dei colori allo stile del sito ufficiale leeno.org (con aggiunta del logo e del link donazioni).
-- Aggiornati manifest.webmanifest e sw.js per la gestione della cache offline v0.1.10.</td>
             </tr>
                     </tbody>
                 </table>
@@ -500,8 +497,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-09-30 08:19 UTC</p>
-                <p>Build Commit: <code>5bdc2e2</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-09-30 22:00 UTC</p>
+                <p>Build Commit: <code>06e1146</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

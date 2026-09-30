@@ -9,6 +9,11 @@
 ########################################################################
 import datetime
 import json
+import os
+import re
+import zipfile
+
+import uno
 
 import LeenoGiornale
 import LeenoUtils
@@ -38,18 +43,11 @@ ETICHETTE = {
 _CHIAVI_PER_ETICHETTA = {v: k for k, v in ETICHETTE.items()}
 
 
-def leggi_appunti(percorso):
+def _valida_pacchetto(dati):
     '''
-    Legge e valida il file JSON.
-    Restituisce la lista [(datetime.date, {chiave: testo})] ordinata per data.
-    Solleva ValueError con un messaggio leggibile se il file non è valido.
+    Valida la struttura già deserializzata (da .json o da dentro uno .zip).
+    Restituisce {datetime.date: {chiave: testo}}. Solleva ValueError.
     '''
-    try:
-        with open(percorso, encoding='utf-8-sig') as f:
-            dati = json.load(f)
-    except (OSError, json.JSONDecodeError) as e:
-        raise ValueError(f'File non leggibile: {e}')
-
     if not isinstance(dati, dict):
         raise ValueError('Il file non contiene un oggetto JSON.')
     if dati.get('schema_version') != SCHEMA_VERSION:
@@ -81,7 +79,95 @@ def leggi_appunti(percorso):
             if testo.strip():
                 campi[chiave] = testo
         risultato[data] = campi
-    return sorted(risultato.items())
+    return risultato
+
+
+def leggi_appunti(percorso):
+    '''
+    Legge e valida un file .json semplice.
+    Restituisce la lista [(datetime.date, {chiave: testo})] ordinata per data.
+    Solleva ValueError con un messaggio leggibile se il file non è valido.
+    '''
+    try:
+        with open(percorso, encoding='utf-8-sig') as f:
+            dati = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        raise ValueError(f'File non leggibile: {e}')
+    return sorted(_valida_pacchetto(dati).items())
+
+
+_RE_CARTELLA_FOTO = re.compile(r'^(\d{4})(\d{2})(\d{2})/([^/]+)$')
+
+
+def leggi_pacchetto(percorso):
+    '''
+    Legge un file .json o .zip esportato dal Brogliaccio.
+    Restituisce (giornate, foto_per_giorno):
+      giornate      : lista [(datetime.date, {chiave: testo})], come leggi_appunti()
+      foto_per_giorno : {datetime.date: [(nome_file, contenuto_bytes), ...]},
+                        vuoto per un .json semplice o uno .zip senza cartelle foto.
+    Solleva ValueError con un messaggio leggibile se il file non è valido.
+    '''
+    if not percorso.lower().endswith('.zip'):
+        return leggi_appunti(percorso), {}
+
+    try:
+        z = zipfile.ZipFile(percorso)
+    except (OSError, zipfile.BadZipFile) as e:
+        raise ValueError(f'File compresso non leggibile: {e}')
+
+    nomi_json = [n for n in z.namelist() if n.endswith('.json') and '/' not in n]
+    if len(nomi_json) != 1:
+        raise ValueError('Il file compresso deve contenere un solo file .json alla radice.')
+    try:
+        dati = json.loads(z.read(nomi_json[0]).decode('utf-8-sig'))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        raise ValueError(f'File non leggibile: {e}')
+    giornate = sorted(_valida_pacchetto(dati).items())
+
+    foto_per_giorno = {}
+    for nome in z.namelist():
+        m = _RE_CARTELLA_FOTO.match(nome)
+        if not m:
+            continue
+        data = datetime.date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+        foto_per_giorno.setdefault(data, []).append((m.group(4), z.read(nome)))
+    return giornate, foto_per_giorno
+
+
+def _estrai_foto(oDoc, foto_per_giorno):
+    '''
+    Scrive le foto su disco accanto al documento, in una sottocartella
+    "foto_giornale/<AAAAMMGG>/". Se un file con lo stesso nome e contenuto
+    esiste già, non lo riscrive (import ripetuto = nessun duplicato); se il
+    nome esiste con contenuto diverso, usa un nome libero senza sovrascrivere.
+    Restituisce {datetime.date: percorso_cartella_relativo} solo per le
+    giornate per cui è stata effettivamente scritta almeno una foto.
+    '''
+    url = oDoc.getURL()
+    if not url:
+        raise ValueError('Salva il documento prima di importare le foto.')
+    cartella_doc = os.path.dirname(uno.fileUrlToSystemPath(url))
+    risultato = {}
+    for data, foto in foto_per_giorno.items():
+        sottocartella = data.strftime('%Y%m%d')
+        cartella = os.path.join(cartella_doc, 'foto_giornale', sottocartella)
+        os.makedirs(cartella, exist_ok=True)
+        for nome, contenuto in foto:
+            destino = os.path.join(cartella, nome)
+            if os.path.exists(destino):
+                with open(destino, 'rb') as f:
+                    if f.read() == contenuto:
+                        continue  # stessa foto già estratta in un import precedente
+                base, ext = os.path.splitext(nome)
+                n = 2
+                while os.path.exists(destino):
+                    destino = os.path.join(cartella, f'{base}_{n}{ext}')
+                    n += 1
+            with open(destino, 'wb') as f:
+                f.write(contenuto)
+        risultato[data] = 'foto_giornale/' + sottocartella
+    return risultato
 
 
 def _righe_giorni(oSheet):
@@ -108,6 +194,16 @@ def _stringa_data(oSheet, data, riga_scratch):
     return testo
 
 
+def _confini_blocco(colonna, righe_data, riga_data):
+    '''Ultima riga (inclusa) del blocco che inizia a riga_data.'''
+    fine = len(colonna) - 1
+    for r in righe_data:
+        if r > riga_data:
+            fine = r - 1
+            break
+    return fine
+
+
 def _scrivi_campi(oSheet, riga_data, campi, mancanti):
     '''
     Scrive i campi nel blocco che inizia a riga_data: il testo va nella riga
@@ -115,11 +211,7 @@ def _scrivi_campi(oSheet, riga_data, campi, mancanti):
     template precedente) vengono registrati in 'mancanti', mai persi in silenzio.
     '''
     colonna, righe_data = _righe_giorni(oSheet)
-    fine = len(colonna) - 1
-    for r in righe_data:
-        if r > riga_data:
-            fine = r - 1
-            break
+    fine = _confini_blocco(colonna, righe_data, riga_data)
     posizioni = {}
     for i in range(riga_data, fine + 1):
         chiave = _CHIAVI_PER_ETICHETTA.get(colonna[i])
@@ -133,16 +225,47 @@ def _scrivi_campi(oSheet, riga_data, campi, mancanti):
         oSheet.getCellByPosition(0, riga + 1).String = testo
 
 
-def importa_giornate(oDoc, giornate, conferma):
+TESTO_LINK_FOTO = 'Apri \u2197'
+
+
+def _assicura_link_foto(oSheet, riga_data, cartella_relativa):
     '''
-    giornate  : lista [(date, campi)] da leggi_appunti()
-    conferma  : funzione conferma(stringa_data) -> 'si' | 'no' | 'annulla',
-                chiamata solo per le date già presenti in GIORNALE.
+    Inserisce (o aggiorna, se già presente da un import precedente) una riga
+    con un collegamento alla cartella delle foto del giorno, subito dopo il
+    testo di "Annotazioni, attività svolte:". Non fa nulla se quell'etichetta
+    non è nel blocco (template precedente senza quel campo).
+    '''
+    colonna, righe_data = _righe_giorni(oSheet)
+    fine = _confini_blocco(colonna, righe_data, riga_data)
+    riga_etichetta = None
+    for i in range(riga_data, fine + 1):
+        if colonna[i] == ETICHETTE['annotazioni']:
+            riga_etichetta = i
+            break
+    if riga_etichetta is None or riga_etichetta + 1 > fine:
+        return  # campo assente nel blocco: nessun posto sensato dove mettere il link
+
+    riga_testo = riga_etichetta + 1
+    riga_link = riga_testo + 1
+    formula = f'=HYPERLINK("{cartella_relativa}/";"{TESTO_LINK_FOTO}")'
+    esiste_gia = (riga_link <= fine and str(oSheet.getCellByPosition(0, riga_link).getFormula()).startswith('=HYPERLINK('))
+    if not esiste_gia:
+        oSheet.getRows().insertByIndex(riga_link, 1)
+    oSheet.getCellByPosition(0, riga_link).setFormula(formula)
+
+
+def importa_giornate(oDoc, giornate, conferma, foto_per_giorno=None):
+    '''
+    giornate        : lista [(date, campi)] da leggi_appunti()/leggi_pacchetto()
+    conferma        : funzione conferma(stringa_data) -> 'si' | 'no' | 'annulla',
+                      chiamata solo per le date già presenti in GIORNALE.
+    foto_per_giorno : {date: percorso_cartella_relativo}, da _estrai_foto(); opzionale.
 
     Prima si raccolgono tutte le risposte (dialoghi), poi si scrive nel foglio:
     nessun dialogo modale tra una scrittura e l'altra.
     Restituisce un dizionario con l'esito.
     '''
+    foto_per_giorno = foto_per_giorno or {}
     esito = {'annullato': False, 'importate': 0, 'sovrascritte': 0,
              'saltate': 0, 'mancanti': set()}
     if not giornate:
@@ -170,13 +293,13 @@ def importa_giornate(oDoc, giornate, conferma):
                 esito['annullato'] = True
                 return esito
             if risposta != 'si':
-                piano.append(('salta', etichetta, campi))
+                piano.append(('salta', data, etichetta, campi))
                 continue
-            piano.append(('sovrascrivi', etichetta, campi))
+            piano.append(('sovrascrivi', data, etichetta, campi))
         else:
-            piano.append(('nuova', etichetta, campi))
+            piano.append(('nuova', data, etichetta, campi))
 
-    for azione, etichetta, campi in piano:
+    for azione, data, etichetta, campi in piano:
         if azione == 'salta':
             esito['saltate'] += 1
             continue
@@ -194,6 +317,9 @@ def importa_giornate(oDoc, giornate, conferma):
                         if str(oSheet.getCellByPosition(0, i).String) == etichetta)
             esito['sovrascritte'] += 1
         _scrivi_campi(oSheet, riga, campi, esito['mancanti'])
+        cartella = foto_per_giorno.get(data)
+        if cartella:
+            _assicura_link_foto(oSheet, riga, cartella)
     return esito
 
 
@@ -211,11 +337,17 @@ def MENU_importa_appunti():
             Title='Importa appunti di cantiere',
             Text='Apri un Giornale Lavori di LeenO e riprova.')
         return
-    percorso = Dialogs.FileSelect('Importa appunti di cantiere...', '*.json', 0)
+    percorso = Dialogs.FileSelect('Importa appunti di cantiere...', '*.json;*.zip', 0)
     if not percorso:
         return
     try:
-        giornate = leggi_appunti(percorso)
+        giornate, foto_per_giorno = leggi_pacchetto(percorso)
+    except ValueError as e:
+        Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
+        return
+
+    try:
+        cartelle = _estrai_foto(oDoc, foto_per_giorno) if foto_per_giorno else {}
     except ValueError as e:
         Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
         return
@@ -230,7 +362,7 @@ def MENU_importa_appunti():
         return {1: 'si', 0: 'no'}.get(r, 'annulla')
 
     try:
-        esito = importa_giornate(oDoc, giornate, conferma)
+        esito = importa_giornate(oDoc, giornate, conferma, cartelle)
     except ValueError as e:
         Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
         return
@@ -240,6 +372,8 @@ def MENU_importa_appunti():
     testo = (f"Giornate aggiunte: {esito['importate']}\n"
              f"Giornate sovrascritte: {esito['sovrascritte']}\n"
              f"Giornate saltate: {esito['saltate']}")
+    if cartelle:
+        testo += f"\n\nFoto estratte in: foto_giornale/ (accanto al documento)"
     if esito['mancanti']:
         testo += ('\n\nCampi non scritti perché assenti nel giornale '
                   '(template precedente): ' + ', '.join(sorted(esito['mancanti'])))

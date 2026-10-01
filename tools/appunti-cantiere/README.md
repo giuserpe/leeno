@@ -1,18 +1,19 @@
 # Brogliaccio per LeenO
 
-PWA per raccogliere sul telefono gli appunti del giornale dei lavori e portarli in LeenO
-(menu Importa/Esporta, "Importa appunti di cantiere nel Giornale Lavori...").
+PWA per raccogliere sul telefono l'agenda del giornale dei lavori e portarla in LeenO
+(menu Importa/Esporta, "Importa agenda di cantiere nel Giornale Lavori...").
 Non è un registro ufficiale: il giornale si consolida solo in LeenO.
 
 - Formato di scambio: `documentazione/schemi/giornale_appunti.schema.json` (v1).
 - I dati restano nel browser del dispositivo: esportare spesso.
 - All'avvio, se non trova dati nel formato attuale, l'app controlla anche due formati/chiavi usati durante lo sviluppo (un "cassetto" di memoria intermedio, e un vecchio formato a un solo cantiere) e li recupera automaticamente se li trova, salvandoli nel formato corrente.
 - Più cantieri: ogni cantiere ha il proprio elenco di giornate, isolato dagli altri. "Esporta per LeenO" esporta solo il cantiere aperto, in un file con il suo nome nel nome del file.
+- Il nome "Brogliaccio" è sempre seguito dalla versione dell'app, sia nell'intestazione sia nel PDF.
 - Tema: il pulsante in alto sceglie tra automatico (segue il sistema), chiaro e scuro. La scelta resta salvata sul dispositivo.
 - Foto: si possono aggiungere foto a ogni giornata (pulsante "Aggiungi foto", fotocamera o galleria). Le foto sono ridisegnate su un canvas prima di essere salvate: questo applica l'orientamento corretto e rimuove ogni dato EXIF, inclusa la posizione GPS, oltre a limitare il lato massimo a 1600px. Sono archiviate in IndexedDB (`brogliaccio-foto`), non in localStorage. Eliminare una giornata o un cantiere elimina anche le sue foto. Le foto non sono ancora incluse nella stampa PDF né nel modulo di import di LeenO.
 - Esportazione con foto: se il cantiere ha almeno una foto, "Esporta per LeenO" genera uno .zip invece di un .json: il JSON resta alla radice con lo stesso nome e contenuto di sempre, più una cartella per ogni data con foto (es. `20260930/202609302152_001.jpg`, con l'orario di scatto e un progressivo a 3 cifre). Senza foto, l'esportazione resta un .json semplice come prima. Lo zip è generato con un piccolo scrittore interno (`zip.js`), senza compressione: le foto sono già JPEG compressi. Il modulo di import di LeenO legge solo il .json: per ora va estratto dallo zip prima di importarlo.
 - Se una giornata ha il campo "Evento infortunistico" compilato, l'esportazione mostra un doppio avviso (informazione, poi conferma) sul rischio di condividere dati sulla salute con terzi.
-- Stampa o PDF: genera una pagina A4 con le giornate compilate del cantiere aperto (solo i campi non vuoti), pensata per essere letta o salvata come PDF dal comando di stampa del browser. Lo stesso doppio avviso privacy vale anche qui. Non riproduce l'impaginazione ufficiale di LeenO: niente numerazione, niente firme.
+- Stampa o PDF: genera una pagina A4 con le giornate compilate del cantiere aperto (solo i campi non vuoti), con "Brogliaccio <versione>" e "Cantiere: <nome>" in testa, le foto della giornata incluse, e "realizzato con LeenO.org" come piè di pagina ripetuto su ogni pagina stampata. Pensata per essere letta o salvata come PDF dal comando di stampa del browser. Lo stesso doppio avviso privacy vale anche qui, in modo indipendente dall'export JSON. Non riproduce l'impaginazione ufficiale di LeenO: niente numerazione, niente firme. Dopo ogni "Esporta per LeenO" riuscito, l'app chiede se generare anche il PDF.
 - Solo file statici, nessun server. Per pubblicare basta servire questa cartella via HTTPS (es. GitHub Pages).
 - Con una nuova versione: aggiornare `CACHE` in `sw.js` e `VERSIONE` in `core.js`.
 - Le etichette dei campi in `core.js` (`CAMPI`) devono restare allineate a `LeenoGiornaleImport.ETICHETTE`.

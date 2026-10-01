@@ -2,6 +2,8 @@
 (function () {
   'use strict';
   var C = window.Core, KEY = 'appunti-cantiere-v1', TEMA_KEY = 'appunti-cantiere-tema';
+  var cantiereApertoId = null, dataAperta = null, urlFotoAttive = [];
+  var cantiereApertoRif = null, giornoApertoRif = null;
   var app = document.getElementById('app'), msg = document.getElementById('msg');
   var stato = carica();
 
@@ -32,7 +34,31 @@
     try {
       var s = JSON.parse(localStorage.getItem(KEY));
       if (s && s.cantieri) return s;
-    } catch (e) { /* stato vuoto */ }
+    } catch (e) { /* prosegue con i tentativi di recupero sotto */ }
+
+    // Recupero: durante lo sviluppo il nome del "cassetto" di memoria e' cambiato
+    // due volte. Se qui dentro c'e' ancora qualcosa di riconoscibile, lo si
+    // riporta al formato attuale invece di ripartire da zero in silenzio.
+    var recuperato = null;
+    try {
+      var v2 = JSON.parse(localStorage.getItem('appunti-cantiere-v2'));
+      if (v2 && v2.cantieri) recuperato = v2; // formato "a piu' cantieri" salvato sotto il nome intermedio
+    } catch (e) { /* niente da recuperare da qui */ }
+    if (!recuperato) {
+      try {
+        var v1piatto = JSON.parse(localStorage.getItem(KEY));
+        if (v1piatto && v1piatto.giornate && Object.keys(v1piatto.giornate).length) {
+          var id = nuovoId();
+          recuperato = { cantieri: {}, attivo: id };
+          recuperato.cantieri[id] = { nome: 'Cantiere recuperato', giornate: v1piatto.giornate,
+            ultimo_export: v1piatto.ultimo_export || null }; // formato a un solo cantiere, precedente a questo
+        }
+      } catch (e) { /* niente da recuperare da qui */ }
+    }
+    if (recuperato) {
+      try { localStorage.setItem(KEY, JSON.stringify(recuperato)); } catch (e) { /* si tenta comunque di usarlo in questa sessione */ }
+      return recuperato;
+    }
     return { cantieri: {}, attivo: null };
   }
   function salva() {
@@ -48,6 +74,13 @@
     return e;
   }
   function btn(testo, fn, cls) { return h('button', { type: 'button', 'class': cls || '', text: testo, on: { click: fn } }); }
+  // AAAAMMGGhhmm dall'istante di scatto/salvataggio di una foto (creato_il), ora locale.
+  function marcaTemporale(iso) {
+    var d = new Date(iso);
+    function due(n) { return (n < 10 ? '0' : '') + n; }
+    return '' + d.getFullYear() + due(d.getMonth() + 1) + due(d.getDate()) + due(d.getHours()) + due(d.getMinutes());
+  }
+
   function dataEstesa(iso) {
     return new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
@@ -55,7 +88,10 @@
     return nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
       .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'cantiere';
   }
-  function svuota() { while (app.firstChild) app.removeChild(app.firstChild); avviso(''); window.scrollTo(0, 0); }
+  function svuota() {
+    urlFotoAttive.forEach(function (u) { URL.revokeObjectURL(u); }); urlFotoAttive = [];
+    while (app.firstChild) app.removeChild(app.firstChild); avviso(''); window.scrollTo(0, 0);
+  }
   function cantiereCorrente() { return stato.attivo ? stato.cantieri[stato.attivo] : null; }
 
   // -------------------- schermata: elenco cantieri --------------------
@@ -94,7 +130,9 @@
     var testo = 'Eliminare il cantiere "' + c.nome + '"' + (n ? ', con ' + giornate(n) + '?' : '?');
     if (n && !c.ultimo_export) testo += '\n\nAttenzione: non è mai stato esportato per LeenO.';
     if (!confirm(testo)) return;
-    delete stato.cantieri[stato.attivo]; stato.attivo = null; salva(); cantieri();
+    var idEliminato = stato.attivo;
+    delete stato.cantieri[idEliminato]; stato.attivo = null; salva(); cantieri();
+    FotoStore.eliminaPerCantiere(idEliminato).catch(function () { /* pulizia foto: nessun blocco per l'utente */ });
   }
 
   // -------------------- schermata: elenco giornate di un cantiere --------------------
@@ -131,6 +169,8 @@
   function modifica(iso) {
     svuota();
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
+    cantiereApertoId = stato.attivo; dataAperta = iso;
+    cantiereApertoRif = c; giornoApertoRif = g;
     app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', elenco), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere' }), h('span', { text: c.nome })
@@ -149,9 +189,37 @@
       });
       app.appendChild(h('div', { 'class': 'campo' }, [h('label', { 'for': id, text: campo[1] }), el]));
     });
+    app.appendChild(h('div', { 'class': 'campo' }, [
+      h('label', { text: 'Foto' }),
+      h('div', { id: 'foto-lista', 'class': 'foto-lista' }),
+      btn('Aggiungi foto', function () { document.getElementById('file-foto').click(); })
+    ]));
+    aggiornaFotoLista();
     app.appendChild(btn('Elimina questa giornata', function () {
-      if (confirm('Eliminare la giornata ' + dataEstesa(iso) + '?')) { delete c.giornate[iso]; salva(); elenco(); }
+      if (!confirm('Eliminare la giornata ' + dataEstesa(iso) + '?')) return;
+      delete c.giornate[iso]; salva(); elenco();
+      FotoStore.eliminaPerGiorno(stato.attivo, iso).catch(function () { /* pulizia foto: nessun blocco per l'utente */ });
     }, 'danger'));
+  }
+
+  function aggiornaFotoLista() {
+    var el = document.getElementById('foto-lista');
+    if (!el) return;
+    while (el.firstChild) el.removeChild(el.firstChild);
+    if (!FotoStore) return;
+    FotoStore.elencaPerGiorno(cantiereApertoId, dataAperta).then(function (righe) {
+      if (el !== document.getElementById('foto-lista')) return; // schermata cambiata nel frattempo
+      righe.forEach(function (r) {
+        var url = URL.createObjectURL(r.blob); urlFotoAttive.push(url);
+        el.appendChild(h('figure', { 'class': 'foto' }, [
+          h('img', { src: url, alt: 'Foto del ' + dataEstesa(dataAperta) }),
+          btn('Elimina', function () {
+            if (!confirm('Eliminare questa foto?')) return;
+            FotoStore.elimina(r.id).then(aggiornaFotoLista);
+          }, 'danger')
+        ]));
+      });
+    }).catch(function (e) { avviso('Impossibile caricare le foto: ' + e.message); });
   }
 
   function contieneDatiSensibili(dati) {
@@ -170,20 +238,58 @@
     return confirm('Vuoi comunque ' + azione + '?');
   }
 
+  function condividiOScarica(file, dati, c) {
+    function fatto() { c.ultimo_export = new Date().toISOString(); salva(); elenco(); avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name); }
+    function scarica() {
+      var a = h('a', { href: URL.createObjectURL(file), download: file.name }); document.body.appendChild(a); a.click(); a.remove(); fatto();
+    }
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(fatto, function (e) {
+        if (e && e.name === 'AbortError') { avviso('Condivisione annullata.'); return; }
+        // Alcuni browser (es. Brave) possono rifiutare la condivisione per motivi propri:
+        // il file resta comunque disponibile scaricandolo direttamente.
+        scarica();
+      });
+    } else {
+      scarica();
+    }
+  }
+
   function esporta() {
     var c = cantiereCorrente();
     var dati = C.buildExport(c.giornate, new Date());
     if (!dati.giornate.length) { avviso('Nessuna giornata da esportare.'); return; }
     if (!confermaSeSensibile(dati, 'esportare il file')) { avviso('Esportazione annullata.'); return; }
     dati.testata = { lavori: c.nome };
-    var nome = 'appunti-' + slug(c.nome) + '-' + C.oggiISO().replace(/-/g, '') + '.json';
-    var file = new File([JSON.stringify(dati, null, 2)], nome, { type: 'application/json' });
-    function fatto() { c.ultimo_export = new Date().toISOString(); salva(); elenco(); avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + nome); }
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(fatto, function (e) { if (e.name !== 'AbortError') avviso('Condivisione non riuscita.'); });
-    } else {
-      var a = h('a', { href: URL.createObjectURL(file), download: nome }); document.body.appendChild(a); a.click(); a.remove(); fatto();
-    }
+    var base = 'appunti-' + slug(c.nome) + '-' + C.oggiISO().replace(/-/g, '');
+    var idCantiere = stato.attivo;
+
+    FotoStore.elencaPerCantiere(idCantiere).catch(function () { return []; }).then(function (foto) {
+      if (!foto.length) {
+        condividiOScarica(new File([JSON.stringify(dati, null, 2)], base + '.json', { type: 'application/json' }), dati, c);
+        return;
+      }
+      var perGiorno = {};
+      foto.forEach(function (f) { (perGiorno[f.giorno] = perGiorno[f.giorno] || []).push(f); });
+      var voci = [{ percorso: base + '.json', promessa: Promise.resolve(new TextEncoder().encode(JSON.stringify(dati, null, 2))) }];
+      Object.keys(perGiorno).sort().forEach(function (giorno) {
+        var cartella = giorno.replace(/-/g, '');
+        perGiorno[giorno]
+          .slice().sort(function (a, b) { return a.creato_il < b.creato_il ? -1 : 1; })
+          .forEach(function (f, i) {
+            var nome = marcaTemporale(f.creato_il) + '_' + String(i + 1).padStart(3, '0') + '.jpg';
+            voci.push({
+              percorso: cartella + '/' + nome,
+              promessa: f.blob.arrayBuffer().then(function (buf) { return new Uint8Array(buf); })
+            });
+          });
+      });
+      Promise.all(voci.map(function (v) { return v.promessa.then(function (d) { return { percorso: v.percorso, dati: d }; }); }))
+        .then(function (vociPronte) {
+          condividiOScarica(new File([ZipStore.creaZip(vociPronte)], base + '.zip', { type: 'application/zip' }), dati, c);
+        })
+        .catch(function (e) { avviso('Creazione del file compresso non riuscita: ' + e.message); });
+    });
   }
 
   function costruisciStampa(nomeCantiere, dati) {
@@ -228,6 +334,21 @@
       n.forEach(function (d) { c.giornate[d] = nuove[d]; });
       salva(); elenco();
     }).catch(function (e) { avviso(e.message); });
+  });
+
+  document.getElementById('file-foto').addEventListener('change', function (ev) {
+    var file = Array.prototype.slice.call(ev.target.files); ev.target.value = '';
+    if (!file.length || !dataAperta) return;
+    avviso('Elaborazione foto in corso...');
+    Promise.all(file.map(function (f) {
+      return FotoStore.preparaImmagine(f).then(function (blob) { return FotoStore.aggiungi(cantiereApertoId, dataAperta, blob); });
+    })).then(function () {
+      // la prima foto di una giornata mai toccata prima la registra nell'elenco, come farebbe un campo di testo
+      if (cantiereApertoRif && cantiereApertoRif.giornate[dataAperta] !== giornoApertoRif) {
+        cantiereApertoRif.giornate[dataAperta] = giornoApertoRif;
+      }
+      salva(); avviso(''); aggiornaFotoLista();
+    }).catch(function (e) { avviso('Foto non salvata: ' + e.message); });
   });
 
   var lista = document.getElementById('meteo');

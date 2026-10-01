@@ -138,7 +138,7 @@ def leggi_pacchetto(percorso):
 def _estrai_foto(oDoc, foto_per_giorno):
     '''
     Scrive le foto su disco accanto al documento, in una sottocartella
-    "foto_giornale/<AAAAMMGG>/". Se un file con lo stesso nome e contenuto
+    "FOTO/<AAAAMMGG>/". Se un file con lo stesso nome e contenuto
     esiste già, non lo riscrive (import ripetuto = nessun duplicato); se il
     nome esiste con contenuto diverso, usa un nome libero senza sovrascrivere.
     Restituisce {datetime.date: percorso_cartella_relativo} solo per le
@@ -151,7 +151,7 @@ def _estrai_foto(oDoc, foto_per_giorno):
     risultato = {}
     for data, foto in foto_per_giorno.items():
         sottocartella = data.strftime('%Y%m%d')
-        cartella = os.path.join(cartella_doc, 'foto_giornale', sottocartella)
+        cartella = os.path.join(cartella_doc, 'FOTO', sottocartella)
         os.makedirs(cartella, exist_ok=True)
         for nome, contenuto in foto:
             destino = os.path.join(cartella, nome)
@@ -166,7 +166,7 @@ def _estrai_foto(oDoc, foto_per_giorno):
                     n += 1
             with open(destino, 'wb') as f:
                 f.write(contenuto)
-        risultato[data] = 'foto_giornale/' + sottocartella
+        risultato[data] = 'FOTO/' + sottocartella
     return risultato
 
 
@@ -373,7 +373,7 @@ def MENU_importa_appunti():
              f"Giornate sovrascritte: {esito['sovrascritte']}\n"
              f"Giornate saltate: {esito['saltate']}")
     if cartelle:
-        testo += f"\n\nFoto estratte in: foto_giornale/ (accanto al documento)"
+        testo += f"\n\nFoto estratte in: FOTO/ (accanto al documento)"
     if esito['mancanti']:
         testo += ('\n\nCampi non scritti perché assenti nel giornale '
                   '(template precedente): ' + ', '.join(sorted(esito['mancanti'])))

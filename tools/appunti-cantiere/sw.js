@@ -1,6 +1,6 @@
 /* Cache dell'app per l'uso offline: risponde dalla cache e aggiorna in background. */
-var CACHE = 'appunti-cantiere-0.1.10';
-var FILE = ['./', 'index.html', 'core.js', 'app.js', 'manifest.webmanifest', 'logo.png', 'icon-192.png', 'icon-512.png'];
+var CACHE = 'appunti-cantiere-0.3.3';
+var FILE = ['./', 'index.html', 'core.js', 'storage.js', 'zip.js', 'app.js', 'manifest.webmanifest', 'logo.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILE); }).then(function () { return self.skipWaiting(); }));
 });

@@ -47,6 +47,10 @@ button.danger { color:var(--warn); border-color:var(--warn); background:transpar
 footer.dona { max-width:40rem; margin:1.2rem auto 0; padding:0 1rem 1.4rem; text-align:center; }
 footer.dona a { display:inline-block; font:600 .85rem var(--display); color:var(--cta); text-decoration:none; border:1px solid var(--cta); border-radius:2px; padding:.55rem 1.2rem; }
 footer.dona a:hover { background:var(--cta); color:#fff; }
+.foto-lista { display:flex; flex-wrap:wrap; gap:.6rem; margin:.4rem 0; }
+.foto { margin:0; width:6rem; }
+.foto img { display:block; width:6rem; height:6rem; object-fit:cover; border:1px solid var(--line); border-radius:2px; }
+.foto button { display:block; width:100%; margin:.25rem 0 0; padding:.25rem; font-size:.7rem; min-height:auto; }
 #stampa { display:none; }
 @media print {
   body > :not(#stampa) { display:none !important; }
@@ -69,7 +73,7 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
   <img src="logo.png" alt="LeenO">
   <div class="info">
     <h1>Brogliaccio</h1>
-    <p>Appunti da consolidare in LeenO. Non è un registro ufficiale: il giornale dei lavori si tiene solo in LeenO.</p>
+    <p>Appunti di cantiere con LeenO - leeno.org</p>
   </div>
   <button type="button" class="tema" id="tema"></button>
 </header>
@@ -80,8 +84,11 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
 </footer>
 <datalist id="meteo"></datalist>
 <input type="file" id="file" accept=".json,application/json" hidden>
+<input type="file" id="file-foto" accept="image/*" capture="environment" multiple hidden>
 <div id="stampa" hidden></div>
 <script src="core.js"></script>
+<script src="storage.js"></script>
+<script src="zip.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

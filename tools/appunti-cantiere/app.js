@@ -338,6 +338,7 @@
     function addPageNum() {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
+      doc.text('realizzato con LeenO.org', mar, 285, { align: 'left' });
       doc.text('Pagina ' + nPag, 210 - mar, 285, { align: 'right' });
       nPag++;
     }

@@ -149,7 +149,7 @@
     var oggi = h('input', { type: 'date', id: 'nuova', value: C.oggiISO() });
     var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
     app.appendChild(h('div', { 'class': 'barra' }, [
-      btn('Cantieri ►', cantieri), h('h2', { text: c.nome }), btn('Rinomina', rinominaCantiere)
+      btn('◄ Cantieri', cantieri), h('h2', { text: c.nome }), btn('Rinomina', rinominaCantiere)
     ]));
     app.appendChild(h('section', {}, [
       h('label', { 'for': 'nuova', text: 'Giornata' }), oggi,
@@ -165,7 +165,7 @@
       h('p', { 'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
         (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.') }),
       btn('Esporta per LeenO ↗', esporta, 'cta'),
-      btn('Stampa o PDF ↙', stampaPDF),
+      btn('Stampa o PDF ↗', stampaPDF),
       btn('Ripristina da file ↙', function () { document.getElementById('file').click(); }),
       btn('Elimina cantiere ⌫', eliminaCantiere, 'danger')
     ]));

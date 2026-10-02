@@ -341,12 +341,12 @@
         tutte.forEach(function (f, i) {
           if (datiFoto[i]) { f.dataUrl = datiFoto[i].url; f.w = datiFoto[i].w; f.h = datiFoto[i].h; }
         });
-        generaVeroPDF(c.nome, dati, perGiorno);
+        generaVeroPDF(c.nome, c, dati, perGiorno);
       });
     });
   }
 
-  function generaVeroPDF(nomeCantiere, dati, fotoPerGiorno) {
+  function generaVeroPDF(nomeCantiere, cantiere, dati, fotoPerGiorno) {
     if (!window.jspdf) { avviso('Libreria PDF non ancora caricata. Riprova tra un attimo.'); return; }
     var doc = new window.jspdf.jsPDF();
     var mar = 20, y = mar;
@@ -448,7 +448,7 @@
     
     var pdfBlob = doc.output('blob');
     var pdfFile = new File([pdfBlob], 'Brogliaccio_' + slug(nomeCantiere) + '.pdf', { type: 'application/pdf' });
-    condividiOScarica(pdfFile, dati, cantiereCorrente());
+    condividiOScarica(pdfFile, dati, cantiere);
   }
 
   document.getElementById('file').addEventListener('change', function (ev) {

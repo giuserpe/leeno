@@ -434,7 +434,9 @@
       addPageNum();
     }
     
-    doc.save('Brogliaccio_' + slug(nomeCantiere) + '.pdf');
+    var pdfBlob = doc.output('blob');
+    var pdfFile = new File([pdfBlob], 'Brogliaccio_' + slug(nomeCantiere) + '.pdf', { type: 'application/pdf' });
+    condividiOScarica(pdfFile, dati, cantiereCorrente());
   }
 
   document.getElementById('file').addEventListener('change', function (ev) {

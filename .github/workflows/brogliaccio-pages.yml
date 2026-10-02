@@ -2,7 +2,7 @@ name: Pubblica Brogliaccio su GitHub Pages
 
 on:
   push:
-    branches: [dev]
+    branches: [master, dev]
     paths:
       - 'tools/appunti-cantiere/**'
       - '.github/workflows/brogliaccio-pages.yml'

@@ -239,29 +239,36 @@
   }
 
   function condividiOScarica(file, dati, c) {
-    function fatto() { c.ultimo_export = new Date().toISOString(); salva(); elenco(); avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name); }
-    function scarica() {
-      var a = h('a', { href: URL.createObjectURL(file), download: file.name }); document.body.appendChild(a); a.click(); a.remove(); fatto();
-    }
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(fatto, function (e) {
-        if (e && e.name === 'AbortError') { avviso('Condivisione annullata.'); return; }
-        // Alcuni browser (es. Brave) possono rifiutare la condivisione per motivi propri:
-        // il file resta comunque disponibile scaricandolo direttamente.
-        scarica();
-      });
-    } else {
-      scarica();
-    }
+    // Si salva sempre il file in locale per primo: e' affidabile e non dipende da
+    // permessi del browser. La condivisione, che fa uscire il file dal dispositivo,
+    // viene proposta subito dopo come passo separato, con l'avviso privacy agganciato
+    // a quella proposta e non al semplice salvataggio locale.
+    var a = h('a', { href: URL.createObjectURL(file), download: file.name });
+    document.body.appendChild(a); a.click(); a.remove();
+    c.ultimo_export = new Date().toISOString(); salva(); elenco();
+    avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name);
+
+    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) return;
+    if (!confirm('Vuoi condividere questo file?')) return;
+    if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
+    navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(
+      function () { avviso('File condiviso: ' + file.name); },
+      function (e) {
+        if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Il file resta comunque salvato.'); return; }
+        avviso('Condivisione non riuscita. Il file resta comunque salvato: ' + file.name);
+      }
+    );
   }
 
   function esporta() {
     var c = cantiereCorrente();
     var dati = C.buildExport(c.giornate, new Date());
     if (!dati.giornate.length) { avviso('Nessuna giornata da esportare.'); return; }
-    if (!confermaSeSensibile(dati, 'esportare il file')) { avviso('Esportazione annullata.'); return; }
+    // Nessun blocco qui: il salvataggio in locale resta sul dispositivo, non e' un
+    // rischio di condivisione. L'avviso privacy scatta sulla condivisione vera e
+    // propria, dentro condividiOScarica().
     dati.testata = { lavori: c.nome };
-    var base = 'appunti-' + slug(c.nome) + '-' + C.oggiISO().replace(/-/g, '');
+    var base = 'agenda-' + slug(c.nome) + '-' + C.oggiISO().replace(/-/g, '');
     var idCantiere = stato.attivo;
 
     FotoStore.elencaPerCantiere(idCantiere).catch(function () { return []; }).then(function (foto) {
@@ -292,13 +299,14 @@
     });
   }
 
-  function costruisciStampa(nomeCantiere, dati) {
+  function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
+    fotoPerGiorno = fotoPerGiorno || {};
     var el = document.getElementById('stampa');
     while (el.firstChild) el.removeChild(el.firstChild);
     el.appendChild(h('div', { 'class': 's-intestazione' }, [
-      h('h1', { text: 'Brogliaccio' }),
-      h('p', { 'class': 's-cantiere', text: nomeCantiere }),
-      h('p', { 'class': 's-avviso', text: 'Appunti da consolidare in LeenO. Non è un registro ufficiale. '
+      h('h1', { text: 'Brogliaccio ' + C.VERSIONE }),
+      h('p', { 'class': 's-cantiere', text: 'Cantiere: ' + nomeCantiere }),
+      h('p', { 'class': 's-avviso', text: 'Agenda da consolidare in LeenO. Non è un registro ufficiale. '
         + 'Generato il ' + new Date().toLocaleDateString('it-IT') + '.' })
     ]));
     dati.giornate.forEach(function (g) {
@@ -309,8 +317,15 @@
         dl.appendChild(h('dt', { text: campo[1] }));
         dl.appendChild(h('dd', { text: testo }));
       });
-      el.appendChild(h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]));
+      var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);
+      var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
+      if (foto.length) {
+        sezione.appendChild(h('div', { 'class': 's-foto-elenco' },
+          foto.map(function (f) { return h('img', { src: f.dataUrl, alt: 'Foto del ' + dataEstesa(g.data) }); })));
+      }
+      el.appendChild(sezione);
     });
+    el.appendChild(h('div', { 'class': 's-piede' }, [h('span', { text: 'realizzato con LeenO.org' })]));
   }
 
   function stampaPDF() {
@@ -318,8 +333,28 @@
     var dati = C.buildExport(c.giornate, new Date());
     if (!dati.giornate.length) { avviso('Nessuna giornata da stampare.'); return; }
     if (!confermaSeSensibile(dati, 'creare il PDF')) { avviso('Operazione annullata.'); return; }
-    costruisciStampa(c.nome, dati);
-    window.print();
+    var idCantiere = stato.attivo;
+    FotoStore.elencaPerCantiere(idCantiere).catch(function () { return []; }).then(function (foto) {
+      var perGiorno = {};
+      foto.forEach(function (f) { (perGiorno[f.giorno] = perGiorno[f.giorno] || []).push(f); });
+      Object.keys(perGiorno).forEach(function (g) {
+        perGiorno[g].sort(function (a, b) { return a.creato_il < b.creato_il ? -1 : 1; });
+      });
+      var tutte = [];
+      Object.keys(perGiorno).forEach(function (g) { perGiorno[g].forEach(function (f) { tutte.push(f); }); });
+      Promise.all(tutte.map(function (f) {
+        return new Promise(function (resolve) {
+          var lettore = new FileReader();
+          lettore.onload = function () { resolve(lettore.result); };
+          lettore.onerror = function () { resolve(null); };
+          lettore.readAsDataURL(f.blob);
+        });
+      })).then(function (urlDati) {
+        tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
+        costruisciStampa(c.nome, dati, perGiorno);
+        window.print();
+      });
+    });
   }
 
   document.getElementById('file').addEventListener('change', function (ev) {
@@ -353,6 +388,8 @@
 
   var lista = document.getElementById('meteo');
   C.METEO.forEach(function (m) { lista.appendChild(h('option', { value: m })); });
+  var elTitolo = document.getElementById('titolo-app');
+  if (elTitolo) elTitolo.textContent = 'Brogliaccio ' + C.VERSIONE;
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
   cantieri();

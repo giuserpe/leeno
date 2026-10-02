@@ -1,7 +1,7 @@
 {
   "name": "Brogliaccio per LeenO",
   "short_name": "Brogliaccio",
-  "description": "Raccolta di appunti di cantiere da consolidare nel Giornale Lavori di LeenO.",
+  "description": "Raccolta di agenda di cantiere da consolidare nel Giornale Lavori di LeenO.",
   "lang": "it",
   "start_url": "./",
   "scope": "./",

@@ -62,6 +62,9 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
   #stampa h1 { font-size:14pt; margin:0 0 2mm; color:#000; }
   #stampa .s-cantiere { font-size:12pt; font-weight:700; margin:0 0 2mm; }
   #stampa .s-giorno { break-inside:avoid; margin-bottom:6mm; }
+  #stampa .s-piede { position:fixed; bottom:6mm; left:16mm; font-size:8pt; color:#444; }
+  #stampa .s-foto-elenco { display:flex; flex-wrap:wrap; gap:3mm; margin:2mm 0 4mm; }
+  #stampa .s-foto-elenco img { width:38mm; height:38mm; object-fit:cover; border:0.3mm solid #000; }
   #stampa h2 { font-size:11pt; border-bottom:1px solid #000; margin:0 0 2mm; text-transform:capitalize; }
   #stampa dt { font-weight:700; font-size:9pt; text-transform:uppercase; letter-spacing:.03em; margin-top:2mm; }
   #stampa dd { margin:0 0 1mm; white-space:pre-wrap; }
@@ -72,8 +75,8 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
 <header>
   <img src="logo.png" alt="LeenO">
   <div class="info">
-    <h1>Brogliaccio</h1>
-    <p>Appunti di cantiere con LeenO - leeno.org</p>
+    <h1 id="titolo-app">Brogliaccio</h1>
+    <p>Agenda di cantiere con LeenO - leeno.org</p>
   </div>
   <button type="button" class="tema" id="tema"></button>
 </header>

@@ -2119,7 +2119,7 @@
               <value>%origin%/icons/leeno</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>LeenO ❤</value>
+              <value>Sostieni LeenO ❤</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

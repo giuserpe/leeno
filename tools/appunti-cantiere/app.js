@@ -213,7 +213,7 @@
         var url = URL.createObjectURL(r.blob); urlFotoAttive.push(url);
         el.appendChild(h('figure', { 'class': 'foto' }, [
           h('img', { src: url, alt: 'Foto del ' + dataEstesa(dataAperta) }),
-          btn('Elimina ⌫', function () {
+          btn('Elimina  ⌫', function () {
             if (!confirm('Eliminare questa foto?')) return;
             FotoStore.elimina(r.id).then(aggiornaFotoLista);
           }, 'danger')

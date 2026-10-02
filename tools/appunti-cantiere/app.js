@@ -100,14 +100,14 @@
     var ids = Object.keys(stato.cantieri).sort(function (a, b) {
       return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it');
     });
-    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Cantieri' })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Cantieri:' })]));
     app.appendChild(h('ul', { 'class': 'lista' }, ids.map(function (id) {
       var c = stato.cantieri[id], n = Object.keys(c.giornate).length;
       return h('li', {}, [h('button', { type: 'button', on: { click: function () { stato.attivo = id; salva(); elenco(); } } }, [
         h('strong', { text: c.nome }), h('span', { text: giornate(n) + (n === 1 ? ' salvata' : ' salvate') })])]);
     })));
     if (!ids.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessun cantiere. Creane uno per iniziare.' }));
-    app.appendChild(btn('Nuovo cantiere', creaCantiere, 'primary'));
+    app.appendChild(btn('Nuovo cantiere ►', creaCantiere, 'primary'));
   }
 
   function creaCantiere() {
@@ -144,7 +144,7 @@
     var oggi = h('input', { type: 'date', id: 'nuova', value: C.oggiISO() });
     var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
     app.appendChild(h('div', { 'class': 'barra' }, [
-      btn('Cantieri', cantieri), h('h2', { text: c.nome }), btn('Rinomina', rinominaCantiere)
+      btn('Cantieri ►', cantieri), h('h2', { text: c.nome }), btn('Rinomina', rinominaCantiere)
     ]));
     app.appendChild(h('section', {}, [
       h('label', { 'for': 'nuova', text: 'Giornata' }), oggi,
@@ -159,10 +159,10 @@
     app.appendChild(h('section', {}, [
       h('p', { 'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
         (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.') }),
-      btn('Esporta per LeenO', esporta, 'cta'),
-      btn('Stampa o PDF', stampaPDF),
-      btn('Ripristina da file', function () { document.getElementById('file').click(); }),
-      btn('Elimina cantiere', eliminaCantiere, 'danger')
+      btn('Esporta per LeenO ↗', esporta, 'cta'),
+      btn('Stampa o PDF ↙', stampaPDF),
+      btn('Ripristina da file ↙', function () { document.getElementById('file').click(); }),
+      btn('Elimina cantiere ⌫', eliminaCantiere, 'danger')
     ]));
   }
 
@@ -171,7 +171,7 @@
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
     cantiereApertoId = stato.attivo; dataAperta = iso;
     cantiereApertoRif = c; giornoApertoRif = g;
-    app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', elenco), h('h2', { text: dataEstesa(iso) })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [btn('◄ Indietro', elenco), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere' }), h('span', { text: c.nome })
     ]));

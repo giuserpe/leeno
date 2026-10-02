@@ -316,12 +316,19 @@
       Promise.all(tutte.map(function (f) {
         return new Promise(function (resolve) {
           var lettore = new FileReader();
-          lettore.onload = function () { resolve(lettore.result); };
+          lettore.onload = function () {
+            var img = new Image();
+            img.onload = function() { resolve({ url: lettore.result, w: img.naturalWidth, h: img.naturalHeight }); };
+            img.onerror = function() { resolve({ url: lettore.result, w: 400, h: 400 }); };
+            img.src = lettore.result;
+          };
           lettore.onerror = function () { resolve(null); };
           lettore.readAsDataURL(f.blob);
         });
-      })).then(function (urlDati) {
-        tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
+      })).then(function (datiFoto) {
+        tutte.forEach(function (f, i) {
+          if (datiFoto[i]) { f.dataUrl = datiFoto[i].url; f.w = datiFoto[i].w; f.h = datiFoto[i].h; }
+        });
         generaVeroPDF(c.nome, dati, perGiorno);
       });
     });
@@ -389,23 +396,37 @@
       var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
       if (foto.length) {
         y += 4;
-        var fW = 40, fH = 40, x = mar;
+        var maxBox = 50, x = mar;
         var inlineY = y;
+        var rigaH = 0;
         for (var i = 0; i < foto.length; i++) {
+          var wOrig = foto[i].w || 400, hOrig = foto[i].h || 400;
+          var fW, fH;
+          if (wOrig > hOrig) {
+            fW = maxBox;
+            fH = (hOrig / wOrig) * maxBox;
+          } else {
+            fH = maxBox;
+            fW = (wOrig / hOrig) * maxBox;
+          }
+
           if (x + fW > 210 - mar) {
             x = mar;
-            inlineY += fH + 4;
+            inlineY += rigaH + 4;
+            rigaH = 0;
           }
           if (inlineY + fH > 275) {
             addPageNum();
             doc.addPage();
             inlineY = mar;
             x = mar;
+            rigaH = 0;
           }
           try { doc.addImage(foto[i].dataUrl, x, inlineY, fW, fH); } catch(e) {}
           x += fW + 4;
+          if (fH > rigaH) rigaH = fH;
         }
-        y = inlineY + fH + 6;
+        y = inlineY + rigaH + 6;
       }
     });
     

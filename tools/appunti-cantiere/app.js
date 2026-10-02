@@ -299,35 +299,6 @@
     });
   }
 
-  function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
-    fotoPerGiorno = fotoPerGiorno || {};
-    var el = document.getElementById('stampa');
-    while (el.firstChild) el.removeChild(el.firstChild);
-    el.appendChild(h('div', { 'class': 's-intestazione' }, [
-      h('h1', { text: 'Brogliaccio ' + C.VERSIONE }),
-      h('p', { 'class': 's-cantiere', text: 'Cantiere: ' + nomeCantiere }),
-      h('p', { 'class': 's-avviso', text: 'Agenda da consolidare in LeenO. Non è un registro ufficiale. '
-        + 'Generato il ' + new Date().toLocaleDateString('it-IT') + '.' })
-    ]));
-    dati.giornate.forEach(function (g) {
-      var dl = h('dl');
-      C.CAMPI.forEach(function (campo) {
-        var testo = g.campi[campo[0]];
-        if (!testo) return;
-        dl.appendChild(h('dt', { text: campo[1] }));
-        dl.appendChild(h('dd', { text: testo }));
-      });
-      var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);
-      var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
-      if (foto.length) {
-        sezione.appendChild(h('div', { 'class': 's-foto-elenco' },
-          foto.map(function (f) { return h('img', { src: f.dataUrl, alt: 'Foto del ' + dataEstesa(g.data) }); })));
-      }
-      el.appendChild(sezione);
-    });
-    el.appendChild(h('div', { 'class': 's-piede' }, [h('span', { text: 'realizzato con LeenO.org' })]));
-  }
-
   function stampaPDF() {
     var c = cantiereCorrente();
     var dati = C.buildExport(c.giornate, new Date());
@@ -351,10 +322,97 @@
         });
       })).then(function (urlDati) {
         tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
-        costruisciStampa(c.nome, dati, perGiorno);
-        window.print();
+        generaVeroPDF(c.nome, dati, perGiorno);
       });
     });
+  }
+
+  function generaVeroPDF(nomeCantiere, dati, fotoPerGiorno) {
+    if (!window.jspdf) { avviso('Libreria PDF non ancora caricata. Riprova tra un attimo.'); return; }
+    var doc = new window.jspdf.jsPDF();
+    var mar = 20, y = mar;
+    var maxW = 210 - mar * 2;
+    var riga = 5;
+    var nPag = 1;
+    
+    function addPageNum() {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text('Pagina ' + nPag, 210 - mar, 285, { align: 'right' });
+      nPag++;
+    }
+
+    function addText(testo, font, size) {
+      doc.setFont('helvetica', font);
+      doc.setFontSize(size);
+      var linee = doc.splitTextToSize(testo, maxW);
+      for (var i = 0; i < linee.length; i++) {
+        if (y > 275) {
+          addPageNum();
+          doc.addPage();
+          y = mar;
+        }
+        doc.text(linee[i], mar, y);
+        y += riga + (size > 12 ? 2 : 0); // extra spazio per titoli
+      }
+      y += 2;
+    }
+    
+    // Intestazione globale
+    addText('Brogliaccio ' + C.VERSIONE, 'bold', 16);
+    addText('Cantiere: ' + nomeCantiere, 'bold', 14);
+    addText('Agenda da consolidare in LeenO. Non è un registro ufficiale.', 'italic', 10);
+    addText('Generato il ' + new Date().toLocaleDateString('it-IT'), 'italic', 10);
+    y += 8;
+    
+    dati.giornate.forEach(function (g, index) {
+      // Se non è il primo giorno, cambia pagina per ricominciare da 1
+      if (index > 0) {
+        addPageNum();
+        doc.addPage();
+        y = mar;
+        nPag = 1; // Resetta ad ogni cambio di data
+      }
+      
+      addText(dataEstesa(g.data), 'bold', 12);
+      y += 4;
+      
+      C.CAMPI.forEach(function (campo) {
+        var testo = g.campi[campo[0]];
+        if (!testo) return;
+        addText(campo[1].toUpperCase(), 'bold', 10);
+        addText(testo, 'normal', 10);
+        y += 2;
+      });
+      
+      var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
+      if (foto.length) {
+        y += 4;
+        var fW = 40, fH = 40, x = mar;
+        var inlineY = y;
+        for (var i = 0; i < foto.length; i++) {
+          if (x + fW > 210 - mar) {
+            x = mar;
+            inlineY += fH + 4;
+          }
+          if (inlineY + fH > 275) {
+            addPageNum();
+            doc.addPage();
+            inlineY = mar;
+            x = mar;
+          }
+          try { doc.addImage(foto[i].dataUrl, x, inlineY, fW, fH); } catch(e) {}
+          x += fW + 4;
+        }
+        y = inlineY + fH + 6;
+      }
+    });
+    
+    if (dati.giornate.length > 0) {
+      addPageNum();
+    }
+    
+    doc.save('Brogliaccio_' + slug(nomeCantiere) + '.pdf');
   }
 
   document.getElementById('file').addEventListener('change', function (ev) {

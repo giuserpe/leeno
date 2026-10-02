@@ -1,3 +1,8 @@
+/* ########################################################################
+ * LeenO - Computo Metrico
+ * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+ * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+ * ######################################################################## */
 /* Cache dell'app per l'uso offline: risponde dalla cache e aggiorna in background. */
 var CACHE = 'appunti-cantiere-0.4.4';
 var FILE = ['./', 'index.html', 'core.js', 'storage.js', 'zip.js', 'app.js', 'jspdf.min.js', 'manifest.webmanifest', 'logo.png', 'icon-192.png', 'icon-512.png'];

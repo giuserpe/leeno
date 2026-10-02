@@ -1,3 +1,8 @@
+/* ########################################################################
+ * LeenO - Computo Metrico
+ * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+ * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+ * ######################################################################## */
 /* Brogliaccio per LeenO: logica pura (schema JSON v1), senza DOM. */
 (function (root) {
   'use strict';

@@ -1,3 +1,8 @@
+/* ########################################################################
+ * LeenO - Computo Metrico
+ * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+ * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+ * ######################################################################## */
 /* Scrittore ZIP minimo, senza compressione (le foto JPEG sono già compresse).
    Usato solo per l'esportazione: nessuna libreria esterna, nessuna dipendenza di rete. */
 (function (root) {

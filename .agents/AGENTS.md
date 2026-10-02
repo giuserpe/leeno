@@ -204,6 +204,10 @@ Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nascond
 
 Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente — anche se in quel momento sembra che nessuno la stia ancora usando.
 
+**Aggiornamento versione:** Ad ogni modifica del codice di Brogliaccio, è obbligatorio aggiornare il numero di versione secondo il criterio Semantic Versioning (Major.Minor.Fix/Patch). La versione va aggiornata in modo allineato in due punti:
+1. In `tools/appunti-cantiere/core.js` (variabile `VERSIONE`).
+2. In `tools/appunti-cantiere/sw.js` (variabile `CACHE` del Service Worker, es. `appunti-cantiere-0.4.2`). Questo passaggio è essenziale per invalidare la cache offline dei dispositivi e far scaricare la nuova versione agli utenti.
+
 ## Quirk minori UNO/ODF
 
 Due gotcha isolati, documentati con dettaglio in `documentazione/LESSONS_UNO_QUIRKS.md`: i nomi di stile interni LibreOffice possono essere anonimi (es. `uuuuu` invece di `'Comp TOTALI'`, causando fallimenti silenziosi in confronti `CellStyle == "nome leggibile"`); i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle F1 di COMPUTO/CONTABILITA se un file reale è stato usato come base — verificarle prima di distribuire un template.

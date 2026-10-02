@@ -11,12 +11,14 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Ambiente di sviluppo e macchine](#ambiente-di-sviluppo-e-macchine)
 - [Diagnosi conflitti pull/merge e gestione della storia](#diagnosi-conflitti-pullmerge-e-gestione-della-storia)
 - [Regole del Progetto LeenO](#regole-del-progetto-leeno)
+- [Gestione Licenza e Copyright](#gestione-licenza-e-copyright)
 - [Sicurezza dei moduli in `pythonpath/`](#sicurezza-dei-moduli-in-pythonpath)
 - [Ciclo di vita dei documenti UNO](#ciclo-di-vita-dei-documenti-uno)
 - [Compatibilità delle proprietà custom del documento](#compatibilità-delle-proprietà-custom-del-documento)
 - [Diagnosi di blocchi/freeze](#diagnosi-di-bloccifreeze)
 - [Modulo XPWE (export/import PriMus)](#modulo-xpwe-exportimport-primus)
 - [Export PDF (PDF/A e note)](#export-pdf-pdfa-e-note)
+- [Agenda di cantiere (Brogliaccio / PWA)](#agenda-di-cantiere-brogliaccio--pwa)
 - [Quirk minori UNO/ODF](#quirk-minori-unoodf)
 - [Pipeline di test automatizzato (headless UNO)](#pipeline-di-test-automatizzato-headless-uno)
 - [Sistema icone](#sistema-icone)
@@ -24,7 +26,6 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Preservazione del line-ending in qualsiasi editing](#preservazione-del-line-ending-in-qualsiasi-editing)
 - [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato)
 - [Git Commit – Conventional Commits in Italiano](#git-commit--conventional-commits-in-italiano-leeno)
-- [Privacy e controllo locale dei dati](#privacy-e-controllo-locale-dei-dati)
 - [Manutenzione di questo file](#manutenzione-di-questo-file)
 
 ## Premesse
@@ -153,6 +154,13 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 - Non includere sezioni CLI nel codice dei moduli.
 - Quando è necessario, preferisci sempre i formati aperti .ODF.
 
+## Gestione Licenza e Copyright
+
+- L'intero progetto LeenO è rilasciato sotto licenza **LGPLv2.1**.
+- Ogni nuovo modulo Python deve includere l'intestazione standard di licenza e copyright (Giuseppe Vizziello - supporto@leeno.org).
+- **NON modificare né rimuovere MAI** le intestazioni di copyright di terze parti (es. Massimo Del Fedele) senza esplicita istruzione. Codice di terzi già incluso va preservato con il suo copyright e licenza originali.
+- Librerie esterne integrate o script custom (anche fuori da `src/Ultimus.oxt`) devono rispettare la compatibilità con la licenza LGPL.
+
 ## Sicurezza dei moduli in `pythonpath/`
 
 `src/Ultimus.oxt/python/pythonpath/` è nel `sys.path` dell'estensione: qualunque file al suo interno può essere importato dal processo di LibreOffice per motivi indipendenti dal task che lo ha creato (esplorazione macro, `importlib.reload` di recupero in caso di errore, tool di indicizzazione). Per questo:
@@ -190,13 +198,19 @@ Regola da tenere a mente comunque, perché ricorre facilmente: `invertiUnSegno()
 
 Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nasconde l'indicatore visivo delle note sulla cella (solo l'elenco a fine pagina) — per escluderle davvero vanno rimosse (e, su documento live, reinserite dopo l'export).
 
+## Agenda di cantiere (Brogliaccio / PWA)
+
+`tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
+
+Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente — anche se in quel momento sembra che nessuno la stia ancora usando.
+
 ## Quirk minori UNO/ODF
 
 Due gotcha isolati, documentati con dettaglio in `documentazione/LESSONS_UNO_QUIRKS.md`: i nomi di stile interni LibreOffice possono essere anonimi (es. `uuuuu` invece di `'Comp TOTALI'`, causando fallimenti silenziosi in confronti `CellStyle == "nome leggibile"`); i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle F1 di COMPUTO/CONTABILITA se un file reale è stato usato come base — verificarle prima di distribuire un template.
 
 ## Pipeline di test automatizzato (headless UNO)
 
-Test round-trip XPWE con istanze reali di LibreOffice, senza mock: gestione lifecycle del processo `soffice`, ordine di import (`Dialogs` per primo, per la catena circolare `pyleeno↔Debug↔Dialogs↔LeenoContab`), monkeypatch di `LeenO_path()`/`basic_LeenO()`. Dettagli completi in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
+Test round-trip XPWE con istanze reali di LibreOffice, senza mock: gestione lifecycle del processo `soffice`, ordine di import (`Dialogs` per primo, per la catena circolare `pyleeno↔Debug↔Dialogs↔LeenoContab`), monkeypatch di `LeenO_path()`/`basic_LeenO()`. Lo stesso approccio copre ora anche il test di codice che scrive percorsi relativi al documento o inserisce righe dentro un blocco esistente (modulo di import dell'agenda di cantiere). Dettagli completi in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
 
 ## Sistema icone
 
@@ -300,26 +314,6 @@ Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione d
 - `refactor(import): ottimizza parsing file XPWE`
 - `chore(meta): bump versione a 3.25.x`
 - `docs: aggiorna istruzioni nel manuale per il nuovo listino`
-
-## Privacy e controllo locale dei dati
-
-LeenO è pensato per professionisti che trattano dati di lavoro e di terzi: privacy e controllo locale dei dati sono principi di progetto, non optional.
-
-### Riservatezza dei dati personali
-
-- **Nessun dato personale deve essere pubblicato**: né nel repository (codice, commit, messaggi di commit, issue, PR, branch), né nella documentazione, nei template, nei listini, negli articoli o nei file di esempio.
-- Sono dati personali, a titolo esemplificativo: nomi e cognomi, codici fiscali, indirizzi, recapiti (email, telefono), dati di committenti, imprese, progettisti e direttori dei lavori, oltre a percorsi di file che contengono nomi di persone o di progetti reali.
-- Per test, esempi e template usare solo dati fittizi o anonimizzati. Prima di distribuire un `.ods` verificare che celle, proprietà del documento, metadati e note non contengano riferimenti a progetti o persone reali (vedi anche "Quirk minori UNO/ODF").
-- Log, output di debug e report di errore non devono includere dati personali né contenuti dei documenti dell'utente.
-- Se un dato personale finisce in un commit già presente su `origin/<branch>`, non basta un commit successivo che lo rimuove: segnalarlo subito e seguire la procedura per la rimozione dalla storia (vedi "Reset, rebase, revert, force-push: quale usare").
-
-### Divieto di funzioni di IA generativa
-
-- **È vietato includere in LeenO funzioni di intelligenza artificiale generativa**: nessun modello linguistico o generativo, integrato o richiamato tramite API/servizi remoti, e nessuna funzione che invii contenuti dei documenti dell'utente a servizi esterni per elaborazione di questo tipo.
-- Il divieto vale per codice, dipendenze, template e dialoghi, e non può essere aggirato con impostazioni opzionali o disattivate per default.
-- Il progetto punta su elaborazione deterministica, privacy e controllo locale dei dati: le funzioni di LeenO devono funzionare in locale, senza trasmettere dati dell'utente all'esterno.
-- Questo divieto riguarda il prodotto LeenO, non gli strumenti usati per svilupparlo: l'uso di agenti AI nel flusso di lavoro resta regolato dalle sezioni di questo file, ma il codice prodotto non deve introdurre funzioni di IA generativa né dipendenze da servizi di questo tipo.
-- Se un task richiede o suggerisce una funzione di questo tipo, l'agente non la implementa: segnala il conflitto con questa regola e chiede conferma.
 
 ## Manutenzione di questo file
 

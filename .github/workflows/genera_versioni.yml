@@ -28,7 +28,7 @@ jobs:
         id: webdav_files
         run: |
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}"
+          WEBDAV_URL="${WEBDAV_URL%/}/LeenoNigthlyBuilds"
 
           if [ -z "$WEBDAV_URL" ]; then
             echo "❌ Errore: WEBDAV_URL non impostato."
@@ -60,9 +60,6 @@ jobs:
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
 
-          echo "=== HTTP response code: $HTTP_CODE ==="
-          cat webdav.xml  # Aggiungi questa riga per debug
-
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
@@ -87,7 +84,7 @@ jobs:
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
           COMMITS_PATH: ${{ github.workspace }}/commits.json
-          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/LeenoNigthlyBuilds"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
@@ -101,7 +98,7 @@ jobs:
         if: steps.webdav_files.outputs.count > 0
         run: |
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}"
+          WEBDAV_URL="${WEBDAV_URL%/}/LeenoNigthlyBuilds"
           for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
             curl -X PUT \
               -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \

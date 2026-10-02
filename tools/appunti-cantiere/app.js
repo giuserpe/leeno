@@ -173,7 +173,7 @@
     cantiereApertoRif = c; giornoApertoRif = g;
     app.appendChild(h('div', { 'class': 'barra' }, [btn('◄ Indietro', elenco), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
-      h('span', { 'class': 'etichetta', text: 'Cantiere' }), h('span', { text: c.nome })
+      h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));
     C.CAMPI.forEach(function (campo) {
       var id = 'c_' + campo[0], el;

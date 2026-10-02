@@ -337,7 +337,7 @@ def MENU_importa_appunti():
             Title='Importa appunti di cantiere',
             Text='Apri un Giornale Lavori di LeenO e riprova.')
         return
-    percorso = Dialogs.FileSelect('Importa appunti di cantiere...', '*.json;*.zip', 0)
+    percorso = Dialogs.FileSelect('Importa appunti di cantiere...', '*.json;*.zip;*.txt', 0)
     if not percorso:
         return
     try:

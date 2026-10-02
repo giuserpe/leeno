@@ -248,11 +248,18 @@
     c.ultimo_export = new Date().toISOString(); salva(); elenco();
     avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name);
 
-    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) return;
+    if (!navigator.share) return;
+    var shareFile = file;
+    // Web Share API blocca i file .json e .zip. Se rifiuta, aggiungiamo .txt per poterlo condividere.
+    if (navigator.canShare && !navigator.canShare({ files: [shareFile] })) {
+      shareFile = new File([file], file.name + '.txt', { type: 'text/plain' });
+    }
+    if (navigator.canShare && !navigator.canShare({ files: [shareFile] })) return;
+
     if (!confirm('Vuoi condividere questo file?')) return;
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
-    navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(
-      function () { avviso('File condiviso: ' + file.name); },
+    navigator.share({ files: [shareFile], title: 'Brogliaccio: ' + c.nome }).then(
+      function () { avviso('File condiviso: ' + shareFile.name); },
       function (e) {
         if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Il file resta comunque salvato.'); return; }
         avviso('Condivisione non riuscita. Il file resta comunque salvato: ' + file.name);

@@ -55,7 +55,7 @@ jobs:
           echo "=== oxt_list.txt ==="
           cat oxt_list.txt
 
-          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
+          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || true)
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="

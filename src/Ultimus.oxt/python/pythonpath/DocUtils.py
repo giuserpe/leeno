@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 '''
 try to overcome limits on document user defined attributes
 '''

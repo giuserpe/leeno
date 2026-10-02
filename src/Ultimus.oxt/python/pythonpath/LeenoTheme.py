@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 # pyrefly: ignore [missing-import]
 import uno
 import LeenoUtils

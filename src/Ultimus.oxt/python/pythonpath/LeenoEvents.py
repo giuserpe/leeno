@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 """
     LeenO - modulo di gestione eventi del documento e dei fogli
 """

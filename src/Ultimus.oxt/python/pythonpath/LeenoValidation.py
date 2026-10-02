@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 # -*- Mode: Python; coding: utf-8 -*-
 """Validazioni foglio Calc (UNO Validation) per LeenO."""
 

@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 '''
 some not-too-complicated persistence methods
 '''

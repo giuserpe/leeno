@@ -1,3 +1,9 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 '''
     PONTE TEMPORANEO TRA BASIC E PYTHON
     IN QUESTO FILE SONO CONTENUTE TUTTE LE FUNZIONI CHIAMATE DA BASIC

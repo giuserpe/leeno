@@ -1,12 +1,12 @@
+########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
 """
 paradox_to_xpwe.py — Converte archivi Paradox di PriMus anni '90 in XPWE 5.05
 
-Uso:
-    python3 paradox_to_xpwe.py <cartella_con_file_paradox> [output.xpwe]
-
-Oppure come modulo:
-    from paradox_to_xpwe import paradox_to_xpwe
-    paradox_to_xpwe('/path/alla/cartella', '/path/output.xpwe')
 
 Struttura attesa nella cartella:
     _E*.DB / _E*.MB   — Elenco Prezzi (tabella + blob memo)

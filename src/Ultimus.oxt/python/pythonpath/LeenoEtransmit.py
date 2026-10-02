@@ -1,4 +1,10 @@
 ########################################################################
+# LeenO - Computo Metrico
+# Copyright (C) Giuseppe Vizziello - supporto@leeno.org
+# Licenza LGPL http://www.gnu.org/licenses/lgpl.html
+########################################################################
+
+########################################################################
 # e-Transmit per LibreOffice Calc
 ########################################################################
 from pydoc import doc

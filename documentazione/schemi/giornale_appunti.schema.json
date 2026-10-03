@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://leeno.org/schemi/giornale_appunti.v1.schema.json",
-  "title": "Appunti di cantiere per LeenO, schema v1",
-  "description": "Formato di scambio tra l'app mobile di raccolta appunti e il modulo di import di LeenO. Gli appunti non costituiscono registro ufficiale: il giornale dei lavori si consolida solo in LeenO.",
+  "title": "Agenda di cantiere per LeenO, schema v1",
+  "description": "Formato di scambio tra l'app mobile Brogliaccio (agenda di cantiere) e il modulo di import di LeenO. L'agenda non costituisce registro ufficiale: il giornale dei lavori si consolida solo in LeenO.",
   "type": "object",
   "required": ["schema_version", "origine", "giornate"],
   "additionalProperties": false,
@@ -17,7 +17,7 @@
     },
     "avviso": {
       "type": "string",
-      "default": "Appunti di cantiere da consolidare in LeenO. Non costituiscono registro ufficiale."
+      "default": "Agenda di cantiere da consolidare in LeenO. Non costituisce registro ufficiale."
     },
     "generato_il": {
       "type": "string",

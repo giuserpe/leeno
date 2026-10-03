@@ -110,4 +110,12 @@ Formato: `L<riga> | Lv<livello> | <titolo> | bookmark: <nome>`
     - L35228 | Lv3 | Accodare più file di Computo | bookmark: `__RefHeading__7511_13646895041`
     - L35977 | Lv3 | Adeguamento di un vecchio file | bookmark: `__RefHeading__9332_758364849`
     - L36119 | Lv3 | Esporta selezione in formato Markdown | bookmark: `__RefHeading__esporta_selezione_markdown`
-- L36124 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`
+- L36124 | Lv1 | BROGLIACCIO: L&apos;AGENDA DI CANTIERE SUL TELEFONO | bookmark: `__RefHeading__brogliaccio`
+    - L36129 | Lv3 | Avvio e uso sul telefono | bookmark: `__RefHeading__brogliaccio_uso`
+    - L36133 | Lv3 | Cantieri | bookmark: `__RefHeading__brogliaccio_cantieri`
+    - L36136 | Lv3 | Compilare una giornata | bookmark: `__RefHeading__brogliaccio_giornata`
+    - L36141 | Lv3 | Esportare per LeenO | bookmark: `__RefHeading__brogliaccio_esporta`
+    - L36145 | Lv3 | Stampa o PDF | bookmark: `__RefHeading__brogliaccio_pdf`
+    - L36148 | Lv3 | Ripristinare da file | bookmark: `__RefHeading__brogliaccio_ripristina`
+    - L36150 | Lv3 | Importare l&apos;agenda in LeenO | bookmark: `__RefHeading__brogliaccio_import`
+- L36157 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`

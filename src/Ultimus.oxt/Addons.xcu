@@ -1102,7 +1102,7 @@
                   <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoGiornaleImport.MENU_importa_appunti</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa appunti di cantiere nel Giornale Lavori...</value>
+                  <value>Importa agenda di cantiere nel Giornale Lavori...</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

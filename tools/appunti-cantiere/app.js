@@ -381,7 +381,7 @@
     // Intestazione globale
     addText('Brogliaccio ' + C.VERSIONE, 'bold', 16);
     addText('Cantiere: ' + nomeCantiere, 'bold', 14);
-    addText('Agenda da consolidare in LeenO. Non è un registro ufficiale.', 'italic', 10);
+    addText('Agenda di cantiere da consolidare in LeenO. Non è un registro ufficiale.', 'italic', 10);
     addText('Generato il ' + new Date().toLocaleDateString('it-IT'), 'italic', 10);
     y += 8;
     

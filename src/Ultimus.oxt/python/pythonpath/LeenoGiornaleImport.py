@@ -4,7 +4,7 @@
 # LeenO - Computo Metrico
 # Copyright (C) Giuseppe Vizziello - supporto@leeno.org
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
-# Import degli appunti di cantiere (JSON schema v1) nel foglio GIORNALE.
+# Import dell'agenda di cantiere (JSON schema v1) nel foglio GIORNALE.
 # Schema: documentazione/schemi/giornale_appunti.schema.json
 ########################################################################
 import datetime
@@ -55,7 +55,7 @@ def _valida_pacchetto(dati):
             f"Versione dello schema non supportata: {dati.get('schema_version')!r} "
             f"(attesa {SCHEMA_VERSION!r}).")
     if dati.get('origine') != ORIGINE:
-        raise ValueError('Il file non è un export degli appunti di cantiere per LeenO.')
+        raise ValueError("Il file non è un export dell'agenda di cantiere per LeenO.")
     giornate = dati.get('giornate')
     if not isinstance(giornate, list):
         raise ValueError("Manca l'elenco 'giornate'.")
@@ -325,7 +325,7 @@ def importa_giornate(oDoc, giornate, conferma, foto_per_giorno=None):
 
 def MENU_importa_appunti():
     '''
-    Importa nel Giornale Lavori aperto gli appunti di cantiere (file JSON).
+    Importa nel Giornale Lavori aperto l'agenda di cantiere (file JSON o ZIP).
     Per ogni giornata già presente chiede se sovrascrivere i campi compilati.
     '''
     import Dialogs  # import locale: evita la catena circolare con pyleeno
@@ -334,29 +334,29 @@ def MENU_importa_appunti():
     if oDoc is None or not (oDoc.getSheets().hasByName('GIORNALE')
                             and oDoc.getSheets().hasByName('GIORNALE_BIANCO')):
         Dialogs.Exclamation(
-            Title='Importa appunti di cantiere',
+            Title='Importa agenda di cantiere',
             Text='Apri un Giornale Lavori di LeenO e riprova.')
         return
-    percorso = Dialogs.FileSelect('Importa appunti di cantiere...', '*.json;*.zip;*.txt', 0)
+    percorso = Dialogs.FileSelect('Importa agenda di cantiere...', '*.json;*.zip;*.txt', 0)
     if not percorso:
         return
     try:
         giornate, foto_per_giorno = leggi_pacchetto(percorso)
     except ValueError as e:
-        Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
+        Dialogs.Exclamation(Title='Importa agenda di cantiere', Text=str(e))
         return
 
     try:
         cartelle = _estrai_foto(oDoc, foto_per_giorno) if foto_per_giorno else {}
     except ValueError as e:
-        Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
+        Dialogs.Exclamation(Title='Importa agenda di cantiere', Text=str(e))
         return
 
     def conferma(stringa):
         r = Dialogs.YesNoCancelDialog(
             Title='Giornata già presente',
             Text=f'La giornata {stringa} esiste già nel giornale.\n\n'
-                 'Sì: sovrascrive i campi compilati negli appunti\n'
+                 'Sì: sovrascrive i campi compilati nell\'agenda\n'
                  'No: salta questa giornata\n'
                  'Annulla: interrompe l\'import')
         return {1: 'si', 0: 'no'}.get(r, 'annulla')
@@ -364,10 +364,10 @@ def MENU_importa_appunti():
     try:
         esito = importa_giornate(oDoc, giornate, conferma, cartelle)
     except ValueError as e:
-        Dialogs.Exclamation(Title='Importa appunti di cantiere', Text=str(e))
+        Dialogs.Exclamation(Title='Importa agenda di cantiere', Text=str(e))
         return
     if esito['annullato']:
-        Dialogs.Info(Title='Importa appunti di cantiere', Text='Import annullato: nessuna modifica.')
+        Dialogs.Info(Title='Importa agenda di cantiere', Text='Import annullato: nessuna modifica.')
         return
     testo = (f"Giornate aggiunte: {esito['importate']}\n"
              f"Giornate sovrascritte: {esito['sovrascritte']}\n"
@@ -377,4 +377,4 @@ def MENU_importa_appunti():
     if esito['mancanti']:
         testo += ('\n\nCampi non scritti perché assenti nel giornale '
                   '(template precedente): ' + ', '.join(sorted(esito['mancanti'])))
-    Dialogs.Info(Title='Importa appunti di cantiere', Text=testo)
+    Dialogs.Info(Title='Importa agenda di cantiere', Text=testo)

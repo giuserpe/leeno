@@ -6,7 +6,7 @@
 /* Brogliaccio per LeenO: logica pura (schema JSON v1), senza DOM. */
 (function (root) {
   'use strict';
-  var VERSIONE = '0.4.7';
+  var VERSIONE = '0.4.8';
   var AVVISO = 'Agenda di cantiere da consolidare in LeenO. Non costituisce registro ufficiale.';
   // chiave JSON, etichetta a video: stesso ordine del foglio GIORNALE
   var CAMPI = [

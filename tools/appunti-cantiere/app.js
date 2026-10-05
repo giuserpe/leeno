@@ -55,8 +55,10 @@
         if (v1piatto && v1piatto.giornate && Object.keys(v1piatto.giornate).length) {
           var id = nuovoId();
           recuperato = { cantieri: {}, attivo: id };
-          recuperato.cantieri[id] = { nome: 'Cantiere recuperato', giornate: v1piatto.giornate,
-            ultimo_export: v1piatto.ultimo_export || null }; // formato a un solo cantiere, precedente a questo
+          recuperato.cantieri[id] = {
+            nome: 'Cantiere recuperato', giornate: v1piatto.giornate,
+            ultimo_export: v1piatto.ultimo_export || null
+          }; // formato a un solo cantiere, precedente a questo
         }
       } catch (e) { /* niente da recuperare da qui */ }
     }
@@ -162,8 +164,10 @@
     })));
     if (!date.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessuna giornata salvata per questo cantiere.' }));
     app.appendChild(h('section', {}, [
-      h('p', { 'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
-        (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.') }),
+      h('p', {
+        'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
+          (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.')
+      }),
       btn('Esporta per LeenO ↗', esporta, 'cta'),
       btn('Stampa o PDF ↗', stampaPDF),
       btn('Ripristina da file ↙', function () { document.getElementById('file').click(); }),
@@ -176,7 +180,7 @@
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
     cantiereApertoId = stato.attivo; dataAperta = iso;
     cantiereApertoRif = c; giornoApertoRif = g;
-    app.appendChild(h('div', { 'class': 'barra' }, [btn('◄ Indietro', elenco), h('h2', { text: dataEstesa(iso) })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [btn('◄ Chiudi', elenco), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));
@@ -330,8 +334,8 @@
           var lettore = new FileReader();
           lettore.onload = function () {
             var img = new Image();
-            img.onload = function() { resolve({ url: lettore.result, w: img.naturalWidth, h: img.naturalHeight }); };
-            img.onerror = function() { resolve({ url: lettore.result, w: 400, h: 400 }); };
+            img.onload = function () { resolve({ url: lettore.result, w: img.naturalWidth, h: img.naturalHeight }); };
+            img.onerror = function () { resolve({ url: lettore.result, w: 400, h: 400 }); };
             img.src = lettore.result;
           };
           lettore.onerror = function () { resolve(null); };
@@ -353,7 +357,7 @@
     var maxW = 210 - mar * 2;
     var riga = 5;
     var nPag = 1;
-    
+
     function addPageNum() {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
@@ -377,14 +381,14 @@
       }
       y += 2;
     }
-    
+
     // Intestazione globale
     addText('Brogliaccio ' + C.VERSIONE, 'bold', 16);
     addText('Cantiere: ' + nomeCantiere, 'bold', 14);
     addText('Agenda di cantiere da consolidare in LeenO. Non è un registro ufficiale.', 'italic', 10);
     addText('Generato il ' + new Date().toLocaleDateString('it-IT'), 'italic', 10);
     y += 8;
-    
+
     dati.giornate.forEach(function (g, index) {
       // Se non è il primo giorno, cambia pagina per ricominciare da 1
       if (index > 0) {
@@ -393,10 +397,10 @@
         y = mar;
         nPag = 1; // Resetta ad ogni cambio di data
       }
-      
+
       addText(dataEstesa(g.data), 'bold', 12);
       y += 4;
-      
+
       C.CAMPI.forEach(function (campo) {
         var testo = g.campi[campo[0]];
         if (!testo) return;
@@ -404,7 +408,7 @@
         addText(testo, 'normal', 10);
         y += 2;
       });
-      
+
       var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
       if (foto.length) {
         y += 4;
@@ -434,18 +438,18 @@
             x = mar;
             rigaH = 0;
           }
-          try { doc.addImage(foto[i].dataUrl, x, inlineY, fW, fH); } catch(e) {}
+          try { doc.addImage(foto[i].dataUrl, x, inlineY, fW, fH); } catch (e) { }
           x += fW + 4;
           if (fH > rigaH) rigaH = fH;
         }
         y = inlineY + rigaH + 6;
       }
     });
-    
+
     if (dati.giornate.length > 0) {
       addPageNum();
     }
-    
+
     var pdfBlob = doc.output('blob');
     var pdfFile = new File([pdfBlob], 'Brogliaccio_' + slug(nomeCantiere) + '.pdf', { type: 'application/pdf' });
     condividiOScarica(pdfFile, dati, cantiere);

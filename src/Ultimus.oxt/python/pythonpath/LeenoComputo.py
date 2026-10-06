@@ -1006,11 +1006,8 @@ def annota_categorie_voci(oSheet=None):
     if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
         return
 
-    if oSheet is None:
-        oDoc = LeenoUtils.getDocument()
-        if not oDoc:
-            return
-        oSheet = oDoc.CurrentController.ActiveSheet
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
 
     # if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
     #     return
@@ -1018,6 +1015,11 @@ def annota_categorie_voci(oSheet=None):
     stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
     stili_contab  = LeenoGlobals.getGlobalVar('stili_contab')
     stili_validi  = set(stili_computo) | set(stili_contab)
+
+    try:
+        ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
+    except Exception:
+        ver_tmpl = 0
 
     fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
     row = 0
@@ -1076,7 +1078,6 @@ def annota_categorie_voci(oSheet=None):
 
         # Annota nei campi del primo rigo della voce (start_row)
         oSheet.getCellByPosition(2, start_row).String = "[" + str_titoli + "]"
-        ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
         if ver_tmpl >= 219:
             oSheet.getCellByPosition(2, start_row).CellStyle = "Comp-Bianche sopraS"
         # oSheet.getCellByPosition(1, start_row).String = num_cat

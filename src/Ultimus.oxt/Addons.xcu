@@ -1888,6 +1888,21 @@
             </prop>
           </node>
 
+          <node oor:name="m24" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.trova_ricorrenze</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Trova ricorrenze voci E.P.</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
           <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />

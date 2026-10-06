@@ -161,8 +161,8 @@ Sub rigenera_tutte
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;rigenera_tutte&quot;)
 End Sub
 rem ######################################################################
-Sub trova_ricorrenze
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;trova_ricorrenze&quot;)
+Sub annulla_partite_provvisorie
+	ScriptPy(&quot;LeenoContab&quot;,&quot;MENU_annulla_partite_provvisorie&quot;)
 End Sub
 rem ######################################################################
 Sub donazioni

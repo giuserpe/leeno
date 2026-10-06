@@ -959,8 +959,9 @@ def annulla_partite_provvisorie_sospese():
 @with_undo("Annulla Partite Provvisorie Sospese")
 def MENU_annulla_partite_provvisorie():
     '''
-    Macro per individuare e annullare le partite provvisorie ancora sospese.
+    Individua e annulla le partite provvisorie sospese.
     '''
+    PL.chiudi_dialoghi()
     with LeenoUtils.no_refresh_context():
         count, inserted_rows = annulla_partite_provvisorie_sospese()
     

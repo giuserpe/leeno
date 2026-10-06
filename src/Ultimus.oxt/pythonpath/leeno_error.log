@@ -7988,3 +7988,91 @@ File: LeenoUtils.py, Line: 365, Function: wrapper
 File: pyleeno.py, Line: 11166, Function: trova_ricorrenze
 ------------------------------------------------------------
 
+[2026-10-06 10:07:51]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.151-TESTING-20261005
+
+Errore: cannot access local variable 'oDoc' where it is not associated with a value
+
+File: 'LeenoComputo.py'
+Line: '1079'
+Function: 'annota_categorie_voci'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoContab.py, Line: 965, Function: MENU_annulla_partite_provvisorie
+File: LeenoContab.py, Line: 909, Function: annulla_partite_provvisorie_sospese
+File: LeenoContab.py, Line: 288, Function: insertVoceContabilita
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: LeenoComputo.py, Line: 1079, Function: annota_categorie_voci
+------------------------------------------------------------
+
+[2026-10-06 10:09:08]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.151-TESTING-20261005
+
+Errore: cannot access local variable 'oDoc' where it is not associated with a value
+
+File: 'LeenoComputo.py'
+Line: '1079'
+Function: 'annota_categorie_voci'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12245, Function: MENU_debug
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoContab.py, Line: 965, Function: MENU_annulla_partite_provvisorie
+File: LeenoContab.py, Line: 909, Function: annulla_partite_provvisorie_sospese
+File: LeenoContab.py, Line: 288, Function: insertVoceContabilita
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: LeenoComputo.py, Line: 1079, Function: annota_categorie_voci
+------------------------------------------------------------
+
+[2026-10-06 10:12:16]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.151-TESTING-20261005
+
+Errore: getDocumentProperties
+
+File: 'LeenoComputo.py'
+Line: '1081'
+Function: 'annota_categorie_voci'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12245, Function: MENU_debug
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoContab.py, Line: 965, Function: MENU_annulla_partite_provvisorie
+File: LeenoContab.py, Line: 909, Function: annulla_partite_provvisorie_sospese
+File: LeenoContab.py, Line: 288, Function: insertVoceContabilita
+File: undo_utils.py, Line: 90, Function: wrapper
+File: undo_utils.py, Line: 78, Function: wrapper
+File: LeenoUtils.py, Line: 365, Function: wrapper
+File: LeenoComputo.py, Line: 1081, Function: annota_categorie_voci
+------------------------------------------------------------
+
+[2026-10-06 10:53:44]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.151-TESTING-20261005
+
+Errore: DocumentRefresh() missing 1 required positional argument: 'boo'
+
+File: 'pyleeno.py'
+Line: '12273'
+Function: 'MENU_debug'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoUtils.py, Line: 385, Function: wrapper
+File: pyleeno.py, Line: 12273, Function: MENU_debug
+------------------------------------------------------------
+

@@ -12239,8 +12239,42 @@ def MENU_debug_giannelli():
 
     return
 
+
+
+def MENU_annota_categorie_voci():
+    import LeenoComputo
+    LeenoComputo.MENU_annota_categorie_voci()
+
+
+def annota_categorie_voci(oSheet=None):
+    import LeenoComputo
+    LeenoComputo.annota_categorie_voci(oSheet)
+
+
+def MENU_cancella_annotazioni_categorie_voci():
+    import LeenoComputo
+    LeenoComputo.MENU_cancella_annotazioni_categorie_voci()
+
+
+def cancella_annotazioni_categorie_voci(oSheet=None):
+    import LeenoComputo
+    LeenoComputo.cancella_annotazioni_categorie_voci(oSheet)
+    # Scansiona tutte le righe da 0 a row - 1
+    for i in range(0, row):
+        # Verifica se il valore nella colonna I (indice 8) è maggiore di quello in colonna C (indice 2) alla riga i
+        if oSheet.getCellByPosition(8, i).Value > oSheet.getCellByPosition(2, i).Value:
+            # Colora la cella in colonna I (indice 8) alla riga i
+            oSheet.getCellByPosition(8, i).CellBackColor = COLORE_ROSSO_AVVISO
+            oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
+
+
 @LeenoUtils.release_ram
 def MENU_debug():
+    LeenoUtils.DocumentRefresh(True)
+    return
+    import LeenoContab
+    LeenoContab.MENU_annulla_partite_provvisorie()
+    return
     import LeenoComputo
     LeenoComputo.annota_categorie_voci()
     return
@@ -12293,35 +12327,6 @@ def MENU_debug():
     import LeenoComputo
     LeenoComputo.MENU_inserisci_somme_lavori_sicurezza()
     return
-
-
-def MENU_annota_categorie_voci():
-    import LeenoComputo
-    LeenoComputo.MENU_annota_categorie_voci()
-
-
-def annota_categorie_voci(oSheet=None):
-    import LeenoComputo
-    LeenoComputo.annota_categorie_voci(oSheet)
-
-
-def MENU_cancella_annotazioni_categorie_voci():
-    import LeenoComputo
-    LeenoComputo.MENU_cancella_annotazioni_categorie_voci()
-
-
-def cancella_annotazioni_categorie_voci(oSheet=None):
-    import LeenoComputo
-    LeenoComputo.cancella_annotazioni_categorie_voci(oSheet)
-    # Scansiona tutte le righe da 0 a row - 1
-    for i in range(0, row):
-        # Verifica se il valore nella colonna I (indice 8) è maggiore di quello in colonna C (indice 2) alla riga i
-        if oSheet.getCellByPosition(8, i).Value > oSheet.getCellByPosition(2, i).Value:
-            # Colora la cella in colonna I (indice 8) alla riga i
-            oSheet.getCellByPosition(8, i).CellBackColor = COLORE_ROSSO_AVVISO
-            oSheet.getCellByPosition(2, i).CellBackColor = COLORE_ROSSO_AVVISO
-
-
 
 
 ########################################################################

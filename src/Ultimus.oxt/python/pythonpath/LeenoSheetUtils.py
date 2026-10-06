@@ -1270,25 +1270,16 @@ def _riepilogo_quantita_config(oSheet):
 
 
 def _riepilogo_quantita_attivo(oSheet):
-    """Restituisce True se il riepilogo quantità è già stato attivato sul foglio,
-    rilevando la presenza di una formula di riepilogo sulla prima voce esistente."""
-    col_start, _ = _riepilogo_quantita_config(oSheet)
-    if col_start is None:
+    """Restituisce True se il riepilogo quantità è attivo sul foglio,
+    rilevando la presenza della stringa 'Quantità' nella cella di intestazione
+    (AS3 per COMPUTO/VARIANTE, AM3 per CONTABILITA)."""
+    if oSheet.Name == 'CONTABILITA':
+        header_cell = 'AM3'
+    elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        header_cell = 'AS3'
+    else:
         return False
-    first_row = prossimaVoce(oSheet, 0, 1, True)
-    last = cercaUltimaVoce(oSheet)
-    # Cerca la prima voce disponibile e controlla se ha già la formula
-    row = first_row
-    while row < last:
-        voce_range = PL.seleziona_voce(row)
-        if voce_range is None:
-            next_row = prossimaVoce(oSheet, row, 1, True)
-            row = next_row if next_row > row else row + 1
-            continue
-        _, ER = voce_range
-        cell = oSheet.getCellByPosition(col_start, ER)
-        return bool(cell.Formula)   # True se ha già una formula di riepilogo
-    return False
+    return 'Quantità' in oSheet.getCellRangeByName(header_cell).getString()
 
 
 def aggiorna_riepilogo_quantita_voce(oSheet, SR, ER):

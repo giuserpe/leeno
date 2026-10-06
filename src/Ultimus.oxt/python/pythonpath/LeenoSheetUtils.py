@@ -1247,7 +1247,68 @@ def riepilogo_quantita():
 
     return
 
+def _riepilogo_quantita_config(oSheet):
+    """Restituisce (col_start, QUANTITA_COL) per il foglio dato,
+    oppure (None, None) se il foglio non è supportato."""
+    if oSheet.Name == 'CONTABILITA':
+        col_start = 38
+        QUANTITA_COL = {
+            'COMPUTO':      (38, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
+            'VARIANTE':     (39, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
+            'CONTABILITA':  (40, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))'),
+        }
+    elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        col_start = 44
+        QUANTITA_COL = {
+            'COMPUTO':      (44, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
+            'VARIANTE':     (45, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
+            'CONTABILITA':  (46, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))'),
+        }
+    else:
+        return None, None
+    return col_start, QUANTITA_COL
+
+
+def _riepilogo_quantita_attivo(oSheet):
+    """Restituisce True se il riepilogo quantità è già stato attivato sul foglio,
+    rilevando la presenza di una formula di riepilogo sulla prima voce esistente."""
+    col_start, _ = _riepilogo_quantita_config(oSheet)
+    if col_start is None:
+        return False
+    first_row = prossimaVoce(oSheet, 0, 1, True)
+    last = cercaUltimaVoce(oSheet)
+    # Cerca la prima voce disponibile e controlla se ha già la formula
+    row = first_row
+    while row < last:
+        voce_range = PL.seleziona_voce(row)
+        if voce_range is None:
+            next_row = prossimaVoce(oSheet, row, 1, True)
+            row = next_row if next_row > row else row + 1
+            continue
+        _, ER = voce_range
+        cell = oSheet.getCellByPosition(col_start, ER)
+        return bool(cell.Formula)   # True se ha già una formula di riepilogo
+    return False
+
+
+def aggiorna_riepilogo_quantita_voce(oSheet, SR, ER):
+    """Inserisce le formule di riepilogo quantità nella voce (SR, ER) del foglio,
+    ma solo se il riepilogo è già attivo (non lo attiva da zero).
+    Da chiamare dopo ogni insertVoce* se si vuole mantenere il riepilogo aggiornato."""
+    if not _riepilogo_quantita_attivo(oSheet):
+        return
+    _, QUANTITA_COL = _riepilogo_quantita_config(oSheet)
+    if QUANTITA_COL is None:
+        return
+    n = SR + 2          # numero di riga formula (1-based, come in riepilogo_quantita)
+    for _sheetName, (col, formula) in QUANTITA_COL.items():
+        s = oSheet.getCellByPosition(col, ER)
+        s.Formula = formula.format(n=n)
+        s.CellStyle = 'Comp-Variante num sotto'
+
+
 def cancella_riepilogo_quantita():
+
     """Cancella le colonne di riepilogo per Computo,
     Variante e Contabilità su ogni voce del foglio attivo."""
     oDoc = LeenoUtils.getDocument()

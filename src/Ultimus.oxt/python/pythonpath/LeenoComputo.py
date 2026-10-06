@@ -390,6 +390,7 @@ def ins_voce_computo(cod=None):
 
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
     annota_categorie_voci(oSheet)
+    LeenoSheetUtils.aggiorna_riepilogo_quantita_voce(oSheet, lrow, lrow + 3)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 

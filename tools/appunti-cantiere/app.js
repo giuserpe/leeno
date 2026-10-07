@@ -1,8 +1,3 @@
-/* ########################################################################
- * LeenO - Computo Metrico
- * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
- * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
- * ######################################################################## */
 /* Brogliaccio per LeenO: interfaccia. Dati solo su questo dispositivo. */
 (function () {
   'use strict';
@@ -55,10 +50,8 @@
         if (v1piatto && v1piatto.giornate && Object.keys(v1piatto.giornate).length) {
           var id = nuovoId();
           recuperato = { cantieri: {}, attivo: id };
-          recuperato.cantieri[id] = {
-            nome: 'Cantiere recuperato', giornate: v1piatto.giornate,
-            ultimo_export: v1piatto.ultimo_export || null
-          }; // formato a un solo cantiere, precedente a questo
+          recuperato.cantieri[id] = { nome: 'Cantiere recuperato', giornate: v1piatto.giornate,
+            ultimo_export: v1piatto.ultimo_export || null }; // formato a un solo cantiere, precedente a questo
         }
       } catch (e) { /* niente da recuperare da qui */ }
     }
@@ -101,35 +94,104 @@
   }
   function cantiereCorrente() { return stato.attivo ? stato.cantieri[stato.attivo] : null; }
 
-  // -------------------- schermata: elenco cantieri --------------------
-  function cantieri() {
+  var MESI = ['GEN', 'FEB', 'MAR', 'APR', 'MAG', 'GIU', 'LUG', 'AGO', 'SET', 'OTT', 'NOV', 'DIC'];
+
+  // Testo di anteprima di una giornata per l'elenco: meteo piu' il primo altro campo
+  // compilato, oppure un avviso esplicito se non c'e' ancora nulla (giornata con sole foto compresa).
+  function anteprimaGiorno(g) {
+    var pezzi = [];
+    if (g.campi.meteo) pezzi.push(g.campi.meteo);
+    for (var i = 0; i < C.CAMPI.length; i++) {
+      var chiave = C.CAMPI[i][0];
+      if (chiave !== 'meteo' && g.campi[chiave]) { pezzi.push(g.campi[chiave]); break; }
+    }
+    var testo = pezzi.join(' · ');
+    if (!testo) return 'Nessuna lavorazione scritta';
+    return testo.length > 70 ? testo.slice(0, 70) + '…' : testo;
+  }
+
+  // -------------------- schermata unica: cantiere (scelta/creazione) + sue giornate --------------------
+  function principale() {
     svuota();
     var ids = Object.keys(stato.cantieri).sort(function (a, b) {
       return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it');
     });
-    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Cantieri:' })]));
-    app.appendChild(h('ul', { 'class': 'lista' }, ids.map(function (id) {
-      var c = stato.cantieri[id], n = Object.keys(c.giornate).length;
-      return h('li', {}, [h('button', { type: 'button', on: { click: function () { stato.attivo = id; salva(); elenco(); } } }, [
-        h('strong', { text: c.nome }), h('span', { text: giornate(n) + (n === 1 ? ' salvata' : ' salvate') })])]);
-    })));
-    if (!ids.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessun cantiere. Creane uno per iniziare.' }));
-    app.appendChild(btn('Nuovo cantiere ►', creaCantiere, 'primary'));
-  }
+    if (stato.attivo && !stato.cantieri[stato.attivo]) stato.attivo = null;
+    if (!stato.attivo && ids.length) stato.attivo = ids[0];
 
-  function creaCantiere() {
-    var nome = (prompt('Nome del cantiere (es. via del corso, indirizzo o commessa):') || '').trim();
-    if (!nome) return;
-    var id = nuovoId();
-    stato.cantieri[id] = { nome: nome, giornate: {}, ultimo_export: null };
-    stato.attivo = id; salva(); elenco();
+    var campi = [];
+    if (ids.length) {
+      var selettore = h('select', { id: 'sel-cantiere' });
+      ids.forEach(function (id) {
+        var opz = h('option', { value: id, text: stato.cantieri[id].nome });
+        if (id === stato.attivo) opz.setAttribute('selected', 'selected');
+        selettore.appendChild(opz);
+      });
+      selettore.addEventListener('change', function () { stato.attivo = selettore.value; salva(); principale(); });
+      campi.push(h('div', { 'class': 'campo' }, [h('label', { 'for': 'sel-cantiere', text: 'Cantiere' }), selettore]));
+    }
+
+    var nuovoNome = h('input', { type: 'text', id: 'nuovo-cantiere', placeholder: 'Scrivi il nome del nuovo cantiere', autocomplete: 'off' });
+    function creaDaCampo() {
+      var nome = nuovoNome.value.trim();
+      if (!nome) return;
+      var id = nuovoId();
+      stato.cantieri[id] = { nome: nome, giornate: {}, ultimo_export: null };
+      stato.attivo = id; salva(); principale();
+    }
+    nuovoNome.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') creaDaCampo(); });
+    campi.push(h('div', { 'class': 'campo' }, [
+      h('label', { 'for': 'nuovo-cantiere', text: ids.length ? 'Oppure un cantiere nuovo' : 'Nome del cantiere' }), nuovoNome
+    ]));
+    campi.push(btn('Crea cantiere', creaDaCampo, ids.length ? '' : 'primary'));
+    app.appendChild(h('section', {}, campi));
+
+    var c = cantiereCorrente();
+    if (!c) {
+      app.appendChild(h('p', { 'class': 'nota', text: 'Scrivi un nome e crea il primo cantiere per iniziare.' }));
+      return;
+    }
+
+    app.appendChild(h('div', { 'class': 'barra' }, [
+      btn('Rinomina', rinominaCantiere), btn('Elimina cantiere', eliminaCantiere, 'danger')
+    ]));
+    app.appendChild(btn('+ Giornata di oggi', function () { modifica(C.oggiISO()); }, 'primary cta-grande'));
+    var dataAltra = h('input', { type: 'date', id: 'altra-data', value: C.oggiISO(), 'aria-label': 'Un\'altra data' });
+    app.appendChild(h('div', { 'class': 'campo-data-secondario' }, [
+      dataAltra,
+      btn('Aggiungi per un\'altra data', function () { if (C.dataValida(dataAltra.value)) modifica(dataAltra.value); })
+    ]));
+
+    var date = Object.keys(c.giornate).sort().reverse();
+    var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
+
+    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Giornate' })]));
+    app.appendChild(h('ul', { 'class': 'lista' }, date.map(function (d) {
+      var dt = new Date(d + 'T12:00:00');
+      return h('li', {}, [h('button', { type: 'button', on: { click: function () { modifica(d); } } }, [
+        h('span', { 'class': 'giorno-numero' }, [
+          h('strong', { text: String(dt.getDate()) }), h('span', { 'class': 'giorno-mese', text: MESI[dt.getMonth()] })
+        ]),
+        h('span', { 'class': 'giorno-dettagli' }, [
+          h('strong', { text: dataEstesa(d) }), h('span', { text: anteprimaGiorno(c.giornate[d]) })
+        ])
+      ])]);
+    })));
+    if (!date.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessuna giornata salvata per questo cantiere.' }));
+    app.appendChild(h('section', {}, [
+      h('p', { 'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
+        (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.') }),
+      btn('Esporta per LeenO', esporta, 'cta'),
+      btn('Stampa o PDF', stampaPDF),
+      btn('Ripristina da file', function () { document.getElementById('file').click(); })
+    ]));
   }
 
   function rinominaCantiere() {
     var c = cantiereCorrente();
     var nome = (prompt('Nuovo nome del cantiere:', c.nome) || '').trim();
     if (!nome || nome === c.nome) return;
-    c.nome = nome; salva(); elenco();
+    c.nome = nome; salva(); principale();
   }
 
   function eliminaCantiere() {
@@ -138,41 +200,8 @@
     if (n && !c.ultimo_export) testo += '\n\nAttenzione: non è mai stato esportato per LeenO.';
     if (!confirm(testo)) return;
     var idEliminato = stato.attivo;
-    delete stato.cantieri[idEliminato]; stato.attivo = null; salva(); cantieri();
+    delete stato.cantieri[idEliminato]; stato.attivo = null; salva(); principale();
     FotoStore.eliminaPerCantiere(idEliminato).catch(function () { /* pulizia foto: nessun blocco per l'utente */ });
-  }
-
-  // -------------------- schermata: elenco giornate di un cantiere --------------------
-  function elenco() {
-    svuota();
-    var c = cantiereCorrente();
-    if (!c) { cantieri(); return; }
-    var date = Object.keys(c.giornate).sort().reverse();
-    var oggi = h('input', { type: 'date', id: 'nuova', value: C.oggiISO() });
-    var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
-    app.appendChild(h('div', { 'class': 'barra' }, [
-      btn('◄ Cantieri', cantieri), h('h2', { text: c.nome }), btn('Rinomina', rinominaCantiere)
-    ]));
-    app.appendChild(h('section', {}, [
-      h('label', { 'for': 'nuova', text: 'Giornata' }), oggi,
-      btn('Apri o crea giornata', function () { if (C.dataValida(oggi.value)) modifica(oggi.value); }, 'primary')
-    ]));
-    app.appendChild(h('ul', { 'class': 'lista' }, date.map(function (d) {
-      var a = c.giornate[d].campi.annotazioni || c.giornate[d].campi.meteo || '';
-      return h('li', {}, [h('button', { type: 'button', on: { click: function () { modifica(d); } } }, [
-        h('strong', { text: dataEstesa(d) }), h('span', { text: a.slice(0, 80) })])]);
-    })));
-    if (!date.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessuna giornata salvata per questo cantiere.' }));
-    app.appendChild(h('section', {}, [
-      h('p', {
-        'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
-          (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.')
-      }),
-      btn('Esporta per LeenO ↗', esporta, 'cta'),
-      btn('Stampa o PDF ↗', stampaPDF),
-      btn('Ripristina da file ↙', function () { document.getElementById('file').click(); }),
-      btn('Elimina cantiere ⌫', eliminaCantiere, 'danger')
-    ]));
   }
 
   function modifica(iso) {
@@ -180,9 +209,9 @@
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
     cantiereApertoId = stato.attivo; dataAperta = iso;
     cantiereApertoRif = c; giornoApertoRif = g;
-    app.appendChild(h('div', { 'class': 'barra' }, [btn('◄ Chiudi', elenco), h('h2', { text: dataEstesa(iso) })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', principale), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
-      h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
+      h('span', { 'class': 'etichetta', text: 'Cantiere' }), h('span', { text: c.nome })
     ]));
     C.CAMPI.forEach(function (campo) {
       var id = 'c_' + campo[0], el;
@@ -204,9 +233,9 @@
       btn('Aggiungi foto', function () { document.getElementById('file-foto').click(); })
     ]));
     aggiornaFotoLista();
-    app.appendChild(btn('Elimina questa giornata ⌫', function () {
+    app.appendChild(btn('Elimina questa giornata', function () {
       if (!confirm('Eliminare la giornata ' + dataEstesa(iso) + '?')) return;
-      delete c.giornate[iso]; salva(); elenco();
+      delete c.giornate[iso]; salva(); principale();
       FotoStore.eliminaPerGiorno(stato.attivo, iso).catch(function () { /* pulizia foto: nessun blocco per l'utente */ });
     }, 'danger'));
   }
@@ -222,7 +251,7 @@
         var url = URL.createObjectURL(r.blob); urlFotoAttive.push(url);
         el.appendChild(h('figure', { 'class': 'foto' }, [
           h('img', { src: url, alt: 'Foto del ' + dataEstesa(dataAperta) }),
-          btn('Elimina  ⌫', function () {
+          btn('Elimina', function () {
             if (!confirm('Eliminare questa foto?')) return;
             FotoStore.elimina(r.id).then(aggiornaFotoLista);
           }, 'danger')
@@ -254,21 +283,14 @@
     // a quella proposta e non al semplice salvataggio locale.
     var a = h('a', { href: URL.createObjectURL(file), download: file.name });
     document.body.appendChild(a); a.click(); a.remove();
-    c.ultimo_export = new Date().toISOString(); salva(); elenco();
+    c.ultimo_export = new Date().toISOString(); salva(); principale();
     avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name);
 
-    if (!navigator.share) return;
-    var shareFile = file;
-    // Web Share API blocca i file .json e .zip. Se rifiuta, aggiungiamo .txt per poterlo condividere.
-    if (navigator.canShare && !navigator.canShare({ files: [shareFile] })) {
-      shareFile = new File([file], file.name + '.txt', { type: 'text/plain' });
-    }
-    if (navigator.canShare && !navigator.canShare({ files: [shareFile] })) return;
-
+    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) return;
     if (!confirm('Vuoi condividere questo file?')) return;
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
-    navigator.share({ files: [shareFile], title: 'Brogliaccio: ' + c.nome }).then(
-      function () { avviso('File condiviso: ' + shareFile.name); },
+    navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(
+      function () { avviso('File condiviso: ' + file.name); },
       function (e) {
         if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Il file resta comunque salvato.'); return; }
         avviso('Condivisione non riuscita. Il file resta comunque salvato: ' + file.name);
@@ -315,6 +337,35 @@
     });
   }
 
+  function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
+    fotoPerGiorno = fotoPerGiorno || {};
+    var el = document.getElementById('stampa');
+    while (el.firstChild) el.removeChild(el.firstChild);
+    el.appendChild(h('div', { 'class': 's-intestazione' }, [
+      h('h1', { text: 'Brogliaccio ' + C.VERSIONE }),
+      h('p', { 'class': 's-cantiere', text: 'Cantiere: ' + nomeCantiere }),
+      h('p', { 'class': 's-avviso', text: 'Agenda da consolidare in LeenO. Non è un registro ufficiale. '
+        + 'Generato il ' + new Date().toLocaleDateString('it-IT') + '.' })
+    ]));
+    dati.giornate.forEach(function (g) {
+      var dl = h('dl');
+      C.CAMPI.forEach(function (campo) {
+        var testo = g.campi[campo[0]];
+        if (!testo) return;
+        dl.appendChild(h('dt', { text: campo[1] }));
+        dl.appendChild(h('dd', { text: testo }));
+      });
+      var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);
+      var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
+      if (foto.length) {
+        sezione.appendChild(h('div', { 'class': 's-foto-elenco' },
+          foto.map(function (f) { return h('img', { src: f.dataUrl, alt: 'Foto del ' + dataEstesa(g.data) }); })));
+      }
+      el.appendChild(sezione);
+    });
+    el.appendChild(h('div', { 'class': 's-piede' }, [h('span', { text: 'realizzato con LeenO.org' })]));
+  }
+
   function stampaPDF() {
     var c = cantiereCorrente();
     var dati = C.buildExport(c.giornate, new Date());
@@ -332,127 +383,16 @@
       Promise.all(tutte.map(function (f) {
         return new Promise(function (resolve) {
           var lettore = new FileReader();
-          lettore.onload = function () {
-            var img = new Image();
-            img.onload = function () { resolve({ url: lettore.result, w: img.naturalWidth, h: img.naturalHeight }); };
-            img.onerror = function () { resolve({ url: lettore.result, w: 400, h: 400 }); };
-            img.src = lettore.result;
-          };
+          lettore.onload = function () { resolve(lettore.result); };
           lettore.onerror = function () { resolve(null); };
           lettore.readAsDataURL(f.blob);
         });
-      })).then(function (datiFoto) {
-        tutte.forEach(function (f, i) {
-          if (datiFoto[i]) { f.dataUrl = datiFoto[i].url; f.w = datiFoto[i].w; f.h = datiFoto[i].h; }
-        });
-        generaVeroPDF(c.nome, c, dati, perGiorno);
+      })).then(function (urlDati) {
+        tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
+        costruisciStampa(c.nome, dati, perGiorno);
+        window.print();
       });
     });
-  }
-
-  function generaVeroPDF(nomeCantiere, cantiere, dati, fotoPerGiorno) {
-    if (!window.jspdf) { avviso('Libreria PDF non ancora caricata. Riprova tra un attimo.'); return; }
-    var doc = new window.jspdf.jsPDF();
-    var mar = 20, y = mar;
-    var maxW = 210 - mar * 2;
-    var riga = 5;
-    var nPag = 1;
-
-    function addPageNum() {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.text('realizzato con LeenO.org', mar, 285, { align: 'left' });
-      doc.text('Pagina ' + nPag, 210 - mar, 285, { align: 'right' });
-      nPag++;
-    }
-
-    function addText(testo, font, size) {
-      doc.setFont('helvetica', font);
-      doc.setFontSize(size);
-      var linee = doc.splitTextToSize(testo, maxW);
-      for (var i = 0; i < linee.length; i++) {
-        if (y > 275) {
-          addPageNum();
-          doc.addPage();
-          y = mar;
-        }
-        doc.text(linee[i], mar, y);
-        y += riga + (size > 12 ? 2 : 0); // extra spazio per titoli
-      }
-      y += 2;
-    }
-
-    // Intestazione globale
-    addText('Brogliaccio ' + C.VERSIONE, 'bold', 16);
-    addText('Cantiere: ' + nomeCantiere, 'bold', 14);
-    addText('Agenda di cantiere da consolidare in LeenO. Non è un registro ufficiale.', 'italic', 10);
-    addText('Generato il ' + new Date().toLocaleDateString('it-IT'), 'italic', 10);
-    y += 8;
-
-    dati.giornate.forEach(function (g, index) {
-      // Se non è il primo giorno, cambia pagina per ricominciare da 1
-      if (index > 0) {
-        addPageNum();
-        doc.addPage();
-        y = mar;
-        nPag = 1; // Resetta ad ogni cambio di data
-      }
-
-      addText(dataEstesa(g.data), 'bold', 12);
-      y += 4;
-
-      C.CAMPI.forEach(function (campo) {
-        var testo = g.campi[campo[0]];
-        if (!testo) return;
-        addText(campo[1].toUpperCase(), 'bold', 10);
-        addText(testo, 'normal', 10);
-        y += 2;
-      });
-
-      var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
-      if (foto.length) {
-        y += 4;
-        var maxBox = 50, x = mar;
-        var inlineY = y;
-        var rigaH = 0;
-        for (var i = 0; i < foto.length; i++) {
-          var wOrig = foto[i].w || 400, hOrig = foto[i].h || 400;
-          var fW, fH;
-          if (wOrig > hOrig) {
-            fW = maxBox;
-            fH = (hOrig / wOrig) * maxBox;
-          } else {
-            fH = maxBox;
-            fW = (wOrig / hOrig) * maxBox;
-          }
-
-          if (x + fW > 210 - mar) {
-            x = mar;
-            inlineY += rigaH + 4;
-            rigaH = 0;
-          }
-          if (inlineY + fH > 275) {
-            addPageNum();
-            doc.addPage();
-            inlineY = mar;
-            x = mar;
-            rigaH = 0;
-          }
-          try { doc.addImage(foto[i].dataUrl, x, inlineY, fW, fH); } catch (e) { }
-          x += fW + 4;
-          if (fH > rigaH) rigaH = fH;
-        }
-        y = inlineY + rigaH + 6;
-      }
-    });
-
-    if (dati.giornate.length > 0) {
-      addPageNum();
-    }
-
-    var pdfBlob = doc.output('blob');
-    var pdfFile = new File([pdfBlob], 'Brogliaccio_' + slug(nomeCantiere) + '.pdf', { type: 'application/pdf' });
-    condividiOScarica(pdfFile, dati, cantiere);
   }
 
   document.getElementById('file').addEventListener('change', function (ev) {
@@ -465,7 +405,7 @@
       if (!confirm('Ripristinare ' + giornate(n.length) + ' nel cantiere "' + c.nome + '"? ' +
         doppie + ' già presenti su questo dispositivo verranno sostituite.')) return;
       n.forEach(function (d) { c.giornate[d] = nuove[d]; });
-      salva(); elenco();
+      salva(); principale();
     }).catch(function (e) { avviso(e.message); });
   });
 
@@ -490,5 +430,5 @@
   if (elTitolo) elTitolo.textContent = 'Brogliaccio ' + C.VERSIONE;
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-  cantieri();
+  principale();
 })();

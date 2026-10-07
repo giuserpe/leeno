@@ -7,6 +7,7 @@ Non è un registro ufficiale: il giornale si consolida solo in LeenO.
 - Formato di scambio: `documentazione/schemi/giornale_appunti.schema.json` (v1).
 - I dati restano nel browser del dispositivo: esportare spesso.
 - All'avvio, se non trova dati nel formato attuale, l'app controlla anche due formati/chiavi usati durante lo sviluppo (un "cassetto" di memoria intermedio, e un vecchio formato a un solo cantiere) e li recupera automaticamente se li trova, salvandoli nel formato corrente.
+- Schermata unica: un menu a tendina sceglie il cantiere attivo, un campo sotto ne crea uno nuovo, un pulsante grande "+ Giornata di oggi" apre subito la giornata corrente. Per un'altra data c'è una riga più piccola dedicata, sotto il pulsante principale. L'elenco delle giornate mostra il numero del giorno e un'anteprima del contenuto (o un avviso esplicito se la giornata ha solo foto e nessun testo).
 - Più cantieri: ogni cantiere ha il proprio elenco di giornate, isolato dagli altri. "Esporta per LeenO" esporta solo il cantiere aperto, in un file con il suo nome nel nome del file.
 - Il nome "Brogliaccio" è sempre seguito dalla versione dell'app, sia nell'intestazione sia nel PDF.
 - Tema: il pulsante in alto sceglie tra automatico (segue il sistema), chiaro e scuro. La scelta resta salvata sul dispositivo.

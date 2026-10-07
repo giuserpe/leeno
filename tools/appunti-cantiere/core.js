@@ -1,13 +1,8 @@
-/* ########################################################################
- * LeenO - Computo Metrico
- * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
- * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
- * ######################################################################## */
 /* Brogliaccio per LeenO: logica pura (schema JSON v1), senza DOM. */
 (function (root) {
   'use strict';
-  var VERSIONE = '0.4.8';
-  var AVVISO = 'Agenda di cantiere da consolidare in LeenO. Non costituisce registro ufficiale.';
+  var VERSIONE = '0.5.0';
+  var AVVISO = 'Brogliaccio da consolidare in LeenO. Non costituisce registro ufficiale.';
   // chiave JSON, etichetta a video: stesso ordine del foglio GIORNALE
   var CAMPI = [
     ['meteo', 'Meteo'],

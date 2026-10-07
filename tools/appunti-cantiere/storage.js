@@ -1,8 +1,3 @@
-/* ########################################################################
- * LeenO - Computo Metrico
- * Copyright (C) Giuseppe Vizziello - supporto@leeno.org
- * Licenza LGPL http://www.gnu.org/licenses/lgpl.html
- * ######################################################################## */
 /* Archivio locale delle foto (IndexedDB) e preparazione immagini.
    Le foto restano solo su questo dispositivo, come il resto dei dati del Brogliaccio.
    La preparazione ridisegna l'immagine su un canvas: questo applica l'orientamento

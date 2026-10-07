@@ -21,7 +21,7 @@ Il manuale è un unico file Flat ODT (XML, oltre 3 MB, fine riga LF). La procedu
 - Solo le schermate di Brogliaccio si generano da script (`scripts/genera_screenshot_brogliaccio.py`, dati fittizi, versione visibile nell'intestazione) e vanno rigenerate a ogni modifica dell'interfaccia. Stili `PBrogFig`, `PBrogCap`, `frBrog`; larghezza 5 cm per le schermate da telefono, 12 cm per la stampa: a 6 cm l'immagine non entrava in pagina e lasciava circa il 40% di pagina vuota.
 - Per dialoghi e fogli di LeenO gli screenshot li fornisce l'utente: l'agente li chiede con l'elenco preciso (dialogo, stato, dati fittizi) e non inserisce segnaposto né immagini ricostruite.
 - Etichette sempre dalle sorgenti (`.xdl`, `.properties`, `Addons.xcu`): se lo screenshot differisce, si segnala la discrepanza.
-- I rimandi `(Figura N)` nel testo sono testo semplice, non campi: dopo ogni aggiunta o rimozione di una figura vanno riallineati a mano.
+- I rimandi alle figure sono riferimenti incrociati (`text:sequence-ref` con `text:reference-format="value"` e `text:ref-name` della didascalia): seguono la numerazione da soli. Un rimando digitato a mano può essere già obsoleto (trovato un "Figura 23" che doveva essere 26) o spezzato su più span ("Figura 2" + "3"): verificare sempre l'immagine di destinazione.
 - Controllo obbligatorio dell'impaginazione: `pdftoppm -png -r 50 -f N -l M ...` sulle pagine interessate e verifica che figure e didascalie non lascino buchi.
 
 ## PDF

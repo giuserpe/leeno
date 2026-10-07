@@ -15,11 +15,14 @@ Il manuale è un unico file Flat ODT (XML, oltre 3 MB, fine riga LF). La procedu
 - Nessuna icona accanto ai nomi dei comandi (decisione del 2026-08-06, soggette ad aggiornamenti frequenti). Restano le icone "Attenzione" e le immagini illustrative.
 - Terminologia di Brogliaccio: "agenda di cantiere" (non più "appunti"), "il Giornale dei Lavori".
 
-## Screenshot
+## Screenshot e immagini
 
-- Si inseriscono solo per Brogliaccio e si generano con `scripts/genera_screenshot_brogliaccio.py` (dati fittizi, versione visibile nell'intestazione): a ogni modifica dell'interfaccia vanno rigenerati e sostituiti, altrimenti il manuale descrive una schermata che non esiste più.
-- Incorporati come immagini PNG in base64 (`office:binary-data`) in un frame ancorato al carattere; stili `PBrogFig`, `PBrogCap`, `frBrog`. Larghezza 5 cm per schermate da telefono, 12 cm per la stampa: a 6 cm l'immagine non entrava in pagina e lasciava circa il 40% di pagina vuota.
-- Controllo obbligatorio dell'impaginazione: `pdftoppm -png -r 50 -f N -l M ...` sulle pagine del capitolo e verifica che figure e didascalie non lascino buchi.
+- Il manuale contiene circa 60 immagini incorporate (PNG in base64, `office:binary-data`) in un frame dentro una tabella a una cella, con didascalia a campo sequenza `Figure`. Per una nuova immagine si copia il blocco di una figura vicina, non se ne inventa la struttura.
+- Solo le schermate di Brogliaccio si generano da script (`scripts/genera_screenshot_brogliaccio.py`, dati fittizi, versione visibile nell'intestazione) e vanno rigenerate a ogni modifica dell'interfaccia. Stili `PBrogFig`, `PBrogCap`, `frBrog`; larghezza 5 cm per le schermate da telefono, 12 cm per la stampa: a 6 cm l'immagine non entrava in pagina e lasciava circa il 40% di pagina vuota.
+- Per dialoghi e fogli di LeenO gli screenshot li fornisce l'utente: l'agente li chiede con l'elenco preciso (dialogo, stato, dati fittizi) e non inserisce segnaposto né immagini ricostruite.
+- Etichette sempre dalle sorgenti (`.xdl`, `.properties`, `Addons.xcu`): se lo screenshot differisce, si segnala la discrepanza.
+- I rimandi `(Figura N)` nel testo sono testo semplice, non campi: dopo ogni aggiunta o rimozione di una figura vanno riallineati a mano.
+- Controllo obbligatorio dell'impaginazione: `pdftoppm -png -r 50 -f N -l M ...` sulle pagine interessate e verifica che figure e didascalie non lascino buchi.
 
 ## PDF
 

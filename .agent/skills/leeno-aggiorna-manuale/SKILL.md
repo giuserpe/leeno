@@ -3,7 +3,7 @@ name: leeno-aggiorna-manuale
 description: >
   Aggiorna il manuale ufficiale di LeenO (MANUALE_LeenO.fodt) dalle modifiche al codice o
   alla PWA Brogliaccio, senza duplicazioni grazie al file di tracking. Include revisione,
-  mappa sezioni, screenshot, PDF e consegna zip.
+  mappa sezioni, immagini e screenshot (generati o forniti dall'utente), PDF e consegna zip.
 ---
 
 # LeenO – Aggiornamento Manuale con Tracciamento
@@ -69,8 +69,18 @@ Leggi `documentazione/TRACKING_MANUALE.md` e individua l'ultimo hash o la versio
 7. Evita "automatico/automaticamente" quando descrivono solo un comportamento del software ("viene generato automaticamente" → "viene generato"). Mantienili se fanno parte del significato o del nome di un comando (es. "Pesca codice automatico").
 8. Se aggiungi o rinomini un titolo, aggiorna la voce corrispondente dell'indice (testo nel FODT) o rigenera gli indici da LibreOffice.
 
-### Fase 4: Screenshot (solo per Brogliaccio)
-Dopo ogni modifica dell'interfaccia della PWA rigenera le immagini: `python3 scripts/genera_screenshot_brogliaccio.py <cartella>` (richiede Playwright, Pillow, `pdftoppm`) e sostituisci i tre PNG incorporati nel capitolo (frame `BrogliaccioPrincipale`, `BrogliaccioGiornata`, `BrogliaccioStampa`). Schermate da telefono larghe 5 cm, stampa 12 cm. Le didascalie usano lo stile `PBrogCap`.
+### Fase 4: Immagini e screenshot (all'occorrenza)
+Un'immagine si inserisce quando il testo da solo non basta: dialogo nuovo o modificato, schermata o barra degli strumenti nuova, area del foglio con un aspetto da riconoscere a colpo d'occhio, procedura in più passaggi su finestre diverse. Non serve per comandi semplici, scorciatoie e voci di menù (bastano percorso e tasti). Nessuna icona accanto ai nomi dei comandi.
+
+1. **Decidi per ogni novità** se serve un'immagine. Se la novità cambia un dialogo o una schermata già illustrati, l'immagine esistente va **sostituita**: cerca nel FODT il titolo o il rimando `(Figura N)` della sezione, altrimenti il manuale mostra una finestra che non esiste più.
+2. **Origine dell'immagine**:
+   - *Brogliaccio*: rigenera con `python3 scripts/genera_screenshot_brogliaccio.py <cartella>` (richiede Playwright, Pillow, `pdftoppm`) e sostituisci i tre PNG del capitolo (frame `BrogliaccioPrincipale`, `BrogliaccioGiornata`, `BrogliaccioStampa`). Schermate da telefono larghe 5 cm, stampa 12 cm, didascalie con stile `PBrogCap`.
+   - *Dialoghi, menù e fogli di LeenO*: non si generano in modo affidabile in headless. Usa gli screenshot forniti dall'utente (allegati in chat o in una cartella indicata). Se servono e mancano, elenca all'utente quali (dialogo o foglio, stato, dati fittizi da usare) e attendi: niente segnaposto nel FODT, niente immagini ricostruite a mano, e l'aggiornamento non si dichiara concluso finché le immagini richieste non sono inserite o l'utente non rinuncia.
+3. **Screenshot ricevuti dall'utente come input**: aprili con `view` e confronta etichette, titoli e campi con `.xdl`, `.properties` e `Addons.xcu`. Il testo del manuale segue le sorgenti; se lo screenshot differisce, segnalalo (immagine obsoleta o sorgente non ancora distribuita) prima di inserirlo.
+4. **Requisiti dell'immagine**: PNG, dati fittizi, nessun dato personale o reale (nomi, committenti, cantieri, importi), ritaglio sull'area utile, tema chiaro. Larghezza coerente con le figure vicine, al massimo 16,8 cm (pagina intera); altezza proporzionale all'originale.
+5. **Inserimento nel FODT**: copia il blocco di una figura esistente dello stesso capitolo (tabella a una cella con frame `fr4`, casella di testo, immagine in `office:binary-data` base64, didascalia `Figura <text:sequence text:name="Figure" ...>N</text:sequence>: descrizione`) e adatta immagine, larghezze, altezze e `text:ref-name` (univoco, es. `refFigure48`). Per Brogliaccio restano gli stili `PBrogFig`, `PBrogCap`, `frBrog`.
+6. **Numerazione**: le didascalie usano campi sequenza, i rimandi nel testo (`(Figura 4)`) sono testo semplice. Dopo aver aggiunto o tolto una figura cerca `(Figura ` e riallinea i rimandi successivi.
+7. **Verifica**: valida l'XML (Fase 3) e controlla l'impaginazione nel PDF (Fase 8). Il FODT cresce di molto con le immagini: segnalalo nella conclusione.
 
 ### Fase 5: Tracking
 Accoda a `TRACKING_MANUALE.md` una riga: `| YYYY-MM-DD | hash o file | cosa è cambiato nel codice | sezione del manuale |`.
@@ -96,4 +106,4 @@ Genera sempre il PDF: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/gene
 3. **Zip, sempre**, anche se il push riesce: tutti i file toccati con le cartelle del repository (`documentazione/MANUALE_LeenO.fodt`, `documentazione/TRACKING_MANUALE.md`, `src/Ultimus.oxt/MANUALE_LeenO.pdf`, `.agent/skills/leeno-aggiorna-manuale/MAPPA_SEZIONI.md`, più gli script nuovi o modificati). Verifica il contenuto con `unzip -l`.
 
 ### Fase 10: Conclusione
-Comunica l'esito mostrando il testo inserito e conferma: tracking, stato di revisione, mappa, PDF (con eventuali anomalie di dimensione), esito del push e zip consegnato.
+Comunica l'esito mostrando il testo inserito e conferma: tracking, stato di revisione, mappa, immagini inserite o sostituite (e quelle ancora richieste all'utente), PDF (con eventuali anomalie di dimensione), esito del push e zip consegnato.

@@ -211,7 +211,7 @@
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
     cantiereApertoId = stato.attivo; dataAperta = iso;
     cantiereApertoRif = c; giornoApertoRif = g;
-    app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', principale), h('h2', { text: dataEstesa(iso) })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [btn('Chiudi', principale), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));

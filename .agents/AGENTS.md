@@ -19,6 +19,7 @@ Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Cl
 - [Modulo XPWE (export/import PriMus)](#modulo-xpwe-exportimport-primus)
 - [Export PDF (PDF/A e note)](#export-pdf-pdfa-e-note)
 - [Agenda di cantiere (Brogliaccio / PWA)](#agenda-di-cantiere-brogliaccio--pwa)
+- [Manuale utente](#manuale-utente)
 - [Quirk minori UNO/ODF](#quirk-minori-unoodf)
 - [Pipeline di test automatizzato (headless UNO)](#pipeline-di-test-automatizzato-headless-uno)
 - [Sistema icone](#sistema-icone)
@@ -200,13 +201,19 @@ Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nascond
 
 ## Agenda di cantiere (Brogliaccio / PWA)
 
-`tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
+`tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere l'agenda di cantiere su smartphone e consolidarla in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
 
 Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente — anche se in quel momento sembra che nessuno la stia ancora usando.
 
 **Aggiornamento versione:** Ad ogni modifica del codice di Brogliaccio, è obbligatorio aggiornare il numero di versione secondo il criterio Semantic Versioning (Major.Minor.Fix/Patch). La versione va aggiornata in modo allineato in due punti:
 1. In `tools/appunti-cantiere/core.js` (variabile `VERSIONE`).
 2. In `tools/appunti-cantiere/sw.js` (variabile `CACHE` del Service Worker, es. `appunti-cantiere-0.4.2`). Questo passaggio è essenziale per invalidare la cache offline dei dispositivi e far scaricare la nuova versione agli utenti.
+
+**Dopo ogni modifica dell'interfaccia:** nelle etichette dei campi di tutte le schermate (anche nella stampa) il testo termina con i due punti (`Cantiere:`, `Meteo:`); i pulsanti no. Poi rigenerare gli screenshot con `scripts/genera_screenshot_brogliaccio.py` e aggiornare il capitolo del manuale (vedi "Manuale utente").
+
+## Manuale utente
+
+`documentazione/MANUALE_LeenO.fodt` si aggiorna seguendo la skill `.agent/skills/leeno-aggiorna-manuale/SKILL.md` e, per le insidie ricorrenti (modifica del FODT, screenshot, PDF, indice), `documentazione/LESSONS_MANUALE.md`. Regola da ricordare comunque: ogni intervento sul manuale aggiorna insieme `TRACKING_MANUALE.md`, la riga "Stato di revisione", `MAPPA_SEZIONI.md` e il PDF in `src/Ultimus.oxt/`, e si chiude con la validazione XML del FODT.
 
 ## Quirk minori UNO/ODF
 
@@ -232,9 +239,11 @@ Un agente che lavora sul repository ma non ha credenziali di push dirette (o non
 
 1. **Formato zip, non bundle git.** Impacchettare i file modificati/creati in un archivio zip, con la struttura di cartelle che rispecchia la destinazione finale sotto `src/Ultimus.oxt/` (o la sottocartella pertinente), non l'intero repository.
 2. **Comandi espliciti di applicazione.** Fornire i comandi PowerShell per estrarre lo zip nel percorso corretto (`W:\_dwg\ULTIMUSFREE\_SRC\leeno\...`), così l'operazione è riproducibile senza ambiguità sul PC `giuserpe`.
-3. **Nessun commit/push automatico.** L'agente non deve mai tentare push diretti quando non richiesto esplicitamente: la revisione del diff e il commit restano un passaggio manuale su PC `giuserpe`, coerente con il workflow di editing su PC TEST descritto sopra.
+3. **Nessun commit/push automatico.** L'agente non tenta push diretti se non richiesto esplicitamente (anche tramite un hook configurato dall'utente): la revisione del diff e il commit restano un passaggio manuale su PC `giuserpe`, coerente con il workflow di editing su PC TEST descritto sopra. Se il push è richiesto, se ne tenta uno solo: un errore 403 indica permessi mancanti (app GitHub non installata o non collegata) e ripeterlo non serve; si riporta la causa e si consegna lo zip.
 4. **Messaggio di commit proposto, non eseguito.** Se richiesto, l'agente propone l'intestazione e il corpo del commit secondo le convenzioni descritte sotto ("Git Commit – Conventional Commits in Italiano"), lasciando all'utente l'esecuzione del comando.
-5. **Verifica di integrità prima della consegna.** Prima di impacchettare, validare la sintassi Python (`python3 -c "import ast; ast.parse(...)"`) e, per i file con line-ending noto, confermare che il conteggio CRLF/LF non sia cambiato rispetto all'originale.
+5. **Verifica di integrità prima della consegna.** Prima di impacchettare, validare la sintassi Python (`python3 -c "import ast; ast.parse(...)"`), per il manuale l'XML del FODT (vedi `documentazione/LESSONS_MANUALE.md`) e, per i file con line-ending noto, confermare che il conteggio CRLF/LF non sia cambiato rispetto all'originale.
+6. **Lo zip si produce sempre, anche per interventi sul solo manuale e anche se il push riesce.** Contiene tutti i file toccati, compresi tracking, mappa sezioni e PDF, con le cartelle del repository.
+7. **Ambiente cloud.** Clonare solo il branch di lavoro (`git clone --depth 1 --branch dev ...`) e, prima di ogni push, `git fetch origin dev` per non inviare una storia obsoleta.
 
 ## Preservazione del line-ending in QUALSIASI editing
 
@@ -288,6 +297,7 @@ Identifica l'area principale colpita dalle modifiche:
 - `meta`: Metadati estensione (`description.xml`, `.xcu`)
 - `template`: Modifiche ai modelli di documento
 - `docs`: Manuale PDF o documentazione tecnica
+- `brogliaccio`: PWA in `tools/appunti-cantiere/`
 
 ### Regole d'Oro
 
@@ -297,7 +307,7 @@ Identifica l'area principale colpita dalle modifiche:
 4. **Breaking Change**: Aggiungi `!` dopo il tipo (es. `feat!: ...`) e descrivi in `BREAKING CHANGE:` nel corpo
 5. **Separazione**: Se le modifiche riguardano aree troppo diverse, suggerisci commit separati
 6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alle funzioni nel cui nome compare la stringa "\_debug" (es. `MENU_debug`) nella generazione del messaggio di commit
-7. **Sinteticità**: Il corpo va aggiunto solo se davvero necessario a spiegare il PERCHÉ (mai il COSA, già chiaro dal diff), e in tal caso in massimo 1 riga breve. Nella maggior parte dei casi il corpo va omesso del tutto: preferire sempre la sola intestazione a un corpo prolisso o multi-paragrafo
+7. **Sinteticità** (valida anche per i commit dei soli aggiornamenti del manuale, con tipo `docs` e senza elenchi puntati nel corpo; le righe di attribuzione richieste dall'ambiente non contano come corpo): Il corpo va aggiunto solo se davvero necessario a spiegare il PERCHÉ (mai il COSA, già chiaro dal diff), e in tal caso in massimo 1 riga breve. Nella maggior parte dei casi il corpo va omesso del tutto: preferire sempre la sola intestazione a un corpo prolisso o multi-paragrafo
 
 ### Procedura Operativa
 

@@ -1,124 +1,99 @@
 ---
 name: leeno-aggiorna-manuale
 description: >
-  Skill per aggiornare sistematicamente il manuale ufficiale di LeenO (MANUALE_LeenO.fodt)
-  partendo dalle modifiche apportate al codice, evitando duplicazioni grazie a un file di tracking.
+  Aggiorna il manuale ufficiale di LeenO (MANUALE_LeenO.fodt) dalle modifiche al codice o
+  alla PWA Brogliaccio, senza duplicazioni grazie al file di tracking. Include revisione,
+  mappa sezioni, screenshot, PDF e consegna zip.
 ---
 
 # LeenO – Aggiornamento Manuale con Tracciamento
 
-Questa skill ha l'obiettivo di mantenere sincronizzato il manuale utente di LeenO (`documentazione/MANUALE_LeenO.fodt`) con le ultime modifiche al codice, assicurandosi di non ripetere il lavoro su commit o funzionalità già documentate.
+Mantiene sincronizzato il manuale utente (`documentazione/MANUALE_LeenO.fodt`) con il codice, senza ripetere il lavoro su commit o funzionalità già documentati.
+
+## Prima di iniziare
+1. Leggi `AGENTS.md` (root) e `documentazione/LESSONS_MANUALE.md`: contengono le regole del progetto e le insidie ricorrenti.
+2. Lavora sempre e solo sul branch `dev`. Se il repository non è presente: `git clone --depth 1 --branch dev https://github.com/giuserpe/leeno` e, per avere abbastanza storia, `git fetch --depth=300 origin dev`.
+3. Tutti i percorsi sotto sono relativi alla radice del repository (sul PC dell'utente: `W:\_dwg\ULTIMUSFREE\_SRC\leeno`).
 
 ## File Chiave
-- **Manuale**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\documentazione\MANUALE_LeenO.fodt` (formato XML)
-- **Manuale PDF**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt\MANUALE_LeenO.pdf` (generato automaticamente)
-- **Registro Aggiornamenti**: `w:\_dwg\ULTIMUSFREE\_SRC\leeno\documentazione\TRACKING_MANUALE.md`
-- **Mappa Sezioni**: `MAPPA_SEZIONI.md` (nella directory di questa skill)
-
-## Risorse della Skill
-- `scripts/genera_mappa.py` — Script Python per rigenerare la mappa delle sezioni del manuale.
-- `scripts/genera_pdf.py` — Script Python per generare il PDF del manuale dentro `src/Ultimus.oxt/`.
-
----
+- **Manuale**: `documentazione/MANUALE_LeenO.fodt` (XML, oltre 3 MB, fine riga LF)
+- **Manuale PDF**: `src/Ultimus.oxt/MANUALE_LeenO.pdf` (generato da `genera_pdf.py`)
+- **Registro aggiornamenti**: `documentazione/TRACKING_MANUALE.md`
+- **Mappa sezioni**: `.agent/skills/leeno-aggiorna-manuale/MAPPA_SEZIONI.md`
+- **Script**: `.agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`, `genera_pdf.py`; per gli screenshot di Brogliaccio `scripts/genera_screenshot_brogliaccio.py`
 
 ## Sorgenti di Informazione
-
-Per individuare le novità da documentare, non limitarti ai soli file Python. Consulta **tutte** le seguenti sorgenti:
+Non limitarti ai file Python: consulta tutte le sorgenti.
 
 | Sorgente | Percorso | Cosa cercare |
 | :--- | :--- | :--- |
-| Codice Python | `src/Ultimus.oxt/python/pythonpath/*.py` | Nuove funzioni `MENU_*`, modifiche a flussi utente |
-| Menù e sotto-menù | `src/Ultimus.oxt/Addons.xcu` | Nuove voci di menù, riorganizzazione menù, etichette |
-| Scorciatoie da tastiera | `src/Ultimus.oxt/Accelerators.xcu` | Nuove scorciatoie, modifiche a scorciatoie esistenti |
-| Finestre di dialogo | `src/Ultimus.oxt/dialogs/*.xdl` | Nuove finestre, nuovi controlli, campi rinominati |
-| File di proprietà | `src/Ultimus.oxt/dialogs/*.properties` | Etichette e testi dei dialoghi |
-| Configurazione | `src/Ultimus.oxt/python/pythonpath/LeenoConfig.py` | Nuove opzioni di configurazione |
+| Codice Python | `src/Ultimus.oxt/python/pythonpath/*.py` | Nuove funzioni `MENU_*`, modifiche ai flussi utente |
+| Menù | `src/Ultimus.oxt/Addons.xcu` | Voci di menù nuove o rinominate, etichette |
+| Scorciatoie | `src/Ultimus.oxt/Accelerators.xcu` | Nuove scorciatoie o modifiche |
+| Dialoghi | `src/Ultimus.oxt/dialogs/*.xdl`, `*.properties` | Finestre, controlli, campi rinominati, testi |
+| Configurazione | `src/Ultimus.oxt/python/pythonpath/LeenoConfig.py` | Nuove opzioni |
+| Brogliaccio (PWA) | `tools/appunti-cantiere/` (`app.js`, `index.html`, `core.js`) | Schermate, etichette, pulsanti, versione (`VERSIONE` in `core.js`) |
 
 > [!IMPORTANT]
-> Quando documenti una funzionalità nel manuale, verifica **sempre** il percorso di menù reale in `Addons.xcu` e le scorciatoie in `Accelerators.xcu`, in modo che le istruzioni nel manuale riflettano fedelmente l'interfaccia utente.
-
----
+> Percorsi di menù, scorciatoie ed etichette nel manuale vanno copiati dalle sorgenti (`Addons.xcu`, `Accelerators.xcu`, `app.js`), mai ricostruiti a memoria.
 
 ## Procedura Operativa
 
-### Fase 0: Consultare la Mappa delle Sezioni
-1. Apri `MAPPA_SEZIONI.md` (nella directory di questa skill) con `view_file`.
-2. Individua la sezione più adatta in cui inserire la nuova documentazione.
-3. Annota il numero di riga e il nome del bookmark del punto di inserimento.
+### Fase 0: Mappa delle sezioni
+Apri `MAPPA_SEZIONI.md`, individua la sezione adatta e annota riga e bookmark del punto di inserimento. Se il manuale è cambiato di recente, rigenera la mappa prima: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`.
 
-> [!TIP]
-> Se il manuale è stato modificato di recente e la mappa potrebbe non essere aggiornata, rigenera la mappa:
-> ```
-> python .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py
-> ```
+### Fase 1: Storico (tracking)
+Leggi `documentazione/TRACKING_MANUALE.md` e individua l'ultimo hash o la versione già documentati (per Brogliaccio, l'ultima versione citata, es. "v0.4.7").
 
-### Fase 1: Verifica dello Storico (Tracking)
-1. Apri e leggi il file `documentazione/TRACKING_MANUALE.md` utilizzando il tool `view_file`.
-2. Controlla la tabella per capire quali sono le ultime funzionalità o gli ultimi commit (`Commit Hash`) già documentati. In questo modo saprai esattamente da quale punto temporale o da quale modifica ripartire.
-
-### Fase 2: Individuazione delle Novità da Documentare
-1. Chiedi all'utente su quale commit/file sta lavorando o usa `git log` per vedere gli ultimi commit sul codice sorgente.
-2. Confronta queste novità con il file di tracking.
-3. Seleziona le funzionalità o le modifiche che non sono ancora presenti nella tabella di `TRACKING_MANUALE.md` e che necessitano di una spiegazione nel manuale utente.
-4. Per ciascuna novità, consulta anche:
-   - `Addons.xcu` per il percorso di menù esatto e le etichette visibili all'utente.
-   - `Accelerators.xcu` per le scorciatoie da tastiera associate.
-   - I file `.xdl` e `.properties` dei dialoghi per i nomi dei campi e i testi dei pulsanti.
+### Fase 2: Novità da documentare
+1. Elenca le modifiche successive all'ultima voce di tracking: `git log --format='%h %ad %s' --date=short <hash>..HEAD -- <percorsi sorgente>` e, per la PWA, `git diff <hash> HEAD -- tools/appunti-cantiere`.
+2. Escludi ciò che è già nel tracking e ciò che non cambia il comportamento visibile all'utente (refactoring, licenze, formattazione).
+3. Per ogni novità verifica menù, scorciatoie ed etichette nelle sorgenti della tabella.
+4. Se non è chiaro su quale commit o funzione lavorare, chiedi all'utente.
 
 ### Fase 3: Modifica del Manuale (FODT)
-Essendo il file `MANUALE_LeenO.fodt` un file XML di grandi dimensioni (oltre 3 MB e 37.000 righe):
-1. **NON usare** script complessi o editor massivi che potrebbero corrompere la struttura XML.
-2. Usa la **Mappa Sezioni** (`MAPPA_SEZIONI.md`) per trovare la posizione di inserimento senza dover scansionare l'intero file.
-3. Usa `view_file` con il numero di riga dalla mappa per ispezionare il contesto XML del punto di inserimento.
-4. Usa Python per effettuare un semplice replace testuale stringa-per-stringa sulla riga interessata. Esempio di snippet sicuro:
+1. **Niente editor massivi né script complessi.** Usa la mappa per trovare il punto e ispeziona il contesto XML.
+2. Sostituzioni stringa-per-stringa in Python, con fine riga preservati e controllo di unicità:
    ```python
-   import sys
-   p = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/documentazione/MANUALE_LeenO.fodt'
-   with open(p, 'r', encoding='utf-8') as f:
-       text = f.read()
-   target = "vecchio testo esatto compresi i tag XML"
-   replacement = "nuovo testo con le nuove istruzioni"
-   if target in text:
-       text = text.replace(target, replacement)
-       with open(p, 'w', encoding='utf-8') as f:
-           f.write(text)
-       print("Sostituzione completata")
-   else:
-       print("Testo target non trovato")
+   p = 'documentazione/MANUALE_LeenO.fodt'
+   t = open(p, encoding='utf-8', newline='').read()
+   vecchio = "testo esatto compresi i tag XML"
+   nuovo = "nuovo testo"
+   assert t.count(vecchio) == 1, t.count(vecchio)
+   open(p, 'w', encoding='utf-8', newline='').write(t.replace(vecchio, nuovo))
    ```
-5. Scrivi il testo in **italiano chiaro e formale**, orientato all'utente finale (senza terminologia informatica, a meno che non si parli di tasti o menu).
-6. Evita gli usi ridondanti di "automatico"/"automaticamente" quando descrivono semplicemente un comportamento del software (es. "viene generato automaticamente" → "viene generato"): danno un'idea di rassicurazione superflua, dato che in un manuale è comunque implicito che sia il programma a farlo. Mantienili solo quando la parola è parte del significato della frase stessa (non un semplice descrittore di un'azione del software) o quando fa parte di un nome di comando/funzione già in uso nel manuale (es. "Pesca codice automatico").
+3. **Valida sempre l'XML** dopo le modifiche: `python3 -c "import xml.dom.minidom as m; m.parse('documentazione/MANUALE_LeenO.fodt')"`.
+4. Riusa gli stili esistenti del contesto (es. `P440` testo, `P437` titolo livello 3, `T838` etichette dell'interfaccia). Non lasciare nel repository script usa-e-getta.
+5. Nessuna icona accanto ai nomi dei comandi (decisione del 2026-08-06).
+6. Scrivi in **italiano chiaro e formale**, per l'utente finale, senza terminologia informatica (salvo tasti e menù). Terminologia di Brogliaccio: "agenda di cantiere".
+7. Evita "automatico/automaticamente" quando descrivono solo un comportamento del software ("viene generato automaticamente" → "viene generato"). Mantienili se fanno parte del significato o del nome di un comando (es. "Pesca codice automatico").
+8. Se aggiungi o rinomini un titolo, aggiorna la voce corrispondente dell'indice (testo nel FODT) o rigenera gli indici da LibreOffice.
 
-### Fase 4: Aggiornamento del Tracking
-Una volta che la modifica al manuale è andata a buon fine, devi aggiornare il registro in modo che nessuno ripeta questo lavoro in futuro.
-1. Edita `documentazione/TRACKING_MANUALE.md` accodando una nuova riga alla tabella in fondo al file.
-2. La riga dovrà contenere: `| YYYY-MM-DD | Hash del commit o Nome del file modificato | Breve descrizione della modifica nel codice | Sezione del manuale in cui hai scritto |`
+### Fase 4: Screenshot (solo per Brogliaccio)
+Dopo ogni modifica dell'interfaccia della PWA rigenera le immagini: `python3 scripts/genera_screenshot_brogliaccio.py <cartella>` (richiede Playwright, Pillow, `pdftoppm`) e sostituisci i tre PNG incorporati nel capitolo (frame `BrogliaccioPrincipale`, `BrogliaccioGiornata`, `BrogliaccioStampa`). Schermate da telefono larghe 5 cm, stampa 12 cm. Le didascalie usano lo stile `PBrogCap`.
 
-### Fase 5: Aggiornamento dello "Stato di revisione"
-Ad **ogni** aggiornamento del manuale (anche se limitato a una sola sezione o a piccole correzioni), aggiorna anche la tabella "Stato di revisione" all'inizio del manuale (bookmark `__RefHeading___Toc12591_579480652`, colonne Numero / Data / Descrizione / Nome).
-1. Individua l'ultima riga della tabella (l'ultima `<table:table-row>` prima della chiusura `</table:table>`).
-2. Aggiungi una nuova riga con lo stesso stile delle celle della riga precedente (`Table5.A2` / `Table5.D2`), contenente:
-   - **Numero**: progressivo coerente con lo schema esistente (es. `3.26.xx-rev2.5`).
-   - **Data**: mese e anno correnti (es. `Agosto 2026`).
-   - **Descrizione**: riepilogo sintetico di tutte le modifiche apportate al manuale in questo aggiornamento (anche se coprono più sezioni o più fasi di lavoro svolte nella stessa sessione).
-   - **Nome**: lascia vuoto se non diversamente indicato dall'utente (segue la convenzione delle righe più recenti della tabella).
-3. Se nella stessa sessione vengono fatti più aggiornamenti al manuale, valuta se accorparli in un'unica riga di revisione invece di aggiungerne una per ogni singola modifica.
+### Fase 5: Tracking
+Accoda a `TRACKING_MANUALE.md` una riga: `| YYYY-MM-DD | hash o file | cosa è cambiato nel codice | sezione del manuale |`.
 
-### Fase 6: Rigenera la Mappa delle Sezioni
-Dopo aver modificato il manuale, rigenera sempre la mappa per mantenerla aggiornata:
-```
-python .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py
-```
+### Fase 6: Stato di revisione
+Ad **ogni** aggiornamento aggiorna la tabella "Stato di revisione" all'inizio del manuale (bookmark `__RefHeading___Toc12591_579480652`; colonne Numero / Data / Descrizione / Nome).
+1. Parti dall'ultima `<table:table-row>` della tabella e copia gli stili delle celle (`Table5.A2` / `Table5.D2`).
+2. **Numero**: progressivo coerente (es. `3.26.xx-rev2.12`). **Data**: mese e anno correnti. **Descrizione**: riepilogo di tutte le modifiche della sessione. **Nome**: vuoto, salvo indicazioni.
+3. Più aggiornamenti nella stessa sessione: modifica la riga appena aggiunta invece di crearne una per modifica.
 
-### Fase 7: Generazione del PDF
-Dopo aver modificato il manuale e rigenerato la mappa, genera sempre il file PDF aggiornato che verrà distribuito all'interno dell'estensione OXT:
-```
-python .agent/skills/leeno-aggiorna-manuale/scripts/genera_pdf.py
-```
-Questo script converte `documentazione/MANUALE_LeenO.fodt` in `src/Ultimus.oxt/MANUALE_LeenO.pdf` tramite LibreOffice in modalità headless.
+### Fase 7: Mappa sezioni
+Rigenera sempre: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`.
 
-> [!IMPORTANT]
-> Il PDF deve essere rigenerato **ad ogni modifica** del manuale, altrimenti gli utenti riceveranno una versione non aggiornata nell'estensione.
+### Fase 8: PDF
+Genera sempre il PDF: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/genera_pdf.py` (LibreOffice headless, da `documentazione/MANUALE_LeenO.fodt` a `src/Ultimus.oxt/MANUALE_LeenO.pdf`).
+- Verifica con `pdftotext` che compaia una frase appena inserita.
+- Se hai aggiunto immagini, controlla l'impaginazione (`pdftoppm -png -r 50 -f N -l M`): niente buchi di pagina.
+- La dimensione dipende dalla versione di LibreOffice (osservato 2,0 MB contro 1,8 MB): segnalala all'utente se cambia sensibilmente.
 
-### Fase 8: Conclusione
-Comunica all'utente l'avvenuto aggiornamento del manuale, mostrando la porzione di testo inserita, e conferma l'avvenuta registrazione in `TRACKING_MANUALE.md`, l'aggiornamento dello "Stato di revisione" e la generazione del PDF.
+### Fase 9: Consegna
+1. **Commit** su `dev`: tipo `docs`, scope `docs`, solo intestazione (max 72 caratteri, italiano, imperativo, senza punto finale); corpo solo se indispensabile e di una riga. Aggiungi le righe di attribuzione richieste dall'ambiente.
+2. **Push**: un solo tentativo. Un errore 403 indica permessi mancanti (app GitHub non installata o non collegata): non ripeterlo, riporta la causa.
+3. **Zip, sempre**, anche se il push riesce: tutti i file toccati con le cartelle del repository (`documentazione/MANUALE_LeenO.fodt`, `documentazione/TRACKING_MANUALE.md`, `src/Ultimus.oxt/MANUALE_LeenO.pdf`, `.agent/skills/leeno-aggiorna-manuale/MAPPA_SEZIONI.md`, più gli script nuovi o modificati). Verifica il contenuto con `unzip -l`.
+
+### Fase 10: Conclusione
+Comunica l'esito mostrando il testo inserito e conferma: tracking, stato di revisione, mappa, PDF (con eventuali anomalie di dimensione), esito del push e zip consegnato.

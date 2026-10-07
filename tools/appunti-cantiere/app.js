@@ -95,6 +95,7 @@
   function cantiereCorrente() { return stato.attivo ? stato.cantieri[stato.attivo] : null; }
 
   var MESI = ['GEN', 'FEB', 'MAR', 'APR', 'MAG', 'GIU', 'LUG', 'AGO', 'SET', 'OTT', 'NOV', 'DIC'];
+  var GIORNI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 
   // Testo di anteprima di una giornata per l'elenco: meteo piu' il primo altro campo
   // compilato, oppure un avviso esplicito se non c'e' ancora nulla (giornata con sole foto compresa).
@@ -128,7 +129,7 @@
         selettore.appendChild(opz);
       });
       selettore.addEventListener('change', function () { stato.attivo = selettore.value; salva(); principale(); });
-      campi.push(h('div', { 'class': 'campo' }, [h('label', { 'for': 'sel-cantiere', text: 'Cantiere' }), selettore]));
+      campi.push(h('div', { 'class': 'campo' }, [h('label', { 'for': 'sel-cantiere', text: 'Cantiere:' }), selettore]));
     }
 
     var nuovoNome = h('input', { type: 'text', id: 'nuovo-cantiere', placeholder: 'Scrivi il nome del nuovo cantiere', autocomplete: 'off' });
@@ -141,7 +142,7 @@
     }
     nuovoNome.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') creaDaCampo(); });
     campi.push(h('div', { 'class': 'campo' }, [
-      h('label', { 'for': 'nuovo-cantiere', text: ids.length ? 'Oppure un cantiere nuovo' : 'Nome del cantiere' }), nuovoNome
+      h('label', { 'for': 'nuovo-cantiere', text: ids.length ? 'Aggiungi nuovo cantiere:' : 'Nome del cantiere:' }), nuovoNome
     ]));
     campi.push(btn('Crea cantiere', creaDaCampo, ids.length ? '' : 'primary'));
     app.appendChild(h('section', {}, campi));
@@ -165,15 +166,16 @@
     var date = Object.keys(c.giornate).sort().reverse();
     var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
 
-    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Giornate' })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Giornate:' })]));
     app.appendChild(h('ul', { 'class': 'lista' }, date.map(function (d) {
       var dt = new Date(d + 'T12:00:00');
       return h('li', {}, [h('button', { type: 'button', on: { click: function () { modifica(d); } } }, [
         h('span', { 'class': 'giorno-numero' }, [
-          h('strong', { text: String(dt.getDate()) }), h('span', { 'class': 'giorno-mese', text: MESI[dt.getMonth()] })
+          h('strong', { text: GIORNI[dt.getDay()] + ' ' + dt.getDate() }),
+          h('span', { 'class': 'giorno-mese', text: MESI[dt.getMonth()] + " '" + String(dt.getFullYear()).slice(-2) })
         ]),
         h('span', { 'class': 'giorno-dettagli' }, [
-          h('strong', { text: dataEstesa(d) }), h('span', { text: anteprimaGiorno(c.giornate[d]) })
+          h('strong', { text: c.nome }), h('span', { text: anteprimaGiorno(c.giornate[d]) })
         ])
       ])]);
     })));
@@ -211,7 +213,7 @@
     cantiereApertoRif = c; giornoApertoRif = g;
     app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', principale), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
-      h('span', { 'class': 'etichetta', text: 'Cantiere' }), h('span', { text: c.nome })
+      h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));
     C.CAMPI.forEach(function (campo) {
       var id = 'c_' + campo[0], el;
@@ -225,10 +227,10 @@
         g.campi[campo[0]] = el.value; g.modificato_il = new Date().toISOString();
         c.giornate[iso] = g; salva();
       });
-      app.appendChild(h('div', { 'class': 'campo' }, [h('label', { 'for': id, text: campo[1] }), el]));
+      app.appendChild(h('div', { 'class': 'campo' }, [h('label', { 'for': id, text: campo[1] + ':' }), el]));
     });
     app.appendChild(h('div', { 'class': 'campo' }, [
-      h('label', { text: 'Foto' }),
+      h('label', { text: 'Foto:' }),
       h('div', { id: 'foto-lista', 'class': 'foto-lista' }),
       btn('Aggiungi foto', function () { document.getElementById('file-foto').click(); })
     ]));
@@ -352,7 +354,7 @@
       C.CAMPI.forEach(function (campo) {
         var testo = g.campi[campo[0]];
         if (!testo) return;
-        dl.appendChild(h('dt', { text: campo[1] }));
+        dl.appendChild(h('dt', { text: campo[1] + ':' }));
         dl.appendChild(h('dd', { text: testo }));
       });
       var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);

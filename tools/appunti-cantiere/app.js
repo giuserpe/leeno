@@ -82,6 +82,7 @@
   }
   function avviso(t) { msg.textContent = t; msg.hidden = !t; }
   function giornate(n) { return n + (n === 1 ? ' giornata' : ' giornate'); }
+  function cantieri(n) { return n + (n === 1 ? ' cantiere' : ' cantieri'); }
   function h(tag, attr, figli) {
     var e = document.createElement(tag), k;
     for (k in (attr || {})) { if (k === 'on') { Object.keys(attr.on).forEach(function (ev) { e.addEventListener(ev, attr.on[ev]); }); } else if (k === 'text') { e.textContent = attr.text; } else { e.setAttribute(k, attr[k]); } }
@@ -218,7 +219,7 @@
     var daSalvare = giornateDaEsportare(c);
     if (daSalvare && confirm('Questo cantiere ha ' + giornate(daSalvare) + (daSalvare === 1 ? ' non ancora esportata' : ' non ancora esportate')
       + '.\n\nOK: salva prima una copia di sicurezza (poi potrai eliminare il cantiere).\nAnnulla: prosegui senza copia.')) {
-      esporta(); return;
+      esportaCantiere(); return;
     }
     var testo = 'Eliminare il cantiere "' + c.nome + '"' + (n ? ', con ' + giornate(n) + '?' : '?');
     if (n && !c.ultimo_export) testo += '\n\nAttenzione: non è mai stato esportato per LeenO.';
@@ -356,25 +357,17 @@
     pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function esporta() {
-    var c = cantiereCorrente();
+  // Prepara i file di un cantiere. prefisso: '' per un cantiere esportato da solo (file alla radice dello .zip),
+  // 'cartella/' quando si esportano tutti i cantieri (una cartella per cantiere, con la stessa struttura).
+  function preparaCantiere(id, prefisso) {
+    var c = stato.cantieri[id];
     var dati = C.buildExport(c.giornate, new Date());
-    if (!dati.giornate.length) { avviso('Nessuna giornata da esportare.'); return; }
-    // Nessun blocco qui: il salvataggio in locale resta sul dispositivo, non e' un
-    // rischio di condivisione. L'avviso privacy scatta sulla condivisione vera e
-    // propria, dentro condividiOScarica().
     dati.testata = { lavori: c.nome };
     var base = 'agenda-' + slug(c.nome) + '-' + C.oggiISO().replace(/-/g, '');
-    var idCantiere = stato.attivo;
-
-    FotoStore.elencaPerCantiere(idCantiere).catch(function () { return []; }).then(function (foto) {
-      if (!foto.length) {
-        condividiOScarica(new File([JSON.stringify(dati, null, 2)], base + '.json', { type: 'application/json' }), dati, c);
-        return;
-      }
+    return FotoStore.elencaPerCantiere(id).catch(function () { return []; }).then(function (foto) {
       var perGiorno = {};
       foto.forEach(function (f) { (perGiorno[f.giorno] = perGiorno[f.giorno] || []).push(f); });
-      var voci = [{ percorso: base + '.json', promessa: Promise.resolve(new TextEncoder().encode(JSON.stringify(dati, null, 2))) }];
+      var voci = [{ percorso: prefisso + base + '.json', promessa: Promise.resolve(new TextEncoder().encode(JSON.stringify(dati, null, 2))) }];
       Object.keys(perGiorno).sort().forEach(function (giorno) {
         var cartella = giorno.replace(/-/g, '');
         perGiorno[giorno]
@@ -382,17 +375,87 @@
           .forEach(function (f, i) {
             var nome = marcaTemporale(f.creato_il) + '_' + String(i + 1).padStart(3, '0') + '.jpg';
             voci.push({
-              percorso: cartella + '/' + nome,
+              percorso: prefisso + cartella + '/' + nome,
               promessa: f.blob.arrayBuffer().then(function (buf) { return new Uint8Array(buf); })
             });
           });
       });
-      Promise.all(voci.map(function (v) { return v.promessa.then(function (d) { return { percorso: v.percorso, dati: d }; }); }))
-        .then(function (vociPronte) {
-          condividiOScarica(new File([ZipStore.creaZip(vociPronte)], base + '.zip', { type: 'application/zip' }), dati, c);
-        })
-        .catch(function (e) { avviso('Creazione del file compresso non riuscita: ' + e.message); });
+      return { c: c, dati: dati, base: base, foto: foto.length, voci: voci };
     });
+  }
+  function vociPronte(voci) {
+    return Promise.all(voci.map(function (v) { return v.promessa.then(function (d) { return { percorso: v.percorso, dati: d }; }); }));
+  }
+
+  // Esporta il solo cantiere aperto: .json semplice, oppure .zip se ha foto.
+  function esportaCantiere() {
+    var c = cantiereCorrente();
+    var dati = C.buildExport(c.giornate, new Date());
+    if (!dati.giornate.length) { avviso('Nessuna giornata da esportare.'); return; }
+    // Nessun blocco qui: il salvataggio in locale resta sul dispositivo, non e' un
+    // rischio di condivisione. L'avviso privacy scatta sulla condivisione vera e
+    // propria, dentro condividiOScarica().
+    preparaCantiere(stato.attivo, '').then(function (p) {
+      if (!p.foto) {
+        condividiOScarica(new File([JSON.stringify(p.dati, null, 2)], p.base + '.json', { type: 'application/json' }), p.dati, c);
+        return;
+      }
+      return vociPronte(p.voci).then(function (pronte) {
+        condividiOScarica(new File([ZipStore.creaZip(pronte)], p.base + '.zip', { type: 'application/zip' }), p.dati, c);
+      }).catch(function (e) { avviso('Creazione del file compresso non riuscita: ' + e.message); });
+    });
+  }
+
+  // Esporta tutti i cantieri con giornate in un unico .zip: una cartella per cantiere, ciascuna con il proprio
+  // .json e le proprie foto. Lo .zip non e' condivisibile dal menu del telefono: si salva direttamente.
+  function esportaTutti() {
+    var ids = Object.keys(stato.cantieri).sort(function (a, b) {
+      return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it') || (a < b ? -1 : 1);
+    });
+    var conGiornate = ids.filter(function (id) { return Object.keys(stato.cantieri[id].giornate).length; });
+    if (!conGiornate.length) { avviso('Nessuna giornata da esportare.'); return; }
+    var usate = {};
+    avviso('Preparazione del file in corso...');
+    Promise.all(conGiornate.map(function (id) {
+      var cartella = slug(stato.cantieri[id].nome), scelta = cartella, k = 2;
+      while (usate[scelta]) scelta = cartella + '-' + (k++); // due cantieri con lo stesso nome: cartelle distinte
+      usate[scelta] = true;
+      return preparaCantiere(id, scelta + '/');
+    })).then(function (pr) {
+      var voci = [];
+      pr.forEach(function (p) { voci = voci.concat(p.voci); });
+      return vociPronte(voci).then(function (pronte) {
+        var file = new File([ZipStore.creaZip(pronte)], 'agenda-tutti-i-cantieri-' + C.oggiISO().replace(/-/g, '') + '.zip', { type: 'application/zip' });
+        salvaTutti(file, pr, ids.length - conGiornate.length);
+      });
+    }).catch(function (e) { avviso('Creazione del file compresso non riuscita: ' + e.message); });
+  }
+  function salvaTutti(file, pr, senzaGiornate) {
+    var a = h('a', { href: URL.createObjectURL(file), download: file.name });
+    document.body.appendChild(a); a.click(); a.remove();
+    var adesso = new Date().toISOString(), g = 0, f = 0;
+    pr.forEach(function (p) { p.c.ultimo_export = adesso; g += p.dati.giornate.length; f += p.foto; });
+    salva(); principale();
+    avviso('Esportati ' + cantieri(pr.length) + ' (' + giornate(g) + ', ' + f + ' foto). File salvato sul telefono: ' + file.name
+      + '. Di solito si trova nella cartella Download (app File). Il file .zip non si puo\' inviare dal menu di condivisione del telefono.'
+      + (senzaGiornate ? ' ' + cantieri(senzaGiornate) + ' senza giornate non ' + (senzaGiornate === 1 ? 'e\' incluso' : 'sono inclusi') + '.' : ''));
+  }
+
+  // Con piu' cantieri sul telefono si sceglie cosa esportare; con uno solo si esporta subito.
+  function esporta() {
+    var ids = Object.keys(stato.cantieri);
+    if (ids.length < 2) { esportaCantiere(); return; }
+    var c = cantiereCorrente(), n = ids.filter(function (id) { return Object.keys(stato.cantieri[id].giornate).length; }).length;
+    chiudiPannello();
+    pannello.hidden = false;
+    pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'Cosa vuoi esportare?' }));
+    pannello.appendChild(h('p', { 'class': 'nota', text: 'Su questo telefono ci sono ' + cantieri(ids.length)
+      + '. Tutti i cantieri finiscono in un unico file .zip, con una cartella per ciascuno.' }));
+    pannello.appendChild(btn('Solo "' + c.nome + '"', function () { chiudiPannello(); esportaCantiere(); }, 'cta cta-grande'));
+    pannello.appendChild(btn('Tutti i cantieri (' + n + ')', function () { chiudiPannello(); esportaTutti(); }, 'cta cta-grande'));
+    pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
+    avviso('');
+    pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
@@ -475,73 +538,157 @@
     return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
   }
 
-  // Ripristino da uno .zip creato da "Esporta per LeenO": il cantiere (creato se manca), il contenuto
-  // del .json e le foto. Le foto gia' presenti (stessa giornata, stesso contenuto) non vengono duplicate.
+  // Cantieri contenuti in uno .zip di esportazione. Un file di un solo cantiere ha il .json alla radice e le foto
+  // in cartelle AAAAMMGG/; l'esportazione di tutti i cantieri ha una cartella per cantiere con la stessa struttura:
+  // le foto appartengono al .json che sta nella cartella che le contiene.
+  function leggiPacchetti(voci) {
+    var json = voci.filter(function (v) { return /\.json$/i.test(v.percorso); });
+    if (!json.length) throw new Error('Nel file .zip manca il file dell\'agenda (.json).');
+    var pacchetti = [], primoErrore = null, ignorati = 0;
+    json.forEach(function (v) {
+      var testo = new TextDecoder().decode(v.dati), nuove, intest;
+      try { nuove = C.parseImport(testo); intest = JSON.parse(testo); }
+      catch (e) { primoErrore = primoErrore || e; ignorati++; return; }
+      var generato = new Date(intest.generato_il);
+      pacchetti.push({
+        dir: v.percorso.slice(0, v.percorso.lastIndexOf('/') + 1), nuove: nuove, n: Object.keys(nuove), foto: [],
+        nome: (intest.testata && typeof intest.testata.lavori === 'string' ? intest.testata.lavori : '').trim(),
+        marca: isNaN(generato.getTime()) ? new Date().toISOString() : generato.toISOString()
+      });
+    });
+    if (!pacchetti.length) throw primoErrore;
+    voci.forEach(function (v) {
+      if (/\.json$/i.test(v.percorso)) return;
+      var m = /^(.*\/)?(\d{4})(\d{2})(\d{2})\/([^\/]+)\.jpe?g$/i.exec(v.percorso), giorno = m && (m[2] + '-' + m[3] + '-' + m[4]);
+      if (!m || !C.dataValida(giorno) || v.dati.length < 4 || v.dati[0] !== 0xFF || v.dati[1] !== 0xD8) { ignorati++; return; }
+      var dir = m[1] || '';
+      // un solo cantiere nel file: tutte le foto sono sue; con piu' cantieri conta la cartella
+      var p = pacchetti.length === 1 ? pacchetti[0] : pacchetti.filter(function (x) { return x.dir === dir; })[0];
+      if (!p) { ignorati++; return; }
+      p.foto.push({ giorno: giorno, dati: v.dati, crc: v.crc, creato_il: creatoIlDaNome(giorno, m[5], p.foto.length) });
+    });
+    pacchetti.sort(function (a, b) { return a.nome.localeCompare(b.nome, 'it') || (a.dir < b.dir ? -1 : 1); });
+    return { pacchetti: pacchetti, ignorati: ignorati };
+  }
+
+  // Cantiere con lo stesso nome (senza badare a maiuscole) gia' presente sul telefono, oppure null.
+  function cercaCantiere(nome) {
+    var trovato = null;
+    Object.keys(stato.cantieri).some(function (k) {
+      if (stato.cantieri[k].nome.trim().toLowerCase() === nome.toLowerCase()) { trovato = k; return true; }
+      return false;
+    });
+    return trovato;
+  }
+
+  // Decide dove va il cantiere del file e quali foto sono davvero da aggiungere (stessa giornata e stesso
+  // contenuto di una foto gia' presente: non si duplica).
+  function analizzaPacchetto(p, unico) {
+    var id = null;
+    if (p.nome) id = cercaCantiere(p.nome);
+    else if (unico) { id = cantiereCorrente() ? stato.attivo : null; p.nome = id ? stato.cantieri[id].nome : 'Cantiere ripristinato'; } // file senza nome: va nel cantiere aperto
+    else p.nome = p.dir.replace(/\/$/, '').split('/').pop() || 'Cantiere ripristinato';
+    p.id = id; p.esistente = id !== null;
+    p.doppie = p.esistente ? p.n.filter(function (d) { return stato.cantieri[id].giornate[d]; }).length : 0;
+    var dimensioni = {}, presenti = {};
+    p.foto.forEach(function (x) { dimensioni[x.giorno + '|' + x.dati.length] = true; });
+    var esaminate = p.esistente ? FotoStore.elencaPerCantiere(id) : Promise.resolve([]);
+    return esaminate.then(function (righe) {
+      return Promise.all(righe.filter(function (r) { return dimensioni[r.giorno + '|' + r.blob.size]; }).map(function (r) {
+        return r.blob.arrayBuffer().then(function (b) { presenti[r.giorno + '|' + r.blob.size + '|' + ZipStore.crc32(new Uint8Array(b))] = true; });
+      }));
+    }).then(function () {
+      p.daAggiungere = p.foto.filter(function (x) {
+        var k = x.giorno + '|' + x.dati.length + '|' + x.crc;
+        if (presenti[k]) return false;
+        presenti[k] = true; return true;
+      });
+      p.saltate = p.foto.length - p.daAggiungere.length;
+    });
+  }
+
+  function dettaglioPacchetto(p) {
+    return giornate(p.n.length) + (p.doppie ? ' (' + p.doppie + ' già presenti su questo dispositivo verranno sostituite)' : '')
+      + ', ' + p.daAggiungere.length + ' foto da aggiungere' + (p.saltate ? ' (' + p.saltate + ' già presenti, non vengono duplicate)' : '');
+  }
+  function notaIgnorati(n) {
+    return n ? n + (n === 1 ? ' voce del file non riconosciuta, ignorata.' : ' voci del file non riconosciute, ignorate.') : '';
+  }
+
+  // File con piu' cantieri: elenco con una casella per cantiere, tutte spuntate. Risolve con i cantieri scelti, o null.
+  function scegliPacchetti(pacchetti, ignorati) {
+    return new Promise(function (resolve) {
+      chiudiPannello();
+      pannello.hidden = false;
+      var caselle = [];
+      pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'Ripristino dal file .zip' }));
+      pannello.appendChild(h('p', { 'class': 'nota', text: 'Il file contiene ' + cantieri(pacchetti.length) + '. Scegli quali ripristinare. '
+        + 'Le giornate già presenti sul telefono vengono sostituite; le foto già presenti non vengono duplicate.' + (ignorati ? ' ' + notaIgnorati(ignorati) : '') }));
+      pacchetti.forEach(function (p) {
+        var casella = h('input', { type: 'checkbox', checked: 'checked' });
+        caselle.push(casella);
+        pannello.appendChild(h('label', { 'class': 'scelta-cantiere' }, [casella,
+          h('span', { text: p.nome + ': ' + dettaglioPacchetto(p) + '. ' + (p.esistente ? 'Cantiere già presente.' : 'Il cantiere verrà creato.') })]));
+      });
+      function concludi(risultato) { chiudiPannello(); resolve(risultato); }
+      pannello.appendChild(btn('Ripristina selezionati', function () {
+        var scelti = pacchetti.filter(function (p, i) { return caselle[i].checked; });
+        if (!scelti.length) { avviso('Seleziona almeno un cantiere.'); return; }
+        concludi(scelti);
+      }, 'cta cta-grande'));
+      pannello.appendChild(btn('Annulla', function () { concludi(null); }, ''));
+      avviso('');
+      pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // Scrive i cantieri scelti: prima il testo (localStorage), poi le foto (IndexedDB). Se le foto si interrompono
+  // a meta', ripetere lo stesso ripristino completa il lavoro, perche' quelle gia' presenti vengono saltate.
+  function applicaPacchetti(scelti) {
+    var totG = 0, totF = 0, totS = 0;
+    scelti.forEach(function (p) {
+      var id = (p.id && stato.cantieri[p.id]) ? p.id : cercaCantiere(p.nome); // due cantieri omonimi nel file: confluiscono in uno
+      if (id === null) { id = nuovoId(); stato.cantieri[id] = { nome: p.nome, giornate: {}, ultimo_export: p.marca }; }
+      var c = stato.cantieri[id];
+      p.n.forEach(function (d) { c.giornate[d] = p.nuove[d]; });
+      p.daAggiungere.forEach(function (x) { if (!c.giornate[x.giorno]) c.giornate[x.giorno] = { campi: {}, modificato_il: p.marca }; });
+      p.idFinale = id; totG += p.n.length; totF += p.daAggiungere.length; totS += p.saltate;
+    });
+    stato.attivo = scelti[0].idFinale;
+    if (!salva()) return;
+    var saltate = totS ? ' (' + totS + ' foto già presenti, saltate)' : '';
+    var riepilogo = scelti.length === 1
+      ? 'Ripristinate ' + giornate(totG) + ' e ' + totF + ' foto nel cantiere "' + scelti[0].nome + '"' + saltate + '.'
+      : 'Ripristinati ' + cantieri(scelti.length) + ': ' + giornate(totG) + ' e ' + totF + ' foto' + saltate + '.';
+    return Promise.all(scelti.map(function (p) {
+      return Promise.all(p.daAggiungere.map(function (x) {
+        return FotoStore.aggiungi(p.idFinale, x.giorno, new Blob([x.dati], { type: 'image/jpeg' }), x.creato_il);
+      }));
+    })).then(function () { principale(); avviso(riepilogo); }, function (e) {
+      principale();
+      avviso('Giornate ripristinate, ma non tutte le foto (' + e.message + '). Riprova con lo stesso file: le foto già presenti vengono saltate.');
+    });
+  }
+
+  // Ripristino da uno .zip creato da "Esporta per LeenO": uno o piu' cantieri (creati se mancano),
+  // contenuto dei .json e foto.
   function ripristinaDaZip(f) {
     avviso('Lettura del file in corso...');
     return f.arrayBuffer().then(ZipStore.leggiZip).then(function (voci) {
-      var radice = voci.filter(function (v) { return /^[^\/]+\.json$/i.test(v.percorso); })[0];
-      if (!radice) throw new Error('Nel file .zip manca il file dell\'agenda (.json).');
-      var testo = new TextDecoder().decode(radice.dati), nuove = C.parseImport(testo), n = Object.keys(nuove);
-      var intest = JSON.parse(testo), generato = new Date(intest.generato_il);
-      var marca = isNaN(generato.getTime()) ? new Date().toISOString() : generato.toISOString();
-
-      var foto = [], ignorati = 0;
-      voci.forEach(function (v) {
-        if (v === radice) return;
-        var m = /(?:^|\/)(\d{4})(\d{2})(\d{2})\/([^\/]+)\.jpe?g$/i.exec(v.percorso), giorno = m && (m[1] + '-' + m[2] + '-' + m[3]);
-        if (!m || !C.dataValida(giorno) || v.dati.length < 4 || v.dati[0] !== 0xFF || v.dati[1] !== 0xD8) { ignorati++; return; }
-        foto.push({ giorno: giorno, dati: v.dati, crc: v.crc, creato_il: creatoIlDaNome(giorno, m[4], foto.length) });
-      });
-
-      // cantiere di destinazione: quello con lo stesso nome (senza badare a maiuscole), altrimenti nuovo
-      var nome = (intest.testata && typeof intest.testata.lavori === 'string' ? intest.testata.lavori : '').trim(), id = null;
-      if (nome) {
-        Object.keys(stato.cantieri).some(function (k) {
-          if (stato.cantieri[k].nome.trim().toLowerCase() === nome.toLowerCase()) { id = k; return true; }
-          return false;
-        });
-      } else {
-        id = cantiereCorrente() ? stato.attivo : null; // file senza nome del cantiere: va in quello aperto
-        nome = id ? stato.cantieri[id].nome : 'Cantiere ripristinato';
-      }
-      var esistente = id !== null, doppie = esistente ? n.filter(function (d) { return stato.cantieri[id].giornate[d]; }).length : 0;
-
-      var dimensioni = {}, presenti = {};
-      foto.forEach(function (p) { dimensioni[p.giorno + '|' + p.dati.length] = true; });
-      var esaminate = esistente ? FotoStore.elencaPerCantiere(id) : Promise.resolve([]);
-      return esaminate.then(function (righe) {
-        return Promise.all(righe.filter(function (r) { return dimensioni[r.giorno + '|' + r.blob.size]; }).map(function (r) {
-          return r.blob.arrayBuffer().then(function (b) { presenti[r.giorno + '|' + r.blob.size + '|' + ZipStore.crc32(new Uint8Array(b))] = true; });
-        }));
-      }).then(function () {
-        var daAggiungere = foto.filter(function (p) {
-          var k = p.giorno + '|' + p.dati.length + '|' + p.crc;
-          if (presenti[k]) return false;
-          presenti[k] = true; return true;
-        });
-        var saltate = foto.length - daAggiungere.length;
-
-        var domanda = 'Ripristinare dal file .zip?\n\nCantiere "' + nome + '": ' + (esistente ? 'già presente, le giornate vanno qui.' : 'non presente, verrà creato.')
-          + '\n' + giornate(n.length) + (doppie ? ' (' + doppie + ' già presenti su questo dispositivo verranno sostituite)' : '') + '.'
-          + '\n' + daAggiungere.length + ' foto da aggiungere'
-          + (saltate ? ' (' + saltate + ' già presenti, non vengono duplicate)' : '') + '.'
-          + (ignorati ? '\n' + ignorati + (ignorati === 1 ? ' voce del file non riconosciuta, ignorata.' : ' voci del file non riconosciute, ignorate.') : '');
-        if (!confirm(domanda)) { avviso(''); return; }
-
-        if (!esistente) { id = nuovoId(); stato.cantieri[id] = { nome: nome, giornate: {}, ultimo_export: marca }; }
-        var c = stato.cantieri[id];
-        n.forEach(function (d) { c.giornate[d] = nuove[d]; });
-        daAggiungere.forEach(function (p) { if (!c.giornate[p.giorno]) c.giornate[p.giorno] = { campi: {}, modificato_il: marca }; });
-        stato.attivo = id;
-        if (!salva()) return;
-
-        var riepilogo = 'Ripristinate ' + giornate(n.length) + ' e ' + daAggiungere.length + ' foto nel cantiere "' + nome + '"' + (saltate ? ' (' + saltate + ' foto già presenti, saltate)' : '') + '.';
-        return Promise.all(daAggiungere.map(function (p) {
-          return FotoStore.aggiungi(id, p.giorno, new Blob([p.dati], { type: 'image/jpeg' }), p.creato_il);
-        })).then(function () { principale(); avviso(riepilogo); }, function (e) {
-          principale();
-          avviso('Giornate ripristinate, ma non tutte le foto (' + e.message + '). Riprova con lo stesso file: le foto già presenti vengono saltate.');
+      var lettura = leggiPacchetti(voci), pacchetti = lettura.pacchetti, unico = pacchetti.length === 1;
+      return Promise.all(pacchetti.map(function (p) { return analizzaPacchetto(p, unico); })).then(function () {
+        if (unico) {
+          var p = pacchetti[0];
+          var domanda = 'Ripristinare dal file .zip?\n\nCantiere "' + p.nome + '": ' + (p.esistente ? 'già presente, le giornate vanno qui.' : 'non presente, verrà creato.')
+            + '\n' + giornate(p.n.length) + (p.doppie ? ' (' + p.doppie + ' già presenti su questo dispositivo verranno sostituite)' : '') + '.'
+            + '\n' + p.daAggiungere.length + ' foto da aggiungere' + (p.saltate ? ' (' + p.saltate + ' già presenti, non vengono duplicate)' : '') + '.'
+            + (lettura.ignorati ? '\n' + notaIgnorati(lettura.ignorati) : '');
+          if (!confirm(domanda)) { avviso(''); return; }
+          return applicaPacchetti([p]);
+        }
+        return scegliPacchetti(pacchetti, lettura.ignorati).then(function (scelti) {
+          if (!scelti) { avviso(''); return; }
+          return applicaPacchetti(scelti);
         });
       });
     });

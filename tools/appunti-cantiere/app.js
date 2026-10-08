@@ -315,7 +315,8 @@
     document.body.appendChild(a); a.click(); a.remove();
     registraExport(c);
     avviso('Esportate ' + giornate(dati.giornate.length) + '. File salvato sul telefono: ' + file.name
-      + '. Di solito si trova nella cartella Download (app File).');
+      + '. Di solito si trova nella cartella Download (app File).'
+      + (/\.zip$/.test(file.name) ? ' Il file con le foto (.zip) non si puo\' inviare dal menu di condivisione del telefono.' : ''));
   }
   function condividiFile(file, dati, c) {
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
@@ -323,7 +324,7 @@
       function () { registraExport(c); avviso('File condiviso: ' + file.name); },
       function (e) {
         if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
-        avviso('Condivisione non riuscita. Usa \"Salva sul telefono\".');
+        avviso('Condivisione non riuscita (' + (e && e.name ? e.name : 'errore') + '). Usa \"Salva sul telefono\".');
       }
     );
   }
@@ -331,15 +332,23 @@
   // rifiutare share(): vedi LESSONS_PWA_BROGLIACCIO.md). Se il dispositivo sa condividere file,
   // un riquadro offre pulsanti da toccare: il tocco fresco rende valida la condivisione.
   // L'ultimo export si registra solo a condivisione riuscita o a file salvato.
+  // Il menu di condivisione di Chromium (Chrome, Brave, Edge) accetta solo alcuni tipi di file
+  // (testo, immagini, audio, video, PDF): .json e .zip vengono rifiutati da share(), anche quando
+  // canShare() risponde di si. Il .json si condivide quindi come testo (.json.txt, che l'import di
+  // LeenO legge ugualmente); lo .zip con le foto non e' condivisibile e si salva direttamente.
+  function fileDaCondividere(file) {
+    return /\.json$/.test(file.name) ? new File([file], file.name + '.txt', { type: 'text/plain' }) : null;
+  }
   function condividiOScarica(file, dati, c) {
     chiudiPannello();
-    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) { salvaSulTelefono(file, dati, c); return; }
+    var daCondividere = fileDaCondividere(file);
+    if (!daCondividere || !(navigator.canShare && navigator.canShare({ files: [daCondividere] }))) { salvaSulTelefono(file, dati, c); return; }
     pannello.hidden = false;
     pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'File pronto: ' + file.name }));
     pannello.appendChild(h('p', { 'class': 'nota', text: giornate(dati.giornate.length)
-      + (/\.zip$/.test(file.name) ? ' con foto' : '') + '. Per portarle in LeenO invia il file a te stesso '
+      + '. Per portarle in LeenO invia il file a te stesso '
       + '(posta, messaggi, cloud) oppure salvalo sul telefono.' }));
-    pannello.appendChild(btn('Invia o condividi', function () { condividiFile(file, dati, c); }, 'cta cta-grande'));
+    pannello.appendChild(btn('Invia o condividi', function () { condividiFile(daCondividere, dati, c); }, 'cta cta-grande'));
     pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c); }, ''));
     pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
     avviso('');

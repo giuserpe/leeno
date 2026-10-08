@@ -32,8 +32,9 @@
 
   function nuovoId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
 
-  function aggiungi(cantiereId, giorno, blob) {
-    var riga = { id: nuovoId(), cantiereId: cantiereId, giorno: giorno, blob: blob, creato_il: new Date().toISOString() };
+  // creatoIl (ISO) e' facoltativo: serve al ripristino per mantenere l'ordine e l'orario originali.
+  function aggiungi(cantiereId, giorno, blob, creatoIl) {
+    var riga = { id: nuovoId(), cantiereId: cantiereId, giorno: giorno, blob: blob, creato_il: creatoIl || new Date().toISOString() };
     return transazione('readwrite').then(function (store) {
       return new Promise(function (resolve, reject) {
         var r = store.add(riga);

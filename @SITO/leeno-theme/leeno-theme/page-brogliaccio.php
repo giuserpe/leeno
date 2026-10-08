@@ -54,12 +54,12 @@ $url_forum    = home_url( '/forums/' );
 
         <p class="brogliaccio-lead">
             <strong>Brogliaccio</strong> è l'agenda di cantiere di LeenO: un'applicazione gratuita per annotare sul telefono,
-            giorno per giorno, i fatti da riportare nel Giornale dei Lavori. Poi porti tutto in LeenO con un'importazione.
+            giorno per giorno, i fatti da riportare nel Giornale dei Lavori. Poi importi tutto in LeenO.
         </p>
 
         <div class="brogliaccio-ctas">
             <a class="btn-big" href="<?php echo esc_url( $url_app ); ?>" rel="noopener">Apri Brogliaccio</a>
-            <a class="btn-outline" href="<?php echo esc_url( $url_docs ); ?>">Leggi la documentazione</a>
+            <!-- <a class="btn-outline" href="<?php echo esc_url( $url_docs ); ?>">Leggi la documentazione</a> -->
         </div>
 
         <section class="brogliaccio-section" aria-labelledby="brogliaccio-perche">

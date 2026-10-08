@@ -213,7 +213,7 @@ Regola da tenere a mente comunque, perché il mancato rispetto ha già causato u
 
 ## Manuale utente
 
-`documentazione/MANUALE_LeenO.fodt` si aggiorna seguendo la skill `.agent/skills/leeno-aggiorna-manuale/SKILL.md` e, per le insidie ricorrenti (modifica del FODT, screenshot, PDF, indice), `documentazione/LESSONS_MANUALE.md`. Regola da ricordare comunque: ogni intervento sul manuale aggiorna insieme `TRACKING_MANUALE.md`, la riga "Stato di revisione", `MAPPA_SEZIONI.md` e il PDF in `src/Ultimus.oxt/`, e si chiude con la validazione XML del FODT.
+`documentazione/MANUALE_LeenO.fodt` si aggiorna seguendo la skill `.agent/skills/leeno-aggiorna-manuale/SKILL.md` e, per le insidie ricorrenti (modifica del FODT, screenshot, PDF, indice), `documentazione/LESSONS_MANUALE.md`. Regola da ricordare comunque: ogni intervento sul manuale aggiorna insieme `TRACKING_MANUALE.md`, la riga "Stato di revisione", `MAPPA_SEZIONI.md`, l'indice generale (`aggiorna_indice.py`, prima del PDF) e il PDF in `src/Ultimus.oxt/`, e si chiude con la validazione XML del FODT.
 
 ## Quirk minori UNO/ODF
 

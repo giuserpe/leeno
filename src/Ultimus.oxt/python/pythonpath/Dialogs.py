@@ -2512,6 +2512,7 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None, de
                   '*.md': 'Markdown(*.md)',
                   '*.json': 'JSON(*.json)',
                   '*.json;*.zip': 'JSON e ZIP(*.json;*.zip)',
+                  '*.json;*.zip;*.txt': 'JSON, ZIP e TXT(*.json;*.zip;*.txt)',
                   '*.DB': 'PriMus Paradox(*.DB)', }
     ctx = uno.getComponentContext()
     oFilePicker = ctx.ServiceManager.createInstanceWithContext("com.sun.star.ui.dialogs.FilePicker", ctx)

@@ -20,7 +20,7 @@ Mantiene sincronizzato il manuale utente (`documentazione/MANUALE_LeenO.fodt`) c
 - **Manuale PDF**: `src/Ultimus.oxt/MANUALE_LeenO.pdf` (generato da `genera_pdf.py`)
 - **Registro aggiornamenti**: `documentazione/TRACKING_MANUALE.md`
 - **Mappa sezioni**: `.agent/skills/leeno-aggiorna-manuale/MAPPA_SEZIONI.md`
-- **Script**: `.agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`, `genera_pdf.py`; per gli screenshot di Brogliaccio `scripts/genera_screenshot_brogliaccio.py`
+- **Script**: `.agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`, `aggiorna_indice.py`, `genera_pdf.py`; per gli screenshot di Brogliaccio `scripts/genera_screenshot_brogliaccio.py`
 
 ## Sorgenti di Informazione
 Non limitarti ai file Python: consulta tutte le sorgenti.
@@ -93,6 +93,9 @@ Ad **ogni** aggiornamento aggiorna la tabella "Stato di revisione" all'inizio de
 
 ### Fase 7: Mappa sezioni
 Rigenera sempre: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/genera_mappa.py`.
+
+### Fase 7bis: Indice generale
+Dopo ogni modifica al manuale rigenera sempre i numeri di pagina dell'indice, **prima** del PDF: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/aggiorna_indice.py`. Lo script fa aggiornare l'indice a LibreOffice su una copia temporanea e riporta nel FODT originale solo i numeri di pagina, voce per voce, senza riscrivere il resto del file. Se sono stati aggiunti o rinominati titoli si ferma e chiede di aggiornare l'indice da LibreOffice (Strumenti > Aggiorna > Tutti gli indici).
 
 ### Fase 8: PDF
 Genera sempre il PDF: `python3 .agent/skills/leeno-aggiorna-manuale/scripts/genera_pdf.py` (LibreOffice headless, da `documentazione/MANUALE_LeenO.fodt` a `src/Ultimus.oxt/MANUALE_LeenO.pdf`).

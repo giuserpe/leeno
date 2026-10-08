@@ -51,6 +51,9 @@ button.cta-grande { width:100%; margin:.6rem 0; padding:.85rem 1rem; font-size:1
 .cantiere-corrente { font:700 1.1rem var(--display); color:var(--cta); margin:0 0 .8rem; display:flex; align-items:baseline; gap:.4rem; }
 .cantiere-corrente .etichetta { font:600 .75rem var(--display); text-transform:uppercase; letter-spacing:.05em; color:var(--lab); }
 .alert { color:var(--warn); font-weight:600; }
+.pannello-export { margin:.8rem 1rem 0; padding:.6rem .8rem; border:1px solid var(--line); border-left:4px solid var(--cta); background:var(--card); }
+.pannello-export[hidden] { display:none; }
+.pannello-titolo { margin:0 0 .2rem; font:700 1rem var(--display); word-break:break-all; }
 #msg { margin:.8rem 1rem 0; padding:.6rem; border:1px solid var(--line); border-left:4px solid var(--acc); background:var(--card); }
 footer.dona { max-width:40rem; margin:1.2rem auto 0; padding:0 1rem 1.4rem; text-align:center; }
 footer.dona a { display:inline-block; font:600 .85rem var(--display); color:var(--cta); text-decoration:none; border:1px solid var(--cta); border-radius:2px; padding:.55rem 1.2rem; }
@@ -89,6 +92,7 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
   <button type="button" class="tema" id="tema"></button>
 </header>
 <p id="msg" role="status" hidden></p>
+<div id="pannello-export" class="pannello-export" hidden></div>
 <main id="app"></main>
 <footer class="dona">
   <a href="https://leeno.org/donazioni/" target="_blank" rel="noopener">Sostieni LeenO: dona</a>

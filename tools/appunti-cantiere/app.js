@@ -4,7 +4,7 @@
   var C = window.Core, KEY = 'appunti-cantiere-v1', TEMA_KEY = 'appunti-cantiere-tema';
   var cantiereApertoId = null, dataAperta = null, urlFotoAttive = [];
   var cantiereApertoRif = null, giornoApertoRif = null;
-  var app = document.getElementById('app'), msg = document.getElementById('msg');
+  var app = document.getElementById('app'), msg = document.getElementById('msg'), pannello = document.getElementById('pannello-export');
   var stato = carica();
 
   // -------------------- tema: automatico, chiaro o scuro, a scelta --------------------
@@ -65,6 +65,21 @@
     try { localStorage.setItem(KEY, JSON.stringify(stato)); return true; }
     catch (e) { avviso('Salvataggio non riuscito: memoria piena o bloccata. Esporta subito i dati.'); return false; }
   }
+  // Giornate mai esportate o modificate (testo o foto) dopo l'ultimo export del cantiere.
+  function giornateDaEsportare(c) {
+    return Object.keys(c.giornate).filter(function (d) {
+      return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export;
+    }).length;
+  }
+  function ultimoExportTesto(c) {
+    var t = c.ultimo_export ? new Date(c.ultimo_export) : null;
+    if (!t || isNaN(t.getTime())) return 'Mai esportato.';
+    var ora = new Date();
+    var n = Math.round((new Date(ora.getFullYear(), ora.getMonth(), ora.getDate())
+      - new Date(t.getFullYear(), t.getMonth(), t.getDate())) / 86400000);
+    if (n <= 0) return 'Ultimo export: oggi.';
+    return 'Ultimo export: ' + (n === 1 ? 'ieri' : n + ' giorni fa') + '.';
+  }
   function avviso(t) { msg.textContent = t; msg.hidden = !t; }
   function giornate(n) { return n + (n === 1 ? ' giornata' : ' giornate'); }
   function h(tag, attr, figli) {
@@ -113,6 +128,7 @@
 
   // -------------------- schermata unica: cantiere (scelta/creazione) + sue giornate --------------------
   function principale() {
+    chiudiPannello();
     svuota();
     var ids = Object.keys(stato.cantieri).sort(function (a, b) {
       return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it');
@@ -164,7 +180,7 @@
     ]));
 
     var date = Object.keys(c.giornate).sort().reverse();
-    var modificate = date.filter(function (d) { return !c.ultimo_export || c.giornate[d].modificato_il > c.ultimo_export; }).length;
+    var modificate = giornateDaEsportare(c);
 
     app.appendChild(h('div', { 'class': 'barra' }, [h('h2', { text: 'Giornate:' })]));
     app.appendChild(h('ul', { 'class': 'lista' }, date.map(function (d) {
@@ -182,7 +198,7 @@
     if (!date.length) app.appendChild(h('p', { 'class': 'nota', text: 'Nessuna giornata salvata per questo cantiere.' }));
     app.appendChild(h('section', {}, [
       h('p', { 'class': modificate ? 'nota alert' : 'nota', text: !date.length ? '' :
-        (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. I dati esistono solo su questo dispositivo.') }),
+        (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. ' + ultimoExportTesto(c) + ' I dati esistono solo su questo dispositivo.') }),
       btn('Esporta per LeenO', esporta, 'cta'),
       btn('Stampa o PDF', stampaPDF),
       btn('Ripristina da file', function () { document.getElementById('file').click(); })
@@ -198,6 +214,11 @@
 
   function eliminaCantiere() {
     var c = cantiereCorrente(), n = Object.keys(c.giornate).length;
+    var daSalvare = giornateDaEsportare(c);
+    if (daSalvare && confirm('Questo cantiere ha ' + giornate(daSalvare) + (daSalvare === 1 ? ' non ancora esportata' : ' non ancora esportate')
+      + '.\n\nOK: salva prima una copia di sicurezza (poi potrai eliminare il cantiere).\nAnnulla: prosegui senza copia.')) {
+      esporta(); return;
+    }
     var testo = 'Eliminare il cantiere "' + c.nome + '"' + (n ? ', con ' + giornate(n) + '?' : '?');
     if (n && !c.ultimo_export) testo += '\n\nAttenzione: non è mai stato esportato per LeenO.';
     if (!confirm(testo)) return;
@@ -255,7 +276,12 @@
           h('img', { src: url, alt: 'Foto del ' + dataEstesa(dataAperta) }),
           btn('Elimina', function () {
             if (!confirm('Eliminare questa foto?')) return;
-            FotoStore.elimina(r.id).then(aggiornaFotoLista);
+            FotoStore.elimina(r.id).then(function () {
+              if (cantiereApertoRif && cantiereApertoRif.giornate[dataAperta]) {
+                giornoApertoRif.modificato_il = new Date().toISOString(); salva();
+              }
+              aggiornaFotoLista();
+            });
           }, 'danger')
         ]));
       });
@@ -278,26 +304,46 @@
     return confirm('Vuoi comunque ' + azione + '?');
   }
 
-  function condividiOScarica(file, dati, c) {
-    // Si salva sempre il file in locale per primo: e' affidabile e non dipende da
-    // permessi del browser. La condivisione, che fa uscire il file dal dispositivo,
-    // viene proposta subito dopo come passo separato, con l'avviso privacy agganciato
-    // a quella proposta e non al semplice salvataggio locale.
+  function chiudiPannello() {
+    while (pannello.firstChild) pannello.removeChild(pannello.firstChild);
+    pannello.hidden = true;
+  }
+  function registraExport(c) { c.ultimo_export = new Date().toISOString(); salva(); principale(); }
+  function salvaSulTelefono(file, dati, c) {
+    // Download diretto via <a download>: non richiede alcuna attivazione utente.
     var a = h('a', { href: URL.createObjectURL(file), download: file.name });
     document.body.appendChild(a); a.click(); a.remove();
-    c.ultimo_export = new Date().toISOString(); salva(); principale();
-    avviso('Esportate ' + giornate(dati.giornate.length) + ': ' + file.name);
-
-    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) return;
-    if (!confirm('Vuoi condividere questo file?')) return;
+    registraExport(c);
+    avviso('Esportate ' + giornate(dati.giornate.length) + '. File salvato sul telefono: ' + file.name
+      + '. Di solito si trova nella cartella Download (app File).');
+  }
+  function condividiFile(file, dati, c) {
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
     navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(
-      function () { avviso('File condiviso: ' + file.name); },
+      function () { registraExport(c); avviso('File condiviso: ' + file.name); },
       function (e) {
-        if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Il file resta comunque salvato.'); return; }
-        avviso('Condivisione non riuscita. Il file resta comunque salvato: ' + file.name);
+        if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
+        avviso('Condivisione non riuscita. Usa \"Salva sul telefono\".');
       }
     );
+  }
+  // Il file e' gia' pronto (costruirlo e' asincrono, e dopo un lavoro asincrono il browser puo'
+  // rifiutare share(): vedi LESSONS_PWA_BROGLIACCIO.md). Se il dispositivo sa condividere file,
+  // un riquadro offre pulsanti da toccare: il tocco fresco rende valida la condivisione.
+  // L'ultimo export si registra solo a condivisione riuscita o a file salvato.
+  function condividiOScarica(file, dati, c) {
+    chiudiPannello();
+    if (!(navigator.canShare && navigator.canShare({ files: [file] }))) { salvaSulTelefono(file, dati, c); return; }
+    pannello.hidden = false;
+    pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'File pronto: ' + file.name }));
+    pannello.appendChild(h('p', { 'class': 'nota', text: giornate(dati.giornate.length)
+      + (/\.zip$/.test(file.name) ? ' con foto' : '') + '. Per portarle in LeenO invia il file a te stesso '
+      + '(posta, messaggi, cloud) oppure salvalo sul telefono.' }));
+    pannello.appendChild(btn('Invia o condividi', function () { condividiFile(file, dati, c); }, 'cta cta-grande'));
+    pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c); }, ''));
+    pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
+    avviso('');
+    pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function esporta() {
@@ -422,6 +468,7 @@
       if (cantiereApertoRif && cantiereApertoRif.giornate[dataAperta] !== giornoApertoRif) {
         cantiereApertoRif.giornate[dataAperta] = giornoApertoRif;
       }
+      giornoApertoRif.modificato_il = new Date().toISOString();
       salva(); avviso(''); aggiornaFotoLista();
     }).catch(function (e) { avviso('Foto non salvata: ' + e.message); });
   });

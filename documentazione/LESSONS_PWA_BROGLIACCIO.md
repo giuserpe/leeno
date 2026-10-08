@@ -8,11 +8,13 @@ Una chiave di storage (`appunti-cantiere-v1`, poi brevemente `-v2`, poi di nuovo
 
 Regola operativa, da applicare anche durante lo sviluppo pre-rilascio: qualunque cambio al nome o alla forma di una chiave di storage persistente va accompagnato, nello stesso cambiamento, da un controllo di recupero che cerchi i dati nel nome/formato precedente e li migri in automatico (vedi `carica()` in `app.js` per il pattern già in uso: prova il formato corrente, poi la chiave intermedia nota, poi il formato piatto precedente, scrivendo subito il risultato nel formato corrente). Non rimandare la rete di sicurezza a "tanto non l'ha ancora usato nessuno": quel momento passa senza preavviso.
 
-## Web Share API: salvare sempre prima di condividere, mai l'inverso
+## Web Share API: file pronto prima, condivisione con un tocco fresco
 
 `navigator.share()` può fallire dopo un lavoro asincrono (es. una lettura IndexedDB prima di costruire il file) perché il browser considera scaduta la "transient activation" concessa dal tocco dell'utente. Brave è più severo di Chrome su questo punto e rifiuta la condivisione dove Chrome l'avrebbe concessa.
 
-Pattern robusto adottato: il salvataggio locale (download diretto via `<a download>`, che non richiede alcuna attivazione) avviene sempre per primo e incondizionatamente; la condivisione viene proposta solo dopo, come passo separato esplicito. Qualunque fallimento di `share()` diverso da `AbortError` (annullamento volontario) va trattato come "va bene così, il file è comunque salvato", mai come un vicolo cieco che lascia l'utente senza nulla in mano.
+Pattern adottato dalla 0.5.4: "Esporta per LeenO" costruisce il file (asincrono) e, se `navigator.canShare({ files })` lo consente, mostra un riquadro con "Invia o condividi" e "Salva sul telefono"; `share()` parte direttamente dal click sul pulsante, quindi con attivazione valida. Senza supporto alla condivisione il file si salva subito via `<a download>`. Qualunque fallimento di `share()` (annullamento incluso) lascia il riquadro aperto: il file non va mai perso e "Salva sul telefono" resta disponibile. `ultimo_export` si registra solo a condivisione riuscita o a file salvato, non alla semplice preparazione.
+
+Perché non più il download automatico per primo (pattern delle versioni fino alla 0.5.3): il file finiva nella cartella Download, difficile da ritrovare per l'utente medio, mentre il menù di condivisione porta il file dove serve (posta a se stessi, cloud).
 
 ## Rimozione EXIF e orientamento foto senza libreria dedicata
 

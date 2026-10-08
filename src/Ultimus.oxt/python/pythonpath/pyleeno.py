@@ -8033,6 +8033,7 @@ def GetModifiers():
 
 
 @with_undo
+LeenoUtils.no_refresh # evita il refresh automatico
 def MENU_filtra_codice():
     import sys
     is_ctrl = False

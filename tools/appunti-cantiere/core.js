@@ -1,7 +1,7 @@
 /* Brogliaccio per LeenO: logica pura (schema JSON v1), senza DOM. */
 (function (root) {
   'use strict';
-  var VERSIONE = '0.6.0';
+  var VERSIONE = '0.7.0';
   var AVVISO = 'Brogliaccio da consolidare in LeenO. Non costituisce registro ufficiale.';
   // chiave JSON, etichetta a video: stesso ordine del foglio GIORNALE
   var CAMPI = [

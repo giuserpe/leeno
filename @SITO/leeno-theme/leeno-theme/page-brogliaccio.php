@@ -109,11 +109,31 @@ $url_forum    = home_url( '/forums/' );
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Più cantieri</h3>
+                    <p class="feature-desc">Ogni cantiere ha il suo elenco di giornate, da scegliere con un menù. Per ognuno l'app ti dice quante giornate non hai ancora esportato e quando hai esportato l'ultima volta.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
                         </svg>
                     </div>
                     <h3 class="feature-title">Un file per LeenO</h3>
-                    <p class="feature-desc">Esporti il cantiere in un solo file: un .json, oppure uno .zip con le foto se ne hai allegate.</p>
+                    <p class="feature-desc">Esporti un cantiere in un solo file: un .json, oppure uno .zip con le foto se ne hai allegate. Con più cantieri puoi esportarli tutti insieme in un unico .zip.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Ripristina da file</h3>
+                    <p class="feature-desc">Hai cambiato telefono o perso i dati? Da un file esportato riporti le giornate e, con lo .zip, anche cantieri e foto. Ripetere il ripristino non duplica le foto.</p>
                 </div>
 
                 <div class="feature-card">
@@ -123,7 +143,7 @@ $url_forum    = home_url( '/forums/' );
                         </svg>
                     </div>
                     <h3 class="feature-title">Stampa o PDF</h3>
-                    <p class="feature-desc">Un PDF del cantiere con una giornata per pagina, solo i campi compilati e le foto, per averlo subito sottomano.</p>
+                    <p class="feature-desc">Apre la stampa del telefono o del browser: stampi oppure scegli «Salva come PDF». Compaiono solo i campi compilati e le foto, con la dicitura che non è un registro ufficiale.</p>
                 </div>
 
             </div>
@@ -138,11 +158,11 @@ $url_forum    = home_url( '/forums/' );
                 </li>
                 <li>
                     <strong>Esporta</strong>
-                    <p>Con <em>Esporta per LeenO</em> ottieni il file dell'agenda. Il telefono lo salva e, se vuoi, te lo fa condividere (posta, cloud e simili) per portarlo al computer.</p>
+                    <p>Con <em>Esporta per LeenO</em> ottieni il file dell'agenda: un .json oppure, se hai allegato foto, uno .zip. Il .json puoi condividerlo (posta, messaggi, cloud) per portarlo al computer; lo .zip viene salvato sul telefono, di solito nella cartella Download. Con più cantieri l'app ti chiede se esportare solo quello aperto o tutti.</p>
                 </li>
                 <li>
                     <strong>Importa in LeenO</strong>
-                    <p>In un Giornale Lavori aperto scegli <span class="brogliaccio-menu">LeenO &gt; Importa/Esporta... &gt; Importa agenda di cantiere nel Giornale Lavori...</span> e seleziona il file. Le giornate nuove vengono aggiunte; per quelle già presenti decidi tu se sovrascrivere. Le foto finiscono nella cartella FOTO accanto al documento, con un collegamento nel giornale.</p>
+                    <p>In un Giornale Lavori aperto scegli <span class="brogliaccio-menu">LeenO &gt; Importa/Esporta... &gt; Importa agenda di cantiere nel Giornale Lavori...</span> e seleziona il file (.json o .zip). Le giornate nuove vengono aggiunte; per quelle già presenti decidi tu se sovrascrivere. Le foto finiscono nella cartella FOTO accanto al documento, con un collegamento nel giornale: con uno .zip il documento deve essere già stato salvato. L'importazione legge un cantiere per volta, quindi uno .zip con tutti i cantieri non viene accettato.</p>
                 </li>
             </ol>
         </section>
@@ -169,7 +189,7 @@ $url_forum    = home_url( '/forums/' );
 
         <section class="brogliaccio-section brogliaccio-note" aria-labelledby="brogliaccio-dati">
             <h2 id="brogliaccio-dati">I tuoi dati restano tuoi</h2>
-            <p>I dati dell'agenda restano nella memoria del browser del telefono: non esiste alcun server e non serve alcun account. Per questo conviene esportare spesso: se cancelli i dati del browser o cambi telefono, ciò che non hai esportato va perso.</p>
+            <p>I dati dell'agenda restano nella memoria del browser del telefono: non esiste alcun server e non serve alcun account. Per questo conviene esportare spesso: se cancelli i dati del browser o cambi telefono, ciò che non hai esportato va perso. Ciò che hai esportato lo recuperi con «Ripristina da file».</p>
             <p>Brogliaccio non è un registro ufficiale. Raccoglie annotazioni da consolidare nel Giornale dei Lavori di LeenO, che resta il documento di riferimento.</p>
             <p>Il campo Evento infortunistico può contenere dati sulla salute di una persona identificabile: prima di condividere un file che lo contiene, l'app ti chiede conferma.</p>
         </section>

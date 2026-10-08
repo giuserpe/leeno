@@ -8076,3 +8076,25 @@ File: LeenoUtils.py, Line: 385, Function: wrapper
 File: pyleeno.py, Line: 12273, Function: MENU_debug
 ------------------------------------------------------------
 
+[2026-10-08 10:20:25]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.152-TESTING-20261007
+
+Errore: invalid syntax (pyleeno.py, line 8036)
+
+File: '<frozen importlib._bootstrap>'
+Line: '241'
+Function: '_call_with_frames_removed'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 273, Function: trigger
+File: __init__.py, Line: 126, Function: import_module
+File: <frozen importlib._bootstrap>, Line: 1204, Function: _gcd_import
+File: <frozen importlib._bootstrap>, Line: 1176, Function: _find_and_load
+File: <frozen importlib._bootstrap>, Line: 1147, Function: _find_and_load_unlocked
+File: <frozen importlib._bootstrap>, Line: 690, Function: _load_unlocked
+File: <frozen importlib._bootstrap_external>, Line: 936, Function: exec_module
+File: <frozen importlib._bootstrap_external>, Line: 1074, Function: get_code
+File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_code
+File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
+------------------------------------------------------------
+

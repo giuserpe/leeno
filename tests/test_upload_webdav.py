@@ -1,8 +1,12 @@
+import http.client
 import os
 import tempfile
 import unittest
 from unittest.mock import patch
-from tools.version.upload_webdav import upload_file
+from tools.version.upload_webdav import (
+    _make_request_urllib,
+    upload_file,
+)
 
 
 class TestUploadWebDAV(unittest.TestCase):
@@ -78,7 +82,6 @@ class TestUploadWebDAV(unittest.TestCase):
         )
         del_resp = (423, "Locked")
 
-        # Each retry does a PUT attempt and a DELETE attempt
         mock_make_request.side_effect = [
             locked_resp,
             del_resp,
@@ -108,6 +111,17 @@ class TestUploadWebDAV(unittest.TestCase):
             delays=[0],
         )
         self.assertFalse(res)
+
+    @patch("urllib.request.urlopen")
+    def test_urllib_incomplete_read(self, mock_urlopen):
+        err_xml = b"<s:exception>OCA\\DAV\\Connector\\Sabre\\Exception\\FileLocked</s:exception>"
+        mock_urlopen.side_effect = http.client.IncompleteRead(partial=err_xml)
+
+        status, body = _make_request_urllib(
+            "https://example.com/file", "PUT", data=b"data"
+        )
+        self.assertEqual(status, 423)
+        self.assertIn("FileLocked", body)
 
 
 if __name__ == "__main__":

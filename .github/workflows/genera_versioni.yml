@@ -37,7 +37,7 @@ jobs:
 
           echo "=== Connessione a ${WEBDAV_URL}/ ==="
 
-          HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
+          HTTP_CODE=$(curl -s -w "%{http_code}" --http1.1 -X PROPFIND \
             -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
             -H "Depth: 1" \
             "${WEBDAV_URL}/" \
@@ -55,7 +55,7 @@ jobs:
           echo "=== oxt_list.txt ==="
           cat oxt_list.txt
 
-          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || true)
+          OXT_COUNT=$(grep -i -c '\.oxt$' oxt_list.txt || true)
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
@@ -65,7 +65,7 @@ jobs:
         run: |
           echo "DEBUG: Recupero commit per ${{ github.repository }} (branch dev)"
           
-          curl -s -L \
+          curl -s -L --http1.1 \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/commits?sha=dev&per_page=20" \
@@ -97,14 +97,14 @@ jobs:
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}/LeenoNigthlyBuilds"
-          for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
-            curl -X PUT \
-              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
-              -T "$file" \
-              "${WEBDAV_URL}/$(basename $file)"
-          done
+          python3 tools/version/upload_webdav.py \
+            src/Ultimus.oxt/leeno_version_code \
+            include/version.h \
+            tools/version/versions.html
+        env:
+          WEBDAV_URL: "${{ secrets.WEBDAV_URL }}"
+          WEBDAV_USER: "${{ secrets.WEBDAV_USER }}"
+          WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
       - name: Pubblica versions.html su GitHub Pages
         run: |

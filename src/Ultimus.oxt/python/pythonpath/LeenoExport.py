@@ -531,15 +531,22 @@ def XPWE_out_run(elaborato, out_file):
         indicator.Value = 5
     try:
         lista_AP = list(set(lista_AP))
-        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
+            if lista_AP:
+                DLG.MsgBox('Nel documento sono presenti voci che richiamano Analisi di Prezzo, ma manca il relativo foglio. Le analisi non verranno esportate.', 'Attenzione')
+            lista_AP = []
+        
+        if lista_AP:
+            oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+            
         k = n
         for el in lista_AP:
             k += 1
             try:
                 m = SheetUtils.uFindStringCol(el, 0, oSheet)
                 if m is None:
-                    DLG.chi(f'XPWE_out_run: voce con analisi "{el}" non trovata '
-                            'nel foglio "Analisi di Prezzo", esportazione saltata')
+                    DLG.MsgBox(f'XPWE_out_run: voce con analisi "{el}" non trovata '
+                               'nel foglio "Analisi di Prezzo", esportazione saltata', 'Attenzione')
                     continue
                 EPItem = SubElement(PweElencoPrezzi, 'EPItem')
                 EPItem.set('ID', str(k))
@@ -676,10 +683,10 @@ def XPWE_out_run(elaborato, out_file):
                     IncMDO.text = str(
                         oSheet.getCellByPosition(8, m).Value * 100)
             except Exception as e:
-                DLG.chi(f'XPWE_out_run: errore esportando la voce con analisi '
-                        f'"{el}" (ID {k}): {e}')
+                DLG.MsgBox(f'XPWE_out_run: errore esportando la voce con analisi '
+                           f'"{el}" (ID {k}): {e}', 'Errore Export XPWE')
     except Exception as e:
-        DLG.chi(f'XPWE_out_run: errore nell\'esportazione delle voci con analisi: {e}')
+        DLG.MsgBox(f'XPWE_out_run: errore nell\'esportazione delle voci con analisi: {e}', 'Errore Export XPWE')
     # if elaborato == 'Elenco_Prezzi':
     #     pass
     # else:

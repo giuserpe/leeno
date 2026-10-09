@@ -3,17 +3,17 @@
 Script completo per la gestione delle versioni LeenO con archivio .oxt
 """
 import json
+import logging
 import os
 import re
-import logging
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler()]
+    handlers=[logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
@@ -36,9 +36,12 @@ class VersionManager:
         """
         Legge oxt_list.txt generato da parse_webdav.py.
         Formato riga: "2026-03-20 18:30 4.4MB LeenO-xxx.oxt"
+        Includere unicamente file che terminano con .oxt
         """
         oxt_list = []
-        raw_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#')
+        raw_url = (
+            os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')
+        ).rstrip('#')
         base_url = raw_url if raw_url.endswith('=') else raw_url.rstrip('/')
 
         try:
@@ -48,7 +51,7 @@ class VersionManager:
             with open(oxt_list_path, 'r') as f:
                 for line in f:
                     line = line.strip()
-                    if not line or '.oxt' not in line.lower():
+                    if not line or not line.lower().endswith('.oxt'):
                         continue
                     parts = line.split()
                     if len(parts) >= 4:
@@ -62,10 +65,14 @@ class VersionManager:
                     else:
                         logger.warning(f"Riga non parsabile: {line!r}")
                         continue
-                        
+
                     import urllib.parse
+
                     name_decoded = urllib.parse.unquote(name_raw)
-                    
+
+                    if not name_decoded.lower().endswith('.oxt'):
+                        continue
+
                     if base_url.endswith('='):
                         url = f"{base_url}{name_raw}"
                     elif base_url:
@@ -91,7 +98,7 @@ class VersionManager:
             'name': 'Nessun file disponibile',
             'size': '0KB',
             'date': datetime.now().strftime('%Y-%m-%d'),
-            'url': '#'
+            'url': '#',
         }]
 
     def _parse_commits(self) -> List[Dict[str, str]]:
@@ -140,7 +147,11 @@ class VersionManager:
         oxt_files = self._parse_oxt_list()
         commits = self._parse_commits()
         now_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M')
-        base_url = (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', '')).rstrip('#').rstrip('/')
+        base_url = (
+            (os.getenv('PUBLIC_DOWNLOAD_URL') or os.getenv('OXT_BASE_URL', ''))
+            .rstrip('#')
+            .rstrip('/')
+        )
 
         # Righe tabella download
         rows = []
@@ -621,7 +632,7 @@ def main():
             'build_number': os.getenv('BUILD_NUMBER', match.group('build')),
             'build_date': datetime.now().strftime('%Y-%m-%d'),
             'git_sha': os.getenv('GITHUB_SHA', 'local')[:7],
-            'type': match.group('type')
+            'type': match.group('type'),
         }
 
         vm.update_version_files(new_version)

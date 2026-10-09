@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Estrae data, dimensione e nome dei file .oxt da webdav.xml (PROPFIND)."""
+import urllib.parse
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 
@@ -23,29 +24,34 @@ except Exception as e:
 entries = []
 for resp in root.findall('d:response', NS):
     href = resp.findtext('d:href', '', NS)
-    if not href or not href.lower().endswith('.oxt'):
+    if not href:
         continue
-    
-    name = href.rstrip('/').split('/')[-1]
-    
+
+    clean_href = urllib.parse.unquote(href)
+    name = clean_href.rstrip('/').split('/')[-1]
+    if not name or not name.lower().endswith('.oxt'):
+        continue
+
     # Cerca globalmente all'interno di response per evitare problemi con propstat multipli
     size_b = resp.findtext('.//d:getcontentlength', default='0', namespaces=NS)
-    if not size_b: size_b = '0'
-    
+    if not size_b:
+        size_b = '0'
+
     date_raw = resp.findtext('.//d:getlastmodified', default='', namespaces=NS)
-    if not date_raw: date_raw = ''
-    
+    if not date_raw:
+        date_raw = ''
+
     try:
         dt = parsedate_to_datetime(date_raw)
         date = dt.strftime('%Y-%m-%d %H:%M')
     except Exception:
         date = date_raw[:10] if date_raw else 'N/A'
-        
+
     try:
         size_mb = f"{int(size_b) / 1048576:.1f}MB"
     except Exception:
         size_mb = 'N/A'
-        
+
     entries.append((date, size_mb, name))
 
 entries.sort(reverse=True)

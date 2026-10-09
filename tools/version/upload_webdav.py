@@ -2,9 +2,10 @@
 """
 Carica i file generati su WebDAV con gestione dei tentativi e risoluzione
 dell'errore FileLocked di Nextcloud/SabreDAV.
-Usa la libreria standard urllib per evitare dipendenze esterne.
+Supporta `requests` (se disponibile) e fallback robusto su `urllib`.
 """
 import base64
+import http.client
 import os
 import sys
 import time
@@ -12,11 +13,39 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+try:
+    import requests
 
-def _make_request(
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
+
+
+def _make_request_requests(
+    url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
+):
+    kwargs = {
+        "timeout": timeout,
+    }
+    if auth and (auth[0] or auth[1]):
+        kwargs["auth"] = auth
+
+    if method == "PUT":
+        kwargs["data"] = data
+        resp = requests.put(url, **kwargs)
+    elif method == "DELETE":
+        resp = requests.delete(url, **kwargs)
+    else:
+        resp = requests.request(method, url, **kwargs)
+
+    return resp.status_code, resp.text
+
+
+def _make_request_urllib(
     url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
 ):
     req = urllib.request.Request(url, data=data, method=method)
+
     if auth and (auth[0] or auth[1]):
         user, password = auth
         credentials = f"{user}:{password}"
@@ -26,13 +55,37 @@ def _make_request(
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             status = resp.status
-            body = resp.read().decode("utf-8", errors="replace")
+            try:
+                body = resp.read().decode("utf-8", errors="replace")
+            except http.client.IncompleteRead as e:
+                body = e.partial.decode("utf-8", errors="replace")
             return status, body
     except urllib.error.HTTPError as err:
-        body = err.read().decode("utf-8", errors="replace")
+        try:
+            body_bytes = err.read()
+        except http.client.IncompleteRead as e:
+            body_bytes = e.partial
+        except Exception:
+            body_bytes = b""
+        body = body_bytes.decode("utf-8", errors="replace")
         return err.code, body
+    except http.client.IncompleteRead as e:
+        body = e.partial.decode("utf-8", errors="replace")
+        status = 423 if ("FileLocked" in body or "is locked" in body) else 500
+        return status, body
     except Exception as err:
         raise err
+
+
+def _make_request(
+    url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
+):
+    if HAS_REQUESTS:
+        try:
+            return _make_request_requests(url, method, data, auth, timeout)
+        except Exception as req_err:
+            print(f"   Note: requests call failed ({req_err}), falling back to urllib...")
+    return _make_request_urllib(url, method, data, auth, timeout)
 
 
 def upload_file(
@@ -40,7 +93,7 @@ def upload_file(
     base_webdav_url: str,
     user: str,
     password: str,
-    max_retries: int = 5,
+    max_retries: int = 8,
     delays: list = None,
 ) -> bool:
     path = Path(file_path)
@@ -55,7 +108,7 @@ def upload_file(
     print(f"📤 Caricamento in corso: {filename} -> {target_url}")
 
     if delays is None:
-        delays = [3, 6, 12, 20, 30]
+        delays = [3, 5, 10, 15, 20, 30, 40, 60]
 
     for attempt in range(1, max_retries + 1):
         try:

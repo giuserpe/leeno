@@ -13,7 +13,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Setup ambiente
         run: |
@@ -26,7 +28,7 @@ jobs:
         id: webdav_files
         run: |
           WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}"
+          WEBDAV_URL="${WEBDAV_URL%/}/LeenoNigthlyBuilds"
 
           if [ -z "$WEBDAV_URL" ]; then
             echo "❌ Errore: WEBDAV_URL non impostato."
@@ -35,7 +37,7 @@ jobs:
 
           echo "=== Connessione a ${WEBDAV_URL}/ ==="
 
-          HTTP_CODE=$(curl -s -w "%{http_code}" -X PROPFIND \
+          HTTP_CODE=$(curl -s -w "%{http_code}" --http1.1 -X PROPFIND \
             -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
             -H "Depth: 1" \
             "${WEBDAV_URL}/" \
@@ -53,7 +55,7 @@ jobs:
           echo "=== oxt_list.txt ==="
           cat oxt_list.txt
 
-          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || echo 0)
+          OXT_COUNT=$(grep -c '.oxt' oxt_list.txt || true)
           echo "count=$OXT_COUNT" >> $GITHUB_OUTPUT
           echo "list_path=${GITHUB_WORKSPACE}/oxt_list.txt" >> $GITHUB_OUTPUT
           echo "=== Trovati $OXT_COUNT file ==="
@@ -61,25 +63,28 @@ jobs:
       - name: Recupera ultimi commit da GitHub API
         continue-on-error: true
         run: |
-          echo "=== Recupero commit dal branch dev ==="
-          curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          echo "DEBUG: Recupero commit per ${{ github.repository }} (branch dev)"
+
+          curl -s -L --http1.1 \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/commits?sha=dev&per_page=20" \
             -o commits_raw.json
-          echo "=== Primi 300 caratteri risposta API ==="
-          head -c 300 commits_raw.json
-          echo ""
+
+          echo "=== Anteprima commits_raw.json (primi 100 char) ==="
+          head -c 100 commits_raw.json
+          echo -e "\n------------------------------------------------"
+
           python3 tools/version/parse_commits.py
 
       - name: Genera file versione
-        run: python tools/version/leeno_version_generator.py
+        run: python3 tools/version/leeno_version_generator.py
         env:
           GITHUB_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
           OXT_LIST_PATH: ${{ github.workspace }}/oxt_list.txt
           COMMITS_PATH: ${{ github.workspace }}/commits.json
-          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}"
+          OXT_BASE_URL: "${{ secrets.WEBDAV_URL }}/LeenoNigthlyBuilds"
           PUBLIC_DOWNLOAD_URL: "${{ secrets.PUBLIC_DOWNLOAD_BASE }}"
 
       - name: Verifica output
@@ -92,14 +97,14 @@ jobs:
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}"
-          for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
-            curl -X PUT \
-              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
-              -T "$file" \
-              "${WEBDAV_URL}/$(basename $file)"
-          done
+          python3 tools/version/upload_webdav.py \
+            src/Ultimus.oxt/leeno_version_code \
+            include/version.h \
+            tools/version/versions.html
+        env:
+          WEBDAV_URL: "${{ secrets.WEBDAV_URL }}"
+          WEBDAV_USER: "${{ secrets.WEBDAV_USER }}"
+          WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
       - name: Pubblica versions.html su GitHub Pages
         run: |

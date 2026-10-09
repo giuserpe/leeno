@@ -24,12 +24,7 @@ except ImportError:
 def _make_request_requests(
     url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
 ):
-    headers = {
-        "X-Requested-With": "XMLHttpRequest",
-        "OCS-APIREQUEST": "true",
-    }
     kwargs = {
-        "headers": headers,
         "timeout": timeout,
     }
     if auth and (auth[0] or auth[1]):
@@ -50,8 +45,6 @@ def _make_request_urllib(
     url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
 ):
     req = urllib.request.Request(url, data=data, method=method)
-    req.add_header("X-Requested-With", "XMLHttpRequest")
-    req.add_header("OCS-APIREQUEST", "true")
 
     if auth and (auth[0] or auth[1]):
         user, password = auth

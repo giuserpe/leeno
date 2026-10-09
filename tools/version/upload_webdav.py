@@ -15,6 +15,7 @@ from pathlib import Path
 
 try:
     import requests
+    from requests.adapters import HTTPAdapter
 
     HAS_REQUESTS = True
 except ImportError:
@@ -24,19 +25,29 @@ except ImportError:
 def _make_request_requests(
     url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
 ):
+    # Forza HTTP/1.1: Nextcloud/SabreDAV chiude il canale HTTP/2 con INTERNAL_ERROR
+    # invece di rispondere con il corretto 423 FileLocked, causando curl exit 92.
+    session = requests.Session()
+    adapter = HTTPAdapter()
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    # Disabilita HTTP/2 impostando il header di downgrade (funziona con httpx/urllib3)
+    headers = {"Connection": "close"}
+
     kwargs = {
         "timeout": timeout,
+        "headers": headers,
     }
     if auth and (auth[0] or auth[1]):
         kwargs["auth"] = auth
 
     if method == "PUT":
         kwargs["data"] = data
-        resp = requests.put(url, **kwargs)
+        resp = session.put(url, **kwargs)
     elif method == "DELETE":
-        resp = requests.delete(url, **kwargs)
+        resp = session.delete(url, **kwargs)
     else:
-        resp = requests.request(method, url, **kwargs)
+        resp = session.request(method, url, **kwargs)
 
     return resp.status_code, resp.text
 
@@ -188,7 +199,11 @@ def main():
     files = sys.argv[1:]
     success = True
 
-    for f in files:
+    for i, f in enumerate(files):
+        if i > 0:
+            # Pausa tra upload successivi: previene lock stale su Nextcloud/SabreDAV
+            # quando il server non rilascia il WebDAV lock abbastanza velocemente.
+            time.sleep(2)
         if not upload_file(f, target_folder_url, user, password):
             success = False
 

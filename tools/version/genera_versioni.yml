@@ -4,6 +4,10 @@ on:
   push:
   workflow_dispatch:
 
+concurrency:
+  group: webdav-upload
+  cancel-in-progress: false
+
 jobs:
   generate_version:
     runs-on: ubuntu-latest

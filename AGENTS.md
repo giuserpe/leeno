@@ -1,33 +1,6 @@
 # AGENTS.md – LeenO
 
-Questo file descrive le convenzioni obbligatorie per qualsiasi agente (Jules, Claude Code, altri assistenti AI) che lavori sul repository LeenO. Va letto prima di qualsiasi task.
-
-## Indice
-
-- [Premesse](#premesse)
-- [Linee guida generali](#linee-guida-generali)
-- [Contesto del progetto](#contesto-del-progetto)
-- [Branch di lavoro](#branch-di-lavoro)
-- [Ambiente di sviluppo e macchine](#ambiente-di-sviluppo-e-macchine)
-- [Diagnosi conflitti pull/merge e gestione della storia](#diagnosi-conflitti-pullmerge-e-gestione-della-storia)
-- [Regole del Progetto LeenO](#regole-del-progetto-leeno)
-- [Gestione Licenza e Copyright](#gestione-licenza-e-copyright)
-- [Sicurezza dei moduli in `pythonpath/`](#sicurezza-dei-moduli-in-pythonpath)
-- [Ciclo di vita dei documenti UNO](#ciclo-di-vita-dei-documenti-uno)
-- [Compatibilità delle proprietà custom del documento](#compatibilità-delle-proprietà-custom-del-documento)
-- [Diagnosi di blocchi/freeze](#diagnosi-di-bloccifreeze)
-- [Modulo XPWE (export/import PriMus)](#modulo-xpwe-exportimport-primus)
-- [Export PDF (PDF/A e note)](#export-pdf-pdfa-e-note)
-- [Agenda di cantiere (Brogliaccio / PWA)](#agenda-di-cantiere-brogliaccio--pwa)
-- [Manuale utente](#manuale-utente)
-- [Quirk minori UNO/ODF](#quirk-minori-unoodf)
-- [Pipeline di test automatizzato (headless UNO)](#pipeline-di-test-automatizzato-headless-uno)
-- [Sistema icone](#sistema-icone)
-- [Consegna del lavoro per agenti senza credenziali di push](#consegna-del-lavoro-per-agenti-senza-credenziali-di-push)
-- [Preservazione del line-ending in qualsiasi editing](#preservazione-del-line-ending-in-qualsiasi-editing)
-- [Pulizia di codice morto e duplicato](#pulizia-di-codice-morto-e-duplicato)
-- [Git Commit – Conventional Commits in Italiano](#git-commit--conventional-commits-in-italiano-leeno)
-- [Manutenzione di questo file](#manutenzione-di-questo-file)
+Convenzioni obbligatorie per qualsiasi agente (Jules, Claude Code, altri assistenti AI) che lavori sul repository LeenO. Va letto per intero prima di qualsiasi task. I dettagli per argomento stanno in `documentazione/LESSONS_<ARGOMENTO>.md`: leggere quello pertinente quando si tocca l'argomento.
 
 ## Premesse
 
@@ -37,8 +10,8 @@ Non sei il mio assistente. Sei il mio consulente, che per caso è più intellige
 2. Indica il tuo livello di certezza. Prima di ogni affermazione, aggiungi [Certo] se hai prove concrete, [Probabile] se si tratta di una forte deduzione, [Ipotesi] se stai colmando delle lacune. Se la maggior parte della tua risposta è basata su ipotesi, dichiaralo fin dall'inizio.
 3. Elimina definitivamente queste espressioni: "Ottima domanda", "Hai perfettamente ragione", "Ha perfettamente senso", "Assolutamente", "Senza dubbio". Se ti accorgi di averne scritta una, cancellala e riscrivi la frase.
 4. Non fare mai riferimento al fatto che tu possa commettere errori, che tu sia un'intelligenza artificiale o che tu possa fraintendere qualcosa. Non fare mai riferimento a te stesso.
-5. Contesta con metodo. Quando sbaglio, dimmi: "Non sono d'accordo perché [motivo]. Al posto tuo farei [alternativa]. II rischio del tuo approccio è [conseguenza specifica]."
-6. Dammi prima la risposta che non voglio sentire. Se una veritå che probabilmente preferirei evitare, inizia da quella. Mettila nella prima riga, non nascosta nel terzo paragrafo.
+5. Contesta con metodo. Quando sbaglio, dimmi: "Non sono d'accordo perché [motivo]. Al posto tuo farei [alternativa]. Il rischio del tuo approccio è [conseguenza specifica]."
+6. Dammi prima la risposta che non voglio sentire. Se c'è una verità che probabilmente preferirei evitare, inizia da quella. Mettila nella prima riga, non nascosta nel terzo paragrafo.
 7. Niente introduzioni inutili. Evita frasi come "Ci sono diversi modi di vedere la questione" o simili. Inizia subito con la cosa più utile che hai da dire.
 8. Se ti contraddico, non cambiare posizione. Mantieni il tuo punto di vista, a meno che non ti fornisca informazioni realmente nuove. "Ma io penso davvero che..." non è una nuova informazione.
 
@@ -49,99 +22,32 @@ Non sei il mio assistente. Sei il mio consulente, che per caso è più intellige
 - Prima di apportare modifiche significative a moduli critici (es. importazione XML, dialoghi), verifica sempre la disponibilità di test esistenti e, se necessario, aggiungine di nuovi per coprire le modifiche apportate.
 - Non eliminare mai file di test o librerie di fallback senza aver prima verificato che non siano utilizzati da altre parti del sistema o da utenti specifici.
 
-## Contesto del progetto
+## Contesto del progetto e branch
 
 LeenO è un'estensione (OXT) per LibreOffice Calc per la redazione di computi metrici e contabilità tecnica di cantiere, scritta prevalentemente in Python e basata sulle API UNO di LibreOffice/OpenOffice. Integra formati PriMus/ACCA (`.dcf`, `.xpwe`) e archivi legacy Paradox.
-
-## Branch di lavoro
 
 - Il branch di sviluppo attivo è `dev` (default branch del repo). Salvo diversa indicazione esplicita, ogni task deve partire da `dev`, non da `master`.
 - `master` è il branch di release stabile: non aprire PR contro `master` senza istruzione esplicita.
 
 ## Ambiente di sviluppo e macchine
 
-Il repository vive su un drive esterno con lettera `W:`, identica su tutte le macchine di lavoro: percorso fisso `W:\_dwg\ULTIMUSFREE\_SRC\leeno`. L'estensione compilata (OXT) viene caricata in LibreOffice tramite un symlink fisso puntato a questo percorso — per questo motivo il percorso del repo non è modificabile e va sempre rispettato così com'è.
+Il repository vive su un drive esterno con lettera `W:`, identica su tutte le macchine di lavoro: percorso fisso `W:\_dwg\ULTIMUSFREE\_SRC\leeno`. L'estensione compilata (OXT) viene caricata in LibreOffice tramite un symlink fisso puntato a questo percorso: il percorso del repo non è modificabile e va sempre rispettato così com'è.
 
-- **PC `giuserpe`** (nome letterale della macchina, non "Giuseppe"): amministratore locale. È la macchina dove avvengono commit, push, gestione dei task Jules, merge delle PR.
-- **PC TEST**: nessun privilegio di amministratore. Usato per test dell'estensione in LibreOffice e, occasionalmente, per editing diretto del codice.
+- **PC `giuserpe`** (nome letterale della macchina, non "Giuseppe"): amministratore locale. Qui avvengono commit, push, gestione dei task Jules, merge delle PR.
+- **PC TEST**: nessun privilegio di amministratore. Usato per test dell'estensione in LibreOffice e, occasionalmente, per editing diretto del codice (`git pull` su `dev` prima di iniziare). **Da qui non si fa commit/push**: l'OXT prodotto con `make_pack()` (conservato in `OXT\`) viene estratto dentro `src/Ultimus.oxt/` su PC `giuserpe`, dove si committa dopo revisione del diff.
+- `src/Ultimus.oxt/` È GIÀ il sorgente diretto: non si usano `bin2src.py`/`src2bin.py`. `make_pack()` si limita a impacchettarlo, con bump automatico di `description.xml` e `leeno_version_code`.
+- Su entrambe le macchine vanno impostati, fin dall'inizio, `git config core.autocrlf true` e `git config core.fileMode false`: senza, un `pull` segna centinaia di file come "modificati" per semplice rumore di line-ending/permessi. Verificare sempre con `git diff` prima di scartare o committare in massa.
+- I `.ods` tracciati (template, listino, test) vanno chiusi in LibreOffice (non solo minimizzati) prima di `pull`/`checkout`/`stash pop`, perché il lock `.~lock.<nome>.ods#` e il contenuto in memoria possono lasciare il file parzialmente scritto; dopo un `pull` che li aggiorna vanno riaperti prima di modificarli. Mai `git checkout --force` a documento aperto.
 
-### File `.oxt` compilati
+Workflow completo: `documentazione/workflow_leeno_unificato.md`.
 
-I pacchetti `.oxt` generati (tramite `make_pack()` da LibreOffice Calc) vengono conservati nella cartella `OXT\`. Non è previsto l'uso di `bin2src.py`/`src2bin.py`: `src/Ultimus.oxt/` nel repo È GIÀ il sorgente diretto; `make_pack()` si limita a impacchettarlo in un `.oxt` installabile, con bump automatico di `description.xml` e `leeno_version_code`.
+## Git: conflitti, reset e storia
 
-### Workflow tipico di editing su PC TEST
+- Se `git pull`/`merge` fallisce con "local changes would be overwritten", non stashare né scartare alla cieca: `git diff --stat` e `git diff --ignore-space-at-eol --ignore-all-space -- <path>`. Diff filtrato vuoto → solo line-ending (sicuro `git checkout -- .`); altrimenti è contenuto reale, da stashare o committare.
+- Prima di riscrivere la storia verificare se il commit è già su `origin/<branch>` (`git log origin/dev..HEAD --oneline`, `git branch --contains <hash>`). Già pushato → `git revert`. Solo locale → `git reset --hard HEAD~1` (stash prima se ci sono modifiche non committate) o `git rebase -i <hash>^`. Far sparire un commit già pushato richiede un motivo esplicito e coordinamento: rebase locale poi `git push --force-with-lease origin <branch>`, mai `--force` secco.
+- Prima di committare icone, `icons/svg/` e `icons/scuro/` devono avere lo stesso insieme di file toccati (`git diff --stat` su entrambe): altrimenti il lavoro è a metà.
 
-Quando il codice viene modificato direttamente su PC TEST (non tramite Jules):
-
-1. `git pull` su `dev` prima di iniziare
-2. Modifica del codice in locale
-3. `make_pack()` da LibreOffice Calc → produce l'OXT aggiornato, conservato in `OXT\`
-4. Il commit/push NON avviene da PC TEST: il file `.oxt` prodotto viene poi estratto e portato dentro `src/Ultimus.oxt/` su PC `giuserpe`, dove si esegue commit e push dopo revisione del diff
-
-### Configurazione git per evitare falsi positivi
-
-Su entrambe le macchine vanno impostati, fin dall'inizio:
-
-```
-git config core.autocrlf true
-git config core.fileMode false
-```
-
-Senza questi parametri, un `pull` può segnare centinaia di file come "modificati" per semplice rumore di line-ending/permessi — non contenuto reale. Verificare sempre con `git diff` prima di scartare o committare in massa.
-
-### Blocco dei file `.ods` durante operazioni git
-
-- Se un file `.ods` del repository (template, listino, foglio di test) è aperto in LibreOffice Calc mentre si esegue `git pull`, `git checkout` o `git stash pop`, l'operazione può fallire o lasciare un file parzialmente scritto: LibreOffice mantiene un lock (file nascosto `.~lock.<nome>.ods#`) e un handle sul contenuto in memoria che non coincide più con quello su disco dopo l'operazione git.
-- Prima di eseguire operazioni git che toccano `.ods` tracciati, chiudere il documento in LibreOffice (non solo minimizzarlo) oppure verificare l'assenza del file di lock (`.~lock.*.ods#`) nella cartella del repository.
-- Se un'operazione git segnala errori di permesso o file "in uso" su un `.ods`, non forzare con `git checkout --force` a documento ancora aperto: chiudere prima il documento, poi ripetere l'operazione.
-- Dopo un `pull` che ha aggiornato un `.ods` già aperto, riaprire il documento (chiudi e riapri) prima di modificarlo: LibreOffice non rileva automaticamente la sostituzione del file su disco e un salvataggio successivo rischia di sovrascrivere la versione aggiornata con quella in memoria, obsoleta.
-
-## Diagnosi conflitti pull/merge e gestione della storia
-
-### Rumore vs contenuto reale prima di stash/scarto
-
-Quando `git pull`/`git merge` fallisce con "local changes would be overwritten", non stashare né scartare alla cieca, anche con `core.autocrlf`/`core.fileMode` già corretti:
-
-```
-git diff --stat
-git diff --ignore-space-at-eol --ignore-all-space -- <path>
-```
-
-Se il diff filtrato è vuoto → solo normalizzazione riga, sicuro `git checkout -- .`. Se resta invariato rispetto al diff non filtrato → è contenuto reale (es. geometria SVG modificata), non va scartato: stash o commit a seconda che il lavoro sia finito o meno.
-
-Passare più path a `git diff -- ` uno per riga o quotati singolarmente: una riga tagliata o concatenata dal terminale (es. autocomplete PSReadLine) produce un `fatal: bad revision` fuorviante, non un errore di git.
-
-### Reset, rebase, revert, force-push: quale usare
-
-La scelta dipende da un solo fattore: il commit da modificare è già su `origin/<branch>` o solo locale? Verificare sempre prima di agire:
-
-```
-git log origin/dev..HEAD --oneline   # commit locali non ancora pushati
-git branch --contains <hash>          # su quali branch/remoti compare <hash>
-git show --stat <hash>                # conferma che sia il commit giusto
-```
-
-| Situazione | Comando | Nota |
-| --- | --- | --- |
-| Ultimo commit, mai pushato, da eliminare del tutto | `git reset --hard HEAD~1` | Nessuna rete di sicurezza per modifiche non committate: stash prima se serve salvare qualcosa |
-| Commit sepolto sotto altri, mai pushato | `git rebase -i <hash>^` → `drop` sulla riga | Può fermarsi in conflitto se commit successivi toccano le stesse righe |
-| Commit già su `origin/<branch>`, effetto da annullare | `git revert <hash>` | Non riscrive la storia condivisa: sicuro anche se altre macchine hanno già fatto pull |
-| Commit già su `origin/<branch>`, da far sparire dalla storia (motivo esplicito, es. dati sensibili) | rebase interattivo locale poi `git push --force-with-lease origin <branch>` | Mai `--force` secco. Richiede coordinamento esplicito con chi altro ha già pullato: al prossimo pull troverà storia divergente e dovrà riallinearsi con un reset manuale |
-
-Un `reset --hard` a un commit molto indietro rispetto a `origin/<branch>` può far ripresentare conflitti già risolti a monte: prima di lanciarlo, controllare `git log <hash>..origin/<branch> --oneline` per capire quanta storia si sta per riattraversare.
-
-Nota su GitHub: un force-push che rimuove un merge di PR dalla storia di un branch non ritira lo stato "Merged" della PR nell'interfaccia web — restano due cose distinte.
-
-### Parità `icons/svg/` e `icons/scuro/` prima di ogni commit sulle icone
-
-Prima di committare modifiche alle icone, verificare che entrambe le cartelle abbiano lo stesso insieme di file toccati:
-
-```
-git diff --stat -- src/Ultimus.oxt/icons/svg/
-git diff --stat -- src/Ultimus.oxt/icons/scuro/
-```
-
-Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Sistema icone" più sotto): non committare finché il crop non è propagato a entrambe.
+Tabella delle situazioni, note e casi particolari: `documentazione/LESSONS_GIT.md`.
 
 ## Regole del Progetto LeenO
 
@@ -166,26 +72,18 @@ Se una delle due risulta modificata e l'altra no, il lavoro è a metà (vedi "Si
 
 `src/Ultimus.oxt/python/pythonpath/` è nel `sys.path` dell'estensione: qualunque file al suo interno può essere importato dal processo di LibreOffice per motivi indipendenti dal task che lo ha creato (esplorazione macro, `importlib.reload` di recupero in caso di errore, tool di indicizzazione). Per questo:
 
-- **Vietato codice con effetti collaterali a livello di modulo** (eseguito al semplice `import`, fuori da funzioni/classi) in qualunque file di questa cartella.
-- **Vietato sovrascrivere `sys.modules[...]` a livello di modulo.** Se un file lo fa (tipicamente per mockare `uno`/`unohelper`/moduli interni nei test) e viene importato anche solo una volta dentro LibreOffice, i moduli reali restano sostituiti da mock per l'intera sessione: effetti silenziosi, difficili da diagnosticare, che vanno da malfunzionamenti a blocchi (freeze) dell'intero processo.
-- **I file di test (`test_*.py`, `unittest`/`pytest`, mocking di `uno`) non vanno mai in `pythonpath/`.** Vanno in una cartella dedicata esclusa dal `sys.path` dell'estensione (es. `tests/`), oppure rimossi prima del merge su `dev` se non servono al funzionamento di LeenO. Attenzione particolare ai commit generati da agenti AI (es. Jules): possono aggiungere test funzionalmente corretti ma ignari di questo vincolo — vanno revisionati prima del merge, non dopo.
-- Qualunque mocking di `sys.modules` in un test deve essere temporaneo e ripristinato (es. `unittest.mock.patch.dict` come context manager), mai un'assegnazione diretta persistente.
-- **Questi vincoli sono applicati automaticamente in CI.** `scripts/check_pythonpath_safety.py` (analisi AST) e il workflow `.github/workflows/check-pythonpath-safety.yml` verificano ad ogni push/PR su `dev` l'assenza di file `test_*.py` in `pythonpath/` e di assegnazioni a `sys.modules[...]` a livello di modulo. Il controllo è nato dopo che un task Jules aveva inserito file di test con mock injection direttamente in `pythonpath/`, rompendo l'intera estensione. Un errore CI del tipo "Failed to resolve action download info" è quasi sempre transitorio: basta un re-run, non indica un problema nel codice.
+- **Vietato codice con effetti collaterali a livello di modulo** (eseguito al semplice `import`, fuori da funzioni/classi).
+- **Vietato sovrascrivere `sys.modules[...]` a livello di modulo.** Un mock importato anche solo una volta dentro LibreOffice resta per l'intera sessione: effetti silenziosi, da malfunzionamenti a blocchi (freeze) dell'intero processo. Nei test il mocking di `sys.modules` è solo temporaneo e ripristinato (es. `unittest.mock.patch.dict` come context manager), mai un'assegnazione diretta persistente.
+- **I file di test (`test_*.py`, `unittest`/`pytest`, mocking di `uno`) non vanno mai in `pythonpath/`.** Vanno in una cartella esclusa dal `sys.path` dell'estensione (es. `tests/`), oppure rimossi prima del merge su `dev` se non servono. Attenzione ai commit di agenti AI (es. Jules): test corretti ma ignari di questo vincolo hanno già rotto l'intera estensione; vanno revisionati prima del merge, non dopo.
+- **Vincoli applicati in CI** a ogni push/PR su `dev`: `scripts/check_pythonpath_safety.py` (analisi AST) e `.github/workflows/check-pythonpath-safety.yml`. Un errore CI "Failed to resolve action download info" è quasi sempre transitorio: basta un re-run.
 
-## Ciclo di vita dei documenti UNO
+## UNO/ODF: regole ricorrenti
 
-- Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione: rischia un deadlock dell'intero processo (lo script attende `close()`, `close()` attende che lo script rilasci il documento). Se serve sostituire il documento corrente (es. aprendone uno nuovo da template), apri prima il nuovo e valuta la chiusura del vecchio come ultima istruzione della funzione, con un `return` immediato subito dopo per non riusare più l'oggetto ormai `disposed`.
-- **`LeenoUtils.getDocument()` può restituire `None` subito dopo un dialogo modale.** `getDocument()` si basa su `desktop.getCurrentComponent()` con fallback alla scansione di `desktop.getComponents()`; nell'istante immediatamente successivo alla chiusura di un dialogo (`oDlg.execute()`), il componente corrente può non essere ancora il foglio Calc atteso, e se nessun componente aperto supera il controllo `is_valid_calc()` la funzione torna `None`. Se una funzione ha già ottenuto un riferimento valido a `oDoc` prima di aprire il dialogo, quel riferimento va passato esplicitamente alle funzioni chiamate dopo la chiusura (es. come parametro opzionale `oDoc=`), invece di richiamare di nuovo `LeenoUtils.getDocument()` — che a quel punto rischia di risolvere `None` e generare `'NoneType' object has no attribute 'CurrentController'` a valle. Vedi il fix in `LeenoToolbars.py` (`Switch`, `On`, `Ordina`, `AllOn`, `AllOff`) e la relativa chiamata da `LeenoConfig.MENU_leeno_conf()`.
-
-## Compatibilità delle proprietà custom del documento
-
-- Se rinomini una `UserDefinedProperty` del documento (es. `Versione` → `Versione_LeenO`), non lasciare letture dirette del vecchio nome senza `try/except`. Centralizza la lettura in un helper con fallback sul nome legacy: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare (eccezione non gestita che interrompe la funzione a metà, senza errore visibile all'utente).
-
-## Diagnosi di blocchi/freeze
-
-- Per isolare un freeze senza un ambiente di riproduzione remoto, instrumenta la funzione sospetta con `DLG.chi()` a ogni passaggio chiave: l'ultimo checkpoint visto prima del blocco localizza il tratto di codice responsabile.
-- Per regressioni con molti commit di distanza e nessun sospetto chiaro, usa `git bisect` (good = ultimo tag/commit noto funzionante, bad = `HEAD` di `dev`) invece di procedere commit per commit.
-- Diffida di commit che sembrano toccare solo codice "non collegato" a nessuna funzione esistente (es. un decorator mai applicato): il problema può annidarsi in un file adiacente introdotto dallo stesso commit, come un file di test.
+- **Chiusura dei documenti.** Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione (deadlock dell'intero processo): per sostituire il documento corrente apri prima il nuovo e chiudi il vecchio come ultima istruzione, con `return` immediato per non riusare più l'oggetto ormai `disposed`.
+- **`LeenoUtils.getDocument()` può restituire `None` subito dopo un dialogo modale** (`oDlg.execute()`): se si ha già un `oDoc` valido prima del dialogo, passarlo esplicitamente alle funzioni chiamate dopo (parametro opzionale `oDoc=`) invece di richiamare `getDocument()`.
+- **Proprietà custom del documento.** Se rinomini una `UserDefinedProperty` (es. `Versione` → `Versione_LeenO`), centralizza la lettura in un helper con fallback sul nome legacy, mai letture dirette del vecchio nome senza `try/except`: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare.
+- **Freeze.** Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave (l'ultimo checkpoint visto localizza il blocco); per regressioni lontane usare `git bisect` (good = ultimo tag funzionante, bad = `HEAD` di `dev`); diffidare di commit che sembrano toccare solo codice "non collegato": il problema può essere in un file adiacente dello stesso commit, come un file di test.
+- **Quirk.** Gli stili possono avere un nome interno anonimo (`uuuuu` invece di `'Comp TOTALI'`), con fallimenti silenziosi nei confronti `CellStyle == "nome leggibile"`; i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle `F1` di COMPUTO/CONTABILITA: verificarle prima di distribuire un template. Dettagli, insieme al caso `getDocument()`, in `documentazione/LESSONS_UNO_QUIRKS.md`.
 
 ## Modulo XPWE (export/import PriMus)
 
@@ -205,9 +103,9 @@ Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nascond
 
 Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente — anche se in quel momento sembra che nessuno la stia ancora usando.
 
-**Aggiornamento versione:** Ad ogni modifica del codice di Brogliaccio, è obbligatorio aggiornare il numero di versione secondo il criterio Semantic Versioning (Major.Minor.Fix/Patch). La versione va aggiornata in modo allineato in due punti:
+**Aggiornamento versione:** ad ogni modifica del codice di Brogliaccio è obbligatorio aggiornare il numero di versione secondo Semantic Versioning (Major.Minor.Fix/Patch), in modo allineato in due punti:
 1. In `tools/appunti-cantiere/core.js` (variabile `VERSIONE`).
-2. In `tools/appunti-cantiere/sw.js` (variabile `CACHE` del Service Worker, es. `appunti-cantiere-0.4.2`). Questo passaggio è essenziale per invalidare la cache offline dei dispositivi e far scaricare la nuova versione agli utenti.
+2. In `tools/appunti-cantiere/sw.js` (variabile `CACHE` del Service Worker, es. `appunti-cantiere-0.4.2`): è essenziale per invalidare la cache offline dei dispositivi e far scaricare la nuova versione agli utenti.
 
 **Dopo ogni modifica dell'interfaccia:** nelle etichette dei campi di tutte le schermate (anche nella stampa) il testo termina con i due punti (`Cantiere:`, `Meteo:`); i pulsanti no. Poi rigenerare gli screenshot con `scripts/genera_screenshot_brogliaccio.py` e aggiornare il capitolo del manuale (vedi "Manuale utente").
 
@@ -215,35 +113,28 @@ Regola da tenere a mente comunque, perché il mancato rispetto ha già causato u
 
 `documentazione/MANUALE_LeenO.fodt` si aggiorna seguendo la skill `.agent/skills/leeno-aggiorna-manuale/SKILL.md` e, per le insidie ricorrenti (modifica del FODT, screenshot, PDF, indice), `documentazione/LESSONS_MANUALE.md`. Regola da ricordare comunque: ogni intervento sul manuale aggiorna insieme `TRACKING_MANUALE.md`, la riga "Stato di revisione", `MAPPA_SEZIONI.md`, l'indice generale (`aggiorna_indice.py`, prima del PDF) e il PDF in `src/Ultimus.oxt/`, e si chiude con la validazione XML del FODT.
 
-## Quirk minori UNO/ODF
-
-Due gotcha isolati, documentati con dettaglio in `documentazione/LESSONS_UNO_QUIRKS.md`: i nomi di stile interni LibreOffice possono essere anonimi (es. `uuuuu` invece di `'Comp TOTALI'`, causando fallimenti silenziosi in confronti `CellStyle == "nome leggibile"`); i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle F1 di COMPUTO/CONTABILITA se un file reale è stato usato come base — verificarle prima di distribuire un template.
-
 ## Pipeline di test automatizzato (headless UNO)
 
-Test round-trip XPWE con istanze reali di LibreOffice, senza mock: gestione lifecycle del processo `soffice`, ordine di import (`Dialogs` per primo, per la catena circolare `pyleeno↔Debug↔Dialogs↔LeenoContab`), monkeypatch di `LeenO_path()`/`basic_LeenO()`. Lo stesso approccio copre ora anche il test di codice che scrive percorsi relativi al documento o inserisce righe dentro un blocco esistente (modulo di import dell'agenda di cantiere). Dettagli completi in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
+Test round-trip con istanze reali di LibreOffice, senza mock (XPWE e codice che scrive percorsi relativi al documento o inserisce righe in un blocco esistente, come il modulo di import dell'agenda di cantiere): dettagli in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
 
 ## Sistema icone
 
-- La specifica completa del design system (filosofia, primitive geometriche, palette colori, regole di export) vive in `documentazione/ICONS_DESIGN_SYSTEM.md`. Consultarla prima di creare o modificare icone: contiene, tra l'altro, la sezione 15 "Canvas di Export 48×48 px con Padding Azzerato", che descrive il crop del `viewBox` calcolato per-icona in uso dalla generazione corrente.
-- `icons/svg/` e `icons/scuro/` condividono sempre la stessa geometria (stesso `viewBox` ritagliato): differiscono solo per colore. Un cambiamento di crop o di bounding box va propagato a entrambe le cartelle nello stesso passaggio.
-- Il disegno segue la griglia master 24×24 con margine di sicurezza 2px; l'export finale usa invece un canvas quadrato 48×48 con `viewBox` ritagliato individualmente sul bounding box del contenuto (nessun crop fisso uguale per tutte le icone).
-- Per icone con badge d'angolo o elementi vicini al bordo, preferire una revisione icona per icona invece di un'operazione bulk automatica: il rischio di danno visivo (badge tagliato, asimmetria) è più alto che nelle icone semplici.
-- Modificare sempre gli SVG in modalità binaria (vedi "Preservazione del line-ending in QUALSIASI editing" più sotto): scritture in modalità testo normalizzano silenziosamente i fine-riga CRLF, producendo diff che toccano ogni riga di ogni file anche a parità di contenuto grafico.
-- **I file `.bmp` in `src/Ultimus.oxt/icons/` sono in realtà SVG/XML testuali**, con estensione `.bmp` solo per compatibilità con il sistema toolbar di LibreOffice. Vanno sempre trattati come testo (`text eol=lf` in `.gitattributes`), mai come file binari: aprirli o processarli come binari ne corrompe il contenuto XML.
-- **Per il calcolo del bounding box in fase di export, usare la pipeline `rsvg-convert` + PIL**, che renderizza correttamente anche gli elementi di testo. Evitare `svgelements` per questo calcolo: restituisce bounding box di dimensione zero per i nodi di testo, producendo crop errati.
+Specifica completa in `documentazione/ICONS_DESIGN_SYSTEM.md` (da consultare prima di creare o modificare icone); regole operative in `documentazione/LESSONS_ICONE.md`. Invarianti:
+
+- `icons/svg/` e `icons/scuro/` condividono sempre la stessa geometria (stesso `viewBox` ritagliato) e differiscono solo per colore: ogni cambiamento di crop o bounding box va propagato a entrambe nello stesso passaggio.
+- Modificare gli SVG sempre in modalità binaria (vedi "Preservazione del line-ending"): una scrittura in modalità testo normalizza silenziosamente i CRLF e produce diff su ogni riga di ogni file, anche a parità di contenuto grafico.
+- **I file `.bmp` in `src/Ultimus.oxt/icons/` sono in realtà SVG/XML testuali**, con estensione `.bmp` solo per compatibilità con il sistema toolbar di LibreOffice: trattarli sempre come testo (`text eol=lf` in `.gitattributes`), mai come binari, o se ne corrompe il contenuto XML.
 
 ## Consegna del lavoro per agenti senza credenziali di push
 
 Un agente che lavora sul repository ma non ha credenziali di push dirette (o non deve committare per policy del task) consegna il lavoro così:
 
-1. **Formato zip, non bundle git.** Impacchettare i file modificati/creati in un archivio zip, con la struttura di cartelle che rispecchia la destinazione finale sotto `src/Ultimus.oxt/` (o la sottocartella pertinente), non l'intero repository.
-2. **Comandi espliciti di applicazione.** Fornire i comandi PowerShell per estrarre lo zip nel percorso corretto (`W:\_dwg\ULTIMUSFREE\_SRC\leeno\...`), così l'operazione è riproducibile senza ambiguità sul PC `giuserpe`.
-3. **Nessun commit/push automatico.** L'agente non tenta push diretti se non richiesto esplicitamente (anche tramite un hook configurato dall'utente): la revisione del diff e il commit restano un passaggio manuale su PC `giuserpe`, coerente con il workflow di editing su PC TEST descritto sopra. Se il push è richiesto, se ne tenta uno solo: un errore 403 indica permessi mancanti (app GitHub non installata o non collegata) e ripeterlo non serve; si riporta la causa e si consegna lo zip.
-4. **Messaggio di commit proposto, non eseguito.** Se richiesto, l'agente propone l'intestazione e il corpo del commit secondo le convenzioni descritte sotto ("Git Commit – Conventional Commits in Italiano"), lasciando all'utente l'esecuzione del comando.
-5. **Verifica di integrità prima della consegna.** Prima di impacchettare, validare la sintassi Python (`python3 -c "import ast; ast.parse(...)"`), per il manuale l'XML del FODT (vedi `documentazione/LESSONS_MANUALE.md`) e, per i file con line-ending noto, confermare che il conteggio CRLF/LF non sia cambiato rispetto all'originale.
-6. **Lo zip si produce sempre, anche per interventi sul solo manuale e anche se il push riesce.** Contiene tutti i file toccati, compresi tracking, mappa sezioni e PDF, con le cartelle del repository.
-7. **Ambiente cloud.** Clonare solo il branch di lavoro (`git clone --depth 1 --branch dev ...`) e, prima di ogni push, `git fetch origin dev` per non inviare una storia obsoleta.
+1. **Zip, non bundle git**, con la struttura di cartelle del repository (destinazione finale, es. sotto `src/Ultimus.oxt/` o la sottocartella pertinente), non l'intero repository. Lo zip si produce sempre, anche per interventi sul solo manuale e anche se il push riesce, e contiene tutti i file toccati (tracking, mappa sezioni e PDF compresi).
+2. **Comandi PowerShell espliciti** per estrarlo in `W:\_dwg\ULTIMUSFREE\_SRC\leeno\...` su PC `giuserpe`, così l'operazione è riproducibile senza ambiguità.
+3. **Nessun commit/push automatico** se non richiesto esplicitamente (anche tramite un hook configurato dall'utente): revisione del diff e commit restano un passaggio manuale su PC `giuserpe`. Se il push è richiesto, se ne tenta uno solo: un errore 403 indica permessi mancanti (app GitHub non installata o non collegata) e ripeterlo non serve; si riporta la causa e si consegna lo zip.
+4. **Messaggio di commit proposto, non eseguito**, secondo le convenzioni più sotto, se richiesto.
+5. **Verifica di integrità prima della consegna**: sintassi Python (`python3 -c "import ast; ast.parse(...)"`), XML del FODT per il manuale (vedi `documentazione/LESSONS_MANUALE.md`) e, per i file con line-ending noto, conteggio CRLF/LF invariato rispetto all'originale.
+6. **Ambiente cloud**: clonare solo il branch di lavoro (`git clone --depth 1 --branch dev ...`) e, prima di ogni push, `git fetch origin dev` per non inviare una storia obsoleta.
 
 ## Preservazione del line-ending in QUALSIASI editing
 
@@ -253,8 +144,6 @@ Nello stesso `pythonpath/` convivono file CRLF (es. `LeenoGiornale.py`) e file L
 2. In Python, aprire in lettura/scrittura con `newline=''` per non far tradurre gli a-capo, e comporre il testo di sostituzione con lo stesso stile di fine riga del blocco che si sta sostituendo.
 3. Dopo la modifica, ricontrollare il conteggio CRLF/LF per confermare che non sia cambiato, prima di consegnare il file.
 
-Questa regola vale anche per gli SVG (vedi "Sistema icone" sopra), non solo per il codice Python.
-
 ## Pulizia di codice morto e duplicato
 
 Checklist e pattern ricorrenti (script usa-e-getta pericolosi in `pythonpath/`, redefinition come segnale affidabile di codice morto, import ereditati nei cloni `LeenoImport_Xml*.py`, variabili apparentemente inutili da verificare sui moduli fratelli prima di rimuoverle) in `documentazione/LESSONS_CODE_QUALITY.md`.
@@ -263,75 +152,25 @@ Regola operativa da ricordare sempre, senza bisogno di consultare il file: uno s
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
-### Formato
+Formato: `<tipo>(<scope>): <descrizione in italiano>`, con corpo opzionale che spiega il PERCHÉ, non il COSA.
 
-```
-<tipo>(<scope>): <descrizione in italiano>
+- **Tipi**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore` (manutenzione, dipendenze, versioning, build), `revert`.
+- **Scope** (area principale colpita): `core` (`pyleeno.py`, `LeenoGlobals.py`), `ui` (dialoghi, `.xhp`, `.xlb`), `contab`, `computo`, `variante`, `giornale`, `import` (`LeenoImport_*.py`), `icons`, `meta` (`description.xml`, `.xcu`), `template`, `docs` (manuale PDF o documentazione tecnica), `brogliaccio` (PWA in `tools/appunti-cantiere/`).
 
-[corpo opzionale: spiega il PERCHÉ, non il COSA]
-```
+Regole d'oro:
 
-### Tipi
+1. **Lingua**: descrizione in **italiano**, imperativo presente (es. "aggiunge", non "aggiunto").
+2. **Intestazione**: max 72 caratteri, nessun punto finale.
+3. **Breaking change**: `!` dopo il tipo (es. `feat!: ...`) e descrizione in `BREAKING CHANGE:` nel corpo.
+4. **Separazione**: se le modifiche riguardano aree troppo diverse, suggerisci commit separati.
+5. **Esclusioni**: ignora e ometti sempre, nel messaggio di commit, le modifiche alle funzioni nel cui nome compare la stringa "\_debug" (es. `MENU_debug`).
+6. **Sinteticità** (vale anche per i commit dei soli aggiornamenti del manuale, con tipo `docs` e senza elenchi puntati nel corpo; le righe di attribuzione richieste dall'ambiente non contano come corpo): il corpo solo se serve davvero a spiegare il PERCHÉ, in massimo 1 riga breve; nella maggior parte dei casi va omesso del tutto, preferendo la sola intestazione.
 
-| Tipo       | Quando                                                            |
-| ---------- | ----------------------------------------------------------------- |
-| `feat`     | Nuova funzionalità                                                |
-| `fix`      | Correzione bug                                                    |
-| `docs`     | Solo documentazione                                               |
-| `style`    | Formattazione, spazi, punti e virgola mancanti (no logica)        |
-| `refactor` | Modifica del codice che non corregge bug né aggiunge funzionalità |
-| `perf`     | Miglioramento prestazioni                                         |
-| `test`     | Aggiunta/modifica test                                            |
-| `chore`    | Manutenzione, aggiornamento dipendenze, versioning, build         |
-| `revert`   | Annullamento di un commit precedente                              |
-
-### Scope Suggeriti (LeenO)
-
-Identifica l'area principale colpita dalle modifiche:
-
-- `core`: Logica principale (`pyleeno.py`, `LeenoGlobals.py`, ecc.)
-- `ui`: Interfaccia utente (`.xhp`, `.xlb`, dialoghi in Python)
-- `contab`, `computo`, `variante`, `giornale`: Modulo specifico in `pythonpath`
-- `import`: Filtri di importazione (`LeenoImport_*.py`)
-- `icons`: Icone e risorse grafiche (`icons/`, SVG/PNG)
-- `meta`: Metadati estensione (`description.xml`, `.xcu`)
-- `template`: Modifiche ai modelli di documento
-- `docs`: Manuale PDF o documentazione tecnica
-- `brogliaccio`: PWA in `tools/appunti-cantiere/`
-
-### Regole d'Oro
-
-1. **Lingua**: Descrizione in **italiano**, imperativo presente (es. "aggiunge", non "aggiunto")
-2. **Lunghezza**: Max 72 caratteri per l'intestazione
-3. **Punteggiatura**: Nessun punto finale nell'intestazione
-4. **Breaking Change**: Aggiungi `!` dopo il tipo (es. `feat!: ...`) e descrivi in `BREAKING CHANGE:` nel corpo
-5. **Separazione**: Se le modifiche riguardano aree troppo diverse, suggerisci commit separati
-6. **Esclusioni**: Ignora e ometti sempre le modifiche apportate alle funzioni nel cui nome compare la stringa "\_debug" (es. `MENU_debug`) nella generazione del messaggio di commit
-7. **Sinteticità** (valida anche per i commit dei soli aggiornamenti del manuale, con tipo `docs` e senza elenchi puntati nel corpo; le righe di attribuzione richieste dall'ambiente non contano come corpo): Il corpo va aggiunto solo se davvero necessario a spiegare il PERCHÉ (mai il COSA, già chiaro dal diff), e in tal caso in massimo 1 riga breve. Nella maggior parte dei casi il corpo va omesso del tutto: preferire sempre la sola intestazione a un corpo prolisso o multi-paragrafo
-
-### Procedura Operativa
-
-1. **Analisi Stato**: Esegui `git status` per vedere quali file sono staged e quali no
-2. **Analisi Modifiche**: Esegui `git diff --cached` per esaminare nel dettaglio il codice modificato
-3. **Identificazione Scope**: Scegli lo scope più calzante in base ai file modificati
-4. **Draft Messaggio**: Componi l'intestazione. Aggiungi un corpo di 1 riga breve solo se il PERCHÉ non è già ovvio dall'intestazione stessa; altrimenti ometti il corpo
-5. **Proponi Comando**: Mostra il comando finale: `git commit -m "..."` o `git commit -e` se serve un corpo esteso
-
-### Caso particolare: commit dopo editing su PC TEST
-
-Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione di un OXT da `OXT\` dentro `src/Ultimus.oxt/`), il diff viene sottoposto per intero a un assistente AI (Claude, Copilot o altro) prima di committare, seguendo comunque questa stessa procedura operativa. Se il diff copre aree molto ampie o eterogenee del codice, preferire più commit separati per area invece di un unico commit generico.
-
-### Esempi
-
-- `feat(computo): aggiunge calcolo automatico oneri sicurezza`
-- `fix(ui): corregge refresh tabella dopo inserimento voce`
-- `refactor(import): ottimizza parsing file XPWE`
-- `chore(meta): bump versione a 3.25.x`
-- `docs: aggiorna istruzioni nel manuale per il nuovo listino`
+Procedura: `git status`, `git diff --cached`, scelta dello scope, intestazione (più l'eventuale riga di corpo), poi proporre il comando `git commit -m "..."` (o `git commit -e` se serve un corpo esteso). Dopo un editing su PC TEST il diff va sottoposto per intero a un assistente AI prima di committare, con più commit per area se è eterogeneo. Tabella dei tipi, esempi e dettagli: `documentazione/LESSONS_GIT.md`.
 
 ## Manutenzione di questo file
 
-- Il repository mantiene due copie di questo documento: `AGENTS.md` (root) e `.agents/AGENTS.md`. Devono restere identiche byte per byte in ogni momento.
-- Qualunque modifica a una copia va applicata anche all'altra **nello stesso commit**, mai in commit separati: una divergenza tra le due copie è di per sé un difetto da correggere, indipendentemente da quale delle due sia "più aggiornata".
-- Prima di proporre una modifica a questo file, verificare con `diff AGENTS.md .agents/AGENTS.md` che le due copie siano già allineate; se non lo sono, segnalarlo esplicitamente invece di limitarsi a modificarne una.
-- **Lezioni specifiche per modulo/argomento non vanno inline in questo file**, ma in `documentazione/LESSONS_<ARGOMENTO>.md`, con un riferimento breve (poche righe, non il testo integrale) qui. Questo file va letto per intero ad ogni task: deve contenere solo regole invarianti o la singola regola operativa più importante di ogni argomento, non l'intero backlog di lezioni apprese. Se una sezione supera 10-15 righe per un singolo argomento non invariante, valutare l'estrazione in un file di dettaglio collegato.
+- Il repository mantiene due copie di questo documento: `AGENTS.md` (root) e `.agents/AGENTS.md`. Devono restare identiche byte per byte in ogni momento.
+- Qualunque modifica a una copia va applicata anche all'altra **nello stesso commit**, mai in commit separati: una divergenza è di per sé un difetto da correggere, indipendentemente da quale delle due sia "più aggiornata". Prima di proporre una modifica verificare con `diff AGENTS.md .agents/AGENTS.md`; se non sono allineate, segnalarlo esplicitamente invece di modificarne una sola.
+- **Lezioni specifiche per modulo/argomento non vanno inline in questo file**, ma in `documentazione/LESSONS_<ARGOMENTO>.md`, con un rimando breve qui. Questo file va letto per intero a ogni task: deve contenere solo regole invarianti o la singola regola operativa più importante di ogni argomento. Se una sezione supera 10-15 righe per un singolo argomento non invariante, estrarla in un file di dettaglio collegato.
+- Non rinominare la sezione "Sicurezza dei moduli in `pythonpath/`": è citata da `scripts/check_pythonpath_safety.py`.

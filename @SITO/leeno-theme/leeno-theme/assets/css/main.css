@@ -102,7 +102,9 @@
 /* ——— CTA DOWNLOAD BUTTON ——— */
 /* Pulsanti download tabella / corpo pagina — allineati a giuserpe.github.io/leeno/versions.html */
 .btn-leeno-download,
-.btn-download-link {
+.btn-download-link,
+.download-link,
+a[href*='/download/'] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -124,7 +126,9 @@
 }
 
 .btn-leeno-download:hover,
-.btn-download-link:hover {
+.btn-download-link:hover,
+.download-link:hover,
+a[href*='/download/']:hover {
     background: var(--accent-rust-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 77, 46, 0.4);
@@ -132,7 +136,9 @@
 }
 
 .btn-leeno-download svg,
-.btn-download-link svg {
+.btn-download-link svg,
+.download-link svg,
+a[href*='/download/'] svg {
     transition: transform 0.3s;
     stroke: #ffffff !important;
     stroke-width: 3;
@@ -141,7 +147,9 @@
 }
 
 .btn-leeno-download:hover svg,
-.btn-download-link:hover svg {
+.btn-download-link:hover svg,
+.download-link:hover svg,
+a[href*='/download/']:hover svg {
     transform: translateY(2px);
 }
 
@@ -1020,11 +1028,11 @@ img {
     margin-bottom: 16px;
 }
 
-.entry-content a:not(.btn-leeno-download):not(.btn-download-link),
-.content-main a:not(.btn-leeno-download):not(.btn-download-link),
-.page-desc a:not(.btn-leeno-download):not(.btn-download-link),
-.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link),
-.single-content a:not(.btn-leeno-download):not(.btn-download-link) {
+.entry-content a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']),
+.content-main a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']),
+.page-desc a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']),
+.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']),
+.single-content a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']) {
     color: #455600 !important; /* Verde scuro ad alto contrasto */
     font-weight: 600 !important;
     text-decoration: underline !important;
@@ -1033,11 +1041,11 @@ img {
     transition: all 0.2s !important;
 }
 
-.entry-content a:not(.btn-leeno-download):not(.btn-download-link):hover,
-.content-main a:not(.btn-leeno-download):not(.btn-download-link):hover,
-.page-desc a:not(.btn-leeno-download):not(.btn-download-link):hover,
-.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link):hover,
-.single-content a:not(.btn-leeno-download):not(.btn-download-link):hover {
+.entry-content a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):hover,
+.content-main a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):hover,
+.page-desc a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):hover,
+.prezzari-intro a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):hover,
+.single-content a:not(.btn-leeno-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):hover {
     color: var(--accent-rust) !important;
     text-decoration-color: var(--accent-rust) !important;
 }
@@ -2569,20 +2577,20 @@ h3.wpfb-cat,
 /* Responsive */
 @media (max-width: 600px) {
     .leeno-table { min-width: 600px; }
-    .btn-leeno-download span { display: none; }
-    .btn-leeno-download { padding: 8px 12px; }
+    .btn-leeno-download span, .download-link span, a[href*='/download/'] span { display: none; }
+    .btn-leeno-download, .download-link, a[href*='/download/'] { padding: 8px 12px; }
     .leeno-table td, .leeno-table th { padding: 10px 12px; }
 }
 
 /* ── Link globali su sfondo chiaro ──────────────────────────── */
 /* Cattura link non coperti da regole più specifiche */
-.page-content a:not(.btn-download):not(.btn-download-link):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link) {
+.page-content a:not(.btn-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link) {
     color: #455600 !important;
     text-decoration: underline;
     text-decoration-color: rgba(69, 86, 0, 0.3);
     text-underline-offset: 3px;
 }
-.page-content a:not(.btn-download):not(.btn-download-link):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link):hover {
+.page-content a:not(.btn-download):not(.btn-download-link):not(.download-link):not([href*='/download/']):not(.btn-leeno-download):not(.btn-hero):not(.btn-hero-ghost):not(.btn-outline):not(.prezzari-dl-btn):not(.prezzari-file-link):not(.nav-menu a):not(.breadcrumbs a):not(.post-thumb):not(.post-title a):not(.search-result-title a):not(.skip-link):hover {
     color: var(--accent-rust) !important;
     text-decoration-color: var(--accent-rust);
 }
@@ -2749,6 +2757,8 @@ h3.wpfb-cat,
    ============================================================ */
 body .btn-leeno-download, 
 body .btn-download-link, 
+body .download-link, 
+body a[href*='/download/'],
 body .btn-download { 
     color: #ffffff !important; 
     text-decoration: none !important; 
@@ -2756,6 +2766,8 @@ body .btn-download {
 
 body .btn-leeno-download svg, 
 body .btn-download-link svg, 
+body .download-link svg, 
+body a[href*='/download/'] svg,
 body .btn-download svg { 
     stroke: #ffffff !important; 
     fill: none !important; 

@@ -48,11 +48,13 @@ add_filter('option_active_plugins', function($plugins) {
     return $filtered;
 });
 
-// Registra lo shortcode con priorità 1 su init (defensive: rimuovi prima
-// nel caso WP Filebase fosse caricato in altro modo).
+// Registra gli shortcode con priorità 1 su init (defensive: rimuovi prima
+// nel caso WP Filebase o altri plugin fossero caricati in altro modo).
 add_action('init', function() {
     remove_shortcode('wpfilebase');
     add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+    remove_shortcode('download');
+    add_shortcode('download', 'leeno_fc_download_shortcode');
 }, 1);
 add_action('wp_enqueue_scripts', 'leeno_fc_enqueue');
 
@@ -127,6 +129,14 @@ function leeno_fc_field($file, $key) {
         return $file->$key ?? '';
     }
     return '';
+}
+}
+
+if ( ! function_exists('leeno_fc_download_shortcode') ) {
+function leeno_fc_download_shortcode($atts) {
+    $atts = shortcode_atts(array('id' => '', 'file' => ''), $atts);
+    $id = intval(!empty($atts['id']) ? $atts['id'] : $atts['file']);
+    return leeno_fc_single($id);
 }
 }
 

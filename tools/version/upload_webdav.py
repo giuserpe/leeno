@@ -23,39 +23,49 @@ except ImportError:
 
 
 def _make_request_requests(
-    url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
+    url: str, method: str, data: bytes = None, auth: tuple = None, headers: dict = None, timeout: int = 30
 ):
-    # Forza HTTP/1.1: Nextcloud/SabreDAV chiude il canale HTTP/2 con INTERNAL_ERROR
-    # invece di rispondere con il corretto 423 FileLocked, causando curl exit 92.
     session = requests.Session()
     adapter = HTTPAdapter()
     session.mount("https://", adapter)
     session.mount("http://", adapter)
-    # Disabilita HTTP/2 impostando il header di downgrade (funziona con httpx/urllib3)
-    headers = {"Connection": "close"}
+
+    req_headers = {"Connection": "close"}
+    if headers:
+        req_headers.update(headers)
 
     kwargs = {
         "timeout": timeout,
-        "headers": headers,
+        "headers": req_headers,
     }
     if auth and (auth[0] or auth[1]):
         kwargs["auth"] = auth
 
-    if method == "PUT":
-        kwargs["data"] = data
-        resp = session.put(url, **kwargs)
-    elif method == "DELETE":
-        resp = session.delete(url, **kwargs)
-    else:
-        resp = session.request(method, url, **kwargs)
-
-    return resp.status_code, resp.text
+    try:
+        if method == "PUT":
+            kwargs["data"] = data
+            resp = session.put(url, **kwargs)
+        elif method == "DELETE":
+            resp = session.delete(url, **kwargs)
+        elif method == "MOVE":
+            resp = session.request("MOVE", url, **kwargs)
+        else:
+            resp = session.request(method, url, **kwargs)
+        return resp.status_code, resp.text
+    except Exception as e:
+        if hasattr(e, "response") and e.response is not None:
+            return e.response.status_code, e.response.text
+        raise e
 
 
 def _make_request_urllib(
-    url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
+    url: str, method: str, data: bytes = None, auth: tuple = None, headers: dict = None, timeout: int = 30
 ):
     req = urllib.request.Request(url, data=data, method=method)
+
+    if headers:
+        for k, v in headers.items():
+            req.add_header(k, v)
 
     if auth and (auth[0] or auth[1]):
         user, password = auth
@@ -89,14 +99,14 @@ def _make_request_urllib(
 
 
 def _make_request(
-    url: str, method: str, data: bytes = None, auth: tuple = None, timeout: int = 30
+    url: str, method: str, data: bytes = None, auth: tuple = None, headers: dict = None, timeout: int = 30
 ):
     if HAS_REQUESTS:
         try:
-            return _make_request_requests(url, method, data, auth, timeout)
+            return _make_request_requests(url, method, data, auth, headers, timeout)
         except Exception as req_err:
             print(f"   Note: requests call failed ({req_err}), falling back to urllib...")
-    return _make_request_urllib(url, method, data, auth, timeout)
+    return _make_request_urllib(url, method, data, auth, headers, timeout)
 
 
 def upload_file(
@@ -147,7 +157,29 @@ def upload_file(
             if is_locked:
                 print("   Dettaglio: Nextcloud segnala file bloccato (FileLocked).")
 
-            if is_retryable and attempt < max_retries:
+            if is_locked:
+                # Prova il metodo MOVE da file temporaneo .tmp
+                tmp_url = f"{target_url}.tmp"
+                try:
+                    print(f"   Tentativo di caricamento via file temporaneo + MOVE...")
+                    tmp_status, _ = _make_request(
+                        tmp_url, method="PUT", data=file_data, auth=auth, timeout=30
+                    )
+                    if tmp_status in (200, 201, 204):
+                        move_headers = {"Destination": target_url, "Overwrite": "T"}
+                        move_status, move_text = _make_request(
+                            tmp_url, method="MOVE", auth=auth, headers=move_headers, timeout=20
+                        )
+                        if move_status in (200, 201, 204):
+                            print(f"✅ {filename} caricato via MOVE con successo (HTTP {move_status}).")
+                            return True
+                        else:
+                            print(f"   Esito MOVE: HTTP {move_status}")
+                        # Pulizia del file .tmp
+                        _make_request(tmp_url, method="DELETE", auth=auth, timeout=10)
+                except Exception as tmp_err:
+                    print(f"   Tentativo MOVE fallito: {tmp_err}")
+
                 # Tentativo di DELETE per rimuovere il file bloccato o lo lock stale in Nextcloud
                 try:
                     print("   Tentativo di rimozione del file/lock remoto via DELETE...")
@@ -158,6 +190,7 @@ def upload_file(
                 except Exception as del_err:
                     print(f"   Richiesta DELETE fallita: {del_err}")
 
+            if is_retryable and attempt < max_retries:
                 delay = delays[min(attempt - 1, len(delays) - 1)]
                 print(f"   Attesa di {delay}s prima di riprovare...")
                 time.sleep(delay)

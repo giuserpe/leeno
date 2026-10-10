@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LeenO WP Filebase Compatibility
  * Plugin URI: https://leeno.org
- * Description: Interpreta shortcode [wpfilebase] legacy senza dipendere dal plugin WP Filebase
+ * Description: Interpreta shortcode [wpfilebase] e [download] legacy senza dipendere dal plugin WP Filebase
  * Version: 1.5.0
  * Author: LeenO Team
  * License: GPL2
@@ -48,11 +48,13 @@ add_filter('option_active_plugins', function($plugins) {
     return $filtered;
 });
 
-// Registra lo shortcode con priorità 1 su init (defensive: rimuovi prima
+// Registra gli shortcode con priorità 1 su init (defensive: rimuovi prima
 // nel caso WP Filebase fosse caricato in altro modo).
 add_action('init', function() {
     remove_shortcode('wpfilebase');
     add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+    remove_shortcode('download');
+    add_shortcode('download', 'leeno_fc_download_shortcode');
 }, 1);
 add_action('wp_enqueue_scripts', 'leeno_fc_enqueue');
 
@@ -127,6 +129,18 @@ function leeno_fc_field($file, $key) {
         return $file->$key ?? '';
     }
     return '';
+}
+}
+
+if ( ! function_exists('leeno_fc_download_shortcode') ) {
+function leeno_fc_download_shortcode($atts) {
+    if (!is_array($atts)) {
+        $atts = [];
+    }
+    if (isset($atts[0]) && !isset($atts['id'])) {
+        $atts['id'] = $atts[0];
+    }
+    return leeno_fc_shortcode($atts);
 }
 }
 

@@ -5,11 +5,12 @@
 
 ## Cosa fa questo plugin?
 
-Interpreta gli shortcode `[wpfilebase]` legacy senza dipendere dal plugin WP Filebase (che è broken con PHP 8+).
+Interpreta gli shortcode `[wpfilebase]` e `[download]` legacy senza dipendere dal plugin WP Filebase (che è broken con PHP 8+).
 
 Se hai pagine in cui usi:
 ```
 [wpfilebase tag=file id=1937]
+[download id=1937]
 [wpfilebase tag=list id=38]
 ```
 
@@ -53,6 +54,7 @@ leeno-filebase-compat/
 ### Link singolo file
 ```
 [wpfilebase tag=file id=1937]
+[download id=1937]
 ```
 
 Renderizza un link di download per il file ID 1937.

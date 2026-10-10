@@ -597,7 +597,19 @@ if ( ! function_exists('leeno_fc_shortcode') ) {
     }
 }
 
-// Safety-net: se leeno-filebase-compat non è attivo, registriamo lo shortcode
+if ( ! function_exists('leeno_fc_download_shortcode') ) {
+    function leeno_fc_download_shortcode($atts) {
+        if (!is_array($atts)) {
+            $atts = [];
+        }
+        if (isset($atts[0]) && !isset($atts['id'])) {
+            $atts['id'] = $atts[0];
+        }
+        return leeno_fc_shortcode($atts);
+    }
+}
+
+// Safety-net: se leeno-filebase-compat non è attivo, registriamo gli shortcode
 // dal tema. Usiamo remove_shortcode prima per scavalcare WP Filebase (rotto su PHP 8+)
 // nel caso fosse ancora attivo. Priorità 1 = eseguito prima dei plugin normali.
 add_action('init', function() {
@@ -605,6 +617,8 @@ add_action('init', function() {
         // Il plugin leeno-filebase-compat non è attivo: siamo il fallback
         remove_shortcode('wpfilebase');
         add_shortcode('wpfilebase', 'leeno_fc_shortcode');
+        remove_shortcode('download');
+        add_shortcode('download', 'leeno_fc_download_shortcode');
     }
     // Se LEENO_FC_VERSION è definita, il plugin ha già gestito tutto.
 }, 1);

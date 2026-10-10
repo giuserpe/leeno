@@ -1,2 +1,2 @@
 === LeenO WP Filebase Compatibility ===
-Interpreta shortcode [wpfilebase] legacy senza WP Filebase
+Interpreta shortcode [wpfilebase] e [download] legacy senza WP Filebase

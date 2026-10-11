@@ -52,32 +52,46 @@ def parseXML(data, defaultTitle):
     lingue = {}
     lingua = None
     lingueEstese = {'it': 'Italiano', 'de': 'Deutsch', 'en': 'English', 'fr': 'Français', 'es': 'Español'}
-    try:
-        for desc in descrizioni:
-            lingua = desc.attrib['lingua']
-            lExt = lingueEstese.get(lingua, lingua)
-            lingue[lExt] = lingua
+
+    for desc in descrizioni:
+        l = desc.attrib.get('lingua')
+        if l:
+            lExt = lingueEstese.get(l, l)
+            lingue[lExt] = l
+        if 'breve' in desc.attrib:
             defaultTitle = desc.attrib['breve']
-        try:
-            anno = defaultTitle.split(' ')[1]
-            for quota in quotazioni:
-                lqtId = quota.attrib['lqtId']
-                if lqtId == anno:
-                    listaQuotazioneId = quota.attrib['listaQuotazioneId']
-                    break
-        except:
-            pass
-    except KeyError:
-        pass
+
+    # Se non trovate o per completare, rileva le lingue dai singoli prodotti
+    for product in prezzario.findall('prodotto'):
+        for pDesc in product.findall('prdDescrizione'):
+            l = pDesc.attrib.get('lingua')
+            if l and l not in lingue.values():
+                lExt = lingueEstese.get(l, l)
+                lingue[lExt] = l
+
+    listaQuotazioneId = None
+    przId = prezzario.attrib.get('przId', '')
+    matchAnno = re.search(r'\b(19\d\d|20\d\d)\b', przId) or re.search(r'(19\d\d|20\d\d)', przId) or re.search(r'\b(19\d\d|20\d\d)\b', defaultTitle)
+    anno = matchAnno.group(1) if matchAnno else None
+    if anno:
+        for quota in quotazioni:
+            if quota.attrib.get('lqtId') == anno:
+                listaQuotazioneId = quota.attrib.get('listaQuotazioneId')
+                break
+    if not listaQuotazioneId and quotazioni:
+        listaQuotazioneId = quotazioni[0].attrib.get('listaQuotazioneId')
 
     if len(lingue) > 1:
-        lingue['Tutte'] = 'tutte'
-        lingue['Annulla'] = 'annulla'
+        bottoniLingue = {}
+        for lName in sorted(lingue.keys(), key=lambda x: (x != 'Italiano', x)):
+            bottoniLingue[lName] = lingue[lName]
+        bottoniLingue['Tutte'] = 'tutte'
+        bottoniLingue['Annulla'] = 'annulla'
         lingua = Dialogs.MultiButton(
             Icon="Icons-Big/question.png",
             Title="Scelta lingue",
             Text="Il file fornito è un prezzario multilinguale\n\nSelezionare la lingua da importare\noppure 'Tutte' per ottenere un prezzario multilinguale",
-            Buttons=lingue)
+            Buttons=bottoniLingue)
         # se si chiude la finestra il dialogo ritorna 'None'
         # lo consideriamo come un 'Annulla'
         if lingua is None:
@@ -94,18 +108,26 @@ def parseXML(data, defaultTitle):
     # altrimenti solo quella specificata
 
     # estrae il nome
-    # se richiesta un lingua specifica, estrae quella
-    # altrimenti le estrea tutte e le concatena una dopo l'altra
+    # se richiesta una lingua specifica, estrae quella
+    # altrimenti le estrae tutte e le concatena una dopo l'altra
     nome = ""
     if lingua is None:
-        nome = descrizioni[0].attrib['breve']
-        for desc in range(1, len(descrizioni)):
-            nome = nome + '\n' + descrizioni[desc].attrib['breve']
+        if descrizioni:
+            nome = descrizioni[0].attrib.get('breve', '')
+            for desc in range(1, len(descrizioni)):
+                nome = nome + '\n' + descrizioni[desc].attrib.get('breve', '')
+        else:
+            nome = defaultTitle
     else:
         for desc in descrizioni:
-            if desc.attrib['lingua'] == lingua:
-                nome = desc.attrib['breve']
+            if desc.attrib.get('lingua') == lingua:
+                nome = desc.attrib.get('breve', '')
                 break
+        if not nome:
+            nome = defaultTitle
+
+    if nome:
+        defaultTitle = nome
 
     # legge le unità di misura
     # siccome ci interessano soli i simboli e non il resto
@@ -156,12 +178,10 @@ def parseXML(data, defaultTitle):
     # utilizziamo le voci 'true' come base per le descrizioni
     # aggiungendo quelle delle voci specializzate '.a, .b...'
     baseCodice = ''
-    baseTextBreve = ''
-    baseTextEstesa = ''
+    baseText = {}
     artList = {}
 
     productList = prezzario.findall('prodotto')
-    madre = ''
     for product in productList:
         attr = product.attrib
 
@@ -184,11 +204,15 @@ def parseXML(data, defaultTitle):
         # voci principali composte da sottovoci
         # le importo comunque, lasciando il valore nullo
         prezzo = ''
-        try:
+        if listaQuotazioneId:
             for el in product.findall('prdQuotazione'):
-                if el.attrib['listaQuotazioneId'] == listaQuotazioneId:
-                    prezzo = float(el.attrib['valore'])
-        except:
+                if el.attrib.get('listaQuotazioneId') == listaQuotazioneId:
+                    try:
+                        prezzo = float(el.attrib['valore'])
+                        break
+                    except (ValueError, KeyError):
+                        pass
+        if prezzo == '':
             try:
                 prezzo = float(product.find('prdQuotazione').attrib['valore'])
             except Exception:
@@ -213,84 +237,81 @@ def parseXML(data, defaultTitle):
         if oneriSic == 0:
             oneriSic = ""
 
-        # per le descrizioni, come sempre... processing a seconda
-        # della lingua disponibile / richiesta
+        # per le descrizioni: estrazione per lingua
         descs = product.findall('prdDescrizione')
-        textBreve = ""
-        textEstesa = ""
-        madre = ""
-        for desc in descs:
-            descAttr = desc.attrib
-            try:
-                descLingua = descAttr['lingua']
-            except KeyError:
-                descLingua = None
-            if lingua is None or descLingua is None or lingua == descLingua:
+        prodTextByLang = {}
+        for descEl in descs:
+            dAttr = descEl.attrib
+            dLang = dAttr.get('lingua', '')
+            breve = dAttr.get('breve', '').strip()
+            estesa = dAttr.get('estesa', '').strip()
+            if breve and estesa:
+                if breve == estesa:
+                    t = breve
+                elif breve in estesa:
+                    t = estesa
+                elif estesa in breve:
+                    t = breve
+                else:
+                    t = f"{breve}\n{estesa}"
+            elif estesa:
+                t = estesa
+            elif breve:
+                t = breve
+            else:
+                t = ""
+            if t:
+                if dLang in prodTextByLang:
+                    prodTextByLang[dLang] += '\n' + t
+                else:
+                    prodTextByLang[dLang] = t
 
-                if 'breve' in descAttr and 'estesa' in descAttr:
-                    if descAttr['breve'] in descAttr['estesa']:
-                        textBreve = descAttr['estesa'] + '\n'
-                    else:
-                        # ~textEstesa = descAttr['estesa'] + '\n' + descAttr['breve'] + '\n'
-                        textEstesa = descAttr['breve'] + '\n' + descAttr['estesa'] + '\n'
-                        madre = textEstesa[: -len('\n')]
- 
-                    if descAttr['breve'] == descAttr['estesa']:
-                        textEstesa = madre +  descAttr['breve'] + '\n'
-                try:
-                    if 'breve' in descAttr and not 'estesa' in descAttr:
-                        # ~textEstesa = madre + descAttr['breve'] + '\n'
-                        if descAttr['breve'][2] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-                            textEstesa = madre + descAttr['breve'] + '\n'
-                        else:
-                            textEstesa = madre + descAttr['breve'] + '\n'
-                except:
-                    pass
-
-
-        # controlla se la voce è una voce 'base' o una specializzazione
-        # della voce base. Il campo 'voce' è totalmente inaffidabile, quindi
-        # consideriamo come 'base' delle voci a valore nullo e le azzeriamo
-        # ad ogni nuova base e/o cambio di numerazione
+        # Gestione gerarchia: voce base e sottovoci
         base = (prezzo == "")
-        if not base and not codice.startswith(baseCodice):
-            baseTextBreve = ""
-            baseTextEstesa = ""
+        if not base and (not baseCodice or not codice.startswith(baseCodice)):
+            baseText = {}
+            baseCodice = ''
 
-        # se voce base, tiene buona la descrizione e la salva anche come base
-        # per le prossime voci (estese). Per funzionare, questo presuppone che
-        # nell' XML le voci estese seguano quella base in ordine, e che tutte le voci
-        # siano correttamente etichettate come voce = 'true' se voci base
-        # probabilmente si può fare di meglio...
         if base:
-            baseTextBreve = textBreve + '\n'
-            baseTextEstesa = textEstesa + '\n'
             baseCodice = codice
+            baseText = dict(prodTextByLang)
 
-        if not base and codice.startswith(baseCodice):
-            # ~textBreve = baseTextBreve +'- '+ textBreve
-            # ~textEstesa = baseTextEstesa +'- '+ textEstesa
-            textBreve = baseTextBreve + textBreve
-            textEstesa = baseTextEstesa + textEstesa
+        fullTextByLang = {}
+        allLangs = set(prodTextByLang.keys())
+        if not base and baseCodice and codice.startswith(baseCodice):
+            allLangs |= set(baseText.keys())
 
-        # utilizza solo la descrizione lunga per LeenO
-        if len(textBreve) > len(textEstesa):
-            desc = textBreve
+        for l in allLangs:
+            tBase = baseText.get(l, '') if (not base and baseCodice and codice.startswith(baseCodice)) else ''
+            tChild = prodTextByLang.get(l, '')
+            if tBase and tChild:
+                fullTextByLang[l] = f"{tBase}\n{tChild}"
+            elif tChild:
+                fullTextByLang[l] = tChild
+            elif tBase:
+                fullTextByLang[l] = tBase
+
+        if lingua is not None:
+            # Lingua specifica (es. 'de' o 'it')
+            desc = fullTextByLang.get(lingua, '')
+            if not desc and '' in fullTextByLang:
+                desc = fullTextByLang['']
+            if not desc and fullTextByLang:
+                desc = next(iter(fullTextByLang.values()))
         else:
-            desc = textEstesa
+            # Opzione 'Tutte': italiano + a capo + § + a capo + tedesco
+            parti = []
+            if fullTextByLang.get('it', '').strip():
+                parti.append(fullTextByLang['it'].strip())
+            if fullTextByLang.get('de', '').strip():
+                parti.append(fullTextByLang['de'].strip())
+            for lKey, lVal in fullTextByLang.items():
+                if lKey not in ('it', 'de') and lVal.strip():
+                    parti.append(lVal.strip())
+            desc = '\n§\n'.join(parti)
 
-        if len(codice.split('.')) == 4:
-            madre = desc
-        if len(codice.split('.')) > 4:
-            # ~if madre not in desc:
-            desc = madre + desc
-
-        # giochino per garantire che la prima stringa abbia una lunghezza minima
-        # in modo che LO formatti correttamente la cella
-        # ~desc = LeenoImport.fixParagraphSize(desc)
-        
-        #sistema_cose
-        desc = PL.clean_text (desc)
+        # sistema_cose
+        desc = PL.clean_text(desc)
 
         # gruppo, nel caso ci sia
         try:

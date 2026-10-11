@@ -65,7 +65,7 @@
             <div class="footer-row">
                 <div class="footer-brand">
                     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-leeno.png'); ?>" alt="LeenO" class="footer-logo">
-                    <span class="footer-license">Open Source &mdash; LGPL v3</span>
+                    <span class="footer-license">Open Source &mdash; LGPL v2.1</span>
                 </div>
 
                 <div class="footer-external">

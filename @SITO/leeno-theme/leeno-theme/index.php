@@ -74,14 +74,14 @@
                     </div>
                     <h3 class="feature-title">
                         <a href="https://leeno.org/about-leeno/" class="feature-title-link">
-                            Automazione Completa
+                            Dal Computo alla Contabilità
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </a>
                     </h3>
-                    <p class="feature-desc">Genera computi metrici, contabilità di cantiere, varianti e libretti delle misure automaticamente. Ogni calcolo è gestito dalle macro integrate.</p>
+                    <p class="feature-desc">Computo metrico, contabilità di cantiere, varianti e libretti delle misure in LibreOffice Calc. Le macro integrate automatizzano le attività ripetitive e riducono il rischio di errori di calcolo.</p>
                 </div>
 
                 <div class="feature-card">
@@ -113,14 +113,14 @@
                     </div>
                     <h3 class="feature-title">
                         <a href="https://leeno.org/leeno-e-il-computo-su-formato-opendocument-odf/" class="feature-title-link">
-                            Conforme al DM 49/2018
+                            Pensato per il DM 49/2018
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </a>
                     </h3>
-                    <p class="feature-desc">Formato ODF aperto e interoperabile. Conforme al decreto per la contabilità dei lavori pubblici. Nessuna dipendenza da software proprietario.</p>
+                    <p class="feature-desc">Formato ODF aperto e interoperabile. Consente di redigere la contabilità lavori secondo l'art. 15 del DM 49/2018. Nessuna dipendenza da software proprietario.</p>
                 </div>
             </div>
 

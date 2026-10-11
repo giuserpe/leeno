@@ -588,7 +588,7 @@ class VersionManager:
             <div class="footer-row">
                 <div class="footer-brand">
                     <img src="https://leeno.org/wp-content/themes/leeno-theme/assets/images/logo-leeno.png" alt="LeenO" class="footer-logo">
-                    <span class="footer-license">Open Source — LGPL v3</span>
+                    <span class="footer-license">Open Source — LGPL v2.1</span>
                 </div>
                 <div class="footer-links">
                     <a href="https://www.libreoffice.org/" target="_blank">LibreOffice</a>

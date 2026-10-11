@@ -2,7 +2,7 @@ LeenO - Computo metrico assistito con LibreOffice
 =================================================
 
 [![Sito Ufficiale](https://img.shields.io/badge/Sito-LeenO.org-blue?style=flat-square)](https://leeno.org/)
-[![Licenza](https://img.shields.io/badge/Licenza-LGPL%20v3-green?style=flat-square)](https://leeno.org/licenza-2/)
+[![Licenza](https://img.shields.io/badge/Licenza-LGPL%20v2.1-green?style=flat-square)](https://leeno.org/licenza-2/)
 [![Telegram](https://img.shields.io/badge/Telegram-Group-blue?logo=telegram&style=flat-square)](https://t.me/leeno_computometrico)
 [![Facebook](https://img.shields.io/badge/Facebook-Group-blue?logo=facebook&style=flat-square)](https://m.facebook.com/groups/433206393972197)
 [![Donazioni](https://img.shields.io/badge/Sostienici-Dona-red?style=flat-square)](https://leeno.org/donazioni/)
@@ -10,7 +10,7 @@ LeenO - Computo metrico assistito con LibreOffice
 
 **LeenO** è l’estensione open-source per LibreOffice Calc specifica per la redazione di computi metrici estimativi e contabilità tecnica di cantiere.
 
-È un fork derivato da *Ultimus*, ideato e scritto da Bartolomeo Aimar, ed è coperto da Licenza LGPL v3. Può quindi essere utilizzato liberamente sia per scopi personali che professionali.
+È un fork derivato da *Ultimus*, ideato e scritto da Bartolomeo Aimar, ed è coperto da Licenza LGPL v2.1. Può quindi essere utilizzato liberamente sia per scopi personali che professionali.
 
 Visita il sito ufficiale: [https://leeno.org/](https://leeno.org/)
 
@@ -20,9 +20,9 @@ Visita il sito ufficiale: [https://leeno.org/](https://leeno.org/)
 
 LeenO completa l’offerta di LibreOffice Calc proponendo all’ufficio tecnico un sistema integrato per la gestione delle progettazioni e degli appalti:
 
-*   **Automazione Completa:** Genera computi metrici, contabilità di cantiere, varianti e libretti delle misure automaticamente. Ogni calcolo e operazione è gestito da macro integrate e altamente ottimizzate.
+*   **Dal Computo alla Contabilità:** Computo metrico, contabilità di cantiere, varianti e libretti delle misure in LibreOffice Calc. Le macro integrate automatizzano le attività ripetitive e riducono il rischio di errori di calcolo.
 *   **Prezzari Regionali:** Accesso ai prezzari regionali aggiornati annualmente (es. Piemonte, Sardegna, Friuli Venezia Giulia, Umbria, Emilia Romagna, RFI, ecc.). Consente l'importazione rapida di elenchi prezzi di tutte le regioni ed enti.
-*   **Conforme al DM 49/2018:** Rispetta perfettamente le prescrizioni dell'art. 15 (Strumenti elettronici di contabilità e contabilità semplificata) del DM 7 marzo 2018 n.49.
+*   **Pensato per il DM 49/2018:** Consente di redigere la contabilità nel rispetto delle prescrizioni dell'art. 15 (Strumenti elettronici di contabilità e contabilità semplificata) del DM 7 marzo 2018 n.49.
 *   **Formato Aperto ed Interoperabile:** Lavorando in ambiente LibreOffice Calc, LeenO adotta lo standard aperto ISO/IEC 26300:2015 (OpenDocument Format - ODF), garantendo la massima interoperabilità tra diversi sistemi operativi, scambio corretto e sicuro dei dati e accessibilità a lungo termine.
 
 ---
@@ -59,12 +59,6 @@ Rimani in contatto con il progetto LeenO e unisciti alla nostra community di pro
 
 Per gli sviluppatori e coloro che vogliono compilare l'estensione a partire dai file sorgente:
 
-È disponibile lo script `src2bin.py` per archiviare i file sorgente in un pacchetto di estensione LibreOffice (`.oxt`) aggiornato su cui poter lavorare.
+Il sorgente dell'estensione è già in `src/Ultimus.oxt/` e non richiede estrazione. Per ottenere il pacchetto installabile (`.oxt`), da LibreOffice Calc lancia la funzione `make_pack()` (voce di menu dedicata): impacchetta il sorgente aggiornando in automatico `description.xml` e `leeno_version_code`.
 
-Dalla cartella radice del repository, esegui il comando:
-
-```bash
-python3 src2bin.py
-```
-
-L'estensione generata verrà salvata all'interno della cartella `bin/`.
+Le convenzioni di sviluppo sono in `AGENTS.md`.

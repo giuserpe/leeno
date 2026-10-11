@@ -90,23 +90,24 @@ jobs:
       - name: Verifica output
         run: |
           echo "=== File generati ==="
-          ls -la src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html
+          ls -la src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html tools/version/versions.htm
           echo "=== Anteprima HTML ==="
           grep -A 5 "Ultima versione" tools/version/versions.html || true
 
       - name: Upload a WebDAV
         if: steps.webdav_files.outputs.count > 0
         run: |
-          WEBDAV_URL="${{ secrets.WEBDAV_URL }}"
-          WEBDAV_URL="${WEBDAV_URL%/}/LeenoNigthlyBuilds"
-          for file in src/Ultimus.oxt/leeno_version_code include/version.h tools/version/versions.html; do
-            curl -X PUT \
-              -u '${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}' \
-              -T "$file" \
-              "${WEBDAV_URL}/$(basename $file)"
-          done
+          python3 tools/version/upload_webdav.py \
+            src/Ultimus.oxt/leeno_version_code \
+            include/version.h \
+            tools/version/versions.html \
+            tools/version/versions.htm
+        env:
+          WEBDAV_URL: "${{ secrets.WEBDAV_URL }}"
+          WEBDAV_USER: "${{ secrets.WEBDAV_USER }}"
+          WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
-      - name: Pubblica versions.html su GitHub Pages
+      - name: Pubblica versions.html e versions.htm su GitHub Pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -115,12 +116,13 @@ jobs:
           git worktree add /tmp/master-pages origin/master
 
           cp tools/version/versions.html /tmp/master-pages/versions.html
+          cp tools/version/versions.htm /tmp/master-pages/versions.htm
 
           cd /tmp/master-pages
-          git add versions.html
+          git add versions.html versions.htm
           if git diff --cached --quiet; then
-            echo "Nessuna modifica a versions.html, skip push."
+            echo "Nessuna modifica a versions.html / versions.htm, skip push."
           else
-            git commit -m "chore: aggiorna versions.html [skip ci]"
+            git commit -m "chore: aggiorna versions.html e versions.htm [skip ci]"
             git push origin HEAD:master
           fi

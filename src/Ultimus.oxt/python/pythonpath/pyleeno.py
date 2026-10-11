@@ -83,6 +83,7 @@ import LeenoUtils
 import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
+from LeenoFormat import sostituisci_stile_colonna
 import LeenoComputo
 import LeenoContab
 import LeenoGiornale

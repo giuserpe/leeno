@@ -13,3 +13,7 @@ Se un file `.ods` reale di un progetto viene salvato sopra un template o usato c
 ## `getDocument()` subito dopo un dialogo modale
 
 `getDocument()` si basa su `desktop.getCurrentComponent()` con fallback alla scansione di `desktop.getComponents()`; nell'istante immediatamente successivo alla chiusura di un dialogo (`oDlg.execute()`), il componente corrente può non essere ancora il foglio Calc atteso, e se nessun componente aperto supera il controllo `is_valid_calc()` la funzione torna `None`. Se una funzione ha già ottenuto un riferimento valido a `oDoc` prima di aprire il dialogo, quel riferimento va passato esplicitamente alle funzioni chiamate dopo la chiusura (es. come parametro opzionale `oDoc=`), invece di richiamare di nuovo `LeenoUtils.getDocument()` — che a quel punto rischia di risolvere `None` e generare `'NoneType' object has no attribute 'CurrentController'` a valle. Vedi il fix in `LeenoToolbars.py` (`Switch`, `On`, `Ordina`, `AllOn`, `AllOff`) e la relativa chiamata da `LeenoConfig.MENU_leeno_conf()`.
+
+## Freeze e regressioni lontane
+
+Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave (l'ultimo checkpoint visto localizza il blocco); per regressioni lontane usare `git bisect` (good = ultimo tag funzionante, bad = `HEAD` di `dev`); diffidare di commit che sembrano toccare solo codice "non collegato": il problema può essere in un file adiacente dello stesso commit, come un file di test.

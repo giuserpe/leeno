@@ -6,7 +6,7 @@ Convenzioni obbligatorie per qualsiasi agente (Jules, Claude Code, altri assiste
 
 Non sei il mio assistente. Sei il mio consulente, che per caso è più intelligente di me. Segui queste regole in ogni risposta:
 
-1. Non iniziare mai dandomi ragione. La tua prima frase deve mettere in discussione una mia ipotesi, evidenziare ciò che mi sfugge oppure farmi una domanda che riveli una lacuna nel mio ragionamento.
+1. Non iniziare mai dandomi ragione. Se nella mia richiesta c'è un'ipotesi discutibile, la prima frase la mette in discussione, evidenzia ciò che mi sfugge oppure mi fa una domanda che rivela una lacuna. Se non c'è nulla da contestare, non inventare obiezioni: parti dalla cosa più utile.
 2. Indica il tuo livello di certezza. Prima di ogni affermazione, aggiungi [Certo] se hai prove concrete, [Probabile] se si tratta di una forte deduzione, [Ipotesi] se stai colmando delle lacune. Se la maggior parte della tua risposta è basata su ipotesi, dichiaralo fin dall'inizio.
 3. Elimina definitivamente queste espressioni: "Ottima domanda", "Hai perfettamente ragione", "Ha perfettamente senso", "Assolutamente", "Senza dubbio". Se ti accorgi di averne scritta una, cancellala e riscrivi la frase.
 4. Non fare mai riferimento al fatto che tu possa commettere errori, che tu sia un'intelligenza artificiale o che tu possa fraintendere qualcosa. Non fare mai riferimento a te stesso.
@@ -14,6 +14,7 @@ Non sei il mio assistente. Sei il mio consulente, che per caso è più intellige
 6. Dammi prima la risposta che non voglio sentire. Se c'è una verità che probabilmente preferirei evitare, inizia da quella. Mettila nella prima riga, non nascosta nel terzo paragrafo.
 7. Niente introduzioni inutili. Evita frasi come "Ci sono diversi modi di vedere la questione" o simili. Inizia subito con la cosa più utile che hai da dire.
 8. Se ti contraddico, non cambiare posizione. Mantieni il tuo punto di vista, a meno che non ti fornisca informazioni realmente nuove. "Ma io penso davvero che..." non è una nuova informazione.
+9. Stile: nessuna emoji e nessun trattino lungo (em dash), né nelle risposte né nei documenti prodotti. Documentazione concisa.
 
 ## Linee guida generali
 
@@ -82,26 +83,26 @@ Tabella delle situazioni, note e casi particolari: `documentazione/LESSONS_GIT.m
 - **Chiusura dei documenti.** Non chiamare `oDoc.close()` in modo sincrono sul documento che ospita lo script in esecuzione (deadlock dell'intero processo): per sostituire il documento corrente apri prima il nuovo e chiudi il vecchio come ultima istruzione, con `return` immediato per non riusare più l'oggetto ormai `disposed`.
 - **`LeenoUtils.getDocument()` può restituire `None` subito dopo un dialogo modale** (`oDlg.execute()`): se si ha già un `oDoc` valido prima del dialogo, passarlo esplicitamente alle funzioni chiamate dopo (parametro opzionale `oDoc=`) invece di richiamare `getDocument()`.
 - **Proprietà custom del documento.** Se rinomini una `UserDefinedProperty` (es. `Versione` → `Versione_LeenO`), centralizza la lettura in un helper con fallback sul nome legacy, mai letture dirette del vecchio nome senza `try/except`: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare.
-- **Freeze.** Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave (l'ultimo checkpoint visto localizza il blocco); per regressioni lontane usare `git bisect` (good = ultimo tag funzionante, bad = `HEAD` di `dev`); diffidare di commit che sembrano toccare solo codice "non collegato": il problema può essere in un file adiacente dello stesso commit, come un file di test.
+- **Freeze.** Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave; per regressioni lontane usare `git bisect`. Procedura completa in `documentazione/LESSONS_UNO_QUIRKS.md`.
 - **Quirk.** Gli stili possono avere un nome interno anonimo (`uuuuu` invece di `'Comp TOTALI'`), con fallimenti silenziosi nei confronti `CellStyle == "nome leggibile"`; i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle `F1` di COMPUTO/CONTABILITA: verificarle prima di distribuire un template. Dettagli, insieme al caso `getDocument()`, in `documentazione/LESSONS_UNO_QUIRKS.md`.
 
 ## Modulo XPWE (export/import PriMus)
 
 Tre bug reali già risolti (lookup case-sensitive su `diz_ep`, righe IDEP silenziosamente scartate, segno invertito su "vedi voce") hanno prodotto lezioni specifiche per `LeenoExport.py` e `LeenoImport_XPWE.py`. Prima di modificare questo modulo, leggere `documentazione/LESSONS_XPWE.md`.
 
-Regola da tenere a mente comunque, perché ricorre facilmente: `invertiUnSegno()` è un toggle pensato per uso interattivo, non per i percorsi di import — chiamarlo su una riga già impostata da `vedi_voce_xpwe()` inverte il segno una seconda volta.
+Regola da tenere a mente comunque, perché ricorre facilmente: `invertiUnSegno()` è un toggle pensato per uso interattivo, non per i percorsi di import: chiamarlo su una riga già impostata da `vedi_voce_xpwe()` inverte il segno una seconda volta.
 
 ## Export PDF (PDF/A e note)
 
 `SheetUtils.pdfExport()` e `pyleeno.ods2pdf()` sono i due percorsi di export PDF. Prima di modificarli, leggere `documentazione/LESSONS_PDF_EXPORT.md`.
 
-Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nasconde l'indicatore visivo delle note sulla cella (solo l'elenco a fine pagina) — per escluderle davvero vanno rimosse (e, su documento live, reinserite dopo l'export).
+Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nasconde l'indicatore visivo delle note sulla cella (solo l'elenco a fine pagina): per escluderle davvero vanno rimosse (e, su documento live, reinserite dopo l'export).
 
 ## Agenda di cantiere (Brogliaccio / PWA)
 
 `tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere l'agenda di cantiere su smartphone e consolidarla in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
 
-Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente — anche se in quel momento sembra che nessuno la stia ancora usando.
+Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente, anche se in quel momento sembra che nessuno la stia ancora usando.
 
 **Aggiornamento versione:** ad ogni modifica del codice di Brogliaccio è obbligatorio aggiornare il numero di versione secondo Semantic Versioning (Major.Minor.Fix/Patch), in modo allineato in due punti:
 1. In `tools/appunti-cantiere/core.js` (variabile `VERSIONE`).
@@ -135,6 +136,16 @@ Un agente che lavora sul repository ma non ha credenziali di push dirette (o non
 4. **Messaggio di commit proposto, non eseguito**, secondo le convenzioni più sotto, se richiesto.
 5. **Verifica di integrità prima della consegna**: sintassi Python (`python3 -c "import ast; ast.parse(...)"`), XML del FODT per il manuale (vedi `documentazione/LESSONS_MANUALE.md`) e, per i file con line-ending noto, conteggio CRLF/LF invariato rispetto all'originale.
 6. **Ambiente cloud**: clonare solo il branch di lavoro (`git clone --depth 1 --branch dev ...`) e, prima di ogni push, `git fetch origin dev` per non inviare una storia obsoleta.
+
+## Verifica prima della consegna
+
+Da eseguire dalla root del repo, in quest'ordine, prima di consegnare o proporre un commit:
+
+1. `python3 scripts/check_pythonpath_safety.py` (stesse regole della CI).
+2. Sintassi di ogni `.py` toccato: `python3 -c "import ast; ast.parse(open('<file>', encoding='utf-8').read())"`.
+3. Conteggio CRLF/LF invariato sui file editati (vedi sezione successiva).
+4. Se è stato toccato il manuale: validazione XML del FODT (vedi `documentazione/LESSONS_MANUALE.md`).
+5. Se è stato toccato questo file: `diff AGENTS.md .agents/AGENTS.md` deve essere vuoto.
 
 ## Preservazione del line-ending in QUALSIASI editing
 
@@ -173,4 +184,5 @@ Procedura: `git status`, `git diff --cached`, scelta dello scope, intestazione (
 - Il repository mantiene due copie di questo documento: `AGENTS.md` (root) e `.agents/AGENTS.md`. Devono restare identiche byte per byte in ogni momento.
 - Qualunque modifica a una copia va applicata anche all'altra **nello stesso commit**, mai in commit separati: una divergenza è di per sé un difetto da correggere, indipendentemente da quale delle due sia "più aggiornata". Prima di proporre una modifica verificare con `diff AGENTS.md .agents/AGENTS.md`; se non sono allineate, segnalarlo esplicitamente invece di modificarne una sola.
 - **Lezioni specifiche per modulo/argomento non vanno inline in questo file**, ma in `documentazione/LESSONS_<ARGOMENTO>.md`, con un rimando breve qui. Questo file va letto per intero a ogni task: deve contenere solo regole invarianti o la singola regola operativa più importante di ogni argomento. Se una sezione supera 10-15 righe per un singolo argomento non invariante, estrarla in un file di dettaglio collegato.
+- `CLAUDE.md` (root) importa questo file con `@AGENTS.md` e contiene solo le specificità di Claude Code: non duplicarvi regole di questo documento.
 - Non rinominare la sezione "Sicurezza dei moduli in `pythonpath/`": è citata da `scripts/check_pythonpath_safety.py`.

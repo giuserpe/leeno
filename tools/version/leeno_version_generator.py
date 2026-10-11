@@ -611,6 +611,8 @@ class VersionManager:
             f.write(html)
         with open(self.web_dir / 'versions.htm', 'w', encoding='utf-8') as f:
             f.write(html)
+        with open(self.web_dir / 'index.html', 'w', encoding='utf-8') as f:
+            f.write(html)
 
 
 def main():

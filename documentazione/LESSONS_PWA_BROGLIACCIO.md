@@ -1,6 +1,6 @@
 # Lezioni apprese – Agenda di cantiere (Brogliaccio, PWA in `tools/appunti-cantiere/`)
 
-PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
+PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages da un repository dedicato su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
 
 ## Non rinominare mai una chiave localStorage/IndexedDB senza un recupero
 

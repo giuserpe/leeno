@@ -100,7 +100,7 @@ Regola da tenere a mente comunque: `PrintAnnotations` sul page style non nascond
 
 ## Agenda di cantiere (Brogliaccio / PWA)
 
-`tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere l'agenda di cantiere su smartphone e consolidarla in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
+`tools/appunti-cantiere/` è una PWA statica (HTML/CSS/JS puro, nessuna dipendenza esterna in produzione) per raccogliere l'agenda di cantiere su smartphone e consolidarla in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages da un repository dedicato su un sottodominio dedicato. Prima di modificarla, leggere `documentazione/LESSONS_PWA_BROGLIACCIO.md`.
 
 Regola da tenere a mente comunque, perché il mancato rispetto ha già causato una perdita dati reale per l'utente finale: non rinominare né cambiare forma a una chiave `localStorage`/IndexedDB già distribuita senza aggiungere, nello stesso cambiamento, un controllo di recupero automatico dal nome/formato precedente, anche se in quel momento sembra che nessuno la stia ancora usando.
 

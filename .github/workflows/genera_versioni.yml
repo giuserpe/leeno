@@ -134,16 +134,19 @@ jobs:
           fi
 
       - name: Configura Pages
+        if: github.ref == 'refs/heads/master'
         uses: actions/configure-pages@v5
         continue-on-error: true
 
       - name: Carica artefatto per GitHub Pages
+        if: github.ref == 'refs/heads/master'
         uses: actions/upload-pages-artifact@v4
         continue-on-error: true
         with:
           path: /tmp/master-pages
 
       - name: Pubblica direttamente su GitHub Pages
+        if: github.ref == 'refs/heads/master'
         id: deployment
         uses: actions/deploy-pages@v4
         continue-on-error: true

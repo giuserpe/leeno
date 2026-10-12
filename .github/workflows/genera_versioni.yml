@@ -10,11 +10,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      actions: write
 
     steps:
       - name: Checkout repository
@@ -113,6 +109,7 @@ jobs:
           WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
       - name: Pubblica versions.html, versions.htm e index.html su master branch
+        id: pubmaster
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -131,19 +128,11 @@ jobs:
           else
             git commit -m "chore: aggiorna versioni HTML [skip ci]"
             git push origin HEAD:master
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Configura Pages
-        uses: actions/configure-pages@v5
-        continue-on-error: true
-
-      - name: Carica artefatto per GitHub Pages
-        uses: actions/upload-pages-artifact@v4
-        continue-on-error: true
-        with:
-          path: /tmp/master-pages
-
-      - name: Pubblica direttamente su GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        continue-on-error: true
+      - name: Avvia la pubblicazione su GitHub Pages
+        if: steps.pubmaster.outputs.changed == 'true'
+        run: gh workflow run pages.yml --ref dev
+        env:
+          GH_TOKEN: ${{ github.token }}

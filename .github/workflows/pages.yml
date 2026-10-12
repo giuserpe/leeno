@@ -1,0 +1,64 @@
+name: Pubblica GitHub Pages (Brogliaccio e versioni)
+
+# Un solo sito Pages per repository: ogni deploy sostituisce il precedente.
+# Questo e' l'unico workflow autorizzato a pubblicare su Pages. Assembla:
+#   - Brogliaccio (tools/appunti-cantiere dal branch dev) alla radice, con il CNAME
+#   - versions.html e versions.htm generati da genera_versioni.yml (letti da master)
+# Quando Brogliaccio sara' su master, cambiare il ref del checkout.
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'tools/appunti-cantiere/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository (dev)
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Assembla il sito
+        run: |
+          mkdir _site
+          cp -a tools/appunti-cantiere/. _site/
+          git fetch --depth 1 origin master:refs/remotes/origin/master
+          for f in versions.html versions.htm; do
+            if git cat-file -e origin/master:$f 2>/dev/null; then
+              git show origin/master:$f > _site/$f
+            else
+              echo "Attenzione: $f non trovato su master, non incluso."
+            fi
+          done
+          test -f _site/index.html
+          test -f _site/CNAME
+          ls -la _site
+
+      - name: Configura Pages
+        uses: actions/configure-pages@v5
+
+      - name: Carica il sito come artefatto
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Pubblica su GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,6 +1,6 @@
 # Lezioni apprese – Agenda di cantiere (Brogliaccio, PWA in `tools/appunti-cantiere/`)
 
-PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
+PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
 
 ## Non rinominare mai una chiave localStorage/IndexedDB senza un recupero
 
@@ -47,3 +47,11 @@ Il .zip dell'esportazione porta il nome del cantiere solo in `testata.lavori` de
 ## Esportare e ripristinare tutti i cantieri
 
 Il formato di un cantiere solo (json alla radice, foto in `AAAAMMGG/`) è letto da `LeenoGiornaleImport.leggi_pacchetto`, che pretende un solo .json alla radice dello .zip: non va cambiato. L'esportazione di tutti i cantieri usa quindi la stessa struttura dentro una cartella per cantiere, e il ripristino associa ogni foto al .json della propria cartella. Con un solo .json nel file tutte le foto vanno a quel cantiere, ovunque stiano: così funziona anche uno .zip ricompresso dentro un'altra cartella. Due cantieri con lo stesso nome (l'app lo consente) ottengono cartelle `nome` e `nome-2` e, ripristinati, confluiscono in un solo cantiere: il nome è l'unica chiave, per scelta. Un cantiere senza giornate non viene esportato (non ci sarebbe nulla da ripristinare). Il ripristino non scrive nulla finché l'utente non conferma (casella per cantiere, o conferma classica con un cantiere solo). Nei test con Chromium non aprire `brogliaccio-foto` prima dell'app: un `indexedDB.open()` fuori dall'app crea il database vuoto alla versione 1, senza magazzino `foto`, e l'app non lo ricrea più. Verificato su Chromium reale (esporta tutti, ripristina scegliendo, ripetizione senza duplicati, omonimi, zip ricompresso con cartella contenitore), e con il codice vero dell'importatore su uno .zip massivo (errore chiaro) e uno singolo (importato).
+
+## Licenza e file pubblicati
+
+Il workflow Pages carica l'intera cartella `tools/appunti-cantiere/`: ogni file presente finisce online, anche se non referenziato (è successo con `jspdf.min.js`, MIT, mai usato). Prima di aggiungere una libreria di terzi verificare che sia davvero caricata da `index.html` e, se resta, conservarne intestazione e licenza originali. I file propri portano l'intestazione LGPL 2.1; l'`index.html` la ha come commento HTML, senza testo visibile (nessun impatto su screenshot e manuale).
+
+## Un solo sito Pages
+
+GitHub Pages serve un solo sito per repository e ogni deploy sostituisce il precedente. Brogliaccio e le pagine delle versioni (`versions.html`, `versions.htm`) condividono il sito e il dominio `brogliaccio.leeno.org`: l'unico workflow che pubblica è `pages.yml`, che li assembla (Brogliaccio alla radice, versioni lette da `master`). `genera_versioni.yml` non pubblica su Pages: aggiorna `master` e avvia `pages.yml`. Non aggiungere altri step `deploy-pages` altrove. Il Service Worker non intercetta `versions.html/htm`, per non servirle dalla cache.

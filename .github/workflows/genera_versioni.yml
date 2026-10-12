@@ -12,9 +12,6 @@ jobs:
       contents: write
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -145,8 +142,19 @@ jobs:
         with:
           path: /tmp/master-pages
 
+  deploy_pages:
+    needs: generate_version
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Pubblica direttamente su GitHub Pages
-        if: github.ref == 'refs/heads/master'
         id: deployment
         uses: actions/deploy-pages@v4
         continue-on-error: true

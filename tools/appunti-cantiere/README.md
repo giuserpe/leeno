@@ -4,6 +4,7 @@ PWA per raccogliere sul telefono l'agenda del giornale dei lavori e portarla in 
 (menu Importa/Esporta, "Importa agenda di cantiere nel Giornale Lavori...").
 Non è un registro ufficiale: il giornale si consolida solo in LeenO.
 
+- Licenza: LGPL 2.1, come il resto di LeenO (`LICENSE` nella radice del repository). Nessuna libreria di terzi inclusa.
 - Formato di scambio: `documentazione/schemi/giornale_appunti.schema.json` (v1).
 - I dati restano nel browser del dispositivo: esportare spesso.
 - All'avvio, se non trova dati nel formato attuale, l'app controlla anche due formati/chiavi usati durante lo sviluppo (un "cassetto" di memoria intermedio, e un vecchio formato a un solo cantiere) e li recupera automaticamente se li trova, salvandoli nel formato corrente.

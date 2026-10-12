@@ -1,3 +1,4 @@
+/* Copyright (C) Giuseppe Vizziello - supporto@leeno.org. Licenza LGPL 2.1 (vedi LICENSE nella radice del repository). */
 /* Brogliaccio per LeenO: interfaccia. Dati solo su questo dispositivo. */
 (function () {
   'use strict';

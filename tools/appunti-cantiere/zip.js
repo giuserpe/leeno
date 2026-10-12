@@ -1,3 +1,4 @@
+/* Copyright (C) Giuseppe Vizziello - supporto@leeno.org. Licenza LGPL 2.1 (vedi LICENSE nella radice del repository). */
 /* Scrittore ZIP minimo, senza compressione (le foto JPEG sono già compresse), e lettore
    per il ripristino. Nessuna libreria esterna, nessuna dipendenza di rete. */
 (function (root) {

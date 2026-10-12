@@ -1,6 +1,6 @@
 # Lezioni apprese – Agenda di cantiere (Brogliaccio, PWA in `tools/appunti-cantiere/`)
 
-PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
+PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
 
 ## Non rinominare mai una chiave localStorage/IndexedDB senza un recupero
 
@@ -51,7 +51,3 @@ Il formato di un cantiere solo (json alla radice, foto in `AAAAMMGG/`) è letto 
 ## Licenza e file pubblicati
 
 Il workflow Pages carica l'intera cartella `tools/appunti-cantiere/`: ogni file presente finisce online, anche se non referenziato (è successo con `jspdf.min.js`, MIT, mai usato). Prima di aggiungere una libreria di terzi verificare che sia davvero caricata da `index.html` e, se resta, conservarne intestazione e licenza originali. I file propri portano l'intestazione LGPL 2.1; l'`index.html` la ha come commento HTML, senza testo visibile (nessun impatto su screenshot e manuale).
-
-## Un solo sito Pages
-
-GitHub Pages serve un solo sito per repository e ogni deploy sostituisce il precedente. Brogliaccio e le pagine delle versioni (`versions.html`, `versions.htm`) condividono il sito e il dominio `brogliaccio.leeno.org`: l'unico workflow che pubblica è `pages.yml`, che li assembla (Brogliaccio alla radice, versioni lette da `master`). `genera_versioni.yml` non pubblica su Pages: aggiorna `master` e avvia `pages.yml`. Non aggiungere altri step `deploy-pages` altrove. Il Service Worker non intercetta `versions.html/htm`, per non servirle dalla cache.

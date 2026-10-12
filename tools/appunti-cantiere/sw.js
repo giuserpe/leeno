@@ -12,8 +12,6 @@ self.addEventListener('activate', function (e) {
 });
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
-  /* Le pagine delle versioni LeenO (versions.html/htm) stanno sullo stesso sito: sempre dalla rete. */
-  if (/\/versions\.html?$/.test(new URL(e.request.url).pathname)) return;
   e.respondWith(caches.open(CACHE).then(function (c) {
     return c.match(e.request).then(function (hit) {
       var rete = fetch(e.request).then(function (r) { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(function () { return hit; });

@@ -133,7 +133,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nessuna modifica a versions.html / versions.htm / index.html / brogliaccio, skip push."
           else
-            git commit -m "chore: aggiorna versioni HTML e brogliaccio [skip ci]"
+            git commit -m "chore: aggiorna versioni HTML e brogliaccio"
             git push origin HEAD:master
           fi
 

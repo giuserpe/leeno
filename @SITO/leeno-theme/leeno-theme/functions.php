@@ -6,7 +6,16 @@
 if (!defined('ABSPATH')) exit;
 
 // Theme version for cache busting
-define('LEENO_DM_VERSION', '1.0.1');
+define('LEENO_DM_VERSION', '1.0.3');
+
+// Versione e data del software mostrate nel tema (hero della home e fascia download del footer).
+// Unico punto da aggiornare a ogni rilascio, allineato al file di aggiornamento nella root del repository.
+define('LEENO_SW_VERSIONE', '3.26.0');
+define('LEENO_SW_DATA', 'Maggio 2026');
+
+// Dichiarazione IA (template-parts/ai-claim.php): mese dell'ultima verifica del perimetro di rete.
+// Da rivedere a ogni rilascio: se il software aggiunge una chiamata di rete, va aggiornato anche il testo.
+define('LEENO_AI_CLAIM_REVISIONE', 'ottobre 2026');
 
 /**
  * Theme setup

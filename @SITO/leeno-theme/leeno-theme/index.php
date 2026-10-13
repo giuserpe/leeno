@@ -15,7 +15,7 @@
             <p class="hero-subtitle" id="heroSubtitle">
                 <b>LeenO</b> è il software open-source per computi metrici estimativi su LibreOffice Calc.
                 <br>
-                <span class="version-badge">v3.26.0 &mdash; Maggio 2026</span>
+                <span class="version-badge">v<?php echo esc_html( LEENO_SW_VERSIONE ); ?> &mdash; <?php echo esc_html( LEENO_SW_DATA ); ?></span>
             </p>
             <div class="hero-ctas">
                 <a href="<?php echo esc_url(home_url('/scarica-leeno/')); ?>" class="btn-hero">
@@ -38,6 +38,9 @@
             <span></span>
         </div>
     </section>
+
+    <!-- DICHIARAZIONE IA (fascia sotto l'hero, non altera l'altezza dell'hero) -->
+    <?php get_template_part( 'template-parts/ai-claim', null, array( 'variant' => 'compact' ) ); ?>
 
     <!-- TRANSITION / CAD GRID SECTION -->
     <section class="transition-section" id="transitionSection">
@@ -74,14 +77,14 @@
                     </div>
                     <h3 class="feature-title">
                         <a href="https://leeno.org/about-leeno/" class="feature-title-link">
-                            Dal Computo alla Contabilità
+                            Automazione Completa
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </a>
                     </h3>
-                    <p class="feature-desc">Computo metrico, contabilità di cantiere, varianti e libretti delle misure in LibreOffice Calc. Le macro integrate automatizzano le attività ripetitive e riducono il rischio di errori di calcolo.</p>
+                    <p class="feature-desc">Genera computi metrici, contabilità di cantiere, varianti e libretti delle misure automaticamente. Ogni calcolo è gestito dalle macro integrate.</p>
                 </div>
 
                 <div class="feature-card">
@@ -113,14 +116,14 @@
                     </div>
                     <h3 class="feature-title">
                         <a href="https://leeno.org/leeno-e-il-computo-su-formato-opendocument-odf/" class="feature-title-link">
-                            Pensato per il DM 49/2018
+                            Conforme al DM 49/2018
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="vertical-align:middle;margin-left:6px;opacity:0.6">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </a>
                     </h3>
-                    <p class="feature-desc">Formato ODF aperto e interoperabile. Consente di redigere la contabilità lavori secondo l'art. 15 del DM 49/2018. Nessuna dipendenza da software proprietario.</p>
+                    <p class="feature-desc">Formato ODF aperto e interoperabile. Conforme al decreto per la contabilità dei lavori pubblici. Nessuna dipendenza da software proprietario.</p>
                 </div>
             </div>
 

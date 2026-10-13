@@ -100,6 +100,8 @@ description: >
 3. Aggiornare la versione in [LeenO.update.xml](https://leeno.org/LeenO.update.xml)
 4. Eseguire [Sincronizza Filebase](https://leeno.org/wp-admin/admin.php?page=wpfilebase_manage&action=sync&no-ob=1)
 5. Correggere la versione nella [pagina download](https://leeno.org/scarica-leeno/)
+6. Aggiornare nel tema la versione e la data del software (costanti `LEENO_SW_VERSIONE` e `LEENO_SW_DATA` in `@SITO/leeno-theme/leeno-theme/functions.php`), alzare `LEENO_DM_VERSION` per invalidare la cache del CSS, rigenerare lo zip con `build_zip.ps1` e ricaricarlo da Aspetto > Temi
+7. Dichiarazione sull'IA: verificare il perimetro di rete con `grep -rnE "urllib|requests|socket|http\.client|urlopen" src/Ultimus.oxt --include=*.py` (ignorando commenti e librerie di terzi). Se compare una nuova chiamata di rete, aggiornare il testo in `template-parts/ai-claim.php`; in ogni caso aggiornare `LEENO_AI_CLAIM_REVISIONE` in `functions.php`
 
 ## Fase G — Comunicazione
 

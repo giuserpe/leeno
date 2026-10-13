@@ -2791,3 +2791,106 @@ body .btn-download svg {
     fill: none !important; 
 }
 
+/* ============================================================
+   DICHIARAZIONE IA (template-parts/ai-claim.php)
+   --full: sfondo chiaro, pagina download. --compact: sfondo scuro, fascia sotto l'hero.
+   ============================================================ */
+.ai-free {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 720px;
+    padding: 24px 28px;
+    text-align: left;
+}
+
+.ai-free__icon {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-free__body { min-width: 0; }
+
+.ai-free__title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.ai-free__text {
+    margin: 0 0 12px;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.ai-free__note {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5f6b7d;
+}
+
+/* Variante chiara */
+.ai-free--full {
+    margin: 0 0 2rem;
+    background: #fff;
+    border-left: 4px solid var(--accent-cyan-hover);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+.ai-free--full .ai-free__icon { background: var(--bg-dark); color: var(--accent-cyan); }
+.ai-free--full .ai-free__title { color: var(--text-dark); }
+.ai-free--full .ai-free__text { color: var(--text-green); }
+
+/* Variante scura compatta (fascia sotto l'hero) */
+.ai-free-strip {
+    background: var(--bg-dark);
+    padding: 28px 0;
+}
+.ai-free--compact {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 14px 18px;
+    gap: 14px;
+    background: var(--bg-green);
+    border: 1px solid rgba(170, 212, 0, 0.25);
+    border-left: 4px solid var(--accent-cyan);
+}
+.ai-free--compact .ai-free__icon {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+    background: rgba(170, 212, 0, 0.12);
+    color: var(--accent-cyan);
+}
+.ai-free--compact .ai-free__icon svg { width: 20px; height: 20px; }
+.ai-free--compact .ai-free__title { margin-bottom: 4px; font-size: 0.85rem; color: #fff; }
+.ai-free--compact .ai-free__text { margin-bottom: 6px; font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); }
+
+.ai-free__link {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+}
+.ai-free__link:hover { color: var(--accent-rust); }
+
+@media (max-width: 480px) {
+    .ai-free--full { flex-direction: column; gap: 14px; padding: 20px; }
+    .ai-free-strip { padding: 20px 0; }
+    .ai-free--compact { padding: 12px 14px; }
+}

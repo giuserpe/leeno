@@ -16,7 +16,7 @@
                             <line x1="10" y1="14" x2="21" y2="3" />
                         </svg>
                     </div>
-                    <span class="cta-desc">v3.25.0 &mdash; LibreOffice Extension</span>
+                    <span class="cta-desc">v<?php echo esc_html( LEENO_SW_VERSIONE ); ?> &mdash; LibreOffice Extension</span>
                 </a>
 
                 <a href="<?php echo esc_url(home_url('/category/documentazione/')); ?>" class="footer-cta-card">
@@ -65,7 +65,7 @@
             <div class="footer-row">
                 <div class="footer-brand">
                     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/logo-leeno.png'); ?>" alt="LeenO" class="footer-logo">
-                    <span class="footer-license">Open Source &mdash; LGPL v2.1</span>
+                    <span class="footer-license">Open Source &mdash; LGPL v3</span>
                 </div>
 
                 <div class="footer-external">

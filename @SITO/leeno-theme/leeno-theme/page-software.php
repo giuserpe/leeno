@@ -45,6 +45,8 @@ get_header();
             </div>
             <?php endif; ?>
 
+            <?php get_template_part( 'template-parts/ai-claim', null, array( 'variant' => 'full' ) ); ?>
+
             <?php
             // Carica file using shortcode (no WP Filebase dependency)
             echo do_shortcode('[wpfilebase tag=list id=38 sort=name]');

@@ -24,6 +24,7 @@ Questa skill automatizza la creazione dell'archivio ZIP del tema WordPress `leen
    cd w:\_dwg\ULTIMUSFREE\@SITO\leeno-theme
    .\build_zip.ps1
    ```
+   Lo script usa come sorgente la cartella in cui si trova e si ferma con errore se mancano `style.css`, `functions.php` o `template-parts/ai-claim.php`, sia nel sorgente sia nello zip prodotto.
 2. Attendi la fine dell'esecuzione dello script. L'output mostrerà la lista dei file aggiunti e, al termine, confermerà il successo dell'operazione.
 
 ### Fase 2: Verifica

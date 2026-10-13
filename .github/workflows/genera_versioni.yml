@@ -4,6 +4,10 @@ on:
   push:
   workflow_dispatch:
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   generate_version:
     runs-on: ubuntu-latest
@@ -109,7 +113,27 @@ jobs:
           WEBDAV_USER: "${{ secrets.WEBDAV_USER }}"
           WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
-      - name: Pubblica versions.html, versions.htm, index.html e brogliaccio su master branch
+      - name: Assembla sito Pages
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          mkdir -p _site/brogliaccio
+          cp tools/version/versions.html tools/version/versions.htm tools/version/index.html _site/
+          cp -R tools/appunti-cantiere/. _site/brogliaccio/
+          rm -f _site/brogliaccio/README.md
+
+      - name: Configura Pages
+        if: github.ref == 'refs/heads/dev'
+        uses: actions/configure-pages@v5
+
+      - name: Carica artefatto per GitHub Pages
+        if: github.ref == 'refs/heads/dev'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Copia su master (versions.html, versions.htm, index.html e brogliaccio)
+        if: github.ref == 'refs/heads/dev'
+        continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -133,21 +157,9 @@ jobs:
             git push origin HEAD:master
           fi
 
-      - name: Configura Pages
-        if: github.ref == 'refs/heads/master'
-        uses: actions/configure-pages@v5
-        continue-on-error: true
-
-      - name: Carica artefatto per GitHub Pages
-        if: github.ref == 'refs/heads/master'
-        uses: actions/upload-pages-artifact@v4
-        continue-on-error: true
-        with:
-          path: /tmp/master-pages
-
   deploy_pages:
     needs: generate_version
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -160,4 +172,3 @@ jobs:
       - name: Pubblica direttamente su GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        continue-on-error: true

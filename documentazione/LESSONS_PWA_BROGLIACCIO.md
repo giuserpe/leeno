@@ -1,6 +1,6 @@
 # Lezioni apprese – Agenda di cantiere (Brogliaccio, PWA in `tools/appunti-cantiere/`)
 
-PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata via GitHub Pages (`.github/workflows/brogliaccio-pages.yml`) su un sottodominio dedicato, non su un percorso sotto `leeno.org`: un percorso (`leeno.org/brogliaccio`) condivide la stessa origine del sito, quindi lo stesso `localStorage`/IndexedDB di tutto il resto del dominio — l'isolamento esiste solo con un sottodominio vero.
+PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata a mano su `https://www.giuserpe.it/brogliaccio/`, non su un percorso sotto `leeno.org`: l'origine è schema più host, non il percorso, quindi un percorso condivide `localStorage`/IndexedDB con tutto il resto del dominio. Lo stesso vale per `giuserpe.it`: su quell'host non devono girare altre pagine con script di terzi.
 
 ## Non rinominare mai una chiave localStorage/IndexedDB senza un recupero
 
@@ -50,4 +50,16 @@ Il formato di un cantiere solo (json alla radice, foto in `AAAAMMGG/`) è letto 
 
 ## Licenza e file pubblicati
 
-Il workflow Pages carica l'intera cartella `tools/appunti-cantiere/`: ogni file presente finisce online, anche se non referenziato (è successo con `jspdf.min.js`, MIT, mai usato). Prima di aggiungere una libreria di terzi verificare che sia davvero caricata da `index.html` e, se resta, conservarne intestazione e licenza originali. I file propri portano l'intestazione LGPL 2.1; l'`index.html` la ha come commento HTML, senza testo visibile (nessun impatto su screenshot e manuale).
+La cartella `tools/appunti-cantiere/` va caricata sul server così com'è: ogni file presente finisce online, anche se non referenziato (è successo con `jspdf.min.js`, MIT, mai usato). Prima di aggiungere una libreria di terzi verificare che sia davvero caricata da `index.html` e, se resta, conservarne intestazione e licenza originali. I file propri portano l'intestazione LGPL 2.1; l'`index.html` la ha come commento HTML, senza testo visibile (nessun impatto su screenshot e manuale).
+
+## Pubblicazione
+
+- Caricare via FTP solo: `index.html`, `core.js`, `storage.js`, `zip.js`, `app.js`, `sw.js`, `manifest.webmanifest`, `logo.png`, `icon-192.png`, `icon-512.png`. Non `README.md`.
+- Serve HTTPS (Service Worker e installazione). Il manifest va servito come `application/manifest+json`.
+- Usare un solo host canonico (con o senza `www`) e reindirizzare l'altro: sono due origini diverse, con dati separati. `/brogliaccio` deve reindirizzare a `/brogliaccio/`, perché i percorsi sono relativi.
+- Non cambiare l'indirizzo dopo l'uso: i dati degli utenti sono legati all'origine.
+
+## Niente GitHub Pages per Brogliaccio
+
+GitHub Pages ha un solo sito per repository e ogni deploy sostituisce il precedente. Il sito del repository è `versions.html` (incorporata in `leeno.org/versioni-sviluppo/`), pubblicata da `genera_versioni.yml`. Un secondo workflow di deploy (provato con `brogliaccio-pages.yml`) la fa sparire: non aggiungere altri `deploy-pages`.
+

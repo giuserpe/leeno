@@ -16,9 +16,6 @@ jobs:
       contents: write
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -116,7 +113,7 @@ jobs:
           WEBDAV_USER: "${{ secrets.WEBDAV_USER }}"
           WEBDAV_PASS: "${{ secrets.WEBDAV_PASS }}"
 
-      - name: Pubblica versions.html, versions.htm e index.html su master branch
+      - name: Pubblica versions.html, versions.htm, index.html e brogliaccio su master branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -128,25 +125,42 @@ jobs:
           cp tools/version/versions.htm /tmp/master-pages/versions.htm
           cp tools/version/index.html /tmp/master-pages/index.html
 
+          mkdir -p /tmp/master-pages/brogliaccio
+          cp -R tools/appunti-cantiere/* /tmp/master-pages/brogliaccio/
+
           cd /tmp/master-pages
-          git add versions.html versions.htm index.html
+          git add versions.html versions.htm index.html brogliaccio
           if git diff --cached --quiet; then
-            echo "Nessuna modifica a versions.html / versions.htm / index.html, skip push."
+            echo "Nessuna modifica a versions.html / versions.htm / index.html / brogliaccio, skip push."
           else
-            git commit -m "chore: aggiorna versioni HTML [skip ci]"
+            git commit -m "chore: aggiorna versioni HTML e brogliaccio [skip ci]"
             git push origin HEAD:master
           fi
 
       - name: Configura Pages
+        if: github.ref == 'refs/heads/master'
         uses: actions/configure-pages@v5
         continue-on-error: true
 
       - name: Carica artefatto per GitHub Pages
+        if: github.ref == 'refs/heads/master'
         uses: actions/upload-pages-artifact@v4
         continue-on-error: true
         with:
           path: /tmp/master-pages
 
+  deploy_pages:
+    needs: generate_version
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Pubblica direttamente su GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

@@ -5,6 +5,8 @@
   var C = window.Core, KEY = 'appunti-cantiere-v1', TEMA_KEY = 'appunti-cantiere-tema';
   var cantiereApertoId = null, dataAperta = null, urlFotoAttive = [];
   var cantiereApertoRif = null, giornoApertoRif = null;
+  // Stato di salvaguardia: DIAG_KEY e' una chiave nuova (non rinomina nulla di distribuito).
+  var DIAG_KEY = 'brogliaccio-diag', diag = null, allarme = null, memoriaProtetta, inModifica = false;
   var app = document.getElementById('app'), msg = document.getElementById('msg'), pannello = document.getElementById('pannello-export');
   var stato = carica();
 
@@ -34,7 +36,7 @@
   function carica() {
     try {
       var s = JSON.parse(localStorage.getItem(KEY));
-      if (s && s.cantieri) return s;
+      if (s && s.cantieri) { if (typeof s.rev !== 'number') s.rev = 0; return s; }
     } catch (e) { /* prosegue con i tentativi di recupero sotto */ }
 
     // Recupero: durante lo sviluppo il nome del "cassetto" di memoria e' cambiato
@@ -60,12 +62,79 @@
       try { localStorage.setItem(KEY, JSON.stringify(recuperato)); } catch (e) { /* si tenta comunque di usarlo in questa sessione */ }
       return recuperato;
     }
-    return { cantieri: {}, attivo: null };
+    return { cantieri: {}, attivo: null, rev: 0 };
   }
+
+  // Revisione: ogni salvataggio incrementa stato.rev. Se nella memoria c'e' una revisione piu' alta della propria,
+  // un'altra istanza dell'app (scheda del browser, app installata, pagina rimasta in pausa) ha scritto dopo il
+  // nostro ultimo caricamento: prima di scrivere si portano in memoria i suoi dati, per non cancellarli.
+  function leggiSalvato() {
+    try { var s = JSON.parse(localStorage.getItem(KEY)); return (s && s.cantieri) ? s : null; }
+    catch (e) { return null; }
+  }
+  // Solo aggiunte e giornate piu' recenti, mai cancellazioni. Restituisce true se qualcosa e' cambiato.
+  function unisciSalvato() {
+    var s = leggiSalvato();
+    if (!s || !(s.rev > (stato.rev || 0))) return false;
+    var cambiato = false;
+    Object.keys(s.cantieri).forEach(function (id) {
+      var sc = s.cantieri[id], c = stato.cantieri[id];
+      if (!c) { stato.cantieri[id] = sc; cambiato = true; return; }
+      Object.keys(sc.giornate || {}).forEach(function (d) {
+        var sg = sc.giornate[d], g = c.giornate[d];
+        var aperta = inModifica && id === cantiereApertoId && d === dataAperta; // la giornata in modifica resta com'e'
+        if (!g || (!aperta && (sg.modificato_il || '') > (g.modificato_il || ''))) { c.giornate[d] = sg; cambiato = true; }
+      });
+      if ((sc.ultimo_export || '') > (c.ultimo_export || '')) { c.ultimo_export = sc.ultimo_export; cambiato = true; }
+    });
+    stato.rev = s.rev;
+    return cambiato;
+  }
+  function contaDati() {
+    var g = 0, ids = Object.keys(stato.cantieri);
+    ids.forEach(function (id) { g += Object.keys(stato.cantieri[id].giornate || {}).length; });
+    return { cantieri: ids.length, giornate: g };
+  }
+  function leggiDiag() {
+    try { var d = JSON.parse(localStorage.getItem(DIAG_KEY)); return (d && typeof d === 'object') ? d : null; }
+    catch (e) { return null; }
+  }
+  function scriviDiag() { try { if (diag) localStorage.setItem(DIAG_KEY, JSON.stringify(diag)); } catch (e) { /* diagnostica facoltativa */ } }
   function salva() {
-    try { localStorage.setItem(KEY, JSON.stringify(stato)); return true; }
-    catch (e) { avviso('Salvataggio non riuscito: memoria piena o bloccata. Esporta subito i dati.'); return false; }
+    try {
+      unisciSalvato();
+      stato.rev = (stato.rev || 0) + 1;
+      localStorage.setItem(KEY, JSON.stringify(stato));
+      if (diag) { diag.ultimo_stato = contaDati(); scriviDiag(); } // l'ultimo stato noto permette di accorgersi di cancellazioni esterne
+      return true;
+    } catch (e) { avviso('Salvataggio non riuscito: memoria piena o bloccata. Esporta subito i dati.'); return false; }
   }
+  // Un'altra istanza ha scritto: si aggiorna lo stato e, se non c'e' una giornata in modifica, la schermata.
+  function aggiornaDaAltrove() {
+    if (!unisciSalvato()) return;
+    if (inModifica) avviso('I dati sono stati aggiornati da un\'altra finestra dell\'app. Chiudi la giornata per vederli.');
+    else principale();
+  }
+  function verificaPersistenza() {
+    var s = navigator.storage;
+    if (!s || !s.persisted) return Promise.resolve(null);
+    return s.persisted().then(function (p) { return p ? true : (s.persist ? s.persist() : false); })
+      .catch(function () { return null; });
+  }
+  function testoMemoria() {
+    var avvio = diag ? ' Avvio n. ' + diag.avvii + '.' : '';
+    if (memoriaProtetta === undefined) return 'Memoria del browser: verifica in corso.' + avvio;
+    if (memoriaProtetta === true) return 'Memoria del browser: protetta.' + avvio;
+    if (memoriaProtetta === false) return 'Memoria del browser: non protetta, il browser può cancellare questi dati. Esporta spesso.' + avvio;
+    return 'Memoria del browser: protezione non verificabile. Esporta spesso.' + avvio;
+  }
+  function aggiornaStatoMemoria() {
+    var el = document.getElementById('stato-memoria');
+    if (!el) return;
+    el.textContent = testoMemoria();
+    el.className = memoriaProtetta === false || memoriaProtetta === null ? 'nota alert' : 'nota';
+  }
+  function statoMemoria() { return h('p', { id: 'stato-memoria', 'class': memoriaProtetta === false || memoriaProtetta === null ? 'nota alert' : 'nota', text: testoMemoria() }); }
   // Giornate mai esportate o modificate (testo o foto) dopo l'ultimo export del cantiere.
   function giornateDaEsportare(c) {
     return Object.keys(c.giornate).filter(function (d) {
@@ -132,6 +201,11 @@
   function principale() {
     chiudiPannello();
     svuota();
+    inModifica = false;
+    if (allarme) {
+      app.appendChild(h('section', {}, [h('p', { 'class': 'nota alert', text: allarme }),
+        btn('Ho capito', function () { allarme = null; principale(); })]));
+    }
     var ids = Object.keys(stato.cantieri).sort(function (a, b) {
       return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it');
     });
@@ -169,6 +243,7 @@
     if (!c) {
       app.appendChild(h('p', { 'class': 'nota', text: 'Scrivi un nome e crea il primo cantiere per iniziare, oppure ripristina un file esportato in precedenza.' }));
       app.appendChild(btn('Ripristina da file', function () { document.getElementById('file').click(); }));
+      app.appendChild(statoMemoria());
       return;
     }
 
@@ -204,7 +279,8 @@
         (giornate(modificate) + (modificate === 1 ? ' non ancora esportata' : ' non ancora esportate') + '. ' + ultimoExportTesto(c) + ' I dati esistono solo su questo dispositivo.') }),
       btn('Esporta per LeenO', esporta, 'cta'),
       btn('Stampa o PDF', stampaPDF),
-      btn('Ripristina da file', function () { document.getElementById('file').click(); })
+      btn('Ripristina da file', function () { document.getElementById('file').click(); }),
+      statoMemoria()
     ]));
   }
 
@@ -233,7 +309,7 @@
   function modifica(iso) {
     svuota();
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
-    cantiereApertoId = stato.attivo; dataAperta = iso;
+    cantiereApertoId = stato.attivo; dataAperta = iso; inModifica = true;
     cantiereApertoRif = c; giornoApertoRif = g;
     app.appendChild(h('div', { 'class': 'barra' }, [btn('Chiudi', principale), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
@@ -643,6 +719,17 @@
     });
   }
 
+  // Rilegge dalla memoria del browser (non dalle variabili) e controlla che giornate e foto del file ci siano davvero.
+  function verificaRipristino(scelti) {
+    var salvato = leggiSalvato();
+    return Promise.all(scelti.map(function (p) {
+      var cs = salvato && salvato.cantieri[p.idFinale];
+      var testoOk = !!cs && p.n.every(function (d) { return cs.giornate && cs.giornate[d]; });
+      return FotoStore.elencaPerCantiere(p.idFinale).then(function (righe) { return righe.length >= p.foto.length; },
+        function () { return false; }).then(function (fotoOk) { return testoOk && fotoOk; });
+    })).then(function (r) { return r.every(Boolean); });
+  }
+
   // Scrive i cantieri scelti: prima il testo (localStorage), poi le foto (IndexedDB). Se le foto si interrompono
   // a meta', ripetere lo stesso ripristino completa il lavoro, perche' quelle gia' presenti vengono saltate.
   function applicaPacchetti(scelti) {
@@ -658,6 +745,7 @@
     stato.attivo = scelti[0].idFinale;
     if (!salva()) return;
     var saltate = totS ? ' (' + totS + ' foto già presenti, saltate)' : '';
+    var verifica = function () { return verificaRipristino(scelti); };
     var riepilogo = scelti.length === 1
       ? 'Ripristinate ' + giornate(totG) + ' e ' + totF + ' foto nel cantiere "' + scelti[0].nome + '"' + saltate + '.'
       : 'Ripristinati ' + cantieri(scelti.length) + ': ' + giornate(totG) + ' e ' + totF + ' foto' + saltate + '.';
@@ -665,7 +753,11 @@
       return Promise.all(p.daAggiungere.map(function (x) {
         return FotoStore.aggiungi(p.idFinale, x.giorno, new Blob([x.dati], { type: 'image/jpeg' }), x.creato_il);
       }));
-    })).then(function () { principale(); avviso(riepilogo); }, function (e) {
+    })).then(verifica).then(function (ok) {
+      principale();
+      avviso(riepilogo + (ok ? ' Verificato: i dati risultano salvati nella memoria del browser.'
+        : ' ATTENZIONE: la verifica dei dati salvati non è riuscita. Esporta subito e riprova.'));
+    }, function (e) {
       principale();
       avviso('Giornate ripristinate, ma non tutte le foto (' + e.message + '). Riprova con lo stesso file: le foto già presenti vengono saltate.');
     });
@@ -725,7 +817,28 @@
   C.METEO.forEach(function (m) { lista.appendChild(h('option', { value: m })); });
   var elTitolo = document.getElementById('titolo-app');
   if (elTitolo) elTitolo.textContent = 'Brogliaccio ' + C.VERSIONE;
-  if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+  // Diagnostica di avvio: confronta il numero di giornate con l'ultimo stato registrato dall'app stessa.
+  // Se e' diminuito senza un'azione dell'utente, i dati sono stati cancellati fuori dall'app (browser o sistema).
+  var precedente = leggiDiag(), adesso = contaDati();
+  var statoPrec = precedente && precedente.ultimo_stato;
+  diag = { avvii: ((precedente && precedente.avvii) || 0) + 1, primo_avvio: (precedente && precedente.primo_avvio) || new Date().toISOString(),
+    ultimo_stato: adesso, versione: C.VERSIONE };
+  if (statoPrec && adesso.giornate < statoPrec.giornate) {
+    allarme = 'Attenzione: dall\'ultimo utilizzo mancano dati (prima ' + giornate(statoPrec.giornate) + ', ora ' + giornate(adesso.giornate)
+      + '). Il browser potrebbe averli cancellati. Ripristina dall\'ultimo file esportato.';
+  }
+  scriviDiag();
+  if (FotoStore && FotoStore.contaTutte) {
+    FotoStore.contaTutte().then(function (n) {
+      if (n > 0 && adesso.cantieri === 0 && (!precedente || (statoPrec && statoPrec.cantieri > 0)) && !allarme) {
+        allarme = 'Sul telefono ci sono ' + n + ' foto ma nessun cantiere: i testi risultano persi. Ripristina dall\'ultimo file esportato.';
+        if (!inModifica) principale();
+      }
+    }).catch(function () { /* nessuna diagnostica sulle foto se l'archivio non si apre */ });
+  }
+  verificaPersistenza().then(function (p) { memoriaProtetta = p; aggiornaStatoMemoria(); });
+  window.addEventListener('storage', function (ev) { if (ev.key === KEY) aggiornaDaAltrove(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') aggiornaDaAltrove(); });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
   principale();
 })();

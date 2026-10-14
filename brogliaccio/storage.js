@@ -99,6 +99,17 @@
     });
   }
 
+  // Numero totale di foto archiviate: serve alla diagnostica di avvio (foto presenti senza testo).
+  function contaTutte() {
+    return transazione('readonly').then(function (store) {
+      return new Promise(function (resolve, reject) {
+        var r = store.count();
+        r.onsuccess = function () { resolve(r.result); };
+        r.onerror = function () { reject(r.error); };
+      });
+    });
+  }
+
   function eliminaPerCantiere(cantiereId) { return eliminaDoveCursore(cantiereId, function () { return true; }); }
   function eliminaPerGiorno(cantiereId, giorno) {
     return eliminaDoveCursore(cantiereId, function (r) { return r.giorno === giorno; });
@@ -121,5 +132,5 @@
   }
 
   root.FotoStore = { aggiungi: aggiungi, elencaPerGiorno: elencaPerGiorno, elencaPerCantiere: elencaPerCantiere,
-    elimina: elimina, eliminaPerCantiere: eliminaPerCantiere, eliminaPerGiorno: eliminaPerGiorno, preparaImmagine: preparaImmagine };
+    elimina: elimina, contaTutte: contaTutte, eliminaPerCantiere: eliminaPerCantiere, eliminaPerGiorno: eliminaPerGiorno, preparaImmagine: preparaImmagine };
 })(typeof window !== 'undefined' ? window : globalThis);

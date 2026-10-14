@@ -535,6 +535,16 @@
     pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Risolve quando tutte le immagini del contenitore sono decodificate (o dopo 20 s, per non bloccare la stampa).
+  function attendiImmagini(contenitore) {
+    var imgs = Array.prototype.slice.call(contenitore.querySelectorAll('img'));
+    var tutte = Promise.all(imgs.map(function (img) {
+      if (img.decode) return img.decode().catch(function () { /* non decodificabile: si stampa comunque */ });
+      return img.complete ? Promise.resolve() : new Promise(function (r) { img.onload = img.onerror = r; });
+    }));
+    return Promise.race([tutte, new Promise(function (r) { setTimeout(r, 20000); })]);
+  }
+
   function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
     fotoPerGiorno = fotoPerGiorno || {};
     var el = document.getElementById('stampa');
@@ -588,7 +598,8 @@
       })).then(function (urlDati) {
         tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
         costruisciStampa(c.nome, dati, perGiorno);
-        window.print();
+        // Con window.print() subito dopo l'inserimento le foto non sono ancora decodificate e finiscono nel PDF come riquadri vuoti.
+        attendiImmagini(document.getElementById('stampa')).then(function () { window.print(); });
       });
     });
   }

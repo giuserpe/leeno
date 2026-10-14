@@ -1,6 +1,6 @@
 # Lezioni apprese – Agenda di cantiere (Brogliaccio, PWA in `tools/appunti-cantiere/`)
 
-PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata a mano su `https://www.giuserpe.it/brogliaccio/`, non su un percorso sotto `leeno.org`: l'origine è schema più host, non il percorso, quindi un percorso condivide `localStorage`/IndexedDB con tutto il resto del dominio. Lo stesso vale per `giuserpe.it`: su quell'host non devono girare altre pagine con script di terzi.
+PWA statica (HTML/CSS/JS puro, nessun framework, nessuna dipendenza esterna in produzione) per raccogliere appunti di cantiere su smartphone e consolidarli in LeenO tramite `LeenoGiornaleImport.py`. Pubblicata su GitHub Pages all'indirizzo `https://giuserpe.github.io/leeno/brogliaccio/` dal workflow `genera_versioni.yml`, non sotto `leeno.org`: l'origine è schema più host, non il percorso, quindi un percorso condivide `localStorage`/IndexedDB con tutto il resto dell'host. L'origine `giuserpe.github.io` è condivisa con ogni altra pagina GitHub Pages dell'account: su quell'host non devono girare pagine con script di terzi né pagine che toccano lo storage.
 
 ## Non rinominare mai una chiave localStorage/IndexedDB senza un recupero
 
@@ -54,12 +54,26 @@ La cartella `tools/appunti-cantiere/` va caricata sul server così com'è: ogni 
 
 ## Pubblicazione
 
-- Caricare via FTP solo: `index.html`, `core.js`, `storage.js`, `zip.js`, `app.js`, `sw.js`, `manifest.webmanifest`, `logo.png`, `icon-192.png`, `icon-512.png`. Non `README.md`.
-- Serve HTTPS (Service Worker e installazione). Il manifest va servito come `application/manifest+json`.
-- Usare un solo host canonico (con o senza `www`) e reindirizzare l'altro: sono due origini diverse, con dati separati. `/brogliaccio` deve reindirizzare a `/brogliaccio/`, perché i percorsi sono relativi.
-- Non cambiare l'indirizzo dopo l'uso: i dati degli utenti sono legati all'origine.
+- `genera_versioni.yml` (copie in `.github/workflows/` e in `tools/version/`) assembla a ogni push su `dev` un solo sito Pages: `versions.html` alla radice e questa cartella in `brogliaccio/`, senza `README.md`, poi lo pubblica con `deploy-pages`. Indirizzo: `https://giuserpe.github.io/leeno/brogliaccio/`. La stessa cartella viene copiata anche su `master`. `versions.html` è incorporata in `leeno.org/versioni-sviluppo/`.
+- Serve HTTPS (Service Worker e installazione): GitHub Pages lo fornisce. Il manifest usa percorsi relativi, quindi l'indirizzo deve finire con `/`.
+- Non cambiare l'indirizzo dopo l'uso: i dati degli utenti sono legati all'origine. Brogliaccio è stato indicato in passato su altri indirizzi (`brogliaccio.leeno.org`, `www.giuserpe.it/brogliaccio/`): chi ha installato l'app da uno di quelli ha i dati in un archivio diverso e non li vede dall'indirizzo attuale. Per spostarli si esporta dal vecchio indirizzo e si ripristina dal nuovo.
+- GitHub Pages ha un solo sito per repository e ogni deploy sostituisce il precedente: un secondo workflow con `deploy-pages` (provato con `brogliaccio-pages.yml`) fa sparire `versions.html`. Non aggiungerne altri.
 
-## Niente GitHub Pages per Brogliaccio
+## Più istanze sulla stessa origine: revisione e merge
 
-GitHub Pages ha un solo sito per repository e ogni deploy sostituisce il precedente. Il sito del repository è `versions.html` (incorporata in `leeno.org/versioni-sviluppo/`), pubblicata da `genera_versioni.yml`. Un secondo workflow di deploy (provato con `brogliaccio-pages.yml`) la fa sparire: non aggiungere altri `deploy-pages`.
+Fino alla 0.7.1 `salva()` riscriveva l'intero stato dalla memoria della pagina senza guardare cosa c'era già salvato. Con due istanze aperte sulla stessa origine (scheda del browser e app installata, o una pagina rimasta in pausa) l'istanza più vecchia, al primo salvataggio, cancellava ciò che l'altra aveva ripristinato o scritto. Riprodotto in Chromium: una pagina caricata prima del ripristino, che poi crea un cantiere, fa sparire il cantiere ripristinato.
 
+Dalla 0.7.2 lo stato porta `rev`, incrementato a ogni salvataggio. Prima di scrivere, `salva()` confronta `rev` con quello salvato: se è più alto porta in memoria i dati dell'altra istanza (solo aggiunte e giornate con `modificato_il` più recente, mai cancellazioni; la giornata aperta in modifica non si tocca). Gli eventi `storage` e `visibilitychange` aggiornano la schermata quando non c'è una giornata in modifica. Non togliere questo controllo da `salva()`. La chiave `appunti-cantiere-v1` non cambia: `rev` è un campo in più e `carica()` lo assume 0 se manca.
+
+Per provarlo senza l'aiuto degli eventi, caricare la pagina "vecchia" con un init script che ignora `addEventListener('storage'|'visibilitychange')`, ripristinare da un'altra pagina, poi salvare dalla prima: senza `rev` i dati ripristinati spariscono.
+
+## Diagnostica della perdita dati
+
+Il browser può cancellare lo storage dell'origine (cancellazione all'uscita, spazio scarso, memoria non persistente) e l'app non può accorgersene dopo, perché sparisce anche ciò che avrebbe registrato. Dalla 0.7.2 rende visibile ciò che si può:
+
+- `navigator.storage.persisted()` (e `persist()` se negato) all'avvio: in fondo alla schermata principale compare "Memoria del browser: protetta" oppure "non protetta" (con invito a esportare spesso), più il numero di avvio.
+- Chiave `brogliaccio-diag` (nuova, nessuna rinomina): contatore degli avvii e ultimo stato noto (cantieri e giornate), aggiornato a ogni `salva()`. All'avvio, se le giornate sono meno dell'ultimo stato registrato dall'app stessa, i dati sono stati tolti da fuori: compare un avviso fisso ("Ho capito" lo chiude).
+- Foto in IndexedDB ma nessun cantiere (testo perso, foto no): avviso analogo.
+- Dopo "Ripristina da file" l'app rilegge dalla memoria del browser (non dalle variabili) e scrive "Verificato: ..." oppure un avviso di errore.
+
+Se la cancellazione toglie tutto (testo, diagnostica e foto) non c'è nulla da rilevare: la difesa resta il file esportato, da cui il promemoria "Ultimo export".

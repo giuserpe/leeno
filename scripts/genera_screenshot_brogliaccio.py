@@ -50,6 +50,8 @@ def main(out):
         with sync_playwright() as p:
             b = p.chromium.launch()
             ctx = b.new_context(viewport={'width': 390, 'height': 780}, device_scale_factor=2, locale='it-IT')
+            # In headless la memoria risulta "non protetta": negli screenshot si mostra il caso normale dell'app installata.
+            ctx.add_init_script("navigator.storage.persisted = () => Promise.resolve(true);")
             pg = ctx.new_page()
             pg.goto('http://localhost:%s/index.html' % PORTA)
             pg.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO)])

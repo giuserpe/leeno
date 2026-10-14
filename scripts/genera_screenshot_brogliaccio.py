@@ -65,7 +65,7 @@ def main(out):
             f2 = os.path.join(out, 'brog_giornata.png')
             pg.evaluate('document.activeElement.blur()')
             pg.screenshot(path=f2); ritaglia(f2, 1560)
-            pg.click('text=Chiudi'); time.sleep(.3)
+            pg.locator('button:has-text("Indietro")').first.click(); time.sleep(.3)
             pg.evaluate('window.print = function(){}')
             pg.click('text=Stampa o PDF'); time.sleep(.8)
             pdf = os.path.join(out, 'brog_stampa.pdf')

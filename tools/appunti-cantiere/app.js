@@ -112,7 +112,7 @@
   // Un'altra istanza ha scritto: si aggiorna lo stato e, se non c'e' una giornata in modifica, la schermata.
   function aggiornaDaAltrove() {
     if (!unisciSalvato()) return;
-    if (inModifica) avviso('I dati sono stati aggiornati da un\'altra finestra dell\'app. Chiudi la giornata per vederli.');
+    if (inModifica) avviso('I dati sono stati aggiornati da un\'altra finestra dell\'app. Torna indietro per vederli.');
     else principale();
   }
   function verificaPersistenza() {
@@ -311,7 +311,7 @@
     var c = cantiereCorrente(), g = c.giornate[iso] || { campi: {} };
     cantiereApertoId = stato.attivo; dataAperta = iso; inModifica = true;
     cantiereApertoRif = c; giornoApertoRif = g;
-    app.appendChild(h('div', { 'class': 'barra' }, [btn('Chiudi', principale), h('h2', { text: dataEstesa(iso) })]));
+    app.appendChild(h('div', { 'class': 'barra' }, [btn('Indietro', principale), h('h2', { text: dataEstesa(iso) })]));
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));
@@ -327,20 +327,24 @@
         g.campi[campo[0]] = el.value; g.modificato_il = new Date().toISOString();
         c.giornate[iso] = g; salva();
       });
-      app.appendChild(h('div', { 'class': 'campo' }, [h('label', { 'for': id, text: campo[1] + ':' }), el]));
+      app.appendChild(h('div', { 'class': 'campo' }, [h('label', { 'for': id, text: etichettaCampo(campo) }), el]));
     });
     app.appendChild(h('div', { 'class': 'campo' }, [
       h('label', { text: 'Foto:' }),
       h('div', { id: 'foto-lista', 'class': 'foto-lista' }),
-      btn('Aggiungi foto', function () { document.getElementById('file-foto').click(); })
+      h('div', { 'class': 'azioni-destra' }, [btn('Aggiungi foto', function () { document.getElementById('file-foto').click(); })])
     ]));
     aggiornaFotoLista();
-    app.appendChild(btn('Elimina questa giornata', function () {
+    app.appendChild(btn('Indietro', principale, 'cta-grande')); // in fondo alla scheda, lontano da Elimina
+    app.appendChild(h('div', { 'class': 'zona-pericolo' }, [btn('Elimina questa giornata', function () {
       if (!confirm('Eliminare la giornata ' + dataEstesa(iso) + '?')) return;
       delete c.giornate[iso]; salva(); principale();
       FotoStore.eliminaPerGiorno(stato.attivo, iso).catch(function () { /* pulizia foto: nessun blocco per l'utente */ });
-    }, 'danger'));
+    }, 'danger')]));
   }
+
+  // Etichetta di un campo degli appunti: trattino iniziale (rende leggibile la stampa) e due punti finali.
+  function etichettaCampo(campo) { return '- ' + campo[1] + ':'; }
 
   function aggiornaFotoLista() {
     var el = document.getElementById('foto-lista');
@@ -560,7 +564,7 @@
       C.CAMPI.forEach(function (campo) {
         var testo = g.campi[campo[0]];
         if (!testo) return;
-        dl.appendChild(h('dt', { text: campo[1] + ':' }));
+        dl.appendChild(h('dt', { text: etichettaCampo(campo) }));
         dl.appendChild(h('dd', { text: testo }));
       });
       var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);

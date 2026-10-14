@@ -77,3 +77,7 @@ Il browser può cancellare lo storage dell'origine (cancellazione all'uscita, sp
 - Dopo "Ripristina da file" l'app rilegge dalla memoria del browser (non dalle variabili) e scrive "Verificato: ..." oppure un avviso di errore.
 
 Se la cancellazione toglie tutto (testo, diagnostica e foto) non c'è nulla da rilevare: la difesa resta il file esportato, da cui il promemoria "Ultimo export".
+
+## Stampa con foto: attendere la decodifica prima di `window.print()`
+
+Fino alla 0.7.2 `stampaPDF()` inseriva le foto come immagini con data URL in `#stampa` e chiamava subito `window.print()`: le immagini non erano ancora decodificate e il PDF mostrava riquadri vuoti. Riprodotto in Chromium con 8 foto da 1600x1200: al momento di `print()` risultavano pronte 0 su 8. Dalla 0.7.3 `attendiImmagini()` attende `img.decode()` su tutte le immagini (con un tetto di 20 s) e solo dopo stampa. Con foto leggere il difetto può non comparire: provarlo sempre con foto pesanti e controllando `img.complete && img.naturalWidth > 0` dentro un `window.print` sostituito.

@@ -389,7 +389,7 @@ def ins_voce_computo(cod=None):
     PL._gotoCella(1, lrow + 1)
 
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
-    annota_categorie_voci(oSheet)
+    annota_categorie_voci(oSheet, lrow=lrow + 1)
     LeenoSheetUtils.aggiorna_riepilogo_quantita_voce(oSheet, lrow, lrow + 3)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
@@ -996,13 +996,17 @@ def MENU_inserisci_somme_lavori_sicurezza():
 
 @with_undo('Annota categorie voci')
 @LeenoUtils.no_refresh
-def annota_categorie_voci(oSheet=None):
+def annota_categorie_voci(oSheet=None, lrow=None):
     """
     Annota nel primo rigo di ogni voce (start_row da circoscriveVoceComputo)
     di COMPUTO, VARIANTE o CONTABILITA:
     - nella colonna C (indice 2) i titoli di Super Categoria, Categoria e Sotto Categoria
       a cui la voce appartiene, separati da " | ".
     - nella colonna B (indice 1) il numero della Super Categoria, Categoria o Sotto Categoria.
+
+    lrow { int } : se indicato, annota solo la voce che contiene quella riga
+                   (inserimento di una singola voce), invece di percorrere
+                   l'intero foglio.
     """
     if LeenoConfig.Config().read('Generale', 'mostra_categorie') == 'False':
         return
@@ -1022,9 +1026,18 @@ def annota_categorie_voci(oSheet=None):
     except Exception:
         ver_tmpl = 0
 
-    fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-    row = 0
     tot_righe = oSheet.Rows.Count
+    if lrow is None:
+        fine_doc = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+        row = 0
+    else:
+        # inserimento di una singola voce: le altre non cambiano categoria
+        try:
+            rng = circoscriveVoceComputo(oSheet, lrow)
+            row = rng.RangeAddress.StartRow
+            fine_doc = rng.RangeAddress.EndRow
+        except Exception:
+            return
 
     while row <= fine_doc and row < tot_righe:
         stile = oSheet.getCellByPosition(0, row).CellStyle

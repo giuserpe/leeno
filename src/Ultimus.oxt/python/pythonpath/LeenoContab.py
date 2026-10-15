@@ -285,7 +285,7 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
         oSheet.getCellByPosition(1, sopra + 1).String = cod
 
     PL.numera_voci()
-    LeenoComputo.annota_categorie_voci(oSheet)
+    LeenoComputo.annota_categorie_voci(oSheet, lrow=sopra + 1)
     LeenoSheetUtils.aggiorna_riepilogo_quantita_voce(oSheet, sopra, sopra + 4)
 
     if cfg.read('Generale', 'pesca_auto') == '1':

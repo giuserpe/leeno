@@ -4,7 +4,7 @@
     <src xlink:href="https://leeno.org/LeenO.update.xml" />
   </update-information>
   <identifier value="org.giuseppe-vizziello.leeno" />
-  <version value="3.26.0.160-TESTING-20261015" />
+  <version value="3.26.0.162-TESTING-20261015" />
   <publisher>
     <name xlink:href="http://leeno.org">LeenO</name>
   </publisher>

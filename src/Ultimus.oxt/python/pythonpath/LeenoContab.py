@@ -998,7 +998,8 @@ def struttura_CONTAB():
 
     if force_color_level != -1:
         for n in range(0, 4):
-            PL.applica_livelli(n, vedi=False, force_color_level=force_color_level)
+            # PL.applica_livelli(n, vedi=False, force_color_level=force_color_level)
+            PL.applica_livelli(n, vedi=False)
 
     oRanges = oDoc.NamedRanges
 

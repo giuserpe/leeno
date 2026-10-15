@@ -358,12 +358,6 @@ def MENU_invia_voce():
     # Aggiorna il layout sul documento attivo finale
     oActiveDoc = LeenoUtils.getDocument()
     if oActiveDoc is not None:
-        oSheet = oActiveDoc.CurrentController.ActiveSheet
-        # Non adattare l'altezza dell'intero foglio quando il foglio attivo è COMPUTO, VARIANTE o CONTABILITA, adatta solo la riga/voce inserita
-        if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
-        else:
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False)
         LeenoUtils.DocumentRefresh(True, oActiveDoc)
 
     if avviso_vedi_voce:
@@ -511,6 +505,7 @@ def invia_voce(ctrl_override=False):
         dccSheet.getRows().insertByIndex(4, 1)
         range_dest = f'A5:G5'
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
+        _pending_altezza_invia_voce.append((dccSheet, 4))
         # ddcDoc.CurrentController.setFirstVisibleRow(3)
         # _gotoCella(0, 4)
 
@@ -533,11 +528,11 @@ def invia_voce(ctrl_override=False):
             codice_selezionato_dp = ''
 
         for voce_da_inviare, row_src in voci_selezionate:
-            _gotoDoc(fpartenza)
             # Check "vedi voce" nella descrizione (colonna C -> indice 2)
             if "vedi voce" in oSheet.getCellByPosition(2, row_src).String.lower():
                 avviso_vedi_voce = True
 
+        for voce_da_inviare, row_src in voci_selezionate:
             _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
             GotoSheet(nSheetDCC)
 
@@ -823,8 +818,6 @@ def invia_voce(ctrl_override=False):
     _gotoDoc(fpartenza)
     GotoSheet(nSheet)
     _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         row = LeggiPosizioneCorrente()[1]
@@ -8319,7 +8312,8 @@ def struttura_ComputoM():
     # 4. Esegue la funzione applica_livelli() per i 4 livelli (0, 1, 2, 3)
     for n in range(0, 4):
         indicator.Value = n
-        applica_livelli(n, vedi = False, force_color_level = force_color_level)
+        # applica_livelli(n, vedi = False, force_color_level = force_color_level)
+        applica_livelli(n, vedi = False)
 
     indicator.end()
 

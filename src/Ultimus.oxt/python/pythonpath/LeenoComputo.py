@@ -557,6 +557,7 @@ class DatiVoce:
         self._voce = ()
         self._REG = ()
         self._SAL = ()
+        self._dati_estratti = False
 
     # ------------------------------------------------------------------
     # RANGE
@@ -586,37 +587,37 @@ class DatiVoce:
 
     @property
     def voce(self):
-        if not self._voce:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._voce
 
     @property
     def num(self):
-        if not self._voce:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[0] if len(self._voce) > 0 else ""
 
     @property
     def art(self):
-        if not self._voce:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[1] if len(self._voce) > 1 else ""
 
     @property
     def desc(self):
-        if not self._voce:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[2] if len(self._voce) > 2 else ""
 
     @property
     def REG(self):
-        if not self._REG:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._REG
 
     @property
     def SAL(self):
-        if not self._SAL:
+        if not self._dati_estratti:
             self._estrai_dati()
         return self._SAL
 
@@ -684,6 +685,9 @@ class DatiVoce:
     # ------------------------------------------------------------------
 
     def _estrai_dati(self):
+        if self._dati_estratti:
+            return
+        self._dati_estratti = True
         # Se non c'è una voce valida, esce lasciando tuple vuote
         if not self.range:
             return
@@ -708,9 +712,18 @@ class DatiVoce:
 
             data = oSheet.getCellByPosition(1, sr + 2).String
             um = oSheet.getCellByPosition(8, er).String.split('[')[-1].split(']')[0]
-            Nlib = int(oSheet.getCellByPosition(19, sr + 1).Value)
-            Plib = int(oSheet.getCellByPosition(20, sr + 1).Value)
-            nSal = int(oSheet.getCellByPosition(23, sr + 1).Value)
+            try:
+                Nlib = int(oSheet.getCellByPosition(19, sr + 1).Value)
+            except Exception:
+                Nlib = 0
+            try:
+                Plib = int(oSheet.getCellByPosition(20, sr + 1).Value)
+            except Exception:
+                Plib = 0
+            try:
+                nSal = int(oSheet.getCellByPosition(23, sr + 1).Value)
+            except Exception:
+                nSal = 0
             prezzo = oSheet.getCellByPosition(13, er).Value
             importo = oSheet.getCellByPosition(15, er).Value
 
@@ -722,6 +735,10 @@ class DatiVoce:
 
             quant = quantP if quantP != "" else quantN
             self._SAL = (num, art, desc, um, quant, prezzo, importo, sic, mdo)
+            self._voce = (
+                num, art, desc, um,
+                quant, prezzo, importo, sic, mdo
+            )
 
         elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
             um = oSheet.getCellByPosition(8, er).String.split('[')[-1].split(']')[0]
@@ -731,6 +748,11 @@ class DatiVoce:
             self._voce = (
                 num, art, desc, um,
                 quantP, prezzo, importo, sic, mdo
+            )
+        else:
+            self._voce = (
+                num, art, desc, "",
+                quantP, 0.0, 0.0, sic, mdo
             )
 
 

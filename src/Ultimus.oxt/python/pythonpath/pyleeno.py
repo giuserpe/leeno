@@ -228,6 +228,7 @@ def MENU_nuovo_usobollo():
 @with_undo('Invia voce a Variante')
 @LeenoUtils.no_refresh
 def invia_voce_interno():
+    global _pending_altezza_invia_voce
     oDoc = LeenoUtils.getDocument()
     oSheetEP = oDoc.CurrentController.ActiveSheet
 
@@ -269,33 +270,99 @@ def invia_voce_interno():
         _gotoCella(2, 1) # Torna sulla cella C2
         return
 
-    # 4. Inserimento effettivo delle voci nell'elaborato scelto
+    # 4. Inserimento effettivo delle voci nell'elaborato scelto.
+    # L'altezza riga e il refresh restano a MENU_invia_voce: riattivare
+    # calculateAll per ogni articolo rende la macro inutilizzabile.
+    dest_name = 'CONTABILITA' if meta == 'CONTABILITA' else meta
+    GotoSheet(dest_name)
+    dest_sheet = oDoc.getSheets().getByName(dest_name)
     for codice_voce in codici:
         if meta == 'CONTABILITA':
-            # Nota: GotoSheet dentro il loop può rallentare, ma garantisce il focus
-            GotoSheet('CONTABILITA')
-            import LeenoContab
             LeenoContab.insertVoceContabilita(cod=codice_voce)
-            ins_row = LeggiPosizioneCorrente()[1]
-            LeenoUtils.DocumentRefresh(True, oDoc)
-            try:
-                LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName('CONTABILITA'), all=False, lrow=ins_row)
-            finally:
-                LeenoUtils.DocumentRefresh(False, oDoc)
         else:
-            # Per COMPUTO e VARIANTE la logica di inserimento è identica
-            # Assicurati che ins_voce_computo inserisca nel foglio attivo
-            GotoSheet(meta)
             LeenoComputo.ins_voce_computo(cod=codice_voce)
-            ins_row = LeggiPosizioneCorrente()[1]
-            LeenoUtils.DocumentRefresh(True, oDoc)
-            try:
-                LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(meta), all=False, lrow=ins_row)
-            finally:
-                LeenoUtils.DocumentRefresh(False, oDoc)
+        ins_row = LeggiPosizioneCorrente()[1]
+        _pending_altezza_invia_voce.append((dest_sheet, ins_row))
 
     # Pulizia finale della selezione blu
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+
+
+def _indice_codici_ep(oSheet, start_row=2):
+    '''Mappa codice articolo -> riga da colonna A, in un'unica lettura UNO.'''
+    last = SheetUtils.getLastUsedRow(oSheet)
+    if last < start_row:
+        return {}
+    data = oSheet.getCellRangeByPosition(0, start_row, 0, last).getDataArray()
+    indice = {}
+    for i, row_data in enumerate(data):
+        code = row_data[0]
+        if code is None or code == '':
+            continue
+        code = str(code)
+        if code == 'Cod. Art.?':
+            continue
+        if code not in indice:
+            indice[code] = start_row + i
+    return indice
+
+
+def _shift_pending_altezza(oSheet, insert_index, count=1):
+    pending = globals().get('_pending_altezza_invia_voce')
+    if not pending:
+        return
+    for i, (sheet, row) in enumerate(pending):
+        if sheet is oSheet and row >= insert_index:
+            pending[i] = (sheet, row + count)
+
+
+def _applica_altezza_pending(pending):
+    '''OptimalHeight sulle sole voci inserite, senza adattaAltezzaRiga.'''
+    if not pending:
+        return
+    grouped = {}
+    order = []
+    for oSheet, row in pending:
+        key = id(oSheet)
+        if key not in grouped:
+            grouped[key] = {'sheet': oSheet, 'rows': []}
+            order.append(key)
+        grouped[key]['rows'].append(row)
+    for key in order:
+        oSheet = grouped[key]['sheet']
+        rows = grouped[key]['rows']
+        is_protected = False
+        try:
+            is_protected = oSheet.isProtected()
+            if is_protected:
+                oSheet.unprotect('')
+            ranges = []
+            if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+                seen = set()
+                for lrow in rows:
+                    try:
+                        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+                        if sStRange is not None:
+                            sr = sStRange.RangeAddress.StartRow
+                            er = sStRange.RangeAddress.EndRow
+                            if sr not in seen:
+                                seen.add(sr)
+                                ranges.append((sr, er))
+                        else:
+                            ranges.append((lrow, lrow))
+                    except Exception:
+                        ranges.append((lrow, lrow))
+            else:
+                for r in sorted(set(rows)):
+                    ranges.append((max(0, r), max(0, r)))
+            for sr, er in ranges:
+                oSheet.getCellRangeByPosition(0, sr, 0, er).Rows.OptimalHeight = True
+        finally:
+            if is_protected:
+                try:
+                    oSheet.protect('')
+                except Exception:
+                    pass
 
 
 ###############################################################################
@@ -345,20 +412,14 @@ def MENU_invia_voce():
             # applica mentre il refresh è ancora disabilitato (o lo si ridisabilita
             # subito dopo), l'adattamento dell'altezza riga viene di fatto ignorato.
             pending = globals().get('_pending_altezza_invia_voce') or []
-            for oSheetPending, rowPending in pending:
-                try:
-                    LeenoSheetUtils.adattaAltezzaRiga(oSheetPending, all=False, lrow=rowPending)
-                except Exception:
-                    pass
+            try:
+                _applica_altezza_pending(pending)
+            except Exception:
+                pass
             globals()['_pending_altezza_invia_voce'] = []
 
     finally:
         cfg.write('Generale', 'pesca_auto', stato)
-
-    # Aggiorna il layout sul documento attivo finale
-    oActiveDoc = LeenoUtils.getDocument()
-    if oActiveDoc is not None:
-        LeenoUtils.DocumentRefresh(True, oActiveDoc)
 
     if avviso_vedi_voce:
         Dialogs.Exclamation(Title="ATTENZIONE!", Text="Nella voce inviata è presente un riferimento ad altra voce (vedi voce). Verifica attentamente!")
@@ -403,11 +464,16 @@ def invia_voce(ctrl_override=False):
         Dialogs.Exclamation(Title='ATTENZIONE!',
             Text="E' necessario impostare il Documento Principale (DP).")
         return False
-    nSheetDCC = getDCCSheet()
-    # arrivo - Documento Principale
+    # arrivo - Documento Principale (senza getDCCSheet: due _gotoDoc solo per leggere il nome foglio)
     DP = LeenoGlobals.getGlobalVar('sUltimus')
     ddcDoc = LeenoUtils.findOpenDocument(DP)
+    if ddcDoc is None:
+        ddcDoc = _gotoDoc(DP)
+        _gotoDoc(fpartenza)
+    nSheetDCC = ddcDoc.CurrentController.ActiveSheet.Name
+    LeenoGlobals.setGlobalVar('sUltimus_sheet', nSheetDCC)
     row = LeggiPosizioneCorrente()[1]
+    ep_dp_map = _indice_codici_ep(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
 
     # DLG.chi(1)
@@ -490,22 +556,34 @@ def invia_voce(ctrl_override=False):
         recupra la voce di prezzo dal foglio di partenza
         e la inserisce nel foglio di destinazione
         '''
+        if not codice_da_cercare and row_src is None:
+            return False
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         if row_src is not None:
             row = row_src
-        elif SheetUtils.getLastUsedRow(oDoc.getSheets().getByName('COMPUTO')) > 20:
-            row = SheetUtils.uFindString(codice_da_cercare, oSheet)[1]
         else:
-            row = LeggiPosizioneCorrente()[1]
+            row = _indice_codici_ep(oSheet).get(codice_da_cercare)
+            if row is None:
+                return False
 
         range_src = f'A{row+1}:G{row+1}'
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
         dccSheet.getRows().insertByIndex(4, 1)
+        _shift_pending_altezza(dccSheet, 4)
         range_dest = f'A5:G5'
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
+        try:
+            src_form_addr = dccSheet.getCellRangeByName("L4:Z4").RangeAddress
+            dst_form_addr = dccSheet.getCellByPosition(11, 4).CellAddress
+            dccSheet.copyRange(dst_form_addr, src_form_addr)
+        except Exception:
+            pass
         _pending_altezza_invia_voce.append((dccSheet, 4))
+        if codice_da_cercare:
+            ep_dp_map[codice_da_cercare] = 4
+        return True
         # ddcDoc.CurrentController.setFirstVisibleRow(3)
         # _gotoCella(0, 4)
 
@@ -519,6 +597,7 @@ def invia_voce(ctrl_override=False):
         # 1. Focus su DP e verifica presenza codice in EP del DP
         _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
+        GotoSheet(nSheetDCC)
 
         # Cattura il codice articolo selezionato nel DP prima di qualsiasi inserimento
         pos_dp = LeggiPosizioneCorrente()[1]
@@ -533,10 +612,7 @@ def invia_voce(ctrl_override=False):
                 avviso_vedi_voce = True
 
         for voce_da_inviare, row_src in voci_selezionate:
-            _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-            GotoSheet(nSheetDCC)
-
-            if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
+            if voce_da_inviare not in ep_dp_map:
                 recupera_voce(voce_da_inviare, row_src=row_src)
 
             # 2. Gestione foglio di destinazione
@@ -571,7 +647,7 @@ def invia_voce(ctrl_override=False):
             elif nSheetDCC == 'Elenco Prezzi':
                 if ctrl_override and codice_selezionato_dp:
                     # Assicura che la voce di partenza sia aggiunta all'Elenco Prezzi di arrivo (nel DP)
-                    if not SheetUtils.uFindString(voce_da_inviare, dccSheetEP):
+                    if voce_da_inviare not in ep_dp_map:
                         recupera_voce(voce_da_inviare, row_src=row_src)
 
                     # Con CTRL: sostituisce tutte le occorrenze del codice selezionato nel DP
@@ -641,9 +717,12 @@ def invia_voce(ctrl_override=False):
 
         noVoce = LeenoGlobals.getGlobalVar('noVoce')
         dccSheet = ddcDoc.getSheets().getByName(nSheetDCC)
+        oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
+        ep_src_map = _indice_codici_ep(oSheetEP)
+        _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
+        GotoSheet(nSheetDCC)
 
         for SR, ER in voci_computo:
-            _gotoDoc(fpartenza)
             dv = LeenoComputo.DatiVoce(oSheet, SR + 1)
             art = dv.art
 
@@ -655,15 +734,15 @@ def invia_voce(ctrl_override=False):
 
             oSheet.getCellByPosition(1, SR + 1).CellBackColor = COLORE_VERDE_SPUNTA
 
-            oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
-            res_ep = SheetUtils.uFindString(art, oSheetEP)
-            if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
+            res_ep = ep_src_map.get(art)
+            if res_ep is not None and oSheetEP.getCellByPosition(1, res_ep).Type.value == 'FORMULA':
                 if art not in analisi:
                     analisi.append(art)
 
+            if art and art not in ep_dp_map:
+                recupera_voce(art)
+
             if nSheetDCC in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-                _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-                GotoSheet(nSheetDCC)
                 row = LeggiPosizioneCorrente()[1]
 
                 if dccSheet.getCellByPosition(0, row).CellStyle in (noVoce + stili_computo + stili_contab):
@@ -735,10 +814,7 @@ def invia_voce(ctrl_override=False):
                 # se nella voce inserita la descrizione non risulta presente
                 # la voce di prezzo viene presa dal foglio di partenza
 
-                ddcSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
-                cerca_in_elenco_prezzi = SheetUtils.uFindString(art, ddcSheetEP)
-
-                if not cerca_in_elenco_prezzi:
+                if art and art not in ep_dp_map:
                     recupera_voce(art)
 
                 # Adatta l'altezza delle righe per la voce inserita nel foglio di arrivo
@@ -757,7 +833,8 @@ def invia_voce(ctrl_override=False):
             oDoc = LeenoUtils.getDocument()
             oSheetAP = oDoc.getSheets().getByName('Analisi di Prezzo')
             oSheetEP = oDoc.getSheets().getByName('Elenco Prezzi')
-            import LeenoAnalysis
+            ap_map = _indice_codici_ep(oSheetAP)
+            ep_src_map = _indice_codici_ep(oSheetEP)
 
             # Raccolta ricorsiva dei costi elementari e delle relative analisi
             voci_da_recuperare = []
@@ -765,9 +842,9 @@ def invia_voce(ctrl_override=False):
             while i < len(analisi):
                 cod = analisi[i]
                 i += 1
-                res = SheetUtils.uFindString(cod, oSheetAP)
-                if res:
-                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, res[1])
+                row_ap = ap_map.get(cod)
+                if row_ap is not None:
+                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, row_ap)
                     for row in range(r.RangeAddress.StartRow, r.RangeAddress.EndRow + 1):
                         if oSheetAP.getCellByPosition(0, row).CellStyle == 'An-lavoraz-Cod-sx':
                             ce_cod = oSheetAP.getCellByPosition(0, row).String
@@ -776,15 +853,14 @@ def invia_voce(ctrl_override=False):
                                     voci_da_recuperare.append(ce_cod)
 
                                 # Se il costo elementare è a sua volta un'analisi, lo aggiungo alla coda
-                                res_ep = SheetUtils.uFindString(ce_cod, oSheetEP)
-                                if res_ep and oSheetEP.getCellByPosition(1, res_ep[1]).Type.value == 'FORMULA':
+                                row_ep = ep_src_map.get(ce_cod)
+                                if row_ep is not None and oSheetEP.getCellByPosition(1, row_ep).Type.value == 'FORMULA':
                                     if ce_cod not in analisi:
                                         analisi.append(ce_cod)
 
             # Invia i costi elementari al Documento Principale
             for ce_cod in voci_da_recuperare:
-                dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
-                if not SheetUtils.uFindString(ce_cod, dccSheetEP):
+                if ce_cod not in ep_dp_map:
                     recupera_voce(ce_cod)
 
             _gotoDoc(fpartenza)
@@ -792,9 +868,9 @@ def invia_voce(ctrl_override=False):
 
             selezione_analisi = []
             for cod in analisi:
-                res = SheetUtils.uFindString(cod, oSheetAP)
-                if res:
-                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, res[1])
+                row_ap = ap_map.get(cod)
+                if row_ap is not None:
+                    r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, row_ap)
                     selezione_analisi.append(r.RangeAddress)
 
             if selezione_analisi:
@@ -848,11 +924,13 @@ def rompi_collegamenti_esterni(doc=None):
     if doc is None:
         return
 
+    had_links = False
     try:
         # 1. Rompe i collegamenti delle aree esterne (AreaLinks)
         if hasattr(doc, "AreaLinks"):
             area_links = doc.AreaLinks
             while area_links.Count > 0:
+                had_links = True
                 area_links.removeByIndex(0)
     except Exception:
         pass
@@ -863,25 +941,30 @@ def rompi_collegamenti_esterni(doc=None):
         if hasattr(doc, "getSheets"):
             for sheet in doc.getSheets():
                 if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
+                    had_links = True
                     sheet.setLinkMode(SHEET_LINK_MODE_NONE)
     except Exception:
         pass
 
+    if not had_links:
+        return
+
     try:
-        # 3. Rompe le formule con link esterni sostituendole con riferimenti locali nativi
+        # 3. Rompe le formule con link esterni solo se esistevano AreaLinks/SheetLinks
         if hasattr(doc, "getSheets"):
-            for sheet in doc.getSheets():
+            for nome in ('Elenco Prezzi', 'Analisi di Prezzo'):
+                if not doc.getSheets().hasByName(nome):
+                    continue
+                sheet = doc.getSheets().getByName(nome)
                 try:
                     replace = sheet.createReplaceDescriptor()
                     replace.SearchRegularExpression = True
                     replace.SearchType = 0  # 0 matches Formulas
 
-                    # Pattern 1: 'file:///[^']*'#
                     replace.SearchString = "'file:///[^']*'#"
                     replace.ReplaceString = ""
                     sheet.replaceAll(replace)
 
-                    # Pattern 2: file:///[^'#]*#
                     replace.SearchString = "file:///[^'#]*#"
                     replace.ReplaceString = ""
                     sheet.replaceAll(replace)
@@ -924,6 +1007,13 @@ def _gotoDoc(sUrl):
     porta il focus su di un determinato documento
     '''
     sUrl = uno.systemPathToFileUrl(sUrl)
+    oCurrent = LeenoUtils.getDocument()
+    if oCurrent is not None:
+        try:
+            if oCurrent.getURL() == sUrl:
+                return oCurrent
+        except Exception:
+            pass
     if sys.platform == 'win32':
         desktop = LeenoUtils.getDesktop()
         oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')

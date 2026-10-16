@@ -3398,11 +3398,19 @@ def scelta_viste_run():
             voci_costi = set()
             if oDoc.Sheets.hasByName('Analisi di Prezzo'):
                 oSheetAP = oDoc.Sheets.getByName('Analisi di Prezzo')
-                er_ap = SheetUtils.getLastUsedRow(oSheetAP)
-                for r_ap in range(er_ap):
-                    cell = oSheetAP.getCellByPosition(0, r_ap)
-                    if cell.CellStyle == 'An-lavoraz-Cod-sx' and cell.String:
-                        voci_costi.add(cell.String.strip().lower())
+                # Lettura batch tramite findAll+SearchStyles invece di getCellByPosition per-riga
+                try:
+                    _sd_ap = oSheetAP.createSearchDescriptor()
+                    _sd_ap.SearchStyles = True
+                    _sd_ap.SearchString = 'An-lavoraz-Cod-sx'
+                    _found_ap = oSheetAP.findAll(_sd_ap)
+                    if _found_ap:
+                        for _fi in range(_found_ap.Count):
+                            _s = _found_ap.getByIndex(_fi).getString()
+                            if _s:
+                                voci_costi.add(_s.strip().lower())
+                except Exception:
+                    pass
                 
             nascondi_zero = False
             try:
@@ -3414,19 +3422,27 @@ def scelta_viste_run():
             col1_idx = col_idx_map.get(col1)
             col2_idx = col_idx_map.get(col2)
 
+            # Lettura batch col1/col2 (col_0_data è già disponibile sopra)
+            if nascondi_zero and col1_idx is not None and col2_idx is not None:
+                _batch_col1 = oSheet.getCellRangeByPosition(col1_idx, 3, col1_idx, max_idx).getDataArray()
+                _batch_col2 = oSheet.getCellRangeByPosition(col2_idx, 3, col2_idx, max_idx).getDataArray()
+            else:
+                _batch_col1 = _batch_col2 = None
+
             oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
             oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
-            for el in range(3, max_idx + 1):
-                cell_code = oSheet.getCellByPosition(0, el).String.strip().lower()
+            for _bi, el in enumerate(range(3, max_idx + 1)):
+                # Reusa col_0_data (già letta); se fuori range, salta
+                if _bi >= len(col_0_data):
+                    break
+                cell_code = str(col_0_data[_bi][0]).strip().lower()
                 if not cell_code:
                     continue
 
                 is_costo = cell_code in voci_costi
                 is_zero = False
-                if nascondi_zero and col1_idx is not None and col2_idx is not None:
-                    val1 = oSheet.getCellByPosition(col1_idx, el).Value
-                    val2 = oSheet.getCellByPosition(col2_idx, el).Value
-                    if val1 == 0 and val2 == 0:
+                if nascondi_zero and _batch_col1 is not None:
+                    if _batch_col1[_bi][0] == 0 and _batch_col2[_bi][0] == 0:
                         is_zero = True
 
                 if is_costo or is_zero:
@@ -3451,9 +3467,12 @@ def scelta_viste_run():
                     if idx - 3 < len(col_0_data):
                         val = col_0_data[idx - 3][0]
                         if str(val).strip() == '':
-                            oSheet.getCellRangeByPosition(11, idx, 25, idx).clearContents(VALUE + FORMULA + STRING)
-                            oRangesClearColor.addRangeAddress(oSheet.getCellRangeByPosition(11, idx, 25, idx).RangeAddress, False)
+                            oRangesClearColor.addRangeAddress(
+                                oSheet.getCellRangeByPosition(11, idx, 25, idx).RangeAddress, False
+                            )
                 if oRangesClearColor.Count > 0:
+                    # clearContents e CellBackColor in batch, non per-riga
+                    oRangesClearColor.clearContents(VALUE + FORMULA + STRING)
                     oRangesClearColor.CellBackColor = -1
 
 # Analisi di Prezzo

@@ -493,7 +493,7 @@ def invia_voce(ctrl_override=False):
         analisi = []
         for sr, er in el_y:
             col_a = oSheet.getCellRangeByPosition(0, sr, 0, er).getDataArray()
-            col_b = oSheet.getCellRangeByPosition(1, sr, 1, er).getFormulas()
+            col_b = oSheet.getCellRangeByPosition(1, sr, 1, er).getFormulaArray()
             for i, (row_a, row_b) in enumerate(zip(col_a, col_b)):
                 form_b = row_b[0]
                 if form_b and str(form_b).startswith('='):

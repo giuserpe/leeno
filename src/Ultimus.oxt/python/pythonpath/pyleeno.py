@@ -490,15 +490,17 @@ def invia_voce(ctrl_override=False):
                 el_y.append((el.StartRow, el.EndRow))
         except TypeError:
             el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
-        lista = []
-        for y in el_y:
-            for el in range(y[0], y[1] + 1):
-                lista.append(el)
         analisi = []
-        for y in lista:
-            if oSheet.getCellByPosition(1, y).Type.value == 'FORMULA':
-                analisi.append(oSheet.getCellByPosition(0, y).String)
-        return (analisi)
+        for sr, er in el_y:
+            col_a = oSheet.getCellRangeByPosition(0, sr, 0, er).getDataArray()
+            col_b = oSheet.getCellRangeByPosition(1, sr, 1, er).getFormulas()
+            for i, (row_a, row_b) in enumerate(zip(col_a, col_b)):
+                form_b = row_b[0]
+                if form_b and str(form_b).startswith('='):
+                    code = str(row_a[0]) if row_a[0] is not None else ''
+                    if code:
+                        analisi.append(code)
+        return analisi
 
     def getVociSelezionate(oSheet):
         try:
@@ -517,7 +519,7 @@ def invia_voce(ctrl_override=False):
             cell_range = oSheet.getCellRangeByPosition(0, start_row, 0, end_row)
             data = cell_range.getDataArray()
             for i, row_data in enumerate(data):
-                code = str(row_data[0])
+                code = str(row_data[0]) if row_data[0] is not None else ''
                 y = start_row + i
                 if code and code != "Cod. Art.?":
                     voci.append((code, y))
@@ -606,10 +608,14 @@ def invia_voce(ctrl_override=False):
         except Exception:
             codice_selezionato_dp = ''
 
-        for voce_da_inviare, row_src in voci_selezionate:
-            # Check "vedi voce" nella descrizione (colonna C -> indice 2)
-            if "vedi voce" in oSheet.getCellByPosition(2, row_src).String.lower():
-                avviso_vedi_voce = True
+        if voci_selezionate:
+            min_r = min(r for _, r in voci_selezionate)
+            max_r = max(r for _, r in voci_selezionate)
+            col_c_data = oSheet.getCellRangeByPosition(2, min_r, 2, max_r).getDataArray()
+            for voce_da_inviare, row_src in voci_selezionate:
+                desc = str(col_c_data[row_src - min_r][0] or '')
+                if "vedi voce" in desc.lower():
+                    avviso_vedi_voce = True
 
         for voce_da_inviare, row_src in voci_selezionate:
             if voce_da_inviare not in ep_dp_map:
@@ -657,6 +663,7 @@ def invia_voce(ctrl_override=False):
                             foglio_dp = ddcDoc.getSheets().getByName(nome_foglio)
                         except Exception:
                             continue
+                        target_col = 0 if nome_foglio == 'Analisi di Prezzo' else 1
                         search_desc = foglio_dp.createSearchDescriptor()
                         search_desc.SearchString = codice_selezionato_dp
                         search_desc.SearchWords = True
@@ -664,17 +671,16 @@ def invia_voce(ctrl_override=False):
                         found_ranges = foglio_dp.findAll(search_desc)
                         if found_ranges:
                             for range_addr in found_ranges.getRangeAddresses():
-                                for r in range(range_addr.StartRow, range_addr.EndRow + 1):
-                                    for c in range(range_addr.StartColumn, range_addr.EndColumn + 1):
-                                        cell = foglio_dp.getCellByPosition(c, r)
+                                if range_addr.StartColumn <= target_col <= range_addr.EndColumn:
+                                    for r in range(range_addr.StartRow, range_addr.EndRow + 1):
+                                        cell = foglio_dp.getCellByPosition(target_col, r)
                                         if nome_foglio == 'Analisi di Prezzo':
-                                            if c == 0 and cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
+                                            if cell.CellStyle in ('An-lavoraz-Cod-sx', 'An-1_sigla'):
                                                 cell.String = voce_da_inviare
                                                 cell.CellBackColor = COLORE_ROSSO_AVVISO
                                         else:
-                                            if c == 1:
-                                                cell.String = voce_da_inviare
-                                                cell.CellBackColor = COLORE_ROSSO_AVVISO
+                                            cell.String = voce_da_inviare
+                                            cell.CellBackColor = COLORE_ROSSO_AVVISO
                     ddcDoc.CurrentController.setFirstVisibleRow(3)
                     _gotoCella(1, 4)
                 else:
@@ -800,13 +806,13 @@ def invia_voce(ctrl_override=False):
                     _src_r = SR + 2 + _i
                     _dst_r = row + 2 + _i
                     # Controlla stile ROSSO su col F(5), G(6), H(7) nella sorgente
-                    if any('ROSSO' in oSheet.getCellByPosition(x, _src_r).CellStyle
-                           for x in range(5, 8)):
+                    if any('ROSSO' in oSheet.getCellByPosition(x, _src_r).CellStyle for x in range(5, 8)):
                         # Applica ROSSO alle stesse colonne della destinazione (come invertiUnSegno)
                         for x in range(2, 10):
-                            _stile = dccSheet.getCellByPosition(x, _dst_r).CellStyle
+                            _cell = dccSheet.getCellByPosition(x, _dst_r)
+                            _stile = _cell.CellStyle
                             if 'ROSSO' not in _stile:
-                                dccSheet.getCellByPosition(x, _dst_r).CellStyle = _stile + ' ROSSO'
+                                _cell.CellStyle = _stile + ' ROSSO'
 
                 rigenera_voce(row)
                 rigenera_parziali(False)
@@ -845,10 +851,14 @@ def invia_voce(ctrl_override=False):
                 row_ap = ap_map.get(cod)
                 if row_ap is not None:
                     r = LeenoAnalysis.circoscriveAnalisi(oSheetAP, row_ap)
-                    for row in range(r.RangeAddress.StartRow, r.RangeAddress.EndRow + 1):
-                        if oSheetAP.getCellByPosition(0, row).CellStyle == 'An-lavoraz-Cod-sx':
-                            ce_cod = oSheetAP.getCellByPosition(0, row).String
-                            if ce_cod:
+                    sr = r.RangeAddress.StartRow
+                    er = r.RangeAddress.EndRow
+                    col_a_vals = oSheetAP.getCellRangeByPosition(0, sr, 0, er).getDataArray()
+                    for idx, row_data in enumerate(col_a_vals):
+                        ce_cod = str(row_data[0]) if row_data[0] is not None else ''
+                        if ce_cod:
+                            curr_row = sr + idx
+                            if oSheetAP.getCellByPosition(0, curr_row).CellStyle == 'An-lavoraz-Cod-sx':
                                 if ce_cod not in voci_da_recuperare:
                                     voci_da_recuperare.append(ce_cod)
 

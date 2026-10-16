@@ -599,7 +599,7 @@ def invia_voce(ctrl_override=False):
         # 1. Focus su DP e verifica presenza codice in EP del DP
         _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
         dccSheetEP = ddcDoc.getSheets().getByName('Elenco Prezzi')
-        GotoSheet(nSheetDCC)
+        GotoSheet(nSheetDCC, oDoc=ddcDoc)
 
         # Cattura il codice articolo selezionato nel DP prima di qualsiasi inserimento
         pos_dp = LeggiPosizioneCorrente()[1]
@@ -1895,12 +1895,14 @@ def vai_a_Scorciatoie():
 ########################################################################
 
 
-def GotoSheet(nSheet, fattore=100):
+def GotoSheet(nSheet, fattore=100, oDoc=None):
     '''
     nSheet   { string } : nome Sheet
     attiva e seleziona una sheet
+    oDoc     { opzionale } : documento target; se None usa getDocument()
     '''
-    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName(nSheet)
     oSheet.IsVisible = True
     oDoc.CurrentController.setActiveSheet(oSheet)

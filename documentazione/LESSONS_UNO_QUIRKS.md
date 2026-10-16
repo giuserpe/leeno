@@ -17,3 +17,9 @@ Se un file `.ods` reale di un progetto viene salvato sopra un template o usato c
 ## Freeze e regressioni lontane
 
 Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave (l'ultimo checkpoint visto localizza il blocco); per regressioni lontane usare `git bisect` (good = ultimo tag funzionante, bad = `HEAD` di `dev`); diffidare di commit che sembrano toccare solo codice "non collegato": il problema può essere in un file adiacente dello stesso commit, come un file di test.
+
+## Altezza ottimale delle righe
+
+Nel doppio click sul bordo tra due righe, con l'intero foglio selezionato, Calc adatta l'altezza al contenuto in modo quasi istantaneo anche con moltissimi dati. L'azione non viene catturata dal registratore di macro, quindi non esiste un comando `.uno:` registrabile che la riproduca. `Rows.OptimalHeight` impostato via API, anche in un'unica operazione su aree estese, resta lento: non è equivalente al gesto della GUI e non va presentato come tale.
+
+Percorsi proposti ma mai provati, scartati senza test: `.uno:SetOptimalRowHeight` dopo `.uno:SelectAll`; blocco di Undo, controller e ricalcolo automatico durante l'operazione. Ipotesi non verificata: il vantaggio della GUI deriva dal minor lavoro collaterale (Undo, notifiche, ridisegni) del percorso della vista. Se serve gestire l'altezza in LeenO, l'unica direzione ragionevole è ridurre il perimetro (ricalcolo solo sulle righe inserite o modificate, o altezze impostate in modo mirato), da misurare sul caso reale prima di adottarla.

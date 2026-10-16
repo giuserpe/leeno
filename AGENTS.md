@@ -86,6 +86,7 @@ Tabella delle situazioni, note e casi particolari: `documentazione/LESSONS_GIT.m
 - **Proprietà custom del documento.** Se rinomini una `UserDefinedProperty` (es. `Versione` → `Versione_LeenO`), centralizza la lettura in un helper con fallback sul nome legacy, mai letture dirette del vecchio nome senza `try/except`: altrimenti i documenti creati con template precedenti smettono silenziosamente di funzionare.
 - **Freeze.** Instrumentare la funzione sospetta con `DLG.chi()` a ogni passaggio chiave; per regressioni lontane usare `git bisect`. Procedura completa in `documentazione/LESSONS_UNO_QUIRKS.md`.
 - **Quirk.** Gli stili possono avere un nome interno anonimo (`uuuuu` invece di `'Comp TOTALI'`), con fallimenti silenziosi nei confronti `CellStyle == "nome leggibile"`; i template `.ods` possono avere percorsi di progetti reali hardcoded nelle celle `F1` di COMPUTO/CONTABILITA: verificarle prima di distribuire un template. Dettagli, insieme al caso `getDocument()`, in `documentazione/LESSONS_UNO_QUIRKS.md`.
+- **Altezza righe.** Il doppio click sul bordo tra due righe (foglio selezionato) non ha un equivalente via macro: non è registrabile e `Rows.OptimalHeight` resta lento su aree estese. Non presentare API o dispatcher come riproduzione di quel gesto. Dettagli in `documentazione/LESSONS_UNO_QUIRKS.md`.
 
 ## Modulo XPWE (export/import PriMus)
 

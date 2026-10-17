@@ -1042,23 +1042,6 @@ def _gotoDoc(sUrl):
 ########################################################################
 
 
-def getDCCSheet():
-    '''
-    sUrl  { string } : nome del file
-    porta il focus su di un determinato documento
-    '''
-    oDoc = LeenoUtils.getDocument()
-    fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
-    _gotoDoc(LeenoGlobals.getGlobalVar('sUltimus'))
-    sUltimus_sheet = LeenoUtils.getDocument().CurrentController.ActiveSheet.Name
-    _gotoDoc(fpartenza)
-    LeenoGlobals.setGlobalVar('sUltimus_sheet', sUltimus_sheet)
-    return sUltimus_sheet
-
-
-########################################################################
-
-
 def oggi():
     '''
     restituisce la data di oggi
@@ -2083,10 +2066,6 @@ def show_sheets(x=True):
             pass
 
 
-def nascondi_sheets():
-    show_sheets(False)
-
-
 ########################################################################
 
 
@@ -2116,28 +2095,6 @@ def salva_come(nomefile=None):
     properties = tuple(oProp)
 
     dispatchHelper.executeDispatch(oFrame, ".uno:SaveAs", "", 0, properties)
-
-
-########################################################################
-
-def sposta_cursore(destra = 1, basso = 1):
-
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-    # posizione corrente
-    IDcol = LeggiPosizioneCorrente()[0]
-    IDrow = LeggiPosizioneCorrente()[1]
-
-    # nuova posizione
-    new_col = IDcol + destra
-    new_row = IDrow + basso
-
-    # nuova cella
-    oDoc.CurrentController.select(oSheet.getCellByPosition(new_col, new_row))
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-    return
 
 
 ########################################################################
@@ -3722,120 +3679,6 @@ def riordina_ElencoPrezzi():
     except Exception as e:
         DLG.errore(e)
 
-@LeenoUtils.no_refresh
-def riordina_ElencoPrezzi_():
-    """
-    Riordina l'Elenco Prezzi in ordine alfabetico-numerico naturale dei codici di prezzo,
-    ignorando i prefissi di 6 caratteri terminanti con '_' (incluso VDS_).
-    """
-    # with LeenoUtils.DocumentRefreshContext(False):
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name != 'Elenco Prezzi':
-        return
-    if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
-        LeenoSheetUtils.inserisciRigaRossa(oSheet)
-    last_row = str(get_elenco_prezzi_last_row_index(oSheet) + 1)
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$AF${last_row}", 'elenco_prezzi')
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', f"$A$3:$A${last_row}", 'Lista')
-    oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    start_row = oRangeAddress.StartRow + 1
-    start_col = 0
-    end_col = 7  # Colonna H (0-indexed: A=0, B=1, ..., H=7)
-    end_row = oRangeAddress.EndRow - 1
-    if start_row == end_row:
-        return
-
-    def rimuovi_prefisso(codice):
-        """
-        Rimuove il prefisso se formato da esattamente 6 caratteri terminanti con '_'.
-        Questo include VDS_, BAS25_, BAS23_, ecc.
-        """
-        if len(codice) >= 6 and codice[5] == '_':
-            return codice[6:]
-        return codice
-
-    def chiave_ordinamento_naturale(testo):
-        """
-        Converte un testo in una chiave per ordinamento naturale.
-        I numeri vengono convertiti in tuple (int, str) per ordinarli numericamente.
-        """
-        def converti(parte):
-            if parte.isdigit():
-                return (0, int(parte))
-            else:
-                return (1, parte.lower())
-
-        return [converti(c) for c in re.split('([0-9]+)', testo)]
-
-    def ordina_intervallo_ignorando_prefisso(sheet, start_row, end_row, start_col, end_col):
-        """
-        Ordina un intervallo di celle in base alla prima colonna,
-        ignorando tutti i prefissi di 6 caratteri terminanti con '_'.
-        """
-        # Raccogli tutte le righe con i loro codici
-        righe = []
-        for r in range(start_row, end_row + 1):
-            codice_originale = sheet.getCellByPosition(start_col, r).String
-            codice_senza_prefisso = rimuovi_prefisso(codice_originale)
-            chiave = chiave_ordinamento_naturale(codice_senza_prefisso)
-            righe.append((chiave, r, codice_originale))
-
-        # Ordina in base alla chiave naturale
-        righe.sort(key=lambda x: x[0])
-
-        # Crea una mappa di destinazione -> sorgente
-        mappa_riordino = {}
-        for nuovo_idx, (_, vecchio_idx, _) in enumerate(righe):
-            mappa_riordino[start_row + nuovo_idx] = vecchio_idx
-
-        # Copia i dati riordinati in un buffer temporaneo
-        buffer = []
-        for dest_row in range(start_row, end_row + 1):
-            source_row = mappa_riordino[dest_row]
-            riga_dati = []
-            for col in range(start_col, end_col + 1):
-                cell = sheet.getCellByPosition(col, source_row)
-                # Salva tutti i dettagli della cella
-                # pyrefly: ignore [missing-import]
-                from com.sun.star.table.CellContentType import TEXT, VALUE, FORMULA, EMPTY
-                cell_type = cell.Type
-                riga_dati.append({
-                    'string': cell.String if cell_type == TEXT or cell_type == EMPTY else '',
-                    'value': cell.Value if cell_type == VALUE or cell_type == FORMULA else 0,
-                    'formula': cell.Formula if cell_type == FORMULA else '',
-                    'type': cell_type
-                })
-            buffer.append(riga_dati)
-
-        # Scrivi il buffer nelle celle preservando i tipi
-        for idx, riga_dati in enumerate(buffer):
-            dest_row = start_row + idx
-            for col_offset, cell_data in enumerate(riga_dati):
-                dest_col = start_col + col_offset
-                cell = sheet.getCellByPosition(dest_col, dest_row)
-                # pyrefly: ignore [missing-import]
-                from com.sun.star.table.CellContentType import TEXT, VALUE, FORMULA, EMPTY
-
-                if cell_data['type'] == FORMULA:
-                    cell.setFormula(cell_data['formula'])
-                elif cell_data['type'] == VALUE:
-                    cell.setValue(cell_data['value'])
-                elif cell_data['type'] == TEXT:
-                    cell.setString(cell_data['string'])
-                else:  # EMPTY
-                    cell.setString('')
-
-    try:
-        costo_elem_row = SheetUtils.uFindStringCol('ELENCO DEI COSTI ELEMENTARI', 1, oSheet)
-        if costo_elem_row is None:
-            ordina_intervallo_ignorando_prefisso(oSheet, start_row, end_row, start_col, end_col)
-        else:
-            ordina_intervallo_ignorando_prefisso(oSheet, start_row, costo_elem_row - 1, start_col, end_col)
-            ordina_intervallo_ignorando_prefisso(oSheet, costo_elem_row + 1, end_row, start_col, end_col)
-    except Exception as e:
-        DLG.errore(e)
-
 ########################################################################
 
 @LeenoUtils.no_refresh
@@ -3955,13 +3798,6 @@ def EliminaVociDoppieElencoPrezzi():
         output_range.setDataArray(clean_data)
 
 
-########################################################################
-
-def MENU_trasferimento_onfly():
-    '''
-    Trasferisce i dati da COMPUTO/VARIANTE a CONTABILITA on-the-fly.
-    '''
-    LeenoContab.MENU_trasferimento_onfly()
 ########################################################################
 
 def MENU_firme_in_calce():

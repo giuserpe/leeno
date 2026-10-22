@@ -2164,13 +2164,19 @@ def Menu_adattaAltezzaRiga():
 ########################################################################
 def MENU_voce_breve():
     oDoc = LeenoUtils.getDocument()
+    if not oDoc:
+        return
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('Analisi di Prezzo'):
+    if oSheet.Name == 'Analisi di Prezzo':
         voce_breve_an()
-    elif oSheet.Name in ('Elenco Prezzi'):
+    elif oSheet.Name == 'Elenco Prezzi':
         voce_breve_ep()
     elif oSheet.Name in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         voce_breve()
+
+
+# Alias di compatibilità
+Menu_voce_breve = MENU_voce_breve
 ########################################################################
 
 
@@ -2181,13 +2187,20 @@ def voce_breve():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
-    # Definizione dei fogli di lavoro da modificare
-    # nome_foglio = oDoc.CurrentController.ActiveSheet.getName()
+    if not oDoc:
+        return
 
-    if oDoc.NamedRanges.hasByName("_Lib_1"):
-        # Dialogs.Exclamation(
-        #     Title='ATTENZIONE!', Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA sarà ignorato.")
+    oActiveSheet = oDoc.CurrentController.ActiveSheet if oDoc else None
+    active_sheet_name = oActiveSheet.Name if oActiveSheet else ""
+
+    ha_sal = oDoc.NamedRanges.hasByName("_Lib_1")
+    if active_sheet_name == 'CONTABILITA' and ha_sal:
+        Dialogs.Exclamation(
+            Title='Avviso!',
+            Text="Risulta già registrato un SAL.\n\nIl foglio CONTABILITA non può essere modificato.")
+        return
+
+    if ha_sal:
         fogli_lavoro = ['COMPUTO']
     else:
         fogli_lavoro = ['COMPUTO', 'CONTABILITA']
@@ -2230,11 +2243,19 @@ def voce_breve():
                 oSheet.getCellRangeByName('S1.H338').Value = int(
                     cfg.read('Computo', 'fine_voci_abbreviate'))
 
-    for el in ("COMPUTO", "VARIANTE", "CONTABILITA", "Elenco Prezzi", "Analisi di Prezzo"):
+    fogli_da_adattare = [f for f in fogli_lavoro if oDoc.getSheets().hasByName(f)]
+    if 'COMPUTO' in fogli_lavoro and oDoc.getSheets().hasByName('VARIANTE'):
+        fogli_da_adattare.append('VARIANTE')
+
+    # Adatta prima il foglio attivo per riscontro visivo immediato
+    if active_sheet_name in fogli_da_adattare:
+        fogli_da_adattare.remove(active_sheet_name)
+        fogli_da_adattare.insert(0, active_sheet_name)
+
+    for el in fogli_da_adattare:
         try:
             LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(el))
-            pass
-        except:
+        except Exception:
             pass
 
 ########################################################################

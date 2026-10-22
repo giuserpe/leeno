@@ -765,11 +765,14 @@ def adattaAltezzaRiga(oSheet=False, all=True, lrow=None):
         if all:
             last_row = getLastUsedRow(oSheet)
             if last_row >= 0:
-                for r in range(0, last_row + 1):
-                    try:
-                        oSheet.getRows().getByIndex(r).OptimalHeight = True
-                    except Exception:
-                        pass
+                try:
+                    oSheet.getCellRangeByPosition(0, 0, 0, last_row).Rows.OptimalHeight = True
+                except Exception:
+                    for r in range(0, last_row + 1):
+                        try:
+                            oSheet.getRows().getByIndex(r).OptimalHeight = True
+                        except Exception:
+                            pass
 
         # --- CASI SPECIALI ---
         if oSheet.Name in FOGLI_SPECIALI:

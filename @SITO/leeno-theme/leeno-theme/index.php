@@ -44,7 +44,7 @@
 
     <!-- TRANSITION / CAD GRID SECTION -->
     <section class="transition-section" id="transitionSection">
-        <canvas class="cad-canvas" id="cadCanvas"></canvas>
+        <canvas class="cad-canvas" id="cadCanvas" aria-hidden="true"></canvas>
         <div class="transition-text" id="transitionText">
             <p>
                 <span class="text-accent">PRECISIONE</span> ARCHITETTONICA.
@@ -70,7 +70,7 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <rect x="3" y="3" width="18" height="18" rx="2" />
                             <path d="M3 9h18M9 21V9" />
                         </svg>
@@ -89,7 +89,7 @@
 
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <ellipse cx="12" cy="5" rx="9" ry="3" />
                             <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
                             <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
@@ -109,7 +109,7 @@
 
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <polyline points="9 11 12 14 22 4" />
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                         </svg>
@@ -141,7 +141,7 @@
 
     <!-- METRICS SECTION -->
     <section class="metrics-section" id="metricsSection">
-        <canvas class="cad-canvas cad-curved" id="cadCanvasCurved"></canvas>
+        <canvas class="cad-canvas cad-curved" id="cadCanvasCurved" aria-hidden="true"></canvas>
         <div class="container relative">
             <h2 class="metrics-heading">
                 Numeri che <span class="text-accent">contano</span>

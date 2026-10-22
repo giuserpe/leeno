@@ -208,7 +208,7 @@ get_header();
                                                 <tr>
                                                     <th scope="col" class="col-name">Nome</th>
                                                     <th scope="col" class="col-dim" style="text-align: right; width: 100px;">Dim.</th>
-                                                    <th scope="col" class="col-dl" style="width: 150px;"></th>
+                                                    <th scope="col" class="col-dl" style="width: 150px;"><span class="screen-reader-text"><?php esc_html_e('Download', 'leeno-dm'); ?></span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>

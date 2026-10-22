@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="main-content single-content">
+<main id="main-content" class="main-content single-content">
     <?php while (have_posts()) : the_post(); ?>
     <article class="single-article">
         <div class="single-header">
@@ -35,16 +35,16 @@
                             <?php the_content(); ?>
                         </div>
 
-                        <div class="post-navigation">
+                        <nav class="post-navigation" aria-label="<?php esc_attr_e('Navigazione articolo', 'leeno-dm'); ?>">
                             <?php
                             previous_post_link('<span class="nav-prev">&larr; %link</span>');
                             next_post_link('<span class="nav-next">%link &rarr;</span>');
                             ?>
-                        </div>
+                        </nav>
                     </div>
 
                     <?php if (is_active_sidebar('sidebar-blog')) : ?>
-                    <aside class="content-sidebar">
+                    <aside class="content-sidebar" aria-label="<?php esc_attr_e('Barra laterale blog', 'leeno-dm'); ?>">
                         <?php dynamic_sidebar('sidebar-blog'); ?>
                     </aside>
                     <?php endif; ?>

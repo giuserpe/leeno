@@ -51,7 +51,7 @@
                     <?php if ( get_the_excerpt() ) : ?>
                     <p class="search-result-excerpt"><?php the_excerpt(); ?></p>
                     <?php endif; ?>
-                    <a href="<?php the_permalink(); ?>" class="search-result-link">
+                    <a href="<?php the_permalink(); ?>" class="search-result-link" aria-label="<?php echo esc_attr( sprintf( __( 'Leggi: %s', 'leeno-dm' ), get_the_title() ) ); ?>">
                         Leggi
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                     </a>
@@ -74,7 +74,7 @@
                 <p>Nessun risultato per <strong><?php echo esc_html(get_search_query()); ?></strong>.</p>
                 <p style="margin-top:8px;color:var(--text-secondary);font-size:0.9rem;">Prova con termini diversi o controlla l'ortografia.</p>
                 <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>" style="margin-top:24px;display:flex;gap:8px;max-width:400px;">
-                    <input type="search" name="s" placeholder="Nuova ricerca…" value="<?php echo esc_attr(get_search_query()); ?>" style="flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 14px;font-size:0.9rem;outline:none;">
+                    <input type="search" name="s" placeholder="Nuova ricerca…" aria-label="<?php esc_attr_e('Nuova ricerca', 'leeno-dm'); ?>" value="<?php echo esc_attr(get_search_query()); ?>" style="flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 14px;font-size:0.9rem;">
                     <button type="submit" style="background:var(--accent-rust);color:var(--bg-dark);font-family:var(--font-display);font-weight:700;font-size:0.8rem;text-transform:uppercase;padding:10px 20px;border:none;cursor:pointer;">Cerca</button>
                 </form>
             </div>

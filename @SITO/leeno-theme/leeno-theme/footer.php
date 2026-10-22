@@ -4,13 +4,13 @@
             <div class="footer-links-grid">
                 <a href="<?php echo esc_url(home_url('/scarica-leeno/')); ?>" class="footer-cta-card">
                     <div class="cta-card-header">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                             <polyline points="7 10 12 15 17 10" />
                             <line x1="12" y1="15" x2="12" y2="3" />
                         </svg>
                         <span class="cta-title">SCARICA LEENO</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                             <polyline points="15 3 21 3 21 9" />
                             <line x1="10" y1="14" x2="21" y2="3" />
@@ -21,12 +21,12 @@
 
                 <a href="<?php echo esc_url(home_url('/category/documentazione/')); ?>" class="footer-cta-card">
                     <div class="cta-card-header">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
                         <span class="cta-title">DOCUMENTAZIONE</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                             <polyline points="15 3 21 3 21 9" />
                             <line x1="10" y1="14" x2="21" y2="3" />
@@ -37,11 +37,11 @@
 
                 <a href="<?php echo esc_url(home_url('/forums/')); ?>" class="footer-cta-card">
                     <div class="cta-card-header">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                         <span class="cta-title">FORUM</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                             <polyline points="15 3 21 3 21 9" />
                             <line x1="10" y1="14" x2="21" y2="3" />
@@ -69,13 +69,13 @@
                 </div>
 
                 <div class="footer-external">
-                    <a href="https://www.libreoffice.org/" target="_blank" rel="noopener">LibreOffice</a>
-                    <a href="https://extensions.libreoffice.org/extensions/leeno-2" target="_blank" rel="noopener">Extensions</a>
-                    <a href="https://gitlab.com/giuserpe/leeno" target="_blank" rel="noopener">GitLab</a>
-                    <a href="https://github.com/giuserpe/leeno" target="_blank" rel="noopener">GitHub</a>
-                    <a href="https://t.me/leeno_computometrico" target="_blank" rel="noopener">Telegram</a>
-                    <a href="https://m.facebook.com/groups/433206393972197" target="_blank" rel="noopener">Facebook</a>
-                    <a href="https://leeno.org/donazioni/" target="_blank" rel="noopener">Dona!</a>
+                    <a href="https://www.libreoffice.org/" target="_blank" rel="noopener" aria-label="LibreOffice (si apre in una nuova scheda)">LibreOffice</a>
+                    <a href="https://extensions.libreoffice.org/extensions/leeno-2" target="_blank" rel="noopener" aria-label="Extensions LibreOffice (si apre in una nuova scheda)">Extensions</a>
+                    <a href="https://gitlab.com/giuserpe/leeno" target="_blank" rel="noopener" aria-label="GitLab LeenO (si apre in una nuova scheda)">GitLab</a>
+                    <a href="https://github.com/giuserpe/leeno" target="_blank" rel="noopener" aria-label="GitHub LeenO (si apre in una nuova scheda)">GitHub</a>
+                    <a href="https://t.me/leeno_computometrico" target="_blank" rel="noopener" aria-label="Telegram LeenO (si apre in una nuova scheda)">Telegram</a>
+                    <a href="https://m.facebook.com/groups/433206393972197" target="_blank" rel="noopener" aria-label="Gruppo Facebook LeenO (si apre in una nuova scheda)">Facebook</a>
+                    <a href="https://leeno.org/donazioni/" target="_blank" rel="noopener" aria-label="Donazioni LeenO (si apre in una nuova scheda)">Dona!</a>
                 </div>
             </div>
 

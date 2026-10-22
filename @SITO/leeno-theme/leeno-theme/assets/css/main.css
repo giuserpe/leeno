@@ -79,7 +79,7 @@
 .leeno-table .col-dim, 
 .leeno-table .col-date,
 .leeno-table .col-extra {
-    color: var(--text-secondary);
+    color: #4a5568;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     white-space: nowrap;
@@ -113,7 +113,7 @@ a[href*='download='] {
     justify-content: center;
     gap: 12px;
     background: #ff4d2e;
-    color: #ffffff !important; /* Forza il bianco puro */
+    color: var(--bg-dark) !important; /* Contrasto accessibile >= 4.5:1 */
     font-family: var(--font-display);
     font-weight: 800;
     padding: 12px 32px;
@@ -138,7 +138,7 @@ a[href*='download=']:hover {
     background: var(--accent-rust-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 77, 46, 0.4);
-    color: #ffffff !important;
+    color: var(--bg-dark) !important;
 }
 
 .btn-leeno-download svg,
@@ -149,7 +149,7 @@ a[href*='/download/'] svg,
 a[href*='dl_id='] svg,
 a[href*='download='] svg {
     transition: transform 0.3s;
-    stroke: #ffffff !important;
+    stroke: var(--bg-dark) !important;
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -370,8 +370,9 @@ img {
     z-index: 200;
 }
 
-/* Show sub-menu on hover */
-.nav-menu > li:hover > .sub-menu {
+/* Show sub-menu on hover and focus-within */
+.nav-menu > li:hover > .sub-menu,
+.nav-menu > li:focus-within > .sub-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -421,7 +422,7 @@ img {
     align-items: center;
     gap: 7px;
     background: #ff4d2e;
-    color: #ffffff !important;
+    color: var(--bg-dark) !important; /* Contrasto accessibile >= 4.5:1 */
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 0.75rem;
@@ -439,11 +440,11 @@ img {
     background: var(--accent-rust-hover);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(255, 77, 46, 0.3);
-    color: #ffffff !important;
+    color: var(--bg-dark) !important;
 }
 
 .btn-download svg {
-    stroke: #ffffff !important;
+    stroke: var(--bg-dark) !important;
 }
 
 /* Mobile menu toggle */
@@ -1476,7 +1477,8 @@ img {
 
 /* ——— SCROLLBAR ——— */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-tr
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
 
 /* ============================================================
    IMPROVEMENTS v1.1
@@ -2449,7 +2451,7 @@ h3.wpfb-cat,
 .prezzari-block-count {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: rgba(170,212,0,0.5);
+    color: var(--accent-cyan);
     margin-left: auto;
 }
 
@@ -2894,3 +2896,71 @@ body .btn-download svg {
     .ai-free-strip { padding: 20px 0; }
     .ai-free--compact { padding: 12px 14px; }
 }
+
+/* ============================================================
+   ACCESSIBILITY & WCAG 2.1 / 2.2 AA COMPLIANCE
+   ============================================================ */
+
+/* ——— Standard WordPress screen-reader-text ——— */
+.screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+    background-color: var(--bg-dark);
+    border: 2px solid var(--accent-cyan);
+    border-radius: 2px;
+    clip: auto !important;
+    clip-path: none;
+    color: #fff;
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    height: auto;
+    left: 16px;
+    line-height: normal;
+    padding: 10px 18px;
+    text-decoration: none;
+    top: 16px;
+    width: auto;
+    z-index: 100002;
+}
+
+/* ——— Global Focus Visible Styles ——— */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent-cyan) !important;
+    outline-offset: 3px !important;
+}
+
+/* ——— Prefers Reduced Motion ——— */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hero-canvas,
+    .cad-canvas {
+        display: none !important;
+    }
+}
+

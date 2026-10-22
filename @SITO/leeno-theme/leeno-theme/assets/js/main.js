@@ -15,6 +15,10 @@
         const canvas = document.getElementById('heroCanvas');
         if (!canvas) return;
 
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
         const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
         if (!gl) return;
 
@@ -195,6 +199,10 @@
     function initCADGrid(canvasId, opts) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
+
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
 
         const ctx = canvas.getContext('2d');
         const curved = opts && opts.curved;
@@ -588,6 +596,19 @@
             if (window.innerWidth > 768 && nav.classList.contains('active')) {
                 nav.classList.remove('active');
                 toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Apri menu');
+            }
+        });
+
+        // Close mobile menu on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && nav.classList.contains('active')) {
+                nav.classList.remove('active');
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Apri menu');
+                toggle.focus();
             }
         });
     }

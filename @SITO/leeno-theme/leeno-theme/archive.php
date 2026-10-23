@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="main-content archive-content">
+<main id="main-content" class="main-content archive-content">
     <div class="page-header">
         <div class="container">
             <h1 class="page-title">
@@ -35,11 +35,11 @@
                     ?>
                     <article class="post-card<?php echo !has_post_thumbnail() ? ' post-card--no-thumb' : ''; ?>">
                         <?php if (has_post_thumbnail()) : ?>
-                        <a href="<?php the_permalink(); ?>" class="post-thumb">
+                        <a href="<?php the_permalink(); ?>" class="post-thumb" tabindex="-1" aria-hidden="true">
                             <?php the_post_thumbnail('leeno-card', ['class' => 'post-img']); ?>
                         </a>
                         <?php else : ?>
-                        <a href="<?php the_permalink(); ?>" class="post-thumb post-thumb--placeholder" aria-hidden="true">
+                        <a href="<?php the_permalink(); ?>" class="post-thumb post-thumb--placeholder" tabindex="-1" aria-hidden="true">
                             <span class="post-thumb-cat">
                                 <?php
                                 $cats = get_the_category();
@@ -56,7 +56,7 @@
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h3>
                             <p class="post-excerpt"><?php echo wp_trim_words(get_the_excerpt(), 18); ?></p>
-                            <a href="<?php the_permalink(); ?>" class="post-read">Leggi tutto &rarr;</a>
+                            <a href="<?php the_permalink(); ?>" class="post-read" aria-label="<?php echo esc_attr( sprintf( __( 'Leggi tutto su %s', 'leeno-dm' ), get_the_title() ) ); ?>">Leggi tutto &rarr;</a>
                         </div>
                     </article>
                     <?php
@@ -67,18 +67,18 @@
                     <?php endif; ?>
                 </div>
 
-                <div class="pagination">
+                <nav class="pagination" aria-label="<?php esc_attr_e('Paginazione articoli', 'leeno-dm'); ?>">
                     <?php
                     echo paginate_links([
                         'prev_text' => '&larr; Precedente',
                         'next_text' => 'Successiva &rarr;',
                     ]);
                     ?>
-                </div>
+                </nav>
             </div>
 
             <?php if (is_active_sidebar('sidebar-blog')) : ?>
-            <aside class="content-sidebar">
+            <aside class="content-sidebar" aria-label="<?php esc_attr_e('Barra laterale blog', 'leeno-dm'); ?>">
                 <?php dynamic_sidebar('sidebar-blog'); ?>
             </aside>
             <?php endif; ?>

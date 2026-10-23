@@ -344,13 +344,14 @@ def ultimo_sal():
     return lista
 
 
-def mostra_sal(uSal, pagebreak=True):
+def mostra_sal(uSal, pagebreak=True, naviga=True):
     '''
     Mostra solo gli atti relativi al SAL scelto.
 
     Parametri:
     uSal { integer } : numero del SAL da mostrare
     pagebreak { boolean } : se True attiva la vista interruzioni di pagina
+    naviga { boolean } : se True attiva i fogli e posiziona il cursore sul SAL
     '''
     oDoc = LeenoUtils.getDocument()
 
@@ -389,10 +390,12 @@ def mostra_sal(uSal, pagebreak=True):
                     if sal == uSal:
                         oSheet.setPrintAreas((oNamedRange,))
                         oSheet.setPrintTitleRows(True)
-                        PL.GotoSheet(oSheet.Name)
+                        if naviga:
+                            PL.GotoSheet(oSheet.Name)
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = True
-                        oDoc.CurrentController.setFirstVisibleRow(1)
-                        PL._gotoCella(0, daRiga - 1)
+                        if naviga:
+                            oDoc.CurrentController.setFirstVisibleRow(1)
+                            PL._gotoCella(0, daRiga - 1)
                     else:
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
                 except Exception as e:

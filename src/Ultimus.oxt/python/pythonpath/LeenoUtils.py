@@ -1025,9 +1025,10 @@ def preserva_posizione(step=0):
                     # Ripristiniamo la variabile globale con la posizione salvata all'inizio
                     LeenoGlobals.setGlobalVar('ultima_posizione', initial_pos)
                 
-                # Ripristina foglio attivo e posizione
-                controller.setActiveSheet(active_sheet)
+                # Ripristina posizione (include setActiveSheet per indice)
+                # poi forziamo il foglio corretto come ultima istruzione
                 ripristina_posizione()
+                controller.setActiveSheet(active_sheet)
         return wrapper
     return decorator
 

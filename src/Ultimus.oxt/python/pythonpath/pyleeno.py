@@ -8841,6 +8841,7 @@ def dp():
 ########################################################################
 
 # @LeenoUtils.no_refresh # non serve: RALLENTA!
+@preserva_posizione()
 def vista_configurazione(tipo_configurazione):
     '''
     Configurazione base di colonne ottimizzata.
@@ -8918,15 +8919,17 @@ def vista_configurazione(tipo_configurazione):
 
 
         elif tipo_configurazione == "Semplificata":
-            # Nascondi range massivi invece di usare cicli for
-            oSheet.getCellRangeByPosition(17, 0, 27, 0).Columns.IsVisible = False
+            # Raggruppa e chiude colonne 19-28
+            oSheet.group(create_cell_range(iSheet, 19, 28), 0)
+            oSheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
+            # Raggruppa e chiude colonne 31-37
+            oSheet.group(create_cell_range(iSheet, 31, 37), 0)
             oSheet.getCellRangeByPosition(31, 0, 37, 0).Columns.IsVisible = False
-            oSheet.getCellRangeByPosition(28, 0, 30, 0).Columns.IsVisible = False
 
     finally:
         # Riabilita i controller anche in caso di errore
         oDoc.unlockControllers()
-        LeenoUtils.ripristina_posizione()
+        # LeenoUtils.ripristina_posizione()
 
 def vista_terra_terra():
     vista_configurazione('terra_terra')

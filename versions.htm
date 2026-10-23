@@ -452,6 +452,11 @@
                     <tbody>
                         
             <tr>
+                <td>2026-10-23 11:04</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ae6589575bc62a0f11f683e3412ea828ea77d282" target="_blank" rel="noopener"><code>ae65895</code></a></td>
+                <td class="commit-msg">fix(contab): ripristina il foglio attivo dopo scelta_viste</td>
+            </tr>
+            <tr>
                 <td>2026-10-23 10:43</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/311a5d8d4894489d8a7dd9bb7fb41a61bbce84ac" target="_blank" rel="noopener"><code>311a5d8</code></a></td>
                 <td class="commit-msg">fix(core): preserve active sheet context in scelta_viste and vista_configurazione functions</td>
@@ -460,11 +465,6 @@
                 <td>2026-10-23 10:23</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/14b15d6929fd1a94e7c0dfafef7835476fcfa07a" target="_blank" rel="noopener"><code>14b15d6</code></a></td>
                 <td class="commit-msg">Aggiornata la funzione vista_configurazione() per registrare all'avvio il nome del foglio attivo corrente dall'interfaccia (oDoc.CurrentController.ActiveSheet.Name) e ripristinarlo in modo garantito nel blocco `finally` mediante GotoSheet(sheet_name). In questo modo, quando si esegue la vista dal foglio CONTABILITA o da un altro foglio correlato, al termine della configurazione delle colonne il focus rimane sul foglio di partenza. Rimosso anche il select di SheetCellRanges vuoto in LeenoUtils.ripristina_posizione() e aggiunti test unitari.</td>
-            </tr>
-            <tr>
-                <td>2026-10-23 10:16</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/c569bac2cb1527b64a62648f64b1c86a26a8a7fb" target="_blank" rel="noopener"><code>c569bac</code></a></td>
-                <td class="commit-msg">fix(core): add category annotations in Ins_Categorie and MENU_elimina_righe functions</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +488,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-10-23 10:44 UTC</p>
-                <p>Build Commit: <code>311a5d8</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-10-23 11:04 UTC</p>
+                <p>Build Commit: <code>ae65895</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

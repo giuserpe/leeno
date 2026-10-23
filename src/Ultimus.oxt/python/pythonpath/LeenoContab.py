@@ -344,12 +344,13 @@ def ultimo_sal():
     return lista
 
 
-def mostra_sal(uSal):
+def mostra_sal(uSal, pagebreak=True):
     '''
     Mostra solo gli atti relativi al SAL scelto.
 
     Parametri:
     uSal { integer } : numero del SAL da mostrare
+    pagebreak { boolean } : se True attiva la vista interruzioni di pagina
     '''
     oDoc = LeenoUtils.getDocument()
 
@@ -362,7 +363,8 @@ def mostra_sal(uSal):
     listaSal = ultimo_sal()
 
     if uSal:
-        SheetUtils.visualizza_PageBreak()
+        if pagebreak:
+            SheetUtils.visualizza_PageBreak()
         for sal in range(1, len(listaSal) + 1):
             for el in d:
                 # ~ nomearea = el[1] + str(sal)

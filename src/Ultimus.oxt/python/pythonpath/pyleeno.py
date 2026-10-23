@@ -3038,7 +3038,7 @@ def scelta_viste_run():
 
         try:
             nSal = int(oDialog1.getControl('ComboBox1').getText())
-            LeenoContab.mostra_sal(nSal)
+            LeenoContab.mostra_sal(nSal, pagebreak=False)
         except Exception as e:
             pass
 

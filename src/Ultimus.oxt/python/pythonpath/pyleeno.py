@@ -8846,21 +8846,25 @@ def vista_configurazione(tipo_configurazione):
     '''
     Configurazione base di colonne ottimizzata.
     '''
-    struttura_off()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    active_sheet = oDoc.CurrentController.ActiveSheet
+    sheet_name = active_sheet.Name if active_sheet else 'CONTABILITA'
+
+    struttura_off()
     LeenoUtils.memorizza_posizione()
 
     # Verifica il nome del foglio
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    target_sheet = active_sheet
+    if sheet_name in ('COMPUTO', 'VARIANTE'):
         col_inizio = 46
-    elif oSheet.Name == 'CONTABILITA':
+    elif sheet_name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
+        target_sheet = oDoc.Sheets.getByName('CONTABILITA')
         col_inizio = 39
     else:
-        raise ValueError(f"Nome del foglio non gestito: {oSheet.Name}")
+        raise ValueError(f"Nome del foglio non gestito: {sheet_name}")
 
-    ncol = oSheet.getColumns().getCount()
-    iSheet = oSheet.RangeAddress.Sheet
+    ncol = target_sheet.getColumns().getCount()
+    iSheet = target_sheet.RangeAddress.Sheet
 
     def create_cell_range(sheet, start_col, end_col):
         addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -8869,7 +8873,7 @@ def vista_configurazione(tipo_configurazione):
         addr.EndColumn = end_col
         return addr
 
-    n = SheetUtils.getLastUsedRow(oSheet)
+    n = SheetUtils.getLastUsedRow(target_sheet)
 
     # Disabilita l'aggiornamento dell'interfaccia a basso livello
     oDoc.lockControllers()
@@ -8879,57 +8883,58 @@ def vista_configurazione(tipo_configurazione):
             applica_livelli(3, vedi=False)
 
             # Raggruppa e Nasconde MDO (colonne 28, 29, 30) in un colpo solo
-            oSheet.group(create_cell_range(iSheet, 29, 30), 0)
-            oSheet.getCellRangeByPosition(28, 0, 30, 0).Columns.IsVisible = False
+            target_sheet.group(create_cell_range(iSheet, 29, 30), 0)
+            target_sheet.getCellRangeByPosition(28, 0, 30, 0).Columns.IsVisible = False
 
             # Raggruppa e Mostra misura (5 a 8)
-            oSheet.group(create_cell_range(iSheet, 5, 8), 0)
-            oSheet.getCellRangeByPosition(5, 0, 8, 0).Columns.IsVisible = True
+            target_sheet.group(create_cell_range(iSheet, 5, 8), 0)
+            target_sheet.getCellRangeByPosition(5, 0, 8, 0).Columns.IsVisible = True
 
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
+            LeenoSheetUtils.setLarghezzaColonne(target_sheet)
 
             # Ottimizzazione ciclo celle: accediamo alla colonna 2 una sola volta
             # Nota: se n è molto grande, qui si potrebbe usare getDataArray/setDataArray
             # ma la logica basata sugli stili richiede l'accesso all'oggetto cella.
             for el in range(4, n):
-                oCell_2 = oSheet.getCellByPosition(2, el)
+                oCell_2 = target_sheet.getCellByPosition(2, el)
                 if oCell_2.CellStyle in ("comp sotto centro", "comp sotto centro_R"):
                     # Pulizia rapida colonne 0, 1, 2
-                    oSheet.getCellRangeByPosition(0, el, 2, el).clearContents(7) # 7 = Stringhe + Valori + Formule
+                    target_sheet.getCellRangeByPosition(0, el, 2, el).clearContents(7) # 7 = Stringhe + Valori + Formule
 
         elif tipo_configurazione == "mdo":
             applica_livelli(3, vedi=False)
 
             # Raggruppa e gestisce visibilità MDO
-            oSheet.group(create_cell_range(iSheet, 29, 30), 0)
-            oSheet.getColumns().getByIndex(28).IsVisible = False
-            oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = True
+            target_sheet.group(create_cell_range(iSheet, 29, 30), 0)
+            target_sheet.getColumns().getByIndex(28).IsVisible = False
+            target_sheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = True
 
             # Raggruppa e Nasconde misura
-            oSheet.group(create_cell_range(iSheet, 5, 8), 0)
-            oSheet.getCellRangeByPosition(5, 0, 8, 0).Columns.IsVisible = False
+            target_sheet.group(create_cell_range(iSheet, 5, 8), 0)
+            target_sheet.getCellRangeByPosition(5, 0, 8, 0).Columns.IsVisible = False
 
             for el in range(4, n):
-                oCell_2 = oSheet.getCellByPosition(2, el)
+                oCell_2 = target_sheet.getCellByPosition(2, el)
                 if oCell_2.CellStyle in ("comp sotto centro", "comp sotto centro_R"):
                     # Copia formula dalla colonna 8 alla 2
-                    oCell_2.Formula = oSheet.getCellByPosition(8, el).Formula
+                    oCell_2.Formula = target_sheet.getCellByPosition(8, el).Formula
 
-            oSheet.getColumns().getByIndex(2).Width = 7900
+            target_sheet.getColumns().getByIndex(2).Width = 7900
 
 
         elif tipo_configurazione == "Semplificata":
             # Raggruppa e chiude colonne 19-28
-            oSheet.group(create_cell_range(iSheet, 19, 28), 0)
-            oSheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
+            target_sheet.group(create_cell_range(iSheet, 19, 28), 0)
+            target_sheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
             # Raggruppa e chiude colonne 31-37
-            oSheet.group(create_cell_range(iSheet, 31, 37), 0)
-            oSheet.getCellRangeByPosition(31, 0, 37, 0).Columns.IsVisible = False
+            target_sheet.group(create_cell_range(iSheet, 31, 37), 0)
+            target_sheet.getCellRangeByPosition(31, 0, 37, 0).Columns.IsVisible = False
 
     finally:
         # Riabilita i controller anche in caso di errore
         oDoc.unlockControllers()
-        # LeenoUtils.ripristina_posizione()
+        if sheet_name:
+            GotoSheet(sheet_name)
 
 def vista_terra_terra():
     vista_configurazione('terra_terra')

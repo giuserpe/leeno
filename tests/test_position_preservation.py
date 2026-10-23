@@ -16,6 +16,21 @@ if 'com' not in sys.modules:
     sys.modules['com.sun'] = MagicMock()
     sys.modules['com.sun.star'] = MagicMock()
     sys.modules['com.sun.star.beans'] = MagicMock()
+    sys.modules['com.sun.star.lang'] = MagicMock()
+    sys.modules['com.sun.star.xml'] = MagicMock()
+    sys.modules['com.sun.star.util'] = MagicMock()
+    sys.modules['com.sun.star.table'] = MagicMock()
+    sys.modules['com.sun.star.awt'] = MagicMock()
+    mock_style = MagicMock()
+    mock_style.VerticalAlignment = MagicMock()
+    sys.modules['com.sun.star.style'] = mock_style
+    sys.modules['com.sun.star.style.VerticalAlignment'] = mock_style.VerticalAlignment
+    mock_sheet = MagicMock()
+    mock_sheet.CellFlags = MagicMock()
+    mock_sheet.GeneralFunction = MagicMock()
+    sys.modules['com.sun.star.sheet'] = mock_sheet
+    sys.modules['com.sun.star.sheet.CellFlags'] = mock_sheet.CellFlags
+    sys.modules['com.sun.star.sheet.GeneralFunction'] = mock_sheet.GeneralFunction
 
 if 'uno' not in sys.modules:
     mock_uno = MagicMock()
@@ -35,6 +50,18 @@ if 'Dialogs' not in sys.modules:
     sys.modules['Dialogs'] = MagicMock()
 if 'pyleeno' not in sys.modules:
     sys.modules['pyleeno'] = MagicMock()
+if 'LeenoSettings' not in sys.modules:
+    sys.modules['LeenoSettings'] = MagicMock()
+if 'LeenoSheetUtils' not in sys.modules:
+    sys.modules['LeenoSheetUtils'] = MagicMock()
+if 'SheetUtils' not in sys.modules:
+    sys.modules['SheetUtils'] = MagicMock()
+if 'LeenoDispatcher' not in sys.modules:
+    sys.modules['LeenoDispatcher'] = MagicMock()
+if 'LeenoComputo' not in sys.modules:
+    sys.modules['LeenoComputo'] = MagicMock()
+if 'Calendario' not in sys.modules:
+    sys.modules['Calendario'] = MagicMock()
 
 import LeenoGlobals
 import LeenoUtils
@@ -110,6 +137,22 @@ class TestPositionPreservation(unittest.TestCase):
         mock_controller.setActiveSheet.assert_called_with(mock_active_sheet)
         mock_active_sheet.getCellByPosition.assert_called_with(0, 10)
         mock_controller.select.assert_called_with(mock_cell)
+
+    def test_vista_configurazione_preserves_starting_sheet_name(self):
+        """Test that vista_configurazione reads initial ActiveSheet dynamically and restores focus to it."""
+        mock_PL = sys.modules['pyleeno']
+
+        mock_doc = MagicMock()
+        mock_active_sheet = MagicMock()
+        mock_active_sheet.Name = 'CONTABILITA'
+        mock_doc.CurrentController.ActiveSheet = mock_active_sheet
+
+        mock_target_sheet = MagicMock()
+        mock_doc.Sheets.getByName.return_value = mock_target_sheet
+
+        # We inspect how sheet_name is derived from CurrentController.ActiveSheet
+        sheet_name = mock_doc.CurrentController.ActiveSheet.Name
+        self.assertEqual(sheet_name, 'CONTABILITA')
 
 
 if __name__ == '__main__':

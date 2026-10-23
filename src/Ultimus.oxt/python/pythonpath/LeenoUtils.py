@@ -1035,11 +1035,7 @@ def preserva_posizione(step=0):
                         pass
                 else:
                     try:
-                        pos = getCursorPosition(doc)
-                        if pos:
-                            cell = active_sheet.getCellByPosition(pos[1], pos[0])
-                        else:
-                            cell = active_sheet.getCellByPosition(0, 0)
+                        cell = active_sheet.getCellByPosition(0, 0)
                         controller.select(cell)
                     except Exception:
                         pass

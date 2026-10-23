@@ -1016,19 +1016,26 @@ def preserva_posizione(step=0):
                 return result
             finally:
                 # Ripristina (anche se la funzione va in errore)
+                # Non si usa ripristina_posizione() perche' la sua riga finale
+                # (select di SheetCellRanges vuoto) sposta il foglio attivo.
+                controller.setActiveSheet(active_sheet)
                 if initial_pos:
                     if step != 0:
                         initial_pos['row'] += step
-                        if 'end_row' in initial_pos: 
+                        if 'end_row' in initial_pos:
                             initial_pos['end_row'] += step
-                    
-                    # Ripristiniamo la variabile globale con la posizione salvata all'inizio
-                    LeenoGlobals.setGlobalVar('ultima_posizione', initial_pos)
-                
-                # Ripristina posizione (include setActiveSheet per indice)
-                # poi forziamo il foglio corretto come ultima istruzione
-                ripristina_posizione()
-                controller.setActiveSheet(active_sheet)
+                    try:
+                        if initial_pos['type'] == 'cell':
+                            cell = active_sheet.getCellByPosition(
+                                initial_pos['col'], initial_pos['row'])
+                            controller.select(cell)
+                        else:
+                            cell_range = active_sheet.getCellRangeByPosition(
+                                initial_pos['col'], initial_pos['row'],
+                                initial_pos['end_col'], initial_pos['end_row'])
+                            controller.select(cell_range)
+                    except Exception:
+                        pass
         return wrapper
     return decorator
 

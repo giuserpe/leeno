@@ -3181,6 +3181,15 @@ def scelta_viste_run():
                     f'_a>_u;-(_a-_u)/_a;_a<_u;(_u-_a)/_a)));"--")'
                 )
 
+                # estende a Z4:Z(totale) il formato di Z2 (barra dati inclusa):
+                # copia in Z4 e riempie verso il basso. Il contenuto viene poi
+                # riscritto dalle formule sottostanti.
+                oSheet.copyRange(
+                    oSheet.getCellRangeByName('Z4').getCellAddress(),
+                    oSheet.getCellRangeByName('Z2').getRangeAddress())
+                oSheet.getCellRangeByPosition(25, 3, 25, y_real).fillAuto(
+                    uno.Enum('com.sun.star.sheet.FillDirection', 'TO_BOTTOM'), 1)
+
                 oSheet.getCellRangeByName('X1').String = label
                 LeenoSheetUtils.setLarghezzaColonne(oSheet)
                 L_last = get_elenco_prezzi_last_row_index(oSheet)

@@ -452,6 +452,11 @@
                     <tbody>
                         
             <tr>
+                <td>2026-10-23 10:23</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/14b15d6929fd1a94e7c0dfafef7835476fcfa07a" target="_blank" rel="noopener"><code>14b15d6</code></a></td>
+                <td class="commit-msg">Aggiornata la funzione vista_configurazione() per registrare all'avvio il nome del foglio attivo corrente dall'interfaccia (oDoc.CurrentController.ActiveSheet.Name) e ripristinarlo in modo garantito nel blocco `finally` mediante GotoSheet(sheet_name). In questo modo, quando si esegue la vista dal foglio CONTABILITA o da un altro foglio correlato, al termine della configurazione delle colonne il focus rimane sul foglio di partenza. Rimosso anche il select di SheetCellRanges vuoto in LeenoUtils.ripristina_posizione() e aggiunti test unitari.</td>
+            </tr>
+            <tr>
                 <td>2026-10-23 10:16</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/c569bac2cb1527b64a62648f64b1c86a26a8a7fb" target="_blank" rel="noopener"><code>c569bac</code></a></td>
                 <td class="commit-msg">fix(core): add category annotations in Ins_Categorie and MENU_elimina_righe functions</td>
@@ -462,16 +467,6 @@
                 <td class="commit-msg">Merge pull request #82 from giuserpe/fix-vista-configurazione-focus-contabilita-2337441487997959463
 
 fix(core): corregge ripristino posizione su foglio attivo in vista_configurazione</td>
-            </tr>
-            <tr>
-                <td>2026-10-23 09:17</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/a356a0d9ad40b6fa640f04449f61ad0d75026d1e" target="_blank" rel="noopener"><code>a356a0d</code></a></td>
-                <td class="commit-msg">fix(core): corregge ripristino posizione su foglio attivo
-
-Rimuove la selezione di SheetCellRanges vuoto in ripristina_posizione
-che causava lo spostamento del foglio attivo su COMPUTO.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +490,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-10-23 10:18 UTC</p>
-                <p>Build Commit: <code>c569bac</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-10-23 10:24 UTC</p>
+                <p>Build Commit: <code>14b15d6</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

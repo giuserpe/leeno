@@ -2732,8 +2732,15 @@ def get_elenco_prezzi_last_row_index(oSheet):
     return LeenoSheetUtils.cercaUltimaVoce(oSheet)
 
 def scelta_viste():
-    with LeenoUtils.DocumentRefreshContext(False):
-        scelta_viste_run()
+    oDoc = LeenoUtils.getDocument()
+    starting_sheet_name = oDoc.CurrentController.ActiveSheet.Name if (oDoc and oDoc.CurrentController and oDoc.CurrentController.ActiveSheet) else 'CONTABILITA'
+    try:
+        with LeenoUtils.DocumentRefreshContext(False):
+            scelta_viste_run()
+    finally:
+        if starting_sheet_name:
+            GotoSheet(starting_sheet_name)
+            LeenoUtils.ripristina_posizione()
     LeenoUtils.DocumentRefresh(True)
 
 def scelta_viste_run():
@@ -8849,21 +8856,20 @@ def vista_configurazione(tipo_configurazione):
     Configurazione base di colonne ottimizzata.
     '''
     oDoc = LeenoUtils.getDocument()
-    active_sheet = oDoc.CurrentController.ActiveSheet
-    sheet_name = active_sheet.Name if active_sheet else 'CONTABILITA'
+    starting_sheet_name = oDoc.CurrentController.ActiveSheet.Name if (oDoc and oDoc.CurrentController and oDoc.CurrentController.ActiveSheet) else 'CONTABILITA'
 
     struttura_off()
     LeenoUtils.memorizza_posizione()
 
     # Verifica il nome del foglio
-    target_sheet = active_sheet
-    if sheet_name in ('COMPUTO', 'VARIANTE'):
+    if starting_sheet_name in ('COMPUTO', 'VARIANTE'):
+        target_sheet = oDoc.Sheets.getByName(starting_sheet_name)
         col_inizio = 46
-    elif sheet_name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
+    elif starting_sheet_name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
         target_sheet = oDoc.Sheets.getByName('CONTABILITA')
         col_inizio = 39
     else:
-        raise ValueError(f"Nome del foglio non gestito: {sheet_name}")
+        raise ValueError(f"Nome del foglio non gestito: {starting_sheet_name}")
 
     ncol = target_sheet.getColumns().getCount()
     iSheet = target_sheet.RangeAddress.Sheet
@@ -8935,8 +8941,8 @@ def vista_configurazione(tipo_configurazione):
     finally:
         # Riabilita i controller anche in caso di errore
         oDoc.unlockControllers()
-        if sheet_name:
-            GotoSheet(sheet_name)
+        if starting_sheet_name:
+            GotoSheet(starting_sheet_name)
 
 def vista_terra_terra():
     vista_configurazione('terra_terra')

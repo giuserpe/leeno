@@ -1205,6 +1205,7 @@ def Ins_Categorie(n):
         oDoc.enableAutomaticCalculation(True)
         oDoc.CurrentController.setFirstVisibleColumn(0)
         oDoc.CurrentController.setFirstVisibleRow(row - 5)
+    annota_categorie_voci()
     LeenoSheetUtils.adattaAltezzaRiga()
 
 
@@ -4771,6 +4772,7 @@ def MENU_elimina_righe():
             # rinumerazione capitoli (solo se necessario)
             if stile2 in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
+                MENU_cancella_annotazioni_categorie_voci()
 
         # Se nel blocco ci sono righe valide → rimuoviamo tutto in una volta
         if righe_valide:
@@ -5520,7 +5522,7 @@ def MENU_ricicla_misure():
             except:
                 cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
                 GotoSheet(cfg.read('Contabilita', 'ricicla_da'))
-        LeenoUtils.DocumentRefresh(True)
+        # LeenoUtils.DocumentRefresh(True)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         row = LeggiPosizioneCorrente()[1]
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
@@ -5552,8 +5554,8 @@ def MENU_ricicla_misure():
         rigenera_voce(partenza[1])
 
         _gotoCella(2, partenza[1])
-        LeenoUtils.DocumentRefresh(True)
         oDest.getRows().getByIndex(partenza[1]).OptimalHeight = True
+    LeenoUtils.DocumentRefresh(True)
 
 
 

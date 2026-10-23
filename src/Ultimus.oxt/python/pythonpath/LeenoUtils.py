@@ -956,9 +956,10 @@ def memorizza_posizione(step=0):
 
     # DLG.chi(f"Posizione salvata: Foglio {pos_data['sheet']}, Riga {pos_data['row']}, Col {pos_data['col']}")
 
-def ripristina_posizione():
-    """Ripristina la posizione memorizzata"""
-    pos_data = LeenoGlobals.getGlobalVar('ultima_posizione')
+def ripristina_posizione(pos_data=None):
+    """Ripristina la posizione memorizzata (o quella passata esplicitamente)"""
+    if pos_data is None:
+        pos_data = LeenoGlobals.getGlobalVar('ultima_posizione')
     if not pos_data:
         DLG.chi("Nessuna posizione memorizzata trovata")
         return

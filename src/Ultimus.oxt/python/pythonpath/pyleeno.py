@@ -2734,13 +2734,19 @@ def get_elenco_prezzi_last_row_index(oSheet):
 def scelta_viste():
     oDoc = LeenoUtils.getDocument()
     starting_sheet_name = oDoc.CurrentController.ActiveSheet.Name if (oDoc and oDoc.CurrentController and oDoc.CurrentController.ActiveSheet) else 'CONTABILITA'
+    # copia locale: la variabile globale viene sovrascritta dalle funzioni
+    # chiamate (mostra_sal sposta il foglio attivo, poi vista_configurazione
+    # memorizza la nuova posizione)
+    LeenoUtils.memorizza_posizione()
+    pos_iniziale = LeenoGlobals.getGlobalVar('ultima_posizione')
+    pos_iniziale = dict(pos_iniziale) if pos_iniziale else None
     try:
         with LeenoUtils.DocumentRefreshContext(False):
             scelta_viste_run()
     finally:
         if starting_sheet_name:
             GotoSheet(starting_sheet_name)
-            LeenoUtils.ripristina_posizione()
+            LeenoUtils.ripristina_posizione(pos_iniziale)
     LeenoUtils.DocumentRefresh(True)
 
 def scelta_viste_run():
@@ -8859,7 +8865,6 @@ def vista_configurazione(tipo_configurazione):
     starting_sheet_name = oDoc.CurrentController.ActiveSheet.Name if (oDoc and oDoc.CurrentController and oDoc.CurrentController.ActiveSheet) else 'CONTABILITA'
 
     struttura_off()
-    LeenoUtils.memorizza_posizione()
 
     # Verifica il nome del foglio
     if starting_sheet_name in ('COMPUTO', 'VARIANTE'):

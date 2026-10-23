@@ -985,7 +985,6 @@ def ripristina_posizione():
 
     except Exception as e:
         DLG.chi(f"Errore nel ripristino: {str(e)}")
-    doc.CurrentController.select(doc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
 #############################################################################
 
@@ -1016,8 +1015,6 @@ def preserva_posizione(step=0):
                 return result
             finally:
                 # Ripristina (anche se la funzione va in errore)
-                # Non si usa ripristina_posizione() perche' la sua riga finale
-                # (select di SheetCellRanges vuoto) sposta il foglio attivo.
                 controller.setActiveSheet(active_sheet)
                 if initial_pos:
                     if step != 0:
@@ -1034,6 +1031,16 @@ def preserva_posizione(step=0):
                                 initial_pos['col'], initial_pos['row'],
                                 initial_pos['end_col'], initial_pos['end_row'])
                             controller.select(cell_range)
+                    except Exception:
+                        pass
+                else:
+                    try:
+                        pos = getCursorPosition(doc)
+                        if pos:
+                            cell = active_sheet.getCellByPosition(pos[1], pos[0])
+                        else:
+                            cell = active_sheet.getCellByPosition(0, 0)
+                        controller.select(cell)
                     except Exception:
                         pass
         return wrapper

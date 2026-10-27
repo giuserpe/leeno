@@ -15,9 +15,6 @@ import zipfile
 
 import uno
 
-import LeenoGiornale
-import LeenoUtils
-import SheetUtils
 
 SCHEMA_VERSION = '1'
 ORIGINE = 'appunti-mobile'
@@ -135,38 +132,77 @@ def leggi_pacchetto(percorso):
     return giornate, foto_per_giorno
 
 
-def _estrai_foto(oDoc, foto_per_giorno):
+def _estrai_foto(oDoc, foto_per_giorno=None, percorso=None, giornate=None):
     '''
-    Scrive le foto su disco accanto al documento, in una sottocartella
-    "FOTO/<AAAAMMGG>/". Se un file con lo stesso nome e contenuto
-    esiste già, non lo riscrive (import ripetuto = nessun duplicato); se il
-    nome esiste con contenuto diverso, usa un nome libero senza sovrascrivere.
-    Restituisce {datetime.date: percorso_cartella_relativo} solo per le
-    giornate per cui è stata effettivamente scritta almeno una foto.
+    Estrae o copia le foto su disco accanto al documento, in sottocartelle
+    "FOTO/<AAAAMMGG>/", e rileva la presenza di cartelle foto esistenti.
+    Supporta l'importazione da pacchetto ZIP e da file .json.
+    Se un file con lo stesso nome e contenuto esiste già, non lo riscrive;
+    se il nome esiste con contenuto diverso, usa un nome libero senza sovrascrivere.
+    Restituisce {datetime.date: percorso_cartella_relativo} per le giornate con foto.
     '''
-    url = oDoc.getURL()
-    if not url:
-        raise ValueError('Salva il documento prima di importare le foto.')
-    cartella_doc = os.path.dirname(uno.fileUrlToSystemPath(url))
+    foto_per_giorno = foto_per_giorno or {}
+    giornate = giornate or []
+
+    date_totali = set(foto_per_giorno.keys()) | {data for data, _ in giornate}
+    if not date_totali:
+        return {}
+
+    url = oDoc.getURL() if oDoc else None
+    cartella_doc = os.path.dirname(uno.fileUrlToSystemPath(url)) if url else None
+    percorso_dir = os.path.dirname(percorso) if percorso else None
+
     risultato = {}
-    for data, foto in foto_per_giorno.items():
+    for data in sorted(date_totali):
         sottocartella = data.strftime('%Y%m%d')
-        cartella = os.path.join(cartella_doc, 'FOTO', sottocartella)
-        os.makedirs(cartella, exist_ok=True)
-        for nome, contenuto in foto:
-            destino = os.path.join(cartella, nome)
-            if os.path.exists(destino):
-                with open(destino, 'rb') as f:
-                    if f.read() == contenuto:
-                        continue  # stessa foto già estratta in un import precedente
-                base, ext = os.path.splitext(nome)
-                n = 2
-                while os.path.exists(destino):
-                    destino = os.path.join(cartella, f'{base}_{n}{ext}')
-                    n += 1
-            with open(destino, 'wb') as f:
-                f.write(contenuto)
-        risultato[data] = 'FOTO/' + sottocartella
+        cartella_relativa = 'FOTO/' + sottocartella
+
+        foto_zip = foto_per_giorno.get(data, [])
+
+        foto_disk = []
+        if percorso_dir:
+            cand1 = os.path.join(percorso_dir, sottocartella)
+            cand2 = os.path.join(percorso_dir, 'FOTO', sottocartella)
+            src_dir = cand1 if os.path.isdir(cand1) else (cand2 if os.path.isdir(cand2) else None)
+            if src_dir:
+                try:
+                    for n in os.listdir(src_dir):
+                        p = os.path.join(src_dir, n)
+                        if os.path.isfile(p):
+                            with open(p, 'rb') as f:
+                                foto_disk.append((n, f.read()))
+                except OSError:
+                    pass
+
+        tutte_foto = foto_zip + foto_disk
+        if tutte_foto:
+            if not cartella_doc:
+                raise ValueError('Salva il documento prima di importare le foto.')
+            cartella_dest = os.path.join(cartella_doc, 'FOTO', sottocartella)
+            os.makedirs(cartella_dest, exist_ok=True)
+            for nome, contenuto in tutte_foto:
+                destino = os.path.join(cartella_dest, nome)
+                if os.path.exists(destino):
+                    with open(destino, 'rb') as f:
+                        if f.read() == contenuto:
+                            continue  # stessa foto già presente
+                    base, ext = os.path.splitext(nome)
+                    n = 2
+                    while os.path.exists(destino):
+                        destino = os.path.join(cartella_dest, f'{base}_{n}{ext}')
+                        n += 1
+                with open(destino, 'wb') as f:
+                    f.write(contenuto)
+
+        if cartella_doc:
+            cartella_dest = os.path.join(cartella_doc, 'FOTO', sottocartella)
+            if os.path.isdir(cartella_dest):
+                try:
+                    if any(os.path.isfile(os.path.join(cartella_dest, f)) for f in os.listdir(cartella_dest)):
+                        risultato[data] = cartella_relativa
+                except OSError:
+                    pass
+
     return risultato
 
 
@@ -175,6 +211,7 @@ def _righe_giorni(oSheet):
     Restituisce (colonna A come lista di stringhe, indici delle righe 'Data:').
     Lettura in blocco di tutta la colonna.
     '''
+    import SheetUtils
     ultima = SheetUtils.getLastUsedRow(oSheet)
     colonna = [str(r[0]) for r in oSheet.getCellRangeByPosition(0, 0, 0, ultima).getDataArray()]
     return colonna, [i for i, s in enumerate(colonna) if s.startswith('Data:')]
@@ -255,6 +292,7 @@ def _assicura_link_foto(oSheet, riga_data, cartella_relativa):
 
 
 def importa_giornate(oDoc, giornate, conferma, foto_per_giorno=None):
+    import LeenoGiornale
     '''
     giornate        : lista [(date, campi)] da leggi_appunti()/leggi_pacchetto()
     conferma        : funzione conferma(stringa_data) -> 'si' | 'no' | 'annulla',
@@ -329,6 +367,7 @@ def MENU_importa_appunti():
     Per ogni giornata già presente chiede se sovrascrivere i campi compilati.
     '''
     import Dialogs  # import locale: evita la catena circolare con pyleeno
+    import LeenoUtils
 
     oDoc = LeenoUtils.getDocument()
     if oDoc is None or not (oDoc.getSheets().hasByName('GIORNALE')
@@ -347,7 +386,7 @@ def MENU_importa_appunti():
         return
 
     try:
-        cartelle = _estrai_foto(oDoc, foto_per_giorno) if foto_per_giorno else {}
+        cartelle = _estrai_foto(oDoc, foto_per_giorno, percorso=percorso, giornate=giornate)
     except ValueError as e:
         Dialogs.Exclamation(Title='Importa agenda di cantiere', Text=str(e))
         return

@@ -2886,12 +2886,12 @@ def scelta_viste_run():
         Menu_adattaAltezzaRiga()
 
         if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
-            _vSintetica_core(oDoc, oSheet, False)
+            # _vSintetica_core(oDoc, oSheet, False)
             vista_configurazione('terra_terra')
         elif oDialog1.getControl('ComboVISTA').getText() == 'Incidenza Manodopera':
             vista_configurazione('mdo')
-        elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
-            _vSintetica_core(oDoc, oSheet, True)
+        # elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+            # _vSintetica_core(oDoc, oSheet, True)
 
 # CONTABILITA
     elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
@@ -3049,9 +3049,9 @@ def scelta_viste_run():
         elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
             vista_configurazione('Semplificata')
             LeenoSheetUtils.setLarghezzaColonne(oSheet)
-        elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
-            _vSintetica_core(oDoc, oSheet, True)
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
+        # elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
+        #     _vSintetica_core(oDoc, oSheet, True)
+        #     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 #Elenco Prezzi
@@ -8965,83 +8965,83 @@ def vista_mdo():
     vista_configurazione('mdo')
 
 
-@LeenoUtils.no_refresh
-def Menu_vSintetica():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+# @LeenoUtils.no_refresh
+# def Menu_vSintetica():
+#     oDoc = LeenoUtils.getDocument()
+#     oSheet = oDoc.CurrentController.ActiveSheet
 
-    flag = True
-    # Prendiamo il range delle prime 1000 celle della colonna A
-    oRange = oSheet.getCellRangeByPosition(0, 0, 0, 1000)
+#     flag = True
+#     # Prendiamo il range delle prime 1000 celle della colonna A
+#     oRange = oSheet.getCellRangeByPosition(0, 0, 0, 1000)
 
-    for i in range(1001):
-        oCell = oRange.getCellByPosition(0, i)
-        # Se la cella non è vuota e ha lo stile cercato, flag = False
-        if oCell.String != "" and oCell.CellStyle == "Comp End Attributo":
-            flag = False
-            break
+#     for i in range(1001):
+#         oCell = oRange.getCellByPosition(0, i)
+#         # Se la cella non è vuota e ha lo stile cercato, flag = False
+#         if oCell.String != "" and oCell.CellStyle == "Comp End Attributo":
+#             flag = False
+#             break
 
     # Chiamata alla funzione core
     # NOTA: Qui passiamo alla funzione "vera" senza decoratore se vogliamo la massima velocità
-    _vSintetica_core(oDoc, oSheet, flag)
+    # _vSintetica_core(oDoc, oSheet, flag)
 
-def _vSintetica_core(oDoc, oSheet, flag):
-    """
-    Logica pura di vSintetica senza decoratori per evitare ricorsione
-    """
-    struttura_off()
+# def _vSintetica_core(oDoc, oSheet, flag):
+#     """
+#     Logica pura di vSintetica senza decoratori per evitare ricorsione
+#     """
+#     struttura_off()
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
-        lcol, col_start, col_end = 18, 29, 30
-    elif oSheet.Name == 'CONTABILITA':
-        uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
-        lcol, col_start, col_end = 15, 19, 30
-    else:
-        return
+#     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+#         uRiga = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet)
+#         lcol, col_start, col_end = 18, 29, 30
+#     elif oSheet.Name == 'CONTABILITA':
+#         uRiga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
+#         lcol, col_start, col_end = 15, 19, 30
+#     else:
+#         return
 
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
+#     iSheet = oSheet.RangeAddress.Sheet
+#     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+#     oCellRangeAddr.Sheet = iSheet
 
-    indicator = oDoc.getCurrentController().getStatusIndicator()
-    indicator.start(f'Elaborazione {oSheet.Name}...', uRiga)
+#     indicator = oDoc.getCurrentController().getStatusIndicator()
+#     indicator.start(f'Elaborazione {oSheet.Name}...', uRiga)
 
-    i = 0
-    while i < uRiga:
-        indicator.setValue(i)
-        i = LeenoSheetUtils.prossimaVoce(oSheet, i)
-        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
-        if not sStRange: break
+#     i = 0
+#     while i < uRiga:
+#         indicator.setValue(i)
+#         i = LeenoSheetUtils.prossimaVoce(oSheet, i)
+#         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
+#         if not sStRange: break
 
-        sotto = sStRange.RangeAddress.EndRow
-        sopra = sStRange.RangeAddress.StartRow
-        res_dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)
-        dati = res_dati[1] if oSheet.Name == 'CONTABILITA' else res_dati
+#         sotto = sStRange.RangeAddress.EndRow
+#         sopra = sStRange.RangeAddress.StartRow
+#         res_dati = LeenoComputo.datiVoceComputo(oSheet, i + 1)
+#         dati = res_dati[1] if oSheet.Name == 'CONTABILITA' else res_dati
 
-        if flag:
-            oSheet.getCellByPosition(0, sotto).Formula = str(dati[0])
-            oSheet.getCellByPosition(1, sotto).Formula = str(dati[1])
-            oSheet.getCellByPosition(2, sotto).Formula = str(dati[2])
-            oSheet.getCellRangeByPosition(2, sotto, 7, sotto).merge(True)
-            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
-            oSheet.getRows().getByIndex(sotto).Height = 750
-            oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto - 1
-            oSheet.group(oCellRangeAddr, 1)
-            oSheet.getCellRangeByPosition(lcol, sopra, lcol, sotto - 1).Rows.IsVisible = False
-        else:
-            oSheet.getCellRangeByPosition(2, sotto, 8, sotto).merge(False)
-            if "SOMMANO [" in oSheet.getCellByPosition(8, sotto).String: break
-            oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
-            oSheet.getCellRangeByPosition(0, sotto, 2, sotto).clearContents(7)
-        i += 1
+#         if flag:
+#             oSheet.getCellByPosition(0, sotto).Formula = str(dati[0])
+#             oSheet.getCellByPosition(1, sotto).Formula = str(dati[1])
+#             oSheet.getCellByPosition(2, sotto).Formula = str(dati[2])
+#             oSheet.getCellRangeByPosition(2, sotto, 7, sotto).merge(True)
+#             oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("[";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+#             oSheet.getRows().getByIndex(sotto).Height = 750
+#             oCellRangeAddr.StartRow, oCellRangeAddr.EndRow = sopra, sotto - 1
+#             oSheet.group(oCellRangeAddr, 1)
+#             oSheet.getCellRangeByPosition(lcol, sopra, lcol, sotto - 1).Rows.IsVisible = False
+#         else:
+#             oSheet.getCellRangeByPosition(2, sotto, 8, sotto).merge(False)
+#             if "SOMMANO [" in oSheet.getCellByPosition(8, sotto).String: break
+#             oSheet.getCellByPosition(8, sotto).Formula = f'=CONCATENATE("SOMMANO [";VLOOKUP(B{sopra + 2};elenco_prezzi;3;FALSE());"]")'
+#             oSheet.getCellRangeByPosition(0, sotto, 2, sotto).clearContents(7)
+#         i += 1
 
-    indicator.end()
-    if flag:
-        oCellRangeAddr.StartColumn, oCellRangeAddr.EndColumn = col_start, col_end
-        oSheet.group(oCellRangeAddr, 0)
-        oSheet.getCellRangeByPosition(28, 0, 30, 0).Columns.IsVisible = False
-        Dialogs.Exclamation(Title='AVVISO!', Text='MODALITÀ VISUALIZZAZIONE ATTIVA')
+#     indicator.end()
+#     if flag:
+#         oCellRangeAddr.StartColumn, oCellRangeAddr.EndColumn = col_start, col_end
+#         oSheet.group(oCellRangeAddr, 0)
+#         oSheet.getCellRangeByPosition(28, 0, 30, 0).Columns.IsVisible = False
+#         Dialogs.Exclamation(Title='AVVISO!', Text='MODALITÀ VISUALIZZAZIONE ATTIVA')
 
 
 

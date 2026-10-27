@@ -41,9 +41,8 @@
   </dlg:button>
   <dlg:combobox dlg:style-id="0" dlg:id="ComboVISTA" dlg:tab-index="18" dlg:left="139" dlg:top="87" dlg:width="71" dlg:height="12" dlg:help-text="&amp;1072.Dialogviste_N.ComboVISTA.HelpText" dlg:value="&amp;1076.Dialogviste_N.ComboVISTA.Text" dlg:spin="true">
    <dlg:menupopup>
-    <dlg:menuitem dlg:value="&amp;1073.ComboVISTA.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;1074.ComboVISTA.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;1075.ComboVISTA.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;1410.ComboVISTA.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;1411.ComboVISTA.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl1" dlg:tab-index="19" dlg:left="8" dlg:top="22" dlg:width="104" dlg:height="55" dlg:help-text="&amp;1077.Dialogviste_N.FrameControl1.HelpText">

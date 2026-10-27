@@ -46,10 +46,9 @@
   </dlg:button>
   <dlg:combobox dlg:id="ComboVISTA" dlg:tab-index="19" dlg:left="121" dlg:top="73" dlg:width="76" dlg:height="11" dlg:help-text="&amp;1053.DialogViste_A.ComboVISTA.HelpText" dlg:value="&amp;1058.DialogViste_A.ComboVISTA.Text" dlg:spin="true">
    <dlg:menupopup>
-    <dlg:menuitem dlg:value="&amp;1054.ComboVISTA.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;1055.ComboVISTA.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;1056.ComboVISTA.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;1057.ComboVISTA.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;1407.ComboVISTA.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;1408.ComboVISTA.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;1409.ComboVISTA.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:checkbox dlg:style-id="3" dlg:id="Descrizione_condensata" dlg:tab-index="20" dlg:left="121" dlg:top="88" dlg:width="80" dlg:height="10" dlg:help-text="&amp;1061.DialogViste_A.Descrizione_condensata.HelpText" dlg:value="&amp;1062.DialogViste_A.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false"/>

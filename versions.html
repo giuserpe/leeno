@@ -452,6 +452,27 @@
                     <tbody>
                         
             <tr>
+                <td>2026-10-27 10:36</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/74914cb00b5ca41d02ccc6aa4c65b6789c042ca2" target="_blank" rel="noopener"><code>74914cb</code></a></td>
+                <td class="commit-msg">Merge pull request #83 from giuserpe/jules-6156292664174612153-5522cc32
+
+fix: include photo hyperlink on Brogliaccio JSON import</td>
+            </tr>
+            <tr>
+                <td>2026-10-27 10:22</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/0fe49f25c151ffa0ea3a4fc447c54119bef2292b" target="_blank" rel="noopener"><code>0fe49f2</code></a></td>
+                <td class="commit-msg">fix: include photo hyperlink on Brogliaccio JSON import
+
+Update LeenoGiornaleImport._estrai_foto and MENU_importa_appunti to
+support photo folder discovery and copying when importing Brogliaccio
+daily notes from a JSON file. Look for photo subfolders alongside the
+selected JSON file or next to the active document, ensuring that
+photo hyperlinks (=HYPERLINK("FOTO/..."; "Apri ↗")) are created or
+updated in the GIORNALE sheet. Add unit tests in test_giornale_import.py.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-10-27 07:05</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/94b5ec4ac9b1416fd6f18225ba62a46fc42ecbb8" target="_blank" rel="noopener"><code>94b5ec4</code></a></td>
                 <td class="commit-msg">refactor(gui): rimozione vista sintetica dai menu di scelta e disabilitazione codice
@@ -462,16 +483,6 @@ BREAKING CHANGE/CHANGELOG: La modalità di visualizzazione "Sintetica" è stata 
 - `DialogViste_A.xdl` & `Dialogviste_N.xdl`: Aggiornati i riferimenti `dlg:menuitem` ai nuovi indici di stringa.
 - `dialog.xlb`: Riorganizzati gli elementi della libreria XML.
 - `pyleeno.py`: Commentati i blocchi di chiamata a `_vSintetica_core` all'interno di `scelta_viste_run`, oltre alle definizioni `Menu_vSintetica` e `_vSintetica_core`.</td>
-            </tr>
-            <tr>
-                <td>2026-10-23 11:48</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6bd26f64c4c4fc33dc818d527c01d4ffb880ec97" target="_blank" rel="noopener"><code>6bd26f6</code></a></td>
-                <td class="commit-msg">fix(version): update version to 3.26.0.168-TESTING-20261023</td>
-            </tr>
-            <tr>
-                <td>2026-10-23 11:34</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/6caaf32f1c160967937a50fe6823bcb7a5fff2d1" target="_blank" rel="noopener"><code>6caaf32</code></a></td>
-                <td class="commit-msg">git commit -m "feat(computo): applica lo stile di Z2 alla colonna del raffronto"</td>
             </tr>
                     </tbody>
                 </table>
@@ -495,8 +506,8 @@ BREAKING CHANGE/CHANGELOG: La modalità di visualizzazione "Sintetica" è stata 
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-10-27 07:06 UTC</p>
-                <p>Build Commit: <code>94b5ec4</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-10-27 10:36 UTC</p>
+                <p>Build Commit: <code>74914cb</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

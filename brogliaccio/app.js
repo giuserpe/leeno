@@ -315,6 +315,7 @@
     app.appendChild(h('p', { 'class': 'cantiere-corrente' }, [
       h('span', { 'class': 'etichetta', text: 'Cantiere:' }), h('span', { text: c.nome })
     ]));
+    app.appendChild(h('p', { 'class': 'suggerimento', text: 'Per scrivere a voce, tocca il microfono sulla tastiera del telefono.' }));
     C.CAMPI.forEach(function (campo) {
       var id = 'c_' + campo[0], el;
       if (campo[0] === 'meteo') {

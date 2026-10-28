@@ -52,6 +52,10 @@ Il formato di un cantiere solo (json alla radice, foto in `AAAAMMGG/`) è letto 
 
 La cartella `tools/appunti-cantiere/` va caricata sul server così com'è: ogni file presente finisce online, anche se non referenziato (è successo con `jspdf.min.js`, MIT, mai usato). Prima di aggiungere una libreria di terzi verificare che sia davvero caricata da `index.html` e, se resta, conservarne intestazione e licenza originali. I file propri portano l'intestazione LGPL 2.1; l'`index.html` la ha come commento HTML, senza testo visibile (nessun impatto su screenshot e manuale).
 
+## Dettatura vocale: niente Web Speech API
+
+Non aggiungere `SpeechRecognition`/`webkitSpeechRecognition` né un pulsante microfono. In Chromium il riconoscimento è affidato a un servizio online: l'audio lascia il telefono, in contrasto con il principio di controllo locale dei dati (i campi contengono verbali, presenti, eventi infortunistici) e senza che l'avviso privacy di export e PDF lo copra. Su Brave la funzione non è disponibile e Firefox su Android non la supporta. Un modello locale (es. Whisper in WASM) richiederebbe librerie di terzi e un modello pesante, contro la regola "nessuna dipendenza esterna in produzione". Scelta adottata: dettatura della tastiera del telefono, con un promemoria nella scheda della giornata (classe `.suggerimento`, dalla 0.7.5), le istruzioni nel README e nel manuale (consigliata la dettatura senza connessione con l'italiano scaricato).
+
 ## Pubblicazione
 
 - `genera_versioni.yml` (copie in `.github/workflows/` e in `tools/version/`) assembla a ogni push su `dev` un solo sito Pages: `versions.html` alla radice e questa cartella in `brogliaccio/`, senza `README.md`, poi lo pubblica con `deploy-pages`. Indirizzo: `https://giuserpe.github.io/leeno/brogliaccio/`. La stessa cartella viene copiata anche su `master`. `versions.html` è incorporata in `leeno.org/versioni-sviluppo/`.

@@ -61,6 +61,9 @@ button.cta-grande { width:100%; margin:.6rem 0; padding:.85rem 1rem; font-size:1
 .pannello-titolo { margin:0 0 .2rem; font:700 1rem var(--display); word-break:break-all; }
 .scelta-cantiere { display:flex; align-items:flex-start; gap:.7rem; margin:.5rem 0; font:inherit; text-transform:none; letter-spacing:0; color:var(--fg); }
 .scelta-cantiere input { width:1.4rem; height:1.4rem; flex:none; padding:0; margin:.1rem 0 0; }
+.scelta-colonne { display:flex; gap:.5rem; margin:.6rem 0; flex-wrap:wrap; }
+.scelta-colonne label { display:flex; align-items:center; gap:.4rem; font:600 .85rem var(--display); text-transform:none; letter-spacing:0; color:var(--fg); margin:0; cursor:pointer; background:var(--bg); padding:.4rem .7rem; border:1px solid var(--line); border-radius:2px; }
+.scelta-colonne input { width:1.1rem; height:1.1rem; margin:0; }
 #msg { margin:.8rem 1rem 0; padding:.6rem; border:1px solid var(--line); border-left:4px solid var(--acc); background:var(--card); }
 footer.dona { max-width:40rem; margin:1.2rem auto 0; padding:0 1rem 1.4rem; text-align:center; }
 footer.dona a { display:inline-block; font:600 .85rem var(--display); color:var(--cta); text-decoration:none; border:1px solid var(--cta); border-radius:2px; padding:.55rem 1.2rem; }
@@ -81,8 +84,12 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
   #stampa .s-cantiere { font-size:12pt; font-weight:700; margin:0 0 2mm; }
   #stampa .s-giorno { break-inside:avoid; margin-bottom:6mm; }
   #stampa .s-piede { position:fixed; bottom:6mm; left:16mm; font-size:8pt; color:#444; }
-  #stampa .s-foto-elenco { display:flex; flex-wrap:wrap; gap:3mm; margin:2mm 0 4mm; }
-  #stampa .s-foto-elenco img { width:38mm; height:38mm; object-fit:cover; border:0.3mm solid #000; }
+  #stampa .s-foto-elenco { display:grid; grid-template-columns:repeat(4, 1fr); gap:3mm; margin:2mm 0 4mm; }
+  #stampa .s-foto-elenco[data-colonne="1"] { grid-template-columns:repeat(1, 1fr); }
+  #stampa .s-foto-elenco[data-colonne="2"] { grid-template-columns:repeat(2, 1fr); }
+  #stampa .s-foto-elenco[data-colonne="3"] { grid-template-columns:repeat(3, 1fr); }
+  #stampa .s-foto-elenco[data-colonne="4"] { grid-template-columns:repeat(4, 1fr); }
+  #stampa .s-foto-elenco img { width:100%; aspect-ratio:1 / 1; object-fit:cover; border:0.3mm solid #000; }
   #stampa h2 { font-size:11pt; border-bottom:1px solid #000; margin:0 0 2mm; text-transform:capitalize; }
   #stampa dt { font-weight:700; font-size:9pt; text-transform:uppercase; letter-spacing:.03em; margin-top:2mm; }
   #stampa dd { margin:0 0 1mm; white-space:pre-wrap; }

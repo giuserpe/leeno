@@ -724,7 +724,7 @@ def attiva_contabilita():
     LeenoEvents.assegna()
 ########################################################################
 
-
+@LeenoUtils.no_refresh
 def partita(testo):
     '''
     Aggiunge/detrae rigo di PARTITA PROVVISORIA

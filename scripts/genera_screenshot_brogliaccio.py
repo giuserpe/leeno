@@ -43,7 +43,7 @@ def ritaglia(percorso, altezza_max):
 
 def main(out):
     os.makedirs(out, exist_ok=True)
-    srv = subprocess.Popen(['python3', '-m', 'http.server', PORTA, '-d', APP],
+    srv = subprocess.Popen([sys.executable, '-m', 'http.server', PORTA, '-d', APP],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(1)
     try:
@@ -67,7 +67,8 @@ def main(out):
             pg.screenshot(path=f2); ritaglia(f2, 1560)
             pg.locator('button:has-text("Indietro")').first.click(); time.sleep(.3)
             pg.evaluate('window.print = function(){}')
-            pg.click('text=Stampa o PDF'); time.sleep(.8)
+            pg.click('text=Stampa o PDF'); time.sleep(.5)
+            pg.click('text=Genera stampa/PDF'); time.sleep(.8)
             pdf = os.path.join(out, 'brog_stampa.pdf')
             pg.pdf(path=pdf, format='A4', print_background=True)
             b.close()

@@ -51,7 +51,7 @@ def aggiorna_con_libreoffice(sorgente, uscita):
         s.bind(('localhost', 0))
         porta = s.getsockname()[1]
     profilo = tempfile.mkdtemp(prefix='lo_indice_')
-    proc = subprocess.Popen([soffice, '--headless', '--norestore', '-env:UserInstallation=file://' + profilo.replace('\\', '/'),
+    proc = subprocess.Popen([soffice, '--headless', '--norestore', '-env:UserInstallation=' + uno.systemPathToFileUrl(profilo),
                              '--accept=socket,host=localhost,port=%d;urp;' % porta],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:

@@ -433,39 +433,41 @@
     avviso('Esportate ' + giornate(contaGiornate(dati)) + '. File salvato sul telefono: ' + file.name
       + '. Di solito si trova nella cartella Download (app File).' + sgText);
   }
-  function condividiFile(file, dati, c, senzaGiornate) {
-    if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
+  // file: quello passato a share() (con estensione .txt); originale: quello da salvare se la condivisione fallisce.
+  // Nessun alert/confirm qui: un dialogo modale prima di share() consuma l'attivazione utente (vedi condividiOScarica).
+  function condividiFile(file, originale, dati, c, senzaGiornate) {
     var titolo = 'Brogliaccio';
     if (c && !Array.isArray(c) && c.nome) titolo += ': ' + c.nome;
     try {
       var p = navigator.share({ files: [file], title: titolo });
       if (p && p.then) {
         p.then(
-          function () { registraExport(c); avviso('File condiviso: ' + file.name); },
+          function () { registraExport(c); avviso('File condiviso: ' + originale.name); },
           function (e) {
             if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
             avviso('Condivisione non riuscita (' + (e && e.name ? e.name : 'errore') + '). Il file viene salvato sul telefono.');
-            salvaSulTelefono(file, dati, c, senzaGiornate);
+            salvaSulTelefono(originale, dati, c, senzaGiornate);
           }
         );
       } else {
-        salvaSulTelefono(file, dati, c, senzaGiornate);
+        salvaSulTelefono(originale, dati, c, senzaGiornate);
       }
     } catch (e) {
       if (e && e.name === 'AbortError') { avviso('Condivisione annullata.'); return; }
       avviso('La condivisione diretta non è supportata da questo browser. Il file viene salvato sul telefono.');
-      salvaSulTelefono(file, dati, c, senzaGiornate);
+      salvaSulTelefono(originale, dati, c, senzaGiornate);
     }
   }
   // Il file e' gia' pronto (costruirlo e' asincrono, e dopo un lavoro asincrono il browser puo'
   // rifiutare share(): vedi LESSONS_PWA_BROGLIACCIO.md). Se il dispositivo sa condividere file,
   // un riquadro offre pulsanti da toccare: il tocco fresco rende valida la condivisione.
   // L'ultimo export si registra solo a condivisione riuscita o a file salvato.
-  // Il .json si condivide come testo (.json.txt) per massima compatibilita' con i selettori MIME di Chromium,
-  // mentre i file .zip (singolo cantiere con foto o tutti i cantieri) si condividono direttamente come archivio.
+  // Chromium (e quindi Brave) accetta in share() solo alcuni tipi di file (testo, immagini, audio, video, PDF):
+  // .json e .zip vengono rifiutati e canShare() risponde false. Entrambi si condividono quindi come testo
+  // (.json.txt, .zip.txt, text/plain). L'import di LeenO e il ripristino della PWA riconoscono il contenuto,
+  // non l'estensione. "Salva sul telefono" scarica invece il file con il nome originale.
   function fileDaCondividere(file) {
-    if (/\.json$/i.test(file.name)) return new File([file], file.name + '.txt', { type: 'text/plain' });
-    if (/\.zip$/i.test(file.name)) return file;
+    if (/\.(json|zip)$/i.test(file.name)) return new File([file], file.name + '.txt', { type: 'text/plain' });
     return file;
   }
   function condividiOScarica(file, dati, c, senzaGiornate) {
@@ -485,7 +487,20 @@
       : 'Il tuo browser non supporta la condivisione diretta. Salva il file sul telefono per portarlo in LeenO.');
     pannello.appendChild(h('p', { 'class': 'nota', text: notaTesto }));
     if (supportaShare) {
-      pannello.appendChild(btn('Invia o condividi', function () { condividiFile(daCondividere, dati, c, senzaGiornate); }, 'cta cta-grande'));
+      // Con dati sensibili l'avviso (alert + confirm) richiede tempo e fa scadere l'attivazione utente: dopo la
+      // conferma il pulsante cambia testo e share() parte da un secondo tocco, con attivazione fresca.
+      var confermato = !contieneDatiSensibili(dati);
+      var bCondividi = btn('Invia o condividi', function () {
+        if (!confermato) {
+          if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
+          confermato = true;
+          bCondividi.textContent = 'Conferma e condividi';
+          avviso('Tocca di nuovo il pulsante per scegliere dove inviare il file.');
+          return;
+        }
+        condividiFile(daCondividere, file, dati, c, senzaGiornate);
+      }, 'cta cta-grande');
+      pannello.appendChild(bCondividi);
     }
     pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c, senzaGiornate); }, supportaShare ? '' : 'cta cta-grande'));
     pannello.appendChild(btn('Chiudi', chiudiPannello, ''));

@@ -8066,8 +8066,8 @@ def MENU_filtra_codice():
         curr_start = LeenoSheetUtils.prossimaVoce(oSheet, row, n=0, saltaCat=True)
         search_row = curr_start - 1
 
-        # 2. Risali finché non trovi uno stile di computo o contabilità
-        stili_validi = LeenoGlobals.getGlobalVar('stili_computo') + LeenoGlobals.getGlobalVar('stili_contab')
+        # 2. Risali finché non trovi uno stile di computo o contabilità (con early exit per max performance)
+        stili_validi = set(LeenoGlobals.getGlobalVar('stili_computo') + LeenoGlobals.getGlobalVar('stili_contab'))
 
         found_row = -1
         while search_row >= 0:
@@ -8076,7 +8076,7 @@ def MENU_filtra_codice():
                 if style in stili_validi:
                     found_row = search_row
                     break
-            except:
+            except Exception:
                 pass
             search_row -= 1
 
@@ -8187,22 +8187,84 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
 
+    # Pre-carica in un'unica ricerca nativa Calc le righe con gli stili di inizio/fine attributo e firme
+    start_rows = {}  # start_row -> end_row
+    end_rows = set()
+    sig_rows = set()
+
+    try:
+        search = oSheet.createSearchDescriptor()
+        search.SearchStyles = True
+
+        # Trova tutte le righe Start Attributo
+        for st in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            search.SearchString = st
+            found = oSheet.findAll(search)
+            if found:
+                for idx_f in range(found.Count):
+                    addr = found.getByIndex(idx_f).RangeAddress
+                    for r_f in range(addr.StartRow, addr.EndRow + 1):
+                        if r_f < fine:
+                            start_rows[r_f] = None
+
+        # Trova tutte le righe End Attributo
+        for st in ('Comp End Attributo', 'Comp End Attributo_R'):
+            search.SearchString = st
+            found = oSheet.findAll(search)
+            if found:
+                for idx_f in range(found.Count):
+                    addr = found.getByIndex(idx_f).RangeAddress
+                    for r_f in range(addr.StartRow, addr.EndRow + 1):
+                        if r_f < fine:
+                            end_rows.add(r_f)
+
+        # Trova tutte le righe Firma
+        search.SearchString = 'Ultimus_centro_bordi_lati'
+        found = oSheet.findAll(search)
+        if found:
+            for idx_f in range(found.Count):
+                addr = found.getByIndex(idx_f).RangeAddress
+                for r_f in range(addr.StartRow, addr.EndRow + 1):
+                    if r_f < fine:
+                        sig_rows.add(r_f)
+    except Exception:
+        pass
+
+    # Abbina ogni start_row alla sua end_row corrispondente
+    sorted_starts = sorted(start_rows.keys())
+    sorted_ends = sorted(end_rows)
+    for s_idx, sopra in enumerate(sorted_starts):
+        # La sotto riga è il primo end_row >= sopra
+        sotto = None
+        for e in sorted_ends:
+            if e >= sopra:
+                sotto = e
+                break
+        start_rows[sopra] = sotto if sotto is not None else sopra
+
+    # Pre-carica i valori della Colonna B in bulk con una sola chiamata UNO
+    rng_col_b_data = oSheet.getCellRangeByPosition(1, 0, 1, fine).getDataArray()
+
     n = 0
     closest_row = None
     min_dist = float('inf')
 
     while n < fine:
-        cell_style = oSheet.getCellByPosition(0, n).CellStyle
-
-        if cell_style in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
-            sopra = sStRange.RangeAddress.StartRow
-            sotto = sStRange.RangeAddress.EndRow
+        if n in start_rows:
+            sopra = n
+            sotto = start_rows[sopra]
+            if sotto is None:
+                sotto = sopra
 
             # Annulla il colore precedente (formattazione diretta)
             oSheet.getCellByPosition(1, sopra + 1).clearContents(HARDATTR)
 
-            codice_corrente = oSheet.getCellByPosition(1, sopra + 1).String
+            # Legge il codice corrente dalla data array pre-caricata
+            if sopra + 1 < len(rng_col_b_data) and rng_col_b_data[sopra + 1]:
+                val_b = rng_col_b_data[sopra + 1][0]
+                codice_corrente = str(val_b) if val_b is not None else ""
+            else:
+                codice_corrente = ""
 
             if codice_corrente != voce:
                 oCellRangeAddr.StartRow = sopra
@@ -8219,7 +8281,7 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
                     closest_row = sopra + 1
 
             n = sotto + 1
-        elif cell_style == 'Ultimus_centro_bordi_lati':
+        elif n in sig_rows:
             oCellRangeAddr.StartRow = n
             oCellRangeAddr.EndRow = n
             try:

@@ -77,21 +77,36 @@ footer.dona a:hover { background:var(--cta); color:#fff; }
   body > :not(#stampa) { display:none !important; }
   body { background:#fff !important; }
   #stampa { display:block !important; color:#000; font:11pt/1.4 var(--body); }
-  @page { size:A4; margin:18mm 16mm; }
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+    @bottom-left {
+      content: "realizzato con LeenO.org";
+      font-size: 8pt;
+      font-family: var(--body);
+      color: #444;
+    }
+    @bottom-right {
+      content: "Pagina " counter(page) " di " counter(pages);
+      font-size: 8pt;
+      font-family: var(--body);
+      color: #444;
+    }
+  }
   #stampa .s-avviso { font-style:italic; font-size:9pt; border-bottom:1px solid #000; padding-bottom:6mm; margin-bottom:6mm; }
   #stampa .s-intestazione { display:block; background:none; padding:0; border:0; }
   #stampa h1 { font-size:14pt; margin:0 0 2mm; color:#000; }
   #stampa .s-cantiere { font-size:12pt; font-weight:700; margin:0 0 2mm; }
-  #stampa .s-giorno { break-inside:avoid; margin-bottom:6mm; }
-  #stampa .s-piede { position:fixed; bottom:6mm; left:16mm; font-size:8pt; color:#444; }
+  #stampa .s-giorno { margin-bottom:6mm; }
+  #stampa .s-piede { display:none !important; }
   #stampa .s-foto-elenco { display:grid; grid-template-columns:repeat(4, 1fr); gap:3mm; margin:2mm 0 4mm; }
   #stampa .s-foto-elenco[data-colonne="1"] { grid-template-columns:repeat(1, 1fr); }
   #stampa .s-foto-elenco[data-colonne="2"] { grid-template-columns:repeat(2, 1fr); }
   #stampa .s-foto-elenco[data-colonne="3"] { grid-template-columns:repeat(3, 1fr); }
   #stampa .s-foto-elenco[data-colonne="4"] { grid-template-columns:repeat(4, 1fr); }
-  #stampa .s-foto-elenco img { width:100%; aspect-ratio:1 / 1; object-fit:cover; border:0.3mm solid #000; }
-  #stampa h2 { font-size:11pt; border-bottom:1px solid #000; margin:0 0 2mm; text-transform:capitalize; }
-  #stampa dt { font-weight:700; font-size:9pt; text-transform:uppercase; letter-spacing:.03em; margin-top:2mm; }
+  #stampa .s-foto-elenco img { width:100%; aspect-ratio:1 / 1; object-fit:cover; border:0.3mm solid #000; break-inside:avoid; page-break-inside:avoid; }
+  #stampa h2 { font-size:11pt; border-bottom:1px solid #000; margin:0 0 2mm; text-transform:capitalize; break-after:avoid; page-break-after:avoid; }
+  #stampa dt { font-weight:700; font-size:9pt; text-transform:uppercase; letter-spacing:.03em; margin-top:2mm; break-after:avoid; page-break-after:avoid; }
   #stampa dd { margin:0 0 1mm; white-space:pre-wrap; }
 }
 </style>

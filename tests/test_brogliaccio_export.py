@@ -235,7 +235,7 @@ def test_export_fallback_quando_can_share_falso(server_app):
         page.wait_for_selector('#pannello-export')
         pannello_testo = page.text_content('#pannello-export')
         assert 'File pronto:' in pannello_testo
-        assert 'non supporta la condivisione diretta' in pannello_testo
+        assert 'non permette di inviare file direttamente' in pannello_testo
         assert page.locator('text=Invia o condividi').count() == 0
         assert page.locator('text=Salva sul telefono').count() == 1
         

@@ -114,9 +114,9 @@ Formato: `L<riga> | Lv<livello> | <titolo> | bookmark: <nome>`
 - L37316 | Lv1 | BROGLIACCIO: L&apos;AGENDA DI CANTIERE SUL TELEFONO | bookmark: `__RefHeading__brogliaccio`
     - L37321 | Lv3 | Avvio e uso sul telefono | bookmark: `__RefHeading__brogliaccio_uso`
     - L37325 | Lv3 | Cantieri | bookmark: `__RefHeading__brogliaccio_cantieri`
-    - L39612 | Lv3 | Compilare una giornata | bookmark: `__RefHeading__brogliaccio_giornata`
-    - L41246 | Lv3 | Esportare per LeenO | bookmark: `__RefHeading__brogliaccio_esporta`
-    - L41251 | Lv3 | Stampa o PDF | bookmark: `__RefHeading__brogliaccio_pdf`
-    - L42206 | Lv3 | Ripristinare da file | bookmark: `__RefHeading__brogliaccio_ripristina`
-    - L42212 | Lv3 | Importare l&apos;agenda in LeenO | bookmark: `__RefHeading__brogliaccio_import`
-- L42220 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`
+    - L39624 | Lv3 | Compilare una giornata | bookmark: `__RefHeading__brogliaccio_giornata`
+    - L41269 | Lv3 | Esportare per LeenO | bookmark: `__RefHeading__brogliaccio_esporta`
+    - L41274 | Lv3 | Stampa o PDF | bookmark: `__RefHeading__brogliaccio_pdf`
+    - L42235 | Lv3 | Ripristinare da file | bookmark: `__RefHeading__brogliaccio_ripristina`
+    - L42241 | Lv3 | Importare l&apos;agenda in LeenO | bookmark: `__RefHeading__brogliaccio_import`
+- L42249 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`

@@ -133,7 +133,7 @@ def test_export_zip_singolo_cantiere_con_foto(server_app):
         
         shared = page.evaluate('window.__sharedData')
         assert len(shared) == 1
-        assert shared[0]['files'][0]['name'].endswith('.zip')
+        assert shared[0]['files'][0]['name'].endswith('.zip.txt')
         
         browser.close()
 
@@ -169,10 +169,15 @@ def test_export_zip_con_avviso_privacy(server_app):
         
         assert len(dialogs) == 2
         assert 'Evento infortunistico' in dialogs[0]
+        # dopo l'avviso share() non parte nello stesso tocco: serve un secondo tocco con attivazione fresca
+        assert page.evaluate('window.__sharedData').__len__() == 0
+        page.click('text=Conferma e condividi')
+        page.wait_for_timeout(300)
+        assert len(dialogs) == 2
         
         shared = page.evaluate('window.__sharedData')
         assert len(shared) == 1
-        assert shared[0]['files'][0]['name'].endswith('.zip')
+        assert shared[0]['files'][0]['name'].endswith('.zip.txt')
         
         browser.close()
 
@@ -205,7 +210,7 @@ def test_export_zip_tutti_i_cantieri(server_app):
         shared = page.evaluate('window.__sharedData')
         assert len(shared) == 1
         assert 'agenda-tutti-i-cantieri-' in shared[0]['files'][0]['name']
-        assert shared[0]['files'][0]['name'].endswith('.zip')
+        assert shared[0]['files'][0]['name'].endswith('.zip.txt')
         
         browser.close()
 
@@ -263,4 +268,68 @@ def test_export_fallback_quando_share_fallisce_brave(server_app):
         msg_testo = page.text_content('#msg')
         assert 'Condivisione non riuscita' in msg_testo or 'salvato' in msg_testo
         
+        browser.close()
+
+
+def test_export_tipi_ammessi_come_chromium(server_app):
+    """canShare() come in Chromium/Brave: rifiuta .json e .zip, accetta solo text/plain.
+    Il pulsante deve esserci e share() deve ricevere un file .txt; il salvataggio resta col nome originale."""
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        ctx = browser.new_context(viewport={'width': 390, 'height': 780}, locale='it-IT')
+        ctx.add_init_script("""
+            window.__sharedData = [];
+            navigator.canShare = function(data) {
+                return !!data.files && Array.from(data.files).every(f => f.type === 'text/plain' && /\\.txt$/i.test(f.name));
+            };
+            navigator.share = function(data) {
+                window.__sharedData.push({ files: Array.from(data.files).map(f => ({ name: f.name, type: f.type })) });
+                return Promise.resolve();
+            };
+        """)
+        page = ctx.new_page()
+        page.goto(server_app)
+        page.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO_SINGOLO)])
+        page.evaluate("""async () => {
+            const jpegDummy = new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0xFF, 0xD9]);
+            await window.FotoStore.aggiungi('c1', '2026-10-10', new Blob([jpegDummy], { type: 'image/jpeg' }));
+        }""")
+        page.reload()
+        page.wait_for_selector('text=Esporta per LeenO')
+        page.click('text=Esporta per LeenO')
+        page.wait_for_selector('#pannello-export')
+        assert page.locator('text=Invia o condividi').count() == 1
+        page.click('text=Invia o condividi')
+        page.wait_for_timeout(300)
+        shared = page.evaluate('window.__sharedData')
+        assert len(shared) == 1
+        assert shared[0]['files'][0]['name'].endswith('.zip.txt')
+        assert shared[0]['files'][0]['type'] == 'text/plain'
+        browser.close()
+
+
+def test_fallback_salva_il_file_originale(server_app):
+    """Se share() fallisce il file salvato ha il nome originale (.zip), non quello con .txt."""
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        ctx = browser.new_context(viewport={'width': 390, 'height': 780}, locale='it-IT', accept_downloads=True)
+        ctx.add_init_script("""
+            navigator.canShare = function() { return true; };
+            navigator.share = function() { return Promise.reject(new DOMException('x', 'NotAllowedError')); };
+        """)
+        page = ctx.new_page()
+        page.goto(server_app)
+        page.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO_SINGOLO)])
+        page.evaluate("""async () => {
+            const jpegDummy = new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0xFF, 0xD9]);
+            await window.FotoStore.aggiungi('c1', '2026-10-10', new Blob([jpegDummy], { type: 'image/jpeg' }));
+        }""")
+        page.reload()
+        page.wait_for_selector('text=Esporta per LeenO')
+        page.click('text=Esporta per LeenO')
+        page.wait_for_selector('#pannello-export')
+        with page.expect_download() as d:
+            page.click('text=Invia o condividi')
+        assert d.value.suggested_filename.endswith('.zip')
+        assert not d.value.suggested_filename.endswith('.txt')
         browser.close()

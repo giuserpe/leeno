@@ -373,7 +373,27 @@
   }
 
   function contieneDatiSensibili(dati) {
-    return dati.giornate.some(function (g) { return g.campi.infortuni; });
+    if (!dati) return false;
+    if (Array.isArray(dati)) {
+      return dati.some(function (item) {
+        var d = item.dati || item;
+        return d && d.giornate && d.giornate.some(function (g) { return g && g.campi && g.campi.infortuni; });
+      });
+    }
+    return dati.giornate ? dati.giornate.some(function (g) { return g && g.campi && g.campi.infortuni; }) : false;
+  }
+
+  function contaGiornate(dati) {
+    if (!dati) return 0;
+    if (Array.isArray(dati)) {
+      var tot = 0;
+      dati.forEach(function (item) {
+        var d = item.dati || item;
+        if (d && d.giornate) tot += d.giornate.length;
+      });
+      return tot;
+    }
+    return dati.giornate ? dati.giornate.length : 0;
   }
 
   // azione: 'esportare il file' | 'creare il PDF', per adattare il testo dell'avviso.
@@ -392,19 +412,32 @@
     while (pannello.firstChild) pannello.removeChild(pannello.firstChild);
     pannello.hidden = true;
   }
-  function registraExport(c) { c.ultimo_export = new Date().toISOString(); salva(); principale(); }
-  function salvaSulTelefono(file, dati, c) {
+  function registraExport(target) {
+    var adesso = new Date().toISOString();
+    if (Array.isArray(target)) {
+      target.forEach(function (item) {
+        var c = item.c || item;
+        if (c && typeof c === 'object') c.ultimo_export = adesso;
+      });
+    } else if (target && typeof target === 'object') {
+      target.ultimo_export = adesso;
+    }
+    salva(); principale();
+  }
+  function salvaSulTelefono(file, dati, c, senzaGiornate) {
     // Download diretto via <a download>: non richiede alcuna attivazione utente.
     var a = h('a', { href: URL.createObjectURL(file), download: file.name });
     document.body.appendChild(a); a.click(); a.remove();
     registraExport(c);
-    avviso('Esportate ' + giornate(dati.giornate.length) + '. File salvato sul telefono: ' + file.name
-      + '. Di solito si trova nella cartella Download (app File).'
-      + (/\.zip$/.test(file.name) ? ' Il file con le foto (.zip) non si puo\' inviare dal menu di condivisione del telefono.' : ''));
+    var sgText = senzaGiornate ? ' ' + cantieri(senzaGiornate) + ' senza giornate non ' + (senzaGiornate === 1 ? 'e\' incluso' : 'sono inclusi') + '.' : '';
+    avviso('Esportate ' + giornate(contaGiornate(dati)) + '. File salvato sul telefono: ' + file.name
+      + '. Di solito si trova nella cartella Download (app File).' + sgText);
   }
   function condividiFile(file, dati, c) {
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
-    navigator.share({ files: [file], title: 'Brogliaccio: ' + c.nome }).then(
+    var titolo = 'Brogliaccio';
+    if (c && !Array.isArray(c) && c.nome) titolo += ': ' + c.nome;
+    navigator.share({ files: [file], title: titolo }).then(
       function () { registraExport(c); avviso('File condiviso: ' + file.name); },
       function (e) {
         if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
@@ -416,24 +449,28 @@
   // rifiutare share(): vedi LESSONS_PWA_BROGLIACCIO.md). Se il dispositivo sa condividere file,
   // un riquadro offre pulsanti da toccare: il tocco fresco rende valida la condivisione.
   // L'ultimo export si registra solo a condivisione riuscita o a file salvato.
-  // Il menu di condivisione di Chromium (Chrome, Brave, Edge) accetta solo alcuni tipi di file
-  // (testo, immagini, audio, video, PDF): .json e .zip vengono rifiutati da share(), anche quando
-  // canShare() risponde di si. Il .json si condivide quindi come testo (.json.txt, che l'import di
-  // LeenO legge ugualmente); lo .zip con le foto non e' condivisibile e si salva direttamente.
+  // Il .json si condivide come testo (.json.txt) per massima compatibilita' con i selettori MIME di Chromium,
+  // mentre i file .zip (singolo cantiere con foto o tutti i cantieri) si condividono direttamente come archivio.
   function fileDaCondividere(file) {
-    return /\.json$/.test(file.name) ? new File([file], file.name + '.txt', { type: 'text/plain' }) : null;
+    if (/\.json$/i.test(file.name)) return new File([file], file.name + '.txt', { type: 'text/plain' });
+    if (/\.zip$/i.test(file.name)) return file;
+    return file;
   }
-  function condividiOScarica(file, dati, c) {
+  function condividiOScarica(file, dati, c, senzaGiornate) {
     chiudiPannello();
     var daCondividere = fileDaCondividere(file);
-    if (!daCondividere || !(navigator.canShare && navigator.canShare({ files: [daCondividere] }))) { salvaSulTelefono(file, dati, c); return; }
+    if (!daCondividere || !(navigator.canShare && navigator.canShare({ files: [daCondividere] }))) {
+      salvaSulTelefono(file, dati, c, senzaGiornate);
+      return;
+    }
     pannello.hidden = false;
     pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'File pronto: ' + file.name }));
-    pannello.appendChild(h('p', { 'class': 'nota', text: giornate(dati.giornate.length)
+    var numG = contaGiornate(dati);
+    pannello.appendChild(h('p', { 'class': 'nota', text: giornate(numG)
       + '. Per portarle in LeenO invia il file a te stesso '
       + '(posta, messaggi, cloud) oppure salvalo sul telefono.' }));
     pannello.appendChild(btn('Invia o condividi', function () { condividiFile(daCondividere, dati, c); }, 'cta cta-grande'));
-    pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c); }, ''));
+    pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c, senzaGiornate); }, ''));
     pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
     avviso('');
     pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -489,7 +526,7 @@
   }
 
   // Esporta tutti i cantieri con giornate in un unico .zip: una cartella per cantiere, ciascuna con il proprio
-  // .json e le proprie foto. Lo .zip non e' condivisibile dal menu del telefono: si salva direttamente.
+  // .json e le proprie foto.
   function esportaTutti() {
     var ids = Object.keys(stato.cantieri).sort(function (a, b) {
       return stato.cantieri[a].nome.localeCompare(stato.cantieri[b].nome, 'it') || (a < b ? -1 : 1);
@@ -508,19 +545,9 @@
       pr.forEach(function (p) { voci = voci.concat(p.voci); });
       return vociPronte(voci).then(function (pronte) {
         var file = new File([ZipStore.creaZip(pronte)], 'agenda-tutti-i-cantieri-' + C.oggiISO().replace(/-/g, '') + '.zip', { type: 'application/zip' });
-        salvaTutti(file, pr, ids.length - conGiornate.length);
+        condividiOScarica(file, pr, pr, ids.length - conGiornate.length);
       });
     }).catch(function (e) { avviso('Creazione del file compresso non riuscita: ' + e.message); });
-  }
-  function salvaTutti(file, pr, senzaGiornate) {
-    var a = h('a', { href: URL.createObjectURL(file), download: file.name });
-    document.body.appendChild(a); a.click(); a.remove();
-    var adesso = new Date().toISOString(), g = 0, f = 0;
-    pr.forEach(function (p) { p.c.ultimo_export = adesso; g += p.dati.giornate.length; f += p.foto; });
-    salva(); principale();
-    avviso('Esportati ' + cantieri(pr.length) + ' (' + giornate(g) + ', ' + f + ' foto). File salvato sul telefono: ' + file.name
-      + '. Di solito si trova nella cartella Download (app File). Il file .zip non si puo\' inviare dal menu di condivisione del telefono.'
-      + (senzaGiornate ? ' ' + cantieri(senzaGiornate) + ' senza giornate non ' + (senzaGiornate === 1 ? 'e\' incluso' : 'sono inclusi') + '.' : ''));
   }
 
   // Con piu' cantieri sul telefono si sceglie cosa esportare; con uno solo si esporta subito.

@@ -105,7 +105,7 @@ def leggi_pacchetto(percorso):
                         vuoto per un .json semplice o uno .zip senza cartelle foto.
     Solleva ValueError con un messaggio leggibile se il file non è valido.
     '''
-    if not percorso.lower().endswith('.zip'):
+    if not zipfile.is_zipfile(percorso):
         return leggi_appunti(percorso), {}
 
     try:

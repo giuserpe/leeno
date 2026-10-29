@@ -433,17 +433,29 @@
     avviso('Esportate ' + giornate(contaGiornate(dati)) + '. File salvato sul telefono: ' + file.name
       + '. Di solito si trova nella cartella Download (app File).' + sgText);
   }
-  function condividiFile(file, dati, c) {
+  function condividiFile(file, dati, c, senzaGiornate) {
     if (!confermaSeSensibile(dati, 'condividere il file')) { avviso('Condivisione annullata.'); return; }
     var titolo = 'Brogliaccio';
     if (c && !Array.isArray(c) && c.nome) titolo += ': ' + c.nome;
-    navigator.share({ files: [file], title: titolo }).then(
-      function () { registraExport(c); avviso('File condiviso: ' + file.name); },
-      function (e) {
-        if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
-        avviso('Condivisione non riuscita (' + (e && e.name ? e.name : 'errore') + '). Usa \"Salva sul telefono\".');
+    try {
+      var p = navigator.share({ files: [file], title: titolo });
+      if (p && p.then) {
+        p.then(
+          function () { registraExport(c); avviso('File condiviso: ' + file.name); },
+          function (e) {
+            if (e && e.name === 'AbortError') { avviso('Condivisione annullata. Puoi riprovare oppure salvare il file sul telefono.'); return; }
+            avviso('Condivisione non riuscita (' + (e && e.name ? e.name : 'errore') + '). Il file viene salvato sul telefono.');
+            salvaSulTelefono(file, dati, c, senzaGiornate);
+          }
+        );
+      } else {
+        salvaSulTelefono(file, dati, c, senzaGiornate);
       }
-    );
+    } catch (e) {
+      if (e && e.name === 'AbortError') { avviso('Condivisione annullata.'); return; }
+      avviso('La condivisione diretta non è supportata da questo browser. Il file viene salvato sul telefono.');
+      salvaSulTelefono(file, dati, c, senzaGiornate);
+    }
   }
   // Il file e' gia' pronto (costruirlo e' asincrono, e dopo un lavoro asincrono il browser puo'
   // rifiutare share(): vedi LESSONS_PWA_BROGLIACCIO.md). Se il dispositivo sa condividere file,
@@ -459,18 +471,23 @@
   function condividiOScarica(file, dati, c, senzaGiornate) {
     chiudiPannello();
     var daCondividere = fileDaCondividere(file);
-    if (!daCondividere || !(navigator.canShare && navigator.canShare({ files: [daCondividere] }))) {
-      salvaSulTelefono(file, dati, c, senzaGiornate);
-      return;
+    var supportaShare = false;
+    try {
+      supportaShare = !!(daCondividere && navigator.canShare && navigator.canShare({ files: [daCondividere] }));
+    } catch (e) {
+      supportaShare = false;
     }
     pannello.hidden = false;
     pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'File pronto: ' + file.name }));
     var numG = contaGiornate(dati);
-    pannello.appendChild(h('p', { 'class': 'nota', text: giornate(numG)
-      + '. Per portarle in LeenO invia il file a te stesso '
-      + '(posta, messaggi, cloud) oppure salvalo sul telefono.' }));
-    pannello.appendChild(btn('Invia o condividi', function () { condividiFile(daCondividere, dati, c); }, 'cta cta-grande'));
-    pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c, senzaGiornate); }, ''));
+    var notaTesto = giornate(numG) + '. ' + (supportaShare
+      ? 'Per portarle in LeenO invia il file a te stesso (posta, messaggi, cloud) oppure salvalo sul telefono.'
+      : 'Il tuo browser non supporta la condivisione diretta. Salva il file sul telefono per portarlo in LeenO.');
+    pannello.appendChild(h('p', { 'class': 'nota', text: notaTesto }));
+    if (supportaShare) {
+      pannello.appendChild(btn('Invia o condividi', function () { condividiFile(daCondividere, dati, c, senzaGiornate); }, 'cta cta-grande'));
+    }
+    pannello.appendChild(btn('Salva sul telefono', function () { salvaSulTelefono(file, dati, c, senzaGiornate); }, supportaShare ? '' : 'cta cta-grande'));
     pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
     avviso('');
     pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });

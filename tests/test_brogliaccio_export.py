@@ -111,7 +111,6 @@ def test_export_zip_singolo_cantiere_con_foto(server_app):
         page.goto(server_app)
         page.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO_SINGOLO)])
 
-        # Aggiunge una foto fittizia in IndexedDB per il cantiere 'c1' e la giornata '2026-10-10'
         page.evaluate("""async () => {
             if (window.FotoStore) {
                 const jpegDummy = new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0xFF, 0xD9]);
@@ -207,5 +206,61 @@ def test_export_zip_tutti_i_cantieri(server_app):
         assert len(shared) == 1
         assert 'agenda-tutti-i-cantieri-' in shared[0]['files'][0]['name']
         assert shared[0]['files'][0]['name'].endswith('.zip')
+
+        browser.close()
+
+
+def test_export_fallback_quando_can_share_falso(server_app):
+    """Verifica che in Firefox (o quando canShare è falso) il pannello si apra mostrando 'Salva sul telefono'."""
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        ctx = browser.new_context(viewport={'width': 390, 'height': 780}, locale='it-IT')
+        ctx.add_init_script("""
+            navigator.canShare = function(data) { return false; };
+            navigator.share = undefined;
+        """)
+
+        page = ctx.new_page()
+        page.goto(server_app)
+        page.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO_SINGOLO)])
+        page.reload()
+        page.wait_for_selector('text=Esporta per LeenO')
+        page.click('text=Esporta per LeenO')
+
+        page.wait_for_selector('#pannello-export')
+        pannello_testo = page.text_content('#pannello-export')
+        assert 'File pronto:' in pannello_testo
+        assert 'non supporta la condivisione diretta' in pannello_testo
+        assert page.locator('text=Invia o condividi').count() == 0
+        assert page.locator('text=Salva sul telefono').count() == 1
+
+        browser.close()
+
+
+def test_export_fallback_quando_share_fallisce_brave(server_app):
+    """Verifica che in Brave (quando share() viene rifiutato) l'errore venga intercettato ed eseguito il salvataggio."""
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        ctx = browser.new_context(viewport={'width': 390, 'height': 780}, locale='it-IT')
+        ctx.add_init_script("""
+            navigator.canShare = function(data) { return true; };
+            navigator.share = function(data) {
+                return Promise.reject(new DOMException("Permission denied", "NotAllowedError"));
+            };
+        """)
+
+        page = ctx.new_page()
+        page.goto(server_app)
+        page.evaluate('([k,v])=>localStorage.setItem(k,v)', [CHIAVE, json.dumps(STATO_SINGOLO)])
+        page.reload()
+        page.wait_for_selector('text=Esporta per LeenO')
+        page.click('text=Esporta per LeenO')
+
+        page.wait_for_selector('#pannello-export')
+        page.click('text=Invia o condividi')
+        page.wait_for_timeout(300)
+
+        msg_testo = page.text_content('#msg')
+        assert 'Condivisione non riuscita' in msg_testo or 'salvato' in msg_testo
 
         browser.close()

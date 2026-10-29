@@ -550,8 +550,9 @@
     return Promise.race([tutte, new Promise(function (r) { setTimeout(r, 20000); })]);
   }
 
-  function costruisciStampa(nomeCantiere, dati, fotoPerGiorno) {
+  function costruisciStampa(nomeCantiere, dati, fotoPerGiorno, colonne) {
     fotoPerGiorno = fotoPerGiorno || {};
+    colonne = colonne || 4;
     var el = document.getElementById('stampa');
     while (el.firstChild) el.removeChild(el.firstChild);
     el.appendChild(h('div', { 'class': 's-intestazione' }, [
@@ -571,7 +572,7 @@
       var sezione = h('section', { 'class': 's-giorno' }, [h('h2', { text: dataEstesa(g.data) }), dl]);
       var foto = (fotoPerGiorno[g.data] || []).filter(function (f) { return f.dataUrl; });
       if (foto.length) {
-        sezione.appendChild(h('div', { 'class': 's-foto-elenco' },
+        sezione.appendChild(h('div', { 'class': 's-foto-elenco', 'data-colonne': String(colonne) },
           foto.map(function (f) { return h('img', { src: f.dataUrl, alt: 'Foto del ' + dataEstesa(g.data) }); })));
       }
       el.appendChild(sezione);
@@ -579,7 +580,7 @@
     el.appendChild(h('div', { 'class': 's-piede' }, [h('span', { text: 'realizzato con LeenO.org' })]));
   }
 
-  function stampaPDF() {
+  function eseguiStampaPDF(colonne) {
     var c = cantiereCorrente();
     var dati = C.buildExport(c.giornate, new Date());
     if (!dati.giornate.length) { avviso('Nessuna giornata da stampare.'); return; }
@@ -602,11 +603,39 @@
         });
       })).then(function (urlDati) {
         tutte.forEach(function (f, i) { f.dataUrl = urlDati[i]; });
-        costruisciStampa(c.nome, dati, perGiorno);
+        costruisciStampa(c.nome, dati, perGiorno, colonne);
         // Con window.print() subito dopo l'inserimento le foto non sono ancora decodificate e finiscono nel PDF come riquadri vuoti.
         attendiImmagini(document.getElementById('stampa')).then(function () { window.print(); });
       });
     });
+  }
+
+  function stampaPDF() {
+    var c = cantiereCorrente();
+    var dati = C.buildExport(c.giornate, new Date());
+    if (!dati.giornate.length) { avviso('Nessuna giornata da stampare.'); return; }
+    chiudiPannello();
+    pannello.hidden = false;
+    pannello.appendChild(h('p', { 'class': 'pannello-titolo', text: 'Stampa o PDF: ' + c.nome }));
+    pannello.appendChild(h('p', { 'class': 'nota', text: 'Scegli quante colonne di immagini inserire nella stampa (da 1 a 4):' }));
+
+    var divColonne = h('div', { 'class': 'scelta-colonne' });
+    [1, 2, 3, 4].forEach(function (n) {
+      var rad = h('input', { type: 'radio', name: 'colonne-foto', value: String(n), id: 'col-' + n });
+      if (n === 4) rad.checked = true;
+      divColonne.appendChild(h('label', { 'for': 'col-' + n }, [rad, h('span', { text: n + (n === 1 ? ' colonna' : ' colonne') })]));
+    });
+    pannello.appendChild(divColonne);
+
+    pannello.appendChild(btn('Genera stampa/PDF', function () {
+      var sel = pannello.querySelector('input[name="colonne-foto"]:checked');
+      var numColonne = sel ? parseInt(sel.value, 10) : 4;
+      chiudiPannello();
+      eseguiStampaPDF(numColonne);
+    }, 'cta cta-grande'));
+    pannello.appendChild(btn('Chiudi', chiudiPannello, ''));
+    avviso('');
+    pannello.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // Ripristino da un .json (solo testo): le giornate vanno nel cantiere aperto.

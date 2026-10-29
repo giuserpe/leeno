@@ -452,31 +452,29 @@
                     <tbody>
                         
             <tr>
+                <td>2026-10-29 12:54</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/b246fafdce0fd6b7ffc33892c74e2dc87e98b5c6" target="_blank" rel="noopener"><code>b246faf</code></a></td>
+                <td class="commit-msg">Merge pull request #84 from giuserpe/jules-12692980748404491603-2e320cfe
+
+fix: ottimizza la velocita di MENU_filtra_codice</td>
+            </tr>
+            <tr>
+                <td>2026-10-29 12:47</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/3e37a17b30353cc067f4bceb39b0394419952f47" target="_blank" rel="noopener"><code>3e37a17</code></a></td>
+                <td class="commit-msg">fix: MENU_filtra_codice e filtra_codice per una ricerca rapida dei codici
+
+Ottimizzata la prestazione di filtra_codice() e MENU_filtra_codice()
+sostituendo i cicli riga per riga sul bridge PyUNO con la ricerca
+nativa LibreOffice Calc (createSearchDescriptor / findAll) per gli stili
+delle voci e getAddress/getDataArray per la colonna B.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-10-28 11:49</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/b533ec57d5cb660b30ace524bc17abe256a2d531" target="_blank" rel="noopener"><code>b533ec5</code></a></td>
                 <td class="commit-msg">feat(brogliaccio): aggiunge promemoria sulla dettatura con la tastiera
 docs(brogliaccio): documenta la dettatura vocale nel manuale</td>
-            </tr>
-            <tr>
-                <td>2026-10-27 10:36</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/74914cb00b5ca41d02ccc6aa4c65b6789c042ca2" target="_blank" rel="noopener"><code>74914cb</code></a></td>
-                <td class="commit-msg">Merge pull request #83 from giuserpe/jules-6156292664174612153-5522cc32
-
-fix: include photo hyperlink on Brogliaccio JSON import</td>
-            </tr>
-            <tr>
-                <td>2026-10-27 10:22</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0fe49f25c151ffa0ea3a4fc447c54119bef2292b" target="_blank" rel="noopener"><code>0fe49f2</code></a></td>
-                <td class="commit-msg">fix: include photo hyperlink on Brogliaccio JSON import
-
-Update LeenoGiornaleImport._estrai_foto and MENU_importa_appunti to
-support photo folder discovery and copying when importing Brogliaccio
-daily notes from a JSON file. Look for photo subfolders alongside the
-selected JSON file or next to the active document, ensuring that
-photo hyperlinks (=HYPERLINK("FOTO/..."; "Apri ↗")) are created or
-updated in the GIORNALE sheet. Add unit tests in test_giornale_import.py.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -500,8 +498,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-10-28 11:49 UTC</p>
-                <p>Build Commit: <code>b533ec5</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-10-29 12:54 UTC</p>
+                <p>Build Commit: <code>b246faf</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

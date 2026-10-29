@@ -484,7 +484,7 @@
     var numG = contaGiornate(dati);
     var notaTesto = giornate(numG) + '. ' + (supportaShare
       ? 'Per portarle in LeenO invia il file a te stesso (posta, messaggi, cloud) oppure salvalo sul telefono.'
-      : 'Il tuo browser non supporta la condivisione diretta. Salva il file sul telefono per portarlo in LeenO.');
+      : 'Questo browser non permette di inviare file direttamente (succede ad esempio con Firefox). Salva il file sul telefono, poi aprilo dall\'app File o dalle notifiche dei download e usa Condividi per inviarlo a te stesso.');
     pannello.appendChild(h('p', { 'class': 'nota', text: notaTesto }));
     if (supportaShare) {
       // Con dati sensibili l'avviso (alert + confirm) richiede tempo e fa scadere l'attivazione utente: dopo la

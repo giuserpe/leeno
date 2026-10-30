@@ -1,0 +1,73 @@
+name: Test e pyflakes
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  test_python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Installazione dipendenze
+        run: pip install pytest
+
+      - name: Esecuzione test Python
+        run: pytest --ignore=tests/test_brogliaccio_export.py tests/
+
+  test_brogliaccio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Installazione dipendenze e Playwright
+        run: |
+          pip install pytest playwright
+          playwright install --with-deps chromium
+
+      - name: Esecuzione test Brogliaccio
+        run: pytest tests/test_brogliaccio_export.py
+
+  pyflakes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Installazione pyflakes
+        run: pip install pyflakes
+
+      - name: Analisi pyflakes su pythonpath
+        run: |
+          FILES=$(find src/Ultimus.oxt/python/pythonpath/ -name "*.py" -not -path "*PyPDF2*")
+          python3 -m pyflakes $FILES > pyflakes_output.txt 2>&1 || true
+          cat pyflakes_output.txt
+          COUNT=$(wc -l < pyflakes_output.txt)
+          echo "Numero di avvisi pyflakes: $COUNT"

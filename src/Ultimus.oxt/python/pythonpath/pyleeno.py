@@ -23,36 +23,29 @@
 from Debug import aggiorna_configurazione_leeno
 from LeenoUtils import preserva_posizione
 from LeenoUtils import release_ram
-from LeenoSheetUtils import cancella_riepilogo_quantita
-from ctypes import string_at
 from LeenoAnalysis import (
     copiaRigaAnalisi,
-    cancella_analisi_da_ep,
-    MENU_analisi_in_ElencoPrezzi,
     tante_analisi_in_ep,
     Circoscrive_Analisi,
     struttura_Analisi,
     voce_breve_an
 )
-from datetime import datetime, date
-from xml.etree.ElementTree import Element, SubElement, tostring
+from datetime import datetime
 from collections import OrderedDict
 # from com.sun.star.task import XStatusIndicator
 
 
 # import distutils.dir_util
 
-import codecs
 import subprocess
 # import psutil
 import re
 import traceback
 import threading
-import time
 # import csv
 
 # pyrefly: ignore [missing-import]
-from com.sun.star.awt.FontWeight import BOLD, NORMAL
+from com.sun.star.awt.FontWeight import BOLD
 
 import os
 import shutil
@@ -63,19 +56,13 @@ import uno
 # pyrefly: ignore [missing-import]
 import unohelper
 import zipfile
-import inspect
 
-import tempfile
-
-from pathlib import Path
 # from uno import fileUrlToSystemPath, systemPathToFileUrl
 
 # pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
 
-# pyrefly: ignore [missing-import]
-import unohelper
 # pyrefly: ignore [missing-import]
 from com.sun.star.sheet import XRangeSelectionListener
 import SheetUtils
@@ -89,26 +76,23 @@ import LeenoGiornale
 import LeenoGlobals
 import LeenoAnalysis
 import LeenoDialogs as DLG
-import PersistUtils as PU
 import LeenoEvents
 import LeenoSettings as LS
-import LeenoPdf as LPdf
 import DocUtils
 # import Debug
 import LeenoVariante
 
 import LeenoConfig
-from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
-      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO, COLORE_ROSSO_AVVISO
+from LeenoConfig import COLORE_COLONNE_RAFFRONTO,\
+      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_ROSSO_AVVISO
 cfg = LeenoConfig.Config()
 
 import Dialogs
 
-from undo_utils import with_undo, with_undo_batch, no_undo, UndoContext, MENU_undo, MENU_redo
+from undo_utils import with_undo, no_undo, MENU_undo, MENU_redo
 
 from LeenoValidation import (
     applica_validazione_decimale,
-    debug_validation,
     valida_cella,
     valida_numeri_decimale,
     # valida_numeri_decimale_diverso_da_0,
@@ -124,7 +108,7 @@ from com.sun.star.beans import PropertyValue
 # pyrefly: ignore [missing-import]
 from com.sun.star.table.CellHoriJustify import RIGHT
 # pyrefly: ignore [missing-import]
-from com.sun.star.awt.FontSlant import ITALIC, NONE
+from com.sun.star.awt.FontSlant import NONE
 
 # pyrefly: ignore [missing-import]
 from com.sun.star.beans.PropertyAttribute import \
@@ -228,7 +212,6 @@ def MENU_nuovo_usobollo():
 @with_undo('Invia voce a Variante')
 @LeenoUtils.no_refresh
 def invia_voce_interno():
-    global _pending_altezza_invia_voce
     oDoc = LeenoUtils.getDocument()
     oSheetEP = oDoc.CurrentController.ActiveSheet
 
@@ -1056,17 +1039,6 @@ def MENU_copia_sorgente_per_git():
     '''
     Fa una copia della directory del codice nel repository locale ed apre una shell per la commit.
     '''
-    oDoc = LeenoUtils.getDocument()
-    src_oxt = ''
-
-    try:
-        if oDoc.getSheets().getByName('S1').getCellByPosition(7, 338).String == '':
-            src_oxt = '_LeenO'
-        else:
-            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7, 338).String
-    except Exception:
-        pass
-
     make_pack(bar=1)
 
     dest = LeenoGlobals.dest()
@@ -1093,18 +1065,7 @@ def MENU_avvia_IDE():
 
 def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany o VSCodium'''
-    oDoc = LeenoUtils.getDocument()
     Toolbars.On("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV", 1)
-    try:
-        if oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String == '':
-            src_oxt = '_LeenO'
-        else:
-            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
-                7, 338).String
-    except Exception:
-        pass
-
     dest = LeenoGlobals.dest()
     if 'giuserpe' in os.getlogin():
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno'
@@ -1133,7 +1094,6 @@ def Ins_Categorie(n):
         stili_computo = LeenoGlobals.getGlobalVar('stili_computo')
         stili_contab = LeenoGlobals.getGlobalVar('stili_contab')
         stili_cat  = LeenoGlobals.getGlobalVar('stili_cat')
-        noVoce = LeenoGlobals.getGlobalVar('noVoce')
 
         row = LeggiPosizioneCorrente()[1]
         if is_ctrl and oSheet.getCellByPosition(0, row).CellStyle in stili_cat:
@@ -1591,7 +1551,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
     # Colonne usate: B(1), C(2), AF(31), AG(32), AH(33)
     # getCellRangeByPosition(col1, row1, col2, row2)
     rng_full  = oSheet.getCellRangeByPosition(0, 0, 33, lastRow - 1)
-    styles    = rng_full.queryContentCells(0x01)   # non usato direttamente
+    rng_full.queryContentCells(0x01)   # non usato direttamente
     # Stili cella per cella vanno letti con un EnumerationAccess oppure
     # tramite getCellByPosition — ma li batchiamo con una sola lettura
     # della proprietà CellStyle su un array di celle per colonna chiave.
@@ -3142,7 +3102,6 @@ def scelta_viste_run():
                 LeenoUtils.DocumentRefresh(False)
 
             oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-            SR = oRangeAddress.StartRow + 1
             ER = oRangeAddress.EndRow
             ultima_voce = ER
             y = ER + 1
@@ -3165,7 +3124,6 @@ def scelta_viste_run():
 
                 # Fetch updated range coordinates from the redefined named-area 'elenco_prezzi'
                 oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-                SR = oRangeAddress.StartRow + 1
                 ER = oRangeAddress.EndRow
                 y_real = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
                 if y_real is None:
@@ -3568,7 +3526,7 @@ def genera_sommario():
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
 
     # --- Controllo doppioni ---
-    start_row, end_row = oCellRangeAddr.StartRow + 1, oCellRangeAddr.EndRow
+    end_row = oCellRangeAddr.EndRow
     ultima_voce = end_row
 
     indicator.start("Genera sommario...", ultima_voce)  # 100 = max progresso
@@ -4191,7 +4149,6 @@ def firme_in_calce(rowF=None):
             45, riga_corrente).Formula = '=AE' + str(riga_corrente +1) + '/AT' + str(mdo)
         oSheet.getCellByPosition(
             46, riga_corrente).Formula = '=AT' + str(riga_corrente +1) + '/8'
-        operai = oSheet.getCellByPosition(47, mdo).Value
         oSheet.getCellByPosition(
             47, riga_corrente).Formula = '=AU' + str(riga_corrente +1) + '/'+ nOperai
 
@@ -5495,7 +5452,7 @@ def MENU_ricicla_misure():
             # Il bit 0x8000 indica se il tasto è attualmente premuto
             is_shift = (ctypes.windll.user32.GetAsyncKeyState(0x10) & 0x8000) != 0
             is_ctrl = (ctypes.windll.user32.GetAsyncKeyState(0x11) & 0x8000) != 0
-        except Exception as e:
+        except Exception:
             # In caso di errore ctypes, procediamo come click normale
             pass
     else:
@@ -6160,7 +6117,6 @@ def numera_voci(oSheet=None):
         # ma lo facciamo in lettura, che è molto più veloce della scrittura
         oCellB = oSheet.getCellByPosition(1, current_row_index)
         style = oCellB.CellStyle
-        color = oCellB.CellBackColor
 
         row_list = list(data[i])
         '''
@@ -6361,8 +6317,6 @@ def ins_voce_elenco():
     oSheet = oDoc.CurrentController.ActiveSheet
     _gotoCella("A5")
     oSheet.getRows().insertByIndex(4, 1)
-
-    row = LeggiPosizioneCorrente()[1] -1
 
     _gotoCella("L5")
     oDoc.CurrentController.select(oSheet.getCellRangeByName('L5:Z5'))
@@ -6655,7 +6609,6 @@ def rigenera_tutte(arg=None, ):
 
     oSheet = oDoc.CurrentController.ActiveSheet
     nome = oSheet.Name
-    stili_cat = LeenoGlobals.getGlobalVar('stili_cat')
 
 
     # attiva la progressbar
@@ -7541,7 +7494,7 @@ def MENU_importa_stili():
         try:
             style = oDoc.StyleFamilies.getByName("CellStyles").getByName(el)
             style.NumberFormat = LeenoFormat.getNumFormat(stili_celle[el])
-        except Exception as e:
+        except Exception:
             pass
             #  DLG.chi(f"Errore durante il ripristino del formato numerico per lo stile {el}: {e}")
 
@@ -7961,8 +7914,6 @@ def SubSum(row, sub=False):
 ########################################################################
 
 # pyrefly: ignore [missing-import]
-import unohelper
-# pyrefly: ignore [missing-import]
 from com.sun.star.awt import XKeyHandler
 
 class LeenoKeyHandler(unohelper.Base, XKeyHandler):
@@ -7990,7 +7941,7 @@ KEY_HANDLER = None
 REGISTERED_CONTROLLERS = []
 
 def register_key_handler(oDoc=None):
-    global KEY_HANDLER, REGISTERED_CONTROLLERS
+    global KEY_HANDLER
     try:
         if oDoc is None:
             oDoc = LeenoUtils.getDocument()
@@ -8019,7 +7970,6 @@ def GetModifiers():
         except:
             pass
     else:
-        global KEY_HANDLER
         if KEY_HANDLER:
             is_ctrl = KEY_HANDLER.ctrl_pressed
             is_shift = KEY_HANDLER.shift_pressed
@@ -8029,7 +7979,6 @@ def GetModifiers():
 @with_undo
 @LeenoUtils.no_refresh # evita il refresh automatico
 def MENU_filtra_codice():
-    import sys
     is_ctrl = False
     is_shift = False
 
@@ -8329,15 +8278,6 @@ def struttura_ComputoM():
     verrà applicata automaticamente da applica_livelli() in base alle impostazioni
     scelte nel MENU di configurazione (leeno.conf).
     '''
-    is_ctrl, is_shift = GetModifiers()
-
-    force_color_level = -1
-    if is_ctrl and is_shift:
-        force_color_level = 2 # Sotto Categoria
-    elif is_ctrl:
-        force_color_level = 0 # Super Categoria
-    elif is_shift:
-        force_color_level = 1 # Categoria
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -8919,7 +8859,7 @@ def dp():
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:' + sUltimus
 
-        except Exception as e:
+        except Exception:
             #  DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
             pass
 
@@ -8939,14 +8879,12 @@ def vista_configurazione(tipo_configurazione):
     # Verifica il nome del foglio
     if starting_sheet_name in ('COMPUTO', 'VARIANTE'):
         target_sheet = oDoc.Sheets.getByName(starting_sheet_name)
-        col_inizio = 46
     elif starting_sheet_name in ('CONTABILITA', 'Registro', 'SAL', 'CdP', 'Riepilogo TOL'):
         target_sheet = oDoc.Sheets.getByName('CONTABILITA')
-        col_inizio = 39
     else:
         raise ValueError(f"Nome del foglio non gestito: {starting_sheet_name}")
 
-    ncol = target_sheet.getColumns().getCount()
+    target_sheet.getColumns().getCount()
     iSheet = target_sheet.RangeAddress.Sheet
 
     def create_cell_range(sheet, start_col, end_col):
@@ -9134,7 +9072,6 @@ def inizializza(oDoc=None):
     v_parts = oUDP.Versione_LeenO.split('.')
     v_major = v_parts[0] if len(v_parts) > 0 else "0"
     v_minor = v_parts[1] if len(v_parts) > 1 else "0"
-    v_sub   = v_parts[2] if len(v_parts) > 2 else "0"
 
     # Scrittura su S1 (usando i valori globali caricati all'avvio)
     oSheetS1.getCellRangeByName('I194').Value = LeenoGlobals.getGlobalVar('Lmajor')
@@ -9667,7 +9604,6 @@ def ods2pdf(oDoc, sFile):
 ########################################################################
 
 def DlgPDF():
-    oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgPDF = dp.createDialog(
@@ -9676,16 +9612,6 @@ def DlgPDF():
     sUrl = LeenO_path() + '/python/pythonpath/Icons-Big/preview.png'
     oDlgPDF.getModel().ImageControl1.ImageURL = sUrl
 
-    oSheet = oDoc.getSheets().getByName('S2')
-
-    progetto    = oSheet.getCellRangeByName('$S2.C3').String
-    localit     = oSheet.getCellRangeByName('$S2.C4').String
-    data_prg    = oSheet.getCellRangeByName('$S2.C5').String
-    committente = oSheet.getCellRangeByName('$S2.C6').String
-    sponsor     = oSheet.getCellRangeByName('$S2.C7').String
-    rup         = oSheet.getCellRangeByName('$S2.C12').String
-    progettista = oSheet.getCellRangeByName('$S2.C13').String
-    dl          = oSheet.getCellRangeByName('$S2.C16').String
     formulas = {
         'progetto'    : '[PROGETTO]',
         'localit'     : '[LOCALITÀ]',
@@ -9988,7 +9914,7 @@ def bak():
         if i >= max_copies:
             try:
                 os.remove(os.path.join(dir_bak_sys, fname))
-            except Exception as e:
+            except Exception:
                 pass
                 # DLG.chi(f"Impossibile eliminare {fname}: {e}")
 
@@ -10624,7 +10550,6 @@ Associato a Ctrl+Shift+C'''
     row = LeggiPosizioneCorrente()[1]
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, row).Type.value == 'EMPTY':
-            larg = oSheet.getCellByPosition(x, row).Columns.Width
             # oSheet.getCellByPosition(x, row).Value = larg
             oSheet.getCellByPosition(x, row).Formula = '=" " & CELL("col")-1'
             oSheet.getCellByPosition(x, row).HoriJustify = 'CENTER'
@@ -11189,7 +11114,6 @@ def trova_np():
     oCellRangeAddr = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     var = 0
     cont = 0
-    i = 3
     np_counter = 1
     code_mappings = {}
 
@@ -11632,7 +11556,6 @@ def PdfDlg():
     imgW = Dialogs.getBigIconSize()[0] * 2
 
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     oSheets = list(oDoc.getSheets().getElementNames())
 
 
@@ -11721,10 +11644,8 @@ def nuove_icone(chiaro = True):
     '''
     if chiaro == True:
         fn = 'svg'
-        e = 'Chiaro'
     else:
         fn = 'scuro'
-        e = 'Scuro'
     fname = uno.fileUrlToSystemPath(LeenO_path()) + '/icons/' + fn
     files_in_folder = os.listdir(fname)
 
@@ -11788,8 +11709,6 @@ def celle_colorate(flag = False):
             if somma >0:
                 oSheet.getCellByPosition(x+1, y).Value = somma
     return
-
-import LeenoTabelle
 
 ########################################################################
 
@@ -12037,8 +11956,6 @@ def struttura_Registro():
 
         oSheet.group(oRangeAddr, 1)
 
-import LeenoContab as LC
-
 def YesNoCancelDialog_DebugNames():
     ctx = LeenoUtils.getComponentContext()
     psm = ctx.ServiceManager
@@ -12275,7 +12192,7 @@ def MENU_debug_giannelli():
     # nell'intervallo definito da GIANNELLI_SAL4
     elenco_codici = set()
     for el in range(start_row, end_row + 1):
-        codice = oSheet.getCellByPosition(0, el).String
+        elenco_codici.add(oSheet.getCellByPosition(0, el).String)
 
 
     # 2. Recupera l'area di celle associata al nome definito "GIANNELLI_PARALLELO"

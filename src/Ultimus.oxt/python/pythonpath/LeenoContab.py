@@ -2303,8 +2303,8 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
                     f"\n\nDifferenza: € {(valore_risultante - imp_contratto):,.2f}!"
                 )
             )
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('firme_contabili_sal: ricalcolo formule', _exc)
 
     currRow = insRow + 14
 

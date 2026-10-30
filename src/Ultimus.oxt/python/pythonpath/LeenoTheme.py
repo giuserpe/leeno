@@ -5,13 +5,11 @@
 ########################################################################
 
 # pyrefly: ignore [missing-import]
-import uno
 import LeenoUtils
 import LeenoConfig
 import LeenoDialogs as DLG
 
 # pyrefly: ignore [missing-import]
-from com.sun.star.beans import PropertyValue
 from contextlib import ExitStack
 
 def scegliere_colore_picker(ctx, colore_iniziale):
@@ -40,7 +38,7 @@ def scegliere_colore_picker(ctx, colore_iniziale):
     return None
 
 
-from undo_utils import with_undo, with_undo_batch, no_undo
+from undo_utils import with_undo
 @with_undo
 @LeenoUtils.no_refresh
 def applica_nuovo_colore_tematico():
@@ -228,9 +226,6 @@ def elimina_stile():
 
 
 import LeenoUtils
-import LeenoConfig
-import LeenoDialogs as DLG
-from contextlib import ExitStack
 
 def recupera_decimali_da_stile(nome_stile):
     """Analizza il formato numerico di uno stile e restituisce il numero di decimali."""

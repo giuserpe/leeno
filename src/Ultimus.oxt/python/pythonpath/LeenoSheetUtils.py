@@ -8,7 +8,6 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
-import functools
 import os
 # pyrefly: ignore [missing-import]
 import uno
@@ -23,12 +22,10 @@ from com.sun.star.beans import PropertyValue
 import LeenoUtils
 import LeenoGlobals
 import SheetUtils
-import LeenoAnalysis
 import LeenoComputo
 import Dialogs
 import LeenoDialogs as DLG
-from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
-      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
+from LeenoConfig import COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -573,11 +570,10 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     Returns:
         int: Nuova posizione di riga
     """
-    import pyleeno as PL
     STILI_CAT = set(LeenoGlobals.getGlobalVar('stili_cat'))
     STILI_COMPUTO = set(LeenoGlobals.getGlobalVar('stili_computo'))
     STILI_CONTAB = set(LeenoGlobals.getGlobalVar('stili_contab'))
-    NO_VOCE = set(LeenoGlobals.getGlobalVar('noVoce'))
+    set(LeenoGlobals.getGlobalVar('noVoce'))
     STILI_VALIDI = STILI_COMPUTO | STILI_CONTAB
 
     # Stili da saltare (insieme per ricerca veloce)
@@ -703,7 +699,6 @@ def inserisciRigaRossa(oSheet):
 
 # ###############################################################
 # pyrefly: ignore [missing-import]
-from com.sun.star.beans import PropertyValue
 
 def setAdatta():
     # ~da sistemare
@@ -1118,7 +1113,7 @@ def MENU_elimina_righe_vuote():
 
     indicator.end()
 
-    lrow_ = SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
+    SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
     # PL._gotoCella(1, 4)
     # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
     LeenoUtils.ripristina_posizione()
@@ -1171,7 +1166,6 @@ def cerca_errori():
                 if cell.Error != 0:
                     oController.select(cell)
                     # Estrazione indirizzo leggibile (es. A1 invece di $Foglio1.$A$1)
-                    address = cell.AbsoluteName.split('.')[-1].replace('$', '')
                     # Dialogs.Info(Title="Errore trovato", Text=f"Errore trovato alla cella {address}")
                     trovato_errore = True
                     return # Si ferma al primo errore trovato per permettere all'utente di correggere
@@ -1200,12 +1194,6 @@ def riepilogo_quantita():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    # 4. Intestazioni colonne (ottimizzato con mapping)
-    INTESTAZIONI = {
-        'L3': 'Quantità\nComputo',
-        'M3': 'Quantità\nVariante',
-        'N3': 'Quantità\nContabilità'
-    }
 
     if oSheet.Name == 'CONTABILITA':
         QUANTITA_COL = {

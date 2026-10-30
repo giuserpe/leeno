@@ -17,16 +17,6 @@ from datetime import date
 # import uno
 # import unohelper
 
-from com.sun.star.style.VerticalAlignment import MIDDLE as VA_MIDDLE
-
-from com.sun.star.awt import Size
-from com.sun.star.awt import XActionListener, XTextListener
-from com.sun.star.task import XJobExecutor
-
-from com.sun.star.awt import XTopWindowListener
-
-from com.sun.star.util import MeasureUnit
-
 # from LeenoConfig import Config
 import LeenoUtils
 import pyleeno as PL
@@ -43,8 +33,8 @@ def calendario():
     '''
     # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    x = PL.LeggiPosizioneCorrente()[0]
-    y = PL.LeggiPosizioneCorrente()[1]
+    PL.LeggiPosizioneCorrente()[0]
+    PL.LeggiPosizioneCorrente()[1]
     testo = pickDate()
     lst = str(testo).split('-')
     try:

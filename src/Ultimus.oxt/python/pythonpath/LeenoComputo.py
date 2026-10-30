@@ -5,7 +5,6 @@
 ########################################################################
 
 # pyrefly: ignore [missing-import]
-from LeenoContab import _leggi_dato_anagrafico
 import LeenoFormat
 # pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
@@ -24,8 +23,7 @@ import LeenoUtils
 import LeenoGlobals
 import LeenoSheetUtils
 import LeenoConfig
-from LeenoConfig import COLORE_COLONNE_RAFFRONTO, COLORE_GIALLO_VARIANTE, COLORE_ROSA_INPUT,\
-      COLORE_VERDE_SPUNTA, COLORE_GRIGIO_INATTIVA, COLORE_BIANCO_SFONDO
+from LeenoConfig import COLORE_VERDE_SPUNTA
 
 import Dialogs
 
@@ -80,8 +78,8 @@ def datiVoceComputo(oSheet, lrow):
         um = oSheet.getCellByPosition(8, end_row).String.split('[')[-1].split(']')[0]
         Nlib = int(oSheet.getCellByPosition(19, start_row + 1).Value)
         Plib = int(oSheet.getCellByPosition(20, start_row + 1).Value)
-        flag = oSheet.getCellByPosition(22, start_row + 1).String
-        nSal = int(oSheet.getCellByPosition(23, start_row + 1).Value)
+        oSheet.getCellByPosition(22, start_row + 1).String
+        oSheet.getCellByPosition(23, start_row + 1).Value
         prezzo = oSheet.getCellByPosition(13, end_row).Value
         importo = oSheet.getCellByPosition(15, end_row).Value
 
@@ -221,7 +219,6 @@ def get_bucket_color_registry_file():
     Metodo suggerito dall'utente per la massima precisione e persistenza.
     """
     try:
-        import re
         import os
         
         # 1. Recupera il percorso del profilo utente in modo generico
@@ -255,7 +252,7 @@ def get_bucket_color_registry_file():
                 if colors:
                     return int(colors[0])
                     
-    except Exception as e:
+    except Exception:
         # DLG.chi(f"Errore lettura file registro: {e}")
         pass
     return None
@@ -394,7 +391,7 @@ def ins_voce_computo(cod=None):
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
 
-import Debug
+
 @LeenoUtils.no_refresh
 def Menu_computoSenzaPrezzi():
     '''
@@ -721,9 +718,9 @@ class DatiVoce:
             except Exception:
                 Plib = 0
             try:
-                nSal = int(oSheet.getCellByPosition(23, sr + 1).Value)
+                oSheet.getCellByPosition(23, sr + 1).Value
             except Exception:
-                nSal = 0
+                pass
             prezzo = oSheet.getCellByPosition(13, er).Value
             importo = oSheet.getCellByPosition(15, er).Value
 
@@ -908,7 +905,6 @@ def MENU_inserisci_somme_lavori_sicurezza():
                     if res_rib:
                         valore_rib = oS2.getCellByPosition(2, res_rib[1]).Value
                         cell_down_right_right.Value = valore_rib
-                        import LeenoFormat
                         cell_down_right_right.NumberFormat = LeenoFormat.getNumFormat('0,000%')
                         cell_down_right_right.CharWeight = 150
                         cell_down_right_right.CellBackColor = COLORE_VIOLA
@@ -1013,7 +1009,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
         PropertyValue(Name="SingleCellMode", Value=True),
     )
 
-    oo = controller.startRangeSelection(props)
+    controller.startRangeSelection(props)
 
 
 @with_undo('Annota categorie voci')
@@ -1077,9 +1073,9 @@ def annota_categorie_voci(oSheet=None, lrow=None):
         end_row = sStRange.RangeAddress.EndRow
 
         # Risali per cercare le categorie genitore
-        super_cat_title, super_cat_num = "", ""
-        cat_title, cat_num = "", ""
-        sotto_cat_title, sotto_cat_num = "", ""
+        super_cat_title = ""
+        cat_title = ""
+        sotto_cat_title = ""
 
         has_passed_cat = False
 

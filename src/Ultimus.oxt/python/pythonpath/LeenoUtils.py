@@ -187,6 +187,61 @@ def isLeenoDocument():
         return False
 
 ###############################################################################
+_LOG_ERRORI_CONTEGGI = {}
+
+
+def log_errore(contesto, exc=None, percorso=None):
+    '''
+    Registra un errore su file, senza aprire dialoghi (a differenza di DLG.chi).
+    Per ogni coppia contesto/tipo di eccezione scrive solo le prime 3
+    occorrenze della sessione, cosi' un errore in un ciclo non riempie il file.
+    Non solleva mai eccezioni. Restituisce True se la riga e' stata scritta.
+
+    contesto : str, es. 'annulla SAL: ungroup CONTABILITA'
+    exc      : eccezione catturata (opzionale)
+    percorso : file di destinazione (solo per i test)
+    '''
+    try:
+        import os
+        import time
+        import traceback
+
+        chiave = (str(contesto), type(exc).__name__ if exc is not None else '')
+        n = _LOG_ERRORI_CONTEGGI.get(chiave, 0) + 1
+        _LOG_ERRORI_CONTEGGI[chiave] = n
+        if n > 3:
+            return False
+
+        if percorso is None:
+            try:
+                psettings = getComponentContext().getValueByName(
+                    '/singletons/com.sun.star.util.thePathSettings')
+                cartella = uno.fileUrlToSystemPath(psettings.UserConfig)
+            except Exception:
+                import tempfile
+                cartella = tempfile.gettempdir()
+            percorso = os.path.join(cartella, 'leeno_errori.log')
+
+        if os.path.exists(percorso) and os.path.getsize(percorso) > 524288:
+            os.replace(percorso, percorso + '.old')
+
+        riga = time.strftime('%Y-%m-%d %H:%M:%S') + ' [' + str(contesto) + ']'
+        if exc is not None:
+            riga += ' ' + type(exc).__name__ + ': ' + str(exc)
+        if n == 3:
+            riga += ' (ulteriori occorrenze non registrate)'
+        riga += '\n'
+        if exc is not None and n == 1:
+            tb = traceback.format_exception(type(exc), exc, exc.__traceback__)
+            riga += ''.join('    ' + r + '\n' for r in ''.join(tb).splitlines())
+
+        with open(percorso, 'a', encoding='utf-8', newline='') as f:
+            f.write(riga)
+        return True
+    except Exception:
+        return False
+
+
 def findOpenDocument(filepath):
     '''
     Check if a document is already open and return it.

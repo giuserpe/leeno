@@ -58,8 +58,6 @@ class TestLeenoImportUtils(unittest.TestCase):
 
     def tearDown(self):
         self.patcher.stop()
-        for m in MOCK_MODULES:
-            sys.modules.pop(m, None)
         sys.modules.pop('LeenoImport', None)
 
     # --- Tests for fixParagraphSize ---

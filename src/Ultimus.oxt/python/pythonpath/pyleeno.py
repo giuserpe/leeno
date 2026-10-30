@@ -361,8 +361,8 @@ def _applica_altezza_pending(pending):
             if is_protected:
                 try:
                     oSheet.protect('')
-                except Exception:
-                    pass
+                except Exception as _exc:
+                    LeenoUtils.log_errore('_applica_altezza_pending: riprotezione foglio', _exc)
 
 
 ###############################################################################
@@ -580,8 +580,8 @@ def invia_voce(ctrl_override=False):
             src_form_addr = dccSheet.getCellRangeByName("L4:Z4").RangeAddress
             dst_form_addr = dccSheet.getCellByPosition(11, 4).CellAddress
             dccSheet.copyRange(dst_form_addr, src_form_addr)
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('recupera_voce: copia formule sistema', _exc)
         _pending_altezza_invia_voce.append((dccSheet, 4))
         if codice_da_cercare:
             ep_dp_map[codice_da_cercare] = 4
@@ -942,8 +942,8 @@ def rompi_collegamenti_esterni(doc=None):
             while area_links.Count > 0:
                 had_links = True
                 area_links.removeByIndex(0)
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('rompi_collegamenti_esterni: rimozione AreaLinks', _exc)
 
     try:
         # 2. Rompe i collegamenti dei fogli esterni (SheetLinks) impostando il LinkMode a NONE
@@ -953,8 +953,8 @@ def rompi_collegamenti_esterni(doc=None):
                 if hasattr(sheet, "getLinkMode") and sheet.getLinkMode() != SHEET_LINK_MODE_NONE:
                     had_links = True
                     sheet.setLinkMode(SHEET_LINK_MODE_NONE)
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('rompi_collegamenti_esterni: disattivazione SheetLinks', _exc)
 
     if not had_links:
         return
@@ -978,10 +978,10 @@ def rompi_collegamenti_esterni(doc=None):
                     replace.SearchString = "file:///[^'#]*#"
                     replace.ReplaceString = ""
                     sheet.replaceAll(replace)
-                except Exception:
-                    pass
-    except Exception:
-        pass
+                except Exception as _exc:
+                    LeenoUtils.log_errore('rompi_collegamenti_esterni: sostituzione testo formule', _exc)
+    except Exception as _exc:
+        LeenoUtils.log_errore('rompi_collegamenti_esterni: pulizia formule fogli', _exc)
 
 
 def codice_voce(row, cod=None):
@@ -2381,12 +2381,12 @@ def MENU_prefisso_VDS_():
 
                     row = LeggiPosizioneCorrente()[1]
                     row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-                except Exception:
-                    pass
+                except Exception as _exc:
+                    LeenoUtils.log_errore('MENU_prefisso_VDS_: elaborazione singola voce', _exc)
 
         # numera_voci()
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('MENU_prefisso_VDS_: esecuzione principale', _exc)
     _gotoCella(1, row+1)
 
     # LeenoUtils.DocumentRefresh(True)
@@ -2437,8 +2437,8 @@ def MENU_costo_elementare_():
 
         _gotoCella(0, row + 1)
 
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('MENU_costo_elementare_: elaborazione singola voce', _exc)
     LeenoUtils.DocumentRefresh(True)
     oSheet.getRows().getByIndex(row + 1).OptimalHeight = True
 
@@ -2531,9 +2531,8 @@ Procedo?''') == 1:
                             nuovo_codice = prefisso + '_' + codice
 
                         oSheet.getCellByPosition(x, y).String = nuovo_codice
-        except:
-            # LeenoUtils.DocumentRefresh(True)
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('MENU_prefisso_codice: aggiornamento prefisso voci', _exc)
     # LeenoUtils.DocumentRefresh(True)
 
 ########################################################################
@@ -3039,8 +3038,8 @@ def scelta_viste_run():
         try:
             nSal = int(oDialog1.getControl('ComboBox1').getText())
             LeenoContab.mostra_sal(nSal, pagebreak=False, naviga=False)
-        except Exception as e:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('scelta_viste_run: mostra_sal', _exc)
 
         if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
             # _vSintetica_core(oDoc, oSheet, False)
@@ -4359,11 +4358,11 @@ def MENU_azzera_voce():
                     ###
                 row = LeggiPosizioneCorrente()[1]
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-            except Exception:
-                pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('MENU_azzera_voce: azzeramento singola voce', _exc)
         # numera_voci()
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('MENU_azzera_voce: esecuzione principale', _exc)
     #  _gotoCella(1, fine +3)
     # LeenoUtils.DocumentRefresh(True)
 
@@ -7825,8 +7824,8 @@ def MENU_converti_stringhe():
                 else:
                     oSheet.getCellByPosition(
                         y, x).String = oSheet.getCellByPosition(y, x).String
-            except Exception:
-                pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('MENU_converti_stringhe: conversione valore cella', _exc)
     return LeenoUtils.DocumentRefresh(True)
 
 
@@ -9492,8 +9491,8 @@ di LeenO installata, potresti avere dei malfunzionamenti!''')
                         GotoSheet(el)
                         if ch_rigenera == 1:
                             rigenera_tutte()
-                    except:
-                        pass
+                    except Exception as _exc:
+                        LeenoUtils.log_errore('adegua_tmpl: rigenera formule fogli', _exc)
                 GotoSheet('COMPUTO')
                 indicator.hide()
                 Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
@@ -11494,8 +11493,8 @@ def MENU_hl():
                 target_url = target_url.replace('"', '')
                 hyperlink_formula = f'=HYPERLINK("{target_url}";"{label}")'
                 cell.Formula = hyperlink_formula
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('MENU_hl: elaborazione cella hyperlink', _exc)
 
 def xref_path():
     '''

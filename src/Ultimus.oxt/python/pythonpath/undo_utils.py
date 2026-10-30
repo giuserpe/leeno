@@ -8,7 +8,6 @@
 Utility per gestire undo/redo nelle operazioni LeenO
 """
 import functools
-import traceback
 
 
 def with_undo(description=None, auto_description=True):

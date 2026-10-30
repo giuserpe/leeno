@@ -424,10 +424,18 @@ def MENU_AnnullaAttiContabili():
     if Dialogs.DLG_ask(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
         indicator = oDoc.getCurrentController().getStatusIndicator()
         indicator.start("Annullamento atti in corso...", 5)
-        _annulla_ultimo_sal_core(oDoc, indicator, listaSal)
+        errori = _annulla_ultimo_sal_core(oDoc, indicator, listaSal)
         indicator.end()
         PL._gotoCella(0,0)
-        Dialogs.Info(Text=f"Atti del SAL n. {listaSal[-1]} annullati.")
+        if errori:
+            Dialogs.Exclamation(
+                Title='ATTENZIONE!',
+                Text=(f"Atti del SAL n. {listaSal[-1]} annullati solo in parte.\n\n"
+                      "Fasi non completate:\n- " + "\n- ".join(errori) +
+                      "\n\nControlla il documento prima di proseguire. "
+                      "Dettagli nel file leeno_errori.log."))
+        else:
+            Dialogs.Info(Text=f"Atti del SAL n. {listaSal[-1]} annullati.")
 
 @LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
@@ -452,16 +460,31 @@ def MENU_AnnullaTuttiAttiContabili():
         count = len(listaSal)
         indicator.start("Annullamento globale atti in corso...", count)
 
+        errori_tot = []
         while True:
             lista = ultimo_sal()
             if not lista:
                 break
             indicator.setText(f"Annullamento SAL n. {lista[-1]}...")
-            _annulla_ultimo_sal_core(oDoc, indicator, lista)
+            for fase in _annulla_ultimo_sal_core(oDoc, indicator, lista):
+                if fase not in errori_tot:
+                    errori_tot.append(fase)
+            # se il SAL e' ancora presente, l'eliminazione e' fallita: evita il ciclo infinito
+            if ultimo_sal()[-1:] == lista[-1:]:
+                errori_tot.append(f"SAL n. {lista[-1]} non eliminato")
+                break
             indicator.setValue(count - len(lista) + 1)
 
         indicator.end()
-        Dialogs.Info(Text="Tutti gli atti contabili sono stati annullati.")
+        if errori_tot:
+            Dialogs.Exclamation(
+                Title='ATTENZIONE!',
+                Text=("Annullamento degli atti contabili non completato.\n\n"
+                      "Problemi rilevati:\n- " + "\n- ".join(errori_tot) +
+                      "\n\nControlla il documento prima di proseguire. "
+                      "Dettagli nel file leeno_errori.log."))
+        else:
+            Dialogs.Info(Text="Tutti gli atti contabili sono stati annullati.")
 
 
 def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=True):
@@ -469,11 +492,14 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
     Logica core per annullare l'ultimo SAL.
     Usata da MENU_AnnullaAttiContabili e MENU_AnnullaTuttiAttiContabili.
     Se rigenera_cdp=False, non rigenera il CdP del SAL precedente.
+    Restituisce la lista delle fasi non completate (vuota se tutto e' andato a buon fine).
+    Gli errori di pulizia del CdP vengono solo registrati su file, perche' il CdP viene rigenerato.
     '''
     if listaSal is None:
         listaSal = ultimo_sal()
     if not listaSal:
-        return
+        return []
+    errori = []
 
     oRanges = oDoc.NamedRanges
     nSal_str = listaSal[-1]
@@ -507,8 +533,8 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                                (cell.Type.value != 'EMPTY' and
                                 cell.CellStyle not in ('comp Int_colonna_R', 'Ultimus_centro_bordi_lati')):
                                 cell.clearContents(VALUE + STRING + FORMULA)
-                except Exception:
-                    pass
+                except Exception as _exc:
+                    LeenoUtils.log_errore('annulla SAL: pulizia voci riepilogo CdP', _exc)
             # Svuota blocco certificati precedenti
             try:
                 r_ncert_result = SheetUtils.uFindString('N°', oCdP)
@@ -519,8 +545,8 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                     for rr in range(r_f, r_s):
                         for cc in range(6):
                             oCdP.getCellByPosition(cc, rr).clearContents(VALUE + STRING + FORMULA)
-            except Exception:
-                pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('annulla SAL: pulizia certificati precedenti CdP', _exc)
             # Ripristina etichetta IVA
             try:
                 r_iva_res = SheetUtils.uFindString('I.V.A.', oCdP)
@@ -531,10 +557,10 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                         if '%' in lbl and 'I.V.A.' in lbl:
                             oCdP.getCellByPosition(cc, r_iv).String = 'per I.V.A. al __%'
                             break
-            except Exception:
-                pass
-    except Exception:
-        pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('annulla SAL: ripristino etichetta IVA nel CdP', _exc)
+    except Exception as _exc:
+        LeenoUtils.log_errore('annulla SAL: eliminazione CdP', _exc)
 
     # 1. Elimina libretto (CONTABILITA)
     try:
@@ -571,8 +597,9 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
         oSheet.getCellRangeByName('Z2').Formula = (
             "=$P$2-SUBTOTAL(9;$P$2:$P$" + str(daRiga - 1) + ")"
         )
-    except Exception:
-        pass
+    except Exception as _exc:
+        errori.append('eliminazione del libretto in CONTABILITA')
+        LeenoUtils.log_errore('annulla SAL: eliminazione libretto', _exc)
 
     # 2. Elimina Registro, SAL, CdP (fogli interi se ultimo SAL rimasto)
     try:
@@ -608,8 +635,9 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
             # CdP foglio (rimosso ad ogni SAL intermedio)
             if oDoc.Sheets.hasByName('CdP'):
                 oDoc.Sheets.removeByName('CdP')
-    except Exception:
-        pass
+    except Exception as _exc:
+        errori.append('eliminazione di Registro, SAL e CdP')
+        LeenoUtils.log_errore('annulla SAL: eliminazione Registro, SAL, CdP', _exc)
 
     # 3. Pulizia SITUAZIONE CONTABILE in S2
     try:
@@ -620,8 +648,9 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
         col_del = yS2 + nSalDel
         oS2.getCellRangeByPosition(col_del, xS2 + 1, col_del, xS2 + 25).clearContents(
             VALUE + DATETIME + STRING + FORMULA)
-    except Exception:
-        pass
+    except Exception as _exc:
+        errori.append('pulizia della situazione contabile in S2')
+        LeenoUtils.log_errore('annulla SAL: pulizia S2', _exc)
 
     # 4. Finalizzazione: aggiornamento UI e rigenerazione CdP precedente
     try:
@@ -639,11 +668,11 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
             SheetUtils.visualizza_PageBreak(False)
 
         oSheet.Rows.OptimalHeight = True
-    except Exception:
-        pass
-        # ~ DLG.errore(e)
-        pass
+    except Exception as _exc:
+        errori.append('aggiornamento finale (Z3, rigenerazione CdP)')
+        LeenoUtils.log_errore('annulla SAL: finalizzazione', _exc)
     PL.GotoSheet('CONTABILITA')
+    return errori
 
 
 # ###############################################################

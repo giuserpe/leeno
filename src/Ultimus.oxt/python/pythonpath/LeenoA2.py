@@ -6,7 +6,6 @@
 
 # pyrefly: ignore [missing-import]
 import uno
-import os
 from pathlib import Path
 
 import LeenoUtils
@@ -93,7 +92,7 @@ def MENU_importi():
                         importo = val_str.rjust(15,".")
                         target = target.ljust(12,".")
                         righe.append(f"   {target}{importo}")
-                    except Exception as e:
+                    except Exception:
                         righe.append(f"   {target}  [errore lettura]")
             
             if not trovato:
@@ -107,7 +106,6 @@ def MENU_importi():
         righe.append("")
 
     # Mostra i risultati in una dialog nativa
-    testo_completo = "\n".join(righe)
     # Dialogs.NotifyDialog(Title="Importi COMPUTO / VARIANTE / CONTABILITA", Text=testo_completo, FontName="Liberation Mono", FontWeight=100)
 
     psm = LeenoUtils.getComponentContext().ServiceManager
@@ -140,7 +138,7 @@ def MENU_importi():
     ods_path = folder_path / nome[2:]
     ods_url = uno.systemPathToFileUrl(str(ods_path))
     try:
-        doc2 = desktop.loadComponentFromURL(ods_url, "_blank", 0, props)
-    except Exception as e:
+        desktop.loadComponentFromURL(ods_url, "_blank", 0, props)
+    except Exception:
         # Dialogs.NotifyDialog(Title="Errore", Text=f"Errore apertura file:\n{e}")
         pass

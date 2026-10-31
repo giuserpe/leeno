@@ -12,7 +12,6 @@ Gestione delle toolbars di LeenO
 from com.sun.star.awt import Point
 
 import os
-import sys
 import LeenoUtils
 import pyleeno as PL
 from LeenoConfig import Config
@@ -76,7 +75,6 @@ _TOOLBAR_NAMES = (
 #     PL.dp()
 #     # PL.fissa()
 
-import time
 import LeenoDialogs as DLG
 @LeenoUtils.release_ram
 def Vedi(arg=None):
@@ -84,9 +82,6 @@ def Vedi(arg=None):
     accende tutte le toolbars (se non sono richieste quelle contestuali)
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
     '''
-    import time
-    t0 = time.time()
-
     oDoc = LeenoUtils.getDocument()
 
     try:
@@ -127,7 +122,7 @@ def Vedi(arg=None):
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG', 1)
         # DLG.chi(f"checkpoint 6 (dopo toolbar sheet): {time.time()-t0:.3f}s")
 
-    except Exception as e:
+    except Exception:
         # DLG.chi(f"Eccezione nel blocco toolbar: {e} — a {time.time()-t0:.3f}s")
         pass
 

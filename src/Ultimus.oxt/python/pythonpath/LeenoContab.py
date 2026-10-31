@@ -12,18 +12,14 @@ LeenoContab.py - Contabilità per Leeno
 '''
 
 # _gotoCella è disponibile tramite 'import pyleeno as PL' (vedi sotto)
-from pyleeno import chiudi_dialoghi
 import LeenoSettings
-from LeenoSettings import setPageStyle
 from LeenoDispatcher import handle_exception
 from datetime import date
 # pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
 # pyrefly: ignore [missing-import]
-from com.sun.star.sheet.GeneralFunction import MAX
-# pyrefly: ignore [missing-import]
 from com.sun.star.sheet.CellFlags import \
-    VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
+    VALUE, DATETIME, STRING, FORMULA, HARDATTR
 
 import LeenoUtils
 import LeenoGlobals
@@ -39,7 +35,6 @@ import LeenoEvents
 import LeenoBasicBridge
 # pyrefly: ignore [missing-import]
 import uno
-import os
 import itertools
 import DocUtils
 import LeenoConfig
@@ -304,7 +299,6 @@ def imposta_data():
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    import datetime
     testo = Calendario.calendario()
 
     try:
@@ -325,7 +319,7 @@ def imposta_data():
         if cell.CellStyle == 'Data_bianca':
             try:
                 cell.String = testo
-            except Exception as e:
+            except Exception:
                 return
     return
 
@@ -398,7 +392,7 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
                             PL._gotoCella(0, daRiga - 1)
                     else:
                         oSheet.getCellRangeByPosition(daColonna, daRiga, aColonna, aRiga).Rows.IsVisible = False
-                except Exception as e:
+                except Exception:
                     # ~ DLG.errore(e)
                     continue
 
@@ -1432,9 +1426,8 @@ def GeneraLibretto(oDoc):
     # Preparazione dei dati per l'inserimento batch (Colonne 19, 20, 21, 22, 23)
     # 19: nSal, 20: nPag, 21: -, 22: #reg, 23: nSal
 
-    num_rows = aRiga - daRiga + 1
     # Recuperiamo gli stili della colonna 1 in un colpo solo per il filtraggio
-    oStyleRange = oSheet.getCellRangeByPosition(1, daRiga, 1, aRiga)
+    oSheet.getCellRangeByPosition(1, daRiga, 1, aRiga)
     # Nota: CellStyle non si recupera in batch facilmente con DataArray,
     # ma possiamo minimizzare le chiamate.
 
@@ -1982,7 +1975,6 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
         # Voci
         numVoci = len(data)
         dataStartRow = current_row
-        totaltStartRow = current_row
         lastDataRowSec = dataStartRow + numVoci - 1
 
         if not foundFirstData:
@@ -2178,7 +2170,6 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
     '''
     fcol = 0
     ncol = "F"  # Colonna degli importi (indice 5)
-    h_pagina_std = 25850  # Altezza pagina SAL in 1/100 mm
 
     # --- 1. FILLER DINAMICO (riempimento bordi fino a fine pagina) ---
     currRow = startRow
@@ -2359,13 +2350,10 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     Genera la pagina di Riepilogo dello Stato Finale dei Lavori.
     '''
     fcol = 0
-    ncol = "F"
 
     oS2 = oDoc.getSheets().getByName('S2')
     markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
     yS2, xS2 = markerS2[0], markerS2[1]
-    col_sal = yS2 + nSal
-    s2_col = _col_letter(col_sal)
 
     # Conteggio certificati precedenti
     num_prev_certs = nSal - 1
@@ -3285,7 +3273,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     perc_anticipo_int = aliquota_anticipo * 100
     perc_anticipo_str = f'{perc_anticipo_int:.3f}'
 
-    aliquota_infortuni = _leggi_infortuni_da_S2(oS2)
 
     # Dati anagrafici
     committente = _leggi_dato_anagrafico(oS2, 'Committente') or _leggi_dato_anagrafico(oS2, 'Stazione Appaltante')
@@ -3336,7 +3323,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     r_credito  = R('RISULTA IL CREDITO')
     r_iva      = R('I.V.A.')
     r_totgen   = R('TOTALE GENERALE')
-    r_visto    = R('VISTO il Contratto')
     r_assic    = R('assicurato')
     r_certifica = R('C E R T I F I C A')
     r_luogo    = R('Luogo e data')
@@ -3424,7 +3410,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     r2_certif = trova_r_S2_multi(["importo certificato", "certificato di pagamento"])
     r2_n_cert = trova_r_S2_multi(["S.A.L. n.", "certificato n.", "n. certificato"])
-    r2_n_rata = trova_r_S2_multi(["rata n.", "rata numero", "n. rata"])
 
     # Recupero Importo a Contratto e Totale Lavori (più robusto)
     def _leggi_val_S2(labels, colonna_val):
@@ -3515,7 +3500,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             r_lavori   = R('Per lavori e somministrazioni')
             r_sottoscritto = R('IL SOTTOSCRITTO')
             r_assic    = R('assicurato')
-            r_visto    = R('VISTO il Contratto')
 
         for i in range(1, nSal):
             r = r_first + (i - 1)
@@ -3537,7 +3521,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     r2_misura = trova_r_S2("a misura")
     r2_sic_mis = trova_r_S2("sicurezza", r2_misura - xS2) if r2_misura else None
-    r2_mdo_mis = trova_r_S2("quota mdo", r2_misura - xS2) if r2_misura else None
     r2_imp_rib = trova_r_S2("importo ribassato")
     r2_infortuni = trova_r_S2("per infortuni")
     r2_anticipo = trova_r_S2("recupero anticipazione")
@@ -3834,8 +3817,6 @@ def MENU_GeneraCdP():
             Text='Nessun SAL registrato. Generare prima gli atti contabili.'
         )
         return
-
-    nSal = int(listaSal[-1])
 
     # Utilizziamo l'helper per la rigenerazione
     try:

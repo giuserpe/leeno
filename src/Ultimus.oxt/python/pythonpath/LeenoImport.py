@@ -7,7 +7,7 @@
 """
     LeenO - modulo di importazione prezzari
 """
-from datetime import datetime, date
+from datetime import datetime
 import os
 import re
 import threading
@@ -492,7 +492,6 @@ def importa_listino_leeno_run():
         test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
     except:
         test = 5
-    fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     assembla = DLG.DlgSiNo(
         '''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -721,7 +720,6 @@ def MENU_ValdAosta():
     LeenoUtils.DocumentRefresh(False)
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.Columns.insertByIndex(3, 1)
-    primo_nome = oSheet.Name
     oSheet.Name = 'COMPUTO'
     LeenoSheetUtils.MENU_elimina_righe_vuote()
     oSheet.Name = oSheet.Name
@@ -757,7 +755,6 @@ NOTA: Questo processo di importazione richiede la selezione di un file
     filename = Dialogs.FileSelect('Scegli un file del set da importare...', '*.xls')
     if filename in ('Cancel', '', None):
         return
-    dest = os.path.dirname(filename).split('.')[0].split('/')
     directory = os.path.dirname(filename).split('.')[0].replace('\\', '/') + '/'
     files = glob.glob(directory + '*.xls')
     indicator = LeenoUtils.getDocument().getCurrentController().getStatusIndicator()

@@ -605,7 +605,6 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, indicator=None):
 
     # articoli
     arrayArticoli = tuple(elencoPrezzi['ListaArticoli'])
-    righeArticoli = len(arrayArticoli)
     # SuperCapitoli
     arraySuperCapitoli = estraiDatiCapitoliCategorie(capitoliCategorie, 'SuperCapitoli')
     righeSuperCapitoli = len(arraySuperCapitoli)
@@ -739,7 +738,6 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
         if codice in existing_codes:
             continue
 
-        prezzo_finale = el[-1]
         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
         lrow = sStRange.RangeAddress.StartRow + 2
         oSheet.getCellByPosition(0, lrow).String = el[0]
@@ -826,8 +824,6 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
 
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, indicator=None):
     ''' compila il computo '''
-    from datetime import datetime, date
-
     with LeenoUtils.DocumentRefreshContext(False):
         # --- Creazione/attivazione del foglio ---
         if elaborato == 'VARIANTE':
@@ -1073,9 +1069,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
 def MENU_XPWE_import(filename = None):
     try:
-        is_ctrl, is_shift = PL.GetModifiers()
+        is_ctrl, _ = PL.GetModifiers()
     except AttributeError:
-        is_ctrl, is_shift = False, False
+        is_ctrl = False
     if is_ctrl:
         Dialogs.NotifyDialog(
             IconType="info",

@@ -11355,24 +11355,25 @@ def classify_hyperlink_target(cell_string):
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ods', 'odt', 'fodt', 'fods',
         'csv', 'txt', 'rtf', 'dwg', 'dxf', 'dcf', 'xpwe', 'xml', 'json',
         'zip', 'rar', '7z', 'tar', 'gz', 'jpg', 'jpeg', 'png', 'gif', 'bmp',
-        'svg', 'tif', 'tiff', 'mp3', 'mp4', 'avi', 'mkv', 'mov', 'wav'
+        'svg', 'tif', 'tiff', 'mp3', 'mp4', 'avi', 'mkv', 'mov', 'wav',
+        'ifc', 'dwf', 'html', 'htm', 'msg', 'eml', 'webp', 'ppt', 'pptx'
     }
 
     if '\\' in s or '/' in s:
-        if re.match(r'^\d{1,2}/\d{1,2}/\d{2,4}$', s):
+        if re.match(r'^\d{1,2}/\d{1,2}(?:/\d{2,4})?$', s):
             return None
         if s.endswith('/') or s.endswith('\\'):
             return (s, "Apri ↗")
         m = re.search(r'\.([a-zA-Z0-9]{2,5})$', s)
         if m and m.group(1).lower() in common_exts:
             return (s, "Apri ↗")
-        if ' ' not in s and ':' not in s:
+        if '\\' in s and ' ' not in s and ':' not in s:
             return (s, "Apri ↗")
 
     m = re.match(r'^[^\s\\/:]+\.([a-zA-Z0-9]{2,5})$', s)
     if m:
         ext = m.group(1).lower()
-        if ext in common_exts or len(ext) >= 2:
+        if ext in common_exts:
             return (s, "Apri ↗")
 
     return None

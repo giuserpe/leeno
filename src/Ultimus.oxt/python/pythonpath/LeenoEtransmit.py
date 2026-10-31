@@ -7,7 +7,6 @@
 ########################################################################
 # e-Transmit per LibreOffice Calc
 ########################################################################
-from pydoc import doc
 import Dialogs
 import LeenoUtils
 # import uno

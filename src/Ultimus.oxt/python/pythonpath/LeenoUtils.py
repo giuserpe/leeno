@@ -40,6 +40,7 @@ def getDesktop():
 
 
 def getDocument():
+    """Recupera il documento di calcolo attivo o ne ricerca uno valido aperto."""
     try:
         ctx = getComponentContext()
         if ctx is None:
@@ -48,6 +49,7 @@ def getDocument():
         desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
         def is_valid_calc(comp):
+            """Verifica se il componente specificato e' un documento Calc valido e attivo."""
             if comp is None: return False
             try:
                 # Verifica che abbia i fogli e non sia stato eliminato
@@ -96,6 +98,7 @@ def resolve_document(oDoc=None):
     Ritorna il documento utilizzabile, oppure None se nessun tentativo riesce.
     '''
     def is_usable(comp):
+        """Verifica se il documento passato e' accessibile e contiene fogli e controller."""
         if comp is None:
             return False
         try:
@@ -386,10 +389,12 @@ class no_refresh_context:
         # Il refresh è riattivato qui
     """
     def __enter__(self):
+        """Disattiva l'aggiornamento visivo del documento all'entrata nel blocco di contesto."""
         DocumentRefresh(False)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Riattiva l'aggiornamento visivo del documento all'uscita dal blocco di contesto."""
         # Riattiva sempre il refresh
         DocumentRefresh(True)
         # Ritorna False per propagare l'eccezione nativamente,
@@ -414,6 +419,7 @@ def no_refresh(func):
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Esegue la funzione decorata disabilitando temporaneamente il refresh visivo."""
         # Usa il context manager
         with no_refresh_context():
             return func(*args, **kwargs)
@@ -435,6 +441,7 @@ def release_ram(func):
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Esegue la funzione decorata e invoca il garbage collector al termine."""
         try:
             return func(*args, **kwargs)
         finally:
@@ -451,6 +458,7 @@ class preserve_clipboard_context:
     durante operazioni interne che fanno uso della clipboard.
     """
     def __enter__(self):
+        """Memorizza il contenuto corrente della clipboard di sistema."""
         self.transferable = None
         self.clip = None
         try:
@@ -469,6 +477,7 @@ class preserve_clipboard_context:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Ripristina il contenuto originario nella clipboard di sistema."""
         try:
             if self.clip is not None and self.transferable is not None:
                 # Ripristina l'oggetto XTransferable originario nella clipboard
@@ -490,6 +499,7 @@ def preserve_clipboard(func):
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Esegue la funzione preservando il contenuto della clipboard di sistema."""
         with preserve_clipboard_context():
             return func(*args, **kwargs)
 
@@ -620,6 +630,7 @@ def date2String(dat, fmt = 0):
         return str(d) + ' ' + MONTHNAMES[m - 1] + ' ' + str(y)
 
 def string2Date(s):
+    """Converte una stringa di data con separatori nel rispettivo oggetto date."""
     if '.' in s:
         sp = s.split('.')
     elif '/' in s:
@@ -845,6 +856,7 @@ def torna_a_schermo_normale():
 ########################################################################
 ########################################################################
 def int_to_italian(n: int) -> str:
+    """Converte un numero intero nella sua rappresentazione testuale in lingua italiana."""
     if n == 0:
         return "zero"
     units = ["","uno","due","tre","quattro","cinque","sei","sette","otto","nove",
@@ -854,6 +866,7 @@ def int_to_italian(n: int) -> str:
                   60:"sessanta",70:"settanta",80:"ottanta",90:"novanta"}
 
     def under_thousand(num: int) -> str:
+        """Converte un numero intero minore di mille in lettere in lingua italiana."""
         res = ""
         if num >= 100:
             hundreds = num // 100
@@ -909,6 +922,7 @@ def int_to_italian(n: int) -> str:
     return "".join(parts)
 
 def convert_number_string(s: str) -> str:
+    """Converte una stringa numerica decimale nella sua rappresentazione in lettere."""
     s = s.strip()
     if not s:
         raise ValueError("Stringa vuota.")
@@ -939,6 +953,7 @@ def convert_number_string(s: str) -> str:
 import textwrap
 
 def wrap_text(text: str, width=55) -> str:
+    """Formatta e manda a capo le righe del testo secondo la larghezza specificata."""
     # return "\n".join(textwrap.wrap(text, width=50))
     lines = text.splitlines()  # mantiene il testo così com'è diviso
     wrapped_lines = [ "\n".join(textwrap.wrap(line, width)) if line else "" for line in lines ]
@@ -1045,8 +1060,10 @@ def preserva_posizione(step=0):
     e li ripristina alla fine.
     """
     def decorator(func):
+        """Decoratore che memorizza la posizione corrente e la ripristina al termine."""
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """Esegue la funzione decorata ripristinando foglio e selezione iniziali."""
             # Memorizza foglio attivo
             doc = getDocument()
             controller = doc.getCurrentController()
@@ -1097,6 +1114,7 @@ from contextlib import contextmanager
 
 @contextmanager
 def CursorContext(step=0):
+    """Context manager che memorizza la posizione del cursore e la ripristina all'uscita."""
     memorizza_posizione(step)
     try:
         yield
@@ -1243,6 +1261,7 @@ def MENU_trova_duplicati():
 
     # --- Passata 2: evidenziazione e raggruppamento ---
     def _make_range_addr(start, end):
+        """Crea una struttura CellRangeAddress per un intervallo di righe sulla colonna 0."""
         addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         addr.Sheet       = iSheet
         addr.StartColumn = 0

@@ -6,7 +6,6 @@
 ########################################################################
 
 import os
-import sys
 import threading
 import codecs
 import logging
@@ -14,8 +13,6 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 
 # pyrefly: ignore [missing-import]
 import uno
-# pyrefly: ignore [missing-import]
-import unohelper
 # pyrefly: ignore [missing-import]
 from com.sun.star.beans import PropertyValue
 
@@ -791,10 +788,6 @@ def XPWE_out_run(elaborato, out_file):
                 # #########################
                 Quantita = SubElement(RGItem, 'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
-                # se negativa in CONTABILITA:
-                    # quando vedi_voce guarda ad un valore negativo
-                if oSheet.getCellByPosition(4, m).Value < 0:
-                    test = True
                 if elaborato == 'CONTABILITA':
                     if oSheet.getCellByPosition(11, m).Value != 0:
                         Quantita.text = '-' + str(oSheet.getCellByPosition(11, m).Value)
@@ -915,7 +908,7 @@ def gantt():
         return
     try:
         sRow = SheetUtils.uFindStringCol('Riepilogo', 2, oSheet, start=2, equal=0, up=False) + 1
-    except Exception as e:
+    except Exception:
         Dialogs.Exclamation(Title='Informazione',
         Text= "L'esportazione in formato CSV può avvenire solo\nin presenza del Riepilogo strutturale delle Categorie.")
         return
@@ -1277,14 +1270,11 @@ def MENU_export_selected_range_to_odt():
         page_style_name = writer_doc.CurrentController.ViewCursor.PageStyle
         page_style = page_styles.getByName(page_style_name)
         page_width = int(getattr(page_style, "Width", 21000))
-        left_margin = int(getattr(page_style, "LeftMargin", 2000))
         right_margin = int(getattr(page_style, "RightMargin", 2000))
     except Exception:
         page_width = 21000
-        left_margin = 2000
         right_margin = 2000
 
-    usable_width = page_width - left_margin - right_margin
     # tab_position = left_margin + usable_width
     tab_position = page_width - right_margin
 

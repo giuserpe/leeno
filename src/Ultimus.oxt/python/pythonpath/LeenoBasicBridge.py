@@ -28,7 +28,6 @@ import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
 import LeenoComputo
-import LeenoContab
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):
@@ -225,7 +224,6 @@ def riordina_ElencoPrezzi():
     riordina l' elenco prezzi
     '''
     callAlert()
-    oDoc = LeenoUtils.getDocument()
     PL.riordina_ElencoPrezzi()
 
 

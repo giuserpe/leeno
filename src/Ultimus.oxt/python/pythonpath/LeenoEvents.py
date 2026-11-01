@@ -12,7 +12,6 @@ import sys
 from com.sun.star.beans import PropertyValue
 import LeenoUtils
 import LeenoBasicBridge
-import pyleeno as PL
 import LeenoDialogs as DLG
 
 
@@ -169,7 +168,7 @@ def assegna(oDoc=None):
         # ~OnCopyToFailed
         macro_DOC ("OnFocus", 'vnd.sun.star.script:UltimusFree2.PY_bridge.Vedi?language=Basic&location=application', oDoc=oDoc)
         # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
-    except Exception as e:
+    except Exception:
         # ~ PL.DLG.chi(f'Errore: {e}')
         pass
     sheets = oDoc.getSheets()
@@ -180,7 +179,7 @@ def assegna(oDoc=None):
             try:
                 # DLG.chi(f'Assegno macro a {sheet_name}')
                 macro_SHEET(sheet_name, "OnRightClick", 'vnd.sun.star.script:UltimusFree2.PY_bridge.calendario_liste?language=Basic&location=application', oDoc=oDoc)
-            except Exception as e:
+            except Exception:
                 # DLG.errore(e)
                 pass
     # ~OnPrint

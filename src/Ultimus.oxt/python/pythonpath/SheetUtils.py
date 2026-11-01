@@ -14,7 +14,6 @@ from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
 import LeenoUtils
 import DocUtils
-import Dialogs
 import LeenoDialogs as DLG
 
 from datetime import date
@@ -238,9 +237,7 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
     # if there's a cover, copy it inside the new document
     # and fill it
     if coverBuilder is not None:
-        hasCover = coverBuilder(oDoc, nDoc)
-    else:
-        hasCover = False
+        coverBuilder(oDoc, nDoc)
 
     # we need to copy the page styles too... they don't get copied
     # along with sheet
@@ -611,7 +608,7 @@ def remove_bad_ranges():
             #     - Colonna iniziale: {addr.StartColumn + 1}
             #     - Colonna finale: {addr.EndColumn + 1}
             #     - Foglio: {addr.Sheet}''')
-        except Exception as e:
+        except Exception:
             oDoc.NamedRanges.removeByName(name)
             # DLG.chi(f"Area {name} rimossa")
     return

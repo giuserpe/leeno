@@ -53,6 +53,7 @@ _LOG_ENABLED: bool = True
 
 
 def _log(*args, sep=' ') -> None:
+    """Scrive un messaggio con timestamp nel file di log se il logging è abilitato."""
     if not _LOG_ENABLED:
         return
     msg = sep.join(str(a) for a in args)
@@ -65,6 +66,7 @@ def _log(*args, sep=' ') -> None:
 
 
 def log_reset() -> None:
+    """Reinizializza il file di log scrivendone l'intestazione."""
     try:
         with open(LOG_FILE, 'w', encoding='utf-8') as fh:
             fh.write(f'# dcf_parser log — {datetime.datetime.now():%Y-%m-%d %H:%M:%S}\n')
@@ -88,11 +90,13 @@ _indicator = None   # com.sun.star.task.XStatusIndicator
 
 
 def set_indicator(indicator) -> None:
+    """Imposta o rilascia l'indicatore di avanzamento nativo di LibreOffice."""
     global _indicator
     _indicator = indicator
 
 
 def _ind_start(msg: str, max_val: int = 100) -> None:
+    """Avvia l'indicatore di avanzamento con messaggio e valore massimo."""
     if _indicator is None:
         return
     try:
@@ -102,6 +106,7 @@ def _ind_start(msg: str, max_val: int = 100) -> None:
 
 
 def _ind_update(msg: str, value: int) -> None:
+    """Aggiorna il messaggio e il valore corrente dell'indicatore di avanzamento."""
     if _indicator is None:
         return
     try:
@@ -112,6 +117,7 @@ def _ind_update(msg: str, value: int) -> None:
 
 
 def _ind_end() -> None:
+    """Termina e chiude l'indicatore di avanzamento."""
     if _indicator is None:
         return
     try:
@@ -125,6 +131,7 @@ def _ind_end() -> None:
 # ===========================================================================
 
 def _float(v) -> float:
+    """Converte un valore in virgola mobile gestendo spazi e virgole decimali."""
     if v is None:
         return 0.0
     try:
@@ -134,6 +141,7 @@ def _float(v) -> float:
 
 
 def _int(v) -> int:
+    """Converte un valore in intero troncando eventuali cifre decimali."""
     if v is None:
         return 0
     try:
@@ -143,6 +151,7 @@ def _int(v) -> int:
 
 
 def _unescape(s: str) -> str:
+    """Decodifica le entità HTML e XML presenti nella stringa."""
     return _html_module.unescape(s or '')
 
 
@@ -190,6 +199,7 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
     }
 
     def _decode(raw: bytes) -> str:
+        """Decodifica i byte in testo provando utf-8 con fallback a windows-1252."""
         try:
             return raw.decode('utf-8')
         except UnicodeDecodeError:
@@ -215,6 +225,7 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
         return dec
 
     def _tag_from_text(txt: str):
+        """Identifica il nome del tag radice XML dal testo decompresso."""
         m = re.search(r'<([A-Za-z]\w*)', txt)
         if not m:
             return None
@@ -226,6 +237,7 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
         return None
 
     def _merge(blocks: dict, tag: str, txt: str):
+        """Aggiunge o aggiorna il blocco XML mantenendo la versione di dimensione maggiore."""
         if tag not in blocks or len(txt) > len(blocks[tag]):
             blocks[tag] = txt
 
@@ -360,15 +372,18 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
 # ---------------------------------------------------------------------------
 
 def _attr_parse(seg: str) -> dict[str, str]:
+    """Estrae gli attributi di un tag XML decodificandone le entità in un dizionario."""
     return {k: _unescape(v) for k, v in re.findall(r'(\w+)="([^"]*)"', seg)}
 
 
 def _iter_attr_tags(xml: str, tag: str):
+    """Itera su tutte le istanze del tag specificato restituendo i dizionari di attributi."""
     for m in re.finditer(rf'<{tag}\s[^<]+?/?>', xml, re.DOTALL):
         yield _attr_parse(m.group(0))
 
 
 def _dcf_parse_dati_generali(xml: str) -> dict[str, Any]:
+    """Estrae dati generali, quadro economico e categorie dal blocco DatiGenerali di un DCF."""
     result: dict[str, Any] = {}
 
     m = re.search(r'<DGDatiGenerali\s([^>]+)>', xml)
@@ -451,6 +466,7 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
                 by_trf[trf] = a
 
     def _build(a: dict) -> dict[str, Any]:
+        """Costruisce il dizionario normalizzato della voce di elenco prezzi dai suoi attributi."""
         dest = _unescape(a.get('DesEst', ''))
         rid  = _unescape(a.get('DesRid', ''))
         brv  = _unescape(a.get('DesBrv', ''))
@@ -493,6 +509,7 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
 
 
 def _dcf_parse_vc(xml: str) -> list[dict[str, Any]]:
+    """Estrae le voci di computo e i rispettivi righi di misurazione dal blocco CollectionVC."""
     items = []
     for m in re.finditer(r'<ItemVC\s[^>]+>.*?</ItemVC>', xml, re.DOTALL):
         seg = m.group(0)
@@ -546,6 +563,7 @@ def _dcf_parse_vc(xml: str) -> list[dict[str, Any]]:
 
 
 def _dcf_parse_st(xml: str) -> list[dict[str, Any]]:
+    """Estrae la struttura dei documenti dal blocco CollectionST di un DCF."""
     tp_map = {1: 'radice', 2: 'analisi_prezzi', 3: 'fabbisogno',
               4: 'computo', 5: 'elenco_prezzi', 6: 'SAL',
               7: 'relazione', 8: 'cronoprogramma'}
@@ -566,6 +584,7 @@ def _dcf_parse_st(xml: str) -> list[dict[str, Any]]:
 # ===========================================================================
 
 def _xpwe_parse_categorie(root: ET.Element) -> dict[str, Any]:
+    """Estrae capitoli e categorie dalla struttura XML di un file XPWE."""
     result: dict[str, Any] = {
         'super_capitoli':  {},
         'capitoli':        {},
@@ -603,6 +622,7 @@ def _xpwe_parse_categorie(root: ET.Element) -> dict[str, Any]:
 
 
 def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
+    """Estrae le voci di elenco prezzi dalla sezione PweElencoPrezzi di un file XPWE."""
     ep_list: list[dict] = []
     ep_by_id: dict[int, dict] = {}
     for el in root.findall('.//PweElencoPrezzi/EPItem'):
@@ -644,6 +664,7 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
 
 
 def _xpwe_parse_vc(root: ET.Element) -> list[dict[str, Any]]:
+    """Estrae le voci di computo e le misurazioni dalla sezione PweVociComputo di un file XPWE."""
     items = []
     for vc_el in root.findall('.//PweVociComputo/VCItem'):
         id_vc = _int(vc_el.get('ID', '0'))
@@ -677,6 +698,7 @@ def _xpwe_parse_vc(root: ET.Element) -> list[dict[str, Any]]:
 
 
 def _xpwe_parse_dg(root: ET.Element) -> dict[str, Any]:
+    """Estrae le informazioni generali del progetto dal blocco PweDGDatiGenerali di un XPWE."""
     dg = root.find('.//PweDGProgetto/PweDGDatiGenerali')
     if dg is None:
         return {}
@@ -986,12 +1008,14 @@ def generate_xpwe(doc: dict, xpwe_path: str, source_nome: str = 'LeenO') -> None
         return _h.escape(str(s or ''))
 
     def _sub(parent, tag: str, text=None) -> _ET.Element:
+        """Crea e aggiunge un sotto-elemento XML impostandone il testo se fornito."""
         el = _ET.SubElement(parent, tag)
         if text is not None:
             el.text = str(text) if text != '' else ''
         return el
 
     def _fmt_float(v, decimals=2) -> str:
+        """Formatta un numero float in stringa rimuovendo gli zeri decimali superflui."""
         if v is None or v == '':
             return ''
         try:

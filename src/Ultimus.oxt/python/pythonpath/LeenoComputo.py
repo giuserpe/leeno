@@ -294,6 +294,7 @@ def colora_voce(oSheet, lrow, color=None):
 
 
 def insertVoceComputoGrezza(oSheet, lrow):
+    """Inserisce la struttura base di una voce di computo alla riga specificata copiandola da S5."""
 
     # lrow = LeggiPosizioneCorrente()[1]
     ########################################################################
@@ -562,18 +563,21 @@ class DatiVoce:
 
     @property
     def range(self):
+        """Restituisce l'intervallo di celle occupato dall'intera voce."""
         if self._range is None:
             self._range = self._circoscrive_voce()
         return self._range
 
     @property
     def SR(self):
+        """Restituisce l'indice della riga iniziale della voce."""
         if self._SR is None and self.range:
             self._SR = self.range.RangeAddress.StartRow
         return self._SR
 
     @property
     def ER(self):
+        """Restituisce l'indice della riga finale della voce."""
         if self._ER is None and self.range:
             self._ER = self.range.RangeAddress.EndRow
         return self._ER
@@ -584,36 +588,42 @@ class DatiVoce:
 
     @property
     def voce(self):
+        """Restituisce la tupla con i dati principali della voce."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._voce
 
     @property
     def num(self):
+        """Restituisce il numero progressivo della voce."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[0] if len(self._voce) > 0 else ""
 
     @property
     def art(self):
+        """Restituisce il codice di tariffa o articolo della voce."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[1] if len(self._voce) > 1 else ""
 
     @property
     def desc(self):
+        """Restituisce la descrizione sintetica della voce."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._voce[2] if len(self._voce) > 2 else ""
 
     @property
     def REG(self):
+        """Restituisce la tupla con i dati di registro contabilità."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._REG
 
     @property
     def SAL(self):
+        """Restituisce la tupla con i dati relativi al SAL."""
         if not self._dati_estratti:
             self._estrai_dati()
         return self._SAL
@@ -623,6 +633,7 @@ class DatiVoce:
     # ------------------------------------------------------------------
 
     def _circoscrive_voce(self):
+        """Individua i limiti di riga della voce e ne restituisce l'intervallo di celle."""
         oSheet = self.oSheet
         lrow = self.lrow
         start_row = lrow
@@ -682,6 +693,7 @@ class DatiVoce:
     # ------------------------------------------------------------------
 
     def _estrai_dati(self):
+        """Estrae dalle celle della voce le informazioni di computo o contabilità."""
         if self._dati_estratti:
             return
         self._dati_estratti = True

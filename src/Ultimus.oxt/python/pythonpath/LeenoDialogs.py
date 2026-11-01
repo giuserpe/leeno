@@ -138,6 +138,7 @@ def MsgBox(Text, Title=''):  # s = messaggio | t = titolo
 
 
 def _parentWindow():
+    """Restituisce la finestra contenitore del documento attivo come genitore per i dialoghi."""
     try:
         doc = LeenoUtils.getDocument()
         if doc:
@@ -316,6 +317,7 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
 
 
 def ScegliElabDest(*, Title='', AskTarget=False, AskSort=False, Sort=False, ValComputo=None, ValVariante=None, ValContabilita=None):
+    """Mostra un dialogo per scegliere elaborato, destinazione e opzione di ordinamento."""
 
     # altezza radiobutton, per fare il testo con il valore uguale
     # ed averli quindi allineati
@@ -331,6 +333,7 @@ def ScegliElabDest(*, Title='', AskTarget=False, AskSort=False, Sort=False, ValC
 
     # handler per il button di info
     def infoHandler(owner,  widgetId,  widget,  cmdStr):
+        """Gestisce il clic sul pulsante delle informazioni sull'ordinamento."""
         if widgetId == 'sortInfo':
             Dialogs.Info(Title="Note sull'ordinamento", Text=
                 "È possibile effettuare l'ordinamento delle voci di\n"

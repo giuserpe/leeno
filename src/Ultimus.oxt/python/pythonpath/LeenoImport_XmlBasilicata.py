@@ -4,10 +4,8 @@
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 ########################################################################
 
-import re
 import pyleeno as PL
 import LeenoImport
-import xml.etree.ElementTree as ET
 # ~import LeenoDialogs as DLG
 
 # ~from com.sun.star.sheet.CellFlags import \

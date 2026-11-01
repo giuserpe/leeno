@@ -4,7 +4,6 @@
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 ########################################################################
 
-import xml.etree.ElementTree as ET
 import LeenoImport
 
 # Importiamo l'oggetto di logging e le utility di LeenO (es. PL se è il modulo dei prezzari)
@@ -24,7 +23,6 @@ def parseXML(data, defaultTitle=None):
     root = LeenoImport.stripXMLNamespaces(data)
 
     intestazione = root.find('intestazione')
-    autore = intestazione.attrib['autore']
 
     dettaglio = intestazione.find('dettaglio')
     anno = dettaglio.attrib['anno']

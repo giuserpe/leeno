@@ -11,7 +11,6 @@ import re
 import Dialogs
 import pyleeno as PL
 import LeenoImport
-import LeenoDialogs as DLG
 
 def parseXML(data, defaultTitle):
     '''

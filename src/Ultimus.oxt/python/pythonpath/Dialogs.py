@@ -713,6 +713,7 @@ class Sizer(DialogItem):
             item._destruct()
 
     def _presetWidgets(self):
+        """Inizializza preliminarmente i widget contenuti nel sizer."""
         for item in self._items:
             item._presetWidgets()
 
@@ -731,6 +732,7 @@ class Sizer(DialogItem):
         return None
 
     def __getitem__(self, key):
+        """Restituisce il widget corrispondente all'identificatore specificato."""
         return self.getWidget(key)
 
 
@@ -1071,25 +1073,31 @@ class FixedText(DialogItem):
         return super().dump(indent) + f", Text: '{txt}'" + '}'
 
     def setText(self, txt):
+        """Imposta il testo dell'etichetta e aggiorna il modello del controllo UNO."""
         self._text = txt
         if self._UNOControlModel is not None:
             self._UNOControlModel.Label = txt
 
     def getText(self):
+        """Restituisce il testo dell'etichetta."""
         return self._text
 
     def setAlign(self, align):
+        """Imposta l'allineamento del testo e aggiorna il modello del controllo UNO."""
         self._align = align
         if self._UNOControlModel is not None:
             self._UNOControlModel.Align = align
 
     def getAlign(self):
+        """Restituisce l'allineamento del testo."""
         return self._align
 
     def getData(self):
+        """Restituisce il testo del controllo."""
         return self.getText()
 
     def setData(self, d):
+        """Imposta il testo del controllo."""
         self.setText(d)
 
 
@@ -1135,6 +1143,7 @@ class Edit(DialogItem):
         }
 
     def widgetEvent(self, evt):
+        """Aggiorna il testo interno dal modello del controllo UNO e lo restituisce."""
         self._text = self._UNOControlModel.Text
         return self._text
 
@@ -1146,17 +1155,21 @@ class Edit(DialogItem):
         return super().dump(indent) + f", Text: '{txt}'" + '}'
 
     def setText(self, txt):
+        """Imposta il testo del campo di modifica e aggiorna il modello del controllo UNO."""
         self._text = txt
         if self._UNOControlModel is not None:
             self._UNOControlModel.Text = txt
 
     def getText(self):
+        """Restituisce il testo del campo di modifica."""
         return self._text
 
     def getData(self):
+        """Restituisce il testo del campo di modifica."""
         return self.getText()
 
     def setData(self, d):
+        """Imposta il testo del campo di modifica."""
         self.setText(d)
 
 class DateField(DialogItem):
@@ -1199,18 +1212,22 @@ class DateField(DialogItem):
         return super().dump(indent) + f", Date: '{self._date}'" + '}'
 
     def setDate(self, dat):
+        """Imposta la data del campo e aggiorna il modello del controllo UNO."""
         self._date = dat
         if self._UNOControlModel is not None:
             d = LeenoUtils.date2UnoDate(self._date)
             self._UNOControlModel.Date = d
 
     def getDate(self):
+        """Restituisce la data memorizzata nel controllo."""
         return self._date
 
     def getData(self):
+        """Restituisce la data del controllo."""
         return self.getDate()
 
     def setData(self, d):
+        """Imposta la data del controllo."""
         self.setDate(d)
 
 
@@ -1238,6 +1255,7 @@ class FileControl(HSizer):
         self._types = Types
 
     def _fixup(self):
+        """Aggiorna la visualizzazione del percorso abbreviato nella casella di testo."""
         txtBox = self._items[0]
         w = txtBox._width
         txtBox.setText(shortenPath(self._path, w))
@@ -1259,6 +1277,7 @@ class FileControl(HSizer):
 
     # handler per il button di selezione path
     def pathHandler(self, owner, cmdStr):
+        """Apre la selezione file e aggiorna il percorso selezionato."""
         file = FileSelect(est = self._types)
         if file is not None:
             self._path = file
@@ -1267,20 +1286,25 @@ class FileControl(HSizer):
         return True
 
     def setFileTypes(self, fTypes):
+        """Imposta i tipi di file ammessi per la selezione."""
         self._types = fTypes
 
     def setPath(self, pth):
+        """Imposta il percorso file e aggiorna il modello del controllo UNO."""
         self._path = pth
         if self._UNOControlModel is not None:
             self._UNOControlModel.Text = pth
 
     def getPath(self):
+        """Restituisce il percorso file configurato."""
         return self._path
 
     def getData(self):
+        """Restituisce il percorso file del controllo."""
         return self.getPath()
 
     def setData(self, d):
+        """Imposta il percorso file del controllo."""
         self.setPath(d)
 
 
@@ -1306,6 +1330,7 @@ class PathControl(HSizer):
         self._path = Path
 
     def _fixup(self):
+        """Aggiorna la visualizzazione del percorso abbreviato nella casella di testo."""
         txtBox = self._items[0]
         w = txtBox._width
         txtBox.setText(shortenPath(self._path, w))
@@ -1327,6 +1352,7 @@ class PathControl(HSizer):
 
     # handler per il button di selezione path
     def pathHandler(self, owner, cmdStr):
+        """Apre la selezione cartella e aggiorna il percorso selezionato."""
         folder = FolderSelect()
         if folder is not None:
             folder = os.path.join(folder, '')
@@ -1336,17 +1362,21 @@ class PathControl(HSizer):
         return True
 
     def setPath(self, pth):
+        """Imposta il percorso della cartella e aggiorna il modello del controllo UNO."""
         self._path = pth
         if self._UNOControlModel is not None:
             self._UNOControlModel.Text = pth
 
     def getPath(self):
+        """Restituisce il percorso della cartella configurato."""
         return self._path
 
     def getData(self):
+        """Restituisce il percorso della cartella del controllo."""
         return self.getPath()
 
     def setData(self, d):
+        """Imposta il percorso della cartella del controllo."""
         self.setPath(d)
 
 
@@ -1373,6 +1403,7 @@ class DateControl(HSizer):
         self._date = Date
 
     def _fixup(self):
+        """Aggiorna la casella di testo con la data formattata come stringa."""
         txtBox = self._items[0]
         txtBox.setText(LeenoUtils.date2String(self._date))
 
@@ -1393,6 +1424,7 @@ class DateControl(HSizer):
 
     # handler per il button di selezione data
     def dateHandler(self, owner, cmdStr):
+        """Apre il calendario di selezione data e aggiorna il valore visualizzato."""
         nDate = pickDate(self._date)
         if nDate is not None:
             self._date = nDate
@@ -1401,17 +1433,21 @@ class DateControl(HSizer):
         return True
 
     def setDate(self, dat):
+        """Imposta la data e aggiorna il testo nel modello del controllo UNO."""
         self._date = dat
         if self._UNOControlModel is not None:
             self._UNOControlModel.Text = LeenoUtils.date2String(self._date)
 
     def getDate(self):
+        """Restituisce la data memorizzata nel controllo."""
         return self._date
 
     def getData(self):
+        """Restituisce la data del controllo."""
         return self.getDate()
 
     def setData(self, d):
+        """Imposta la data del controllo."""
         self.setDate(d)
 
 
@@ -1537,6 +1573,7 @@ class ProgressBar(DialogItem):
         return super().dump(indent) + '}'
 
     def setLimits(self,  minVal, maxVal):
+        """Imposta i valori minimo e massimo della barra di avanzamento."""
         self._minVal = minVal
         self._maxVal = maxVal
         if self._UNOControlModel is not None:
@@ -1544,14 +1581,17 @@ class ProgressBar(DialogItem):
             self._UNOControlModel.ProgressValueMax = maxVal
 
     def getLimits(self):
+        """Restituisce la tupla con i valori minimo e massimo della barra di avanzamento."""
         return self._minVal, self._maxVal
 
     def setValue(self, val):
+        """Imposta il valore corrente della barra di avanzamento."""
         self._value = val
         if self._UNOControlModel is not None:
             self._UNOControlModel.ProgressValue = val
 
     def getValue(self):
+        """Restituisce il valore corrente della barra di avanzamento."""
         return self._value
 
 
@@ -1607,6 +1647,7 @@ class Button(DialogItem):
         return res
 
     def widgetEvent(self, evt):
+        """Gestisce l'evento di clic sul pulsante e restituisce la stringa di azione."""
         return 'OnClick'
 
     def dump(self,  indent):
@@ -1619,17 +1660,21 @@ class Button(DialogItem):
         return res
 
     def setLabel(self, lbl):
+        """Imposta l'etichetta del pulsante e aggiorna il modello del controllo UNO."""
         self._label = lbl
         if self._UNOControlModel is not None:
             self._UNOControlModel.Label = lbl
 
     def getLabel(self):
+        """Restituisce l'etichetta del pulsante."""
         return self._label
 
     def getData(self):
+        """Restituisce l'etichetta del pulsante."""
         return self.getLabel()
 
     def setData(self, d):
+        """Imposta l'etichetta del pulsante."""
         self.setLabel(d)
 
 
@@ -1671,15 +1716,18 @@ class CheckBox(DialogItem):
         }
 
     def widgetEvent(self, evt):
+        """Aggiorna lo stato booleano della casella e restituisce la stringa di azione."""
         self._state = True if self._UNOControlModel.State else False
         return "OnChange"
 
     def setState(self, state):
+        """Imposta lo stato della casella di controllo e aggiorna il modello UNO."""
         self._state = state
         if self._UNOControlModel:
             self._UNOControlModel.State = self._state
 
     def getState(self):
+        """Restituisce lo stato booleano della casella di controllo."""
         return self._state
 
     def dump(self, indent):
@@ -1692,9 +1740,11 @@ class CheckBox(DialogItem):
         return res
 
     def getData(self):
+        """Restituisce lo stato della casella di controllo."""
         return self.getState()
 
     def setData(self, d):
+        """Imposta lo stato della casella di controllo."""
         self.setState(d)
 
 
@@ -1758,11 +1808,13 @@ class ListBox(DialogItem):
         return self._current
 
     def setCurrent(self, curr):
+        """Imposta la voce selezionata nell'elenco e aggiorna il controllo UNO."""
         self._current= curr
         if self._UNOControl:
             self._UNOControl.selectItem(self._current, True)
 
     def getCurrent(self):
+        """Restituisce la voce attualmente selezionata nell'elenco."""
         return self._current
 
     def dump(self, indent):
@@ -1775,6 +1827,7 @@ class ListBox(DialogItem):
         return res
 
     def setList(self, list):
+        """Imposta gli elementi dell'elenco a discesa e ne aggiorna il controllo UNO."""
         if list is None:
             list = ()
         if type(list) == set:
@@ -1802,12 +1855,15 @@ class ListBox(DialogItem):
             self._UNOControl.makeVisible(itemIndex)
 
     def getList(self):
+        """Restituisce la sequenza di elementi presenti nell'elenco."""
         return self._list
 
     def getData(self):
+        """Restituisce la voce correntemente selezionata nell'elenco."""
         return self.getCurrent()
 
     def setData(self, d):
+        """Imposta la voce selezionata nell'elenco."""
         self.setCurrent(d)
 
 
@@ -1861,11 +1917,13 @@ class ComboBox(DialogItem):
         return self._current
 
     def setCurrent(self, curr):
+        """Imposta il valore di testo corrente della casella combinata."""
         self._current= curr
         if self._UNOControlModel:
             self._UNOControlModel.setText(curr)
 
     def getCurrent(self):
+        """Restituisce il valore di testo corrente della casella combinata."""
         return self._current
 
     def dump(self, indent):
@@ -1878,6 +1936,7 @@ class ComboBox(DialogItem):
         return res
 
     def setList(self, list):
+        """Imposta gli elementi disponibili nella casella combinata e ne aggiorna il controllo UNO."""
         if list is None:
             list = ()
         if type(list) == set:
@@ -1895,12 +1954,15 @@ class ComboBox(DialogItem):
             self._UNOControl.setText(self._current)
 
     def getList(self):
+        """Restituisce la sequenza di elementi presenti nella casella combinata."""
         return self._list
 
     def getData(self):
+        """Restituisce il valore corrente della casella combinata."""
         return self.getCurrent()
 
     def setData(self, d):
+        """Imposta il valore corrente della casella combinata."""
         self.setCurrent(d)
 
 
@@ -2055,6 +2117,7 @@ class RadioGroup(DialogItem):
 
         # param is the button number, here
         # already extracted by button handler
+        """Memorizza l'indice del pulsante radio attivato e ne restituisce il valore."""
         self._current = param
 
         return param
@@ -2066,6 +2129,7 @@ class RadioGroup(DialogItem):
         return self._sizer.getWidget(wId)
 
     def __getitem__(self, key):
+        """Restituisce il widget corrispondente all'identificatore specificato nel gruppo radio."""
         return self.getWidget(key)
 
     def getProps(self):
@@ -2110,9 +2174,11 @@ class RadioGroup(DialogItem):
         return res
 
     def getData(self):
+        """Restituisce l'indice del pulsante radio attualmente selezionato."""
         return self.getCurrent()
 
     def setData(self, d):
+        """Imposta l'indice del pulsante radio selezionato."""
         self.setCurrent(d)
 
 
@@ -2186,6 +2252,7 @@ class GroupBox(DialogItem):
         return self._sizer.getWidget(wId)
 
     def __getitem__(self, key):
+        """Restituisce il widget corrispondente all'identificatore specificato nella cornice."""
         return self.getWidget(key)
 
     def getProps(self):
@@ -2349,6 +2416,7 @@ class Dialog(unohelper.Base, XJobExecutor,  XTopWindowListener):
         self._dialogContainer.dispose()
 
     def _presetWidgets(self):
+        """Esegue l'inizializzazione preliminare dei widget contenuti nel dialogo."""
         self._sizer._presetWidgets()
 
     def windowClosing(self,  evt):
@@ -2442,12 +2510,15 @@ class Dialog(unohelper.Base, XJobExecutor,  XTopWindowListener):
         return self._sizer.getWidget(wId)
 
     def __getitem__(self, key):
+        """Restituisce il widget corrispondente all'identificatore specificato nel dialogo."""
         return self.getWidget(key)
 
     def showing(self):
+        """Indica se il dialogo è in fase di visualizzazione attiva."""
         return self._showing
 
     def getValue(self):
+        """Restituisce il valore di ritorno impostato alla chiusura del dialogo."""
         return self._retVal
 
     def setData(self, data):
@@ -2655,6 +2726,7 @@ def _mapBasicYesNoCancel(uno_result):
 
 
 def _iconMsgType(icon_type, default=INFOBOX):
+    """Restituisce il tipo di messaggio UNO corrispondente all'icona richiesta."""
     return _ICON_TO_MSG_TYPE.get((icon_type or 'info').lower(), default)
 
 
@@ -2677,27 +2749,33 @@ def NotifyDialog(*, IconType="info", Title=None, Text=None, MsgType=None,
 
 
 def box_notizia(*, Image, Title, Text):
+    """Mostra una finestra di dialogo informativa con titolo e testo."""
     return Info(Title=Title, Text=Text)
 
 
 def notizia(*, Title='', Text=''):
+    """Mostra una finestra di dialogo informativa."""
     return Info(Title=Title, Text=Text)
 
 #######################################################################
 
 def Critical(*, Title='', Text=''):
+    """Mostra una finestra di dialogo modale di errore critico."""
     NotifyDialog(Title=Title, Text=Text, MsgType=ERRORBOX)
 
 
 def Exclamation(*, Title='', Text=''):
+    """Mostra una finestra di dialogo modale di avvertimento."""
     NotifyDialog(Title=Title, Text=Text, MsgType=WARNINGBOX)
 
 
 def Info(*, Title='', Text=''):
+    """Mostra una finestra di dialogo modale informativa."""
     NotifyDialog(Title=Title, Text=Text, MsgType=INFOBOX)
 
 
 def Ok(*, Title='', Text=''):
+    """Mostra una finestra di dialogo modale informativa con pulsante di conferma."""
     NotifyDialog(Title=Title, Text=Text, MsgType=INFOBOX)
 
 #######################################################################
@@ -2743,6 +2821,7 @@ def YesNoCancelDialog(IconType="question", Image=None, Title=None, Text=None):
 
 
 def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
+    """Mostra un dialogo con testo, icona opzionale e pulsanti a scelta multipla."""
     if Buttons is None:
         return None
     top = HSizer()
@@ -2769,6 +2848,7 @@ def pickDate(curDate=None):
         curDate = date.today()
 
     def rgb(r, g, b):
+        """Converte le componenti cromatiche rosso, verde e blu in un intero RGB."""
         return 256*256*r + 256*g + b
 
 
@@ -2798,6 +2878,7 @@ def pickDate(curDate=None):
         )
 
     def mkDayLabels():
+        """Genera le righe di pulsanti del calendario per i giorni del mese."""
         monthDay = 1
         weeks = []
         for week in range(0, 5):
@@ -2825,6 +2906,7 @@ def pickDate(curDate=None):
         return weeks
 
     def loadDate(dlg, dat):
+        """Aggiorna i numeri dei giorni e l'etichetta del calendario in base alla data."""
         day = - LeenoUtils.firstWeekDay(dat) + 1
         days = LeenoUtils.daysInMonth(dat)
         for week in range(0, 5):
@@ -2839,6 +2921,7 @@ def pickDate(curDate=None):
         dlg['date'].setText(LeenoUtils.date2String(dat))
 
     def handler(dlg, widgetId, widget, cmdStr):
+        """Gestisce gli eventi dei controlli del calendario per il cambio data."""
         nonlocal curDate
         if widgetId == 'prevYear':
             curDate = date(year=curDate.year-1, month=curDate.month, day=curDate.day)

@@ -16,6 +16,7 @@ import LeenoUtils
 import PersistUtils
 
 def setDocUserDefinedAttribute(oDoc, name, value):
+    """Imposta il valore di una proprietà personalizzata nel documento."""
     userProps = oDoc.DocumentProperties.UserDefinedProperties
 
     # stringize the property
@@ -37,6 +38,7 @@ def setDocUserDefinedAttribute(oDoc, name, value):
             pass
 
 def getDocUserDefinedAttribute(oDoc, name):
+    """Restituisce il valore tipizzato di una proprietà personalizzata del documento."""
     userProps = oDoc.DocumentProperties.UserDefinedProperties
 
     try:
@@ -47,9 +49,11 @@ def getDocUserDefinedAttribute(oDoc, name):
         return None
 
 def hasDocUserDefinedAttribute(oDoc, name):
+    """Verifica la presenza di una proprietà personalizzata nel documento."""
     return getDocUserDefinedAttribute(oDoc, name) != None
 
 def removeDocUserDefinedAttribute(oDoc, name):
+    """Rimuove una proprietà personalizzata dal documento se esistente."""
     userProps = oDoc.DocumentProperties.UserDefinedProperties
 
     # try to add the property, exception if exists
@@ -86,6 +90,7 @@ def loadDataBlock(oDoc, baseName):
     return res
 
 def loadDocument(filePath, Hidden=True):
+    """Carica e restituisce un documento da percorso o URL."""
 
     try:
         url = uno.systemPathToFileUrl(filePath)
@@ -109,6 +114,7 @@ def loadDocument(filePath, Hidden=True):
         return None
 
 def createSheetDocument(Hidden=True):
+    """Crea e restituisce un nuovo documento foglio di calcolo vuoto."""
 
     if Hidden:
         # start hidden

@@ -79,6 +79,7 @@ def valida_cella(oCell, lista_val=None, titoloInput='', msgInput='', err=False):
 
 
 def _uno_condition_operator_greater_equal():
+    """Restituisce il singleton enum com.sun.star.sheet.ConditionOperator.GREATER_EQUAL."""
     cache = _uno_condition_operator_greater_equal
     if getattr(cache, '_enum', None) is None:
         cache._enum = uno.Enum(
@@ -87,6 +88,7 @@ def _uno_condition_operator_greater_equal():
 
 
 def _uno_validation_type_decimal():
+    """Restituisce il singleton enum com.sun.star.sheet.ValidationType.DECIMAL."""
     cache = _uno_validation_type_decimal
     if getattr(cache, '_enum', None) is None:
         cache._enum = uno.Enum(
@@ -95,6 +97,7 @@ def _uno_validation_type_decimal():
 
 
 def _uno_validation_alert_stop():
+    """Restituisce il singleton enum com.sun.star.sheet.ValidationAlertStyle.STOP."""
     cache = _uno_validation_alert_stop
     if getattr(cache, '_enum', None) is None:
         cache._enum = uno.Enum(
@@ -166,6 +169,7 @@ def applica_validazione_decimale():
     rng_sheet = oSheet.getCellRangeByPosition
 
     def apply_dec_batch(rng):
+        """Applica la validazione decimale a un intervallo saltando le celle già validate."""
         _imposta_validazione_decimale_su_intervallo(
             rng, skip_se_gia_decimale=True)
 

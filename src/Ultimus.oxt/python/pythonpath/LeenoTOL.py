@@ -357,6 +357,7 @@ def _applica_sfondo_ep(oSheet, riga_tol_inizio_1based, riga_tol_fine_1based):
 
 
 def _applica_larghezze_colonne(oSheet):
+    """Imposta le larghezze predefinite delle colonne del foglio di riepilogo."""
     for col, larghezza in _LARGHEZZE_COLONNE.items():
         try:
             oSheet.getColumns().getByIndex(col).Width = larghezza
@@ -398,6 +399,7 @@ def _preleva_stili_riferimento(oSheetEP):
 
 
 def _applica_stile(cella, stili, ruolo):
+    """Applica alla cella lo stile corrispondente al ruolo indicato."""
     nome = stili.get(ruolo)
     if not nome:
         return
@@ -408,6 +410,7 @@ def _applica_stile(cella, stili, ruolo):
 
 
 def _assicura_foglio_riepilogo(oDoc):
+    """Recupera il foglio di riepilogo TOL, creandolo se non esiste."""
     oSheets = oDoc.getSheets()
     if not oSheets.hasByName(SHEET_RIEPILOGO):
         oSheets.insertNewByName(SHEET_RIEPILOGO, oSheets.getCount())
@@ -495,6 +498,7 @@ def scrivi_foglio_riepilogo_tol(oDoc, periodo_sal=None, mese_aggiudicazione=None
         riga_corrente += 1
 
     def _scrivi_totale(riga, etichetta, ruolo_valore):
+        """Scrive e formatta una riga di totale nel foglio di riepilogo."""
 
         oSheet.getCellByPosition(0, riga - 1).setString('')
 

@@ -24,6 +24,7 @@ from undo_utils import with_undo
 
 @with_undo("Inserimento Oneri Sicurezza")
 def Inserisci_Utili():
+    """Inserisce la riga degli oneri per la sicurezza nell'analisi di prezzo corrente."""
     oDoc = LeenoUtils.getDocument()
     oSheets = oDoc.getSheets()
     oRanges = oDoc.NamedRanges
@@ -68,6 +69,7 @@ def Inserisci_Utili():
 
 
 def calcola_codice_successivo(codice_corrente):
+    """Calcola il codice progressivo successivo incrementando la parte numerica finale."""
     import re
     if not codice_corrente:
         return None
@@ -345,6 +347,7 @@ def MENU_impagina_analisi():
 ########################################################################
 
 def Main_Riordina_Analisi_Alfabetico():
+    """Avvia il riordino alfabetico delle schede di analisi e ne adatta l'altezza riga."""
     _Riordina_Analisi_Alfabetico()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName("Analisi di Prezzo")
@@ -355,6 +358,7 @@ def Main_Riordina_Analisi_Alfabetico():
 @with_undo("Riordina Analisi di Prezzo Alfabetico")
 @LeenoUtils.no_refresh
 def _Riordina_Analisi_Alfabetico():
+    """Riordina alfabeticamente per codice le schede del foglio Analisi di Prezzo."""
     PL.chiudi_dialoghi()
 
     # with LeenoUtils.DocumentRefreshContext(False):
@@ -446,6 +450,7 @@ def _Riordina_Analisi_Alfabetico():
 
 
 def Main_Rinumera_Analisi_Selezionate():
+    """Avvia la rinumerazione progressiva delle analisi di prezzo selezionate."""
     _Rinumera_Analisi_Selezionate()
 
 
@@ -717,6 +722,7 @@ def MENU_analisi_in_ElencoPrezzi():
 
 
 def tante_analisi_in_ep():
+    """Trasferisce in blocco tutte le analisi di prezzo nel foglio Elenco Prezzi."""
     import uno
     # pyrefly: ignore [missing-import]
     from com.sun.star.sheet.CellFlags import HARDATTR

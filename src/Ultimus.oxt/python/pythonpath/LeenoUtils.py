@@ -3,7 +3,6 @@ Often used utility functions
 
 Copyright 2020 by Massimo Del Fedele
 '''
-import sys
 # pyrefly: ignore [missing-import]
 import uno
 # pyrefly: ignore [missing-import]
@@ -338,7 +337,7 @@ def DocumentRefreshContext(enable_refresh: bool):
     DocumentRefresh(enable_refresh)
     try:
         yield
-    except Exception as e:
+    except Exception:
         pass
 
         # DLG.errore(str(e))
@@ -572,7 +571,6 @@ def dictToProperties(values, unoAny=False):
         ps = uno.Any('[]com.sun.star.beans.PropertyValue', ps)
     return ps
 
-import calendar
 def daysInMonth(dat):
     '''
     Restituisce il numero di giorni nel mese della data passata.
@@ -705,7 +703,6 @@ def indirizzo_in_forma_leggibile():
     converter.Address = cell_address
 
     user_representation = converter.UserInterfaceRepresentation
-    persistent_representation = converter.PersistentRepresentation
 
     # Stampa le rappresentazioni (opzionale)
 
@@ -964,13 +961,11 @@ def wrap_path(path, max_len=60):
     return result
 
 ##########################################################################
-import functools
-
 
 
 def memorizza_posizione(step=0):
     """Memorizza la posizione corrente del cursore, con incremento opzionale della riga"""
-    ctx = getComponentContext()
+    getComponentContext()
     doc = getDocument()
     if doc is None:
         return

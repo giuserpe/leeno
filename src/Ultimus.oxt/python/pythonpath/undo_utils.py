@@ -40,6 +40,7 @@ def with_undo(description=None, auto_description=True):
 
     # Caso 2: @with_undo() o @with_undo("desc") - description è una stringa o None
     def decorator(func):
+        """Costruisce il wrapper di undo per la funzione specificata."""
         # Determina la descrizione
         if description:
             actual_description = description
@@ -59,6 +60,7 @@ def _create_wrapper(func, undo_description):
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Esegue la funzione racchiusa in un contesto di undo e con refresh bloccato."""
         # Import locale per evitare dipendenze circolari
         try:
             import LeenoUtils
@@ -104,8 +106,10 @@ def with_undo_batch(description="Operazioni multiple"):
             # Risultato: un solo undo invece di due
     """
     def decorator(func):
+        """Costruisce il wrapper per raggruppare operazioni multiple in un singolo undo."""
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """Esegue le operazioni raggruppando gli undo interni in un'unica voce."""
             try:
                 import LeenoUtils
                 oDoc = LeenoUtils.getDocument()
@@ -150,6 +154,7 @@ def no_undo(func):
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Esegue la funzione disabilitando temporaneamente il gestore di undo."""
         try:
             import LeenoUtils
             oDoc = LeenoUtils.getDocument()
@@ -183,10 +188,12 @@ class UndoContext:
             # tutto sarà in un singolo undo
     """
     def __init__(self, description="Operazione"):
+        """Inizializza il context manager con la descrizione dell'azione di undo."""
         self.description = description
         self.undoManager = None
 
     def __enter__(self):
+        """Apre il contesto di undo sul documento corrente."""
         try:
             import LeenoUtils
             oDoc = LeenoUtils.getDocument()
@@ -197,6 +204,7 @@ class UndoContext:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Chiude il contesto di undo precedentemente aperto."""
         if self.undoManager:
             try:
                 self.undoManager.leaveUndoContext()

@@ -614,7 +614,6 @@ def impostazioni_pagina():
             DLG.chi(f"Stile non trovato: {e}")
             committente_full = committente
 
-        htxt = 8.0 / 100 * oAktPage.PageScale
 
         if oAktPage.DisplayName == 'Page_Style_COPERTINE':
             oAktPage.HeaderIsOn = False
@@ -718,15 +717,6 @@ def importa_stili_pagina_non_presenti(silent = False):
         lun_1 = len(existing_page_styles)
 
 
-        # Creare la lista di PropertyValue per le opzioni di caricamento
-        loadOptions = [
-            PL.crea_property_value("LoadPageStyles", True),
-            PL.crea_property_value("LoadCellStyles", False),
-            PL.crea_property_value("LoadTextStyles", False),
-            PL.crea_property_value("LoadFrameStyles", False),
-            PL.crea_property_value("LoadNumberingStyles", False),
-            PL.crea_property_value("OverwriteStyles", False)  # Non sovrascrivere per default
-        ]
 
         try:
             # Carica il documento di template temporaneamente in modalità nascosta
@@ -754,7 +744,7 @@ def importa_stili_pagina_non_presenti(silent = False):
             templateDoc.close(True)
 
             # ~ DLG.chi("Stili di pagina mancanti importati correttamente.")
-        except Exception as e:
+        except Exception:
             # ~ DLG.chi(f"Errore durante l'importazione degli stili: {str(e)}")
             pass
         # attiva la progressbar

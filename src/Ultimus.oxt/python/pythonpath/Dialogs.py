@@ -11,7 +11,6 @@ external constraints
 
 Copyright 2020 by Massimo Del Fedele
 """
-import LeenoComputo
 import os
 import inspect
 from datetime import date
@@ -55,8 +54,6 @@ from com.sun.star.awt.MessageBoxResults import YES, NO, CANCEL
 
 from LeenoConfig import Config
 import LeenoUtils
-import pyleeno as PL
-import LeenoDialogs as DLG
 
 
 def getCurrentPath():

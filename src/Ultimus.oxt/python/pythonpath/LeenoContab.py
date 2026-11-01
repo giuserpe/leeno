@@ -51,6 +51,7 @@ class ProgressIndicatorManager:
     e prevenire l'hijacking da parte di operazioni interne di Calc.
     """
     def __init__(self, oDoc, total_steps=4):
+        """Inizializza il gestore della barra di avanzamento dello stato del documento."""
         self.oDoc = oDoc
         self.indicator = oDoc.getCurrentController().getStatusIndicator()
         self.total_steps = total_steps
@@ -82,9 +83,11 @@ class ProgressIndicatorManager:
         self.indicator.end()
 
     def __enter__(self):
+        """Restituisce l'istanza del gestore all'entrata nel blocco di contesto."""
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Termina la barra di avanzamento all'uscita dal blocco di contesto."""
         self.end()
         return False
 
@@ -98,8 +101,10 @@ def with_progress_reclaim(manager_attr='progress'):
         manager_attr: nome dell'attributo che contiene il ProgressIndicatorManager
     """
     def decorator(func):
+        """Decoratore che invoca la liberazione delle risorse del gestore di avanzamento."""
         @wraps(func)
         def wrapper(*args, **kwargs):
+            """Esegue la funzione e rilascia le risorse dell'indicatore di avanzamento."""
             result = func(*args, **kwargs)
             # Cerca il manager negli argomenti o nel primo argomento (self/cls)
             if args and hasattr(args[0], manager_attr):
@@ -1306,6 +1311,7 @@ def GeneraLibretto(oDoc):
 
         # Raggruppamento per datiSAL (Lavori) e datiSAL_VDS (Sicurezza) con N. ord. sequenziale e raggruppamento per Articolo
         def raggruppa_voci(dati_lista):
+            """Raggruppa le voci per articolo sommando quantita' e importi."""
             # Raggruppa per solo Articolo per garantire l'univocità
             gruppi_quant = defaultdict(float)
             gruppi_importo = defaultdict(float)
@@ -1639,6 +1645,7 @@ def GeneraRegistro(oDoc, dati):
 
     # Raggruppa le voci per tipo (LAVORI o VDS) per inserirle in blocchi
     def get_type(entry):
+        """Determina la categoria della voce distinguendo tra 'VDS' e 'LAVORI'."""
         return 'VDS' if entry[1] else 'LAVORI'
 
     for voce_type, group in itertools.groupby(REG_DATA_ORDERED, key=get_type):
@@ -1888,6 +1895,7 @@ def setup_intestazioni_sal(oSheet, nSal, oDoc):
 
 
 def GeneraSAL(oDoc, dati, stato_finale=False):
+    """Genera il foglio di Stato Avanzamento Lavori compilando voci, riepiloghi e firme."""
     # Unpack dei dati
     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
 
@@ -2519,6 +2527,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
         # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
         def trova_r_S2(testo, start_offset=0):
+            """Cerca l'indice di riga relativo contenente il testo specificato nella colonna 4."""
             for i in range(start_offset, 40):
                 riga = xS2 + i
                 cell_text = oS2.getCellByPosition(4, riga).String.lower()
@@ -2547,6 +2556,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
         r_certif = trova_r_S2("Certificato di pagamento")
 
         def scrivi(offset, formula_o_valore):
+            """Scrive un valore o una formula nella cella all'offset indicato."""
             if offset is not None:
                 cell = oS2.getCellByPosition(col, xS2 + offset)
                 if isinstance(formula_o_valore, str) and formula_o_valore.startswith('='):
@@ -2568,6 +2578,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
         # Formule dinamiche interne a S2 basate sulle righe effettive (1-indexed)
         def rf(offset):
+            """Restituisce il riferimento alfanumerico di cella dato l'offset di riga."""
             # Ritorna il riferimento alla cella es: F14
             return f"{ncol}{xS2 + offset + 1}" if offset is not None else "0"
 
@@ -2908,6 +2919,7 @@ def firme_libretto(lrowF=None, oSheet=None, col=None, aggiungi_spazio=True):
 @LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
 def GeneraAttiContabili():
+    """Avvia la generazione coordinata degli atti contabili sul documento attivo."""
     oDoc = LeenoUtils.getDocument()
     EseguiContabilita(oDoc)
     return
@@ -3052,6 +3064,7 @@ def _intero_in_lettere(n):
             'sessanta', 'settanta', 'ottanta', 'novanta']
 
     def _sotto_mille(m):
+        """Converte in lettere italiane una cifra intera minore di mille."""
         if m == 0:
             return ''
         if m < 20:
@@ -3063,6 +3076,7 @@ def _intero_in_lettere(n):
         return tens + (uni[u] if u else '')
 
     def _centinaia(m):
+        """Converte in lettere italiane le centinaia di un numero."""
         if m == 0:
             return ''
         c, resto = divmod(m, 100)
@@ -3395,6 +3409,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
     def trova_r_S2(testo, start_offset=0):
+        """Cerca il numero di riga assoluto contenente la stringa cercata in colonna 4."""
         for i in range(start_offset, 40):
             riga = xS2 + i
             cell_text = oS2.getCellByPosition(4, riga).String.lower()
@@ -3403,6 +3418,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         return None
 
     def trova_r_S2_multi(labels):
+        """Cerca la prima riga corrispondente a una delle etichette fornite."""
         for label in labels:
             r = trova_r_S2(label)
             if r is not None: return r
@@ -3413,6 +3429,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     # Recupero Importo a Contratto e Totale Lavori (più robusto)
     def _leggi_val_S2(labels, colonna_val):
+        """Legge un valore numerico da S2 cercando prima in anagrafica e poi nella situazione contabile."""
         # 1. Cerca in Anagrafica (col 0/1 -> valore col 2)
         # Cerchiamo nelle prime 200 righe dove solitamente risiede l'anagrafica
         for r in range(200):
@@ -3763,6 +3780,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     }
 
 def _mostra_riepilogo_cdp(riepilogo, titolo="Atti contabili aggiornati con successo."):
+    """Mostra la finestra di dialogo con il riepilogo del certificato di pagamento generato."""
     if not riepilogo:
         Dialogs.Info(Text=titolo)
         return

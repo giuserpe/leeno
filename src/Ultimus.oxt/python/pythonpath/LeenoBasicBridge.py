@@ -253,7 +253,7 @@ def trova_np():
 
 
 def sproteggi_sheet_TUTTE():
-    """Rimuove la protezione da tutti i fogli del documento."""
+    """Rimuove la protezione da tutti i fogli del documento e li riordina nella sequenza standard di LeenO."""
     callAlert()
     PL.sproteggi_sheet_TUTTE()
 
@@ -318,13 +318,13 @@ def rifa_nomearea(oDoc, sSheet, sRange, sName):
 
 
 def autoexec():
-    """Attiva l'esecuzione automatica delle macro di avvio."""
+    """Inizializza l'ambiente di LeenO nel documento (eventi, impostazioni, fogli principali)."""
     callAlert()
     PL.autoexec()
 
 
 def autoexec_off():
-    """Disattiva l'esecuzione automatica delle macro di avvio."""
+    """Disattiva l'ambiente di LeenO: barre degli strumenti, gestori di eventi e intestazioni dei fogli principali."""
     callAlert()
     PL.autoexec_off()
 
@@ -397,7 +397,7 @@ def voce_breve_ep():
 
 
 def Rinumera_TUTTI_Capitoli2():
-    """Rinumera progressivamente tutti i capitoli nel foglio attivo."""
+    """Sincronizza capitoli e sottocapitoli del foglio attivo e ricalcola tutti i subtotali."""
     callAlert()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

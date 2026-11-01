@@ -26,6 +26,7 @@ _EXPORTSETTINGSITEMS = (
 )
 
 def loadExportSettings(oDoc):
+    """Carica le impostazioni di esportazione PDF dal documento o dalla configurazione."""
     cfg = LeenoConfig.Config()
     data = DocUtils.loadDataBlock(oDoc, 'ImpostazioniExport')
     if data is None or len(data) == 0:
@@ -33,6 +34,7 @@ def loadExportSettings(oDoc):
     return data
 
 def storeExportSettings(oDoc, es):
+    """Salva le impostazioni di esportazione PDF nel documento e nella configurazione."""
     cfg = LeenoConfig.Config()
 
     DocUtils.storeDataBlock(oDoc, 'ImpostazioniExport', es)
@@ -96,6 +98,7 @@ def prepareCover(oDoc, nDoc, docSubst):
     return True
 
 def prepareHeaderFooter(oDoc, docSubst):
+    """Prepara il dizionario di intestazione e piè di pagina sostituendo i segnaposto."""
 
     res = {}
 
@@ -124,6 +127,7 @@ def prepareHeaderFooter(oDoc, docSubst):
     return res
 
 def PdfDialog():
+    """Crea e restituisce la finestra di dialogo per l'esportazione dei documenti in PDF."""
     # dimensione verticale dei checkbox == dimensione bottoni
     #dummy, hItems = Dialogs.getButtonSize('', Icon="Icons-24x24/settings.png")
     nWidth, hItems = Dialogs.getEditBox('aa')
@@ -180,6 +184,7 @@ def PdfDialog():
 
 
 def PdfElencoPrezzi(destFolder, nTavola):
+    """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
 
     oDoc = LeenoUtils.getDocument()
     ep = oDoc.Sheets.getByName('Elenco Prezzi')
@@ -205,6 +210,7 @@ def PdfElencoPrezzi(destFolder, nTavola):
 
 
 def PdfComputoMetrico(destFolder, nTavola):
+    """Esporta in formato PDF il foglio COMPUTO nella cartella specificata."""
 
     oDoc = LeenoUtils.getDocument()
     ep = oDoc.Sheets.getByName('COMPUTO')
@@ -230,6 +236,7 @@ def PdfComputoMetrico(destFolder, nTavola):
 
 
 def MENU_Pdf():
+    """Mostra la finestra di dialogo ed esegue l'esportazione PDF dei documenti selezionati."""
 
     oDoc = LeenoUtils.getDocument()
     es = loadExportSettings(oDoc)

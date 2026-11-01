@@ -39,6 +39,7 @@ if 'CALL_SET' not in bDict:
     bDict['CALL_SET'] = set()
 
 def callAlert():
+    """Mostra un avviso per la chiamata da LibreOffice Basic se gli alert sono attivi."""
     if ALERT_BASIC_CALLS:
         funcName = inspect.stack()[1][3]
         # pyrefly: ignore [unknown-name]
@@ -252,6 +253,7 @@ def trova_np():
 
 
 def sproteggi_sheet_TUTTE():
+    """Rimuove la protezione da tutti i fogli del documento."""
     callAlert()
     PL.sproteggi_sheet_TUTTE()
 
@@ -316,37 +318,44 @@ def rifa_nomearea(oDoc, sSheet, sRange, sName):
 
 
 def autoexec():
+    """Attiva l'esecuzione automatica delle macro di avvio."""
     callAlert()
     PL.autoexec()
 
 
 def autoexec_off():
+    """Disattiva l'esecuzione automatica delle macro di avvio."""
     callAlert()
     PL.autoexec_off()
 
 
 def setTabColor(color):
+    """Imposta il colore della scheda del foglio attivo."""
     callAlert()
     PL.setTabColor(color)
 
 
 def paste_clip(arg=None, insCells=0):
+    """Incolla il contenuto degli appunti con inserimento celle opzionale."""
     callAlert()
     PL.paste_clip(arg, insCells)
 
 
 def copy_clip():
+    """Copia la selezione corrente negli appunti."""
     callAlert()
     PL.comando('Copy')
 
 
 def ins_voce_elenco():
+    """Inserisce una nuova riga nell'Elenco Prezzi."""
     callAlert()
     PL.ins_voce_elenco()
 
 
 
 def Tutti_Subtotali():
+    """Calcola e aggiorna tutti i subtotali nel foglio attivo."""
     callAlert()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -354,6 +363,7 @@ def Tutti_Subtotali():
 
 
 def salva_come(nomefile=None):
+    """Apre il dialogo di salvataggio con nome o salva con il percorso specificato."""
     callAlert()
     PL.salva_come(nomefile)
 
@@ -367,6 +377,7 @@ def ScriviNomeDocumentoPrincipale():
 
 
 def fissa(cols_freeze=None, rows_freeze=None):
+    """Blocca o sblocca righe e colonne nel foglio attivo."""
     callAlert()
     PL.fissa(cols_freeze, rows_freeze)
 
@@ -380,11 +391,13 @@ def bak0(arg=None):
 
 
 def voce_breve_ep():
+    """Genera e imposta la descrizione breve per la voce di Elenco Prezzi."""
     callAlert()
     PL.voce_breve_ep()
 
 
 def Rinumera_TUTTI_Capitoli2():
+    """Rinumera progressivamente tutti i capitoli nel foglio attivo."""
     callAlert()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -392,11 +405,13 @@ def Rinumera_TUTTI_Capitoli2():
 
 
 def copia_riga_computo(lrow):
+    """Duplica una riga di misurazione del computo metrico."""
     callAlert()
     PL.copia_riga_computo(lrow)
 
 
 def ins_voce_computo():
+    """Inserisce una nuova voce nel foglio di computo attivo."""
     callAlert()
     LeenoComputo.ins_voce_computo()
 

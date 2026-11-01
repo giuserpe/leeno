@@ -4,10 +4,7 @@
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 ########################################################################
 
-import re
 import LeenoImport
-import xml.etree.ElementTree as ET
-import LeenoDialogs as DLG
 
 # ~from com.sun.star.sheet.CellFlags import \
     # ~VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED

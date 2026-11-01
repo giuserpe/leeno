@@ -8,7 +8,6 @@
     LeenO - modulo parser XML per il formato XML-SIX
 """
 import LeenoImport_XmlToscana
-import LeenoImport
 import pyleeno as PL
 
 def parseXML(data, defaultTitle):

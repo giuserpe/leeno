@@ -6,7 +6,6 @@
 
 import re
 import LeenoImport
-import xml.etree.ElementTree as ET
 import LeenoDialogs as DLG
 import pyleeno as PL
 
@@ -206,7 +205,7 @@ def parseXML1(data, defaultTitle=None):
             # ~ return
         try:
             desc = PL.clean_text(voce.find('Declaratoria').text)
-        except Exception as e:
+        except Exception:
             # ~ DLG.chi(f'Errore: {e} code: {codice}')
             desc = ''
         try:

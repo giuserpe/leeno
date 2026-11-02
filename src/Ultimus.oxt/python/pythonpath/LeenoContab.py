@@ -3081,6 +3081,8 @@ def _intero_in_lettere(n):
             return ''
         c, resto = divmod(m, 100)
         pref = 'cento' if c == 1 else (uni[c] + 'cento' if c else '')
+        if pref and 80 <= resto < 90:
+            pref = pref[:-1]
         return pref + _sotto_mille(resto)
 
     res = ''

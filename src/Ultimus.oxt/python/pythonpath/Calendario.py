@@ -33,8 +33,6 @@ def calendario():
     '''
     # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    PL.LeggiPosizioneCorrente()[0]
-    PL.LeggiPosizioneCorrente()[1]
     testo = pickDate()
     lst = str(testo).split('-')
     try:

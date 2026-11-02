@@ -573,7 +573,6 @@ def prossimaVoce(oSheet, lrow, n=1, saltaCat=True):
     STILI_CAT = set(LeenoGlobals.getGlobalVar('stili_cat'))
     STILI_COMPUTO = set(LeenoGlobals.getGlobalVar('stili_computo'))
     STILI_CONTAB = set(LeenoGlobals.getGlobalVar('stili_contab'))
-    set(LeenoGlobals.getGlobalVar('noVoce'))
     STILI_VALIDI = STILI_COMPUTO | STILI_CONTAB
 
     # Stili da saltare (insieme per ricerca veloce)
@@ -1113,7 +1112,6 @@ def MENU_elimina_righe_vuote():
 
     indicator.end()
 
-    SheetUtils.uFindStringCol(sString, 2, oSheet, start=2, equal=1, up=True) or SheetUtils.getLastUsedRow(oSheet)
     # PL._gotoCella(1, 4)
     # Dialogs.Info(Title='Ricerca conclusa', Text=f'Eliminate {lrow - lrow_} righe vuote.')
     LeenoUtils.ripristina_posizione()

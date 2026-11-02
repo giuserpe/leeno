@@ -78,8 +78,6 @@ def datiVoceComputo(oSheet, lrow):
         um = oSheet.getCellByPosition(8, end_row).String.split('[')[-1].split(']')[0]
         Nlib = int(oSheet.getCellByPosition(19, start_row + 1).Value)
         Plib = int(oSheet.getCellByPosition(20, start_row + 1).Value)
-        oSheet.getCellByPosition(22, start_row + 1).String
-        oSheet.getCellByPosition(23, start_row + 1).Value
         prezzo = oSheet.getCellByPosition(13, end_row).Value
         importo = oSheet.getCellByPosition(15, end_row).Value
 

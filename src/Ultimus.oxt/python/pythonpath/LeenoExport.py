@@ -704,7 +704,6 @@ def XPWE_out_run(elaborato, out_file):
                                     n).CellStyle in ('Comp Start Attributo',
                                                         'Comp Start Attributo_R'):
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
-            sStRange.RangeAddress
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
             if elaborato == 'CONTABILITA':

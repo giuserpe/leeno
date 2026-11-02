@@ -423,15 +423,25 @@ class TestUtilsPure2(unittest.TestCase):
                 zf.writestr("dati.xml", "<?xml version=\"1.0\"?><testo>da zip</testo>".encode("utf-8"))
             self.assertEqual(_readXmlFile(p_zip), "<?xml version=\"1.0\"?><testo>da zip</testo>")
 
-            # 7. Codifica cp1252 / Windows-1252 senza BOM
-            # BUG NOTO: Se il file non ha BOM ed e' codificato in cp1252 (Windows-1252),
-            # _readXmlFile assume sempre utf-8 con errors='ignore', scartando silenziosamente
-            # i byte non-ASCII (ad esempio 'caffè' codificato in cp1252 contiene 0xe9, che viene
-            # ignorato risultando in 'caff').
+            # 7. Codifica cp1252 / Windows-1252 senza BOM: nessun carattere perso
             p_cp1252 = os.path.join(td, "doc_cp1252.xml")
             with open(p_cp1252, "wb") as f:
-                f.write("<?xml version=\"1.0\"?><testo>caffè</testo>".encode("cp1252"))
-            self.assertEqual(_readXmlFile(p_cp1252), "<?xml version=\"1.0\"?><testo>caff</testo>")
+                f.write("<?xml version=\"1.0\"?><testo>caff\u00e8 \u00b0C</testo>".encode("cp1252"))
+            self.assertEqual(_readXmlFile(p_cp1252), "<?xml version=\"1.0\"?><testo>caff\u00e8 \u00b0C</testo>")
+
+            # 8. Codifica dichiarata nell'intestazione (ISO-8859-1) senza BOM
+            p_iso = os.path.join(td, "doc_iso.xml")
+            with open(p_iso, "wb") as f:
+                f.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><testo>perch\u00e9</testo>".encode("iso-8859-1"))
+            self.assertEqual(
+                _readXmlFile(p_iso),
+                "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><testo>perch\u00e9</testo>")
+
+            # 9. UTF-8 valido senza BOM: invariato
+            p_u8 = os.path.join(td, "doc_utf8.xml")
+            with open(p_u8, "wb") as f:
+                f.write("<?xml version=\"1.0\"?><testo>caff\u00e8</testo>".encode("utf-8"))
+            self.assertEqual(_readXmlFile(p_u8), "<?xml version=\"1.0\"?><testo>caff\u00e8</testo>")
 
 
 if __name__ == "__main__":

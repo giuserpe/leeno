@@ -294,6 +294,22 @@ def _readXmlFile(filename):
     else:
         encoding = 'utf-8'
 
+    try:
+        return raw.decode(encoding)
+    except UnicodeDecodeError:
+        pass
+
+    if encoding == 'utf-8':
+        # senza BOM e non UTF-8 valido: prova la codifica dichiarata nell'intestazione XML, poi cp1252
+        import re
+        dichiarata = re.search(rb'<\?xml[^>]*encoding=["\']([A-Za-z0-9_.:-]+)["\']', raw[:200])
+        candidate = [dichiarata.group(1).decode('ascii')] if dichiarata else []
+        for enc in candidate + ['cp1252']:
+            try:
+                return raw.decode(enc)
+            except (UnicodeDecodeError, LookupError):
+                continue
+
     return raw.decode(encoding, errors='ignore')
 
 def ImportElencoPrezziXML():

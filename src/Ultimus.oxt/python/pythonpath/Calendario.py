@@ -17,10 +17,7 @@ from datetime import date
 # import uno
 # import unohelper
 
-# from LeenoConfig import Config
 import LeenoUtils
-import pyleeno as PL
-# import LeenoDialogs as DLG
 import Dialogs
 
 

@@ -4366,7 +4366,6 @@ def raggruppa_righe_voce(row, flag=1):
     #  row = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
-        sStRange.RangeAddress
 
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct(
@@ -8884,7 +8883,6 @@ def vista_configurazione(tipo_configurazione):
     else:
         raise ValueError(f"Nome del foglio non gestito: {starting_sheet_name}")
 
-    target_sheet.getColumns().getCount()
     iSheet = target_sheet.RangeAddress.Sheet
 
     def create_cell_range(sheet, start_col, end_col):

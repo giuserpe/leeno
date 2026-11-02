@@ -1433,7 +1433,6 @@ def GeneraLibretto(oDoc):
     # 19: nSal, 20: nPag, 21: -, 22: #reg, 23: nSal
 
     # Recuperiamo gli stili della colonna 1 in un colpo solo per il filtraggio
-    oSheet.getCellRangeByPosition(1, daRiga, 1, aRiga)
     # Nota: CellStyle non si recupera in batch facilmente con DataArray,
     # ma possiamo minimizzare le chiamate.
 

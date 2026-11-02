@@ -126,7 +126,7 @@ def sbloccaContabilita(oSheet, lrow):
         return True
 
     partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
-    if partenza[2] == '#reg':
+    if len(partenza) > 2 and partenza[2] == '#reg':
         res = Dialogs.YesNoCancelDialog(IconType="question",
            Title="Voce già registrata",
            Text= "Lavorando in questo punto del foglio,\n"

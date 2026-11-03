@@ -219,6 +219,7 @@ def leggiDatiGeneraliAnalisi(dati):
             PweDGAnalisi = list(found_moduli)[0]
 
             def parse_percent(tag):
+                '''Converte in frazione decimale un valore percentuale letto da un tag XML.'''
                 text = get_xml_text(PweDGAnalisi, tag, '0')
                 try:
                     return float(text.replace(',', '.')) / 100
@@ -251,6 +252,7 @@ def leggiApprossimazioni(dati):
         PweDGConfigNumeri = list(found_config)[0]
 
         def parse_decimal_digits(tag):
+            '''Estrae il numero di cifre decimali dalla stringa di formato nel tag XML.'''
             text = get_xml_text(PweDGConfigNumeri, tag)
             if not text:
                 return None
@@ -363,6 +365,7 @@ def leggiElencoPrezzi(misurazioni):
         unmisura = get_xml_text(elem, 'UnMisura')
 
         def parse_price(tag):
+            '''Converte in float il prezzo letto da un tag XML o restituisce una stringa vuota.'''
             text = get_xml_text(elem, tag)
             if not text or text == '0':
                 return ''
@@ -383,6 +386,7 @@ def leggiElencoPrezzi(misurazioni):
         adrinternet = get_xml_text(elem, 'AdrInternet')
 
         def parse_incidenza(tag):
+            '''Converte in frazione decimale l'incidenza percentuale letta da un tag XML.'''
             text = get_xml_text(elem, tag)
             if not text: return ''
             try:
@@ -443,6 +447,7 @@ def leggiMisurazioni(misurazioni, ordina):
         return []
 
     def clean_value(elem, tag, pattern):
+        '''Pulisce e normalizza il testo numerico o di formula letto da un tag XML.'''
         value = get_xml_text(elem, tag)
         if not value:
             return value
@@ -518,6 +523,7 @@ def leggiMisurazioni(misurazioni, ordina):
 ################################################
 
 def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
+    '''Estrae la lista dei capitoli o categorie formattata per l'elenco prezzi.'''
     resList = []
     for el in capitoliCategorie[catName]:
         tariffa = el.get('codice')
@@ -528,6 +534,7 @@ def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
     return tuple(resList)
 
 def riempiBloccoElencoPrezzi(oSheet, dati, col, indicator=None, case_sensitive=False, overwrite=False):
+    '''Inserisce o aggiorna in blocco le voci dell'elenco prezzi nel foglio specificato.'''
     # 1. Recupera tutti i codici esistenti nel foglio (colonna 0, dalla riga 3 in poi)
     import SheetUtils
     existing_codes = {}
@@ -850,6 +857,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         numeroVoce = 1             # numerazione progressiva voci
 
         def get_map(key):
+            '''Costruisce un dizionario di associazione tra identificativi e descrizioni sintetiche.'''
             res = {}
             for el in capitoliCategorie.get(key, []):
                 if isinstance(el, dict):
@@ -1068,6 +1076,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     return voci_senza_tariffa
 
 def MENU_XPWE_import(filename = None):
+    '''Avvia il processo interattivo di importazione di un file XPWE o DCF.'''
     try:
         is_ctrl, _ = PL.GetModifiers()
     except AttributeError:

@@ -36,6 +36,7 @@ LOG_FILE: str = os.path.join(os.path.expanduser('~'), 'paradox_to_xpwe.log')
 
 
 def _log(*args, sep=' ') -> None:
+    '''Scrive un messaggio con timestamp nel file di log.'''
     msg = sep.join(str(a) for a in args)
     ts  = datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]
     try:
@@ -46,6 +47,7 @@ def _log(*args, sep=' ') -> None:
 
 
 def log_reset() -> None:
+    '''Reinizializza il file di log con una nuova intestazione.'''
     try:
         with open(LOG_FILE, 'w', encoding='utf-8') as fh:
             fh.write(f'# paradox_to_xpwe log — {datetime.datetime.now():%Y-%m-%d %H:%M:%S}\n')
@@ -179,6 +181,7 @@ _EP_SKIP = 2  # byte interni Paradox da saltare all'inizio di ogni record
 
 
 def _parse_ep_record(rec: bytes, data_mb: bytes) -> dict[str, Any] | None:
+    '''Decodifica un record binario dell'elenco prezzi ed estrae i relativi campi.'''
     s = _EP_SKIP
     trf = _read_alpha(rec, s+0, 20)
     # Filtra record vuoti o con tariffa non valida
@@ -390,6 +393,7 @@ def paradox_to_xpwe(folder: str, output_xpwe: str | None = None,
     files = os.listdir(folder)
 
     def find_db(prefix: str) -> str | None:
+        '''Cerca un file con estensione DB corrispondente al prefisso specificato.'''
         for f in files:
             if f.upper().startswith(prefix.upper()) and f.upper().endswith('.DB'):
                 return os.path.join(folder, f)

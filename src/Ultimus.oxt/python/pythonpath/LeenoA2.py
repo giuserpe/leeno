@@ -14,6 +14,7 @@ import Dialogs
 FOGLI_TARGET = ["COMPUTO", "VARIANTE", "CONTABILITA"]
 
 def fmt_euro(val):
+    '''Formatta un valore numerico come stringa in formato valuta Euro.'''
     try:
         n = float(val)
         s = f"{n:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")

@@ -31,6 +31,7 @@ import SheetUtils
 
 
 def creaGiornale():
+    '''Crea un nuovo documento Giornale dei Lavori a partire dal modello ODS.'''
     desktop = LeenoUtils.getDesktop()
     opz = PropertyValue()
     opz.Name = 'AsTemplate'
@@ -45,6 +46,7 @@ def creaGiornale():
 
 
 def nuovo_giorno():
+    '''Inserisce una nuova giornata di lavoro nel foglio GIORNALE e ne raggruppa le righe.'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('GIORNALE')
     # ~PL.GotoSheet('GIORNALE')

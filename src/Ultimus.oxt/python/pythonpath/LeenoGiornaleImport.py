@@ -292,6 +292,7 @@ def _assicura_link_foto(oSheet, riga_data, cartella_relativa):
 
 
 def importa_giornate(oDoc, giornate, conferma, foto_per_giorno=None):
+    '''Importa nel foglio GIORNALE i dati delle giornate da Brogliaccio.'''
     import LeenoGiornale
     '''
     giornate        : lista [(date, campi)] da leggi_appunti()/leggi_pacchetto()
@@ -392,6 +393,7 @@ def MENU_importa_appunti():
         return
 
     def conferma(stringa):
+        '''Chiede all'utente come procedere per una giornata già esistente nel giornale.'''
         r = Dialogs.YesNoCancelDialog(
             Title='Giornata già presente',
             Text=f'La giornata {stringa} esiste già nel giornale.\n\n'

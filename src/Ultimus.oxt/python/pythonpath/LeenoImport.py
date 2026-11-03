@@ -257,6 +257,7 @@ def compilaElencoPrezzi(oDoc, dati):
 
 
 def MENU_ImportElencoPrezziXML():
+    '''Avvia l'importazione di un prezzario in formato XML nell'elenco prezzi.'''
     with LeenoUtils.DocumentRefreshContext(False):
         ImportElencoPrezziXML()
 
@@ -486,9 +487,11 @@ class importa_listino_leeno_th(threading.Thread):
     @@ DA DOCUMENTARE
     '''
     def __init__(self):
+        '''Inizializza il thread per l'importazione del listino.'''
         threading.Thread.__init__(self)
 
     def run(self):
+        '''Esegue l'importazione del listino LeenO nel thread in background.'''
         importa_listino_leeno_run()
 
 

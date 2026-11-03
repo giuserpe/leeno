@@ -46,7 +46,8 @@ def creaGiornale():
 
 
 def nuovo_giorno():
-    '''Inserisce una nuova giornata di lavoro nel foglio GIORNALE e ne raggruppa le righe.'''
+    '''Inserisce una nuova giornata nel foglio GIORNALE e riorganizza
+    raggruppamenti e interruzioni di pagina di tutte le giornate'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('GIORNALE')
     # ~PL.GotoSheet('GIORNALE')

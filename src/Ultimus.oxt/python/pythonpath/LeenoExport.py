@@ -896,6 +896,7 @@ Verifica che il file di destinazione non sia già in uso!''')
 
 
 def gantt():
+    '''Esporta i dati di riepilogo delle categorie in un file CSV per GanttProject.'''
     # Ottieni il documento corrente e prepara il percorso del file di output
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1207,9 +1208,11 @@ class XPWE_export_th(threading.Thread):
     @@ DA DOCUMENTARE
     '''
     def __init__(self):
+        '''Inizializza il thread per l'esportazione del file XPWE.'''
         threading.Thread.__init__(self)
 
     def run(self):
+        '''Esegue la procedura di esportazione XPWE nel thread in background.'''
         XPWE_export_run()
 
 

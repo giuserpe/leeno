@@ -21,6 +21,7 @@ from com.sun.star.beans import PropertyValue
 # Utility: normalizzazione link cross-platform
 # --------------------------------------------------
 def normalize_link_target(target):
+    '''Converte una stringa di destinazione collegamento in un oggetto Path assoluto.'''
     target = target.strip()
     # URL file:///...
     if target.startswith("file:///"):
@@ -50,6 +51,7 @@ def is_in_leeno_bk(path):
 # Estrazione link dal documento
 # --------------------------------------------------
 def extract_links(doc):
+    '''Estrae l'insieme dei percorsi dei file collegati nelle celle del documento.'''
     links = set()
     for sheet in doc.Sheets:
         cursor = sheet.createCursor()

@@ -267,6 +267,7 @@ def storePrintSettings(oDoc, js):
     cfg.writeBlock('ImpostazioniStampa', js, True)
 
 def PrintSettingsDialog():
+    '''Crea il dialogo di configurazione per l'intestazione e il piè di pagina di stampa.'''
     # dimensione dell'icona grande
     imgW = Dialogs.getBigIconSize()[0] * 2
     fieldW, dummy = Dialogs.getTextBox("W" * 30)

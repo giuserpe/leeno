@@ -200,15 +200,18 @@ def circoscriveVoceComputo(oSheet, lrow, misure = False):
 
 class ColorStatusListener(unohelper.Base, XStatusListener):
     def __init__(self):
+        '''Inizializza il listener per lo stato del colore.'''
         self.color = None
         self.called = False
     def statusChanged(self, event):
+        '''Aggiorna il colore memorizzato quando cambia lo stato del comando.'''
         # Il valore del colore è spesso contenuto in event.State
         # Per .uno:BackgroundColor, se caricato, è un valore intero RGB
         if hasattr(event, "State"):
             self.color = event.State
         self.called = True
     def disposing(self, event):
+        '''Gestisce l'evento di dismissione del broadcaster.'''
         pass
 
 def get_bucket_color_registry_file():
@@ -545,6 +548,7 @@ class DatiVoce:
     """
 
     def __init__(self, oSheet, lrow):
+        '''Inizializza l'oggetto per l'estrazione dei dati della voce.'''
         self.oSheet = oSheet
         self.lrow = lrow
         self._range = None
@@ -850,6 +854,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
 
     class VdsSumListener(unohelper.Base, XRangeSelectionListener):
         def __init__(self, controller, f_ord, f_vds, c_ord, c_vds):
+            '''Inizializza il listener con il controller e i parametri per le formule.'''
             self.controller = controller
             self.formula_ordinarie = f_ord
             self.formula_vds = f_vds
@@ -1001,12 +1006,15 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 self.unregister()
 
         def aborted(self, event):
+            '''Annulla la selezione dell'intervallo e disregistra il listener.'''
             self.unregister()
 
         def unregister(self):
+            '''Rimuove il listener dalla selezione dell'intervallo del controller.'''
             self.controller.removeRangeSelectionListener(self)
 
         def disposing(self, event):
+            '''Gestisce l'evento di rilascio del broadcaster.'''
             pass
 
     controller = oDoc.CurrentController

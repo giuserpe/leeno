@@ -47,6 +47,7 @@ def pickDate(curDate=None):
         curDate = date.today()
 
     def rgb(r, g, b):
+        '''Calcola il valore intero del colore a partire dalle componenti RGB.'''
         return 256*256*r + 256*g + b
 
 
@@ -76,6 +77,7 @@ def pickDate(curDate=None):
         )
 
     def mkDayLabels():
+        '''Crea la griglia di pulsanti per i giorni del calendario.'''
         monthDay = 1
         weeks = []
         for week in range(0, 5):
@@ -103,6 +105,7 @@ def pickDate(curDate=None):
         return weeks
 
     def loadDate(dlg, dat):
+        '''Aggiorna le etichette dei giorni e il campo data del dialogo.'''
         day = - LeenoUtils.firstWeekDay(dat) + 1
         days = LeenoUtils.daysInMonth(dat)
         for week in range(0, 5):
@@ -117,6 +120,7 @@ def pickDate(curDate=None):
         dlg['date'].setText(LeenoUtils.date2String(dat))
 
     def handler(dlg, widgetId, widget, cmdStr):
+        '''Gestisce gli eventi di navigazione e selezione del calendario.'''
         nonlocal curDate
         if widgetId == 'prevYear':
             curDate = date(year=curDate.year-1, month=curDate.month, day=curDate.day)

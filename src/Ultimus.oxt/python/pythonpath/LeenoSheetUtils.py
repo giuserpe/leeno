@@ -130,6 +130,7 @@ def getColumnWidths(oSheet):
     Restituisce: dict con widths, hidden_ranges, group_levels, visible_cols, freeze
     '''
     def col_index_to_letter(n):
+        '''Converte un indice di colonna a base zero nella corrispondente lettera alfabetica.'''
         name = ''
         while n >= 0:
             name = chr(ord('A') + (n % 26)) + name
@@ -486,6 +487,7 @@ def rRow(oSheet):
             return n
 
 def cercaUltimaVoce(oSheet):
+    '''Trova l'indice di riga dell'ultima voce o livello presente nel foglio.'''
     # if oSheet.Name == 'Elenco Prezzi':
     #     nRow = SheetUtils.getLastUsedRow(oSheet)
     #     return nRow

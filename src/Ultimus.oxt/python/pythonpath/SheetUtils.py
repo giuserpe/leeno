@@ -25,6 +25,7 @@ insert strings attributes into spreadsheets
 '''
 
 def setSheetUserDefinedAttribute(oSheet, name, value):
+    """Imposta o aggiorna un attributo personalizzato (UserDefinedAttribute) nel foglio specificato."""
     userAttributes = oSheet.UserDefinedAttributes
     attr = AttributeData()
     attr.Type = "CDATA"
@@ -36,16 +37,19 @@ def setSheetUserDefinedAttribute(oSheet, name, value):
     oSheet.UserDefinedAttributes = userAttributes
 
 def getSheetUserDefinedAttribute(oSheet, name):
+    """Restituisce il valore di un attributo personalizzato del foglio specificato, oppure None se assente."""
     userAttributes = oSheet.UserDefinedAttributes
     if userAttributes.hasByName(name):
         return userAttributes.getByName(name).Value
     return None
 
 def hasSheetUserDefinedAttribute(oSheet, name):
+    """Verifica se il foglio specificato possiede l'attributo personalizzato indicato."""
     userAttributes = oSheet.UserDefinedAttributes
     return userAttributes.hasByName(name)
 
 def removeSheetUserDefinedAttribute(oSheet, name):
+    """Rimuove un attributo personalizzato dal foglio specificato se presente."""
     userAttributes = oSheet.UserDefinedAttributes
     if userAttributes.hasByName(name):
         userAttributes.removeByName(name)
@@ -215,6 +219,7 @@ def copyPageStyle(nDoc, style):
 
 
 def paginationFields(oDoc, oTxt):
+    """Sostituisce i segnaposto [PAGINA] e [PAGINE] nell'oggetto di testo con i relativi campi numerici."""
     if oTxt.String.find('[PAGINA]') >= 0:
         oField = oDoc.createInstance("com.sun.star.text.TextField.PageNumber")
         LeenoUtils.replacePatternWithField(oTxt, '[PAGINA]', oField)

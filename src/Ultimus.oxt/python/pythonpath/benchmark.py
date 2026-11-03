@@ -10,14 +10,17 @@ from io import StringIO
 import re
 
 def clean_text(desc):
+    """Rimuove caratteri di controllo non validi ed entità numeriche illegali dal testo."""
     desc = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', desc)
     def _remove_illegal_charref(m):
+        """Filtra i riferimenti a caratteri decimali non ammessi nello standard XML."""
         code = int(m.group(1))
         if code in (9, 10, 13) or code > 31:
             return m.group(0)
         return ''
     desc = re.sub(r'&#(\d+);', _remove_illegal_charref, desc)
     def _remove_illegal_hexref(m):
+        """Filtra i riferimenti a caratteri esadecimali non ammessi nello standard XML."""
         code = int(m.group(1), 16)
         if code in (9, 10, 13) or code > 31:
             return m.group(0)
@@ -41,6 +44,7 @@ for event, elem in context:
     tag_name = elem.tag.split('}')[-1]
     if tag_name == 'SAR24_prezzario_articoli':
         def get_text(child_name):
+            """Estrae il testo del tag figlio corrispondente al nome specificato."""
             for child in elem:
                 if child.tag.endswith(child_name):
                     return child.text if child.text else ''

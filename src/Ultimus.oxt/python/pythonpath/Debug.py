@@ -89,6 +89,7 @@ def aggiorna_configurazione_leeno():
 
     # 4. Funzione helper per l'aggiornamento del file
     def process_xcu(source, target, label):
+        """Aggiorna un file XCU sostituendo il segnaposto di origine con il percorso di LeenO."""
         if not os.path.exists(source):
             return f"✗ {label} sorgente non trovato"
         if not target:
@@ -554,6 +555,7 @@ def pulisci_log_performance():
 
 
 def check_ods(percorso):
+    """Verifica l'integrità strutturale e l'XML di un file ODS stampando l'esito."""
     try:
         with zipfile.ZipFile(percorso, 'r') as z:
             # Verifica integrità archivio

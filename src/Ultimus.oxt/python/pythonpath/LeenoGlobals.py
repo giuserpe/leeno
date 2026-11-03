@@ -9,6 +9,7 @@ import sys
 
 
 def getGlobalVar(name):
+    """Recupera una variabile globale di LeenO memorizzata nel dizionario builtins."""
     if type(__builtins__) == type(sys):
         bDict = __builtins__.__dict__
     else:
@@ -17,6 +18,7 @@ def getGlobalVar(name):
 
 
 def setGlobalVar(name, value):
+    """Imposta una variabile globale di LeenO nel dizionario builtins."""
     if type(__builtins__) == type(sys):
         bDict = __builtins__.__dict__
     else:
@@ -25,6 +27,7 @@ def setGlobalVar(name, value):
 
 
 def initGlobalVars(d):
+    """Inizializza un insieme di variabili globali di LeenO da un dizionario in builtins."""
     if type(__builtins__) == type(sys):
         bDict = __builtins__.__dict__
     else:

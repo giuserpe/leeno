@@ -25,6 +25,7 @@ def trova_autocad(nome_finestra):
     hwnd = ctypes.c_void_p()
 
     def enum_windows_proc(h, lparam):
+        """Controlla il titolo della finestra enumerata e ne memorizza l'handle se corrisponde."""
         user32.GetWindowTextW(h, buffer, 255)
         titolo = buffer.value
         if nome_finestra.lower() in titolo.lower():
@@ -38,6 +39,7 @@ def trova_autocad(nome_finestra):
 
 
 def attiva_finestra(hwnd):
+    """Ripristina e porta in primo piano la finestra di sistema indicata dall'handle."""
     if hwnd:
         user32 = ctypes.WinDLL('user32')
         SW_RESTORE = 9
@@ -49,6 +51,7 @@ def attiva_finestra(hwnd):
 
 
 def invia_tasto(ch):
+    """Simula la pressione e il rilascio del tasto corrispondente al carattere specificato."""
     user32 = ctypes.WinDLL('user32')
     vk = user32.VkKeyScanW(ord(ch))
     user32.keybd_event(vk, 0, 0, 0)
@@ -57,6 +60,7 @@ def invia_tasto(ch):
 
 
 def invia_testo(testo):
+    """Invia una sequenza di caratteri come tasti premuti seguita dal tasto Invio."""
     for ch in testo:
         invia_tasto(ch)
     user32 = ctypes.WinDLL('user32')

@@ -96,6 +96,7 @@ def applica_nuovo_colore_tematico():
 
 ######################################################################
 def trova_colore_cella():
+    """Mostra tramite dialogo informativo il colore di sfondo (CellBackColor) della cella corrente."""
     oDoc = LeenoUtils.getDocument()
     active_cell = oDoc.CurrentSelection
     DLG.chi(active_cell.CellBackColor)

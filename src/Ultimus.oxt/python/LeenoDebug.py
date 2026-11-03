@@ -202,6 +202,7 @@ desktop = lo['desktop']
 
 
 def loadDocument(filename):
+    """Carica e apre un documento in LibreOffice a partire dal percorso del file."""
     url = uno.systemPathToFileUrl(filename)
     oDoc = desktop.loadComponentFromURL(url, "_blank", 0, tuple())
     return oDoc

@@ -17,6 +17,7 @@ import Dialogs
 
 import LeenoDialogs as DLG
 def MENU_generaVariante():
+    """Mostra una richiesta di conferma per lo svuotamento e avvia la generazione della variante dal computo."""
     oDoc = LeenoUtils.getDocument()
     res = Dialogs.YesNoCancelDialog(
         IconType="question",

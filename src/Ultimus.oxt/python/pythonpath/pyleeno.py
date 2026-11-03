@@ -551,13 +551,13 @@ def invia_voce(ctrl_override=False):
             if row is None:
                 return False
 
-        range_src = f'A{row+1}:G{row+1}'
+        range_src = f'A{row+1}:J{row+1}'
         data = oSheet.getCellRangeByName(range_src).FormulaArray
 
         dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
         dccSheet.getRows().insertByIndex(4, 1)
         _shift_pending_altezza(dccSheet, 4)
-        range_dest = f'A5:G5'
+        range_dest = f'A5:J5'
         dccSheet.getCellRangeByName(range_dest).FormulaArray = data
         try:
             src_form_addr = dccSheet.getCellRangeByName("L4:Z4").RangeAddress

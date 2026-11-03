@@ -44,6 +44,7 @@ def parseXML(data, defaultTitle=None):
     # ~def PRT():
         # ~return "PRT"
     def trovaTipo(xmlText):
+        """Identifica la tipologia di schema XML del prezzario analizzando i namespace presenti nel testo."""
         Dati = {
             'PRT="https://prezzariollpp.regione.toscana.it/PrezzarioRT.xsd"': 'PRT',
             'EASY="https://prezzariollpp.regione.toscana.it/prezzario.xsd"': 'EASY',

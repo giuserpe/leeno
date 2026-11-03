@@ -208,6 +208,7 @@ class attesa(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        """Mostra a video il dialogo di attesa dopo averne terminato l'eventuale esecuzione precedente."""
         LeenoGlobals.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
         LeenoGlobals.getGlobalVar('oDialogo_attesa').execute()
 

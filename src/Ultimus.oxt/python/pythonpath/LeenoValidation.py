@@ -16,6 +16,7 @@ from undo_utils import UndoContext
 
 
 def debug_validation():
+    """Configura l'etichetta e la convalida dati per la scelta tra COMPUTO e VARIANTE nel foglio attivo."""
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  DLG.mri(oDoc.CurrentSelection.Validation)

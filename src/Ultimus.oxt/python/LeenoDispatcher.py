@@ -29,6 +29,7 @@ def msgbox(*, Title='Errore interno', Message=''):
         return -1
 
 def loVersion():
+    """Restituisce la versione di LibreOffice configurata nel setup dell'ambiente UNO."""
     aConfigProvider = uno.getComponentContext().ServiceManager.createInstance(
         "com.sun.star.configuration.ConfigurationProvider")
     arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
@@ -39,6 +40,7 @@ def loVersion():
     ).ooSetupVersionAboutBox
 
 def fixPythonPath():
+    """Aggiunge la cartella dello script e la cartella pythonpath a sys.path se non presenti."""
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     if myPath not in sys.path:
         sys.path.append(myPath)
@@ -47,6 +49,7 @@ def fixPythonPath():
         sys.path.append(libPath)
 
 def reloadLeenoModules():
+    """Ricarica tutti i moduli Python presenti nella cartella pythonpath."""
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     myPath = os.path.join(myPath, "pythonpath")
     if not os.path.exists(myPath):
@@ -267,6 +270,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
         fixPythonPath()
 
     def trigger(self, arg):
+        """Esegue una funzione modulo.funzione tramite dispatch ricaricando prima i moduli."""
         try:
             reloadLeenoModules()
             ModFunc = arg.split('.')

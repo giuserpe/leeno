@@ -87,6 +87,7 @@ _CACHE_TTL = timedelta(hours=24)
 # ---------------------------------------------------------------------------
 
 def _cache_path():
+    """Restituisce il percorso del file JSON di cache degli indici TOL creandone la directory se assente."""
     global _CACHE_PATH
     if _CACHE_PATH is None:
         if os.name == 'nt':
@@ -100,6 +101,7 @@ def _cache_path():
 
 
 def _load_cache():
+    """Carica e restituisce il dizionario della cache da disco, oppure un dizionario vuoto in caso di errore."""
     path = _cache_path()
     if not os.path.exists(path):
         return {}
@@ -111,6 +113,7 @@ def _load_cache():
 
 
 def _save_cache(cache):
+    """Salva su disco il dizionario della cache in formato JSON."""
     with open(_cache_path(), 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
@@ -120,6 +123,7 @@ def _save_cache(cache):
 # ---------------------------------------------------------------------------
 
 def _rispetta_rate_limit():
+    """Attende l'intervallo minimo stabilito tra richieste consecutive per rispettare i limiti di frequenza."""
     global _last_request_ts
     trascorso = time.time() - _last_request_ts
     if trascorso < _MIN_INTERVAL_SEC:

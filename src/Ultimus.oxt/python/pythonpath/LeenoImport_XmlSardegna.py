@@ -54,6 +54,7 @@ def parseXML(data, defaultTitle):
             tag_name = elem.tag.split('}')[-1]
             if event == 'end' and tag_name == 'SAR24_prezzario_articoli':
                 def get_text(child_name):
+                    """Estrae il testo del tag figlio corrispondente al nome specificato."""
                     for child in elem:
                         if child.tag.endswith(child_name):
                             return child.text if child.text else ''

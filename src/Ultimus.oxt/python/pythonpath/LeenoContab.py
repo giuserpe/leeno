@@ -115,28 +115,44 @@ def with_progress_reclaim(manager_attr='progress'):
     return decorator
 
 
+def is_voce_registrata(oSheet, lrow):
+    '''
+    Verifica se la voce a cui appartiene la riga lrow in CONTABILITA
+    è registrata negli atti contabili (presenta '#reg' nella colonna W, indice 22).
+    '''
+    if oSheet.Name != 'CONTABILITA':
+        return False
+    partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
+    if len(partenza) > 2 and partenza[2] == '#reg':
+        return True
+    try:
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        if sStRange:
+            sr = sStRange.RangeAddress.StartRow
+            er = sStRange.RangeAddress.EndRow
+            # Controlla colonna W (indice 22) nell'intervallo della voce
+            for r in range(sr, er + 1):
+                if oSheet.getCellByPosition(22, r).String == '#reg':
+                    return True
+    except Exception:
+        pass
+    return False
+
+
 def sbloccaContabilita(oSheet, lrow):
     '''
-    Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
-    Ritorna True se il consenso è stato dato, False altrimenti
+    Controlla se la voce in CONTABILITA è registrata (#reg).
+    Se è registrata, non è modificabile: espone un alert e ritorna False.
     '''
-    if LeenoGlobals.getGlobalVar('sblocca_computo') == 1:
-        return True
     if oSheet.Name != 'CONTABILITA':
         return True
 
-    partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
-    if len(partenza) > 2 and partenza[2] == '#reg':
-        res = Dialogs.YesNoCancelDialog(IconType="question",
-           Title="Voce già registrata",
-           Text= "Lavorando in questo punto del foglio,\n"
-                 "comprometterai la validità degli atti contabili già emessi.\n\n"
-                 "Vuoi procedere?\n\n"
-                 "SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!"
+    if is_voce_registrata(oSheet, lrow):
+        Dialogs.Exclamation(
+            Title="ATTENZIONE! Voce registrata",
+            Text="Questa voce risulta già registrata negli atti contabili (#reg).\n\n"
+                 "Non è modificabile."
         )
-        if res == 1:
-            LeenoGlobals.setGlobalVar('sblocca_computo', 1)
-            return True
         return False
     return True
 
@@ -762,6 +778,8 @@ def partita(testo):
     if oSheet.Name != "CONTABILITA":
         return
     x = PL.LeggiPosizioneCorrente()[1]
+    if not sbloccaContabilita(oSheet, x):
+        return
     if oSheet.getCellByPosition(0, x).CellStyle == 'comp 10 s_R':
         if oSheet.getCellByPosition(2, x).Type.value != 'EMPTY':
             PL.Copia_riga_Ent()

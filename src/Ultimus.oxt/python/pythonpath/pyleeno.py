@@ -4276,6 +4276,13 @@ def MENU_azzera_voce():
         idx = 0
         for row in reversed(fini):
             row += idx
+            if oSheet.Name == 'CONTABILITA' and LeenoContab.is_voce_registrata(oSheet, row):
+                Dialogs.Exclamation(
+                    Title="ATTENZIONE! Voce registrata",
+                    Text="Questa voce risulta già registrata negli atti contabili (#reg).\n\n"
+                         "Non è modificabile."
+                )
+                continue
             try:
                 sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
                 sStRange.RangeAddress
@@ -4590,6 +4597,16 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
         else:
             return
 
+    if oSheet.Name == 'CONTABILITA':
+        for r_check in range(SR, ER + 1):
+            if LeenoContab.is_voce_registrata(oSheet, r_check):
+                Dialogs.Exclamation(
+                    Title="ATTENZIONE! Voce registrata",
+                    Text="Tra le voci selezionate è presente una voce già registrata negli atti contabili (#reg).\n\n"
+                         "Non è modificabile né eliminabile."
+                )
+                return
+
     # Seleziona visivamente l'area che sta per essere eliminata
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
 
@@ -4679,6 +4696,16 @@ def MENU_elimina_righe():
 
     if not righe:
         return
+
+    if oSheet.Name == 'CONTABILITA':
+        for r_check in righe:
+            if LeenoContab.is_voce_registrata(oSheet, r_check):
+                Dialogs.Exclamation(
+                    Title="ATTENZIONE! Voce registrata",
+                    Text="Tra le righe selezionate è presente una voce già registrata negli atti contabili (#reg).\n\n"
+                         "Non è modificabile né eliminabile."
+                )
+                return
 
     # --- 2) COSTRUZIONE BLOCCHI CONTIGUI ---
     blocchi = []
@@ -4857,6 +4884,10 @@ def copia_riga_contab(row, num_righe=1):
     with LeenoUtils.DocumentRefreshContext(False):
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
+
+        if not LeenoContab.sbloccaContabilita(oSheet, row):
+            return
+
         oSheetto = oDoc.getSheets().getByName('S5')
 
         # template: riga 25 di S5 (0-based)
@@ -5105,34 +5136,20 @@ def cerca_partenza():
 
 def sblocca_cont():
     '''
-    @@@ MODIFICA IN CORSO CON 'LeenoContab.sbloccaContabilita'
-    Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
+    Controlla se la voce in CONTABILITA è registrata (#reg).
+    Se è registrata, non è modificabile ed espone un alert bloccante.
     '''
-    partenza = LeenoGlobals.getGlobalVar('partenza')
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('CONTABILITA'):
         partenza = cerca_partenza()
-        # DLG.chi(partenza[2])
-        # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
-        if LeenoGlobals.getGlobalVar('sblocca_computo') == 1:
-            pass
-        else:
-            if partenza[2] == '':
-                pass
-            if partenza[2] == '#reg':
-                res = Dialogs.YesNoCancelDialog(IconType="question", Title='Avviso: Voce già registrata!',
-                Text= """Lavorando in questo punto del foglio,
-comprometterai la validità degli atti contabili già emessi.
-
-Vuoi procedere?
-
-SCEGLIENDO SÌ DOVRAI NECESSARIAMENTE RIGENERARLI!""")
-                if res == 1:
-                    LeenoGlobals.setGlobalVar('sblocca_computo', 1)
-                else:
-                    LeenoGlobals.setGlobalVar('sblocca_computo', 0)
-        # DLG.chi(LeenoGlobals.getGlobalVar('sblocca_computo'))
+        if len(partenza) > 2 and partenza[2] == '#reg':
+            Dialogs.Exclamation(
+                Title="ATTENZIONE! Voce registrata",
+                Text="Questa voce risulta già registrata negli atti contabili (#reg).\n\n"
+                     "Non è modificabile."
+            )
+            LeenoGlobals.setGlobalVar('sblocca_computo', 0)
 
 
 ########################################################################
@@ -5567,6 +5584,16 @@ def inverti_segno(target_row=None):
         for r in ranges:
             for row in range(r.StartRow, r.EndRow + 1):
                 lista_righe.add(row)
+
+    if oSheet.Name == 'CONTABILITA':
+        for row in sorted(lista_righe):
+            if LeenoContab.is_voce_registrata(oSheet, row):
+                Dialogs.Exclamation(
+                    Title="ATTENZIONE! Voce registrata",
+                    Text="Tra le righe selezionate è presente una voce già registrata negli atti contabili (#reg).\n\n"
+                         "Non è modificabile."
+                )
+                return
 
     for row in sorted(lista_righe):
         LeenoSheetUtils.invertiUnSegno(oSheet, row)
@@ -11725,6 +11752,17 @@ def sposta_voce(row=None, msg=1):
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, oSel.getRangeAddress().EndRow).RangeAddress.EndRow
     except:
         return
+
+    if oSheet.Name == 'CONTABILITA':
+        for r_check in range(SR, ER + 1):
+            if LeenoContab.is_voce_registrata(oSheet, r_check):
+                Dialogs.Exclamation(
+                    Title="ATTENZIONE! Voce registrata",
+                    Text="Tra le voci da spostare è presente una voce già registrata negli atti contabili (#reg).\n\n"
+                         "Non è modificabile né spostabile."
+                )
+                return
+
     num_rows = ER - SR + 1
 
     # 2. Identifica destinazione

@@ -103,3 +103,15 @@ Quando le modifiche arrivano da una sessione di editing su PC TEST (estrazione d
 - `refactor(import): ottimizza parsing file XPWE`
 - `chore(meta): bump versione a 3.25.x`
 - `docs: aggiorna istruzioni nel manuale per il nuovo listino`
+
+## Conflitto `both added` dopo l'estrazione di uno zip
+
+Se uno zip aggiunge un file che nel frattempo è arrivato anche da `origin/dev` (tipico: un agente lo ha creato in una PR), il `git pull` si ferma con `both added`. Prevenzione: `git pull` prima di estrarre lo zip. Risoluzione, tenendo la versione dello zip (la locale, "ours"):
+
+```
+git checkout --ours -- <file>
+git add <file>
+git commit --no-edit
+```
+
+Prima del commit controllare che non restino marcatori: `Select-String -Path <file> -Pattern "<<<<<<<|>>>>>>>|======="` non deve trovare nulla. Se i marcatori ci sono ancora, il `checkout --ours` non è stato eseguito (o è stato eseguito dopo la ricerca).

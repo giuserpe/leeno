@@ -9,3 +9,5 @@
 - Nessun commit o push automatico se non richiesto: consegna lo zip con i comandi PowerShell come descritto in AGENTS.md e proponi il messaggio di commit senza eseguirlo.
 - Prima di consegnare esegui la sezione "Verifica prima della consegna" di AGENTS.md.
 - Niente emoji e niente trattini lunghi in risposte, commit e documenti.
+- Per rivedere una PR di un agente (Jules o altri) usa `scripts/verifica_diff.py` e la checklist di `documentazione/LESSONS_AGENTI.md`: il diff reale prevale sulla descrizione della PR.
+- Un prompt per un agente delegato deve poter essere incollato così com'è: se contiene segnaposto, indica in testa cosa sostituire.

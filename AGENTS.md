@@ -56,9 +56,10 @@ Tabella delle situazioni, note e casi particolari: `documentazione/LESSONS_GIT.m
 - Per i task di programmazione, utilizza sempre Python come linguaggio preferenziale, a meno di esplicita indicazione contraria.
 - Quando devi manipolare o analizzare file di testo di grandi dimensioni, preferisci sempre l'utilizzo di librerie specializzate (come `pandas` per dati strutturati o `re`/`regex` per pattern) per ottenere prestazioni migliori, piuttosto che l'analisi manuale tramite stringhe o cicli in linguaggio naturale.
 - Preferisci sempre l'utilizzo di procedure batch (elaborazioni in blocco) per migliorare le prestazioni e ridurre i tempi di esecuzione, specialmente quando si interagisce con il documento.
-- Non usare `print()`: utilizza `DLG.chi()` per l'output di debug/log.
+- Non usare `print()`. `DLG.chi()` apre un dialogo modale: serve solo al debug interattivo, mai in cicli o in percorsi di produzione.
 - Per la selezione di file o cartelle, utilizza sempre `Dialogs.FileSelect()` o `Dialogs.FolderSelect()` quando disponibili, invece di dialoghi custom o librerie esterne.
-- Nessun output su stdout: usa il logging su file previsto dal progetto.
+- Nessun output su stdout. Gli errori a runtime si registrano con `LeenoUtils.log_errore(contesto, exc)`: scrive su `leeno_errori.log`, senza dialoghi.
+- Mai `except Exception: pass` nel codice nuovo: usa `except Exception as _exc:` seguito da `LeenoUtils.log_errore('funzione: operazione', _exc)` (`_exc` e non `e`: Python cancella la variabile a fine blocco). Se un errore lascia i dati a metà, raccogli le fasi fallite e avvisa l'utente una sola volta a fine operazione. Fa eccezione una sonda voluta (es. `LeenoUtils.is_usable`). Dettagli: `documentazione/LESSONS_CODE_QUALITY.md`.
 - Non includere sezioni CLI nel codice dei moduli.
 - Quando è necessario, preferisci sempre i formati aperti .ODF.
 
@@ -120,6 +121,8 @@ Regola da tenere a mente comunque, perché il mancato rispetto ha già causato u
 
 Test round-trip con istanze reali di LibreOffice, senza mock (XPWE e codice che scrive percorsi relativi al documento o inserisce righe in un blocco esistente, come il modulo di import dell'agenda di cantiere): dettagli in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
 
+Le funzioni senza UNO (parser, utilità pure) si testano in `tests/` con `pytest`, eseguito dalla CI a ogni push e PR su `dev`. Un difetto trovato si documenta con un commento `BUG NOTO:` nel test e si corregge in un commit a parte. Dettagli: `documentazione/LESSONS_TESTING.md`.
+
 ## Sistema icone
 
 Specifica completa in `documentazione/ICONS_DESIGN_SYSTEM.md` (da consultare prima di creare o modificare icone); regole operative in `documentazione/LESSONS_ICONE.md`. Invarianti:
@@ -144,10 +147,11 @@ Un agente che lavora sul repository ma non ha credenziali di push dirette (o non
 Da eseguire dalla root del repo, in quest'ordine, prima di consegnare o proporre un commit:
 
 1. `python3 scripts/check_pythonpath_safety.py` (stesse regole della CI).
-2. Sintassi di ogni `.py` toccato: `python3 -c "import ast; ast.parse(open('<file>', encoding='utf-8').read())"`.
-3. Conteggio CRLF/LF invariato sui file editati (vedi sezione successiva).
-4. Se è stato toccato il manuale: validazione XML del FODT (vedi `documentazione/LESSONS_MANUALE.md`).
-5. Se è stato toccato questo file: `diff AGENTS.md .agents/AGENTS.md` deve essere vuoto.
+2. `pytest --ignore=tests/test_brogliaccio_export.py tests/` (stessa suite della CI).
+3. Sintassi di ogni `.py` toccato: `python3 -c "import ast; ast.parse(open('<file>', encoding='utf-8').read())"`.
+4. Conteggio CRLF/LF invariato sui file editati (vedi sezione successiva).
+5. Se è stato toccato il manuale: validazione XML del FODT (vedi `documentazione/LESSONS_MANUALE.md`).
+6. Se è stato toccato questo file: `diff AGENTS.md .agents/AGENTS.md` deve essere vuoto.
 
 ## Preservazione del line-ending in QUALSIASI editing
 
@@ -162,6 +166,8 @@ Nello stesso `pythonpath/` convivono file CRLF (es. `LeenoGiornale.py`) e file L
 Checklist e pattern ricorrenti (script usa-e-getta pericolosi in `pythonpath/`, redefinition come segnale affidabile di codice morto, import ereditati nei cloni `LeenoImport_Xml*.py`, variabili apparentemente inutili da verificare sui moduli fratelli prima di rimuoverle) in `documentazione/LESSONS_CODE_QUALITY.md`.
 
 Regola operativa da ricordare sempre, senza bisogno di consultare il file: uno script one-shot in `pythonpath/` va eseguito ed eliminato subito dopo l'uso, mai lasciato "per sicurezza".
+
+Per ogni PR di pulizia i nomi non definiti di `pyflakes` devono restare invariati. Prima di rimuovere o rinominare una funzione o un import, cercarne il nome anche nel dispatcher (`?Modulo.funzione` in `Addons.xcu` e `Accelerators.xcu`, risolto da `LeenoDispatcher` con `getattr`), nelle macro Basic (`.xba`) e nei dialoghi (`.xdl`); le voci dentro commenti XML non contano. Un'istruzione isolata dentro un `try` può essere una sonda voluta: non rimuoverla.
 
 ## Git Commit – Conventional Commits in Italiano (LeenO)
 
@@ -180,6 +186,12 @@ Regole d'oro:
 6. **Sinteticità** (vale anche per i commit dei soli aggiornamenti del manuale, con tipo `docs` e senza elenchi puntati nel corpo; le righe di attribuzione richieste dall'ambiente non contano come corpo): il corpo solo se serve davvero a spiegare il PERCHÉ, in massimo 1 riga breve; nella maggior parte dei casi va omesso del tutto, preferendo la sola intestazione.
 
 Procedura: `git status`, `git diff --cached`, scelta dello scope, intestazione (più l'eventuale riga di corpo), poi proporre il comando `git commit -m "..."` (o `git commit -e` se serve un corpo esteso). Dopo un editing su PC TEST il diff va sottoposto per intero a un assistente AI prima di committare, con più commit per area se è eterogeneo. Tabella dei tipi, esempi e dettagli: `documentazione/LESSONS_GIT.md`.
+
+## Lavoro delegato ad agenti e revisione delle loro PR
+
+Una PR di un agente si verifica sul diff reale, mai sulla descrizione: è già arrivata una PR con commit vuoti e una descrizione dettagliata. Un task per modulo, prompt completo (cosa fare, cosa non fare, controlli da eseguire), numeri ottenuti dai comandi e non stimati. Ordine di rischio: CI, test, pulizia, docstring; i refactor e tutto ciò che dipende dal comportamento di Calc non si delegano.
+
+Per rivedere una PR: `python3 scripts/verifica_diff.py <base> <head>` (AST, line-ending, nomi non definiti, except silenziosi, nomi rimossi ancora usati) e poi la checklist di `documentazione/LESSONS_AGENTI.md`. Le docstring di un wrapper si scrivono leggendo la funzione richiamata, non dal nome.
 
 ## Manutenzione di questo file
 

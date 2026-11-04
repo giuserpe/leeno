@@ -17,3 +17,33 @@ Spesso portano con sé l'intero header di import del file sorgente, incluso il b
 ## Prima di rimuovere una variabile "assegnata e mai usata" apparentemente inutile, controllare i moduli fratelli
 
 Se lo stesso pattern (es. un campo estratto dall'XML ma non incluso nel titolo composto) si ripete identico in più moduli `LeenoImport_Xml*.py`, è quasi sempre una scelta di design ricorrente e non un refuso isolato — la rimozione va fatta comunque (il dato resta inutilizzato), ma senza trattarla come "correzione di un bug".
+
+# Lezioni apprese: sweep di novembre 2026 ed eccezioni silenziose
+
+## Sweep con pyflakes: esito e regole
+
+Da 119 avvisi in 33 moduli a 36 (14 in `pyleeno.py`, 5 in `LeenoContab.py`, gli altri 1-2 per modulo). Regole che hanno funzionato:
+
+- I nomi non definiti segnalati da pyflakes restano identici prima e dopo ogni PR.
+- Assegnazione con chiamata a metodo a destra (`x = oSheet.metodo(...)`): togliere solo `x =`. Assegnazione con sola lettura (`.String`, `.Value`, `getCount()`, `set(...)`): togliere la riga intera, e il `try` che resta vuoto.
+- Un'istruzione isolata dentro un `try` può essere una sonda voluta: `LeenoUtils.is_usable` legge `comp.getSheets()` e `comp.CurrentController` per far fallire il controllo su un documento chiuso. Non toccarla.
+- `except Exception as e` con `e` mai usata: togliere solo `as e`.
+- Un solo import inutile può generare più avvisi: `from pydoc import doc` (import automatico) causava anche tre "redefinition of unused 'doc'" in `LeenoEtransmit.py`.
+- Togliere un import inutile può eliminare un ciclo: `LeenoSheetUtils` e `LeenoAnalysis` si importavano a vicenda.
+- Nessuna rimozione era un re-export (controllato per `Modulo.nome`, `PL.nome`, `from Modulo import`, dispatcher e Basic).
+
+## Nomi non definiti storici (8): non sono regressioni
+
+Falsi positivi: `CALL_SET` in `LeenoBasicBridge` (definito in `builtins`), `__global_context__` in `LeenoUtils` (iniettato da LibreOffice), `PL` in `LeenoImport_XmlLiguria` (protetto da `'PL' in globals()`, quindi il ramo non gira mai), `Toolbars` in `LeenoConfig` (import locale in un'altra funzione, errore nascosto da un `try`).
+
+Difetti reali: `pyleeno.MENU_inserisci_nuova_riga_con_descrizione` richiama `inserisci_nuova_riga_con_descrizione_th`, che non esiste, ed è collegata a una voce di menu attiva in `Addons.xcu` (NameError al click). `LeenoExtra.convert_to_pdf` usa `subprocess` con l'import commentato; non è collegata a nessun menu.
+
+## Eccezioni silenziose e registro errori
+
+- `except Exception: pass` nasconde i guasti: se un'operazione a più fasi fallisce a metà, i dati restano incoerenti senza avviso. L'audit ne ha contati 113 in `pyleeno.py` e `LeenoContab.py`.
+- `DLG.chi()` non è un log: apre un dialogo modale con `dir()` dell'oggetto, e in un ciclo mostra decine di finestre. Per gli errori a runtime: `LeenoUtils.log_errore(contesto, exc)`.
+- `log_errore` scrive su `leeno_errori.log` (cartella di configurazione utente di LibreOffice, altrimenti cartella temporanea), registra al massimo 3 occorrenze per contesto e tipo di eccezione per sessione, ruota il file oltre 512 KB e non solleva mai eccezioni.
+- Nel blocco `except` usare `as _exc`, non `as e`: Python cancella la variabile a fine blocco e un `e` già usato nella funzione provoca `NameError` più avanti.
+- Operazioni a più fasi (esempio `LeenoContab._annulla_ultimo_sal_core`): registrare ogni errore, raccogliere le fasi fallite in una lista e mostrare un solo avviso a fine operazione. Gli errori di pulizia ricostruibili (CdP rigenerato) si registrano senza avvisare.
+- Nei cicli che ripetono una funzione finché lo stato cambia (`MENU_AnnullaTuttiAttiContabili`) verificare che lo stato sia cambiato davvero: se l'eliminazione fallisce prima di rimuovere l'intervallo con nome, `ultimo_sal()` restituisce sempre lo stesso SAL e il ciclo non termina.
+- `undo_utils.with_undo_batch` non è usata da nessuna parte e probabilmente non funziona: blocca l'undo con `lock()` e poi apre un contesto vuoto, quindi non raggruppa nulla.

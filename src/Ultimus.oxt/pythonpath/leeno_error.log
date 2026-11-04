@@ -8098,3 +8098,19 @@ File: <frozen importlib._bootstrap_external>, Line: 1004, Function: source_to_co
 File: <frozen importlib._bootstrap>, Line: 241, Function: _call_with_frames_removed
 ------------------------------------------------------------
 
+[2026-11-03 16:34:53]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.171-TESTING-20261101
+
+Errore: Type 0 is not supported!
+
+File: 'LeenoContab.py'
+Line: '765'
+Function: 'partita'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 284, Function: trigger
+File: LeenoContab.py, Line: 778, Function: MENU_partita_aggiungi
+File: LeenoUtils.py, Line: 425, Function: wrapper
+File: LeenoContab.py, Line: 765, Function: partita
+------------------------------------------------------------
+

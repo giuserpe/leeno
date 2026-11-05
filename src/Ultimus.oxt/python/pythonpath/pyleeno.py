@@ -4486,14 +4486,6 @@ def seleziona(row=None):
         # else:
             # ER = LeenoComputo.circoscriveVoceComputo(oSheet, row).RangeAddress.EndRow
     if oSheet.Name == 'CONTABILITA':
-        partenza = cerca_partenza()
-        if partenza[2] == '#reg':
-            sblocca_cont()
-            if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-                return
-            pass
-        else:
-            pass
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
         except AttributeError:
@@ -4538,14 +4530,6 @@ def seleziona_voce(row=None):
             sStRange = Circoscrive_Analisi(row)
         ###
         if oSheet.Name == 'CONTABILITA':
-            partenza = cerca_partenza()
-            if partenza[2] == '#reg':
-                sblocca_cont()
-                if LeenoGlobals.getGlobalVar('sblocca_computo') == 0:
-                    return
-                pass
-            else:
-                pass
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, row)
         ###
     except Exception:

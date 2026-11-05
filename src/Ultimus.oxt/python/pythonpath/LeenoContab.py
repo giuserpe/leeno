@@ -420,6 +420,9 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
                     # ~ DLG.chi(f"Errore nell'accesso all'area nominata {nomearea}: {e}")
                     # ~ pass
 
+    if oDoc.Sheets.hasByName('CONTABILITA'):
+        LeenoSheetUtils.raggruppa_colonne_contabilita(oDoc.Sheets.getByName('CONTABILITA'))
+
     return
 @LeenoUtils.release_ram
 @with_progress_reclaim(manager_attr='progress')
@@ -1057,6 +1060,7 @@ def struttura_CONTAB():
     if oSheet.Name == 'CONTABILITA':
         pref = "_Lib_"
         y = 3
+        LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
         if not oDoc.NamedRanges.hasByName("_Lib_1"):
             PL.struttura_ComputoM()
     elif oSheet.Name == 'Registro':

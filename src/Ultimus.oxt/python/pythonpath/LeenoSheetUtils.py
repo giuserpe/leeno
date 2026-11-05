@@ -110,6 +110,25 @@ def DelPrintSheetArea ():
 
 # ###############################################################
 
+def raggruppa_colonne_contabilita(oSheet):
+    '''
+    Garantisce che le colonne da T ad AC (indici 19-28) rimangano raggruppate e chiuse nel foglio CONTABILITA.
+    '''
+    if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
+        return
+    try:
+        addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        addr.Sheet = oSheet.RangeAddress.Sheet
+        addr.StartColumn = 19
+        addr.EndColumn = 28
+        addr.StartRow = 0
+        addr.EndRow = 0
+        oSheet.group(addr, 0)
+        oSheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
+    except Exception as _exc:
+        LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AC', _exc)
+
+
 def setVisibilitaColonne(oSheet, sValori):
     '''
     sValori { string } : una stringa di configurazione della visibilità colonne
@@ -467,6 +486,9 @@ def setLarghezzaColonne(oSheet):
 
         if 'visible_cols' in config and config['visible_cols']:
             setVisibilitaColonne(oSheet, config['visible_cols'])
+
+        if oSheet.Name == 'CONTABILITA':
+            raggruppa_colonne_contabilita(oSheet)
 
         if 'freeze' in config:
             SheetUtils.freezeRowCol(oSheet, *config['freeze'])

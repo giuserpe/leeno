@@ -1250,10 +1250,36 @@ def MENU_export_selected_range_to_odt():
         DLG.chi("Seleziona un range di celle prima di eseguire la macro!")
         return
 
-    output_path = Dialogs.FileSelect('Salva con nome...', '*.odt', 1)
+    # Ottieni il nome del file corrente come suggerimento predefinito e percorso iniziale
+    doc_url = oDoc.getURL() if hasattr(oDoc, 'getURL') else ""
+    default_filename = ""
+    start_path = None
+    name_without_ext = ""
+
+    if doc_url:
+        try:
+            system_path = uno.fileUrlToSystemPath(doc_url)
+            base_name = os.path.basename(system_path)
+            name_without_ext = os.path.splitext(base_name)[0]
+            start_path = os.path.dirname(system_path)
+        except Exception:
+            pass
+
+    if not name_without_ext:
+        if hasattr(oDoc, 'Title') and oDoc.Title:
+            name_without_ext = os.path.splitext(oDoc.Title)[0]
+        elif hasattr(oDoc, 'getTitle') and oDoc.getTitle():
+            name_without_ext = os.path.splitext(oDoc.getTitle())[0]
+
+    if not name_without_ext:
+        name_without_ext = "documento"
+
+    default_filename = name_without_ext + ".odt"
+
+    output_path = Dialogs.FileSelect('Salva con nome...', '*.odt', 1, startPath=start_path, defaultName=default_filename)
     if not output_path:
         return
-    if not output_path.endswith('.odt'):
+    if not output_path.lower().endswith('.odt'):
         output_path += '.odt'
 
     desktop = LeenoUtils.getDesktop()
@@ -1359,7 +1385,7 @@ def MENU_export_selected_range_to_odt():
             False
         )
 
-    writer_doc.storeToURL(
+    writer_doc.storeAsURL(
         uno.systemPathToFileUrl(output_path),
         (PropertyValue("FilterName", 0, "writer8", 0),)
     )

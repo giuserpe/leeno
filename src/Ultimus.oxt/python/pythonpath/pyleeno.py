@@ -3011,6 +3011,7 @@ def scelta_viste_run():
         # elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
         #     _vSintetica_core(oDoc, oSheet, True)
         #     LeenoSheetUtils.setLarghezzaColonne(oSheet)
+        LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
 
 
 #Elenco Prezzi
@@ -4364,6 +4365,17 @@ def MENU_elimina_voci_azzerate():
 
 
 ########################################################################
+def raggruppa_colonne_contabilita(oSheet=None):
+    '''
+    Garantisce che le colonne da T ad AC (indici 19-28) rimangano raggruppate nel foglio CONTABILITA.
+    '''
+    if oSheet is None:
+        oDoc = LeenoUtils.getDocument()
+        if oDoc and hasattr(oDoc, 'CurrentController') and oDoc.CurrentController:
+            oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
+
+
 def raggruppa_righe_voce(row, flag=1):
     '''
     Raggruppa le righe che compongono una singola voce.
@@ -8273,6 +8285,9 @@ def filtra_codice(voce=None, is_ctrl=False, is_shift=False):
     oSheet.group(oCellRangeAddr, 0)
     oSheet.getCellRangeByPosition(29, 0, 30, 0).Columns.IsVisible = False
 
+    if oSheet.Name == 'CONTABILITA':
+        LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
+
     if closest_row is not None:
         _gotoCella(1, closest_row)
 
@@ -8362,6 +8377,8 @@ def struttura_off():
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         oSheet.clearOutline()
+        if oSheet.Name == 'CONTABILITA':
+            LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
 
         # --- RESET COLORI ---
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Registro', 'SAL'):
@@ -8975,6 +8992,9 @@ def vista_configurazione(tipo_configurazione):
             # Raggruppa e chiude colonne 31-37
             target_sheet.group(create_cell_range(iSheet, 31, 37), 0)
             target_sheet.getCellRangeByPosition(31, 0, 37, 0).Columns.IsVisible = False
+
+        if target_sheet.Name == 'CONTABILITA':
+            LeenoSheetUtils.raggruppa_colonne_contabilita(target_sheet)
 
     finally:
         # Riabilita i controller anche in caso di errore

@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 
 SRC_CONTAB = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/LeenoContab.py"
 SRC_PYLEENO = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/pyleeno.py"
+SRC_SHEETUTILS = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/LeenoSheetUtils.py"
 
 
 def _estrai_funzione(file_path, nome):
@@ -145,6 +146,75 @@ class TestVoceRegistrataContabilita(unittest.TestCase):
         sblocca_cont()
         self.mock_dialogs.Exclamation.assert_called_once()
         self.mock_globals.setGlobalVar.assert_called_with("sblocca_computo", 0)
+
+    def test_seleziona_voce_non_bloccata_da_voce_registrata(self):
+        """Verifica che seleziona_voce() restituisca inizio/fine voce anche se registrata (#reg) senza bloccare."""
+        ns_pyleeno = {
+            "Dialogs": self.mock_dialogs,
+            "LeenoComputo": self.mock_computo,
+            "LeenoUtils": self.mock_utils,
+            "LeggiPosizioneCorrente": lambda: (0, 10),
+        }
+        code_seleziona_voce = _estrai_funzione(SRC_PYLEENO, "seleziona_voce")
+        exec(code_seleziona_voce, ns_pyleeno)
+        seleziona_voce = ns_pyleeno["seleziona_voce"]
+
+        oSheet = MagicMock()
+        oSheet.Name = "CONTABILITA"
+        self.mock_utils.getDocument.return_value.CurrentController.ActiveSheet = oSheet
+
+        sStRange = MagicMock()
+        sStRange.RangeAddress.StartRow = 10
+        sStRange.RangeAddress.EndRow = 14
+        self.mock_computo.circoscriveVoceComputo.return_value = sStRange
+
+        res = seleziona_voce(row=10)
+        self.assertEqual(res, (10, 14))
+        self.mock_dialogs.Exclamation.assert_not_called()
+
+    def test_riepilogo_quantita_non_bloccata_da_voci_registrate(self):
+        """Verifica che riepilogo_quantita operi su CONTABILITA anche in presenza di voci registrate."""
+        ns_sheetutils = {
+            "PL": self.mock_pl,
+            "LeenoUtils": self.mock_utils,
+            "with_undo": lambda fn: fn,
+            "prossimaVoce": MagicMock(),
+            "cercaUltimaVoce": MagicMock(),
+            "cancella_riepilogo_quantita": MagicMock(),
+        }
+        # Mock release_ram e no_refresh
+        self.mock_utils.release_ram = lambda fn: fn
+        self.mock_utils.no_refresh = lambda fn: fn
+
+        code_riepilogo = _estrai_funzione(SRC_SHEETUTILS, "riepilogo_quantita")
+        exec(code_riepilogo, ns_sheetutils)
+        riepilogo_quantita = ns_sheetutils["riepilogo_quantita"]
+
+        self.mock_pl.GetModifiers.return_value = (False, False)
+        oSheet = MagicMock()
+        oSheet.Name = "CONTABILITA"
+        self.mock_utils.getDocument.return_value.CurrentController.ActiveSheet = oSheet
+
+        # Simula una voce che ha seleziona_voce = (10, 14) e last = 20
+        ns_sheetutils["cercaUltimaVoce"].return_value = 20
+        ns_sheetutils["prossimaVoce"].side_effect = [10, 25]  # prima voce 10, poi esce dal loop (> 20)
+        self.mock_pl.seleziona_voce.return_value = (10, 14)
+
+        cell_mock = MagicMock()
+        oSheet.getCellByPosition.return_value = cell_mock
+
+        riepilogo_quantita()
+
+        # Verifica che siano state scritte le intestazioni su AM3:AO3
+        oSheet.getCellRangeByName.assert_any_call("AM3")
+        oSheet.getCellRangeByName.assert_any_call("AN3")
+        oSheet.getCellRangeByName.assert_any_call("AO3")
+        # Nessun dialogo di allerta deve essere stato invocato
+        self.mock_dialogs.Exclamation.assert_not_called()
+        # Le celle di colonna AM (38), AN (39), AO (40) per ER=14 sono state valorizzate
+        oSheet.getCellByPosition.assert_any_call(38, 14)
+        oSheet.getCellByPosition.assert_any_call(39, 14)
+        oSheet.getCellByPosition.assert_any_call(40, 14)
 
 
 if __name__ == "__main__":

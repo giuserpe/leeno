@@ -498,6 +498,21 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
             if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
                 continue
             dest = a.get('DesEst', '')
+            analisi = []
+            for an in el.findall('.//ItemAN'):
+                an_a = an.attrib
+                an_idep = _int(an_a.get('IdEP', '0'))
+                analisi.append({
+                    'id':          _int(an_a.get('IdAN', '0')),
+                    'tipo':        _int(an_a.get('Tp', '0')),
+                    'id_ep':       an_idep if an_idep != 0 else -2,
+                    'descrizione': _unescape(an_a.get('Des', '')).strip(),
+                    'um':          an_a.get('Mis', ''),
+                    'qt':          an_a.get('Qt', '').replace(' ', ''),
+                    'prezzo':      an_a.get('Prz', '').replace(' ', ''),
+                    'fld_ctl':     _int(an_a.get('FldCTL', '0')),
+                })
+            a['_analisi'] = analisi
             prev = by_id.get(id_ep)
             if prev is None or len(dest) > len(prev.get('DesEst', '')):
                 by_id[id_ep] = a
@@ -555,6 +570,7 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
             'data':         a.get('Data', '') or a.get('Dt', ''),
             'adr_internet': a.get('AdrInt', '') or a.get('AdrInet', ''),
             'tag_bim':      a.get('TagBIM', ''),
+            'analisi':      a.get('_analisi', []),
         }
 
     ep_list  = [_build(a) for a in sorted(by_id.values(), key=lambda x: int(x.get('IdEP', 0)))]
@@ -727,6 +743,19 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
         rid   = (el.findtext('DesRidotta') or '').strip()
         brv   = (el.findtext('DesBreve') or '').strip()
         desc_best = dest or rid or brv
+        analisi = []
+        for an_it in el.findall('.//PweEPAnalisi/PweEPAR/EPARItem'):
+            an_idep = _int(an_it.findtext('IDEP'))
+            analisi.append({
+                'id':          _int(an_it.get('ID', '0')),
+                'tipo':        _int(an_it.findtext('Tipo')),
+                'id_ep':       an_idep,
+                'descrizione': (an_it.findtext('Descrizione') or '').strip(),
+                'um':          (an_it.findtext('Misura') or '').strip(),
+                'qt':          (an_it.findtext('Qt') or '').replace(' ', ''),
+                'prezzo':      (an_it.findtext('Prezzo') or '').replace(' ', ''),
+                'fld_ctl':     _int(an_it.findtext('FieldCTL')),
+            })
         item = {
             'id':           id_ep,
             'tariffa':      (el.findtext('Tariffa') or '').strip(),
@@ -753,6 +782,7 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
             'data':         (el.findtext('Data') or '').strip(),
             'adr_internet': (el.findtext('AdrInternet') or '').strip(),
             'tag_bim':      (el.findtext('TagBIM') or '').strip(),
+            'analisi':      analisi,
         }
         ep_list.append(item)
         ep_by_id[id_ep] = item
@@ -897,23 +927,26 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
     dg = _dcf_parse_dati_generali(blocks.get('DatiGenerali', ''))
     ep_list, ep_by_id_map = _dcf_parse_ep(blocks.get('CollectionEP', ''))
 
-    # Verifica integrità CollectionEP: CountId deve corrispondere agli EP estratti
+    # Verifica integrità CollectionEP: CountId in PriMus è l'ID progressivo massimo
+    # (comprensivo dell'ID 1 non allocato e dell'ID 2 riservato al sistema).
     import re as _re
     _ep_xml = blocks.get('CollectionEP', '')
     _count_match = _re.search(r'CountId="(\d+)"', _ep_xml)
     if _count_match:
-        _count_id  = int(_count_match.group(1))
-        _count_got = len(ep_by_id_map)
-        if _count_got < _count_id:
-            _mancanti = _count_id - _count_got
+        _count_id = int(_count_match.group(1))
+        # Verifica se mancano ID reali nell'intervallo delle voci utente (da 3 a _count_id)
+        _id_mancanti = [i for i in range(3, _count_id + 1) if i not in ep_by_id_map]
+        if _id_mancanti:
+            _mancanti = len(_id_mancanti)
+            _count_got = len(ep_by_id_map)
             _log(f'parse_dcf: ATTENZIONE CollectionEP parzialmente corrotto: '
-                 f'CountId={_count_id} ma solo {_count_got} voci estratte '
-                 f'({_mancanti} mancanti).')
+                 f'CountId={_count_id} ma {_mancanti} voci utente mancanti '
+                 f'(estratte {_count_got} voci).')
             _log('parse_dcf: Le voci mancanti non sono recuperabili dal DCF.')
             _log('parse_dcf: Soluzione -> esportare XPWE da PriMus per ottenere dati completi.')
             _user_msg(
                 f'Il file DCF contiene {_mancanti} voci di elenco prezzi non leggibili\n'
-                f'(saranno estratte {_count_got} delle {_count_id} attese).\n\n'
+                f'(saranno estratte {_count_got} voci).\n\n'
                 f'Il file è parzialmente corrotto.\n\n'
                 f'Aprire il file in PriMus ed esportarlo come XPWE\n'
                 f'(File → Esporta → XPWE 5.05) per ottenere tutti i dati.'
@@ -1246,7 +1279,22 @@ def generate_xpwe(doc: dict, xpwe_path: str, source_nome: str = 'LeenO') -> None
         _sub(it, 'IncMAT',    _fmt_float(ep.get('inc_mat',  0)))
         _sub(it, 'IncATTR',   _fmt_float(ep.get('inc_attr', 0)))
         _sub(it, 'TagBIM',    _e(ep.get('tag_bim', '')))
-        _sub(it, 'PweEPAnalisi', None)
+        an_items = ep.get('analisi', [])
+        if an_items:
+            an_sect = _sub(it, 'PweEPAnalisi')
+            ar_sect = _sub(an_sect, 'PweEPAR')
+            for an_el in an_items:
+                ar_it = _ET.SubElement(ar_sect, 'EPARItem')
+                ar_it.set('ID', str(an_el.get('id', 0)))
+                _sub(ar_it, 'Tipo',        str(an_el.get('tipo', 0)))
+                _sub(ar_it, 'IDEP',        str(an_el.get('id_ep', -2)))
+                _sub(ar_it, 'Descrizione', _e(an_el.get('descrizione', '')))
+                _sub(ar_it, 'Misura',      _e(an_el.get('um', '')))
+                _sub(ar_it, 'Qt',          str(an_el.get('qt', '')) if an_el.get('qt') != '' else '')
+                _sub(ar_it, 'Prezzo',      str(an_el.get('prezzo', '')) if an_el.get('prezzo') != '' else '')
+                _sub(ar_it, 'FieldCTL',    str(an_el.get('fld_ctl', 0)))
+        else:
+            _sub(it, 'PweEPAnalisi', None)
 
     # Voci Computo
     vc_sect = _sub(mis, 'PweVociComputo')

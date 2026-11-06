@@ -222,6 +222,13 @@ class TestDcfParserCharacterization(unittest.TestCase):
         doc_xpwe = dcf_parser.parse_xpwe(xpwe_path)
 
         # 1. Elenco Prezzi: 201 voci attese (id, tariffa, um, prezzi 1-5, incidenze)
+        # Verifica che riferimento.dcf sia letto senza falsi allarmi di corruzione
+        from unittest.mock import patch
+        with patch('dcf_parser._user_msg') as mock_user_msg:
+            doc_dcf = dcf_parser.parse_dcf(dcf_path)
+            self.assertFalse(mock_user_msg.called, f"_user_msg chiamato inaspettatamente: {mock_user_msg.call_args}")
+
+        # 1. Elenco Prezzi: 201 voci attese (id, tariffa, um, prezzi 1-5, incidenze)
         self.assertEqual(len(doc_dcf['elenco_prezzi']), 201)
         self.assertEqual(len(doc_xpwe['elenco_prezzi']), 201)
         self.assertEqual(len(doc_dcf['_ep_by_id']), 201)
@@ -247,7 +254,28 @@ class TestDcfParserCharacterization(unittest.TestCase):
             self.assertAlmostEqual(d_ep['inc_mat'], x_ep['inc_mat'], places=4)
             self.assertAlmostEqual(d_ep['inc_attr'], x_ep['inc_attr'], places=4)
 
-        # 2. Voci di computo e misurazioni: 96 VC, 2896 righi di misura
+        # 2. Analisi di prezzo: 177 righe di analisi (ItemAN / EPARItem)
+        total_dcf_analisi = sum(len(ep.get('analisi', [])) for ep in doc_dcf['elenco_prezzi'])
+        total_xpwe_analisi = sum(len(ep.get('analisi', [])) for ep in doc_xpwe['elenco_prezzi'])
+        self.assertEqual(total_dcf_analisi, 177)
+        self.assertEqual(total_xpwe_analisi, 177)
+
+        for idep, x_ep in doc_xpwe['_ep_by_id'].items():
+            d_ep = doc_dcf['_ep_by_id'][idep]
+            x_an = x_ep.get('analisi', [])
+            d_an = d_ep.get('analisi', [])
+            self.assertEqual(len(d_an), len(x_an))
+            for da, xa in zip(d_an, x_an):
+                self.assertEqual(da['id'], xa['id'])
+                self.assertEqual(da['tipo'], xa['tipo'])
+                self.assertEqual(da['id_ep'], xa['id_ep'])
+                self.assertEqual(da['descrizione'], xa['descrizione'])
+                self.assertEqual(da['um'], xa['um'])
+                self.assertEqual(da['qt'], xa['qt'])
+                self.assertEqual(da['prezzo'], xa['prezzo'])
+                self.assertEqual(da['fld_ctl'], xa['fld_ctl'])
+
+        # 3. Voci di computo e misurazioni: 96 VC, 2896 righi di misura
         self.assertEqual(len(doc_dcf['computo']), 96)
         self.assertEqual(len(doc_xpwe['computo']), 96)
 
@@ -271,7 +299,7 @@ class TestDcfParserCharacterization(unittest.TestCase):
                 self.assertAlmostEqual(d_rm['qt'], x_rm['qt'], places=4)
                 self.assertEqual(d_rm['descrizione'], x_rm['descrizione'])
 
-        # 3. Categorie e Capitoli
+        # 4. Categorie e Capitoli
         # Differenze note tra DCF e XPWE:
         # - data_init: in XPWE e' valorizzata (es. '18/09/2025' o '30/12/1899'),
         #   mentre in DGDatiGenerali/ItemSpCat del DCF l'attributo DtInz e' vuoto.

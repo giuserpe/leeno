@@ -296,6 +296,42 @@ class TestDcfParserCharacterization(unittest.TestCase):
         self.assertEqual(doc_dcf['sotto_capitoli'], {})
         self.assertEqual(doc_xpwe['sotto_capitoli'], {})
 
+        # 4. Analisi di prezzo: 21 schede in CollectionAN / PweEPAR
+        dcf_an = [ep for ep in doc_dcf['elenco_prezzi'] if ep.get('analisi')]
+        xpwe_an = [ep for ep in doc_xpwe['elenco_prezzi'] if ep.get('analisi')]
+        self.assertEqual(len(dcf_an), 21)
+        self.assertEqual(len(xpwe_an), 21)
+        plenum_d = next(ep for ep in dcf_an if ep['tariffa'] == 'NP_Plenum')
+        plenum_x = next(ep for ep in xpwe_an if ep['tariffa'] == 'NP_Plenum')
+        self.assertEqual(len(plenum_d['analisi']), 8)
+        self.assertEqual(len(plenum_x['analisi']), 8)
+        self.assertEqual(plenum_d['analisi'][0]['des'], 'MANODOPERA')
+        self.assertEqual(plenum_d['analisi'][1]['id_ep'], 152)
+        self.assertEqual(plenum_x['analisi'][1]['id_ep'], 152)
+
+    def test_riferimento_dcf_non_segnala_corruzione_falsa(self):
+        dcf_path = os.path.join(os.path.dirname(__file__), 'data', 'riferimento.dcf')
+        if not os.path.exists(dcf_path):
+            self.skipTest("tests/data/riferimento.dcf non trovato")
+        msgs = []
+        orig = dcf_parser._user_msg
+        dcf_parser._user_msg = lambda m: msgs.append(m)
+        try:
+            doc = dcf_parser.parse_dcf(dcf_path)
+        finally:
+            dcf_parser._user_msg = orig
+        self.assertEqual(msgs, [])
+        self.assertEqual(len(doc['elenco_prezzi']), 201)
+
+        xpwe_path = os.path.join(self.temp_dir.name, 'from_dcf.xpwe')
+        dcf_parser.generate_xpwe(doc, xpwe_path)
+        parsed = dcf_parser.parse_xpwe(xpwe_path)
+        an = [ep for ep in parsed['elenco_prezzi'] if ep.get('analisi')]
+        self.assertEqual(len(an), 21)
+        plenum = next(ep for ep in an if ep['tariffa'] == 'NP_Plenum')
+        self.assertEqual(len(plenum['analisi']), 8)
+        self.assertEqual(plenum['analisi'][1]['id_ep'], 152)
+
 
 if __name__ == '__main__':
     unittest.main()

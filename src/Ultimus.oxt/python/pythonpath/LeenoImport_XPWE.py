@@ -710,6 +710,188 @@ def rimuoviAnalisiVuote(oSheet):
                 except Exception:
                     pass
 
+def _fmt_euro(val):
+    '''Formatta un importo in euro con separatore delle migliaia e virgola decimale.'''
+    segno = '-' if val < 0 else ''
+    intero, dec = f'{abs(val):.2f}'.split('.')
+    gruppi = []
+    while intero:
+        gruppi.append(intero[-3:])
+        intero = intero[:-3]
+    return segno + '.'.join(reversed(gruppi)) + ',' + dec
+
+
+def _prezzi_analisi_file(elencoPrezzi):
+    '''Tariffa -> Prezzo1 del file, per le sole voci che hanno un'analisi.'''
+    prezzi = {}
+    for el in elencoPrezzi.get('ListaAnalisi') or []:
+        if not el or len(el) < 5 or not el[0] or el[4] in ('', None):
+            continue
+        try:
+            prezzi[str(el[0]).strip()] = float(str(el[4]).replace(',', '.'))
+        except (TypeError, ValueError):
+            continue
+    return prezzi
+
+
+def _codice_ep(cell):
+    '''Testo del codice in Elenco Prezzi, anche se la cella tiene la tariffa come formula.'''
+    testo = str(cell.String or '').strip()
+    if testo and not testo.startswith('#'):
+        return testo
+    formula = str(cell.Formula or '').strip()
+    if formula.startswith('='):
+        formula = formula[1:].strip()
+    if len(formula) >= 2 and formula[0] == "'" and formula[-1] == "'":
+        formula = formula[1:-1]
+    return formula.strip()
+
+
+def _righe_ep(oDoc):
+    '''Tariffa -> riga, sull'area nominata elenco_prezzi.'''
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    fine = SheetUtils.getLastUsedRow(oSheet)
+    inizio = 3
+    try:
+        addr = oDoc.NamedRanges.getByName('elenco_prezzi').ReferredCells.RangeAddress
+        inizio = min(inizio, addr.StartRow)
+        fine = max(fine, addr.EndRow)
+    except Exception as _exc:
+        LeenoUtils.log_errore('_righe_ep: elenco_prezzi', _exc)
+    righe = {}
+    if fine < inizio:
+        return oSheet, righe
+    for riga in range(inizio, fine + 1):
+        code = _codice_ep(oSheet.getCellByPosition(0, riga))
+        if code and code not in righe:
+            righe[code] = riga
+    return oSheet, righe
+
+
+def _scrivi_formule_prezzo(oSheet, righe, formule):
+    '''Ripristina le formule di prezzo salvate prima della prova coi prezzi del file.'''
+    for code, formula in formule.items():
+        riga = righe.get(code)
+        if riga is None or not formula:
+            continue
+        cell = oSheet.getCellByPosition(4, riga)
+        if str(formula).startswith('='):
+            cell.Formula = formula
+        else:
+            try:
+                cell.Value = float(formula)
+            except (TypeError, ValueError):
+                cell.Formula = formula
+
+
+def _scrivi_prezzi(oSheet, righe, prezzi):
+    '''Scrive il prezzo numerico del file al posto della formula di analisi.'''
+    for code, prezzo in prezzi.items():
+        riga = righe.get(code)
+        if riga is not None:
+            oSheet.getCellByPosition(4, riga).Value = prezzo
+
+
+def _calcola(oDoc):
+    try:
+        oDoc.enableAutomaticCalculation(True)
+        oDoc.calculateAll()
+    except Exception as _exc:
+        LeenoUtils.log_errore('_calcola', _exc)
+
+
+def _numero_cella(cella):
+    try:
+        return float(cella.Value or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _totale_lavori(oDoc, nome_foglio):
+    '''Importo lavori gia' calcolato. Se SUBTOTAL sull'intera colonna vale 0, usa un intervallo chiuso.'''
+    _calcola(oDoc)
+    oSheet = oDoc.getSheets().getByName(nome_foglio)
+    riga = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+    for cella in (oSheet.getCellByPosition(18, 1), oSheet.getCellByPosition(18, riga)):
+        valore = _numero_cella(cella)
+        if abs(valore) >= 0.01:
+            return round(valore, 2)
+    cella = oSheet.getCellByPosition(18, riga)
+    formula = cella.Formula
+    valore = 0.0
+    if riga > 4:
+        cella.Formula = '=SUBTOTAL(9;S4:S%d)' % riga
+        _calcola(oDoc)
+        valore = _numero_cella(cella)
+        if formula:
+            cella.Formula = formula
+            _calcola(oDoc)
+    return round(valore, 2)
+
+
+def _prezzi_analisi_diversi(oSheet, righe, prezzi_file):
+    '''True se almeno un prezzo di analisi nel foglio non coincide con quello del file.'''
+    for code, prezzo in prezzi_file.items():
+        riga = righe.get(code)
+        if riga is None:
+            continue
+        if abs(_numero_cella(oSheet.getCellByPosition(4, riga)) - prezzo) >= 0.01:
+            return True
+    return False
+
+
+def _scegli_totale_prezzi(oDoc, nome_foglio, elencoPrezzi):
+    '''Domanda "Totali diversi": prezzi del file oppure prezzi ricalcolati dalle analisi.
+
+    Va chiamata a foglio sbloccato. XPWE_import gira con il refresh spento:
+    senza un DocumentRefresh i codici e il totale non sono ancora leggibili
+    e la domanda non parte.
+    '''
+    LeenoUtils.DocumentRefresh(True)
+    prezzi_file = _prezzi_analisi_file(elencoPrezzi)
+    if not prezzi_file or not oDoc.getSheets().hasByName(nome_foglio):
+        return
+    if not oDoc.getSheets().hasByName('Elenco Prezzi'):
+        return
+    oSheet, righe = _righe_ep(oDoc)
+    if not _prezzi_analisi_diversi(oSheet, righe, prezzi_file):
+        return
+    formule = {
+        code: oSheet.getCellByPosition(4, righe[code]).Formula
+        for code in prezzi_file
+        if code in righe
+    }
+    tot_analisi = _totale_lavori(oDoc, nome_foglio)
+    _scrivi_prezzi(oSheet, righe, prezzi_file)
+    tot_origine = _totale_lavori(oDoc, nome_foglio)
+    if abs(tot_analisi - tot_origine) < 0.01:
+        _scrivi_formule_prezzo(oSheet, righe, formule)
+        _totale_lavori(oDoc, nome_foglio)
+        return
+    scarto = tot_analisi - tot_origine
+    testo = (
+        f'Il totale del computo, con i prezzi ricalcolati dalle analisi, '
+        f'è {_fmt_euro(tot_analisi)} euro.\n'
+        f'Con i prezzi del file di origine è {_fmt_euro(tot_origine)} euro '
+        f'(scarto {_fmt_euro(scarto)} euro).\n\n'
+        'Vuoi mantenere i prezzi del file di origine?\n\n'
+        'Sì: il totale resta quello del file.\n'
+        'No: restano i prezzi ricalcolati dalle analisi.'
+    )
+    try:
+        tiene_origine = Dialogs.YesNoDialog(
+            IconType='question',
+            Title='Totali diversi',
+            Text=testo,
+        ) == 1
+    except Exception as _exc:
+        LeenoUtils.log_errore('_scegli_totale_prezzi', _exc)
+        tiene_origine = False
+    if not tiene_origine:
+        _scrivi_formule_prezzo(oSheet, righe, formule)
+        _totale_lavori(oDoc, nome_foglio)
+
+
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi, indicator=None):
     ''' Compilo Analisi di prezzo '''
     numAnalisi = len(elencoPrezzi['ListaAnalisi'])
@@ -1104,7 +1286,6 @@ def MENU_XPWE_import(filename = None):
     oSheet = oDoc.CurrentController.ActiveSheet
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
-@LeenoUtils.no_refresh
 def XPWE_import(filename = None):
     '''
     Importazione dati dal formato XPWE
@@ -1156,6 +1337,7 @@ def XPWE_import(filename = None):
 
     indicator = None
     try:
+        LeenoUtils.DocumentRefresh(False)
         # effettua il parsing del file XML
         tree = ElementTree()
         try:
@@ -1296,7 +1478,14 @@ def XPWE_import(filename = None):
             PL.salva_come(dest)
 
         PL.inizializza_computo()
-        
+        if indicator:
+            try:
+                indicator.end()
+            except Exception as _exc:
+                LeenoUtils.log_errore('XPWE_import: indicator.end', _exc)
+            indicator = None
+        _scegli_totale_prezzi(oDoc, elaborato, elencoPrezzi)
+
         ok_msg = f'Importazione di {len(listaMisure)} voci di {elaborato} eseguita con successo!'
         if skipped_count > 0:
             ok_msg += f'\n\nAttenzione: {skipped_count} voci di prezzo sono state ignorate perché già presenti (sovrascrittura non confermata).'
@@ -1320,5 +1509,6 @@ def XPWE_import(filename = None):
                             Text=f"L'importazione si è interrotta a causa di un errore imprevisto ({type(e).__name__}):\n{str(e)}")
         logging.error(f"Errore XPWE_import: {str(e)}", exc_info=True)
     finally:
+        LeenoUtils.DocumentRefresh(True)
         if indicator:
             indicator.end()

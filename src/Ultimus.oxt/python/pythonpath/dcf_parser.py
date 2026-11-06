@@ -470,13 +470,39 @@ def _dcf_parse_dati_generali(xml: str) -> dict[str, Any]:
     return result
 
 
-def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
+def _dcf_analisi_da_attrs(a: dict) -> dict[str, Any]:
+    """Normalizza una riga ItemAN / EPARItem. IdEP=0 nel DCF diventa -2 (libero, come in XPWE)."""
+    id_ep_an = _int(a.get('IdEP', '0'))
+    return {
+        'id':        _int(a.get('IdAN') or a.get('ID', '0')),
+        'id_ep':     -2 if id_ep_an == 0 else id_ep_an,
+        'tipo':      a.get('Tp', a.get('Tipo', '0')),
+        'des':       _unescape(a.get('Des', a.get('Descrizione', ''))),
+        'um':        a.get('Mis', a.get('Misura', '')),
+        'qt':        a.get('Qt', ''),
+        'prezzo':    a.get('Prz', a.get('Prezzo', '')),
+        'field_ctl': a.get('FldCTL', a.get('FieldCTL', '0')),
+    }
+
+
+def _dcf_analisi_da_el(item_el: ET.Element) -> list[dict[str, Any]]:
+    """Estrae le righe di analisi (CollectionAN/ItemAN) da un ItemEP."""
+    an_el = item_el.find('CollectionAN')
+    if an_el is None:
+        return []
+    return [_dcf_analisi_da_attrs(an.attrib) for an in an_el.findall('ItemAN')]
+
+
+def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict], int, int]:
     """
     Parser EP da .dcf.
     Estrae le voci di elenco prezzi dal blocco CollectionEP escludendo
     le voci riservate di sistema (IdEP=2).
+    Restituisce (ep_list, ep_by_id, n_item_xml, n_reserved).
     """
-    by_id: dict[int, dict] = {}
+    by_id: dict[int, tuple[dict, list]] = {}
+    n_item_xml = 0
+    n_reserved = 0
 
     items_el = None
     try:
@@ -485,41 +511,36 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
     except (ET.ParseError, ValueError):
         items_el = None
 
+    def _accetta(a: dict, analisi: list) -> None:
+        nonlocal n_item_xml, n_reserved
+        n_item_xml += 1
+        id_ep_str = a.get('IdEP')
+        if not id_ep_str:
+            return
+        try:
+            id_ep = int(id_ep_str)
+        except ValueError:
+            return
+        if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
+            n_reserved += 1
+            return
+        dest = a.get('DesEst', '')
+        prev = by_id.get(id_ep)
+        if prev is None or len(dest) > len(prev[0].get('DesEst', '')):
+            by_id[id_ep] = (a, analisi)
+
     if items_el is not None:
         for el in items_el:
             a = {k: _unescape(v) for k, v in el.attrib.items()}
-            id_ep_str = a.get('IdEP')
-            if not id_ep_str:
-                continue
-            try:
-                id_ep = int(id_ep_str)
-            except ValueError:
-                continue
-            if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
-                continue
-            dest = a.get('DesEst', '')
-            prev = by_id.get(id_ep)
-            if prev is None or len(dest) > len(prev.get('DesEst', '')):
-                by_id[id_ep] = a
+            _accetta(a, _dcf_analisi_da_el(el))
     else:
-        # Fallback con regex: estrae solo il tag di apertura di ItemEP
-        for m in re.finditer(r'<ItemEP\s+([^>]+?)>', xml):
-            a = _attr_parse(m.group(0))
-            id_ep_str = a.get('IdEP')
-            if not id_ep_str:
-                continue
-            try:
-                id_ep = int(id_ep_str)
-            except ValueError:
-                continue
-            if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
-                continue
-            dest = a.get('DesEst', '')
-            prev = by_id.get(id_ep)
-            if prev is None or len(dest) > len(prev.get('DesEst', '')):
-                by_id[id_ep] = a
+        for m in re.finditer(r'<ItemEP\s([^>]+?)(?:/>|>(.*?)</ItemEP>)', xml, re.DOTALL):
+            a = _attr_parse(m.group(1))
+            body = m.group(2) or ''
+            analisi = [_dcf_analisi_da_attrs(an) for an in _iter_attr_tags(body, 'ItemAN')]
+            _accetta(a, analisi)
 
-    def _build(a: dict) -> dict[str, Any]:
+    def _build(a: dict, analisi: list) -> dict[str, Any]:
         """Costruisce il dizionario normalizzato della voce di elenco prezzi dai suoi attributi."""
         dest = _unescape(a.get('DesEst', ''))
         rid  = _unescape(a.get('DesRid', ''))
@@ -555,11 +576,15 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
             'data':         a.get('Data', '') or a.get('Dt', ''),
             'adr_internet': a.get('AdrInt', '') or a.get('AdrInet', ''),
             'tag_bim':      a.get('TagBIM', ''),
+            'analisi':      analisi,
         }
 
-    ep_list  = [_build(a) for a in sorted(by_id.values(), key=lambda x: int(x.get('IdEP', 0)))]
-    ep_by_id = {id_ep: _build(a) for id_ep, a in by_id.items()}
-    return ep_list, ep_by_id
+    ep_list = [
+        _build(a, analisi)
+        for a, analisi in sorted(by_id.values(), key=lambda x: int(x[0].get('IdEP', 0)))
+    ]
+    ep_by_id = {item['id']: item for item in ep_list}
+    return ep_list, ep_by_id, n_item_xml, n_reserved
 
 
 def _dcf_parse_vc(xml: str) -> list[dict[str, Any]]:
@@ -754,6 +779,19 @@ def _xpwe_parse_ep(root: ET.Element) -> tuple[list[dict], dict[int, dict]]:
             'adr_internet': (el.findtext('AdrInternet') or '').strip(),
             'tag_bim':      (el.findtext('TagBIM') or '').strip(),
         }
+        analisi = []
+        for epari in el.findall('./PweEPAnalisi/PweEPAR/EPARItem'):
+            analisi.append({
+                'id':        _int(epari.get('ID', '0')),
+                'id_ep':     _int(epari.findtext('IDEP')),
+                'tipo':      (epari.findtext('Tipo') or '0').strip(),
+                'des':       epari.findtext('Descrizione') or '',
+                'um':        (epari.findtext('Misura') or '').strip(),
+                'qt':        (epari.findtext('Qt') or '').strip(),
+                'prezzo':    (epari.findtext('Prezzo') or '').strip(),
+                'field_ctl': (epari.findtext('FieldCTL') or '0').strip(),
+            })
+        item['analisi'] = analisi
         ep_list.append(item)
         ep_by_id[id_ep] = item
     return ep_list, ep_by_id
@@ -895,29 +933,21 @@ def parse_dcf(dcf_path: str) -> dict[str, Any]:
         }
 
     dg = _dcf_parse_dati_generali(blocks.get('DatiGenerali', ''))
-    ep_list, ep_by_id_map = _dcf_parse_ep(blocks.get('CollectionEP', ''))
+    ep_list, ep_by_id_map, n_item_xml, n_reserved = _dcf_parse_ep(
+        blocks.get('CollectionEP', ''))
 
-    # Verifica integrità CollectionEP: CountId deve corrispondere agli EP estratti
-    import re as _re
-    _ep_xml = blocks.get('CollectionEP', '')
-    _count_match = _re.search(r'CountId="(\d+)"', _ep_xml)
-    if _count_match:
-        _count_id  = int(_count_match.group(1))
-        _count_got = len(ep_by_id_map)
-        if _count_got < _count_id:
-            _mancanti = _count_id - _count_got
-            _log(f'parse_dcf: ATTENZIONE CollectionEP parzialmente corrotto: '
-                 f'CountId={_count_id} ma solo {_count_got} voci estratte '
-                 f'({_mancanti} mancanti).')
-            _log('parse_dcf: Le voci mancanti non sono recuperabili dal DCF.')
-            _log('parse_dcf: Soluzione -> esportare XPWE da PriMus per ottenere dati completi.')
-            _user_msg(
-                f'Il file DCF contiene {_mancanti} voci di elenco prezzi non leggibili\n'
-                f'(saranno estratte {_count_got} delle {_count_id} attese).\n\n'
-                f'Il file è parzialmente corrotto.\n\n'
-                f'Aprire il file in PriMus ed esportarlo come XPWE\n'
-                f'(File → Esporta → XPWE 5.05) per ottenere tutti i dati.'
-            )
+    # CountId nel tag CollectionEP e' il prossimo id libero di PriMus, non
+    # il numero di ItemEP. IdEP=2 'Voce riservata!!!' e' esclusa di proposito.
+    _count_got = len(ep_by_id_map)
+    _log(f'parse_dcf: CollectionEP ItemEP={n_item_xml} '
+         f'estratti={_count_got} riservati={n_reserved}')
+    if n_item_xml and _count_got + n_reserved < n_item_xml:
+        _mancanti = n_item_xml - _count_got - n_reserved
+        _log(f'parse_dcf: ATTENZIONE CollectionEP: {_mancanti} ItemEP non letti.')
+        _user_msg(
+            f'Il   {_mancanti} voci di elenco prezzi non leggibili\n'
+            f'(saranno estratte {_count_got} delle {n_item_xml - n_reserved} attese).'
+        )
 
     # Rileva DCF con dati XML insufficienti (PriMus non ha esportato l'XML embedded)
     # In questo caso il DCF esiste ma i blocchi sono quasi vuoti (< 1KB)
@@ -1246,7 +1276,23 @@ def generate_xpwe(doc: dict, xpwe_path: str, source_nome: str = 'LeenO') -> None
         _sub(it, 'IncMAT',    _fmt_float(ep.get('inc_mat',  0)))
         _sub(it, 'IncATTR',   _fmt_float(ep.get('inc_attr', 0)))
         _sub(it, 'TagBIM',    _e(ep.get('tag_bim', '')))
-        _sub(it, 'PweEPAnalisi', None)
+        pwe_an = _sub(it, 'PweEPAnalisi', None)
+        an_rows = ep.get('analisi') or []
+        if an_rows:
+            epar = _sub(pwe_an, 'PweEPAR', None)
+            for row in an_rows:
+                epari = _ET.SubElement(epar, 'EPARItem')
+                epari.set('ID', str(row.get('id', 0)))
+                _sub(epari, 'Tipo', str(row.get('tipo', '0')))
+                id_ep_an = row.get('id_ep', -2)
+                if not id_ep_an:
+                    id_ep_an = -2
+                _sub(epari, 'IDEP', str(id_ep_an))
+                _sub(epari, 'Descrizione', _e(row.get('des', '')))
+                _sub(epari, 'Misura', _e(row.get('um', '')))
+                _sub(epari, 'Qt', str(row.get('qt', '')))
+                _sub(epari, 'Prezzo', str(row.get('prezzo', '')))
+                _sub(epari, 'FieldCTL', str(row.get('field_ctl', '0')))
 
     # Voci Computo
     vc_sect = _sub(mis, 'PweVociComputo')

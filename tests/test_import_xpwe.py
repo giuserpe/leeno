@@ -78,6 +78,10 @@ class TestImportXpwe(unittest.TestCase):
         res_default_custom = self.IMP.get_xml_text(root, 'descrizione', default='Non specificato')
         self.assertEqual(res_default_custom, 'Non specificato')
 
+    def test_fmt_euro(self):
+        self.assertEqual(self.IMP._fmt_euro(634098.45), '634.098,45')
+        self.assertEqual(self.IMP._fmt_euro(-94.38), '-94,38')
+
     def test_get_xml_text_elemento_vuoto(self):
         root = ET.fromstring('<root><vuoto></vuoto><spazi>   </spazi></root>')
         # Tag vuoto senza testo: found.text e' None -> restituisce default

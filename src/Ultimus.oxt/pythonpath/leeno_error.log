@@ -8114,3 +8114,17 @@ File: LeenoUtils.py, Line: 425, Function: wrapper
 File: LeenoContab.py, Line: 765, Function: partita
 ------------------------------------------------------------
 
+[2026-11-06 21:12:17]
+OS: win32 / LibreOffice-26.8.0.3 / LeenO-3.26.0.175-TESTING-20261105
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '86'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 288, Function: trigger
+File: LeenoBasicBridge.py, Line: 86, Function: DlgMain
+------------------------------------------------------------
+

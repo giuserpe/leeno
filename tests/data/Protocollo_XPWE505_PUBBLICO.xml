@@ -16,7 +16,7 @@ Nel 2003, come evoluzione del PWE, nasce il più attuale XPWE ovvero il formato 
 
 
 XPWE (versione 5.01)	dal 29 marzo 2004		(con PriMus system)
-XPWE (versione 5.02)	dal 7 maggio 2015	   	(con PriMus 100e)	  
+XPWE (versione 5.02)	dal 7 maggio 2015	   	(con PriMus 100e)
 XPWE (versione 5.03)	dal 7 aprile 2017			(con PriMus POWER3e)
 XPWE (versione 5.04)	dal 14 dicembre 2017 	(con PriMus BIMc)
 XPWE (versione 5.05)	dal 16 novembre 2020 	(con PriMus BIM 2e)
@@ -231,17 +231,17 @@ I campi ID inseriti come attributo di un nodo indicano l'identificativo univoco 
 			<!--Booleano, indica se la struttura è attiva-->
 			</DGWBSAttiva>
 			<DGWBSItem ID="">
-		       	<CU>
+			<CU>
 					<!--Codice Univoco della voce-->
 				</CU>
-          			<CUParent>
+				<CUParent>
 					<!--Codice Univoco della voce di cui si è “Figli”-->
 				</CUParent>
-          			<Titolo>
+				<Titolo>
 					<!--Titolo dell’elemento WBS-->
 				</Titolo>
-          			<Codice>
-<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent 
+				<Codice>
+<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent
 Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima ha come CODICE 1, il CODICE da inserire sarà 1.1. In caso la sequenza logica non viene rispettata questo campo sarà CALCOLATO AUTOMATICAMENTE in fase di importazione. -->
 				</Codice>
 				<CodiceExt>
@@ -254,17 +254,17 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 			<!--Booleano, indica se la struttura è attiva-->
 			</DGWBSCAPAttiva>
 			<DGWBSCAPItem ID="">
-		       	<CU>
+			<CU>
 					<!--Codice Univoco della voce-->
 				</CU>
-          			<CUParent>
+				<CUParent>
 					<!--Codice Univoco della voce di cui si è “Figli”-->
 				</CUParent>
-          			<Titolo>
+				<Titolo>
 					<!--Titolo dell’elemento WBS-->
 				</Titolo>
-          			<Codice>
-<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent 
+				<Codice>
+<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent
 Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima ha come CODICE 1, il CODICE da inserire sarà 1.1. In caso la sequenza logica non viene rispettata questo campo sarà CALCOLATO AUTOMATICAMENTE in fase di importazione. -->
 				</Codice>
 				<CodiceExt>
@@ -276,7 +276,7 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 			<PweDGAnalisi>
 				<SpeseUtili>
 					<!--Formula applicata alle Spese e agli Utili:
-	-1: NETTO + (SG * Netto) + (UI * (Netto + SG)) 
+	-1: NETTO + (SG * Netto) + (UI * (Netto + SG))
 	0:  NETTO + (SG * Netto) + (UI * Netto)-->
 				</SpeseUtili>
 				<SpeseGenerali>
@@ -290,9 +290,9 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 				</OneriAccessoriSc>
 				<ConfQuantita>
 					<!--formato di configurazione delle quantità:
-	X.Y|n, dove 
+	X.Y|n, dove
 	X indica il numero totale di cifre disponibili,
-	Y indica il numero di cifre decimali da utilizzare 
+	Y indica il numero di cifre decimali da utilizzare
 	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
 				</ConfQuantita>
 			</PweDGAnalisi>
@@ -314,9 +314,9 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 				</Cambio>
 				<PartiUguali>
 					<!--Parti Uguali. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
-	X.Y|n, dove 
+	X.Y|n, dove
 	X indica il numero totale di cifre disponibili,
-	Y indica il numero di cifre decimali da utilizzare 
+	Y indica il numero di cifre decimali da utilizzare
 	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
 				</PartiUguali>
 				<Lunghezza>
@@ -344,7 +344,7 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 	X.Y|n. (vedi compo PartiUguali)-->
 				</PrezziTotale>
 				<ConvPrezzi>
-					<!--Conversione prezzi unitari. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo: 
+					<!--Conversione prezzi unitari. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
 	X.Y|n. (vedi compo PartiUguali)-->
 				</ConvPrezzi>
 				<ConvPrezziTotale>
@@ -352,11 +352,11 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 	X.Y|n. (vedi compo PartiUguali)-->
 				</ConvPrezziTotale>
 				<IncidenzaPercentuale>
-					<!--Incidenza in percentuale. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo 
+					<!--Incidenza in percentuale. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo
 	X.Y|n. (vedi compo PartiUguali)-->
 				</IncidenzaPercentuale>
 				<Aliquote>
-					<!--Configurazione Aliquote. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo: 
+					<!--Configurazione Aliquote. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
 	X.Y|n. (vedi compo PartiUguali)-->
 				</Aliquote>
 			</PweDGConfigNumeri>
@@ -414,7 +414,7 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 					<!--Specifica l'indice del Sub Capitolo, descritto nei Dati Generali, da associare alla Voce di EP: tipo di dato numerico non negativo.-->
 				</IDSbCap>
 				<Flags>
-					<!--DWORD (32 bit) 
+					<!--DWORD (32 bit)
 	bit 10: SOLO DESCRIZIONE;
 	bit 12: VOCE DEL FERRO;
 	bit 17: ANALISI;
@@ -466,9 +466,9 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 					</CnfQTDef>
 					<CnfQT>
 						<!--formato di configurazione delle quantità, da utilizzare se il campo “CnfQT Def = -1”, in sostituzione del formato di configurazione delle quantità indicata nel modulo dell’Analisi dei Dati Generali:
-	X.Y|n, dove 
+	X.Y|n, dove
 	X indica il numero totale di cifre disponibili,
-	Y indica il numero di cifre decimali da utilizzare 
+	Y indica il numero di cifre decimali da utilizzare
 	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
 					</CnfQT>
 					<PweEPAR>
@@ -495,8 +495,8 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 								<!--una stringa contenente la formula o il valore del prezzo unitario (solo per gli inserimenti liberi; in caso di riferimenti a voci di listino la stringa è vuota).-->
 							</Prezzo>
 							<FieldCTL>
-								<!--Indica se il rigo è un elemento fittizio: 
-	0: default; 
+								<!--Indica se il rigo è un elemento fittizio:
+	0: default;
 	-1: Elemento Fittizio-->
 							</FieldCTL>
 						</EPARItem>
@@ -565,7 +565,7 @@ Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima h
 	bit 1: PARZIALE;
 	bit 3: SEGNA LIBRO;
 	bit 4: INSERIMENTO CONTO PROVVISORIO;
-	bit 5: DETRAZIONE CONTO PROVVISORIO; 
+	bit 5: DETRAZIONE CONTO PROVVISORIO;
 	bit 15: VEDI VOCE;
 	Settando uno o più bit e possibile settare le proprietà alla voce.-->
 						</Flags>
@@ -594,4 +594,3 @@ Un file XML ben strutturato deve attenersi alle seguenti condizioni:
 1. Include un elemento di livello superiore (elemento principale) ed ogni altro elemento deve essere nidificato all'interno di questo
 2. Gli elementi sono nidificati in modo corretto
 3.Il nome scelto tra i tag deve rispettare l'uso delle maiuscole e minuscole.-->
-

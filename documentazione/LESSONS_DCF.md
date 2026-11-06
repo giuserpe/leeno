@@ -5,7 +5,7 @@ Documentazione tecnica e concisa sulla struttura interna dei file binari DCF di 
 ## Struttura delle pagine del container SFS
 
 Il file DCF inizia con il magic number `AAMVHFSS` (`0x00..0x07`).
-Lo spazio del file e' suddiviso in pagine a dimensione fissa di 2048 byte (`0x800`).
+Lo spazio del file è suddiviso in pagine a dimensione fissa di 2048 byte (`0x800`). L'ultima pagina può essere parziale: `tests/data/riferimento.dcf` ha 81 pagine intere più 280 byte.
 
 Ogni pagina presenta una sezione di trailer / metadati a offset fisso relativo di pagina `0x118..0x137` (32 byte, da `offset + 280` a `offset + 312`).
 
@@ -19,7 +19,7 @@ I flussi di dati (XML compresso con zlib/deflate) iniziano con un marcatore AACS
    - A `pos + 0x90`: inizio dei 2 byte di magic zlib (es. `\x78\x9c`) seguiti dallo stream raw deflate.
 
 2. **Frammentazione nelle pagine successive**:
-   Il flusso compresso NON e' memorizzato in modo continuo nel file.
+   Il flusso compresso NON è memorizzato in modo continuo nel file.
    - **Prima pagina del blocco** (dove risiede AACS a `0x138`):
      Il payload zlib inizia a `pos + 0x90` (offset relativo `0x1C8`) e prosegue fino alla fine della pagina (`0x800`).
    - **Pagine successive dello stesso flusso**:
@@ -36,4 +36,4 @@ I flussi di dati (XML compresso con zlib/deflate) iniziano con un marcatore AACS
 ## Cosa resta non compreso / da approfondire
 
 - Struttura completa della tabella di allocazione delle pagine / FAT (visibile parzialmente nelle pagine di directory come le pagine 4, 9, 41, 73 con puntatori alle pagine successive).
-- Protezione DRM proprietaria ACCA: alcuni file (e documenti di contabilit\u00e0 `TpDoc=2` protetti) memorizzano blocchi cifrati con marcatore `Copyright ACCA software S.p.A.` senza XML in chiaro, non reversibili senza le chiavi proprietarie.
+- Blocchi senza XML in chiaro: in alcuni file (osservati nei documenti di contabilità con `TpDoc=2`, non presenti in `tests/data`) compare il marcatore `Copyright ACCA software S.p.A.` e nessun XML leggibile. Non è verificato se i blocchi siano cifrati o in un altro formato.

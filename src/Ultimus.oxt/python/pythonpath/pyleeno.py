@@ -9170,6 +9170,17 @@ def adegua_tmpl():
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec')  # rinvia a autoexec in basic
+        if oDoc.Sheets.hasByName('copyright_LeenO'):
+            oSheet_copy = oDoc.Sheets.getByName('copyright_LeenO')
+            if oSheet_copy.getCellRangeByName('G5').String.strip() != 'NB':
+                try:
+                    oRange = oSheet_copy.getCellRangeByName('F2:L40')
+                    oSheet_copy.removeRange(
+                        oRange.RangeAddress,
+                        uno.Enum('com.sun.star.sheet.CellDeleteMode', 'UP')
+                    )
+                except Exception as _exc:
+                    LeenoUtils.log_errore('adegua_tmpl: rimozione range F2:L40 copyright_LeenO', _exc)
 
     adegua_a = 219  # VERSIONE CORRENTE
 

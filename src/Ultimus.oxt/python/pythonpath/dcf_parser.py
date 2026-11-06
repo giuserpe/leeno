@@ -246,7 +246,12 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
     # Ogni blocco SFS inizia con 0x138 byte di header, poi 'AACS' (4 byte),
     # poi 0x8c byte di header AACS, poi i dati zlib.
     # Distanza da inizio 'AACS' al magic zlib = 0x90 byte.
+    # Nei flussi multi-pagina i dati compressi sono frammentati tra le pagine:
+    # ciascuna pagina (0x800 byte) riserva l'intervallo 0x118..0x138 per il trailer.
     # ------------------------------------------------------------------
+    import struct as _struct
+
+    PAGE_SIZE = 0x800
     AACS_TO_ZLIB = 0x90
     blocks_aacs: dict[str, str] = {}
 
@@ -272,11 +277,41 @@ def _sfs_extract_xml(dcf_path: str) -> dict[str, str]:
         if data[zlib_start:zlib_start+2] not in zlib_magics:
             continue
 
-        # Payload: da zlib_start fino al prossimo AACS marker (escluso header)
-        next_pos = aacs_offsets[idx+1] if idx+1 < len(aacs_offsets) else file_size
-        payload  = data[zlib_start:next_pos]
+        aacs_hdr = data[pos:pos+0x90]
+        comp_size = _struct.unpack('<I', aacs_hdr[0x80:0x84])[0]
+        uncomp_size = _struct.unpack('<I', aacs_hdr[0x84:0x88])[0]
 
-        dec = _decompress(payload)
+        # Ricostruzione flusso multi-pagina saltando i trailer (0x118..0x138)
+        first_page = pos // PAGE_SIZE
+        stream = bytearray()
+        first_page_end = min((first_page + 1) * PAGE_SIZE, file_size)
+        stream.extend(data[zlib_start:first_page_end])
+
+        cur_page = first_page + 1
+        target_len = comp_size + 2 if comp_size > 0 else (file_size - zlib_start)
+        while len(stream) < target_len + 10:
+            p_offset = cur_page * PAGE_SIZE
+            if p_offset >= file_size:
+                break
+            part_a_end = min(p_offset + 0x118, file_size)
+            stream.extend(data[p_offset : part_a_end])
+            if p_offset + 0x138 < file_size:
+                part_b_end = min(p_offset + PAGE_SIZE, file_size)
+                stream.extend(data[p_offset + 0x138 : part_b_end])
+            cur_page += 1
+
+        payload = bytes(stream)
+        dec = b''
+        if uncomp_size > 0:
+            try:
+                d = zlib.decompressobj(wbits=-15)
+                dec = d.decompress(payload[2:], uncomp_size)
+            except (zlib.error, _struct.error):
+                dec = b''
+
+        if not dec:
+            dec = _decompress(payload)
+
         if len(dec) < 10:
             continue
 
@@ -438,32 +473,51 @@ def _dcf_parse_dati_generali(xml: str) -> dict[str, Any]:
 def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
     """
     Parser EP da .dcf.
-    PriMus duplica ogni ItemEP per ogni capitolo/categoria.
-    Deduplica per tariffa tenendo la DesEst piu' lunga.
+    Estrae le voci di elenco prezzi dal blocco CollectionEP escludendo
+    le voci riservate di sistema (IdEP=2).
     """
-    segments = re.split(r'(?=<ItemEP\s)', xml)
-    by_id:  dict[int, dict] = {}
-    by_trf: dict[str, dict] = {}
+    by_id: dict[int, dict] = {}
 
-    for seg in segments:
-        if not seg.strip().startswith('<ItemEP'):
-            continue
-        a = _attr_parse(seg)
-        if not a.get('IdEP'):
-            continue
-        try:
-            id_ep = int(a['IdEP'])
-        except ValueError:
-            continue
-        trf  = a.get('Trf', '')
-        dest = a.get('DesEst', '')
-        prev = by_id.get(id_ep)
-        if prev is None or len(dest) > len(prev.get('DesEst', '')):
-            by_id[id_ep] = a
-        if trf:
-            prev_trf = by_trf.get(trf)
-            if prev_trf is None or len(dest) > len(prev_trf.get('DesEst', '')):
-                by_trf[trf] = a
+    items_el = None
+    try:
+        root_el = ET.fromstring(xml)
+        items_el = root_el.findall('.//ItemEP')
+    except (ET.ParseError, ValueError):
+        items_el = None
+
+    if items_el is not None:
+        for el in items_el:
+            a = {k: _unescape(v) for k, v in el.attrib.items()}
+            id_ep_str = a.get('IdEP')
+            if not id_ep_str:
+                continue
+            try:
+                id_ep = int(id_ep_str)
+            except ValueError:
+                continue
+            if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
+                continue
+            dest = a.get('DesEst', '')
+            prev = by_id.get(id_ep)
+            if prev is None or len(dest) > len(prev.get('DesEst', '')):
+                by_id[id_ep] = a
+    else:
+        # Fallback con regex: estrae solo il tag di apertura di ItemEP
+        for m in re.finditer(r'<ItemEP\s+([^>]+?)>', xml):
+            a = _attr_parse(m.group(0))
+            id_ep_str = a.get('IdEP')
+            if not id_ep_str:
+                continue
+            try:
+                id_ep = int(id_ep_str)
+            except ValueError:
+                continue
+            if id_ep == 2 and a.get('DesRid') == 'Voce riservata!!!':
+                continue
+            dest = a.get('DesEst', '')
+            prev = by_id.get(id_ep)
+            if prev is None or len(dest) > len(prev.get('DesEst', '')):
+                by_id[id_ep] = a
 
     def _build(a: dict) -> dict[str, Any]:
         """Costruisce il dizionario normalizzato della voce di elenco prezzi dai suoi attributi."""
@@ -498,12 +552,12 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
             'id_cap':       _int(a.get('IdCap', '0')),
             'id_sbcap':     _int(a.get('IdSbCap', '0')),
             'flags':        _int(a.get('Fgs', '0')),
-            'data':         a.get('Dt', ''),
-            'adr_internet': a.get('AdrInt', ''),
+            'data':         a.get('Data', '') or a.get('Dt', ''),
+            'adr_internet': a.get('AdrInt', '') or a.get('AdrInet', ''),
             'tag_bim':      a.get('TagBIM', ''),
         }
 
-    ep_list  = [_build(a) for a in sorted(by_trf.values(), key=lambda x: x.get('Trf', ''))]
+    ep_list  = [_build(a) for a in sorted(by_id.values(), key=lambda x: int(x.get('IdEP', 0)))]
     ep_by_id = {id_ep: _build(a) for id_ep, a in by_id.items()}
     return ep_list, ep_by_id
 
@@ -511,53 +565,95 @@ def _dcf_parse_ep(xml: str) -> tuple[list[dict], dict[int, dict]]:
 def _dcf_parse_vc(xml: str) -> list[dict[str, Any]]:
     """Estrae le voci di computo e i rispettivi righi di misurazione dal blocco CollectionVC."""
     items = []
-    for m in re.finditer(r'<ItemVC\s[^>]+>.*?</ItemVC>', xml, re.DOTALL):
-        seg = m.group(0)
-        a = _attr_parse(seg)
-        if not a.get('IdVC'):
-            continue
-        misure = []
-        for rm in _iter_attr_tags(seg, 'ItemRM'):
-            misure.append({
-                'id':          _int(rm.get('IdRM', '0')),
-                'descrizione': rm.get('Des', ''),
-                'pu':          rm.get('Pu', ''),   # stringa: può contenere formula
-                'lu':          rm.get('Lu', ''),   # stringa: può contenere formula
-                'la':          rm.get('La', ''),   # stringa: può contenere formula
-                'hp':          rm.get('Hp', ''),   # stringa: può contenere formula
-                'qt':          _float(rm.get('Qt', '0')),  # sempre numero (pre-calcolato)
-                'rif_voce':    _int(rm.get('IdVV', '0')),
-                'flags':       _int(rm.get('Fgs', '0')),
+
+    # Prova parsing robusto con ElementTree
+    root_el = None
+    try:
+        root_el = ET.fromstring(xml)
+    except (ET.ParseError, ValueError):
+        root_el = None
+
+    if root_el is not None:
+        for vc_el in root_el.findall('.//ItemVC'):
+            a = vc_el.attrib
+            if not a.get('IdVC'):
+                continue
+            misure = []
+            for rm in vc_el.findall('.//ItemRM'):
+                rm_a = rm.attrib
+                misure.append({
+                    'id':          _int(rm_a.get('IdRM', '0')),
+                    'descrizione': _unescape(rm_a.get('Des', '')).strip(),
+                    'pu':          rm_a.get('Pu', ''),   # stringa: può contenere formula
+                    'lu':          rm_a.get('Lu', ''),   # stringa: può contenere formula
+                    'la':          rm_a.get('La', ''),   # stringa: può contenere formula
+                    'hp':          rm_a.get('Hp', ''),   # stringa: può contenere formula
+                    'qt':          _float(rm_a.get('Qt', '0')),  # sempre numero
+                    'rif_voce':    _int(rm_a.get('IdVV', '0')),
+                    'flags':       _int(rm_a.get('Fgs', '0')),
+                })
+            items.append({
+                'id':       _int(a.get('IdVC', '0')),
+                'id_ep':    _int(a.get('IdEP', '0')),
+                'quantita': _float(a.get('Qt', '0')),
+                'importo':  _float(a.get('Imprt', '0')),
+                'data_mis': a.get('DataMis', ''),
+                'id_spcal': _int(a.get('IdSpCat', '0')),
+                'id_cat':   _int(a.get('IdCat', '0')),
+                'id_sbcat': _int(a.get('IdSbCat', '0')),
+                'flags':    _int(a.get('Fgs', '0')),
+                'misure':   misure,
             })
-        items.append({
-            'id':       _int(a.get('IdVC', '0')),
-            'id_ep':    _int(a.get('IdEP', '0')),
-            'quantita': _float(a.get('Qt', '0')),
-            'importo':  _float(a.get('Imprt', '0')),
-            'data_mis': a.get('DataMis', ''),
-            'id_spcal': _int(a.get('IdSpCat', '0')),
-            'id_cat':   _int(a.get('IdCat', '0')),
-            'id_sbcat': _int(a.get('IdSbCat', '0')),
-            'flags':    _int(a.get('Fgs', '0')),
-            'misure':   misure,
-        })
-    # Self-closing senza misure
-    for m in re.finditer(r'<ItemVC\s[^>]+/>', xml):
-        a = _attr_parse(m.group(0))
-        if not a.get('IdVC'):
-            continue
-        items.append({
-            'id':       _int(a.get('IdVC', '0')),
-            'id_ep':    _int(a.get('IdEP', '0')),
-            'quantita': _float(a.get('Qt', '0')),
-            'importo':  _float(a.get('Imprt', '0')),
-            'data_mis': a.get('DataMis', ''),
-            'id_spcal': _int(a.get('IdSpCat', '0')),
-            'id_cat':   _int(a.get('IdCat', '0')),
-            'id_sbcat': _int(a.get('IdSbCat', '0')),
-            'flags':    _int(a.get('Fgs', '0')),
-            'misure':   [],
-        })
+    else:
+        # Fallback con regex: estrae separatamente il tag di apertura <ItemVC ...>
+        for m in re.finditer(r'<ItemVC\s+([^>]+?)>(.*?)</ItemVC>', xml, re.DOTALL):
+            open_attrs = _attr_parse(m.group(1))
+            body = m.group(2)
+            if not open_attrs.get('IdVC'):
+                continue
+            misure = []
+            for rm in _iter_attr_tags(body, 'ItemRM'):
+                misure.append({
+                    'id':          _int(rm.get('IdRM', '0')),
+                    'descrizione': _unescape(rm.get('Des', '')).strip(),
+                    'pu':          rm.get('Pu', ''),
+                    'lu':          rm.get('Lu', ''),
+                    'la':          rm.get('La', ''),
+                    'hp':          rm.get('Hp', ''),
+                    'qt':          _float(rm.get('Qt', '0')),
+                    'rif_voce':    _int(rm.get('IdVV', '0')),
+                    'flags':       _int(rm.get('Fgs', '0')),
+                })
+            items.append({
+                'id':       _int(open_attrs.get('IdVC', '0')),
+                'id_ep':    _int(open_attrs.get('IdEP', '0')),
+                'quantita': _float(open_attrs.get('Qt', '0')),
+                'importo':  _float(open_attrs.get('Imprt', '0')),
+                'data_mis': open_attrs.get('DataMis', ''),
+                'id_spcal': _int(open_attrs.get('IdSpCat', '0')),
+                'id_cat':   _int(open_attrs.get('IdCat', '0')),
+                'id_sbcat': _int(open_attrs.get('IdSbCat', '0')),
+                'flags':    _int(open_attrs.get('Fgs', '0')),
+                'misure':   misure,
+            })
+        # Self-closing senza misure
+        for m in re.finditer(r'<ItemVC\s+([^>]+?)/>', xml):
+            a = _attr_parse(m.group(1))
+            if not a.get('IdVC'):
+                continue
+            items.append({
+                'id':       _int(a.get('IdVC', '0')),
+                'id_ep':    _int(a.get('IdEP', '0')),
+                'quantita': _float(a.get('Qt', '0')),
+                'importo':  _float(a.get('Imprt', '0')),
+                'data_mis': a.get('DataMis', ''),
+                'id_spcal': _int(a.get('IdSpCat', '0')),
+                'id_cat':   _int(a.get('IdCat', '0')),
+                'id_sbcat': _int(a.get('IdSbCat', '0')),
+                'flags':    _int(a.get('Fgs', '0')),
+                'misure':   [],
+            })
+
     items.sort(key=lambda x: x['id'])
     return items
 

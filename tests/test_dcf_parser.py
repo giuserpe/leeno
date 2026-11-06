@@ -188,6 +188,114 @@ class TestDcfParserCharacterization(unittest.TestCase):
         self.assertEqual(row['importo'], 300.00)
         self.assertEqual(row['n_misure'], 1)
 
+    def test_riferimento_dcf_xml_well_formed(self):
+        import xml.etree.ElementTree as ET
+        dcf_path = os.path.join(os.path.dirname(__file__), 'data', 'riferimento.dcf')
+        if not os.path.exists(dcf_path):
+            self.skipTest("tests/data/riferimento.dcf non trovato")
+
+        doc = dcf_parser.parse_dcf(dcf_path)
+        raw_xml = doc.get('_raw_xml', {})
+        self.assertTrue(raw_xml, "Nessun blocco XML grezzo estratto")
+
+        expected_blocks = [
+            'InfoDoc', 'DatiGenerali', 'CollectionEP',
+            'CollectionVC', 'CollectionOD', 'CollectionST',
+            'OpzioniInterfaccia',
+        ]
+        for tag in expected_blocks:
+            self.assertIn(tag, raw_xml, f"Blocco {tag} mancante in _raw_xml")
+            xml_text = raw_xml[tag]
+            try:
+                root = ET.fromstring(xml_text)
+            except ET.ParseError as err:
+                self.fail(f"Il blocco XML {tag} non e' ben formato: {err}")
+            self.assertEqual(root.tag, tag)
+
+    def test_riferimento_dcf_confronto_con_xpwe(self):
+        dcf_path = os.path.join(os.path.dirname(__file__), 'data', 'riferimento.dcf')
+        xpwe_path = os.path.join(os.path.dirname(__file__), 'data', 'riferimento.xpwe')
+        if not os.path.exists(dcf_path) or not os.path.exists(xpwe_path):
+            self.skipTest("riferimento.dcf o riferimento.xpwe non trovati")
+
+        doc_dcf = dcf_parser.parse_dcf(dcf_path)
+        doc_xpwe = dcf_parser.parse_xpwe(xpwe_path)
+
+        # 1. Elenco Prezzi: 201 voci attese (id, tariffa, um, prezzi 1-5, incidenze)
+        self.assertEqual(len(doc_dcf['elenco_prezzi']), 201)
+        self.assertEqual(len(doc_xpwe['elenco_prezzi']), 201)
+        self.assertEqual(len(doc_dcf['_ep_by_id']), 201)
+        self.assertEqual(len(doc_xpwe['_ep_by_id']), 201)
+
+        # Differenze note tra DCF e XPWE per Elenco Prezzi:
+        # - IdEP=2: presente solo nel DCF come 'Voce riservata!!!' interna a PriMus,
+        #   omessa dall'export XPWE standard e scartata dall'elenco prezzi.
+        # - Data: l'XPWE esporta la data standard se omessa, mentre il DCF usa '30/12/1899' di default.
+        for idep, x_ep in doc_xpwe['_ep_by_id'].items():
+            self.assertIn(idep, doc_dcf['_ep_by_id'], f"IdEP {idep} presente in XPWE ma mancante in DCF")
+            d_ep = doc_dcf['_ep_by_id'][idep]
+            self.assertEqual(d_ep['id'], x_ep['id'])
+            self.assertEqual(d_ep['tariffa'], x_ep['tariffa'])
+            self.assertEqual(d_ep['um'], x_ep['um'])
+            self.assertAlmostEqual(d_ep['prezzo'], x_ep['prezzo'], places=4)
+            self.assertAlmostEqual(d_ep['prezzo2'], x_ep['prezzo2'], places=4)
+            self.assertAlmostEqual(d_ep['prezzo3'], x_ep['prezzo3'], places=4)
+            self.assertAlmostEqual(d_ep['prezzo4'], x_ep['prezzo4'], places=4)
+            self.assertAlmostEqual(d_ep['prezzo5'], x_ep['prezzo5'], places=4)
+            self.assertAlmostEqual(d_ep['inc_mdo'], x_ep['inc_mdo'], places=4)
+            self.assertAlmostEqual(d_ep['inc_sic'], x_ep['inc_sic'], places=4)
+            self.assertAlmostEqual(d_ep['inc_mat'], x_ep['inc_mat'], places=4)
+            self.assertAlmostEqual(d_ep['inc_attr'], x_ep['inc_attr'], places=4)
+
+        # 2. Voci di computo e misurazioni: 96 VC, 2896 righi di misura
+        self.assertEqual(len(doc_dcf['computo']), 96)
+        self.assertEqual(len(doc_xpwe['computo']), 96)
+
+        total_dcf_misure = sum(len(vc['misure']) for vc in doc_dcf['computo'])
+        total_xpwe_misure = sum(len(vc['misure']) for vc in doc_xpwe['computo'])
+        self.assertEqual(total_dcf_misure, 2896)
+        self.assertEqual(total_xpwe_misure, 2896)
+
+        # Confronto per ogni VC: id, id_ep, quantita e misurazioni
+        for d_vc, x_vc in zip(doc_dcf['computo'], doc_xpwe['computo']):
+            self.assertEqual(d_vc['id'], x_vc['id'])
+            self.assertEqual(d_vc['id_ep'], x_vc['id_ep'])
+            self.assertAlmostEqual(d_vc['quantita'], x_vc['quantita'], places=4)
+            self.assertEqual(len(d_vc['misure']), len(x_vc['misure']))
+            for d_rm, x_rm in zip(d_vc['misure'], x_vc['misure']):
+                self.assertEqual(d_rm['id'], x_rm['id'])
+                self.assertEqual(d_rm['pu'], x_rm['pu'])
+                self.assertEqual(d_rm['lu'], x_rm['lu'])
+                self.assertEqual(d_rm['la'], x_rm['la'])
+                self.assertEqual(d_rm['hp'], x_rm['hp'])
+                self.assertAlmostEqual(d_rm['qt'], x_rm['qt'], places=4)
+                self.assertEqual(d_rm['descrizione'], x_rm['descrizione'])
+
+        # 3. Categorie e Capitoli
+        # Differenze note tra DCF e XPWE:
+        # - data_init: in XPWE e' valorizzata (es. '18/09/2025' o '30/12/1899'),
+        #   mentre in DGDatiGenerali/ItemSpCat del DCF l'attributo DtInz e' vuoto.
+        self.assertEqual(len(doc_dcf['super_categorie']), 3)
+        self.assertEqual(len(doc_xpwe['super_categorie']), 3)
+        for sc_id, x_sc in doc_xpwe['super_categorie'].items():
+            self.assertIn(sc_id, doc_dcf['super_categorie'])
+            d_sc = doc_dcf['super_categorie'][sc_id]
+            self.assertEqual(d_sc['nome'], x_sc['nome'])
+            self.assertEqual(d_sc['cod'], x_sc['cod'])
+            self.assertEqual(d_sc['durata'], x_sc['durata'])
+            self.assertAlmostEqual(d_sc['percent'], x_sc['percent'], places=4)
+
+        self.assertEqual(doc_dcf['categorie'], {})
+        self.assertEqual(doc_xpwe['categorie'], {})
+        self.assertEqual(doc_dcf['sotto_categorie'], {})
+        self.assertEqual(doc_xpwe['sotto_categorie'], {})
+        self.assertEqual(doc_dcf['super_capitoli'], {})
+        self.assertEqual(doc_xpwe['super_capitoli'], {})
+        self.assertEqual(doc_dcf['capitoli'], {})
+        self.assertEqual(doc_xpwe['capitoli'], {})
+        self.assertEqual(doc_dcf['sotto_capitoli'], {})
+        self.assertEqual(doc_xpwe['sotto_capitoli'], {})
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,596 @@
+<!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by Guido Cianciulli (ACCA software S.p.A.) -->
+<!--
+ACCA software S.p.A.
+Contrada Rosole, 13
+83043 BAGNOLI IRPINO (AV) - Italy
+Tel. 0827/69504 - fax 0827/601235
+All Rights Reserved
+
+
+
+DEFINIZIONE DEL PROTOCOLLO XPWE (versione 5.05)
+
+Lo studio e la ricerca di un protocollo standard di interscambio dei dati è la strada obbligata ogni qualvolta si presenta la necessità di scambiare informazioni tra più programmi siano essi operanti con sistema operativo e/o piattaforma hardware, compatibili o meno. Al fine di rendere non solo disponibili tutti i dati di un prezzario, un computo o una contabilità, ma di facilitare la modifica, l'importazione e l'esportazione delle informazioni, ACCA software ritenne opportuno definire e realizzare nel 1991 il protocollo di comunicazione noto come PWE (comandi composti da codici standard ASCII). Grazie ad esso è possibile non solo esportare i dati di PriMus in formato PWE, ma anche importarli. Dato che il protocollo di comunicazione messo a punto dal ACCA software è pubblico e utilizzabile in qualsiasi applicativo è diventato ormai lo STANDARD utilizzato da quasi tutti i programmi di computo e contabilità.
+
+Nel 2003, come evoluzione del PWE, nasce il più attuale XPWE ovvero il formato PWE strutturato in formato XML (eXtensible Markup Language) descritto in seguito. Il protocollo XPWE permette la scrittura e l'aggiornamento dei dati mediante un qualsiasi programma in grado di scrivere o leggere un file in fornato XML, nasce dal collaudatissimo formato STANDARD PWE e, come quest'ultimo, è PUBBLICO in modo da poter essere utilizzato da qualsiasi programma applicativo per lo scambio dei dati.
+
+
+XPWE (versione 5.01)	dal 29 marzo 2004		(con PriMus system)
+XPWE (versione 5.02)	dal 7 maggio 2015	   	(con PriMus 100e)
+XPWE (versione 5.03)	dal 7 aprile 2017			(con PriMus POWER3e)
+XPWE (versione 5.04)	dal 14 dicembre 2017 	(con PriMus BIMc)
+XPWE (versione 5.05)	dal 16 novembre 2020 	(con PriMus BIM 2e)
+
+
+Un file XPWE deve avere l'estensione .XPWE (esempio: MioFile.XPWE) è composto da un header, che consente di identificare il tipo di file XPWE e il Programma che lo ha generato, e da un corpo dati nel quale si possono indicare i Dati Generali, le Voci di EP, i Righi di Misurazione e gli Elementi di Analisi relativi ad un documento.
+I campi ID inseriti come attributo di un nodo indicano l'identificativo univoco del record (tipo di dato numerico) di una tabella. Per inserire altri righi è necessario ripetere più volte la struttura del nodo.
+
+-->
+<PweDocumento>
+	<CopyRight>
+		<!--Stringa FISSA (Copyright ACCA software S.p.A.) -->
+	</CopyRight>
+	<TipoDocumento>
+		<!--Identifica il tipo di Documento (0=Listino; 1=Progetto; 2=Contabilità) -->
+	</TipoDocumento>
+	<TipoFormato>
+		<!--Formato che identifica il tipo di Drag&Drop (XMLPwe) -->
+	</TipoFormato>
+	<Versione>
+		<!--Versione della struttura del Drag&Drop-->
+	</Versione>
+	<SourceVersione>
+		<!--Versione del Programma che genera la Struttura XPWE del Drag&Drop-->
+	</SourceVersione>
+	<SourceNome>
+		<!--Nome del Programma che genera la Struttura XPWE del Drag&Drop -->
+	</SourceNome>
+	<FileNameDocumento>
+		<!--Nome del Documento da dove vengono presi i Dati che riempono la Struttura XPWE del Drag&Drop -->
+	</FileNameDocumento >
+	<PweDatiGenerali>
+		<PweDGProgetto>
+			<PweDGDatiGenerali>
+				<PercPrezzi>
+					<!--Percentuale (+/-) sui prezzi di listino.-->
+				</PercPrezzi>
+				<Comune>
+					<!--Comune.-->
+				</Comune>
+				<Provincia>
+					<!--Provincia.-->
+				</Provincia>
+				<Oggetto>
+					<!--Oggetto.-->
+				</Oggetto>
+				<Committente>
+					<!--Committente.-->
+				</Committente>
+				<Impresa>
+					<!--Impresa.-->
+				</Impresa>
+				<ParteOpera>
+					<!--Parte d'opera.-->
+				</ParteOpera>
+			</PweDGDatiGenerali>
+		</PweDGProgetto>
+		<PweDGCapitoliCategorie>
+			<PweDGSuperCapitoli>
+				<DGSuperCapitoliItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGSuperCapitoliItem>
+			</PweDGSuperCapitoli>
+			<PweDGCapitoli>
+				<DGCapitoliItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGCapitoliItem>
+			</PweDGCapitoli>
+			<PweDGSubCapitoli>
+				<DGSubCapitoliItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGSubCapitoliItem>
+			</PweDGSubCapitoli>
+			<PweDGSuperCategorie>
+				<DGSuperCategorieItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGSuperCategorieItem>
+			</PweDGSuperCategorie>
+			<PweDGCategorie>
+				<DGCategorieItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGCategorieItem>
+			</PweDGCategorie>
+			<PweDGSubCategorie>
+				<DGSubCategorieItem ID="">
+					<DesSintetica>
+						<!--Descrizione sintetica.-->
+					</DesSintetica>
+					<DesEstesa>
+						<!--Descrizione estesa.-->
+					</DesEstesa>
+					<DataInit>
+						<!--Data inizio.-->
+					</DataInit>
+					<Durata>
+						<!--Durata giorni.-->
+					</Durata>
+					<CodFase>
+						<!--Codice fase.-->
+					</CodFase>
+					<Percentuale>
+						<!--Percentuale.-->
+					</Percentuale>
+					<Codice>
+						<!--Codice.-->
+					</Codice>
+				</DGSubCategorieItem>
+			</PweDGSubCategorie>
+		</PweDGCapitoliCategorie>
+		<PweDGWBS>
+			<DGWBSAttiva>
+			<!--Booleano, indica se la struttura è attiva-->
+			</DGWBSAttiva>
+			<DGWBSItem ID="">
+			<CU>
+					<!--Codice Univoco della voce-->
+				</CU>
+				<CUParent>
+					<!--Codice Univoco della voce di cui si è “Figli”-->
+				</CUParent>
+				<Titolo>
+					<!--Titolo dell’elemento WBS-->
+				</Titolo>
+				<Codice>
+<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent
+Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima ha come CODICE 1, il CODICE da inserire sarà 1.1. In caso la sequenza logica non viene rispettata questo campo sarà CALCOLATO AUTOMATICAMENTE in fase di importazione. -->
+				</Codice>
+				<CodiceExt>
+<!--E’ una seconda codifica liberamente definibile per ciascun nodo della struttura. Con un’apposita funzione, tale codifica può divenire anche un "codice strutturale" riportando in sequenza, per ciascun nodo figlio, i codici di tutti nodi da cui dipende separati dal punto. -->
+				</CodiceExt>
+			</DGWBSItem>
+		</PweDGWBS>
+		<PweDGWBSCAP> <!--INTERFACCIA DISPONIBILE SOLO PER PROGRAMMI NON IN ITALIANO-->
+			<DGWBSCAPAttiva>
+			<!--Booleano, indica se la struttura è attiva-->
+			</DGWBSCAPAttiva>
+			<DGWBSCAPItem ID="">
+			<CU>
+					<!--Codice Univoco della voce-->
+				</CU>
+				<CUParent>
+					<!--Codice Univoco della voce di cui si è “Figli”-->
+				</CUParent>
+				<Titolo>
+					<!--Titolo dell’elemento WBS-->
+				</Titolo>
+				<Codice>
+<!--Il Codice dell’elemento WBS sarà il valore di riferimento per la voce di Computo. Il valore inserito in questo campo dovrà essere relativo alle relazioni create con CU e CUParent
+Es. se la voce attuale è “Figlia” della voce che precede e quest’ultima ha come CODICE 1, il CODICE da inserire sarà 1.1. In caso la sequenza logica non viene rispettata questo campo sarà CALCOLATO AUTOMATICAMENTE in fase di importazione. -->
+				</Codice>
+				<CodiceExt>
+<!--E’ una seconda codifica liberamente definibile per ciascun nodo della struttura. Con un’apposita funzione, tale codifica può divenire anche un "codice strutturale" riportando in sequenza, per ciascun nodo figlio, i codici di tutti nodi da cui dipende separati dal punto. -->
+				</CodiceExt>
+			</DGWBSCAPItem>
+		</PweDGWBSCAP> <!--INTERFACCIA DISPONIBILE SOLO PER PROGRAMMI NON IN ITALIANO-->
+		<PweDGModuli>
+			<PweDGAnalisi>
+				<SpeseUtili>
+					<!--Formula applicata alle Spese e agli Utili:
+	-1: NETTO + (SG * Netto) + (UI * (Netto + SG))
+	0:  NETTO + (SG * Netto) + (UI * Netto)-->
+				</SpeseUtili>
+				<SpeseGenerali>
+					<!--percentuale delle spese generali-->
+				</SpeseGenerali>
+				<UtiliImpresa>
+					<!--percentuale degli utili d'impresa-->
+				</UtiliImpresa>
+				<OneriAccessoriSc>
+					<!--percentuale degli oneri per la sicurezza-->
+				</OneriAccessoriSc>
+				<ConfQuantita>
+					<!--formato di configurazione delle quantità:
+	X.Y|n, dove
+	X indica il numero totale di cifre disponibili,
+	Y indica il numero di cifre decimali da utilizzare
+	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
+				</ConfQuantita>
+			</PweDGAnalisi>
+		</PweDGModuli>
+		<PweDGConfigurazione>
+			<PweDGConfigNumeri>
+				<Divisa>
+					<!--Divisa. Tipo di dato alfanumerico Es: Lire, Euro ecc.. -->
+				</Divisa>
+				<ConversioniIN>
+					<!--Descrizione del tipo di valuta (Euro, Lire, Dollaro, ecc.)-->
+				</ConversioniIN>
+				<FattoreConversione>
+					<!--Fattore di Conversione (es. 1936.27 per l’Euro) -->
+				</FattoreConversione>
+				<Cambio>
+					<!-- 0: Divide gli importi del Documento con il valore indicato nel campo FattoreConversione
+	1: Moltiplica gli importi del Documento con il valore indicato nel campo FattoreConversione-->
+				</Cambio>
+				<PartiUguali>
+					<!--Parti Uguali. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n, dove
+	X indica il numero totale di cifre disponibili,
+	Y indica il numero di cifre decimali da utilizzare
+	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
+				</PartiUguali>
+				<Lunghezza>
+					<!--Lunghezza. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</Lunghezza>
+				<Larghezza>
+					<!--Larghezza. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</Larghezza>
+				<HPeso>
+					<!--Altezza/Peso. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</HPeso>
+				<Quantita>
+					<!--Totale quantità. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</Quantita>
+				<Prezzi>
+					<!--Prezzi unitari. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</Prezzi>
+				<PrezziTotale>
+					<!--Prezzi totali. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</PrezziTotale>
+				<ConvPrezzi>
+					<!--Conversione prezzi unitari. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</ConvPrezzi>
+				<ConvPrezziTotale>
+					<!--Conversione prezzi totali. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</ConvPrezziTotale>
+				<IncidenzaPercentuale>
+					<!--Incidenza in percentuale. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo
+	X.Y|n. (vedi compo PartiUguali)-->
+				</IncidenzaPercentuale>
+				<Aliquote>
+					<!--Configurazione Aliquote. Tipo di dato alfanumerico che indica un formato di configurazione che sarà del tipo:
+	X.Y|n. (vedi compo PartiUguali)-->
+				</Aliquote>
+			</PweDGConfigNumeri>
+		</PweDGConfigurazione>
+	</PweDatiGenerali>
+	<PweMisurazioni>
+		<PweElencoPrezzi>
+			<EPItem ID="">
+				<TipoEP>
+					<!--Indica il Tipo di Nodo Elenco Prezzi-
+	0: Voce semplice;
+	1: Voce di Gruppo;
+	2: Voce di Sottogruppo;-->
+				</TipoEP>
+				<Tariffa>
+					<!--Identifica il codice di tariffa che verrà ricercato da PriMus nell'elenco prezzi del computo attivo; se non venisse ritrovato un codice di tariffa uguale PriMus creerà una nuova VoceEP, con tariffa uguale a quella indicata, nel tariffario di riferimento del computo attivo: tipo di dato alfanumerico max 20 caratteri. -->
+				</Tariffa>
+				<Articolo>
+					<!--Codice di articolo della Voce di EP: tipo di dato alfanumerico max 20 caratteri.-->
+				</Articolo>
+				<DesRidotta>
+					<!--Descrizione sintetica della Voce di EP: tipo di dato alfanumerico max 120 caratteri. Se NON è indicata viene generata in automatico dalla Descrizione Estesa. -->
+				</DesRidotta>
+				<DesEstesa>
+					<!--Descrizione estesa della Voce di EP: tipo di dato alfanumerico. Se NON è indicata scrive la  Descrizione Estesa uguale alla Descrizione Ridotta-->
+				</DesEstesa>
+				<DesBreve>
+					<!--Descrizione breve della Voce di EP: tipo di dato alfanumerico.-->
+				</DesBreve>
+				<UnMisura>
+					<!--Unità di misura della Voce di EP: tipo di dato alfanumerico max 7 caratteri.-->
+				</UnMisura>
+				<Prezzo1>
+					<!--Prezzi unitari della Voce di EP: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Prezzo1>
+				<Prezzo2>
+					<!--Prezzi unitari della Voce di EP: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Prezzo2>
+				<Prezzo3>
+					<!--Prezzi unitari della Voce di EP: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Prezzo3>
+				<Prezzo4>
+					<!--Prezzi unitari della Voce di EP: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Prezzo4>
+				<Prezzo5>
+					<!--Prezzi unitari della Voce di EP: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Prezzo5>
+				<IDSpCap>
+					<!--Specifica l'indice del Super Capitolo, descritto nei Dati Generali, da associare alla Voce di EP. : tipo di dato numerico non negativo.-->
+				</IDSpCap>
+				<IDCap>
+					<!--Specifica l'indice del Capitolo, descritto nei Dati Generali, da associare alla Voce di EP: tipo di dato numerico non negativo.-->
+				</IDCap>
+				<IDSbCap>
+					<!--Specifica l'indice del Sub Capitolo, descritto nei Dati Generali, da associare alla Voce di EP: tipo di dato numerico non negativo.-->
+				</IDSbCap>
+				<Flags>
+					<!--DWORD (32 bit)
+	bit 10: SOLO DESCRIZIONE;
+	bit 12: VOCE DEL FERRO;
+	bit 17: ANALISI;
+	Settando uno o più bit e possibile settare le proprietà alla voce.-->
+				</Flags>
+				<Data>
+					<!--Specifica la data della Voce di EP: tipo di dato data (formato gg/mm/aaaa).-->
+				</Data>
+				<AdrInternet>
+					<!--Indirizzi internet collegati alla Voce di EP: tipo di dato alfanumerico.-->
+				</AdrInternet>
+<IncSIC>
+	<!--Indica l’incidenza della SICUREZZA per ogni voce di EP -->
+</IncSIC>
+<IncMDO>
+	<!--Indica l’incidenza della MANODOPERA per ogni voce di EP -->
+</IncMDO>
+<IncMAT>
+	<!--Indica l’incidenza MATERIALI per ogni voce di EP -->
+</IncMAT>
+<IncATTR>
+	<!--Indica l’incidenza della ATTREZZATURE per ogni voce di EP -->
+</IncATTR>
+<TagBIM>
+	<!--Indica per ogni voce di EP uno o più TAG di collegamento per l’ambiente BIM
+		Es: <TagBIM>#nomeTAG [UnMisura] = “ValoreTAG”;</TagBIM>-->
+</TagBIM>
+				<PweEPAnalisi>
+					<SpeseDef>
+						<!--indica se utilizzare (0) o NON utilizzare (-1) la percentuale delle Spese indicata nel modulo delle Analisi dei Dati Generali.-->
+					</SpeseDef>
+					<Spese>
+						<!--percentuale delle Spese, da utilizzare se il campo “SpeseDef = -1”, in sostituzione della percentuale delle Spese indicata nel modulo dell’Analisi dei Dati Generali-->
+					</Spese>
+					<UtiliDef>
+						<!--indica se utilizzare (0) o NON utilizzare (-1) la percentuale Utili d'Impresa indicata nel modulo delle Analisi dei Dati Generali. -->
+					</UtiliDef>
+					<Utili>
+						<!--percentuale Utili d'Impresa, da utilizzare se il campo “UtiliDef = -1”, in sostituzione della percentuale Utili d'Impresa indicata nel modulo dell’Analisi dei Dati Generali-->
+					</Utili>
+					<OneriDef>
+						<!--indica se utilizzare (0) o NON utilizzare (-1) la percentuale degli Oneri per la Sicurezza indicata nel modulo delle Analisi dei Dati Generali.-->
+					</OneriDef>
+					<Oneri>
+						<!--percentuale degli Oneri per la Sicurezza, da utilizzare se il campo “OneriDef = -1”, in sostituzione della percentuale degli Oneri per la Sicurezza indicata nel modulo dell’Analisi dei Dati Generali-->
+					</Oneri>
+					<CnfQTDef>
+						<!--indica se utilizzare (0) o NON utilizzare (-1)  il formato di configurazione delle quantità indicata nel modulo delle Analisi dei Dati Generali.-->
+					</CnfQTDef>
+					<CnfQT>
+						<!--formato di configurazione delle quantità, da utilizzare se il campo “CnfQT Def = -1”, in sostituzione del formato di configurazione delle quantità indicata nel modulo dell’Analisi dei Dati Generali:
+	X.Y|n, dove
+	X indica il numero totale di cifre disponibili,
+	Y indica il numero di cifre decimali da utilizzare
+	n indica la presenza (1) o assenza (0) del carattere separatore delle migliaia.-->
+					</CnfQT>
+					<PweEPAR>
+						<EPARItem ID="">
+							<Tipo>
+								<!--può assumere i seguenti valori:
+	0: se si tratta di un elemento non presente in listino (inserimento libero);
+	1: se è un elemento semplice (elemento presente in listino);
+	2: se è un elemento composto (elemento presente in listino con Analisi).-->
+							</Tipo>
+							<IDEP>
+								<!--identificativo della voce di Listino dell'elemento (quando è inserimento libero è uguale a -2).-->
+							</IDEP>
+							<Descrizione>
+								<!--Descrizione aggiuntiva dell'elemento (indispensabile per gli inserimenti liberi).-->
+							</Descrizione>
+							<Misura>
+								<!--unità di misura dell'elemento (solo per gli inserimenti liberi; in caso di riferimenti a voci di listino la stringa è vuota) - max 7 caratteri.-->
+							</Misura>
+							<Qt>
+								<!--una stringa contenente la formula o il valore della quantità dell'elemento. -->
+							</Qt>
+							<Prezzo>
+								<!--una stringa contenente la formula o il valore del prezzo unitario (solo per gli inserimenti liberi; in caso di riferimenti a voci di listino la stringa è vuota).-->
+							</Prezzo>
+							<FieldCTL>
+								<!--Indica se il rigo è un elemento fittizio:
+	0: default;
+	-1: Elemento Fittizio-->
+							</FieldCTL>
+						</EPARItem>
+					</PweEPAR>
+				</PweEPAnalisi>
+			</EPItem>
+		</PweElencoPrezzi>
+		<PweVociComputo>
+			<!--Una Voce di Computo deve essere sempre collegato ad una Voce di EP-->
+			<VCItem ID="">
+				<IDEP>
+					<!--Specifica l'identificativo univoco della voce di Elenco Prezzi a cui è legata la voce di Computo: tipo di dato numerico.-->
+				</IDEP>
+				<Quantita>
+					<!--quantità totale dei righi di misura: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+				</Quantita>
+				<DataMis>
+					<!--Riporta la data di misurazione del rigo: tipo di dato data (formato gg/mm/aaaa). -->
+				</DataMis>
+				<Flags>
+					<!--DWORD (32 bit)
+	bit 3: SEGNA LIBERO;
+	bit 4: INSERIMENTO CONTO PROVVISORIO;
+	bit 5: DETRAZIONE CONTO PROVVISORIO;
+	bit 15: VEDI VOCE;
+	Settando uno o più bit e possibile settare le proprietà alla voce.-->
+				</Flags>
+				<IDSpCat>
+					<!--Specifica l'indice della Super Categoria, descritta nei Dati Generali, da associare al rigo di misurazione: tipo di dato numerico non negativo. -->
+				</IDSpCat>
+				<IDCat>
+					<!--Specifica l'indice della Categoria, descritta nei Dati Generali, da associare al rigo di misurazione: tipo di dato numerico non negativo.-->
+				</IDCat>
+				<IDSbCat>
+					<!--Specifica l'indice della Sub Categoria, descritta nei Dati Generali, da associare al rigo di misurazione: tipo di dato numerico non negativo.-->
+				</IDSbCat>
+				<CodiceWBS>
+<!--E’ il codice dell’elemento WBS, indicato nei Dati Generali, al quale è collegato il rigo di misurazione -->
+				</CodiceWBS>
+				<PweVCMisure>
+					<RGItem ID="">
+						<IDVV>
+							<!--Specifica l'identificativo univoco della Voce di Computo a cui è legato il VEDIVOCE-->
+						</IDVV>
+						<Descrizione>
+							<!--una stringa alfanumerica contenente la descrizione del rigo di misurazione-->
+						</Descrizione>
+						<PartiUguali>
+							<!--una stringa numerica contenente la formula/valore da usare nel campo parti uguali-->
+						</PartiUguali>
+						<Lunghezza>
+							<!--una stringa numerica contenente la formula/valore da usare nel campo lunghezza-->
+						</Lunghezza>
+						<Larghezza>
+							<!--una stringa numerica contenente la formula/valore da usare nel campo larghezza-->
+						</Larghezza>
+						<HPeso>
+							<!--una stringa numerica contenente la formula/valore da usare nel campo altezza/peso-->
+						</HPeso>
+						<Quantita>
+							<!--quantità del rigo di misura: tipo di dato numerico (verrà approssimato secondo le specifiche di configurazione).-->
+						</Quantita>
+						<Flags>
+							<!--DWORD (32 bit)
+	bit 0: NEGATIVO;
+	bit 1: PARZIALE;
+	bit 3: SEGNA LIBRO;
+	bit 4: INSERIMENTO CONTO PROVVISORIO;
+	bit 5: DETRAZIONE CONTO PROVVISORIO;
+	bit 15: VEDI VOCE;
+	Settando uno o più bit e possibile settare le proprietà alla voce.-->
+						</Flags>
+					</RGItem>
+				</PweVCMisure>
+			</VCItem>
+		</PweVociComputo>
+	</PweMisurazioni>
+</PweDocumento>
+<!--
+
+
+
+
+
+ATTENZIONE !!!.:
+Quando si compila un file XML, per non generare errori, bisogna evitare di inserire testi contenenti simboli riservati. Per rimediare sono state introdotte le "entità predefinite". Queste entità rappresentano una sequenza di caratteri che definiscono i simboli riservati.
+Pertanto:
+Il carattere &  deve essere sostituito con la sequenza &amp;
+Il carattere <  deve essere sostituito con la sequenza &lt;
+Il carattere >  deve essere sostituito con la sequenza &gt;
+Il carattere '  deve essere sostituito con la sequenza &apos;
+Il carattere "  deve essere sostituito con la sequenza &quot;
+
+Un file XML ben strutturato deve attenersi alle seguenti condizioni:
+1. Include un elemento di livello superiore (elemento principale) ed ogni altro elemento deve essere nidificato all'interno di questo
+2. Gli elementi sono nidificati in modo corretto
+3.Il nome scelto tra i tag deve rispettare l'uso delle maiuscole e minuscole.-->

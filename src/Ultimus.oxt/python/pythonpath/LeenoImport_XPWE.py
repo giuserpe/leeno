@@ -812,15 +812,21 @@ def _totale_lavori(oDoc, nome_foglio):
     _calcola(oDoc)
     oSheet = oDoc.getSheets().getByName(nome_foglio)
     riga = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
-    for cella in (oSheet.getCellByPosition(18, 1), oSheet.getCellByPosition(18, riga)):
+    col_idx = 15 if nome_foglio == 'CONTABILITA' else 18
+    col_letter = 'P' if nome_foglio == 'CONTABILITA' else 'S'
+    for cella in (
+        oSheet.getCellByPosition(col_idx, 1),
+        oSheet.getCellByPosition(col_idx, riga),
+        oSheet.getCellByPosition(0, 1),
+    ):
         valore = _numero_cella(cella)
         if abs(valore) >= 0.01:
             return round(valore, 2)
-    cella = oSheet.getCellByPosition(18, riga)
+    cella = oSheet.getCellByPosition(col_idx, riga)
     formula = cella.Formula
     valore = 0.0
     if riga > 4:
-        cella.Formula = '=SUBTOTAL(9;S4:S%d)' % riga
+        cella.Formula = '=SUBTOTAL(9;%s4:%s%d)' % (col_letter, col_letter, riga)
         _calcola(oDoc)
         valore = _numero_cella(cella)
         if formula:

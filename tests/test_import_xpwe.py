@@ -842,6 +842,109 @@ class TestImportXpwe(unittest.TestCase):
             self.assertEqual(misure[0]['lista_rig'][0][0], 'Tratto A-B')
             self.assertEqual(misure[0]['lista_rig'][0][4], '80')
 
+    # -------------------------------------------------------------------------
+    # 10. _totale_lavori e _scegli_totale_prezzi
+    # -------------------------------------------------------------------------
+    def test_totale_lavori_contabilita(self):
+        oDoc = MagicMock()
+        oSheet = MagicMock()
+        oDoc.getSheets().getByName.return_value = oSheet
+        import LeenoSheetUtils
+        LeenoSheetUtils.cercaUltimaVoce.return_value = 10
+
+        def get_cell(col, row):
+            cell = MagicMock()
+            cell.Formula = ''
+            if col == 15 and row == 1:
+                cell.Value = 634004.07
+            else:
+                cell.Value = 0.0
+            return cell
+
+        oSheet.getCellByPosition.side_effect = get_cell
+
+        tot = self.IMP._totale_lavori(oDoc, 'CONTABILITA')
+        self.assertEqual(tot, 634004.07)
+
+    def test_scegli_totale_prezzi_espone_dialogo_su_contabilita(self):
+        oDoc = MagicMock()
+        oSheet_ep = MagicMock()
+        oSheet_dest = MagicMock()
+
+        oDoc.getSheets().hasByName.side_effect = lambda name: name in ('CONTABILITA', 'Elenco Prezzi')
+        def get_by_name(name):
+            if name == 'CONTABILITA':
+                return oSheet_dest
+            if name == 'Elenco Prezzi':
+                return oSheet_ep
+            return MagicMock()
+        oDoc.getSheets().getByName.side_effect = get_by_name
+
+        import SheetUtils
+        import LeenoSheetUtils
+        SheetUtils.getLastUsedRow.return_value = 5
+        LeenoSheetUtils.cercaUltimaVoce.return_value = 10
+
+        # Elenco Prezzi setup
+        # Tariffa "A.01" alla riga 3
+        # Col 0: Codice "A.01"
+        # Col 4: Prezzo analisi = 100.0, formula = "=ANALISI..."
+        ep_cells = {}
+        cell_a = MagicMock()
+        cell_a.String = 'A.01'
+        cell_a.Formula = ''
+        ep_cells[(0, 3)] = cell_a
+
+        # CONTABILITA setup:
+        # Quando prezzi sono ricalcolati (prezzo=100.0): totale = 634098.45
+        # Quando prezzi file vengono scritti (prezzo=50.0): totale = 634004.07
+        contab_state = {'prezzo_scritto': False, 'val': 100.0}
+
+        class MockPriceCell:
+            String = '100.0'
+            Formula = '=AN1'
+
+            @property
+            def Value(self):
+                return contab_state['val']
+
+            @Value.setter
+            def Value(self, v):
+                contab_state['prezzo_scritto'] = True
+                contab_state['val'] = v
+
+        cell_p = MockPriceCell()
+        ep_cells[(4, 3)] = cell_p
+
+        oSheet_ep.getCellByPosition.side_effect = lambda col, row: ep_cells.get((col, row), MagicMock(String='', Value=0.0, Formula=''))
+
+        def get_contab_cell(col, row):
+            c = MagicMock()
+            c.Formula = ''
+            if col == 15 and row == 1:
+                c.Value = 634004.07 if contab_state['prezzo_scritto'] else 634098.45
+            else:
+                c.Value = 0.0
+            return c
+
+        oSheet_dest.getCellByPosition.side_effect = get_contab_cell
+
+        elencoPrezzi = {
+            'ListaAnalisi': [
+                ['A.01', 'Desc', 'cad', [], '50.0']  # Prezzo da file = 50.0 (diverso da 100.0)
+            ]
+        }
+
+        self.mock_dialogs.YesNoDialog.return_value = 1  # Sì, mantieni file origine
+
+        self.IMP._scegli_totale_prezzi(oDoc, 'CONTABILITA', elencoPrezzi)
+
+        self.mock_dialogs.YesNoDialog.assert_called_once()
+        dialog_kwargs = self.mock_dialogs.YesNoDialog.call_args[1]
+        self.assertEqual(dialog_kwargs['Title'], 'Totali diversi')
+        self.assertIn('634.098,45', dialog_kwargs['Text'])
+        self.assertIn('634.004,07', dialog_kwargs['Text'])
+
 
 if __name__ == '__main__':
     unittest.main()

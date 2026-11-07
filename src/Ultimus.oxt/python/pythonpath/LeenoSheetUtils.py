@@ -1226,27 +1226,66 @@ def riepilogo_quantita():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-
-    if oSheet.Name == 'CONTABILITA':
+    is_contab = (oSheet.Name == 'CONTABILITA')
+    if is_contab:
+        col_start, col_end = 38, 40
+        s_string = 'T O T A L E'
+        header_cells = ("AM3", "AN3", "AO3", "AM3:AO3")
         QUANTITA_COL = {
             'COMPUTO': (38, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
             'VARIANTE': (39, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
             'CONTABILITA': (40, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))')
         }
-        oSheet.getCellRangeByName("AM3").String = "Quantità\nComputo"
-        oSheet.getCellRangeByName("AN3").String = "Quantità\nVariante"
-        oSheet.getCellRangeByName("AO3").String = "Quantità\nContabilità"
-        oSheet.getCellRangeByName("AM3:AO3").CellStyle = "comp Int_colonna"
     else:
+        col_start, col_end = 44, 46
+        s_string = 'TOTALI COMPUTO'
+        header_cells = ("AS3", "AT3", "AU3", "AS3:AU3")
         QUANTITA_COL = {
             'COMPUTO': (44, '=LET(_s; SUMIF(AA; B{n}; BB); IF(_s; _s; "--"))'),
             'VARIANTE': (45, '=LET(_s; SUMIF(varAA; B{n}; varBB);IFERROR(IF(_s; _s; "--"); "--"))'),
             'CONTABILITA': (46, '=LET(_s; SUMIF(GG; B{n}; G1G1);IFERROR(IF(_s; _s; "--"); "--"))')
         }
-        oSheet.getCellRangeByName("AS3").String = "Quantità\nComputo"
-        oSheet.getCellRangeByName("AT3").String = "Quantità\nVariante"
-        oSheet.getCellRangeByName("AU3").String = "Quantità\nContabilità"
-        oSheet.getCellRangeByName("AS3:AU3").CellStyle = "comp Int_colonna"
+
+    # Determinazione riga del totale
+    riga_totale = SheetUtils.uFindStringCol(s_string, 2, oSheet, start=2, equal=1, up=True)
+    if riga_totale is None:
+        riga_totale = cercaUltimaVoce(oSheet) + 1
+
+    # Verifica se l'area interessata contiene già dei dati
+    if not _riepilogo_quantita_attivo(oSheet):
+        start_check_row = 2
+        area_range = oSheet.getCellRangeByPosition(col_start, start_check_row, col_end, riga_totale)
+        contiene_dati = False
+        try:
+            flags = VALUE | DATETIME | STRING | FORMULA
+            content_cells = area_range.queryContentCells(flags)
+            contiene_dati = content_cells.getCount() > 0
+        except Exception:
+            data = area_range.getDataArray()
+            contiene_dati = any(
+                val not in ("", 0, 0.0, None)
+                for row_data in data
+                for val in row_data
+            )
+
+        if contiene_dati:
+            try:
+                addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+                addr.Sheet = oSheet.RangeAddress.Sheet
+                addr.StartColumn = col_start
+                addr.EndColumn = col_end
+                addr.StartRow = start_check_row
+                addr.EndRow = riga_totale
+                # Sposta verso destra inserendo nuove celle
+                insert_mode = uno.Enum("com.sun.star.sheet.CellInsertMode", "RIGHT") if hasattr(uno, 'Enum') else 2
+                oSheet.insertCells(addr, insert_mode)
+            except Exception as _exc:
+                LeenoUtils.log_errore('riepilogo_quantita: shift celle verso destra', _exc)
+
+    oSheet.getCellRangeByName(header_cells[0]).String = "Quantità\nComputo"
+    oSheet.getCellRangeByName(header_cells[1]).String = "Quantità\nVariante"
+    oSheet.getCellRangeByName(header_cells[2]).String = "Quantità\nContabilità"
+    oSheet.getCellRangeByName(header_cells[3]).CellStyle = "comp Int_colonna"
 
     row = prossimaVoce(oSheet, 0, 1, True)
     last = cercaUltimaVoce(oSheet) 

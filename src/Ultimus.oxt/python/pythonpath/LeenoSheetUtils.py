@@ -211,6 +211,16 @@ def getColumnWidths(oSheet):
 
     return config
 
+def ottimizza_altezza_celle():
+    oDoc = LeenoUtils.getDocument()
+    import LeenoSheetUtils
+    for el in ("Elenco Prezzi", "COMPUTO", "VARIANTE", "CONTABILITA", "Analisi di Prezzo"):
+        if oDoc.Sheets.hasByName(el):
+            oSheet = oDoc.getSheets().getByName(el)
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoUtils.DocumentRefresh(True)
+    return
+
 def optimize_visibility_string(s):
     '''Compatta la stringa di visibilità per colonne consecutive'''
     from itertools import groupby

@@ -1263,6 +1263,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
     return voci_senza_tariffa
 
+@LeenoUtils.release_ram
 def MENU_XPWE_import(filename = None):
     '''Avvia il processo interattivo di importazione di un file XPWE o DCF.'''
     try:
@@ -1286,11 +1287,7 @@ def MENU_XPWE_import(filename = None):
         dcf_parser.import_generated_xpwe()
         return
 
-    # with LeenoUtils.DocumentRefreshContext(False):
     XPWE_import(filename = None)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 def XPWE_import(filename = None):
     '''
@@ -1509,7 +1506,6 @@ def XPWE_import(filename = None):
         Dialogs.Ok(Text=ok_msg)
         if 'giuserpe' not in os.getlogin():
             PL.dlg_donazioni()
-
     except Exception as e:
         Dialogs.Exclamation(Title="Errore Critico",
                             Text=f"L'importazione si è interrotta a causa di un errore imprevisto ({type(e).__name__}):\n{str(e)}")
@@ -1518,3 +1514,4 @@ def XPWE_import(filename = None):
         LeenoUtils.DocumentRefresh(True)
         if indicator:
             indicator.end()
+    LeenoSheetUtils.ottimizza_altezza_celle()

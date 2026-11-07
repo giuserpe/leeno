@@ -452,6 +452,26 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-07 12:23</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5873d83083e3923d81504eb05139c4e609988c4f" target="_blank" rel="noopener"><code>5873d83</code></a></td>
+                <td class="commit-msg">Merge pull request #128 from giuserpe/fix-totale-lavori-contabilita-xpwe-4167457734448002064
+
+Fix: mostra dialogo Totali diversi nell'importazione in CONTABILITA</td>
+            </tr>
+            <tr>
+                <td>2026-11-06 22:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/1c0f38ae51ed0660e30db9d0384f93d9052ac2e5" target="_blank" rel="noopener"><code>1c0f38a</code></a></td>
+                <td class="commit-msg">fix(import): corregge lettura totale lavori in contabilità per dialogo totali diversi
+
+In LeenoImport_XPWE._totale_lavori, la colonna del totale lavori in
+CONTABILITA è la colonna P (indice 15) anziché la colonna S (indice 18)
+usata in COMPUTO/VARIANTE. Questo impediva il corretto calcolo del totale
+dei lavori durante l'importazione in CONTABILITA e impediva la comparsa
+del dialogo "Totali diversi" anche in presenza di scarto diverso da zero.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-11-06 20:58</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/bae0665db94505261dfa4a38c06ce9718cbb0d36" target="_blank" rel="noopener"><code>bae0665</code></a></td>
                 <td class="commit-msg">feat(import): confronta totali analisi/file e migliora parsing analisi DCF
@@ -465,16 +485,6 @@
   mappa IdEP=0 → -2 e riduce i falsi allarmi di corruzione
 - Test: copertura analisi DCF/XPWE e formattazione `_fmt_euro`
 - Bump versione a 3.26.0.176-TESTING-20261106</td>
-            </tr>
-            <tr>
-                <td>2026-11-06 17:02</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d9d1a7b81b8b6844e21405ca6501d0c1e93e2af3" target="_blank" rel="noopener"><code>d9d1a7b</code></a></td>
-                <td class="commit-msg">fix(template): rimuove area crediti obsoleta da copyright_LeenO in adegua_tmpl</td>
-            </tr>
-            <tr>
-                <td>2026-11-06 12:52</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d9b34c07b276f08fee5eeeb469ddd118c8d6530d" target="_blank" rel="noopener"><code>d9b34c0</code></a></td>
-                <td class="commit-msg">docs(core): corregge LESSONS_DCF e segnala come non verificata l'ipotesi DRM</td>
             </tr>
                     </tbody>
                 </table>
@@ -498,8 +508,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-06 20:59 UTC</p>
-                <p>Build Commit: <code>bae0665</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-07 12:23 UTC</p>
+                <p>Build Commit: <code>5873d83</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

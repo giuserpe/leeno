@@ -452,6 +452,15 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-07 15:05</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a13d17cbb827772c82a193d1108d73a82819efdc" target="_blank" rel="noopener"><code>a13d17c</code></a></td>
+                <td class="commit-msg">refactor(xpwe): ottimizzazione gestione memoria e altezza righe nei fogli di lavoro
+
+- Aggiunto il decoratore `@LeenoUtils.release_ram` alla funzione `MENU_XPWE_import` per ottimizzare l'uso della memoria RAM.
+- Introdotta la funzione centralizzata `ottimizza_altezza_celle` in `LeenoSheetUtils` per automatizzare l'adattamento dell'altezza delle righe nei fogli principali ("Elenco Prezzi", "COMPUTO", "VARIANTE", "CONTABILITA", "Analisi di Prezzo").
+- Semplificato il flusso di importazione XPWE rimuovendo la logica ridondante e delegandola alla nuova funzione centralizzata.</td>
+            </tr>
+            <tr>
                 <td>2026-11-07 12:23</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5873d83083e3923d81504eb05139c4e609988c4f" target="_blank" rel="noopener"><code>5873d83</code></a></td>
                 <td class="commit-msg">Merge pull request #128 from giuserpe/fix-totale-lavori-contabilita-xpwe-4167457734448002064
@@ -470,21 +479,6 @@ dei lavori durante l'importazione in CONTABILITA e impediva la comparsa
 del dialogo "Totali diversi" anche in presenza di scarto diverso da zero.
 
 Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
-            </tr>
-            <tr>
-                <td>2026-11-06 20:58</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/bae0665db94505261dfa4a38c06ce9718cbb0d36" target="_blank" rel="noopener"><code>bae0665</code></a></td>
-                <td class="commit-msg">feat(import): confronta totali analisi/file e migliora parsing analisi DCF
-
-- In XPWE_import: se i prezzi ricalcolati dalle analisi differiscono da
-  quelli del file, chiede se mantenere i prezzi di origine o quelli
-  ricalcolati (dialogo "Totali diversi")
-- Aggiunti helper per formattazione euro, lettura codici EP, totali lavori
-  e ripristino formule di prezzo
-- In dcf_parser: estrae correttamente le analisi (CollectionAN/ItemAN),
-  mappa IdEP=0 → -2 e riduce i falsi allarmi di corruzione
-- Test: copertura analisi DCF/XPWE e formattazione `_fmt_euro`
-- Bump versione a 3.26.0.176-TESTING-20261106</td>
             </tr>
                     </tbody>
                 </table>
@@ -508,8 +502,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-07 12:23 UTC</p>
-                <p>Build Commit: <code>5873d83</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-07 15:05 UTC</p>
+                <p>Build Commit: <code>a13d17c</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

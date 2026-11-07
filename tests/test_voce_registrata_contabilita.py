@@ -177,10 +177,16 @@ class TestVoceRegistrataContabilita(unittest.TestCase):
         ns_sheetutils = {
             "PL": self.mock_pl,
             "LeenoUtils": self.mock_utils,
+            "SheetUtils": self.mock_sheet_utils,
             "with_undo": lambda fn: fn,
             "prossimaVoce": MagicMock(),
             "cercaUltimaVoce": MagicMock(),
             "cancella_riepilogo_quantita": MagicMock(),
+            "_riepilogo_quantita_attivo": MagicMock(return_value=False),
+            "VALUE": 1,
+            "DATETIME": 2,
+            "STRING": 4,
+            "FORMULA": 16,
         }
         # Mock release_ram e no_refresh
         self.mock_utils.release_ram = lambda fn: fn

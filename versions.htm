@@ -452,6 +452,25 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-07 15:44</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/bda4cb9adf44c8a49cd69d6606d7cbcd2297138e" target="_blank" rel="noopener"><code>bda4cb9</code></a></td>
+                <td class="commit-msg">Merge pull request #129 from giuserpe/jules-18365075996773537878-c994091f
+
+fix LeenoSheetUtils.riepilogo_quantita: sposta a destra dati esistenti</td>
+            </tr>
+            <tr>
+                <td>2026-11-07 15:43</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/bab153d9bac8826e5017857996ec2d13e2bf24db" target="_blank" rel="noopener"><code>bab153d</code></a></td>
+                <td class="commit-msg">fix(core): sposta verso destra celle con dati in riepilogo_quantita
+
+In LeenoSheetUtils.riepilogo_quantita, se l'area interessata (colonne 38-40
+in CONTABILITA e colonne 44-46 in COMPUTO, fino alla riga del totale)
+contiene dati, sposta l'area verso destra inserendo nuove celle prima di
+scrivere intestazioni e formule dei riepiloghi.
+
+Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
+            </tr>
+            <tr>
                 <td>2026-11-07 15:05</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/a13d17cbb827772c82a193d1108d73a82819efdc" target="_blank" rel="noopener"><code>a13d17c</code></a></td>
                 <td class="commit-msg">refactor(xpwe): ottimizzazione gestione memoria e altezza righe nei fogli di lavoro
@@ -459,26 +478,6 @@
 - Aggiunto il decoratore `@LeenoUtils.release_ram` alla funzione `MENU_XPWE_import` per ottimizzare l'uso della memoria RAM.
 - Introdotta la funzione centralizzata `ottimizza_altezza_celle` in `LeenoSheetUtils` per automatizzare l'adattamento dell'altezza delle righe nei fogli principali ("Elenco Prezzi", "COMPUTO", "VARIANTE", "CONTABILITA", "Analisi di Prezzo").
 - Semplificato il flusso di importazione XPWE rimuovendo la logica ridondante e delegandola alla nuova funzione centralizzata.</td>
-            </tr>
-            <tr>
-                <td>2026-11-07 12:23</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5873d83083e3923d81504eb05139c4e609988c4f" target="_blank" rel="noopener"><code>5873d83</code></a></td>
-                <td class="commit-msg">Merge pull request #128 from giuserpe/fix-totale-lavori-contabilita-xpwe-4167457734448002064
-
-Fix: mostra dialogo Totali diversi nell'importazione in CONTABILITA</td>
-            </tr>
-            <tr>
-                <td>2026-11-06 22:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/1c0f38ae51ed0660e30db9d0384f93d9052ac2e5" target="_blank" rel="noopener"><code>1c0f38a</code></a></td>
-                <td class="commit-msg">fix(import): corregge lettura totale lavori in contabilità per dialogo totali diversi
-
-In LeenoImport_XPWE._totale_lavori, la colonna del totale lavori in
-CONTABILITA è la colonna P (indice 15) anziché la colonna S (indice 18)
-usata in COMPUTO/VARIANTE. Questo impediva il corretto calcolo del totale
-dei lavori durante l'importazione in CONTABILITA e impediva la comparsa
-del dialogo "Totali diversi" anche in presenza di scarto diverso da zero.
-
-Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
             </tr>
                     </tbody>
                 </table>
@@ -502,8 +501,8 @@ Co-authored-by: giuserpe <5587872+giuserpe@users.noreply.github.com></td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-07 15:05 UTC</p>
-                <p>Build Commit: <code>a13d17c</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-07 15:45 UTC</p>
+                <p>Build Commit: <code>bda4cb9</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

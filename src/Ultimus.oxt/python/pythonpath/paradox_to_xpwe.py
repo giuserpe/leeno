@@ -292,8 +292,10 @@ def _parse_ep_record(rec: bytes, data_mb: bytes,
         inc_mdo = _read_number(rec, schema['incmdo'][0]) if 'incmdo' in schema else 0.0
         inc_sic = _read_number(rec, schema['incsic'][0]) if 'incsic' in schema else 0.0
 
+        cuep = _read_long(rec, schema['cuep'][0]) if 'cuep' in schema else 0
         return {
             'tariffa':     trf,
+            'cuep':        cuep,
             'articolo':    art,
             'des_ridotta': des_rid,
             'des_estesa':  des_est,
@@ -387,71 +389,165 @@ _VC_SKIP = 2
 
 def read_vc_table(db_path: str, ep_list: list[dict]) -> list[dict[str, Any]]:
     """
-    Legge la tabella voci computo (_V*.DB).
-    Mappa i riferimenti EP tramite indice ordinale (con auto-rilevamento offset).
+    Legge la tabella voci computo (_V*.DB o _B*.DB).
+    Mappa i riferimenti EP tramite identificativo relazionale CuEP (o ordine ordinale di fallback).
     """
     data    = open(db_path, 'rb').read()
+    mb_path = db_path.replace('.DB', '.MB')
+    data_mb = open(mb_path, 'rb').read() if os.path.exists(mb_path) else b''
+    mb_index = _parse_mb_file(data_mb)
     rec_size, hdr_size, block_size = _pdx_params(data)
-    _log(f'VC: {db_path}  rec_size={rec_size}  hdr_size={hdr_size}  block_size={block_size}')
+    schema_v = _get_pdx_field_offsets(data, hdr_size)
+    _log(f'VC: {db_path}  rec_size={rec_size}  hdr_size={hdr_size}  block_size={block_size}  fields={len(schema_v)}')
 
-    # Leggi ordine di inserimento degli EP nel file (diverso dall'ordine per tariffa)
-    ep_db_path  = db_path.replace('_V', '_E')
-    ep_data     = open(ep_db_path, 'rb').read()
-    ep_mb_path  = ep_db_path.replace('.DB', '.MB')
-    ep_data_mb  = open(ep_mb_path, 'rb').read() if os.path.exists(ep_mb_path) else b''
-    ep_mb_index = _parse_mb_file(ep_data_mb)
-    ep_rec_size, ep_hdr_size, ep_block_size = _pdx_params(ep_data)
-    ep_schema   = _get_pdx_field_offsets(ep_data, ep_hdr_size)
+    # Mappa CuEP -> ep['id'] per join relazionale diretto
+    cuep_to_id: dict[int, int] = {ep['cuep']: ep['id'] for ep in ep_list if ep.get('cuep')}
 
-    trf_to_id = {ep['tariffa']: ep['id'] for ep in ep_list}
-    ep_ordinal: dict[int, int] = {}  # ordine lettura -> ep_id
-    idx = 0
-    for rec in _iter_blocks(ep_data, ep_rec_size, ep_hdr_size, ep_block_size):
-        row = _parse_ep_record(rec, ep_data_mb, schema=ep_schema, mb_index=ep_mb_index)
-        if not row:
-            continue
-        idx += 1
-        ep_id = trf_to_id.get(row['tariffa'], 0)
-        if ep_id:
-            ep_ordinal[idx] = ep_id
-
-    # Raccoglie tutti i ref dal file VC
-    raw_refs: list[tuple[int, int, float, float]] = []  # (id_vc, ref, qt, imp)
-    for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
-        s = _VC_SKIP
-        id_vc = _read_long(rec, s+0)
-        ref   = _read_long(rec, s+4)
-        if not id_vc:
-            continue
-        qt  = _read_number(rec, s+8)
-        imp = _read_number(rec, s+16)
-        raw_refs.append((id_vc, ref, qt, imp))
-
-    # Auto-rileva offset (i ref partono tipicamente da 7 = primo EP reale)
-    valid_refs = [ref for _, ref, _, _ in raw_refs if 0 < ref <= len(ep_ordinal) + 20]
-    offset = min(valid_refs) - 1 if valid_refs else 0
-    _log(f'VC: offset rilevato={offset}  record totali={len(raw_refs)}')
+    # Fallback ordinale per tabelle senza CuEP / test sintetici
+    ep_ordinal: dict[int, int] = {}
+    if not cuep_to_id:
+        ep_db_path = None
+        for prefix in ('_V', '_B'):
+            if prefix in os.path.basename(db_path):
+                ep_db_path = os.path.join(os.path.dirname(db_path), os.path.basename(db_path).replace(prefix, '_E', 1))
+                break
+        if ep_db_path and os.path.exists(ep_db_path):
+            ep_data     = open(ep_db_path, 'rb').read()
+            ep_mb_path  = ep_db_path.replace('.DB', '.MB')
+            ep_data_mb  = open(ep_mb_path, 'rb').read() if os.path.exists(ep_mb_path) else b''
+            ep_mb_index = _parse_mb_file(ep_data_mb)
+            ep_rec_size, ep_hdr_size, ep_block_size = _pdx_params(ep_data)
+            ep_schema   = _get_pdx_field_offsets(ep_data, ep_hdr_size)
+            trf_to_id   = {ep['tariffa']: ep['id'] for ep in ep_list}
+            idx = 0
+            for rec in _iter_blocks(ep_data, ep_rec_size, ep_hdr_size, ep_block_size):
+                row = _parse_ep_record(rec, ep_data_mb, schema=ep_schema, mb_index=ep_mb_index)
+                if not row:
+                    continue
+                idx += 1
+                ep_id = trf_to_id.get(row['tariffa'], 0)
+                if ep_id:
+                    ep_ordinal[idx] = ep_id
 
     vc_list: list[dict] = []
-    for i, (id_vc, ref, qt, imp) in enumerate(raw_refs, 1):
-        ordinal = ref - offset
-        ep_id   = ep_ordinal.get(ordinal, 0)
-        vc_list.append({
-            'id':       i,
-            'id_ep':    ep_id,
-            'quantita': qt,
-            'importo':  imp,
-            'data_mis': '',
-            'id_spcal': 0,
-            'id_cat':   0,
-            'id_sbcat': 0,
-            'flags':    0,
-            'misure':   [],
-            'cod_wbs':  '',
-        })
+    if schema_v and 'cuvc' in schema_v and 'cuep' in schema_v:
+        off_vc   = schema_v['cuvc'][0]
+        off_ep   = schema_v['cuep'][0]
+        off_qt   = schema_v.get('quantita', (12, 8, 6))[0]
+        off_mis  = schema_v.get('misure', (48, 10, 13))[0] if 'misure' in schema_v else None
+        len_mis  = schema_v.get('misure', (48, 10, 13))[1] if 'misure' in schema_v else 10
+        off_sp   = schema_v.get('supercategoria', (38, 2, 3))[0] if 'supercategoria' in schema_v else None
+        off_cat  = schema_v.get('categoria', (40, 2, 3))[0] if 'categoria' in schema_v else None
+        off_sb   = schema_v.get('subcategoria', (42, 2, 3))[0] if 'subcategoria' in schema_v else None
+        off_dt   = schema_v.get('datamis', (20, 4, 2))[0] if 'datamis' in schema_v else None
 
-    mapped = sum(1 for v in vc_list if v['id_ep'] > 0)
-    _log(f'VC: {len(vc_list)} voci  mappate={mapped}')
+        for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
+            id_vc = _read_long(rec, off_vc)
+            ref_ep = _read_long(rec, off_ep)
+            if not id_vc or not ref_ep:
+                continue
+
+            ep_id = cuep_to_id.get(ref_ep, 0)
+            if not ep_id:
+                continue
+
+            qt = _read_number(rec, off_qt)
+            misure_txt = _read_memo(data_mb, rec[off_mis:off_mis+len_mis], mb_index=mb_index) if off_mis else ''
+
+            spcat = (struct.unpack_from('>H', rec, off_sp)[0] ^ 0x8000) if off_sp and off_sp + 2 <= len(rec) else 0
+            cat   = (struct.unpack_from('>H', rec, off_cat)[0] ^ 0x8000) if off_cat and off_cat + 2 <= len(rec) else 0
+            sbcat = (struct.unpack_from('>H', rec, off_sb)[0] ^ 0x8000) if off_sb and off_sb + 2 <= len(rec) else 0
+
+            misure: list[dict[str, Any]] = []
+            if misure_txt:
+                for line in misure_txt.splitlines():
+                    l_str = line.strip()
+                    if not l_str:
+                        continue
+                    misure.append({
+                        'id':          len(misure) + 1,
+                        'rif_voce':    -2,
+                        'descrizione': l_str,
+                        'pu':          '',
+                        'lu':          '',
+                        'la':          '',
+                        'hp':          '',
+                        'qt':          qt if not misure else 0.0,
+                        'flags':       0,
+                    })
+
+            if not misure:
+                misure.append({
+                    'id':          1,
+                    'rif_voce':    -2,
+                    'descrizione': '',
+                    'pu':          '',
+                    'lu':          '',
+                    'la':          '',
+                    'hp':          '',
+                    'qt':          qt,
+                    'flags':       0,
+                })
+
+            vc_list.append({
+                'id':       len(vc_list) + 1,
+                'id_ep':    ep_id,
+                'quantita': qt,
+                'importo':  0.0,
+                'data_mis': '',
+                'id_spcal': spcat,
+                'id_cat':   cat,
+                'id_sbcat': sbcat,
+                'flags':    0,
+                'misure':   misure,
+                'cod_wbs':  '',
+            })
+    else:
+        # Percorso di compatibilità per tabelle senza schema (es. test sintetici)
+        raw_refs: list[tuple[int, int, float, float]] = []
+        for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
+            s = _VC_SKIP
+            id_vc = _read_long(rec, s+0)
+            ref   = _read_long(rec, s+4)
+            if not id_vc:
+                continue
+            qt  = _read_number(rec, s+8)
+            imp = _read_number(rec, s+16)
+            raw_refs.append((id_vc, ref, qt, imp))
+
+        valid_refs = [ref for _, ref, _, _ in raw_refs if 0 < ref <= len(ep_ordinal) + 20]
+        offset = min(valid_refs) - 1 if valid_refs else 0
+
+        for (id_vc, ref, qt, imp) in raw_refs:
+            ordinal = ref - offset
+            ep_id   = ep_ordinal.get(ordinal, 0)
+            if ep_id > 0:
+                vc_list.append({
+                    'id':       len(vc_list) + 1,
+                    'id_ep':    ep_id,
+                    'quantita': qt,
+                    'importo':  imp,
+                    'data_mis': '',
+                    'id_spcal': 0,
+                    'id_cat':   0,
+                    'id_sbcat': 0,
+                    'flags':    0,
+                    'misure':   [{
+                        'id':          1,
+                        'rif_voce':    -2,
+                        'descrizione': '',
+                        'pu':          '',
+                        'lu':          '',
+                        'la':          '',
+                        'hp':          '',
+                        'qt':          qt,
+                        'flags':       0,
+                    }],
+                    'cod_wbs':  '',
+                })
+
+    mapped = len(vc_list)
+    _log(f'VC: {mapped} voci computo valide estratte da {db_path}')
     return vc_list
 
 
@@ -518,6 +614,7 @@ def paradox_to_xpwe(folder: str, output_xpwe: str | None = None,
 
     db_e   = find_db('_E')
     db_v   = find_db('_V')
+    db_b   = find_db('_B')
     db_hdr = find_db('__')
 
     if not db_e:
@@ -536,11 +633,18 @@ def paradox_to_xpwe(folder: str, output_xpwe: str | None = None,
     ep_list = read_ep_table(db_e)
 
     vc_list: list[dict] = []
-    if db_v and os.path.exists(db_v):
-        _log(f'Lettura VC da {db_v}')
-        vc_list = read_vc_table(db_v, ep_list)
-    else:
-        _log('File _V*.DB non trovato — computo vuoto')
+    # In PriMus: _B = Computo Base, _V = Computo Variante
+    # Controlla entrambe le tabelle raccogliendo le voci computo valide
+    for cand_db in (db_b, db_v):
+        if cand_db and os.path.exists(cand_db):
+            _log(f'Lettura computo da {cand_db}')
+            items = read_vc_table(cand_db, ep_list)
+            if items:
+                vc_list.extend(items)
+
+    # Riassegna identificatori sequenziali alle voci di computo
+    for i, vc in enumerate(vc_list, 1):
+        vc['id'] = i
 
     info: dict[str, str] = {}
     if db_hdr and os.path.exists(db_hdr):

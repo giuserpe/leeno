@@ -322,5 +322,60 @@ class TestPdxTablesAndParams(unittest.TestCase):
         self.assertEqual(vc['importo'], 1255.0)
 
 
+class TestParadoxDatasetRistrutturazione(unittest.TestCase):
+    """Test di caratterizzazione e integrazione sull'archivio reale ristrutturazione."""
+
+    def setUp(self):
+        self.folder = os.path.join(os.path.dirname(__file__), 'data', 'ristrutturazione')
+        self.ep_db_path = os.path.join(self.folder, '_Eristrutturazione.DB')
+
+    def test_pdx_params_multi_block(self):
+        data = open(self.ep_db_path, 'rb').read()
+        rec_size, hdr_size, block_size = paradox_to_xpwe._pdx_params(data)
+        self.assertEqual(rec_size, 546)
+        self.assertEqual(hdr_size, 4096)
+        self.assertEqual(block_size, 2048)
+
+    def test_read_ep_table_ristrutturazione(self):
+        ep_list = paradox_to_xpwe.read_ep_table(self.ep_db_path)
+        self.assertEqual(len(ep_list), 18)
+
+        voci_per_trf = {item['tariffa']: item for item in ep_list}
+        self.assertIn('01-02-03a', voci_per_trf)
+        self.assertIn('01-02-13b', voci_per_trf)
+        self.assertIn('01-02-22a', voci_per_trf)
+        self.assertIn('01-04-11b', voci_per_trf)
+
+        item_03a = voci_per_trf['01-02-03a']
+        self.assertEqual(item_03a['um'], 'mq')
+        self.assertEqual(item_03a['prezzo'], 7.83)
+        self.assertEqual(item_03a['articolo'], 'I-02-03a')
+        self.assertTrue(item_03a['des_estesa'].startswith('Demolizione di tramezzi in mattoni pieni o forati'))
+
+        item_13b = voci_per_trf['01-02-13b']
+        self.assertEqual(item_13b['um'], 'ml')
+        self.assertEqual(item_13b['prezzo'], 3.05)
+
+        item_22a = voci_per_trf['01-02-22a']
+        self.assertEqual(item_22a['um'], 'cad')
+        self.assertEqual(item_22a['prezzo'], 12.47)
+
+    def test_paradox_to_xpwe_generation(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_xpwe = os.path.join(tmp_dir, 'ristrutturazione.xpwe')
+            res = paradox_to_xpwe.paradox_to_xpwe(self.folder, out_xpwe, lire_to_euro=False)
+            self.assertEqual(res, out_xpwe)
+            self.assertTrue(os.path.exists(out_xpwe))
+
+            with open(out_xpwe, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            self.assertIn('<PweDocumento>', content)
+            self.assertIn('<Versione>5.05</Versione>', content)
+            self.assertIn('01-02-03a', content)
+            self.assertIn('01-04-11b', content)
+            self.assertIn('Demolizione di tramezzi', content)
+
+
 if __name__ == '__main__':
     unittest.main()

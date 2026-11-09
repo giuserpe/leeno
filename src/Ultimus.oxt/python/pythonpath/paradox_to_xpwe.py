@@ -95,17 +95,59 @@ def _read_long(rec: bytes, off: int) -> int:
     return (v ^ 0x80000000) if v else 0
 
 
-def _read_memo(data_mb: bytes, raw10: bytes) -> str:
+def _parse_mb_file(data_mb: bytes) -> dict[tuple[int, int], bytes]:
+    """
+    Analizza un file memo Paradox .MB indicizzato a blocchi.
+    Restituisce un dizionario con chiave (block_index, entry_id) e valore bytes del testo.
+    """
+    if len(data_mb) < 4096:
+        return {}
+    blk_size = data_mb[12] * 256 if len(data_mb) > 13 and data_mb[12] > 0 else 4096
+    if blk_size <= 0:
+        blk_size = 4096
+
+    memos: dict[tuple[int, int], bytes] = {}
+    n_blocks = len(data_mb) // blk_size
+    for b in range(1, n_blocks):
+        blk_off = b * blk_size
+        max_idx_off = min(blk_off + 336, len(data_mb))
+        for p in range(blk_off + 16, max_idx_off - 4):
+            chunk_off = data_mb[p]
+            chunk_cnt = data_mb[p+1]
+            entry_id  = data_mb[p+2] + (data_mb[p+3] << 8)
+            if 0 < entry_id < 2000 and 0 < chunk_off < 256 and 0 < chunk_cnt < 256:
+                text_off = blk_off + chunk_off * 16
+                text_end = text_off + chunk_cnt * 16
+                if text_end <= len(data_mb):
+                    cand = data_mb[text_off:text_end]
+                    if any(32 <= c <= 126 for c in cand[:10]):
+                        memos[(b, entry_id)] = cand
+    return memos
+
+
+def _read_memo(data_mb: bytes, raw10: bytes,
+               mb_index: dict[tuple[int, int], bytes] | None = None) -> str:
     """
     Legge un campo FmtMemo Paradox dal file .MB.
     raw10: 10 byte del campo nel record DB.
-      byte 0-3: offset assoluto nel file MB (LE u32)
-      byte 4-5: modifier (LE u16)
-      byte 6-7: lunghezza blob (LE u16)
-      byte 8-9: riservato
+    Supporta sia gli archivi indicizzati per blocchi sia i blob con offset diretto.
     """
     if len(raw10) < 10:
         return ''
+
+    # Prova lettura tramite indice di blocco
+    if mb_index:
+        b_idx = raw10[1] // 16 if raw10[1] else 0
+        eid   = raw10[8] + (raw10[9] << 8)
+        mlen  = raw10[4] + (raw10[5] << 8)
+        if (b_idx, eid) in mb_index:
+            raw = mb_index[(b_idx, eid)]
+            txt = raw[:mlen].decode('cp1252', errors='replace').strip() if mlen else (
+                raw.split(b'\x00')[0].decode('cp1252', errors='replace').strip()
+            )
+            return re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', txt)
+
+    # Fallback su offset diretto nel file MB
     blob_off = struct.unpack_from('<I', raw10, 0)[0]
     blob_len = struct.unpack_from('<H', raw10, 6)[0]
     if not blob_off or not blob_len:
@@ -120,15 +162,16 @@ def _read_memo(data_mb: bytes, raw10: bytes) -> str:
 def _iter_blocks(data: bytes, rec_size: int, hdr_size: int, block_size: int):
     """
     Itera su tutti i record Paradox di un file .DB.
-    Ogni blocco ha 4 byte di header ([next_block u16][n_recs u8][?])
-    seguiti dai record consecutivi.
+    Determina la dimensione dell'header di blocco (4 byte in Paradox 3.5 o 6 byte in Paradox 4.0+)
+    ed estrae i record.
     """
-    recs_per_block = (block_size - 4) // rec_size
+    blk_hdr_size = 6 if hdr_size >= 2048 else 4
+    recs_per_block = (block_size - blk_hdr_size) // rec_size
     n_blocks = (len(data) - hdr_size) // block_size
     for blk in range(n_blocks):
         blk_off = hdr_size + blk * block_size
         for r in range(recs_per_block):
-            rec_off = blk_off + 4 + r * rec_size
+            rec_off = blk_off + blk_hdr_size + r * rec_size
             if rec_off + rec_size > len(data):
                 break
             yield data[rec_off:rec_off+rec_size]
@@ -137,61 +180,143 @@ def _iter_blocks(data: bytes, rec_size: int, hdr_size: int, block_size: int):
 def _pdx_params(data: bytes) -> tuple[int, int, int]:
     """
     Restituisce (rec_size, hdr_size, block_size) dal file .DB Paradox.
-    block_size = ((max_table_size + 1) * 512) arrotondato al record_size.
+    Calcola block_size basandosi sui blocchi totali nel file o sul codice max_table_size.
     """
-    rec_size  = struct.unpack_from('<H', data, 0x00)[0]
-    hdr_size  = struct.unpack_from('<H', data, 0x02)[0]
-    max_tbl   = data[0x05]
-    # block_size: usa la formula standard, poi verifica con file_size
-    block_size = (max_tbl + 1) * 512
-    # Normalizza: deve essere multiplo di rec_size + 4
+    rec_size = struct.unpack_from('<H', data, 0x00)[0]
+    hdr_size = struct.unpack_from('<H', data, 0x02)[0]
+    max_tbl  = data[0x05]
+    total_blocks = struct.unpack_from('<H', data, 0x0C)[0] if len(data) >= 0x0E else 0
+
+    if total_blocks > 0 and len(data) > hdr_size and (len(data) - hdr_size) % total_blocks == 0:
+        block_size = (len(data) - hdr_size) // total_blocks
+    else:
+        block_size = (max_tbl + 1) * 512
+
     if block_size < rec_size + 4:
-        block_size = rec_size + 4 + rec_size  # minimo 2 record
+        block_size = rec_size + 4 + rec_size
     return rec_size, hdr_size, block_size
+
+
+def _get_pdx_field_offsets(data: bytes, hdr_size: int) -> dict[str, tuple[int, int, int]]:
+    """
+    Estrae dinamicamente lo schema dei campi Paradox dall'intestazione del file .DB.
+    Restituisce un dizionario: nome_campo.lower() -> (offset_nel_record, lunghezza, tipo).
+    """
+    if len(data) < 0x80:
+        return {}
+    num_fields = data[0x21] + (data[0x22] << 8)
+    if num_fields <= 0 or num_fields > 255:
+        return {}
+
+    fspecs = []
+    curr = 0x78
+    if curr + num_fields * 2 > len(data):
+        return {}
+    for _ in range(num_fields):
+        fspecs.append((data[curr], data[curr+1]))
+        curr += 2
+
+    pos = curr
+    names: list[str] = []
+    while pos < hdr_size - 10:
+        cur = pos
+        curr_names = []
+        for _ in range(num_fields):
+            end = data.find(b'\x00', cur, min(cur + 50, hdr_size))
+            if end == -1 or end == cur:
+                break
+            name_bytes = data[cur:end]
+            if not name_bytes.replace(b'_', b'').isalnum():
+                break
+            curr_names.append(name_bytes.decode('latin1', errors='replace'))
+            cur = end + 1
+        if len(curr_names) == num_fields:
+            names = curr_names
+            break
+        pos += 1
+
+    if len(names) != num_fields:
+        return {}
+
+    offsets: dict[str, tuple[int, int, int]] = {}
+    cum_off = 0  # I record reali iniziano direttamente con i campi dello schema
+    for (ftype, flen), name in zip(fspecs, names):
+        offsets[name.lower()] = (cum_off, flen, ftype)
+        cum_off += flen
+    return offsets
 
 
 # ===========================================================================
 # PARSER TABELLA EP  (_E*.DB)
 # ===========================================================================
 
-# Layout campo _E (rec_size=486, skip 2 byte iniziali Paradox):
-#   s+ 0  Alpha(20)   tariffa
-#   s+20  AutoInc(4)  id_autoinc
-#   s+24  Alpha(20)   articolo
-#   s+44  Alpha(120)  des_ridotta
-#   s+164 FmtMemo(10) des_estesa
-#   s+174 FmtMemo(10) memo2
-#   s+184 FmtMemo(10) memo3
-#   s+194 Number(8)   prezzo1
-#   s+202 Number(8)   prezzo2
-#   s+210 Number(8)   prezzo3
-#   s+218 Number(8)   prezzo4
-#   s+226 Number(8)   prezzo5
-#   s+234 Number(8)   ?
-#   s+242 Alpha(6)    um
-#   s+248 Alpha(20)   ?
-#   s+268 Short(2)*4  id_spcap, id_cap, id_sbcap, ?
-#   s+276 Long(4)     ?
-#   s+280 Short(2)    ?
-#   s+282 Number(8)   inc_mdo
-#   s+290 Number(8)   inc_sic
-#   ...
-
 _EP_SKIP = 2  # byte interni Paradox da saltare all'inizio di ogni record
 
 
-def _parse_ep_record(rec: bytes, data_mb: bytes) -> dict[str, Any] | None:
+def _parse_ep_record(rec: bytes, data_mb: bytes,
+                     schema: dict[str, tuple[int, int, int]] | None = None,
+                     mb_index: dict[tuple[int, int], bytes] | None = None) -> dict[str, Any] | None:
     '''Decodifica un record binario dell'elenco prezzi ed estrae i relativi campi.'''
+    if schema and 'tariffa' in schema:
+        off_trf, len_trf, _ = schema['tariffa']
+        trf = _read_alpha(rec, off_trf, len_trf)
+        if not trf or len(trf) < 2 or not re.match(r'^[\w\.\-\/\s]+$', trf):
+            return None
+
+        off_art, len_art, _ = schema.get('articolo', (off_trf + len_trf + 4, 20, 1))
+        art = _read_alpha(rec, off_art, len_art)
+
+        off_rid, len_rid, _ = schema.get('desridotta', (off_art + len_art, 120, 1))
+        des_rid = _read_alpha(rec, off_rid, len_rid)
+
+        des_est = des_rid
+        if 'desestesa' in schema:
+            off_est, len_est, _ = schema['desestesa']
+            memo_txt = _read_memo(data_mb, rec[off_est:off_est+len_est], mb_index=mb_index)
+            if memo_txt:
+                des_est = memo_txt
+
+        um = ''
+        if 'unmisura' in schema:
+            off_um, len_um, ftype_um = schema['unmisura']
+            if ftype_um in (12, 13):
+                um = _read_memo(data_mb, rec[off_um:off_um+len_um], mb_index=mb_index)
+            else:
+                um = _read_alpha(rec, off_um, len_um)
+
+        prezzo = _read_number(rec, schema['prezzo1'][0]) if 'prezzo1' in schema else 0.0
+        prezzo2 = _read_number(rec, schema['prezzo2'][0]) if 'prezzo2' in schema else 0.0
+        prezzo3 = _read_number(rec, schema['prezzo3'][0]) if 'prezzo3' in schema else 0.0
+        prezzo4 = _read_number(rec, schema['prezzo4'][0]) if 'prezzo4' in schema else 0.0
+        prezzo5 = _read_number(rec, schema['prezzo5'][0]) if 'prezzo5' in schema else 0.0
+        inc_mdo = _read_number(rec, schema['incmdo'][0]) if 'incmdo' in schema else 0.0
+        inc_sic = _read_number(rec, schema['incsic'][0]) if 'incsic' in schema else 0.0
+
+        return {
+            'tariffa':     trf,
+            'articolo':    art,
+            'des_ridotta': des_rid,
+            'des_estesa':  des_est,
+            'um':          um,
+            'prezzo':      prezzo,
+            'prezzo2':     prezzo2,
+            'prezzo3':     prezzo3,
+            'prezzo4':     prezzo4,
+            'prezzo5':     prezzo5,
+            'inc_mdo':     inc_mdo,
+            'inc_sic':     inc_sic,
+        }
+
+    # Layout di fallback per tabelle con schema statico / test sintetici
     s = _EP_SKIP
     trf = _read_alpha(rec, s+0, 20)
-    # Filtra record vuoti o con tariffa non valida
     if not trf or len(trf) < 2:
         return None
     if not re.match(r'^[\w\.\-\/\s]+$', trf):
         return None
 
     des_rid = _read_alpha(rec, s+44, 120)
-    des_est = _read_memo(data_mb, rec[s+164:s+174]) or des_rid
+    des_est = _read_memo(data_mb, rec[s+164:s+174], mb_index=mb_index) or des_rid
 
     return {
         'tariffa':     trf,
@@ -214,16 +339,18 @@ def read_ep_table(db_path: str) -> list[dict[str, Any]]:
     data    = open(db_path, 'rb').read()
     mb_path = db_path.replace('.DB', '.MB')
     data_mb = open(mb_path, 'rb').read() if os.path.exists(mb_path) else b''
+    mb_index = _parse_mb_file(data_mb)
     rec_size, hdr_size, block_size = _pdx_params(data)
-    _log(f'EP: {db_path}  rec_size={rec_size}  hdr_size={hdr_size}  block_size={block_size}')
+    schema = _get_pdx_field_offsets(data, hdr_size)
+    _log(f'EP: {db_path}  rec_size={rec_size}  hdr_size={hdr_size}  block_size={block_size}  fields={len(schema)}')
 
     by_trf: dict[str, dict] = {}
     for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
-        row = _parse_ep_record(rec, data_mb)
+        row = _parse_ep_record(rec, data_mb, schema=schema, mb_index=mb_index)
         if not row:
             continue
         trf = row['tariffa']
-        # Tieni la versione con descrizione più lunga
+        # Tieni la versione con descrizione più completa
         if trf not in by_trf or len(row['des_estesa']) > len(by_trf[trf]['des_estesa']):
             by_trf[trf] = row
 
@@ -255,13 +382,6 @@ def read_ep_table(db_path: str) -> list[dict[str, Any]]:
 # PARSER TABELLA VC  (_V*.DB)
 # ===========================================================================
 
-# Layout campo _V (rec_size=116, skip 2 byte iniziali Paradox):
-#   s+ 0  Long(4)    id_vc
-#   s+ 4  Long(4)    ref_ep (indice ordinale nella tabella EP, 1-based + offset)
-#   s+ 8  Number(8)  quantità (spesso vuoto in file molto vecchi)
-#   s+16  Number(8)  importo  (spesso vuoto)
-#   ...
-
 _VC_SKIP = 2
 
 
@@ -271,8 +391,6 @@ def read_vc_table(db_path: str, ep_list: list[dict]) -> list[dict[str, Any]]:
     Mappa i riferimenti EP tramite indice ordinale (con auto-rilevamento offset).
     """
     data    = open(db_path, 'rb').read()
-    mb_path = db_path.replace('.DB', '.MB')
-    data_mb = open(mb_path, 'rb').read() if os.path.exists(mb_path) else b''
     rec_size, hdr_size, block_size = _pdx_params(data)
     _log(f'VC: {db_path}  rec_size={rec_size}  hdr_size={hdr_size}  block_size={block_size}')
 
@@ -281,13 +399,15 @@ def read_vc_table(db_path: str, ep_list: list[dict]) -> list[dict[str, Any]]:
     ep_data     = open(ep_db_path, 'rb').read()
     ep_mb_path  = ep_db_path.replace('.DB', '.MB')
     ep_data_mb  = open(ep_mb_path, 'rb').read() if os.path.exists(ep_mb_path) else b''
+    ep_mb_index = _parse_mb_file(ep_data_mb)
     ep_rec_size, ep_hdr_size, ep_block_size = _pdx_params(ep_data)
+    ep_schema   = _get_pdx_field_offsets(ep_data, ep_hdr_size)
 
     trf_to_id = {ep['tariffa']: ep['id'] for ep in ep_list}
     ep_ordinal: dict[int, int] = {}  # ordine lettura -> ep_id
     idx = 0
     for rec in _iter_blocks(ep_data, ep_rec_size, ep_hdr_size, ep_block_size):
-        row = _parse_ep_record(rec, ep_data_mb)
+        row = _parse_ep_record(rec, ep_data_mb, schema=ep_schema, mb_index=ep_mb_index)
         if not row:
             continue
         idx += 1
@@ -296,7 +416,7 @@ def read_vc_table(db_path: str, ep_list: list[dict]) -> list[dict[str, Any]]:
             ep_ordinal[idx] = ep_id
 
     # Raccoglie tutti i ref dal file VC
-    raw_refs: list[tuple[int, int]] = []  # (id_vc, ref)
+    raw_refs: list[tuple[int, int, float, float]] = []  # (id_vc, ref, qt, imp)
     for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
         s = _VC_SKIP
         id_vc = _read_long(rec, s+0)
@@ -347,14 +467,11 @@ def read_header_table(db_path: str) -> dict[str, str]:
     if not os.path.exists(db_path):
         return {}
     data    = open(db_path, 'rb').read()
-    mb_path = db_path.replace('.DB', '.MB')
-    data_mb = open(mb_path, 'rb').read() if os.path.exists(mb_path) else b''
     rec_size, hdr_size, block_size = _pdx_params(data)
 
     info: dict[str, str] = {}
     for rec in _iter_blocks(data, rec_size, hdr_size, block_size):
         s = _EP_SKIP
-        # Cerca stringhe significative nei primi campi Alpha
         candidates = []
         for off in range(0, min(rec_size - 2, 300), 20):
             t = _read_alpha(rec, s+off, 20)
@@ -399,8 +516,8 @@ def paradox_to_xpwe(folder: str, output_xpwe: str | None = None,
                 return os.path.join(folder, f)
         return None
 
-    db_e  = find_db('_E')
-    db_v  = find_db('_V')
+    db_e   = find_db('_E')
+    db_v   = find_db('_V')
     db_hdr = find_db('__')
 
     if not db_e:

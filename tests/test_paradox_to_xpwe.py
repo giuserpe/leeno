@@ -377,6 +377,7 @@ class TestParadoxDatasetRistrutturazione(unittest.TestCase):
             self.assertIn('01-04-11b', content)
             self.assertIn('Demolizione di tramezzi', content)
 
+<<<<<<< HEAD
     def test_menu_xpwe_import_shift_dispatch(self):
         """Verifica che MENU_XPWE_import attivi paradox_to_xpwe quando è premuto SHIFT."""
         mock_pl = mock.MagicMock()
@@ -473,6 +474,8 @@ class TestParadoxDatasetRistrutturazione(unittest.TestCase):
             self.assertEqual(len(vc['misure']), 1)
             self.assertEqual(vc['misure'][0]['qt'], 15.5)
 
+=======
+>>>>>>> 1a165b70 (feat(import): migliora parser archivi Paradox di PriMus)
 
 if __name__ == '__main__':
     unittest.main()

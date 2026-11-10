@@ -1845,11 +1845,14 @@ def GotoSheet(nSheet, fattore=100, oDoc=None):
     attiva e seleziona una sheet
     oDoc     { opzionale } : documento target; se None usa getDocument()
     '''
-    if oDoc is None:
-        oDoc = LeenoUtils.getDocument()
+    oDoc = LeenoUtils.resolve_document(oDoc)
+    if not oDoc or not hasattr(oDoc, 'Sheets') or not oDoc.Sheets.hasByName(nSheet):
+        return None
     oSheet = oDoc.Sheets.getByName(nSheet)
     oSheet.IsVisible = True
-    oDoc.CurrentController.setActiveSheet(oSheet)
+    if oDoc.CurrentController:
+        oDoc.CurrentController.setActiveSheet(oSheet)
+    return oSheet
 
     # oDoc.CurrentController.ZoomValue = fattore
     # oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
@@ -2703,9 +2706,17 @@ def scelta_viste():
         with LeenoUtils.DocumentRefreshContext(False):
             scelta_viste_run()
     finally:
-        if starting_sheet_name:
-            GotoSheet(starting_sheet_name)
-            LeenoUtils.ripristina_posizione(pos_iniziale)
+        oDoc = LeenoUtils.resolve_document(oDoc)
+        if oDoc and hasattr(oDoc, 'Sheets'):
+            target = starting_sheet_name if oDoc.Sheets.hasByName(starting_sheet_name) else (
+                'CONTABILITA' if oDoc.Sheets.hasByName('CONTABILITA') else (
+                    'COMPUTO' if oDoc.Sheets.hasByName('COMPUTO') else None
+                )
+            )
+            if target:
+                GotoSheet(target, oDoc=oDoc)
+                if target == starting_sheet_name:
+                    LeenoUtils.ripristina_posizione(pos_iniziale)
     LeenoUtils.DocumentRefresh(True)
 
 def scelta_viste_run():
@@ -2928,6 +2939,8 @@ def scelta_viste_run():
             oDialog1.getControl('RimuoviSAL').Label = "Elimina atti SAL n. " + str(len(listaSal))
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. ' + str(len(listaSal)+1)
         else:
+            oDialog1.getControl('ComboBox1').Text = ''
+            oDialog1.getControl('ComboBox1').Enable = False
             oDialog1.getControl('RimuoviSAL').Enable = False
             oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL da rimuovere"
             oDialog1.getControl('RimuoviTuttiSAL').Enable = False
@@ -2996,8 +3009,10 @@ def scelta_viste_run():
             LeenoComputo.cancella_annotazioni_categorie_voci()
 
         try:
-            nSal = int(oDialog1.getControl('ComboBox1').getText())
-            LeenoContab.mostra_sal(nSal, pagebreak=False, naviga=False)
+            val_sal = oDialog1.getControl('ComboBox1').getText().strip()
+            if val_sal.isdigit():
+                nSal = int(val_sal)
+                LeenoContab.mostra_sal(nSal, pagebreak=False, naviga=False)
         except Exception as _exc:
             LeenoUtils.log_errore('scelta_viste_run: mostra_sal', _exc)
 
@@ -8984,7 +8999,7 @@ def vista_configurazione(tipo_configurazione):
         # Riabilita i controller anche in caso di errore
         oDoc.unlockControllers()
         if starting_sheet_name:
-            GotoSheet(starting_sheet_name)
+            GotoSheet(starting_sheet_name, oDoc=oDoc)
 
 def vista_terra_terra():
     vista_configurazione('terra_terra')

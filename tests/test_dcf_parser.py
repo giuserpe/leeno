@@ -333,5 +333,120 @@ class TestDcfParserCharacterization(unittest.TestCase):
         self.assertEqual(plenum['analisi'][1]['id_ep'], 152)
 
 
+class TestDcfParserContabilita(unittest.TestCase):
+    """Test di importazione e analisi di prezzo su tests/data/CONTABILITA.dcf."""
+
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.dcf_path = os.path.join(os.path.dirname(__file__), 'data', 'CONTABILITA.dcf')
+        if not os.path.exists(self.dcf_path):
+            self.skipTest("tests/data/CONTABILITA.dcf non trovato")
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    def test_contabilita_dcf_xml_well_formed(self):
+        import xml.etree.ElementTree as ET
+        doc = dcf_parser.parse_dcf(self.dcf_path)
+        raw_xml = doc.get('_raw_xml', {})
+        self.assertTrue(raw_xml, "Nessun blocco XML grezzo estratto")
+
+        expected_blocks = [
+            'InfoDoc', 'DatiGenerali', 'CollectionEP',
+            'CollectionVC', 'CollectionOD', 'CollectionST',
+            'OpzioniInterfaccia',
+        ]
+        for tag in expected_blocks:
+            self.assertIn(tag, raw_xml, f"Blocco {tag} mancante in _raw_xml")
+            xml_text = raw_xml[tag]
+            try:
+                root = ET.fromstring(xml_text)
+            except ET.ParseError as err:
+                self.fail(f"Il blocco XML {tag} non e' ben formato: {err}")
+            self.assertEqual(root.tag, tag)
+
+    def test_contabilita_dcf_struttura_e_analisi(self):
+        doc = dcf_parser.parse_dcf(self.dcf_path)
+
+        self.assertEqual(doc['formato'], 'dcf')
+        self.assertEqual(len(doc['elenco_prezzi']), 172)
+        self.assertEqual(len(doc['computo']), 180)
+        self.assertEqual(len(doc['categorie']), 4)
+        self.assertEqual(len(doc['sotto_categorie']), 2)
+
+        # 5 voci con analisi di prezzo
+        an_eps = [ep for ep in doc['elenco_prezzi'] if ep.get('analisi')]
+        self.assertEqual(len(an_eps), 5)
+        total_an_rows = sum(len(ep['analisi']) for ep in an_eps)
+        self.assertEqual(total_an_rows, 23)
+
+        an_by_trf = {ep['tariffa']: ep for ep in an_eps}
+        self.assertEqual(set(an_by_trf.keys()), {'NP003', 'NP006', 'NP011', 'NP023', 'NP025'})
+
+        # Verifica conteggio righe analisi per ciascuna voce
+        self.assertEqual(len(an_by_trf['NP003']['analisi']), 3)
+        self.assertEqual(len(an_by_trf['NP006']['analisi']), 4)
+        self.assertEqual(len(an_by_trf['NP011']['analisi']), 3)
+        self.assertEqual(len(an_by_trf['NP023']['analisi']), 5)
+        self.assertEqual(len(an_by_trf['NP025']['analisi']), 8)
+
+        # Verifica normalizzazione campi analisi: id, id_ep, tipo, qt, prezzo
+        np003_an = an_by_trf['NP003']['analisi']
+        self.assertEqual(np003_an[0]['id_ep'], 111)
+        self.assertEqual(np003_an[0]['tipo'], '1')
+        self.assertEqual(np003_an[0]['qt'], '0.400')
+        self.assertEqual(np003_an[0]['prezzo'], '20.20')
+
+        self.assertEqual(np003_an[1]['id_ep'], -2)
+        self.assertEqual(np003_an[1]['tipo'], '0')
+        self.assertEqual(np003_an[1]['qt'], '0.400')
+        self.assertEqual(np003_an[1]['prezzo'], '19.00')
+
+        self.assertEqual(np003_an[2]['id_ep'], -2)
+        self.assertEqual(np003_an[2]['tipo'], '0')
+        self.assertEqual(np003_an[2]['qt'], '1.000')
+        self.assertEqual(np003_an[2]['prezzo'], '18.65')
+
+    def test_contabilita_dcf_roundtrip_generate_xpwe(self):
+        doc = dcf_parser.parse_dcf(self.dcf_path)
+        xpwe_path = os.path.join(self.temp_dir.name, 'from_contabilita.xpwe')
+        dcf_parser.generate_xpwe(doc, xpwe_path)
+        self.assertTrue(os.path.exists(xpwe_path))
+
+        parsed = dcf_parser.parse_xpwe(xpwe_path)
+        self.assertEqual(len(parsed['elenco_prezzi']), 172)
+        self.assertEqual(len(parsed['computo']), 180)
+
+        an = [ep for ep in parsed['elenco_prezzi'] if ep.get('analisi')]
+        self.assertEqual(len(an), 5)
+        total_an = sum(len(ep['analisi']) for ep in an)
+        self.assertEqual(total_an, 23)
+
+        parsed_by_trf = {ep['tariffa']: ep for ep in an}
+        orig_by_trf = {ep['tariffa']: ep for ep in doc['elenco_prezzi'] if ep.get('analisi')}
+
+        for trf in ('NP003', 'NP006', 'NP011', 'NP023', 'NP025'):
+            self.assertIn(trf, parsed_by_trf)
+            p_rows = parsed_by_trf[trf]['analisi']
+            o_rows = orig_by_trf[trf]['analisi']
+            self.assertEqual(len(p_rows), len(o_rows))
+            for pr, or_ in zip(p_rows, o_rows):
+                self.assertEqual(pr['id'], or_['id'])
+                self.assertEqual(pr['id_ep'], or_['id_ep'])
+                self.assertEqual(pr['qt'], or_['qt'])
+                self.assertEqual(pr['prezzo'], or_['prezzo'])
+
+    def test_contabilita_dcf_nessuna_falsa_corruzione(self):
+        msgs = []
+        orig = dcf_parser._user_msg
+        dcf_parser._user_msg = lambda m: msgs.append(m)
+        try:
+            doc = dcf_parser.parse_dcf(self.dcf_path)
+        finally:
+            dcf_parser._user_msg = orig
+        self.assertEqual(msgs, [])
+        self.assertEqual(len(doc['elenco_prezzi']), 172)
+
+
 if __name__ == '__main__':
     unittest.main()

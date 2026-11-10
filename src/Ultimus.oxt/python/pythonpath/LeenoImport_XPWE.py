@@ -1267,30 +1267,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 def MENU_XPWE_import(filename = None):
     '''Avvia il processo interattivo di importazione di un file XPWE o DCF.'''
     try:
-        is_ctrl, is_shift = PL.GetModifiers()
+        is_ctrl, _ = PL.GetModifiers()
     except (AttributeError, ValueError):
         is_ctrl = False
-        is_shift = False
-
-    if is_shift:
-        Dialogs.NotifyDialog(
-            IconType="info",
-            Title="Leeno - Importazione archivio Paradox PriMus",
-            Text=
-"La procedura consente di importare archivi storici Paradox prodotti con PriMus (ACCA).\n\n"
-"Seleziona un file '.DB' (es. _E*.DB) all'interno della cartella dell'archivio da importare."
-        )
-        converti_euro = Dialogs.YesNoDialog(
-            IconType="question",
-            Title="Conversione Valuta",
-            Text=
-"I prezzi nell'archivio Paradox sono espressi in Lire?\n\n"
-"Seleziona 'Sì' per convertirli automaticamente in Euro (diviso per 1936,27),\n"
-"oppure 'No' per mantenerli inalterati."
-        )
-        import paradox_to_xpwe
-        paradox_to_xpwe.select_folder_and_convert(lire_to_euro=bool(converti_euro))
-        return
 
     if is_ctrl:
         Dialogs.NotifyDialog(

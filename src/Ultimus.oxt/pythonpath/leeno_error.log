@@ -8128,3 +8128,33 @@ File: LeenoDispatcher.py, Line: 288, Function: trigger
 File: LeenoBasicBridge.py, Line: 86, Function: DlgMain
 ------------------------------------------------------------
 
+[2026-11-10 09:48:07]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.177-TESTING-20261107
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1850'
+Function: 'GotoSheet'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 288, Function: trigger
+File: pyleeno.py, Line: 2707, Function: scelta_viste
+File: pyleeno.py, Line: 1850, Function: GotoSheet
+------------------------------------------------------------
+
+[2026-11-10 10:03:52]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.177-TESTING-20261107
+
+Errore: 
+
+File: 'pyleeno.py'
+Line: '1850'
+Function: 'GotoSheet'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 288, Function: trigger
+File: pyleeno.py, Line: 2707, Function: scelta_viste
+File: pyleeno.py, Line: 1850, Function: GotoSheet
+------------------------------------------------------------
+

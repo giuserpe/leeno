@@ -42,7 +42,6 @@ Corretti:
 - `LeenoImport._readXmlFile`: i file senza BOM e non in UTF-8 perdevano gli accenti, perché la decodifica usava `errors='ignore'`. Ora ripiega sulla codifica dichiarata nell'intestazione XML e poi su `cp1252`.
 
 Aperti, documentati nei test:
-- `paradox_to_xpwe._read_number` restituisce positivi anche i numeri negativi, e `_read_long` tratta i negativi come senza segno. Gli archivi Paradox non sono una priorità.
 - "ventitre" e simili sono scritti senza accento nei numeri in lettere, in entrambe le funzioni (decisione da prendere).
 - `leggiElencoPrezzi` lascia `prezzo2`-`prezzo5` come stringhe, ma nessuno li usa.
 - `Debug._format_time` non ha le ore. `LeenoImport.MENU_ValdAosta` è dichiarata non funzionante nella docstring.

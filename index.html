@@ -452,6 +452,19 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-10 22:00</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/5695883d3b459e73874f40381e837d2b5eb51e8a" target="_blank" rel="noopener"><code>5695883</code></a></td>
+                <td class="commit-msg">refactor(contab): genera i blocchi CdP copiando il template invece di coordinate fisse
+
+- Sostituita `_init_template_cdp_blocco` (unioni/stili/testi hardcoded)
+  con `_copia_blocco_template_cdp`, che replica le righe 0..44 del foglio
+  CdP di Computo_LeenO.ods (layout, altezze, formule)
+- Introdotta la costante `CDP_RIGHE_BLOCCO` e riga vuota sotto l’intestazione
+- Area di stampa e range nominato allineati al nuovo blocco (esclusa la riga
+  ‘segue CdP’ e la riga vuota)
+- Test aggiornati sulla copia dal template e sulla pulizia del foglio temporaneo</td>
+            </tr>
+            <tr>
                 <td>2026-11-10 20:37</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/bb2b28f5e082913faaf0c89b201876684a457f75" target="_blank" rel="noopener"><code>bb2b28f</code></a></td>
                 <td class="commit-msg">feat: update CdP spreadsheet with new test data</td>
@@ -460,11 +473,6 @@
                 <td>2026-11-10 20:36</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/84efd6cefcf889da1a075ce8ea6ce50159a974db" target="_blank" rel="noopener"><code>84efd6c</code></a></td>
                 <td class="commit-msg">feat: enhance CdP generation with template initialization and row management</td>
-            </tr>
-            <tr>
-                <td>2026-11-10 18:50</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5139acd485dac3ea842dfde8bdebe0aab49de10c" target="_blank" rel="noopener"><code>5139acd</code></a></td>
-                <td class="commit-msg">feat: add LeenoContab accounting module and test data fixtures</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +496,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-10 20:38 UTC</p>
-                <p>Build Commit: <code>bb2b28f</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-10 22:01 UTC</p>
+                <p>Build Commit: <code>5695883</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

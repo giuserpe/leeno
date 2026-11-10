@@ -20,7 +20,7 @@ TARGET_MODIFIED_TRIES = [
     ("pyleeno.py", "MENU_prefisso_VDS_", "circoscriveVoceComputo"),
     ("pyleeno.py", "MENU_costo_elementare_", "LeggiPosizioneCorrente"),
     ("pyleeno.py", "MENU_prefisso_codice", "getSheets().getByName(el)"),
-    ("pyleeno.py", "scelta_viste_run", "int(oDialog1.getControl('ComboBox1').getText())"),
+    ("pyleeno.py", "scelta_viste_run", "val_sal = oDialog1.getControl('ComboBox1').getText()"),
     ("pyleeno.py", "MENU_azzera_voce", "CurrentController.ActiveSheet"),
     ("pyleeno.py", "MENU_azzera_voce", "circoscriveVoceComputo"),
     ("pyleeno.py", "MENU_converti_stringhe", "Type.value == 'TEXT'"),

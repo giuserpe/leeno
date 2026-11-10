@@ -9,6 +9,7 @@ import struct
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src', 'Ultimus.oxt', 'python', 'pythonpath'))
 
@@ -328,6 +329,8 @@ class TestParadoxDatasetRistrutturazione(unittest.TestCase):
     def setUp(self):
         self.folder = os.path.join(os.path.dirname(__file__), 'data', 'ristrutturazione')
         self.ep_db_path = os.path.join(self.folder, '_Eristrutturazione.DB')
+        if not os.path.exists(self.ep_db_path):
+            self.skipTest("tests/data/ristrutturazione non trovato")
 
     def test_pdx_params_multi_block(self):
         data = open(self.ep_db_path, 'rb').read()
@@ -375,6 +378,102 @@ class TestParadoxDatasetRistrutturazione(unittest.TestCase):
             self.assertIn('01-02-03a', content)
             self.assertIn('01-04-11b', content)
             self.assertIn('Demolizione di tramezzi', content)
+
+    def test_menu_xpwe_import_shift_dispatch(self):
+        """Verifica che MENU_XPWE_import attivi paradox_to_xpwe quando è premuto SHIFT."""
+        mock_pl = mock.MagicMock()
+        mock_pl.GetModifiers.return_value = (False, True)
+
+        mock_dlg = mock.MagicMock()
+        mock_dlg.YesNoDialog.return_value = 1
+
+        mock_utils = mock.MagicMock()
+        mock_utils.release_ram.side_effect = lambda fn: fn
+
+        mock_modules = {
+            'uno': mock.MagicMock(),
+            'unohelper': mock.MagicMock(),
+            'com': mock.MagicMock(),
+            'com.sun.star': mock.MagicMock(),
+            'com.sun.star.table': mock.MagicMock(),
+            'Dialogs': mock_dlg,
+            'LeenoDialogs': mock.MagicMock(),
+            'pyleeno': mock_pl,
+            'SheetUtils': mock.MagicMock(),
+            'LeenoSheetUtils': mock.MagicMock(),
+            'LeenoUtils': mock_utils,
+            'LeenoFormat': mock.MagicMock(),
+            'LeenoConfig': mock.MagicMock(),
+            'LeenoAnalysis': mock.MagicMock(),
+            'LeenoComputo': mock.MagicMock(),
+            'LeenoVariante': mock.MagicMock(),
+            'LeenoContab': mock.MagicMock(),
+        }
+
+        with mock.patch.dict(sys.modules, mock_modules):
+            if 'LeenoImport_XPWE' in sys.modules:
+                del sys.modules['LeenoImport_XPWE']
+            import LeenoImport_XPWE
+            with mock.patch('paradox_to_xpwe.select_folder_and_convert') as mock_select:
+                LeenoImport_XPWE.MENU_XPWE_import()
+                mock_dlg.NotifyDialog.assert_called_once()
+                mock_dlg.YesNoDialog.assert_called_once()
+                mock_select.assert_called_once_with(lire_to_euro=True)
+            if 'LeenoImport_XPWE' in sys.modules:
+                del sys.modules['LeenoImport_XPWE']
+
+    def test_read_vc_table_with_cuep_and_misure(self):
+        """Verifica che read_vc_table colleghi CuEP relazionale e generi righe di misurazione."""
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            vc_db_path = os.path.join(tmp_dir, '_V_cuep.DB')
+            ep_list = [
+                {'id': 1, 'cuep': 7, 'tariffa': '01-02-03a', 'prezzo': 10.0},
+                {'id': 2, 'cuep': 8, 'tariffa': '01-02-11a', 'prezzo': 20.0},
+            ]
+
+            # Creazione header Paradox con schema contenente cuvc, cuep, quantita
+            rec_size = 116
+            hdr_size = 512
+            max_tbl = 3
+            num_fields = 3
+
+            db_header = bytearray(hdr_size)
+            struct.pack_into('<H', db_header, 0, rec_size)
+            struct.pack_into('<H', db_header, 2, hdr_size)
+            db_header[5] = max_tbl
+            struct.pack_into('<H', db_header, 0x21, num_fields)
+
+            # fspecs: cuvc (type 22, len 4), cuep (type 4, len 4), quantita (type 6, len 8)
+            curr = 0x78
+            for ftype, flen in [(22, 4), (4, 4), (6, 8)]:
+                db_header[curr] = ftype
+                db_header[curr+1] = flen
+                curr += 2
+
+            # field names
+            names_blob = b'cuvc\x00cuep\x00quantita\x00'
+            db_header[curr+num_fields*4 : curr+num_fields*4+len(names_blob)] = names_blob
+
+            rec1 = bytearray(rec_size)
+            struct.pack_into('>I', rec1, 0, 1 ^ 0x80000000)  # id_vc = 1
+            struct.pack_into('>I', rec1, 4, 7 ^ 0x80000000)  # cuep = 7 -> maps to ep_id = 1
+            qt_bytes = bytearray(struct.pack('>d', 15.5))
+            qt_bytes[0] ^= 0x80
+            rec1[8:16] = qt_bytes
+
+            data_vc = bytes(db_header) + b'\x00\x00\x00\x00' + bytes(rec1)
+            data_vc += b'\x00' * (2048 - 4 - rec_size)
+
+            with open(vc_db_path, 'wb') as f:
+                f.write(data_vc)
+
+            vc_items = paradox_to_xpwe.read_vc_table(vc_db_path, ep_list)
+            self.assertEqual(len(vc_items), 1)
+            vc = vc_items[0]
+            self.assertEqual(vc['id_ep'], 1)
+            self.assertEqual(vc['quantita'], 15.5)
+            self.assertEqual(len(vc['misure']), 1)
+            self.assertEqual(vc['misure'][0]['qt'], 15.5)
 
 
 if __name__ == '__main__':

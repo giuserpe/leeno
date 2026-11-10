@@ -373,7 +373,8 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
     d = [
         ('CONTABILITA', '_Lib_', 11),
         ('Registro', '_Reg_', 9),
-        ('SAL', '_SAL_', 5)
+        ('SAL', '_SAL_', 5),
+        ('CdP', '_CdP_', 5)
     ]
 
     listaSal = ultimo_sal()
@@ -650,9 +651,16 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                     oSheet_S.Rows.removeByIndex(oNR_S.StartRow - 1, oNR_S.EndRow - oNR_S.StartRow + 2)
                     oRanges.removeByName(nome_sal)
 
-            # CdP foglio (rimosso ad ogni SAL intermedio)
+            # CdP
             if oDoc.Sheets.hasByName('CdP'):
-                oDoc.Sheets.removeByName('CdP')
+                oSheet_C = oDoc.Sheets.getByName('CdP')
+                nome_cdp_del = "_CdP_" + nSal_str
+                if oRanges.hasByName(nome_cdp_del):
+                    oNR_C = oRanges.getByName(nome_cdp_del).ReferredCells.RangeAddress
+                    oSheet_C.ungroup(oNR_C, 1)
+                    # Include la riga titolo "segue CdP" (StartRow - 1)
+                    oSheet_C.Rows.removeByIndex(oNR_C.StartRow - 1, oNR_C.EndRow - oNR_C.StartRow + 2)
+                    oRanges.removeByName(nome_cdp_del)
     except Exception as _exc:
         errori.append('eliminazione di Registro, SAL e CdP')
         LeenoUtils.log_errore('annulla SAL: eliminazione Registro, SAL, CdP', _exc)
@@ -3161,13 +3169,16 @@ def _trova_riva(oCdP, testo, col_hint=None, equal=1):
     return None, None
 
 
-def setup_foglio_CdP(oDoc):
-    '''
-    Prepara il foglio CdP nel documento, partendo sempre dal template pulito.
-    Se il foglio esiste già viene rimosso e reimportato, così la struttura
-    è sempre quella originale (26 righe libere per i certificati, ecc.).
+def setup_foglio_CdP(oDoc, force_clean=False):
+    """
+    Prepara il foglio CdP nel documento.
+    Se non esiste (o force_clean=True), lo importa pulito dal template.
+    Se esiste già e force_clean=False, restituisce il foglio esistente per appendere i nuovi CdP.
     Ritorna l'oggetto sheet o None se fallisce.
-    '''
+    """
+    if not force_clean and oDoc.getSheets().hasByName('CdP'):
+        return oDoc.getSheets().getByName('CdP')
+
     # Costruisce il percorso del template
     template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
 
@@ -3176,7 +3187,7 @@ def setup_foglio_CdP(oDoc):
     if oDoc.getSheets().hasByName('SAL'):
         pos = oDoc.getSheets().getByName('SAL').getRangeAddress().Sheet + 1
 
-    # Se il foglio CdP esiste già, lo rimuove per ricrearlo da zero
+    # Se il foglio CdP esiste già e si forza il reset, lo rimuove per ricrearlo da zero
     if oDoc.getSheets().hasByName('CdP'):
         idx = oDoc.getSheets().getByName('CdP').getRangeAddress().Sheet
         oDoc.getSheets().removeByName('CdP')
@@ -3279,11 +3290,12 @@ def _leggi_infortuni_da_S2(oS2):
 
 
 def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
-    '''
+    """
     CERTIFICATO DI PAGAMENTO - Popola il foglio CdP per il SAL corrente.
-    Usa la struttura fissa del foglio template; individua le celle tramite
-    ancoraggi testuali per massima robustezza.
-    '''
+    Consolida il CdP precedente, inserisce la riga titolo con stile 'uuuuu'
+    e raggruppa le righe.
+    """
+    daVoce, aVoce = 1, ''
     if dati:
         nSal, daVoce, aVoce, _, _, _, tot_sic, tot_mdo, _ = dati
     elif nSal is None:
@@ -3292,9 +3304,75 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             return
         nSal = int(listaSal[-1])
 
-    oCdP = setup_foglio_CdP(oDoc)
+    # Per determinare aVoce se non passata
+    if not aVoce:
+        try:
+            oS2_tmp = oDoc.getSheets().getByName('S2')
+            m_s2 = SheetUtils.uFindString('SITUAZIONE CONTABILE', oS2_tmp)
+            if m_s2:
+                aVoce = int(oS2_tmp.getCellByPosition(m_s2[0] + nSal, m_s2[1] + 24).Value)
+        except Exception:
+            aVoce = ''
+
+    # 1. Consolidamento del CdP precedente (formule sostituite da valori)
+    if nSal > 1:
+        prev_name = f"_CdP_{nSal - 1}"
+        if oDoc.NamedRanges.hasByName(prev_name):
+            try:
+                prev_range_addr = oDoc.NamedRanges.getByName(prev_name).ReferredCells.RangeAddress
+                sheet_cdp_prev = oDoc.Sheets.getByName('CdP')
+                prev_cell_range = sheet_cdp_prev.getCellRangeByPosition(
+                    prev_range_addr.StartColumn,
+                    prev_range_addr.StartRow,
+                    prev_range_addr.EndColumn,
+                    prev_range_addr.EndRow
+                )
+                prev_data = prev_cell_range.getDataArray()
+                prev_cell_range.setDataArray(prev_data)
+            except Exception as _exc:
+                LeenoUtils.log_errore('GeneraCdP: consolidamento CdP precedente', _exc)
+
+    # 2. Setup del foglio CdP (creazione se non esiste, altrimenti riuso)
+    oCdP = setup_foglio_CdP(oDoc, force_clean=(nSal == 1))
     if oCdP is None:
         return
+
+    # Calcolo riga di inserimento
+    if nSal == 1:
+        base_start_row = 0
+    else:
+        prev_name = f"_CdP_{nSal - 1}"
+        if oDoc.NamedRanges.hasByName(prev_name):
+            prev_addr = oDoc.NamedRanges.getByName(prev_name).ReferredCells.RangeAddress
+            insRow = prev_addr.EndRow + 1
+        else:
+            insRow = SheetUtils.getLastUsedRow(oCdP) + 1
+
+        # Inserimento riga di intestazione raggruppamento "segue CdP" con stile "uuuuu"
+        oCdP.getRows().insertByIndex(insRow, 1)
+        oCdP.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
+        str_aVoce = f" - 1÷{aVoce}" if aVoce else ""
+        oCdP.getCellByPosition(1, insRow).String = f"segue CdP n.{nSal}{str_aVoce}"
+        try:
+            oCdP.getRows().getByIndex(insRow).IsStartOfNewPage = True
+        except Exception:
+            pass
+
+        base_start_row = insRow + 1
+
+        # Clona la struttura del template per il nuovo CdP
+        num_tmpl_rows = 48
+        if oDoc.NamedRanges.hasByName("_CdP_1"):
+            cdp1_addr = oDoc.NamedRanges.getByName("_CdP_1").ReferredCells.RangeAddress
+            num_tmpl_rows = max(num_tmpl_rows, cdp1_addr.EndRow - cdp1_addr.StartRow + 1)
+        oCdP.getRows().insertByIndex(base_start_row, num_tmpl_rows)
+
+        try:
+            src_addr = oCdP.getCellRangeByPosition(0, 0, 5, num_tmpl_rows - 1).getRangeAddress()
+            dst_cell_addr = oCdP.getCellByPosition(0, base_start_row).getCellAddress()
+            oCdP.copyRange(dst_cell_addr, src_addr)
+        except Exception as _exc:
+            LeenoUtils.log_errore('GeneraCdP: copia template CdP', _exc)
 
     # ── Dati S2 ──────────────────────────────────────────────────────────
     oS2 = oDoc.getSheets().getByName('S2')
@@ -3309,7 +3387,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     aliquota_anticipo = _leggi_anticipo_da_S2(oS2)
     perc_anticipo_int = aliquota_anticipo * 100
     perc_anticipo_str = f'{perc_anticipo_int:.3f}'
-
 
     # Dati anagrafici
     committente = _leggi_dato_anagrafico(oS2, 'Committente') or _leggi_dato_anagrafico(oS2, 'Stazione Appaltante')
@@ -3331,18 +3408,16 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     polizza_n   = _leggi_dato_anagrafico(oS2, 'Polizza n.') or _leggi_dato_anagrafico(oS2, 'Polizza')
     articolo    = _leggi_dato_anagrafico(oS2, 'Articolo contratto') or _leggi_dato_anagrafico(oS2, 'Articolo') or ''
 
-
-    # ── Ancoraggi nel foglio CdP ─────────────────────────────────────────
+    # ── Ancoraggi nel foglio CdP per il blocco corrente ───────────────────
     def R(testo, col=None):
-        '''Cerca testo nel CdP con ricerca substring (non esatta).'''
+        """Cerca testo nel blocco CdP corrente con ricerca substring (non esatta)."""
         if col is not None:
-            r = SheetUtils.uFindStringCol(testo, col, oCdP, start=0, equal=0)
+            r = SheetUtils.uFindStringCol(testo, col, oCdP, start=base_start_row, equal=0)
             return int(r) if r is not None else None
         # Cerca in colonne 0..5
         for c in range(6):
-            r = SheetUtils.uFindStringCol(testo, c, oCdP, start=0, equal=0)
+            r = SheetUtils.uFindStringCol(testo, c, oCdP, start=base_start_row, equal=0)
             if r is not None:
-                # DLG.chi("R:%d | C:%d | Testo:%s " % (r, c, testo))
                 return int(r)
         return None
 
@@ -3361,7 +3436,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     r_iva      = R('I.V.A.')
     r_totgen   = R('TOTALE GENERALE')
     r_assic    = R('assicurato')
-    r_certifica = R('C E R T I F I C A')
+    r_certifica = R('C E R T I F I C A') or R('termini dell\'articolo') or R('si può pagare all\'impresa')
     r_luogo    = R('Luogo e data')
 
     # Colonna valori destra (F = 5 di default, verifica dalla riga sogg)
@@ -3407,18 +3482,14 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             if 'oggetto' in cell.String.lower():
                 cell.String = oggetto
                 cell.IsTextWrapped = True
-                # OptimalHeight non funziona per celle unite (merged):
-                # calcola l'altezza manualmente in base alla lunghezza del testo
                 try:
-                    # Larghezza totale delle colonne unite (in 1/100 mm)
                     largh_totale = sum(
                         oCdP.getColumns().getByIndex(ci).Width
                         for ci in range(val_col + 1)
                     )
-                    # Stima: ~220 unità per carattere (font ~10pt), altezza riga ~400 per linea
                     chars_per_riga = max(1, largh_totale // 220)
                     num_righe_testo = max(1, (len(oggetto) + chars_per_riga - 1) // chars_per_riga)
-                    altezza_stimata = num_righe_testo * 400 + 100  # margine
+                    altezza_stimata = num_righe_testo * 400 + 100
                     oCdP.getRows().getByIndex(r_ogg).Height = max(
                         oCdP.getRows().getByIndex(r_ogg).Height,
                         altezza_stimata
@@ -3426,9 +3497,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                 except Exception:
                     pass
                 break
-
-
-
 
     # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
     def trova_r_S2(testo, start_offset=0):
@@ -3440,43 +3508,15 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                 return riga
         return None
 
-    def trova_r_S2_multi(labels):
-        """Cerca la prima riga corrispondente a una delle etichette fornite."""
-        for label in labels:
-            r = trova_r_S2(label)
-            if r is not None: return r
-        return None
+    r2_certif   = trova_r_S2("certificato di pagamento")
+    r2_n_cert   = trova_r_S2("certificato n.")
 
-    r2_certif = trova_r_S2_multi(["importo certificato", "certificato di pagamento"])
-    r2_n_cert = trova_r_S2_multi(["S.A.L. n.", "certificato n.", "n. certificato"])
-
-    # Recupero Importo a Contratto e Totale Lavori (più robusto)
-    def _leggi_val_S2(labels, colonna_val):
-        """Legge un valore numerico da S2 cercando prima in anagrafica e poi nella situazione contabile."""
-        # 1. Cerca in Anagrafica (col 0/1 -> valore col 2)
-        # Cerchiamo nelle prime 200 righe dove solitamente risiede l'anagrafica
-        for r in range(200):
-            for col in (0, 1):
-                cell_txt = oS2.getCellByPosition(col, r).String.lower()
-                for label in labels:
-                    if label.lower() in cell_txt:
-                        v = oS2.getCellByPosition(2, r).Value
-                        if v: return v
-        # 2. Cerca in Tabella SITUAZIONE CONTABILE (col 4 -> valore colonna_val)
-        r_tab = trova_r_S2_multi(labels)
-        if r_tab is not None:
-            return oS2.getCellByPosition(colonna_val, r_tab).Value
-        return 0.0
-
-    imp_contratto = _leggi_val_S2(["importo netto di contratto", "importo di contratto", "importo contrattuale", "importo a contratto"], yS2)
-    tot_lavori_oggi = _leggi_val_S2(["sommano i lavori", "totale lavori", "totale lavori eseguiti"], col_sal)
-
-    # Dati contrattuali (IL SOTTOSCRITTO... VISTO il Contratto...)
-    r_sottoscritto = R('IL SOTTOSCRITTO')
+    # VISTO il Contratto... (scrive il testo dinamico con tutti i dati anagrafici)
+    r_sottoscritto = R('IL SOTTOSCRITTO') or R('VISTO il Contratto')
     if r_sottoscritto is not None:
         visto_text = (
-            "IL SOTTOSCRITTO\n\n"
-            f"VISTO il Contratto in data {data_contr or '_________'} "
+            "IL SOTTOSCRITTO DIRETTORE DEI LAVORI\n\n"
+            f"VISTO il Contratto in data {data_contr or '____________'} "
             f"repertorio n. {rep_n or '________'} "
             f"registrato a {reg_a or '____________'} "
             f"in data {data_reg or '____________'} "
@@ -3484,46 +3524,39 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             "con il quale fu affidata alla predetta impresa l'esecuzione dei suindicati lavori;\n\n"
             "RISULTANDO dalla contabilità sino ad oggi che l'ammontare dei lavori eseguiti e delle spese fatte è quello in seguito riportato:"
         )
-        # Scrive l'intero blocco nella cella che contiene l'ancora (solitamente colonna D o E)
-        for c in range(3, 6):
+        for c in range(2, 6):
             cell = oCdP.getCellByPosition(c, r_sottoscritto)
-            if 'SOTTOSCRITTO' in cell.String.upper():
+            if 'SOTTOSCRITTO' in cell.String.upper() or 'VISTO' in cell.String.upper():
                 cell.String = visto_text
                 cell.IsTextWrapped = True
                 break
 
-    # Assicurazione operai (verrà gestita anche in Firme se in cella unica)
+    # Assicurazione operai
     if r_assic is not None and polizza_n:
         for rv in range(r_assic, r_assic + 3):
             for c in range(6):
                 cell = oCdP.getCellByPosition(c, rv)
                 if 'n.' in cell.String and '_' in cell.String:
-                    # Se il placeholder è nella stessa cella
                     cell.String = cell.String.replace('n.__________', f'n. {polizza_n}').replace('n.____', f'n. {polizza_n}')
                 elif cell.String.strip() == 'n.':
-                    # Se il placeholder è nella cella a destra
                     for cc in range(c + 1, 7):
                         cv = oCdP.getCellByPosition(cc, rv)
                         if cv.Type.value == 'EMPTY' or '_' in cv.String:
                             cv.String = polizza_n
                             break
 
-
     # ── 2. Blocco sinistro: certificati precedenti ───────────────────────
     if r_Ncert is not None:
         r_first = r_Ncert + 1   # prima riga dati cert LIST
         num_cert = nSal - 1     # certificati precedenti da scrivere (1..nSal-1)
 
-        # Calcola quante righe sono disponibili nel template tra header e SOMMANO
         if r_sogg is not None:
             righe_disponibili = r_sogg - r_first
         else:
-            righe_disponibili = num_cert  # nessun limite noto
+            righe_disponibili = num_cert
 
-        # Se servono più righe di quelle disponibili, inserisci le mancanti
         righe_da_inserire = num_cert - righe_disponibili
         if righe_da_inserire > 0:
-            # Inserisce righe subito dopo le esistenti (prima di r_sogg)
             oCdP.getRows().insertByIndex(r_first + righe_disponibili, righe_da_inserire)
 
             # Ricalcola gli ancoraggi che si sono spostati verso il basso
@@ -3535,29 +3568,24 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             r_credito  = R('RISULTA IL CREDITO')
             r_iva      = R('I.V.A.')
             r_totgen   = R('TOTALE GENERALE')
-            r_certifica = R('C E R T I F I C A')
+            r_certifica = R('C E R T I F I C A') or R('termini dell\'articolo') or R('si può pagare all\'impresa')
             r_luogo    = R('Luogo e data')
             r_lavori   = R('Per lavori e somministrazioni')
-            r_sottoscritto = R('IL SOTTOSCRITTO')
+            r_sottoscritto = R('IL SOTTOSCRITTO') or R('VISTO il Contratto')
             r_assic    = R('assicurato')
 
         for i in range(1, nSal):
             r = r_first + (i - 1)
             col_i      = yS2 + i
             s2_col_i   = _col_letter(col_i)
-            # Data SAL i (offset +2) - Nota: la data in S2 è sempre alla riga xS2 + 2
             data_i = oS2.getCellByPosition(col_i, xS2 + 2).Value
-            oCdP.getCellByPosition(0, r).Value  = i          # N°
-            oCdP.getCellByPosition(1, r).Value = data_i     # Data
-            # Importo: punta a S2 Importo Certificato di Pagamento i
+            oCdP.getCellByPosition(0, r).Value  = i
+            oCdP.getCellByPosition(1, r).Value = data_i
             if r2_certif is not None:
-                oCdP.getCellByPosition(imp_col_sx, r).Formula = \
-                    f'=$S2.${s2_col_i}${r2_certif + 1}'
+                oCdP.getCellByPosition(imp_col_sx, r).Formula =                     f'=$S2.${s2_col_i}${r2_certif + 1}'
 
-        # TOTALE anticipazione (stessa riga dell'IVA, blocco sinistro)
         if r_iva is not None and r_first <= r_iva:
-            oCdP.getCellByPosition(imp_col_sx, r_iva).Formula = \
-                f'=SUBTOTAL(9;{s}{r_first + 1}:{s}{r_iva})'
+            oCdP.getCellByPosition(imp_col_sx, r_iva).Formula =                 f'=SUBTOTAL(9;{s}{r_first + 1}:{s}{r_iva})'
 
     r2_misura = trova_r_S2("a misura")
     r2_sic_mis = trova_r_S2("sicurezza", r2_misura - xS2) if r2_misura else None
@@ -3566,45 +3594,29 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     r2_anticipo = trova_r_S2("recupero anticipazione")
 
     # ── 3. Blocco destro: importi ─────────────────────────────────────────
-    # "Per lavori e somministrazioni" → punta direttamente a Importo Certificato di S2
     if r_lavori is not None and r2_certif is not None:
-        #ref = f'$S2.${s2_col}${r2_certif + 1}'
         ref = f'$S2.${s2_col}${r2_sic_mis + 1}+S2.${s2_col}${r2_imp_rib + 1}'
-        oCdP.getCellByPosition(val_col, r_lavori).Formula = \
-            f'=IF({ref}=0;"";{ref})'
+        oCdP.getCellByPosition(val_col, r_lavori).Formula =             f'=IF({ref}=0;"";{ref})'
 
-    # "Per materiali giacenti in cantiere" → riga sotto r_lavori, lascia editabile
-    # (non scriviamo nulla: cella già vuota nel template)
-
-    # SOMMANO importi soggetti a ritenute
     if r_sogg is not None and r_lavori is not None:
         sub = f'SUBTOTAL(9;{v}{r_lavori + 1}:{v}{r_sogg})'
-        oCdP.getCellByPosition(val_col, r_sogg).Formula = \
-            f'=IF({sub}=0;"";{sub})'
+        oCdP.getCellByPosition(val_col, r_sogg).Formula =             f'=IF({sub}=0;"";{sub})'
 
-    # SOMMANO importi NON soggetti a ritenute
     if r_nonsogg is not None and r_sogg is not None:
-        r_ns_start = r_sogg + 2   # prima riga editabile sezione non soggetti
-        oCdP.getCellByPosition(val_col, r_nonsogg).Formula = \
-            f'=SUBTOTAL(9;{v}{r_ns_start + 1}:{v}{r_nonsogg})'
+        r_ns_start = r_sogg + 2
+        oCdP.getCellByPosition(val_col, r_nonsogg).Formula =             f'=SUBTOTAL(9;{v}{r_ns_start + 1}:{v}{r_nonsogg})'
 
-    # b) Ammontare Certificati precedenti → TOTALE del blocco sinistro
     if r_certprec is not None and r_iva is not None:
         ref_cert_prec = f'{s}{r_iva + 1}'
-        oCdP.getCellByPosition(val_col, r_certprec).Formula = \
-            f'=IF({ref_cert_prec}=0;"";{ref_cert_prec})'
+        oCdP.getCellByPosition(val_col, r_certprec).Formula =             f'=IF({ref_cert_prec}=0;"";{ref_cert_prec})'
 
-    # a) Ritenuta per infortuni
     if r_ritenuta is not None and r2_infortuni is not None:
         ref = f'$S2.${s2_col}${r2_infortuni + 1}'
-        oCdP.getCellByPosition(val_col, r_ritenuta).Formula = \
-            f'=IF({ref}=0;"";{ref})'
+        oCdP.getCellByPosition(val_col, r_ritenuta).Formula =             f'=IF({ref}=0;"";{ref})'
 
-    # a.2) Recupero anticipazione
     r_anticipo_cdp = R('b) Recupero anticipazione') or R('Recupero anticipazione')
 
     if r_anticipo_cdp is not None:
-        # Aggiorna etichetta con percentuale (al pari dell'I.V.A.)
         for c in range(val_col - 1, -1, -1):
             cell = oCdP.getCellByPosition(c, r_anticipo_cdp)
             lbl = cell.String
@@ -3613,59 +3625,41 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                 cell.String = new_lbl
                 break
 
-        if aliquota_anticipo > 0:
-            # Calcolo basato sulla somma dei lavori del SAL attuale
-            if r_sogg is not None and r_nonsogg is not None:
-                expr = f'({v}{r_sogg + 1}+{v}{r_nonsogg + 1})*{aliquota_anticipo}'
-                oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = \
-                    f'=IF({expr}=0;"";{expr})'
-            else:
-                ref = f'$S2.${s2_col}${r2_anticipo + 1}'
-                oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = \
-                    f'=IF({ref}=0;"";{ref})'
+        if aliquota_anticipo > 0 and r_sogg is not None:
+            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula =                 f'={v}{r_sogg + 1}*{aliquota_anticipo}'
+        elif r2_anticipo is not None:
+            ref_ant = f'$S2.${s2_col}${r2_anticipo + 1}'
+            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula =                 f'=IF({ref_ant}=0;"";{ref_ant})'
         else:
-            ref = f'$S2.${s2_col}${r2_anticipo + 1}'
-            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = \
-                f'=IF({ref}=0;"";{ref})'
+            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = '0'
 
-
-
-    # TOTALE DETRAZIONE
-    if r_totdet is not None and r_ritenuta is not None:
-        sub = f'=SUM({v}{r_ritenuta + 1}:{v}{r_totdet})'
+    if r_totdet is not None and r_ritenuta is not None and r_certprec is not None:
+        r_det_fine = max(r_ritenuta, r_certprec,
+                         r_anticipo_cdp if r_anticipo_cdp is not None else 0)
+        sub = f'=SUBTOTAL(9;{v}{r_ritenuta + 1}:{v}{r_det_fine + 1})'
         oCdP.getCellByPosition(val_col, r_totdet).Formula = sub
-        # f'=IF({sub}=0;"";{sub})'
 
-    # RISULTA IL CREDITO DELL'IMPRESA
     if r_credito is not None and r_sogg is not None and r_totdet is not None:
-        expr = f'{v}{r_sogg + 1}+{v}{r_nonsogg + 1}-{v}{r_totdet + 1}'
-        # expr = f'{v}{r_sogg + 1}+{v}{r_nonsogg + 1}-{ref_cert_prec}'
-        oCdP.getCellByPosition(val_col, r_credito).Formula = \
-            f'=IF({expr}=0;"";{expr})'
+        ns = f'+{v}{r_nonsogg + 1}' if r_nonsogg is not None else ''
+        oCdP.getCellByPosition(val_col, r_credito).Formula =             f'={v}{r_sogg + 1}{ns}-{v}{r_totdet + 1}'
 
-    # per I.V.A. al __%
-    if r_iva is not None and r_credito is not None:
-        # Aggiorna etichetta con percentuale letta da S2
+    if r_iva is not None:
         for c in range(val_col - 1, -1, -1):
-            lbl = oCdP.getCellByPosition(c, r_iva).String
-            if 'I.V.A.' in lbl or 'IVA' in lbl.upper():
-                oCdP.getCellByPosition(c, r_iva).String = \
-                    f'per I.V.A. al {perc_iva_str}%'
+            cell = oCdP.getCellByPosition(c, r_iva)
+            lbl = cell.String
+            if 'I.V.A.' in lbl:
+                cell.String = f'per I.V.A. al {perc_iva_str}%'
                 break
-        expr = f'{v}{r_credito + 1}*{aliquota_iva}'
-        oCdP.getCellByPosition(val_col, r_iva).Formula = \
-            f'=IF({expr}=0;"";{expr})'
 
-    # TOTALE GENERALE
+        oCdP.getCellByPosition(val_col, r_iva).Formula =             f'={v}{r_credito + 1}*{aliquota_iva}'
+
     if r_totgen is not None and r_credito is not None and r_iva is not None:
         expr = f'{v}{r_credito + 1}+{v}{r_iva + 1}'
-        oCdP.getCellByPosition(val_col, r_totgen).Formula = \
-            f'=IF({expr}=0;"";{expr})'
+        oCdP.getCellByPosition(val_col, r_totgen).Formula =             f'=IF({expr}=0;"";{expr})'
 
     # ── 4. Sezione CERTIFICA ─────────────────────────────────────────────
     importo_finale = 0.0
 
-    # Recupera il valore direttamente dal risultato del calcolo nel foglio CdP
     if r_totgen is not None:
         try:
             was_auto = oDoc.isAutomaticCalculationEnabled()
@@ -3677,97 +3671,76 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         except Exception:
             pass
 
-    # Fallback ai dati presenti in S2 se CdP è vuoto
     if importo_finale == 0.0 and r2_certif is not None:
         _v = oS2.getCellByPosition(col_sal, r2_certif).Value
         importo_finale = round(_v, 2)
 
-    # Preparazione delle stringhe per Title e Certifica
     str_n_cert = oS2.getCellByPosition(col_sal, r2_n_cert).String if r2_n_cert is not None else str(nSal)
-    # Formattazione importo stile IT (1.234,56) - importo_finale è già troncato a 2 decimali
     str_importo = f"{importo_finale:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    # DLG.chi(str_importo)
+
     if r_certifica is not None:
         in_lettere = numero_in_lettere_euro(importo_finale)
-
-        # Testo completo per la sezione CERTIFICA
         certifica_testo = (
             "C E R T I F I C A\n"
             f"CHE ai termini dell'articolo {articolo or '____'} del contratto si può pagare all'impresa "
             f"la rata di euro {str_importo} oltre IVA, se dovuta, come per legge.\n\n"
             f"Diconsi: (euro {in_lettere})."
         )
-
-        # Scrive l'intero blocco nella cella che contiene "C E R T I F I C A"
         for c in range(10):
             cell = oCdP.getCellByPosition(c, r_certifica)
-            if 'C E R T I F I C A' in cell.String.upper():
+            txt_u = cell.String.upper()
+            if 'C E R T I F I C A' in txt_u or 'TERMINI' in txt_u or 'PAGARE' in txt_u:
                 cell.String = certifica_testo
                 cell.IsTextWrapped = True
                 break
 
-
     # ── 5. Firme ─────────────────────────────────────────────────────────
-
     if r_luogo is not None:
-        # Luogo e data (colonna sinistra)
-        oCdP.getCellByPosition(4, r_luogo).String = \
-            f'{luogo}, {data_odierna}'
+        oCdP.getCellByPosition(4, r_luogo).String = f'{luogo}, {data_odierna}'
 
-    if r_certifica is not None:
-        # Responsabile (qualsiasi variante: del Procedimento, del Progetto, di Progetto...)
-        # Cerca in tutte le colonne usate; scrive il nome nella riga sotto.
-        _max_col = SheetUtils.getLastUsedColumn(oCdP) if hasattr(SheetUtils, 'getLastUsedColumn') else 9
-        _scritto = False
-        for _r in range(SheetUtils.getLastUsedRow(oCdP) + 1):
-            for _col in range(_max_col + 1):
-                if 'RESPONSABILE' in oCdP.getCellByPosition(_col, _r).String.upper():
-                    oCdP.getCellByPosition(_col, _r + 1).String = f'({nome_resp})'
-                    _scritto = True
-                    break
-            if _scritto:
+    # Scansione firme limitata al blocco CdP corrente (da base_start_row in avanti)
+    _max_col = SheetUtils.getLastUsedColumn(oCdP) if hasattr(SheetUtils, 'getLastUsedColumn') else 9
+    _blocco_end_row = SheetUtils.getLastUsedRow(oCdP) + 1
+    _scritto = False
+    for _r in range(base_start_row, _blocco_end_row):
+        for _col in range(_max_col + 1):
+            if 'RESPONSABILE' in oCdP.getCellByPosition(_col, _r).String.upper():
+                oCdP.getCellByPosition(_col, _r + 1).String = f'({nome_resp})'
+                _scritto = True
                 break
+        if _scritto:
+            break
 
-        # Direttore Lavori (qualsiasi colonna del template)
-        _cell_dl = None
-        for _lbl_dl in ('Il Direttore dei Lavori', 'Direttore Lavori'):
-            _lbl_dl_up = _lbl_dl.upper()
-            for _r in range(SheetUtils.getLastUsedRow(oCdP) + 1):
-                for _col in range(_max_col + 1):
-                    if _lbl_dl_up in oCdP.getCellByPosition(_col, _r).String.upper():
-                        _cell_dl = oCdP.getCellByPosition(_col, _r)
-                        break
-                if _cell_dl:
+    _cell_dl = None
+    for _lbl_dl in ('Il Direttore dei Lavori', 'Direttore Lavori'):
+        _lbl_dl_up = _lbl_dl.upper()
+        for _r in range(base_start_row, _blocco_end_row):
+            for _col in range(_max_col + 1):
+                if _lbl_dl_up in oCdP.getCellByPosition(_col, _r).String.upper():
+                    _cell_dl = oCdP.getCellByPosition(_col, _r)
                     break
             if _cell_dl:
                 break
+        if _cell_dl:
+            break
 
-        if _cell_dl is not None:
-            txt = _cell_dl.String
-            # Inserisce la polizza se presente il placeholder (fallback)
-            if 'n._' in txt and polizza_n:
-                txt = txt.replace('n.__________', f'n. {polizza_n}')
-            # Inserisce il nome DL in coda se non già presente
-            if f'({nome_dl})' not in txt:
-                txt = txt.strip() + f'\n({nome_dl})'
-            _cell_dl.String = txt
-            _cell_dl.IsTextWrapped = True
-
-
-
+    if _cell_dl is not None:
+        txt = _cell_dl.String
+        if 'n._' in txt and polizza_n:
+            txt = txt.replace('n.__________', f'n. {polizza_n}')
+        if f'({nome_dl})' not in txt:
+            txt = txt.strip() + f'\n({nome_dl})'
+        _cell_dl.String = txt
+        _cell_dl.IsTextWrapped = True
 
     # ── 6. Titolo (CERTIFICATO DI PAGAMENTO...) ──────────────────────────
-    # Cerchiamo la riga del titolo in modo più robusto
     r_tit_ancora = R('CERTIFICATO DI PAGAMENTO') or R('PAGAMENTO DELLA RATA')
 
     if r_tit_ancora is not None:
-        # Componiamo il testo finale (usiamo \n per l'andata a capo)
         titolo_testo = (
             f"CERTIFICATO DI PAGAMENTO N. {str_n_cert}\n"
             f"PER IL PAGAMENTO DELLA RATA N. {str_n_cert} DI euro {str_importo}"
         )
-
-        # Scrive il risultato come testo semplice (non formula)
         for c in range(10):
             cell = oCdP.getCellByPosition(c, r_tit_ancora)
             txt = cell.String.upper()
@@ -3778,16 +3751,26 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     # ── 7. Area nominata e stampa ────────────────────────────────────────
     ultimo_row = SheetUtils.getLastUsedRow(oCdP) + 1
-    area_cdp = f'$A$1:${_col_letter(val_col)}${ultimo_row + 1}'
+    start_row_named = base_start_row
+    area_cdp = f'$A${start_row_named + 1}:${_col_letter(val_col)}${ultimo_row + 1}'
     SheetUtils.NominaArea(oDoc, 'CdP', area_cdp, f'_CdP_{nSal}')
 
-    # Area di stampa = tutto il foglio
-    addr = oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row + 2).getRangeAddress()
+    addr = oCdP.getCellRangeByPosition(0, start_row_named, val_col, ultimo_row).getRangeAddress()
     oCdP.setPrintAreas((addr,))
 
-    oCdP.getCellRangeByPosition(0, 0, val_col, ultimo_row + 2).Rows.OptimalHeight = True
+    oCdP.getCellRangeByPosition(0, start_row_named, val_col, ultimo_row).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)
     PL.GotoSheet('CdP')
+
+    # Dati aggiuntivi per il riepilogo
+    imp_contratto = 0.0
+    tot_lavori_oggi = 0.0
+    r2_contratto = trova_r_S2("importo contrattuale") or trova_r_S2("contratto")
+    if r2_contratto is not None:
+        imp_contratto = oS2.getCellByPosition(col_sal, r2_contratto).Value
+    r2_tot_lav = trova_r_S2("totale lavori") or trova_r_S2("lavori eseguiti")
+    if r2_tot_lav is not None:
+        tot_lavori_oggi = oS2.getCellByPosition(col_sal, r2_tot_lav).Value
 
     return {
         'nSal': nSal,
@@ -3801,6 +3784,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         'tot_lavori_oggi': tot_lavori_oggi,
         'cert_precedenti': oCdP.getCellByPosition(val_col, r_certprec).Value if r_certprec is not None else 0.0
     }
+
 
 def _mostra_riepilogo_cdp(riepilogo, titolo="Atti contabili aggiornati con successo."):
     """Mostra la finestra di dialogo con il riepilogo del certificato di pagamento generato."""

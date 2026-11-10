@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?mso-application progid="PriMus.Document.XPWE"?>
+<PweDocumento>
+	<CopyRight>Copyright ACCA software S.p.A.</CopyRight>
+	<TipoDocumento>1</TipoDocumento>
+	<TipoFormato>XMLPwe</TipoFormato>
+	<Versione>5.05</Versione>
+	<SourceVersione>LeenO</SourceVersione>
+	<SourceNome>LeenO</SourceNome>
+	<FileNameDocumento>W:\_dwg\ULTIMUSFREE\_SRC\leeno\tests\data\ristrutturazione\_Eristrutturazione.xpwe</FileNameDocumento>
+	<PweDatiGenerali>
+		<PweDGProgetto>
+			<PweDGDatiGenerali>
+				<PercPrezzi>0</PercPrezzi>
+				<Comune />
+				<Provincia />
+				<Oggetto>ll Rights Reserved</Oggetto>
+				<Committente />
+				<Impresa />
+				<ParteOpera />
+			</PweDGDatiGenerali>
+		</PweDGProgetto>
+		<PweDGCapitoliCategorie>
+			<PweDGSuperCapitoli />
+			<PweDGCapitoli />
+			<PweDGSubCapitoli />
+			<PweDGSuperCategorie />
+			<PweDGCategorie />
+			<PweDGSubCategorie />
+		</PweDGCapitoliCategorie>
+		<PweDGModuli>
+			<PweDGAnalisi>
+				<SpeseUtili>-1</SpeseUtili>
+				<SpeseGenerali>14</SpeseGenerali>
+				<UtiliImpresa>10</UtiliImpresa>
+				<OneriAccessoriSc>0</OneriAccessoriSc>
+				<ConfQuantita>11.3|1</ConfQuantita>
+				<OneriSociali>0</OneriSociali>
+			</PweDGAnalisi>
+		</PweDGModuli>
+		<PweDGConfigurazione>
+			<PweDGConfigNumeri>
+				<Divisa>euro</Divisa>
+				<ConversioniIN>lire</ConversioniIN>
+				<FattoreConversione>1936.27</FattoreConversione>
+				<Cambio>1</Cambio>
+				<PartiUguali>8.2|0</PartiUguali>
+				<Lunghezza>8.2|0</Lunghezza>
+				<Larghezza>9.3|0</Larghezza>
+				<HPeso>9.3|0</HPeso>
+				<Quantita>10.2|1</Quantita>
+				<Prezzi>10.2|1</Prezzi>
+				<PrezziTotale>14.2|1</PrezziTotale>
+				<ConvPrezzi>11.0|1</ConvPrezzi>
+				<ConvPrezziTotale>15.0|1</ConvPrezziTotale>
+				<IncidenzaPercentuale>7.3|0</IncidenzaPercentuale>
+				<Aliquote>7.3|0</Aliquote>
+			</PweDGConfigNumeri>
+		</PweDGConfigurazione>
+	</PweDatiGenerali>
+	<PweMisurazioni>
+		<PweElencoPrezzi>
+			<EPItem ID="1">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-03a</Tariffa>
+				<Articolo>I-02-03a</Articolo>
+				<DesRidotta>Demolizione di tramezzi in mattoni pieni o forati, compre ... i di risulta  tramezzi fino a 12-15 cm. di spessore fìnito</DesRidotta>
+				<DesEstesa>Demolizione di tramezzi in mattoni pieni o forati, compresi relativi intonaci di qualsiasi tipo e spessore, a qualsiasi altezza, compreso abbassamento e accatastamento, nell&amp;#x27;ambito del cantiere o del magazzino dell&amp;#x27;Amministrazione, dei recuperi prescritti dalla Direzione lavori, il carico, il trasporto e scarico alle discariche dei materiali di risulta  tramezzi fino a 12-15 cm. di spessore fìnito</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="2">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-11a</Tariffa>
+				<Articolo>I-02-11a</Articolo>
+				<DesRidotta>Demolizione di controsoffìtti compreso il carico, lo scar ... , arelle e intonaco, o rete metallica, o pannelli in gesso</DesRidotta>
+				<DesEstesa>Demolizione di controsoffìtti compreso il carico, lo scarico e il trasporto a rifiuto, posti fino a  metri 4 dal piano di calpestio   in legno, arelle e intonaco, o rete metallica, o pannelli in gesso</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="3">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-13b</Tariffa>
+				<Articolo>I-02-13b</Articolo>
+				<DesRidotta>Rimozione di zoccolini battiscopa:   in piastrelle di grè ... mbito del cantiere secondo gli ordini impartiti dalla D.L.</DesRidotta>
+				<DesEstesa>Rimozione di zoccolini battiscopa:   in piastrelle di grès o di maiolica, o pietra da taglio, posti in opera a mezzo di malta o colla, compreso il trasporto a rifiuto del materiale o il suo accatastamento nell&amp;#x27;ambito del cantiere secondo gli ordini impartiti dalla D.L.</DesEstesa>
+				<DesBreve />
+				<UnMisura>ml</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="4">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-14a</Tariffa>
+				<Articolo>I-02-14a</Articolo>
+				<DesRidotta>Demolizione anche parziale di sottofondi, caldane, masset ... o di  nerti normali e cemento fino a uno spessore di cm. 5</DesRidotta>
+				<DesEstesa>Demolizione anche parziale di sottofondi, caldane, massetti per pendenze, manti impermeabili di qualsiasi tipo, ed a qualsiasi altezza, con gli oneri di cui alle premesse, con l&amp;#x27;avvertenza che le strutture sottostanti non devono essere interessate, nè danneggiate, compreso caricamento e trasporto del materiale di risulta alle discariche. di caldana di sottofondo, massetto per pendenze, cappa di protezione in conglomerato di  nerti normali e cemento fino a uno spessore di cm. 5</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="5">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-14g</Tariffa>
+				<Articolo>I-02-14g</Articolo>
+				<DesRidotta>Demolizione anche parziale di sottofondi, caldane, masset ... reso malta del piano di posa, senza recupero dei materiali</DesRidotta>
+				<DesEstesa>Demolizione anche parziale di sottofondi, caldane, massetti per pendenze, manti impermeabili di qualsiasi tipo, ed a qualsiasi altezza, con gli oneri di cui alle premesse, con l&amp;#x27;avvertenza che le strutture sottostanti non devono essere interessate, nè danneggiate, compreso caricamento e trasporto del materiale di risulta alle discariche. di pavimento in piastrelle di cemento, pietrini, marmette, grès, mosaico di grès, o di marmo, listelli di klinker, compreso malta del piano di posa, senza recupero dei materiali</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="6">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-14n</Tariffa>
+				<Articolo>I-02-14n</Articolo>
+				<DesRidotta>Demolizione anche parziale di sottofondi, caldane, masset ... resa malta del letto di posa, senza recupero dei materiali</DesRidotta>
+				<DesEstesa>Demolizione anche parziale di sottofondi, caldane, massetti per pendenze, manti impermeabili di qualsiasi tipo, ed a qualsiasi altezza, con gli oneri di cui alle premesse, con l&amp;#x27;avvertenza che le strutture sottostanti non devono essere interessate, nè danneggiate, compreso caricamento e trasporto del materiale di risulta alle discariche. di rivestimento interno ed esterno in piastrelle di terracotta o ceramica smaltata, grès, tessere di grès, e di marmo, listelli di klinker, compresa malta del letto di posa, senza recupero dei materiali</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="7">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-17a</Tariffa>
+				<Articolo>I-02-17a</Articolo>
+				<DesRidotta>Rimozione di serramenti in legno, in qualsiasi numero, co ... ti, copri fili, scuretti, con superficie superiore a 2 mq.</DesRidotta>
+				<DesEstesa>Rimozione di serramenti in legno, in qualsiasi numero, compresi vetri ed accessori connessi al loro funzionamento, da depositare nel luogo indicato dalla Direzione Lavori entro l&amp;#x27;ambito del cantiere, con gli oneri come alle premesse. Nel caso si debbano rimuovere oltre al serramento, anche il cassonetto e le cornici in legno, le superfici di questi ultimi vanno sommate a quelle del serramento. La rimozione deve essere effettuata senza danneggiare le parti recuperabili e reintegrabili. di serramento in legno per finestre e porte - finestre, di cassonetto, compresi stipiti, contro stipiti, copri fili, scuretti, con superficie superiore a 2 mq.</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="8">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-17d</Tariffa>
+				<Articolo>I-02-17d</Articolo>
+				<DesRidotta>Rimozione di serramenti in legno, in qualsiasi numero, co ... erna in legno, compresi stipite, controstipite e coprifili</DesRidotta>
+				<DesEstesa>Rimozione di serramenti in legno, in qualsiasi numero, compresi vetri ed accessori connessi al loro funzionamento, da depositare nel luogo indicato dalla Direzione Lavori entro l&amp;#x27;ambito del cantiere, con gli oneri come alle premesse. Nel caso si debbano rimuovere oltre al serramento, anche il cassonetto e le cornici in legno, le superfici di questi ultimi vanno sommate a quelle del serramento. La rimozione deve essere effettuata senza danneggiare le parti recuperabili e reintegrabili. di porta interna in legno, compresi stipite, controstipite e coprifili</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="9">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-17h</Tariffa>
+				<Articolo>I-02-17h</Articolo>
+				<DesRidotta>Rimozione di serramenti in legno, in qualsiasi numero, co ... esso, compreso stipiti, controstipiti, bussola e coprifili</DesRidotta>
+				<DesEstesa>Rimozione di serramenti in legno, in qualsiasi numero, compresi vetri ed accessori connessi al loro funzionamento, da depositare nel luogo indicato dalla Direzione Lavori entro l&amp;#x27;ambito del cantiere, con gli oneri come alle premesse. Nel caso si debbano rimuovere oltre al serramento, anche il cassonetto e le cornici in legno, le superfici di questi ultimi vanno sommate a quelle del serramento. La rimozione deve essere effettuata senza danneggiare le parti recuperabili e reintegrabili. di porta ed antiporta di primo ingresso, compreso stipiti, controstipiti, bussola e coprifili</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="10">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22a</Tariffa>
+				<Articolo>I-02-22a</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... vaso igienico, compreso cassetta, tubo di scarico e sifone</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. di vaso igienico, compreso cassetta, tubo di scarico e sifone</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0.01</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="11">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22c</Tariffa>
+				<Articolo>I-02-22c</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... e. di lavabo, lavandino e lavello, compreso sifone esterno</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. di lavabo, lavandino e lavello, compreso sifone esterno</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0.01</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="12">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22d</Tariffa>
+				<Articolo>I-02-22d</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... o e zanche. di bidet, compresi tubetti di raccordo al muro</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. di bidet, compresi tubetti di raccordo al muro</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0.01</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="13">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22e</Tariffa>
+				<Articolo>I-02-22e</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... tangolare o a sedere, compreso gruppo di erogazione a muro</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. di vasca rettangolare o a sedere, compreso gruppo di erogazione a muro</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0.01</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="14">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22g</Tariffa>
+				<Articolo>I-02-22g</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... e zanche. di radiatore per riscaldamento fino a 6 elementi</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. di radiatore per riscaldamento fino a 6 elementi</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="15">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-22h</Tariffa>
+				<Articolo>I-02-22h</Articolo>
+				<DesRidotta>Rimozione di apparecchi idrico - sanitari, di riscaldame ... rdi di piombo e zanche. idem c.s. per ogni elemento in più</DesRidotta>
+				<DesEstesa>Rimozione di apparecchi idrico - sanitari, di riscaldamento o simili, in qualsiasi  numero, con gli oneri come alle premesse, più la rimozione delle rubinetterie, tubi di raccordo esterni, eventuali pilette a pavimento, raccordi di piombo e zanche. idem c.s. per ogni elemento in più</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="16">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-23i</Tariffa>
+				<Articolo>I-02-23i</Articolo>
+				<DesRidotta>Rimozione di articoli vari, in qualsiasi numero, con gli  ... remesse: di placche compreso frutti e cassette portafrutta</DesRidotta>
+				<DesEstesa>Rimozione di articoli vari, in qualsiasi numero, con gli oneri come alle premesse: di placche compreso frutti e cassette portafrutta</DesEstesa>
+				<DesBreve />
+				<UnMisura>cad</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="17">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-02-28</Tariffa>
+				<Articolo>I-02-28</Articolo>
+				<DesRidotta>Rimozione di davanzali o soglie in marmo od altra pietra ... iano pronto per la posa di un manufatto dei suddetti tipi.</DesRidotta>
+				<DesEstesa>Rimozione di davanzali o soglie in marmo od altra pietra naturale dello  spessore fino a cm. 5, larghezza fino a cm. 30, compresa la discesa a piano cortile, l&amp;#x27;accatastamento, la scalpellatura del piano di posa, la pulizia e quant&amp;#x27;altro necessario per dare detto piano pronto per la posa di un manufatto dei suddetti tipi.</DesEstesa>
+				<DesBreve />
+				<UnMisura>ml.</UnMisura>
+				<Prezzo1>0</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+			<EPItem ID="18">
+				<TipoEP>0</TipoEP>
+				<Tariffa>01-04-11b</Tariffa>
+				<Articolo>I-04-11b</Articolo>
+				<DesRidotta>Tramezzi di blocchetti di argilla espansa e cemento fora ... uggellatura degli incastri a mura: dello spessore di cm. 8</DesRidotta>
+				<DesEstesa>Tramezzi di blocchetti di argilla espansa e cemento forati, compressi o vibrati posti in opera con malta cementizia, compreso l&amp;#x27;eventuale taglio o suggellatura degli incastri a mura: dello spessore di cm. 8</DesEstesa>
+				<DesBreve />
+				<UnMisura>mq</UnMisura>
+				<Prezzo1>0.01</Prezzo1>
+				<Prezzo2>0</Prezzo2>
+				<Prezzo3>0</Prezzo3>
+				<Prezzo4>0</Prezzo4>
+				<Prezzo5>0</Prezzo5>
+				<IDSpCap>0</IDSpCap>
+				<IDCap>0</IDCap>
+				<IDSbCap>0</IDSbCap>
+				<CodiceWBSCAP />
+				<Flags>0</Flags>
+				<Data>09/11/2026</Data>
+				<AdrInternet />
+				<IncSIC>0</IncSIC>
+				<IncMDO>0</IncMDO>
+				<IncMAT>0</IncMAT>
+				<IncATTR>0</IncATTR>
+				<TagBIM />
+				<PweEPAnalisi />
+			</EPItem>
+		</PweElencoPrezzi>
+		<PweVociComputo />
+	</PweMisurazioni>
+</PweDocumento>

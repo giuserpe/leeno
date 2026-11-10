@@ -658,8 +658,10 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                 if oRanges.hasByName(nome_cdp_del):
                     oNR_C = oRanges.getByName(nome_cdp_del).ReferredCells.RangeAddress
                     oSheet_C.ungroup(oNR_C, 1)
-                    # Include la riga titolo "segue CdP" (StartRow - 1)
-                    oSheet_C.Rows.removeByIndex(oNR_C.StartRow - 1, oNR_C.EndRow - oNR_C.StartRow + 2)
+                    # Rimuove le righe del blocco CdP (compresa la riga d'intestazione a StartRow - 1)
+                    r_start = max(0, oNR_C.StartRow - 1)
+                    num_r = oNR_C.EndRow - r_start + 1
+                    oSheet_C.Rows.removeByIndex(r_start, num_r)
                     oRanges.removeByName(nome_cdp_del)
     except Exception as _exc:
         errori.append('eliminazione di Registro, SAL e CdP')
@@ -3289,6 +3291,52 @@ def _leggi_infortuni_da_S2(oS2):
     return 0.0
 
 
+# Righe del template CdP (righe 0..44 del foglio CdP in Computo_LeenO.ods).
+# Un blocco CdP e' formato dalla riga 0 (intestazione 'segue CdP'), da una riga
+# vuota e dalle righe 1..44 del template: CDP_RIGHE_BLOCCO + 1 righe in tutto.
+CDP_RIGHE_BLOCCO = 45
+
+
+def _copia_blocco_template_cdp(oDoc, oCdP, base_start_row):
+    '''
+    Replica fedelmente nel foglio CdP, a partire da base_start_row, le righe 0..44
+    del foglio CdP di Computo_LeenO.ods: unioni, stili, testi, formule e altezze.
+    La riga 0 va in base_start_row, la riga base_start_row + 1 resta vuota e le righe
+    1..44 vanno da base_start_row + 2. Le righe di destinazione (CDP_RIGHE_BLOCCO + 1)
+    devono esistere gia'. Il template e' l'unico schema di
+    riferimento: nessuna coordinata di cella e' riscritta a mano in questo modulo.
+    Ritorna True se la copia riesce, False altrimenti.
+    '''
+    template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
+    oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+    if not oTemplate:
+        return False
+    nome_tmp = None
+    try:
+        oSheets = oDoc.getSheets()
+        idx = oSheets.importSheet(oTemplate, 'CdP', oSheets.getCount())
+        oTmp = oSheets.getByIndex(idx)
+        nome_tmp = oTmp.getName()
+        src_tit = oTmp.getCellRangeByPosition(0, 0, 5, 0).getRangeAddress()
+        src_corpo = oTmp.getCellRangeByPosition(0, 1, 5, CDP_RIGHE_BLOCCO - 1).getRangeAddress()
+        oCdP.copyRange(oCdP.getCellByPosition(0, base_start_row).getCellAddress(), src_tit)
+        oCdP.copyRange(oCdP.getCellByPosition(0, base_start_row + 2).getCellAddress(), src_corpo)
+        for i in range(CDP_RIGHE_BLOCCO):
+            r_dst = base_start_row + i + (1 if i > 0 else 0)
+            oCdP.getRows().getByIndex(r_dst).Height = oTmp.getRows().getByIndex(i).Height
+        return True
+    except Exception as _exc:
+        LeenoUtils.log_errore('_copia_blocco_template_cdp: copia dal template', _exc)
+        return False
+    finally:
+        try:
+            if nome_tmp and oDoc.getSheets().hasByName(nome_tmp):
+                oDoc.getSheets().removeByName(nome_tmp)
+        except Exception as _exc:
+            LeenoUtils.log_errore('_copia_blocco_template_cdp: rimozione foglio temporaneo', _exc)
+        oTemplate.close(True)
+
+
 def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     """
     CERTIFICATO DI PAGAMENTO - Popola il foglio CdP per il SAL corrente.
@@ -3337,7 +3385,11 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     if oCdP is None:
         return
 
-    # Calcolo riga di inserimento
+    # Inserimento/scrittura intestazione in cima a ciascun CdP (stile 'uuuuu')
+    # Ciascun CdP occupa CDP_RIGHE_BLOCCO + 1 righe (intestazione, riga vuota, righe 1..44 del template)
+    str_aVoce = f" - 1÷{aVoce}" if aVoce else ""
+    testo_titolo = f"segue CdP n.{nSal}{str_aVoce}"
+
     if nSal == 1:
         base_start_row = 0
     else:
@@ -3346,33 +3398,38 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             prev_addr = oDoc.NamedRanges.getByName(prev_name).ReferredCells.RangeAddress
             insRow = prev_addr.EndRow + 1
         else:
-            insRow = SheetUtils.getLastUsedRow(oCdP) + 1
+            insRow = (nSal - 1) * (CDP_RIGHE_BLOCCO + 1)
 
-        # Inserimento riga di intestazione raggruppamento "segue CdP" con stile "uuuuu"
-        oCdP.getRows().insertByIndex(insRow, 1)
-        oCdP.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
-        str_aVoce = f" - 1÷{aVoce}" if aVoce else ""
-        oCdP.getCellByPosition(1, insRow).String = f"segue CdP n.{nSal}{str_aVoce}"
+        base_start_row = insRow
+
+        # Inserisce le righe per il nuovo CdP e vi replica il template (righe 0..44)
+        oCdP.getRows().insertByIndex(base_start_row, CDP_RIGHE_BLOCCO + 1)
+        if not _copia_blocco_template_cdp(oDoc, oCdP, base_start_row):
+            LeenoUtils.log_errore('GeneraCdP: copia del template CdP', RuntimeError('copia non riuscita'))
+
+    if nSal == 1:
+        # Il foglio importato dal template non ha la riga vuota sotto l'intestazione
+        oCdP.getRows().insertByIndex(1, 1)
+
+    # Riga vuota sotto l'intestazione
+    oRigaVuota = oCdP.getCellRangeByPosition(0, base_start_row + 1, 5, base_start_row + 1)
+    oRigaVuota.merge(False)
+    oRigaVuota.clearContents(VALUE + DATETIME + STRING + FORMULA)
+    oRigaVuota.CellStyle = "Default"
+
+    # Riga titolo del blocco: la riga 0 del template e' unita su A:F, la si separa
+    # perche' il testo va in B con stile 'uuuuu'
+    oRigaTitolo = oCdP.getCellRangeByPosition(0, base_start_row, 5, base_start_row)
+    oRigaTitolo.merge(False)
+    oRigaTitolo.CellStyle = "uuuuu"
+    oCdP.getCellByPosition(1, base_start_row).String = testo_titolo
+    if nSal > 1:
         try:
-            oCdP.getRows().getByIndex(insRow).IsStartOfNewPage = True
-        except Exception:
-            pass
-
-        base_start_row = insRow + 1
-
-        # Clona la struttura del template per il nuovo CdP
-        num_tmpl_rows = 48
-        if oDoc.NamedRanges.hasByName("_CdP_1"):
-            cdp1_addr = oDoc.NamedRanges.getByName("_CdP_1").ReferredCells.RangeAddress
-            num_tmpl_rows = max(num_tmpl_rows, cdp1_addr.EndRow - cdp1_addr.StartRow + 1)
-        oCdP.getRows().insertByIndex(base_start_row, num_tmpl_rows)
-
-        try:
-            src_addr = oCdP.getCellRangeByPosition(0, 0, 5, num_tmpl_rows - 1).getRangeAddress()
-            dst_cell_addr = oCdP.getCellByPosition(0, base_start_row).getCellAddress()
-            oCdP.copyRange(dst_cell_addr, src_addr)
+            oCdP.getRows().getByIndex(base_start_row).IsStartOfNewPage = True
         except Exception as _exc:
-            LeenoUtils.log_errore('GeneraCdP: copia template CdP', _exc)
+            LeenoUtils.log_errore('GeneraCdP: interruzione di pagina del blocco', _exc)
+
+    righe_inserite = 0
 
     # ── Dati S2 ──────────────────────────────────────────────────────────
     oS2 = oDoc.getSheets().getByName('S2')
@@ -3550,14 +3607,16 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         r_first = r_Ncert + 1   # prima riga dati cert LIST
         num_cert = nSal - 1     # certificati precedenti da scrivere (1..nSal-1)
 
-        if r_sogg is not None:
-            righe_disponibili = r_sogg - r_first
+        # La lista occupa le righe fino alla riga del totale (stessa riga di 'per I.V.A.')
+        if r_iva is not None:
+            righe_disponibili = r_iva - r_first
         else:
             righe_disponibili = num_cert
 
         righe_da_inserire = num_cert - righe_disponibili
         if righe_da_inserire > 0:
             oCdP.getRows().insertByIndex(r_first + righe_disponibili, righe_da_inserire)
+            righe_inserite = righe_da_inserire
 
             # Ricalcola gli ancoraggi che si sono spostati verso il basso
             r_sogg     = R('SOMMANO importi soggetti')
@@ -3750,15 +3809,20 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                 break
 
     # ── 7. Area nominata e stampa ────────────────────────────────────────
-    ultimo_row = SheetUtils.getLastUsedRow(oCdP) + 1
-    start_row_named = base_start_row
-    area_cdp = f'$A${start_row_named + 1}:${_col_letter(val_col)}${ultimo_row + 1}'
+    # Escludiamo la riga d'intestazione "segue CdP" (base_start_row) dall'area del NamedRange
+    # in modo che il raggruppamento delle righe mantenga l'intestazione visibile all'esterno,
+    # analogamente a quanto avviene per Registro e SAL.
+    start_row_named = base_start_row + 1
+    end_row_named = base_start_row + CDP_RIGHE_BLOCCO + righe_inserite
+    area_cdp = f'$A${start_row_named + 1}:${_col_letter(val_col)}${end_row_named + 1}'
     SheetUtils.NominaArea(oDoc, 'CdP', area_cdp, f'_CdP_{nSal}')
 
-    addr = oCdP.getCellRangeByPosition(0, start_row_named, val_col, ultimo_row).getRangeAddress()
+    # L'area di stampa esclude la riga d'intestazione 'segue CdP' (stile 'uuuuu') e la riga vuota sotto di essa
+    addr = oCdP.getCellRangeByPosition(0, base_start_row + 2, val_col, end_row_named).getRangeAddress()
     oCdP.setPrintAreas((addr,))
+    oCdP.setPrintTitleRows(False)
 
-    oCdP.getCellRangeByPosition(0, start_row_named, val_col, ultimo_row).Rows.OptimalHeight = True
+    oCdP.getCellRangeByPosition(0, start_row_named, val_col, end_row_named).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)
     PL.GotoSheet('CdP')
 

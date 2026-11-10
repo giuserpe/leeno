@@ -60,10 +60,13 @@ class TestGeneraCdPComportamento(unittest.TestCase):
             "_leggi_dato_anagrafico": lambda s, l: "Dato",
             "_col_letter": lambda c: chr(65 + c),
             "date": MagicMock(),
+            "CDP_RIGHE_BLOCCO": 45,
+            "VALUE": 1, "DATETIME": 2, "STRING": 4, "FORMULA": 16,
         }
         self.ns["date"].today.return_value.strftime.return_value = "01/01/2026"
 
         mod = ast.Module(body=[
+            _estrai_funzione("_copia_blocco_template_cdp"),
             _estrai_funzione("setup_foglio_CdP"),
             _estrai_funzione("GeneraCdP")
         ], type_ignores=[])
@@ -135,10 +138,13 @@ class TestGeneraCdPComportamento(unittest.TestCase):
         # 1. Verifica consolidamento CdP 1: setDataArray chiamato con i dati del getDataArray
         prev_cell_range.setDataArray.assert_called_with((("val1", "val2"),))
 
-        # 2. Verifica inserimento riga titolo "segue CdP n.2 - 1÷30" con stile "uuuuu"
-        # insRow era prev_addr.EndRow + 1 = 46
-        oCdP.getRows().insertByIndex.assert_any_call(46, 1)
+        # 2. Verifica inserimento raggruppamento e titolo "segue CdP n.2 - 1÷30" con stile "uuuuu"
+        # insRow era prev_addr.EndRow + 1 = 46 (46 righe inserite: intestazione, riga vuota, righe 1..44 del template)
+        oCdP.getRows().insertByIndex.assert_any_call(46, 46)
         self.assertEqual(cells[(1, 46)].String, "segue CdP n.2 - 1÷30")
+
+        # Il layout del nuovo blocco viene replicato dal template: intestazione e corpo
+        self.assertEqual(oCdP.copyRange.call_count, 2)
 
         # 3. Verifica NominaArea per il nuovo CdP (_CdP_2)
         self.ns["SheetUtils"].NominaArea.assert_called()
@@ -146,6 +152,78 @@ class TestGeneraCdPComportamento(unittest.TestCase):
         self.assertEqual(args[0], oDoc)
         self.assertEqual(args[1], "CdP")
         self.assertEqual(args[3], "_CdP_2")
+
+
+class TestCopiaBloccoTemplateCdP(unittest.TestCase):
+    """La copia del blocco CdP deve venire dal template, non da coordinate scritte a mano."""
+
+    def setUp(self):
+        self.leeno_utils = MagicMock()
+        self.doc_utils = MagicMock()
+        self.ns = {
+            "LeenoUtils": self.leeno_utils,
+            "DocUtils": self.doc_utils,
+            "PL": MagicMock(),
+            "uno": MagicMock(),
+            "CDP_RIGHE_BLOCCO": 45,
+        }
+        mod = ast.Module(body=[_estrai_funzione("_copia_blocco_template_cdp")], type_ignores=[])
+        exec(compile(mod, str(LEENO_CONTAB_PATH), "exec"), self.ns)
+        self.copia = self.ns["_copia_blocco_template_cdp"]
+
+    def _documenti(self):
+        oDoc = MagicMock()
+        oCdP = MagicMock()
+        oTmp = MagicMock()
+        oTmp.getName.return_value = "CdP_tmp"
+        oDoc.getSheets().importSheet.return_value = 7
+        oDoc.getSheets().getByIndex.return_value = oTmp
+        oDoc.getSheets().hasByName.return_value = True
+        oTemplate = MagicMock()
+        self.doc_utils.loadDocument.return_value = oTemplate
+        return oDoc, oCdP, oTmp, oTemplate
+
+    def test_copia_righe_0_44_del_template_e_pulisce(self):
+        oDoc, oCdP, oTmp, oTemplate = self._documenti()
+
+        self.assertTrue(self.copia(oDoc, oCdP, 92))
+
+        # Sorgente: riga 0 (intestazione) e righe 1..44, colonne A..F del foglio importato dal template
+        self.assertEqual([c.args for c in oTmp.getCellRangeByPosition.call_args_list],
+                         [(0, 0, 5, 0), (0, 1, 5, 44)])
+        # Destinazione: intestazione nella prima riga del blocco, corpo dopo una riga vuota
+        self.assertEqual([c.args for c in oCdP.getCellByPosition.call_args_list],
+                         [(0, 92), (0, 94)])
+        self.assertEqual(oCdP.copyRange.call_count, 2)
+        # Foglio temporaneo rimosso e template chiuso
+        oDoc.getSheets().removeByName.assert_called_once_with("CdP_tmp")
+        oTemplate.close.assert_called_once_with(True)
+
+    def test_altezze_righe_replicate_dal_template(self):
+        oDoc, oCdP, oTmp, _ = self._documenti()
+
+        self.copia(oDoc, oCdP, 92)
+
+        richieste = [c.args[0] for c in oCdP.getRows().getByIndex.call_args_list]
+        # 45 righe del template, con la riga vuota (93) saltata
+        self.assertEqual(richieste, [92] + list(range(94, 94 + 44)))
+
+    def test_errore_di_copia_ritorna_false_e_pulisce(self):
+        oDoc, oCdP, _, oTemplate = self._documenti()
+        oCdP.copyRange.side_effect = RuntimeError("copia fallita")
+
+        self.assertFalse(self.copia(oDoc, oCdP, 92))
+
+        self.leeno_utils.log_errore.assert_called()
+        oDoc.getSheets().removeByName.assert_called_once_with("CdP_tmp")
+        oTemplate.close.assert_called_once_with(True)
+
+    def test_template_non_caricabile_ritorna_false(self):
+        oDoc, oCdP, _, _ = self._documenti()
+        self.doc_utils.loadDocument.return_value = None
+
+        self.assertFalse(self.copia(oDoc, oCdP, 92))
+        oCdP.copyRange.assert_not_called()
 
 
 if __name__ == "__main__":

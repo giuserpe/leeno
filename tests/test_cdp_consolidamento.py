@@ -135,9 +135,9 @@ class TestGeneraCdPComportamento(unittest.TestCase):
         # 1. Verifica consolidamento CdP 1: setDataArray chiamato con i dati del getDataArray
         prev_cell_range.setDataArray.assert_called_with((("val1", "val2"),))
 
-        # 2. Verifica inserimento riga titolo "segue CdP n.2 - 1÷30" con stile "uuuuu"
-        # insRow era prev_addr.EndRow + 1 = 46
-        oCdP.getRows().insertByIndex.assert_any_call(46, 1)
+        # 2. Verifica inserimento raggruppamento e titolo "segue CdP n.2 - 1÷30" con stile "uuuuu"
+        # insRow era prev_addr.EndRow + 1 = 46 (47 righe inserite per il nuovo blocco)
+        oCdP.getRows().insertByIndex.assert_any_call(46, 47)
         self.assertEqual(cells[(1, 46)].String, "segue CdP n.2 - 1÷30")
 
         # 3. Verifica NominaArea per il nuovo CdP (_CdP_2)

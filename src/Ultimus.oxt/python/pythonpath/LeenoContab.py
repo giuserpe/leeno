@@ -658,7 +658,7 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                 if oRanges.hasByName(nome_cdp_del):
                     oNR_C = oRanges.getByName(nome_cdp_del).ReferredCells.RangeAddress
                     oSheet_C.ungroup(oNR_C, 1)
-                    # Rimuove le 47 righe del CdP (compresa la riga d'intestazione a StartRow - 1)
+                    # Rimuove le righe del blocco CdP (compresa la riga d'intestazione a StartRow - 1)
                     r_start = max(0, oNR_C.StartRow - 1)
                     num_r = oNR_C.EndRow - r_start + 1
                     oSheet_C.Rows.removeByIndex(r_start, num_r)
@@ -3291,120 +3291,50 @@ def _leggi_infortuni_da_S2(oS2):
     return 0.0
 
 
-def _init_template_cdp_blocco(oCdP, base_start_row):
-    """
-    Inizializza le etichette, gli stili e le unioni di celle di un blocco CdP
-    a partire da base_start_row (escluso il titolo 'segue CdP' alla riga 0),
-    replicando fedelmente la struttura del template Computo_LeenO.ods.
-    """
-    cdp_template_merges = [
-        (0, 1, 6, 1), (0, 2, 6, 1), (0, 3, 3, 1), (4, 3, 2, 1),
-        (0, 4, 3, 1), (4, 4, 2, 1), (0, 5, 6, 1), (0, 6, 3, 1),
-        (4, 6, 2, 6), (4, 17, 2, 1), (4, 21, 2, 1), (0, 28, 2, 1),
-        (0, 29, 2, 1), (0, 31, 3, 8), (4, 31, 2, 1), (4, 34, 2, 1),
-        (4, 35, 2, 1)
-    ]
+# Righe del template CdP (righe 0..44 del foglio CdP in Computo_LeenO.ods).
+# Un blocco CdP e' formato dalla riga 0 (intestazione 'segue CdP'), da una riga
+# vuota e dalle righe 1..44 del template: CDP_RIGHE_BLOCCO + 1 righe in tutto.
+CDP_RIGHE_BLOCCO = 45
 
-    for col, rel_row, c_span, r_span in cdp_template_merges:
+
+def _copia_blocco_template_cdp(oDoc, oCdP, base_start_row):
+    '''
+    Replica fedelmente nel foglio CdP, a partire da base_start_row, le righe 0..44
+    del foglio CdP di Computo_LeenO.ods: unioni, stili, testi, formule e altezze.
+    La riga 0 va in base_start_row, la riga base_start_row + 1 resta vuota e le righe
+    1..44 vanno da base_start_row + 2. Le righe di destinazione (CDP_RIGHE_BLOCCO + 1)
+    devono esistere gia'. Il template e' l'unico schema di
+    riferimento: nessuna coordinata di cella e' riscritta a mano in questo modulo.
+    Ritorna True se la copia riesce, False altrimenti.
+    '''
+    template_path = uno.fileUrlToSystemPath(PL.LeenO_path() + '/template/leeno/Computo_LeenO.ods')
+    oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
+    if not oTemplate:
+        return False
+    nome_tmp = None
+    try:
+        oSheets = oDoc.getSheets()
+        idx = oSheets.importSheet(oTemplate, 'CdP', oSheets.getCount())
+        oTmp = oSheets.getByIndex(idx)
+        nome_tmp = oTmp.getName()
+        src_tit = oTmp.getCellRangeByPosition(0, 0, 5, 0).getRangeAddress()
+        src_corpo = oTmp.getCellRangeByPosition(0, 1, 5, CDP_RIGHE_BLOCCO - 1).getRangeAddress()
+        oCdP.copyRange(oCdP.getCellByPosition(0, base_start_row).getCellAddress(), src_tit)
+        oCdP.copyRange(oCdP.getCellByPosition(0, base_start_row + 2).getCellAddress(), src_corpo)
+        for i in range(CDP_RIGHE_BLOCCO):
+            r_dst = base_start_row + i + (1 if i > 0 else 0)
+            oCdP.getRows().getByIndex(r_dst).Height = oTmp.getRows().getByIndex(i).Height
+        return True
+    except Exception as _exc:
+        LeenoUtils.log_errore('_copia_blocco_template_cdp: copia dal template', _exc)
+        return False
+    finally:
         try:
-            cell_range = oCdP.getCellRangeByPosition(
-                col, base_start_row + rel_row,
-                col + c_span - 1, base_start_row + rel_row + r_span - 1
-            )
-            cell_range.merge(True)
-        except Exception:
-            pass
-
-    cdp_template_styles = [
-        (0, 1, 'Grassetto_20__2b_'), (0, 2, 'C_5f_BASE'), (0, 3, 'Dx'), (4, 3, 'C_5f_scorre'),
-        (0, 4, 'Dx'), (4, 4, 'C_5f_scorre'), (0, 5, 'Grassetto_20__2b_'), (0, 6, 'CP_5f_testo'),
-        (4, 6, 'Status'), (0, 7, 'CP_5f_testo'), (1, 7, 'CP_5f_testo'), (2, 7, 'CP_5f_testo'),
-        (0, 8, 'CP'), (1, 8, 'CP_5f_DATA'), (2, 8, 'CP_5f_importo'), (0, 9, 'CP'),
-        (1, 9, 'CP_5f_DATA'), (2, 9, 'CP_5f_importo'), (0, 10, 'CP'), (1, 10, 'CP_5f_DATA'),
-        (2, 10, 'CP_5f_importo'), (0, 11, 'CP'), (1, 11, 'CP_5f_DATA'), (2, 11, 'CP_5f_importo'),
-        (0, 12, 'CP'), (1, 12, 'CP_5f_DATA'), (2, 12, 'CP_5f_importo'),
-        (4, 12, 'CP_5f_testo_5f_normal'), (5, 12, 'CP_5f_importo'), (0, 13, 'CP'),
-        (1, 13, 'CP_5f_DATA'), (2, 13, 'CP_5f_importo'), (4, 13, 'CP_5f_testo_5f_normal'),
-        (5, 13, 'CP_5f_importo'), (0, 14, 'CP'), (1, 14, 'CP_5f_DATA'), (2, 14, 'CP_5f_importo'),
-        (4, 14, 'CP_5f_testo_5f_normal'), (5, 14, 'CP_5f_importo'), (0, 15, 'CP'),
-        (1, 15, 'CP_5f_DATA'), (2, 15, 'CP_5f_importo'), (4, 15, 'CP_5f_totale'),
-        (5, 15, 'CP_5f_totale'), (0, 16, 'CP'), (1, 16, 'CP_5f_DATA'), (2, 16, 'CP_5f_importo'),
-        (0, 17, 'CP'), (1, 17, 'CP_5f_DATA'), (2, 17, 'CP_5f_importo'),
-        (4, 17, 'CP_5f_testo_5f_centrato_5f_normale'), (0, 18, 'CP'), (1, 18, 'CP_5f_DATA'),
-        (2, 18, 'CP_5f_importo'), (4, 18, 'CP_5f_testo_5f_normal'), (5, 18, 'CP_5f_importo'),
-        (0, 19, 'CP'), (1, 19, 'CP_5f_DATA'), (2, 19, 'CP_5f_importo'), (4, 19, 'CP_5f_totale'),
-        (5, 19, 'CP_5f_totale'), (0, 20, 'CP'), (1, 20, 'CP_5f_DATA'), (2, 20, 'CP_5f_importo'),
-        (0, 21, 'CP'), (1, 21, 'CP_5f_DATA'), (2, 21, 'CP_5f_importo'),
-        (4, 21, 'CP_5f_testo_5f_centrato_5f_normale'), (0, 22, 'CP'), (1, 22, 'CP_5f_DATA'),
-        (2, 22, 'CP_5f_importo'), (4, 22, 'CP_5f_testo_5f_normal'), (5, 22, 'CP_5f_importo'),
-        (0, 23, 'CP'), (1, 23, 'CP_5f_DATA'), (2, 23, 'CP_5f_importo'),
-        (4, 23, 'CP_5f_testo_5f_normal'), (5, 23, 'CP_5f_importo'), (0, 24, 'CP'),
-        (1, 24, 'CP_5f_DATA'), (2, 24, 'CP_5f_importo'), (4, 24, 'CP_5f_testo_5f_normal'),
-        (5, 24, 'CP_5f_importo'), (0, 25, 'CP'), (1, 25, 'CP_5f_DATA'), (2, 25, 'CP_5f_importo'),
-        (4, 25, 'CP_5f_testo_5f_normal'), (5, 25, 'CP_5f_importo'), (0, 26, 'CP'),
-        (1, 26, 'CP_5f_DATA'), (2, 26, 'CP_5f_importo'), (4, 26, 'CP_5f_totale'),
-        (5, 26, 'CP_5f_totale'), (0, 27, 'CP'), (1, 27, 'CP_5f_DATA'), (2, 27, 'CP_5f_importo'),
-        (4, 27, 'CP_5f_totale'), (5, 27, 'CP_5f_totale'), (0, 28, 'CP_5f_totale'),
-        (2, 28, 'CP_5f_totale'), (4, 28, 'CP_5f_totale'), (5, 28, 'CP_5f_importo'),
-        (0, 29, 'CP_5f_totale'), (2, 29, 'CP_5f_totale'), (4, 29, 'CP_5f_totale'),
-        (5, 29, 'CP_5f_totale'), (0, 31, 'SPath'), (4, 31, 'Status'), (4, 33, 'Status'),
-        (4, 34, 'Status'), (4, 35, 'Status'), (4, 36, 'Status'), (4, 37, 'Status'),
-        (1, 39, 'C_5f_BASE'), (2, 39, 'Status'), (4, 39, 'Status'), (2, 40, 'Status'),
-        (2, 41, 'Status'), (4, 41, 'Status')
-    ]
-
-    for col, rel_row, stile in cdp_template_styles:
-        try:
-            oCdP.getCellByPosition(col, base_start_row + rel_row).CellStyle = stile
-        except Exception:
-            pass
-
-    cdp_template_texts = [
-        (0, 1, 'Provincia di __________'),
-        (0, 2, 'oggetto'),
-        (0, 3, 'COMMITTENTE:'),
-        (0, 4, 'IMPRESA:'),
-        (0, 5, 'CERTIFICATO DI PAGAMENTO N. ___\nPER IL PAGAMENTO DELLA RATA N.___ DI euro _________'),
-        (0, 6, 'CERTIFICATI\nEmessi precedentemente'),
-        (4, 6, "IL SOTTOSCRITTO VISTO il Contratto in data ____________ repertorio n. ________ registrato a ____________ in data ____________ al n. ________ con il quale fu affidata alla predetta impresa l'esecuzione dei suindicati lavori;\nRISULTANDO dalla contabilità sino ad oggi che l'ammontare dei lavori eseguiti e delle spese fatte è quello in seguito riportato:"),
-        (0, 7, 'N°'),
-        (1, 7, 'Data'),
-        (2, 7, 'Importo (€)'),
-        (4, 12, 'Per lavori e somministrazioni'),
-        (4, 13, 'Per materiali giacenti in cantiere'),
-        (4, 15, 'SOMMANO importi soggetti a ritenute'),
-        (5, 15, ',00'),
-        (4, 17, 'IMPORTI NON SOGGETTI A RITENUTE'),
-        (4, 19, 'SOMMANO importi NON soggetti a ritenute'),
-        (5, 19, ',00'),
-        (4, 21, 'Da cui occorre detrarre:'),
-        (4, 22, 'a) Ritenuta per infortuni 0,5%'),
-        (5, 22, ',00'),
-        (4, 23, 'b) Recupero anticipazione _______%'),
-        (5, 23, ',00'),
-        (4, 24, 'c) Ammontare dei Certificati precedenti'),
-        (5, 24, ',00'),
-        (4, 26, 'TOTALE DETRAZIONE'),
-        (5, 26, ',00'),
-        (4, 27, 'RISULTA IL CREDITO DELL’IMPRESA '),
-        (5, 27, ',00'),
-        (0, 28, 'TOTALE'),
-        (2, 28, ',00'),
-        (4, 28, 'per I.V.A. al _______%'),
-        (0, 29, 'anticipazione'),
-        (4, 29, 'T O T A L E '),
-        (5, 29, ',00'),
-        (0, 31, "ASSICURAZIONE OPERAI\n\nL'Impresa ha assicurato gli operai con Polizza continuativa presso l'INAIL di Matera n.__________\n\nIl Direttore dei Lavori"),
-        (4, 31, "C E R T I F I C A\nCHE ai termini dell'articolo _____ del contratto si può pagare all'impresa la rata di euro ________________ oltre IVA, se dovuta, come per legge.\n\nDiconsi: (euro…………………………………………………………………………)."),
-        (4, 33, 'Luogo e data'),
-        (4, 34, 'Il Responsabile del Procedimento')
-    ]
-
-    for col, rel_row, txt in cdp_template_texts:
-        try:
-            oCdP.getCellByPosition(col, base_start_row + rel_row).String = txt
-        except Exception:
-            pass
+            if nome_tmp and oDoc.getSheets().hasByName(nome_tmp):
+                oDoc.getSheets().removeByName(nome_tmp)
+        except Exception as _exc:
+            LeenoUtils.log_errore('_copia_blocco_template_cdp: rimozione foglio temporaneo', _exc)
+        oTemplate.close(True)
 
 
 def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
@@ -3456,48 +3386,50 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         return
 
     # Inserimento/scrittura intestazione in cima a ciascun CdP (stile 'uuuuu')
-    # Ciascun CdP occupa 47 righe esatte (da riga 0 a 46 compresi)
+    # Ciascun CdP occupa CDP_RIGHE_BLOCCO + 1 righe (intestazione, riga vuota, righe 1..44 del template)
     str_aVoce = f" - 1÷{aVoce}" if aVoce else ""
     testo_titolo = f"segue CdP n.{nSal}{str_aVoce}"
 
     if nSal == 1:
         base_start_row = 0
-        oCdP.getRows().getByIndex(0).CellStyle = "uuuuu"
-        oCdP.getCellRangeByPosition(0, 0, 5, 0).CellStyle = "uuuuu"
-        oCdP.getCellByPosition(1, 0).String = testo_titolo
     else:
         prev_name = f"_CdP_{nSal - 1}"
         if oDoc.NamedRanges.hasByName(prev_name):
             prev_addr = oDoc.NamedRanges.getByName(prev_name).ReferredCells.RangeAddress
             insRow = prev_addr.EndRow + 1
         else:
-            insRow = (nSal - 1) * 47
+            insRow = (nSal - 1) * (CDP_RIGHE_BLOCCO + 1)
 
         base_start_row = insRow
 
-        # Inserisci le 47 righe per il nuovo CdP
-        num_cdp_rows = 47
-        oCdP.getRows().insertByIndex(base_start_row, num_cdp_rows)
+        # Inserisce le righe per il nuovo CdP e vi replica il template (righe 0..44)
+        oCdP.getRows().insertByIndex(base_start_row, CDP_RIGHE_BLOCCO + 1)
+        if not _copia_blocco_template_cdp(oDoc, oCdP, base_start_row):
+            LeenoUtils.log_errore('GeneraCdP: copia del template CdP', RuntimeError('copia non riuscita'))
 
-        # Copia il layout del primo CdP (righe 0..46) nel blocco del nuovo CdP
-        try:
-            src_addr = oCdP.getCellRangeByPosition(0, 0, 5, 46).getRangeAddress()
-            dst_cell_addr = oCdP.getCellByPosition(0, base_start_row).getCellAddress()
-            oCdP.copyRange(dst_cell_addr, src_addr)
-        except Exception as _exc:
-            LeenoUtils.log_errore('GeneraCdP: copia layout CdP', _exc)
+    if nSal == 1:
+        # Il foglio importato dal template non ha la riga vuota sotto l'intestazione
+        oCdP.getRows().insertByIndex(1, 1)
 
-        # Inizializza esplicitamente la struttura del blocco CdP (unioni, stili, etichette)
-        _init_template_cdp_blocco(oCdP, base_start_row)
+    # Riga vuota sotto l'intestazione
+    oRigaVuota = oCdP.getCellRangeByPosition(0, base_start_row + 1, 5, base_start_row + 1)
+    oRigaVuota.merge(False)
+    oRigaVuota.clearContents(VALUE + DATETIME + STRING + FORMULA)
+    oRigaVuota.CellStyle = "Default"
 
-        # Scrive l'intestazione sulla prima riga del blocco (base_start_row)
-        oCdP.getRows().getByIndex(base_start_row).CellStyle = "uuuuu"
-        oCdP.getCellRangeByPosition(0, base_start_row, 5, base_start_row).CellStyle = "uuuuu"
-        oCdP.getCellByPosition(1, base_start_row).String = testo_titolo
+    # Riga titolo del blocco: la riga 0 del template e' unita su A:F, la si separa
+    # perche' il testo va in B con stile 'uuuuu'
+    oRigaTitolo = oCdP.getCellRangeByPosition(0, base_start_row, 5, base_start_row)
+    oRigaTitolo.merge(False)
+    oRigaTitolo.CellStyle = "uuuuu"
+    oCdP.getCellByPosition(1, base_start_row).String = testo_titolo
+    if nSal > 1:
         try:
             oCdP.getRows().getByIndex(base_start_row).IsStartOfNewPage = True
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('GeneraCdP: interruzione di pagina del blocco', _exc)
+
+    righe_inserite = 0
 
     # ── Dati S2 ──────────────────────────────────────────────────────────
     oS2 = oDoc.getSheets().getByName('S2')
@@ -3675,14 +3607,16 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
         r_first = r_Ncert + 1   # prima riga dati cert LIST
         num_cert = nSal - 1     # certificati precedenti da scrivere (1..nSal-1)
 
-        if r_sogg is not None:
-            righe_disponibili = r_sogg - r_first
+        # La lista occupa le righe fino alla riga del totale (stessa riga di 'per I.V.A.')
+        if r_iva is not None:
+            righe_disponibili = r_iva - r_first
         else:
             righe_disponibili = num_cert
 
         righe_da_inserire = num_cert - righe_disponibili
         if righe_da_inserire > 0:
             oCdP.getRows().insertByIndex(r_first + righe_disponibili, righe_da_inserire)
+            righe_inserite = righe_da_inserire
 
             # Ricalcola gli ancoraggi che si sono spostati verso il basso
             r_sogg     = R('SOMMANO importi soggetti')
@@ -3879,13 +3813,14 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     # in modo che il raggruppamento delle righe mantenga l'intestazione visibile all'esterno,
     # analogamente a quanto avviene per Registro e SAL.
     start_row_named = base_start_row + 1
-    end_row_named = base_start_row + 46
+    end_row_named = base_start_row + CDP_RIGHE_BLOCCO + righe_inserite
     area_cdp = f'$A${start_row_named + 1}:${_col_letter(val_col)}${end_row_named + 1}'
     SheetUtils.NominaArea(oDoc, 'CdP', area_cdp, f'_CdP_{nSal}')
 
-    # L'area di stampa include l'intero blocco compresa l'intestazione
-    addr = oCdP.getCellRangeByPosition(0, base_start_row, val_col, end_row_named).getRangeAddress()
+    # L'area di stampa esclude la riga d'intestazione 'segue CdP' (stile 'uuuuu') e la riga vuota sotto di essa
+    addr = oCdP.getCellRangeByPosition(0, base_start_row + 2, val_col, end_row_named).getRangeAddress()
     oCdP.setPrintAreas((addr,))
+    oCdP.setPrintTitleRows(False)
 
     oCdP.getCellRangeByPosition(0, start_row_named, val_col, end_row_named).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)

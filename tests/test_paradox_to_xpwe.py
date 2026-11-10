@@ -329,6 +329,8 @@ class TestParadoxDatasetRistrutturazione(unittest.TestCase):
     def setUp(self):
         self.folder = os.path.join(os.path.dirname(__file__), 'data', 'ristrutturazione')
         self.ep_db_path = os.path.join(self.folder, '_Eristrutturazione.DB')
+        if not os.path.exists(self.ep_db_path):
+            self.skipTest("tests/data/ristrutturazione non trovato")
 
     def test_pdx_params_multi_block(self):
         data = open(self.ep_db_path, 'rb').read()

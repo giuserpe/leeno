@@ -368,6 +368,31 @@ def MENU_PrintSettings():
 
 ########################################################################
 
+# Stile di pagina del foglio CdP: A4 verticale, senza intestazione e piè di pagina
+# perche' il certificato riporta nel corpo i propri dati (ente, oggetto, committente).
+# Non e' nel template: viene creato al bisogno da _crea_stile_pagina_cdp.
+STILE_PAGINA_CDP = 'PageStyle_CdP_A4'
+
+
+def _crea_stile_pagina_cdp(oDoc):
+    '''
+    Crea lo stile di pagina del CdP se il documento ha il foglio CdP e lo stile manca.
+    Le impostazioni comuni (margini, scala) sono applicate da MENU_sistema_pagine.
+    '''
+    if not oDoc.getSheets().hasByName('CdP'):
+        return
+    oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+    if oPageStyles.hasByName(STILE_PAGINA_CDP):
+        return
+    oPageStyles.insertByName(STILE_PAGINA_CDP, oDoc.createInstance('com.sun.star.style.PageStyle'))
+    oStile = oPageStyles.getByName(STILE_PAGINA_CDP)
+    oStile.IsLandscape = False
+    oStile.Width = 21000
+    oStile.Height = 29700
+    oStile.HeaderIsOn = False
+    oStile.FooterIsOn = False
+
+
 def setPageStyle(silent = False):
     '''
     Attribuisce ad ogni foglio il suo specifico stile di pagina.
@@ -375,6 +400,7 @@ def setPageStyle(silent = False):
     per evitare switch di foglio e i relativi ridisegni intermedi.
     '''
     importa_stili_pagina_non_presenti(silent=silent)
+    _crea_stile_pagina_cdp(LeenoUtils.getDocument())
 
     stili = {
         'cP_Cop': 'Page_Style_COPERTINE',
@@ -385,6 +411,7 @@ def setPageStyle(silent = False):
         'CONTABILITA': 'Page_Style_Libretto_Misure2',
         'Registro': 'PageStyle_REGISTRO_A4',
         'SAL': 'PageStyle_SAL_A4',
+        'CdP': STILE_PAGINA_CDP,
     }
 
     oDoc = LeenoUtils.getDocument()

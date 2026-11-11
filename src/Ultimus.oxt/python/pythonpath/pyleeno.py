@@ -2026,8 +2026,8 @@ def show_sheets(x=True):
         try:
             oSheet = oDoc.getSheets().getByName(nome)
             oSheet.IsVisible = True
-        except Exception as _exc:
-            LeenoUtils.log_errore('show_sheets: visibilita foglio', _exc)
+        except Exception:
+            pass
 
 
 ########################################################################
@@ -2219,8 +2219,8 @@ def voce_breve():
     for el in fogli_da_adattare:
         try:
             LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(el))
-        except Exception as _exc:
-            LeenoUtils.log_errore('voce_breve: adatta altezza riga', _exc)
+        except Exception:
+            pass
 
 ########################################################################
 @LeenoUtils.no_refresh # evita il refresh automatico
@@ -8577,8 +8577,8 @@ def autoexec_off():
                                                               FORMATTED +
                                                               HARDATTR)
             oSheet.getCellRangeByName("A1").String = ''
-        except Exception as _exc:
-            LeenoUtils.log_errore('autoexec_off: pulizia fogli', _exc)
+        except Exception:
+            pass
     LeenoSheetUtils.cancella_riepilogo_quantita()
 
 ########################################################################
@@ -8901,8 +8901,9 @@ def dp():
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:' + sUltimus
 
-        except Exception as _exc:
-            LeenoUtils.log_errore('dp: aggiornamento stato documento', _exc)
+        except Exception:
+            #  DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
+            pass
 
 ########################################################################
 
@@ -9580,8 +9581,8 @@ def ScriviNomeDocumentoPrincipale():
             oSheet.getCellRangeByName(d[el]).String = 'DP: ' + LeenoGlobals.getGlobalVar('sUltimus')
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
 
-        except Exception as _exc:
-            LeenoUtils.log_errore('ScriviNomeDocumentoPrincipale: scrittura DP', _exc)
+        except Exception:
+            pass
 
 ########################################################################
 
@@ -10184,7 +10185,6 @@ def donazioni():
     apri.execute("https://leeno.org/donazioni/", "", 0)
 
 ########################################################################
-class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
     '''
     @@ DA DOCUMENTARE
     '''
@@ -10732,6 +10732,24 @@ def set_area_stampa():
     elif oSheet.Name in ('SAL'):
         SR = 2
         EC = 5
+    elif oSheet.Name == 'CdP':
+        # Si stampa l'ultimo CdP emesso, escludendo la riga d'intestazione
+        # 'segue CdP' (stile 'uuuuu') e la riga vuota sotto di essa.
+        SR = 0
+        EC = 5
+        ultimo = 0
+        for nome in oDoc.NamedRanges.ElementNames:
+            if nome.startswith('_CdP_') and nome[5:].isdigit() and int(nome[5:]) > ultimo:
+                ultimo = int(nome[5:])
+        try:
+            if not ultimo:
+                raise LookupError('nessun nome area _CdP_n')
+            area_cdp = oDoc.NamedRanges.getByName('_CdP_%d' % ultimo).ReferredCells.RangeAddress
+            # il nome area parte dalla riga vuota: la prima riga stampata e' quella dopo
+            SR = area_cdp.StartRow + 1
+            ER = area_cdp.EndRow
+        except Exception as _exc:
+            LeenoUtils.log_errore('set_area_stampa: area del CdP', _exc)
     else:
         SR = 0
         ER = SheetUtils.getLastUsedRow(oSheet)
@@ -10833,6 +10851,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
     HTXT_ANALISI  = 9.0
     # nomefile calcolato una sola volta fuori dal loop
     nomefile = os.path.basename(oDoc.getURL().replace('%20', ' '))
+    # Stili senza intestazione e piè di pagina: copertina e CdP
+    STILI_SENZA_HEADER = frozenset(('Page_Style_COPERTINE', LS.STILE_PAGINA_CDP))
 
     # Struttura bordo azzerato costruita una sola volta e riusata
     bordo_zero = uno.createUnoStruct('com.sun.star.table.BorderLine2')
@@ -10868,9 +10888,9 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
         displayName = oAktPage.DisplayName
 
         # chi((n , displayName))
-        is_copertina = (displayName == 'Page_Style_COPERTINE')
-        oAktPage.HeaderIsOn = not is_copertina
-        oAktPage.FooterIsOn = not is_copertina
+        senza_header = displayName in STILI_SENZA_HEADER
+        oAktPage.HeaderIsOn = not senza_header
+        oAktPage.FooterIsOn = not senza_header
 
         # Batch write proprietà comuni: 1 chiamata UNO invece di 14
         try:

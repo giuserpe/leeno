@@ -972,8 +972,8 @@ def annulla_partite_provvisorie_sospese():
                 for r in range(start_R, end_R + 1):
                     try:
                         oSheet.getRows().getByIndex(r).OptimalHeight = True
-                    except Exception as _exc:
-                        LeenoUtils.log_errore('annulla partite: ottimizzazione altezza riga', _exc)
+                    except Exception:
+                        pass
                 insert_pos = end_R
 
         PL.numera_voci(oSheet)
@@ -1049,14 +1049,20 @@ def struttura_CONTAB():
             oSheet.group(oRange, 1)
             oSheet.getCellRangeByPosition(0, oRange.StartRow,
                 11, oRange.EndRow).Rows.IsVisible = False
-        except Exception:
+        except:
             try:
                 oSheet.getCellRangeByPosition(0, oRange.StartRow,
                     11, oRange.EndRow).Rows.IsVisible = True
                 PL._gotoCella(0, oRange.StartRow -1)
                 oDoc.CurrentController.setFirstVisibleRow(y)
-            except Exception as _exc:
-                LeenoUtils.log_errore('struttura_CONTAB: ripristino visibilita righe', _exc)
+            except:
+                # ~Dialogs.NotifyDialog(Image='Icons-Big/info.png',
+                        # ~Title = 'Info',
+                        # ~Text='''In questo Libretto delle Misure
+# ~non ci sono misure registrate.''')
+                # ~ if oSheet.Name == 'CONTABILITA':
+                    # ~ PL.struttura_ComputoM()
+                pass
             return
 
 def aggiorna_S2_libretto(oDoc, nSal, aVoce, nPag):

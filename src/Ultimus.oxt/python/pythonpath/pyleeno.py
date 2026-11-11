@@ -10891,8 +10891,10 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
 
         # chi((n , displayName))
         is_copertina = (displayName == 'Page_Style_COPERTINE')
-        oAktPage.HeaderIsOn = not is_copertina
-        oAktPage.FooterIsOn = not is_copertina
+        # il CdP riporta nel corpo i propri dati: niente intestazione e piè di pagina comuni
+        senza_intestazione = is_copertina or displayName == LS.STILE_PAGINA_CDP
+        oAktPage.HeaderIsOn = not senza_intestazione
+        oAktPage.FooterIsOn = not senza_intestazione
 
         # Batch write proprietà comuni: 1 chiamata UNO invece di 14
         try:

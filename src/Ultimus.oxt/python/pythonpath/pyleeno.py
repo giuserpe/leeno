@@ -10733,6 +10733,27 @@ def set_area_stampa():
     elif oSheet.Name in ('SAL'):
         SR = 2
         EC = 5
+    elif oSheet.Name == 'CdP':
+        # L'area di stampa coincide con l'area dati dell'ultimo CdP emesso ('_CdP_n'),
+        # esclusa l'intestazione 'segue CdP', e non ci sono righe da ripetere.
+        # Senza questo ramo si stamperebbe tutto il foglio, blocchi e intestazioni compresi.
+        SR = 0
+        EC = 5
+        if oSheet.getPrintTitleRows():
+            oSheet.setPrintTitleRows(False)
+        ultimo = 0
+        for nome in oDoc.NamedRanges.ElementNames:
+            if nome.startswith('_CdP_') and nome[5:].isdigit() and int(nome[5:]) > ultimo:
+                ultimo = int(nome[5:])
+        try:
+            if not ultimo:
+                raise LookupError('nessun nome area _CdP_n')
+            area_cdp = oDoc.NamedRanges.getByName('_CdP_%d' % ultimo).ReferredCells.RangeAddress
+            SR = area_cdp.StartRow
+            ER = area_cdp.EndRow
+            EC = area_cdp.EndColumn
+        except Exception as _exc:
+            LeenoUtils.log_errore('set_area_stampa: area del CdP', _exc)
     else:
         SR = 0
         ER = SheetUtils.getLastUsedRow(oSheet)

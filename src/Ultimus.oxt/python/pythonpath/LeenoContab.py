@@ -972,8 +972,8 @@ def annulla_partite_provvisorie_sospese():
                 for r in range(start_R, end_R + 1):
                     try:
                         oSheet.getRows().getByIndex(r).OptimalHeight = True
-                    except Exception:
-                        pass
+                    except Exception as _exc:
+                        LeenoUtils.log_errore('annulla partite: ottimizzazione altezza riga', _exc)
                 insert_pos = end_R
 
         PL.numera_voci(oSheet)
@@ -1049,20 +1049,14 @@ def struttura_CONTAB():
             oSheet.group(oRange, 1)
             oSheet.getCellRangeByPosition(0, oRange.StartRow,
                 11, oRange.EndRow).Rows.IsVisible = False
-        except:
+        except Exception:
             try:
                 oSheet.getCellRangeByPosition(0, oRange.StartRow,
                     11, oRange.EndRow).Rows.IsVisible = True
                 PL._gotoCella(0, oRange.StartRow -1)
                 oDoc.CurrentController.setFirstVisibleRow(y)
-            except:
-                # ~Dialogs.NotifyDialog(Image='Icons-Big/info.png',
-                        # ~Title = 'Info',
-                        # ~Text='''In questo Libretto delle Misure
-# ~non ci sono misure registrate.''')
-                # ~ if oSheet.Name == 'CONTABILITA':
-                    # ~ PL.struttura_ComputoM()
-                pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('struttura_CONTAB: ripristino visibilita righe', _exc)
             return
 
 def aggiorna_S2_libretto(oDoc, nSal, aVoce, nPag):
@@ -3780,9 +3774,11 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     area_cdp = f'$A${start_row_named + 1}:${_col_letter(val_col)}${end_row_named + 1}'
     SheetUtils.NominaArea(oDoc, 'CdP', area_cdp, f'_CdP_{nSal}')
 
-    # L'area di stampa esclude la riga d'intestazione 'segue CdP' (stile 'uuuuu') e la riga vuota sotto di essa
-    addr = oCdP.getCellRangeByPosition(0, base_start_row + 2, val_col, end_row_named).getRangeAddress()
+    # L'area di stampa coincide con l'area dati '_CdP_n' (esclusa l'intestazione 'segue CdP')
+    # e non ci sono righe da ripetere
+    addr = oCdP.getCellRangeByPosition(0, start_row_named, val_col, end_row_named).getRangeAddress()
     oCdP.setPrintAreas((addr,))
+    oCdP.setPrintTitleRows(False)
 
     oCdP.getCellRangeByPosition(0, start_row_named, val_col, end_row_named).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)

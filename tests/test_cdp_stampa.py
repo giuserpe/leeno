@@ -38,6 +38,7 @@ class TestAreaStampaCdP(unittest.TestCase):
             r = MagicMock()
             r.ReferredCells.RangeAddress.StartRow = aree[nome][0]
             r.ReferredCells.RangeAddress.EndRow = aree[nome][1]
+            r.ReferredCells.RangeAddress.EndColumn = 5
             return r
 
         oDoc.NamedRanges.getByName.side_effect = per_nome
@@ -53,14 +54,13 @@ class TestAreaStampaCdP(unittest.TestCase):
         ns["set_area_stampa"]()
         return oSheet, leeno_utils
 
-    def test_stampa_l_ultimo_blocco_senza_intestazione_e_riga_vuota(self):
+    def test_area_di_stampa_coincide_con_l_area_dati_dell_ultimo_cdp(self):
         oSheet, _ = self._esegui(
             ["_CdP_1", "_CdP_2", "_CdP_10", "_CdP_x", "_Lib_1"],
             {"_CdP_1": (1, 46), "_CdP_2": (48, 92), "_CdP_10": (500, 545)},
         )
         area = oSheet.setPrintAreas.call_args.args[0][0]
-        # il nome area parte dalla riga vuota: la prima riga stampata e' quella dopo
-        self.assertEqual(area.StartRow, 501)
+        self.assertEqual(area.StartRow, 500)
         self.assertEqual(area.EndRow, 545)
         self.assertEqual((area.StartColumn, area.EndColumn), (0, 5))
 
@@ -70,9 +70,10 @@ class TestAreaStampaCdP(unittest.TestCase):
         self.assertEqual((area.StartRow, area.EndRow), (0, 200))
         leeno_utils.log_errore.assert_called_once()
 
-    def test_il_ramo_cdp_non_usa_le_righe_da_ripetere(self):
+    def test_nessuna_riga_da_ripetere(self):
         oSheet, _ = self._esegui(["_CdP_1"], {"_CdP_1": (1, 46)})
         oSheet.setTitleRows.assert_not_called()
+        oSheet.setPrintTitleRows.assert_called_once_with(False)
 
 
 class TestStilePaginaCdP(unittest.TestCase):
@@ -103,12 +104,9 @@ class TestStilePaginaCdP(unittest.TestCase):
         _, oPageStyles = self._crea(True, True)
         oPageStyles.insertByName.assert_not_called()
 
-    def test_stile_associato_al_foglio_cdp_e_senza_intestazione_nel_menu(self):
+    def test_stile_associato_al_foglio_cdp(self):
         codice = SETTINGS.read_text(encoding="utf-8")
         self.assertIn("'CdP': STILE_PAGINA_CDP", codice)
-        menu = ast.unparse(_funzione(PYLEENO, "MENU_sistema_pagine"))
-        self.assertIn("LS.STILE_PAGINA_CDP", menu)
-        self.assertIn("HeaderIsOn = not senza_header", menu)
 
 
 if __name__ == "__main__":

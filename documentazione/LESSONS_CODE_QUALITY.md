@@ -47,3 +47,8 @@ Difetti reali: `pyleeno.MENU_inserisci_nuova_riga_con_descrizione` richiama `ins
 - Operazioni a più fasi (esempio `LeenoContab._annulla_ultimo_sal_core`): registrare ogni errore, raccogliere le fasi fallite in una lista e mostrare un solo avviso a fine operazione. Gli errori di pulizia ricostruibili (CdP rigenerato) si registrano senza avvisare.
 - Nei cicli che ripetono una funzione finché lo stato cambia (`MENU_AnnullaTuttiAttiContabili`) verificare che lo stato sia cambiato davvero: se l'eliminazione fallisce prima di rimuovere l'intervallo con nome, `ultimo_sal()` restituisce sempre lo stesso SAL e il ciclo non termina.
 - `undo_utils.with_undo_batch` non è usata da nessuna parte e probabilmente non funziona: blocca l'undo con `lock()` e poi apre un contesto vuoto, quindi non raggruppa nulla.
+
+## Parsing XML in Python 3.12+ e parser regionali
+
+- **ElementTree truth value**: In Python 3.12+, valutare direttamente il booleano di un nodo `Element` (`if not elem:`) solleva un `DeprecationWarning` e diventerà un'eccezione nelle versioni successive. Usare sempre controlli espliciti: `if elem is None:` oppure `if len(list(elem)) < ...:`.
+- **Parser regionali coperti**: Tutti i parser XML regionali (`Basilicata`, `Liguria`, `Lombardia`, `Sardegna`, `SIX`, `Toscana`, `Veneto`) dispongono ora di test di caratterizzazione dedicati in `tests/test_import_xml_<regione>.py`. In caso di evoluzione dei formati o refactoring dei moduli `LeenoImport_Xml*.py`, verificare sempre che i relativi test continuino a passare senza introdurre dipendenze PyUNO non isolate.

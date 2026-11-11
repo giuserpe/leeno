@@ -14,6 +14,29 @@ DEBUG_PATH = BASE_DIR / "src/Ultimus.oxt/python/pythonpath/Debug.py"
 LEENO_ISTAT_PATH = BASE_DIR / "src/Ultimus.oxt/python/pythonpath/LeenoISTAT.py"
 DISPATCHER_PATH = BASE_DIR / "src/Ultimus.oxt/python/LeenoDispatcher.py"
 LEENO_IMPORT_PATH = BASE_DIR / "src/Ultimus.oxt/python/pythonpath/LeenoImport.py"
+LEENO_UTILS_PATH = BASE_DIR / "src/Ultimus.oxt/python/pythonpath/LeenoUtils.py"
+
+
+def _carica_utils_date():
+    import calendar
+    import datetime
+    from datetime import date
+    tree = ast.parse(LEENO_UTILS_PATH.read_text(encoding="utf-8"))
+    nodi = []
+    for n in tree.body:
+        if isinstance(n, ast.Assign):
+            for t in n.targets:
+                if isinstance(t, ast.Name) and t.id in ("DAYNAMES", "MONTHNAMES"):
+                    nodi.append(n)
+        elif isinstance(n, ast.FunctionDef) and n.name in ("daysInMonth", "firstWeekDay", "date2String", "string2Date"):
+            nodi.append(n)
+    ns = {
+        "calendar": calendar,
+        "datetime": datetime,
+        "date": date,
+    }
+    exec(compile(ast.Module(body=nodi, type_ignores=[]), str(LEENO_UTILS_PATH), "exec"), ns)
+    return ns
 
 
 def _carica_export():
@@ -442,6 +465,50 @@ class TestUtilsPure2(unittest.TestCase):
             with open(p_u8, "wb") as f:
                 f.write("<?xml version=\"1.0\"?><testo>caff\u00e8</testo>".encode("utf-8"))
             self.assertEqual(_readXmlFile(p_u8), "<?xml version=\"1.0\"?><testo>caff\u00e8</testo>")
+
+    def test_date_utils_leeno_utils(self):
+        """Testa daysInMonth, firstWeekDay, date2String e string2Date estratti da LeenoUtils."""
+        import datetime
+        mod = _carica_utils_date()
+        daysInMonth = mod["daysInMonth"]
+        firstWeekDay = mod["firstWeekDay"]
+        date2String = mod["date2String"]
+        string2Date = mod["string2Date"]
+
+        # daysInMonth per anni bisestili e mesi standard
+        d_feb_leap = datetime.date(2024, 2, 10)
+        d_feb_non_leap = datetime.date(2023, 2, 10)
+        d_apr = datetime.date(2023, 4, 15)
+        d_dec = datetime.date(2023, 12, 1)
+
+        self.assertEqual(daysInMonth(d_feb_leap), 29)
+        self.assertEqual(daysInMonth(d_feb_non_leap), 28)
+        self.assertEqual(daysInMonth(d_apr), 30)
+        self.assertEqual(daysInMonth(d_dec), 31)
+
+        # firstWeekDay: restituisce il weekday del primo giorno del mese (Lunedì=0, Domenica=6)
+        # 1 Novembre 2023 era Mercoledì -> 2
+        d_nov = datetime.date(2023, 11, 15)
+        self.assertEqual(firstWeekDay(d_nov), 2)
+
+        # date2String formati 0, 1, 2, 3
+        d_test = datetime.date(2023, 5, 4)
+        self.assertEqual(date2String(d_test, fmt=0), "4 Maggio 2023")
+        self.assertEqual(date2String(d_test, fmt=1), "4/05/2023")
+        self.assertEqual(date2String(d_test, fmt=2), "4-05-2023")
+        self.assertEqual(date2String(d_test, fmt=3), "4.05.2023")
+
+        # string2Date parsing con diversi separatori
+        self.assertEqual(string2Date("04/05/2023"), datetime.date(2023, 5, 4))
+        self.assertEqual(string2Date("04-05-2023"), datetime.date(2023, 5, 4))
+        self.assertEqual(string2Date("04.05.2023"), datetime.date(2023, 5, 4))
+
+        # string2Date senza separatori validi fallback a today
+        self.assertEqual(string2Date("invalid_date"), datetime.date.today())
+
+        # string2Date formato malformato con separatore solleva eccezione
+        with self.assertRaises(Exception):
+            string2Date("04/05")
 
 
 if __name__ == "__main__":

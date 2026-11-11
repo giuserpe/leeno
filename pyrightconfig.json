@@ -1,0 +1,7 @@
+{
+  "extraPaths": [
+    "src/Ultimus.oxt/python",
+    "src/Ultimus.oxt/python/pythonpath"
+  ]
+}
+

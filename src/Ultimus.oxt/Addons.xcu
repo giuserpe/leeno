@@ -146,7 +146,7 @@
             <value>%origin%/icons/duplica_sicurezza</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Duplica voce corrente in Voce Della Sicurezza</value>
+            <value>Duplica voce corrente in Voce Della Sicurezza (CTRL+click per Costo Elementare)</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

@@ -681,7 +681,6 @@ def invia_voce(ctrl_override=False):
                             copiaRigaAnalisi(dccSheetDest, row_dest)
                             row_dest = row_dest + 1
                     dccSheetDest.getCellByPosition(0, row_dest).String = voce_da_inviare
-                    dccSheetDest.getCellByPosition(0, row_dest).CellBackColor = COLORE_ROSSO_AVVISO
                     _gotoCella(3, row_dest)
         # Rimosso return anticipato per permettere il flusso verso la copia dell'analisi se presente
         # return avviso_vedi_voce

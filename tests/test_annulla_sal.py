@@ -1,5 +1,6 @@
 import ast
 import unittest
+import unittest.mock
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -26,6 +27,7 @@ def _carica_core(registro, uf_find=None):
         "VALUE": 1, "STRING": 4, "FORMULA": 16, "DATETIME": 2, "HARDATTR": 32,
         "ultimo_sal": lambda: ["1"],
         "GeneraCdP": lambda *a, **k: None,
+        "_rimuovi_blocco_cdp": MagicMock(),
     }
     if uf_find is not None:
         ns["SheetUtils"].uFindString.side_effect = uf_find
@@ -69,18 +71,80 @@ class TestAnnullaSalComportamento(unittest.TestCase):
         self.assertEqual(errori, ["eliminazione del libretto in CONTABILITA"])
         self.assertIn("annulla SAL: eliminazione libretto", registro)
 
-    def test_errore_pulizia_cdp_solo_registrato(self):
-        registro = []
+    def test_non_svuota_celle_cdp_cercando_etichette_dall_alto(self):
+        """La vecchia pulizia colpiva il primo blocco CdP e toglieva il nome area prima della rimozione."""
+        codice = ast.unparse(_funzione("_annulla_ultimo_sal_core"))
+        self.assertNotIn("anchors_cdp", codice)
+        self.assertNotIn("removeByName(nome_cdp)", codice)
 
-        def boom(*a, **k):
-            raise RuntimeError("cella non trovata")
+    def test_sal_maggiore_di_uno_rimuove_il_blocco_cdp_annullato(self):
+        core = _carica_core([])
+        rimuovi = MagicMock()
+        core.__globals__["_rimuovi_blocco_cdp"] = rimuovi
+        core(MagicMock(), listaSal=["1", "2", "3"])
+        rimuovi.assert_any_call(unittest.mock.ANY, "3")
 
-        core = _carica_core(registro, uf_find=boom)
-        errori = core(MagicMock(), listaSal=["1", "2"])
-        # la pulizia del CdP e la pulizia di S2 usano uFindString: la prima non e' bloccante
-        self.assertNotIn("pulizia voci riepilogo CdP", " ".join(errori))
-        self.assertIn("annulla SAL: pulizia voci riepilogo CdP", registro)
-        self.assertIn("pulizia della situazione contabile in S2", errori)
+    def test_ultimo_sal_elimina_il_foglio_cdp_senza_rimuovere_blocchi(self):
+        core = _carica_core([])
+        rimuovi = MagicMock()
+        core.__globals__["_rimuovi_blocco_cdp"] = rimuovi
+        oDoc = MagicMock()
+        oDoc.Sheets.hasByName.return_value = True
+        core(oDoc, listaSal=["1"])
+        oDoc.Sheets.removeByName.assert_any_call("CdP")
+        # il nome area del foglio eliminato non resta orfano
+        oDoc.NamedRanges.removeByName.assert_any_call("_CdP_1")
+        rimuovi.assert_not_called()
+
+    def test_rigenerazione_sostituisce_il_blocco_dell_ultimo_cdp_rimasto(self):
+        core = _carica_core([])
+        chiamate = []
+        core.__globals__["ultimo_sal"] = lambda: ["1", "2"]
+        core.__globals__["_rimuovi_blocco_cdp"] = lambda d, n: chiamate.append(("rimuovi", str(n)))
+        core.__globals__["GeneraCdP"] = lambda d, **k: chiamate.append(("genera", k["nSal"]))
+        core(MagicMock(), listaSal=["1", "2", "3"])
+        # prima rimuove il blocco n.3 annullato e il vecchio n.2, poi rigenera il n.2
+        self.assertEqual(chiamate, [("rimuovi", "3"), ("rimuovi", "2"), ("genera", 2)])
+
+    def test_rigenerazione_del_cdp_1_non_rimuove_blocchi(self):
+        core = _carica_core([])
+        chiamate = []
+        core.__globals__["ultimo_sal"] = lambda: ["1"]
+        core.__globals__["_rimuovi_blocco_cdp"] = lambda d, n: chiamate.append(("rimuovi", str(n)))
+        core.__globals__["GeneraCdP"] = lambda d, **k: chiamate.append(("genera", k["nSal"]))
+        core(MagicMock(), listaSal=["1", "2"])
+        self.assertEqual(chiamate, [("rimuovi", "2"), ("genera", 1)])
+
+
+class TestRimuoviBloccoCdP(unittest.TestCase):
+    def _fn(self):
+        ns = {}
+        mod = ast.Module(body=[_funzione("_rimuovi_blocco_cdp")], type_ignores=[])
+        exec(compile(mod, str(SRC), "exec"), ns)
+        return ns["_rimuovi_blocco_cdp"]
+
+    def test_rimuove_intestazione_righe_e_nome_area(self):
+        oDoc = MagicMock()
+        oDoc.Sheets.hasByName.return_value = True
+        oDoc.NamedRanges.hasByName.return_value = True
+        addr = oDoc.NamedRanges.getByName.return_value.ReferredCells.RangeAddress
+        addr.StartRow, addr.EndRow = 95, 139
+        oSheet = oDoc.Sheets.getByName.return_value
+
+        self.assertTrue(self._fn()(oDoc, 3))
+
+        oDoc.NamedRanges.getByName.assert_called_with("_CdP_3")
+        # intestazione a StartRow - 1: righe 94..139 = 46 righe
+        oSheet.Rows.removeByIndex.assert_called_once_with(94, 46)
+        oDoc.NamedRanges.removeByName.assert_called_once_with("_CdP_3")
+
+    def test_senza_nome_area_non_tocca_il_foglio(self):
+        oDoc = MagicMock()
+        oDoc.Sheets.hasByName.return_value = True
+        oDoc.NamedRanges.hasByName.return_value = False
+
+        self.assertFalse(self._fn()(oDoc, 3))
+        oDoc.Sheets.getByName.return_value.Rows.removeByIndex.assert_not_called()
 
 
 if __name__ == "__main__":

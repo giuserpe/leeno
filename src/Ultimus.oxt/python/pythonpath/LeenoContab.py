@@ -1049,20 +1049,14 @@ def struttura_CONTAB():
             oSheet.group(oRange, 1)
             oSheet.getCellRangeByPosition(0, oRange.StartRow,
                 11, oRange.EndRow).Rows.IsVisible = False
-        except:
+        except Exception:
             try:
                 oSheet.getCellRangeByPosition(0, oRange.StartRow,
                     11, oRange.EndRow).Rows.IsVisible = True
                 PL._gotoCella(0, oRange.StartRow -1)
                 oDoc.CurrentController.setFirstVisibleRow(y)
-            except:
-                # ~Dialogs.NotifyDialog(Image='Icons-Big/info.png',
-                        # ~Title = 'Info',
-                        # ~Text='''In questo Libretto delle Misure
-# ~non ci sono misure registrate.''')
-                # ~ if oSheet.Name == 'CONTABILITA':
-                    # ~ PL.struttura_ComputoM()
-                pass
+            except Exception as _exc:
+                LeenoUtils.log_errore('struttura_CONTAB: ripristino visibilita righe', _exc)
             return
 
 def aggiorna_S2_libretto(oDoc, nSal, aVoce, nPag):

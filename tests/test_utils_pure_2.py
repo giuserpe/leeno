@@ -382,12 +382,11 @@ class TestUtilsPure2(unittest.TestCase):
     def test_cerca_path_valido_login_non_giuserpe(self):
         cerca_path_valido = self.dispatcher_ns["cerca_path_valido"]
 
-        # BUG NOTO: cerca_path_valido ha una condizione 'if giuserpe in os.getlogin():' che racchiude
-        # l'intera logica di ricerca. Se il login non contiene 'giuserpe', la funzione esce senza
-        # eseguire il blocco e ritorna implicitamente None invece di cercare l'editor o sollevare FileNotFoundError.
-        with patch("os.getlogin", return_value="mario"):
+        with patch("os.getlogin", return_value="mario"), \
+             patch("platform.system", return_value="Linux"), \
+             patch("os.path.exists", side_effect=lambda p: p == "/usr/bin/code"):
             risultato = cerca_path_valido()
-            self.assertIsNone(risultato)
+            self.assertEqual(risultato, "/usr/bin/code")
 
     def test_fix_python_path(self):
         fixPythonPath = self.dispatcher_ns["fixPythonPath"]

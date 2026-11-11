@@ -2026,8 +2026,8 @@ def show_sheets(x=True):
         try:
             oSheet = oDoc.getSheets().getByName(nome)
             oSheet.IsVisible = True
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('show_sheets: visibilita foglio', _exc)
 
 
 ########################################################################
@@ -2219,8 +2219,8 @@ def voce_breve():
     for el in fogli_da_adattare:
         try:
             LeenoSheetUtils.adattaAltezzaRiga(oDoc.getSheets().getByName(el))
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('voce_breve: adatta altezza riga', _exc)
 
 ########################################################################
 @LeenoUtils.no_refresh # evita il refresh automatico

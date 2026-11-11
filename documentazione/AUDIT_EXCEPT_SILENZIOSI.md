@@ -6,13 +6,13 @@ Il presente documento contiene l'analisi statica (AST) del codice sorgente nei m
 
 - **Totale eccezioni silenziose analizzate:** 113
 - **Classe A (Errore atteso e innocuo, pass corretto):** 74
-- **Classe B (Possibile bug reale, da loggare con DLG.chi()):** 38
-- **Classe C (Incerto):** 1
+- **Classe B (Possibile bug reale, da loggare con LeenoUtils.log_errore):** 38 (interamente convertite o gestite nei moduli Python attivi)
+- **Classe C (Incerto / Threading Basic):** 1
 
 ### Legenda delle Classificazioni
 - **A**: Errore atteso e innocuo (es. proprieta opzionale, elemento UI assente, compatibilita cross-platform). Il `pass` e' corretto e intenzionale.
-- **B**: Potrebbe nascondere un bug reale o un fallimento silenziato in operazioni critiche (I/O, manipolazione fogli, formule, rimozione righe). Andrebbe loggato tramite `DLG.chi()`.
-- **C**: Incerto. Comportamento dipendente dall'ambiente di esecuzione o dalla presenza di riferimenti dinamici.
+- **B**: Potrebbe nascondere un bug reale o un fallimento silenziato in operazioni critiche (I/O, manipolazione fogli, formule, rimozione righe). Convertite a logging tracciato tramite `LeenoUtils.log_errore('<funzione>: <operazione>', _exc)`.
+- **C**: Incerto. Comportamento dipendente dall'ambiente di esecuzione o dalla presenza di riferimenti dinamici (inclusi thread su macro Basic legacy in dismissione).
 
 ---
 

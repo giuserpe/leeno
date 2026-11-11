@@ -375,10 +375,10 @@ def leggiElencoPrezzi(misurazioni):
                 return ''
 
         prezzo1 = parse_price('Prezzo1')
-        prezzo2 = get_xml_text(elem, 'Prezzo2', '0')
-        prezzo3 = get_xml_text(elem, 'Prezzo3', '0')
-        prezzo4 = get_xml_text(elem, 'Prezzo4', '0')
-        prezzo5 = get_xml_text(elem, 'Prezzo5', '0')
+        prezzo2 = parse_price('Prezzo2')
+        prezzo3 = parse_price('Prezzo3')
+        prezzo4 = parse_price('Prezzo4')
+        prezzo5 = parse_price('Prezzo5')
 
         idspcap = get_xml_text(elem, 'IDSpCap')
         idcap = get_xml_text(elem, 'IDCap')

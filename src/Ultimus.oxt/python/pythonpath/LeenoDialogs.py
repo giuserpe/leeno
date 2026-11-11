@@ -428,65 +428,64 @@ def cerca_path_valido():
     Raises:
         FileNotFoundError: Se nessun editor viene trovato
     """
-    if 'giuserpe' in os.getlogin():
-        import platform
-        system = platform.system()
+    import platform
+    system = platform.system()
 
-        possible_paths = []
+    possible_paths = []
 
-        # === ANTIGRAVITY (Priorità 1) ===
-        if system == "Windows":
-            possible_paths.extend([
-                os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
-                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe",
-                "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe"
-            ])
-        elif system == "Linux":
-            possible_paths.extend([
-                "/usr/bin/antigravity",
-                "/usr/local/bin/antigravity",
-                os.path.expanduser("~/.local/bin/antigravity"),
-            ])
-        elif system == "Darwin":  # macOS
-            possible_paths.extend([
-                "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
-                os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
-            ])
+    # === ANTIGRAVITY (Priorità 1) ===
+    if system == "Windows":
+        possible_paths.extend([
+            os.path.expanduser("~\\AppData\\Local\\Programs\\Antigravity\\Antigravity.exe"),
+            "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe",
+            "C:\\Users\\TEST\\AppData\\Local\\Programs\\Antigravity IDE\\Antigravity IDE.exe"
+        ])
+    elif system == "Linux":
+        possible_paths.extend([
+            "/usr/bin/antigravity",
+            "/usr/local/bin/antigravity",
+            os.path.expanduser("~/.local/bin/antigravity"),
+        ])
+    elif system == "Darwin":  # macOS
+        possible_paths.extend([
+            "/Applications/Antigravity.app/Contents/MacOS/Antigravity",
+            os.path.expanduser("~/Applications/Antigravity.app/Contents/MacOS/Antigravity"),
+        ])
 
-        # === VS CODE (Fallback) ===
-        if system == "Windows":
-            possible_paths.extend([
-                os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
-                "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-                "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
-                "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-                "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            ])
-        elif system == "Linux":
-            possible_paths.extend([
-                "/usr/bin/code",
-                "/usr/local/bin/code",
-                "/snap/bin/code",
-                os.path.expanduser("~/.local/bin/code"),
-            ])
-        elif system == "Darwin":  # macOS
-            possible_paths.extend([
-                "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
-                "/usr/local/bin/code",
-            ])
+    # === VS CODE (Fallback) ===
+    if system == "Windows":
+        possible_paths.extend([
+            os.path.expanduser("~\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"),
+            "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+            "C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe",
+            "C:\\Users\\giuserpe\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+            "C:\\Users\\DELL\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        ])
+    elif system == "Linux":
+        possible_paths.extend([
+            "/usr/bin/code",
+            "/usr/local/bin/code",
+            "/snap/bin/code",
+            os.path.expanduser("~/.local/bin/code"),
+        ])
+    elif system == "Darwin":  # macOS
+        possible_paths.extend([
+            "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
+            "/usr/local/bin/code",
+        ])
 
-        editor_path = None
-        for path in possible_paths:
-            if os.path.exists(path):
-                editor_path = path
-                break
+    editor_path = None
+    for path in possible_paths:
+        if os.path.exists(path):
+            editor_path = path
+            break
 
-        if editor_path is None:
-            raise FileNotFoundError(
-                f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
-                "Assicurati che almeno uno sia installato."
-            )
-        return editor_path
+    if editor_path is None:
+        raise FileNotFoundError(
+            f"Impossibile trovare un editor (Antigravity o VS Code) su {system}. "
+            "Assicurati che almeno uno sia installato."
+        )
+    return editor_path
 
 def apri_con_editor(full_file_path, line_number):
     """

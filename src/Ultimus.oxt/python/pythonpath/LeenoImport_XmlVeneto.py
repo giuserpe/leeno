@@ -87,13 +87,13 @@ def parseXML(data, defaultTitle=None):
                     catList[codiceCat] = paragrafo.find('sint').text
                     voce = paragrafo.find('estesa').text
                     try:
-                        paragrafo.find('tipologia').text
-                        if paragrafo.find('tipologia').text == 'Manodopera':
-                            mdo = 1
+                        tipologia_text = paragrafo.find('tipologia').text if paragrafo.find('tipologia') is not None else ''
+                        if tipologia_text == 'Manodopera':
+                            mdo_paragrafo = 1
                         else:
-                            mdo = ''
+                            mdo_paragrafo = ''
                     except:
-                        mdo = ''
+                        mdo_paragrafo = ''
                     prezzi = paragrafo.findall('prezzi')
                     for el in prezzi[0]:
                         art = el.text
@@ -109,6 +109,7 @@ def parseXML(data, defaultTitle=None):
                         codice = el.attrib['cod']
                         um = el.attrib['umi']
                         prezzo = float(el.attrib['val'])
+                        mdo = mdo_paragrafo
                         if mdo == '':
                             try:
                                 mdo = float(el.attrib['man']) / 100

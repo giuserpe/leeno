@@ -309,9 +309,9 @@ class TestUtilsPure2(unittest.TestCase):
         self.assertEqual(_format_time(125.5), "2m 5.50s")
 
         # Valori >= 3600 secondi (1 ora):
-        # BUG NOTO: _format_time non gestisce l'unita' ore ('h'). Per tempi superiori a 60 minuti,
-        # visualizza minuti cumulativi invece di suddividere in ore (es. 3665 secondi produce '61m 5.00s' invece di '1h 1m 5.00s').
-        self.assertEqual(_format_time(3665.0), "61m 5.00s")
+        self.assertEqual(_format_time(3600.0), "1h 0m 0.00s")
+        self.assertEqual(_format_time(3665.0), "1h 1m 5.00s")
+        self.assertEqual(_format_time(7325.25), "2h 2m 5.25s")
 
     # -------------------------------------------------------------------------
     # LeenoISTAT.py: _codice_sdmx

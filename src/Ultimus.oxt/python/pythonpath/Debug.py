@@ -189,10 +189,16 @@ def _format_time(seconds):
         return f"{seconds * 1000:.2f} ms"
     elif seconds < 60:
         return f"{seconds:.2f} s"
-    else:
+    elif seconds < 3600:
         minutes = int(seconds // 60)
         secs = seconds % 60
         return f"{minutes}m {secs:.2f}s"
+    else:
+        hours = int(seconds // 3600)
+        rem = seconds % 3600
+        minutes = int(rem // 60)
+        secs = rem % 60
+        return f"{hours}h {minutes}m {secs:.2f}s"
 
 
 def _log_to_file(func_name, module_name, start_datetime, elapsed_time, success, error_msg):

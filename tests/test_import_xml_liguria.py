@@ -145,9 +145,9 @@ class TestImportXmlLiguria(unittest.TestCase):
         self.assertEqual(res['categorie'], {'03': 'Mezzi'})
         self.assertIn('03', res['articoli'])
 
-    def test_parseXML_bug_noto_nodo_mo_e_sicurezza_mancanti(self):
-        # BUG NOTO: se i nodi <mo> o <sicurezza> sono assenti nell'XML dell'articolo,
-        # articolo.find('mo') e' None e articolo.find('mo').text solleva AttributeError.
+    def test_parseXML_gestione_nodi_mo_e_sicurezza_mancanti(self):
+        # Verifica che l'assenza dei nodi <mo> o <sicurezza> non sollevi AttributeError
+        # e assegni correttamente valori di default (0.0 / '').
         xml_data = """<Prezzario>
             <intestazione autore="Regione Liguria">
                 <dettaglio anno="2025" area="La Spezia" />
@@ -165,8 +165,10 @@ class TestImportXmlLiguria(unittest.TestCase):
             </Contenuto>
         </Prezzario>"""
 
-        with self.assertRaises(AttributeError):
-            self.LeenoImport_XmlLiguria.parseXML(xml_data)
+        res = self.LeenoImport_XmlLiguria.parseXML(xml_data)
+        art = res['articoli']['04.01.001']
+        self.assertEqual(art['mdo'], 0.0)
+        self.assertEqual(art['sicurezza'], '')
 
 
 if __name__ == '__main__':

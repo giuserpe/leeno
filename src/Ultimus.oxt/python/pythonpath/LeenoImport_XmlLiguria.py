@@ -88,8 +88,20 @@ def parseXML(data, defaultTitle=None):
                 prezzo = 0.0
 
         # Manodopera e Sicurezza
-        mdo = float(articolo.find('mo').text or 0) / 100
-        oneriSic = float(articolo.find('sicurezza').text or 0)
+        mo_node = articolo.find('mo')
+        mo_val = mo_node.text if mo_node is not None and mo_node.text else 0
+        try:
+            mdo = float(mo_val) / 100
+        except ValueError:
+            mdo = 0.0
+
+        sicurezza_node = articolo.find('sicurezza')
+        sicurezza_val = sicurezza_node.text if sicurezza_node is not None and sicurezza_node.text else 0
+        try:
+            oneriSic = float(sicurezza_val)
+        except ValueError:
+            oneriSic = 0.0
+
         if oneriSic == 0:
             oneriSic = ''
 

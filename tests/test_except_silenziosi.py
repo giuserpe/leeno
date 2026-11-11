@@ -26,6 +26,10 @@ TARGET_MODIFIED_TRIES = [
     ("pyleeno.py", "MENU_converti_stringhe", "Type.value == 'TEXT'"),
     ("pyleeno.py", "adegua_tmpl", "rigenera_tutte()"),
     ("pyleeno.py", "MENU_hl", "getCellByPosition(lcol, el)"),
+    ("pyleeno.py", "autoexec_off", "oSheet = oDoc.Sheets.getByName(el)"),
+    ("pyleeno.py", "dp", "oSheet = oDoc.Sheets.getByName(el)"),
+    ("pyleeno.py", "ScriviNomeDocumentoPrincipale", "oSheet = oDoc.Sheets.getByName(el)"),
+    ("LeenoContab.py", "annulla_partite_provvisorie_sospese", "OptimalHeight = True"),
 ]
 
 

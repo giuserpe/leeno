@@ -8577,8 +8577,8 @@ def autoexec_off():
                                                               FORMATTED +
                                                               HARDATTR)
             oSheet.getCellRangeByName("A1").String = ''
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('autoexec_off: pulizia fogli', _exc)
     LeenoSheetUtils.cancella_riepilogo_quantita()
 
 ########################################################################
@@ -8901,9 +8901,8 @@ def dp():
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:' + sUltimus
 
-        except Exception:
-            #  DLG.chi(f"Errore durante l'accesso al foglio '{el}': {e}")
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('dp: aggiornamento stato documento', _exc)
 
 ########################################################################
 
@@ -9581,8 +9580,8 @@ def ScriviNomeDocumentoPrincipale():
             oSheet.getCellRangeByName(d[el]).String = 'DP: ' + LeenoGlobals.getGlobalVar('sUltimus')
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
 
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('ScriviNomeDocumentoPrincipale: scrittura DP', _exc)
 
 ########################################################################
 
@@ -10185,6 +10184,7 @@ def donazioni():
     apri.execute("https://leeno.org/donazioni/", "", 0)
 
 ########################################################################
+class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
     '''
     @@ DA DOCUMENTARE
     '''

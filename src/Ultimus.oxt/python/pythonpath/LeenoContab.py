@@ -1009,8 +1009,8 @@ def annulla_partite_provvisorie_sospese():
                 for r in range(start_R, end_R + 1):
                     try:
                         oSheet.getRows().getByIndex(r).OptimalHeight = True
-                    except Exception:
-                        pass
+                    except Exception as _exc:
+                        LeenoUtils.log_errore('annulla partite: ottimizzazione altezza riga', _exc)
                 insert_pos = end_R
 
         PL.numera_voci(oSheet)

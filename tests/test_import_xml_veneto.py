@@ -124,10 +124,9 @@ class TestImportXmlVeneto(unittest.TestCase):
         self.assertEqual(len(res['articoli']), 1)
         self.assertEqual(res['articoli']['DUP01']['prezzo'], 20.00)
 
-    def test_parseXML_bug_noto_mdo_persistenza(self):
-        # BUG NOTO: se la tipologia e' 'Manodopera', mdo e' 1 per tutti i prezzi del paragrafo.
-        # Inoltre, la variabile mdo non viene resettata tra i prezzi in prezzi[0],
-        # quindi il secondo articolo eredita la percentuale man del primo se non la specifica.
+    def test_parseXML_mdo_non_persiste_tra_articoli(self):
+        # Verifica che la variabile mdo venga azzerata tra i prezzi in prezzi[0],
+        # evitando che il secondo articolo erediti la percentuale man del primo se non la specifica.
         xml_data = """<root desc="Test MDO Bug">
             <settore cod="S1" desc="S1">
                 <capitolo cod="S1.C1" desc="C1">
@@ -145,9 +144,7 @@ class TestImportXmlVeneto(unittest.TestCase):
 
         res = self.LeenoImport_XmlVeneto.parseXML(xml_data)
         self.assertEqual(res['articoli']['M1']['mdo'], 0.50)
-        # BUG NOTO: M2 non ha attribute 'man', ma poiche' mdo non viene azzerato ad ogni ciclo del loop prezzi[0],
-        # M2 eredita 0.50 da M1 invece di fallback a 0 o stringa vuota.
-        self.assertEqual(res['articoli']['M2']['mdo'], 0.50)
+        self.assertEqual(res['articoli']['M2']['mdo'], '')
 
 
 if __name__ == '__main__':

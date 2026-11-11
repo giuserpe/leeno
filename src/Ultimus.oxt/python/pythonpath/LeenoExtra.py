@@ -7,7 +7,7 @@
 '''
 Funzioni di utilità extra
 '''
-# ~import subprocess
+import subprocess
 # ~import LeenoDialogs as DLG
 
 import xml.etree.ElementTree as ET

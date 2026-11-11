@@ -36,7 +36,9 @@ Da 119 avvisi in 33 moduli a 36 (14 in `pyleeno.py`, 5 in `LeenoContab.py`, gli 
 
 Falsi positivi: `CALL_SET` in `LeenoBasicBridge` (definito in `builtins`), `__global_context__` in `LeenoUtils` (iniettato da LibreOffice), `PL` in `LeenoImport_XmlLiguria` (protetto da `'PL' in globals()`, quindi il ramo non gira mai), `Toolbars` in `LeenoConfig` (import locale in un'altra funzione, errore nascosto da un `try`).
 
-Difetti reali: `pyleeno.MENU_inserisci_nuova_riga_con_descrizione` richiama `inserisci_nuova_riga_con_descrizione_th`, che non esiste, ed è collegata a una voce di menu attiva in `Addons.xcu` (NameError al click). `LeenoExtra.convert_to_pdf` usa `subprocess` con l'import commentato; non è collegata a nessun menu.
+Difetti reali risolti:
+- `pyleeno.MENU_inserisci_nuova_riga_con_descrizione`: ripristinata l'intestazione della classe thread `inserisci_nuova_riga_con_descrizione_th(threading.Thread)` precedentemente orfana e annidata in `donazioni()`.
+- `LeenoExtra.convert_to_pdf`: de-commentato l'import di `subprocess`.
 
 ## Eccezioni silenziose e registro errori
 

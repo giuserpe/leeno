@@ -443,7 +443,7 @@ def leggiElencoPrezzi(misurazioni):
 
 def leggiMisurazioni(misurazioni, ordina):
     """leggo voci di misurazione e righe"""
-    if not misurazioni or len(list(misurazioni)) < 2:
+    if misurazioni is None or len(list(misurazioni)) < 2:
         return []
 
     def clean_value(elem, tag, pattern):

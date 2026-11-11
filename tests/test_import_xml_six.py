@@ -22,6 +22,7 @@ class TestImportXmlSix(unittest.TestCase):
             'uno': MagicMock(),
             'unohelper': MagicMock(),
             'com': MagicMock(),
+            'com.sun': MagicMock(),
             'com.sun.star': MagicMock(),
             'com.sun.star.beans': MagicMock(),
             'com.sun.star.sheet': MagicMock(),
@@ -41,6 +42,9 @@ class TestImportXmlSix(unittest.TestCase):
 
     def tearDown(self):
         self.patcher.stop()
+        for mod in ['LeenoImport_XmlSix', 'LeenoImport']:
+            if mod in sys.modules:
+                del sys.modules[mod]
 
     def test_parseXML_struttura_sintetica_singola_lingua(self):
         xml_data = """<?xml version="1.0" encoding="utf-8"?>

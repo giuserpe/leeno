@@ -4,6 +4,7 @@
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 ########################################################################
 
+import pyleeno as PL
 import LeenoImport
 
 # Importiamo l'oggetto di logging e le utility di LeenO (es. PL se è il modulo dei prezzari)

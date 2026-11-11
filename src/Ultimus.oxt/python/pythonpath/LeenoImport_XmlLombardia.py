@@ -62,13 +62,24 @@ def parseXML(data, defaultTitle=None):
     catList = {}
 
     # prendo il suffisso da aggiungere al codice categorie
-    try:
-        suff = list(root[0][0])[1].attrib['CMPcodifica_voce'][:8]
-    except:
-        suff = list(root[0][0])[1].attrib['codice_voce'][:8]
+    first_det = root.find('.//dettaglio_voce')
+    if first_det is not None:
+        suff = first_det.attrib.get('CMPcodifica_voce', first_det.attrib.get('codice_voce', ''))[:8]
+    else:
+        try:
+            suff = list(root[0][0])[1].attrib['CMPcodifica_voce'][:8]
+        except Exception:
+            try:
+                suff = list(root[0][0])[1].attrib['codice_voce'][:8]
+            except Exception:
+                suff = ''
 
     voci = root.find('voci')
+    if voci is None:
+        voci = []
     for voce in voci:
+        if voce.tag == 'voci' or len(list(voce)) < 2:
+            continue
         dettaglio_voce = list(voce)[1]
         ###
         # estrae supercategoria e categoria

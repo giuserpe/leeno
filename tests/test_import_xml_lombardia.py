@@ -83,11 +83,9 @@ class TestImportXmlLombardia(unittest.TestCase):
         self.assertEqual(art2['desc'], 'Opere in calcestruzzo armato e non\nin opera per solai')
         self.assertEqual(art2['prezzo'], 1350.00)
 
-    def test_parseXML_bug_noto_ciclo_voci_header(self):
-        # BUG NOTO: in parseXML, `voci = root.find('voci')` e `for voce in voci:` itera su tutti i figli
-        # del nodo <voci>, incluso il sotto-nodo <voci> che contiene le informazioni di intestazione (<riferimenti_voce>).
-        # Poiche' la prima iterazione tenta di accedere a `list(voce)[1]` ed estrarre attributi dell'articolo
-        # (come udm_voce / unita_misura_voce), se l'intestazione non possiede tali attributi solleva KeyError o IndexError.
+    def test_parseXML_ignora_nodo_header_voci(self):
+        # Verifica che il parser ignori il nodo header <voci> contenente <riferimenti_voce>
+        # e parsi correttamente i nodi <voce> effettivi senza sollevare eccezioni.
         xml_data = """<root>
             <voci>
                 <voci>
@@ -96,11 +94,23 @@ class TestImportXmlLombardia(unittest.TestCase):
                         <anno>2025</anno>
                     </riferimenti_voce>
                 </voci>
+                <voce>
+                    <identificativo>1</identificativo>
+                    <dettaglio_voce CMPcodifica_voce="1.1.1" udm_voce="cad" prezzo_voce="15.50">
+                        <declaratoria_voce>Voce di prova</declaratoria_voce>
+                    </dettaglio_voce>
+                </voce>
             </voci>
         </root>"""
 
-        with self.assertRaises((IndexError, KeyError)):
-            self.LeenoImport_XmlLombardia.parseXML(xml_data)
+        res = self.LeenoImport_XmlLombardia.parseXML(xml_data)
+        self.assertEqual(res['titolo'], "LOM 2025")
+        self.assertIn('1.1.1', res['articoli'])
+        art = res['articoli']['1.1.1']
+        self.assertEqual(art['codice'], '1.1.1')
+        self.assertEqual(art['desc'], 'Voce di prova')
+        self.assertEqual(art['um'], 'cad')
+        self.assertEqual(art['prezzo'], 15.50)
 
 
 if __name__ == '__main__':

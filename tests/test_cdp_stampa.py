@@ -108,6 +108,23 @@ class TestStilePaginaCdP(unittest.TestCase):
         codice = SETTINGS.read_text(encoding="utf-8")
         self.assertIn("'CdP': STILE_PAGINA_CDP", codice)
 
+    def test_sistema_pagine_non_riattiva_intestazione_del_cdp(self):
+        fn = _funzione(PYLEENO, "MENU_sistema_pagine")
+        esclusione = None
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Assign) and any(
+                    isinstance(t, ast.Name) and t.id == "senza_intestazione" for t in n.targets):
+                esclusione = ast.unparse(n.value)
+        self.assertIsNotNone(esclusione)
+        self.assertIn("LS.STILE_PAGINA_CDP", esclusione)
+        attivazioni = [ast.unparse(n.value) for n in ast.walk(fn)
+                       if isinstance(n, ast.Assign)
+                       and any(isinstance(t, ast.Attribute) and t.attr in ("HeaderIsOn", "FooterIsOn")
+                               for t in n.targets)]
+        self.assertEqual(len(attivazioni), 2)
+        for a in attivazioni:
+            self.assertIn("senza_intestazione", a)
+
 
 if __name__ == "__main__":
     unittest.main()

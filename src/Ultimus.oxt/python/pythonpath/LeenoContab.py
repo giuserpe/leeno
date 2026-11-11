@@ -3123,8 +3123,8 @@ def _trova_riva(oCdP, testo, col_hint=None, equal=1):
             result = SheetUtils.uFindString(testo, oCdP)
             if result:
                 return result[1], result[0]
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('_trova_riva: ricerca di %r' % testo, _exc)
     return None, None
 
 
@@ -3197,8 +3197,8 @@ def _leggi_iva_da_S2(oS2):
             if row_iva is not None:
                 iva_val = oS2.getCellByPosition(2, int(row_iva)).Value
                 return iva_val
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('CdP: lettura IVA da S2, uso 0%', _exc)
     return 0  # default IVA 0%
 
 
@@ -3220,8 +3220,8 @@ def _leggi_anticipo_da_S2(oS2):
             if row_ant is not None:
                 ant_val = oS2.getCellByPosition(2, int(row_ant)).Value
                 return ant_val
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('CdP: lettura anticipazione da S2, uso 0', _exc)
     return 0.0
 
 
@@ -3243,8 +3243,8 @@ def _leggi_infortuni_da_S2(oS2):
             if row_inf is not None:
                 inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
                 return inf_val
-    except Exception:
-        pass
+    except Exception as _exc:
+        LeenoUtils.log_errore('CdP: lettura infortuni da S2, uso 0', _exc)
     return 0.0
 
 
@@ -3316,7 +3316,8 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             m_s2 = SheetUtils.uFindString('SITUAZIONE CONTABILE', oS2_tmp)
             if m_s2:
                 aVoce = int(oS2_tmp.getCellByPosition(m_s2[0] + nSal, m_s2[1] + 24).Value)
-        except Exception:
+        except Exception as _exc:
+            LeenoUtils.log_errore('GeneraCdP: ricerca dell\'ultima voce del SAL', _exc)
             aVoce = ''
 
     # 1. Consolidamento del CdP precedente (formule sostituite da valori)
@@ -3508,8 +3509,8 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                         oCdP.getRows().getByIndex(r_ogg).Height,
                         altezza_stimata
                     )
-                except Exception:
-                    pass
+                except Exception as _exc:
+                    LeenoUtils.log_errore('GeneraCdP: altezza della riga oggetto', _exc)
                 break
 
     # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
@@ -3677,15 +3678,18 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     importo_finale = 0.0
 
     if r_totgen is not None:
+        was_auto = None
         try:
             was_auto = oDoc.isAutomaticCalculationEnabled()
             oDoc.enableAutomaticCalculation(True)
             oDoc.calculateAll()
             _v = oCdP.getCellByPosition(val_col, r_totgen).Value
             importo_finale = round(_v, 2)
-            oDoc.enableAutomaticCalculation(was_auto)
-        except Exception:
-            pass
+        except Exception as _exc:
+            LeenoUtils.log_errore('GeneraCdP: ricalcolo dell\'importo finale', _exc)
+        finally:
+            if was_auto is not None:
+                oDoc.enableAutomaticCalculation(was_auto)
 
     if importo_finale == 0.0 and r2_certif is not None:
         _v = oS2.getCellByPosition(col_sal, r2_certif).Value

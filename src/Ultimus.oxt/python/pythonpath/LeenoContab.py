@@ -506,13 +506,31 @@ def MENU_AnnullaTuttiAttiContabili():
             Dialogs.Info(Text="Tutti gli atti contabili sono stati annullati.")
 
 
+def _rimuovi_blocco_cdp(oDoc, nSal):
+    '''
+    Rimuove dal foglio CdP il blocco del CdP n.nSal (riga d'intestazione compresa)
+    e il relativo nome area '_CdP_n'. Ritorna True se il blocco e' stato rimosso.
+    '''
+    nome = '_CdP_' + str(nSal)
+    if not (oDoc.Sheets.hasByName('CdP') and oDoc.NamedRanges.hasByName(nome)):
+        return False
+    oSheet_C = oDoc.Sheets.getByName('CdP')
+    oNR_C = oDoc.NamedRanges.getByName(nome).ReferredCells.RangeAddress
+    oSheet_C.ungroup(oNR_C, 1)
+    # L'intestazione 'segue CdP' sta una riga sopra l'area nominata
+    r_start = max(0, oNR_C.StartRow - 1)
+    oSheet_C.Rows.removeByIndex(r_start, oNR_C.EndRow - r_start + 1)
+    oDoc.NamedRanges.removeByName(nome)
+    return True
+
+
 def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=True):
     '''
     Logica core per annullare l'ultimo SAL.
     Usata da MENU_AnnullaAttiContabili e MENU_AnnullaTuttiAttiContabili.
     Se rigenera_cdp=False, non rigenera il CdP del SAL precedente.
     Restituisce la lista delle fasi non completate (vuota se tutto e' andato a buon fine).
-    Gli errori di pulizia del CdP vengono solo registrati su file, perche' il CdP viene rigenerato.
+    Il blocco del CdP annullato viene rimosso dal foglio CdP (o l'intero foglio se e' l'ultimo SAL).
     '''
     if listaSal is None:
         listaSal = ultimo_sal()
@@ -523,63 +541,9 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
     oRanges = oDoc.NamedRanges
     nSal_str = listaSal[-1]
 
-    # 0. Elimina CdP (NamedRange + svuota celle compilate)
-    nome_cdp = '_CdP_' + nSal_str
-    try:
-        if oRanges.hasByName(nome_cdp):
-            oRanges.removeByName(nome_cdp)
-        if oDoc.Sheets.hasByName('CdP'):
-            oCdP = oDoc.Sheets.getByName('CdP')
-            anchors_cdp = [
-                'Per lavori e somministrazioni',
-                'SOMMANO importi soggetti',
-                'SOMMANO importi NON soggetti',
-                'Ritenuta per infortuni',
-                'Ammontare dei Certificati',
-                'TOTALE DETRAZIONE',
-                'RISULTA IL CREDITO',
-                'I.V.A.',
-                'TOTALE GENERALE',
-            ]
-            for label in anchors_cdp:
-                try:
-                    result = SheetUtils.uFindString(label, oCdP)
-                    if result:
-                        r_a = result[1]
-                        for cc in range(8):
-                            cell = oCdP.getCellByPosition(cc, r_a)
-                            if cell.getFormula().startswith('=') or \
-                               (cell.Type.value != 'EMPTY' and
-                                cell.CellStyle not in ('comp Int_colonna_R', 'Ultimus_centro_bordi_lati')):
-                                cell.clearContents(VALUE + STRING + FORMULA)
-                except Exception as _exc:
-                    LeenoUtils.log_errore('annulla SAL: pulizia voci riepilogo CdP', _exc)
-            # Svuota blocco certificati precedenti
-            try:
-                r_ncert_result = SheetUtils.uFindString('N°', oCdP)
-                if r_ncert_result:
-                    r_f = r_ncert_result[1] + 1
-                    r_sogg_res = SheetUtils.uFindString('SOMMANO importi soggetti', oCdP)
-                    r_s = r_sogg_res[1] if r_sogg_res else r_f + 10
-                    for rr in range(r_f, r_s):
-                        for cc in range(6):
-                            oCdP.getCellByPosition(cc, rr).clearContents(VALUE + STRING + FORMULA)
-            except Exception as _exc:
-                LeenoUtils.log_errore('annulla SAL: pulizia certificati precedenti CdP', _exc)
-            # Ripristina etichetta IVA
-            try:
-                r_iva_res = SheetUtils.uFindString('I.V.A.', oCdP)
-                if r_iva_res:
-                    r_iv = r_iva_res[1]
-                    for cc in range(6):
-                        lbl = oCdP.getCellByPosition(cc, r_iv).String
-                        if '%' in lbl and 'I.V.A.' in lbl:
-                            oCdP.getCellByPosition(cc, r_iv).String = 'per I.V.A. al __%'
-                            break
-            except Exception as _exc:
-                LeenoUtils.log_errore('annulla SAL: ripristino etichetta IVA nel CdP', _exc)
-    except Exception as _exc:
-        LeenoUtils.log_errore('annulla SAL: eliminazione CdP', _exc)
+    # Il blocco CdP viene rimosso al punto 2 tramite il suo nome area '_CdP_n':
+    # il nome area non va eliminato prima e le celle non vanno svuotate cercando
+    # le etichette dall'alto del foglio, perche' colpirebbe il primo blocco.
 
     # 1. Elimina libretto (CONTABILITA)
     try:
@@ -626,9 +590,14 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
         if len(listaSal) == 1:
             fogli_da_eliminare = ['Registro', 'SAL', 'CdP']
 
+        prefissi_aree = {'Registro': '_Reg_', 'SAL': '_SAL_', 'CdP': '_CdP_'}
         for el in fogli_da_eliminare:
             if oDoc.Sheets.hasByName(el):
                 oDoc.Sheets.removeByName(el)
+            # Il nome area del foglio eliminato resterebbe orfano (#REF!)
+            nome_el = prefissi_aree[el] + nSal_str
+            if oRanges.hasByName(nome_el):
+                oRanges.removeByName(nome_el)
 
         if len(listaSal) > 1:
             # Registro
@@ -652,17 +621,7 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
                     oRanges.removeByName(nome_sal)
 
             # CdP
-            if oDoc.Sheets.hasByName('CdP'):
-                oSheet_C = oDoc.Sheets.getByName('CdP')
-                nome_cdp_del = "_CdP_" + nSal_str
-                if oRanges.hasByName(nome_cdp_del):
-                    oNR_C = oRanges.getByName(nome_cdp_del).ReferredCells.RangeAddress
-                    oSheet_C.ungroup(oNR_C, 1)
-                    # Rimuove le righe del blocco CdP (compresa la riga d'intestazione a StartRow - 1)
-                    r_start = max(0, oNR_C.StartRow - 1)
-                    num_r = oNR_C.EndRow - r_start + 1
-                    oSheet_C.Rows.removeByIndex(r_start, num_r)
-                    oRanges.removeByName(nome_cdp_del)
+            _rimuovi_blocco_cdp(oDoc, nSal_str)
     except Exception as _exc:
         errori.append('eliminazione di Registro, SAL e CdP')
         LeenoUtils.log_errore('annulla SAL: eliminazione Registro, SAL, CdP', _exc)
@@ -690,6 +649,10 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
             oSheet.getCellRangeByName('Z3').String = n_ultimo
             # Rigenera il CdP per l'ultimo SAL rimasto
             if rigenera_cdp:
+                # Il blocco dell'ultimo CdP rimasto e' consolidato (valori): lo si
+                # sostituisce con uno nuovo generato dal template nella stessa posizione
+                if int(n_ultimo) > 1:
+                    _rimuovi_blocco_cdp(oDoc, n_ultimo)
                 GeneraCdP(oDoc, nSal=int(n_ultimo), silent=True)
         else:
             oSheet.getCellRangeByName('Z3').String = ''
@@ -1009,8 +972,8 @@ def annulla_partite_provvisorie_sospese():
                 for r in range(start_R, end_R + 1):
                     try:
                         oSheet.getRows().getByIndex(r).OptimalHeight = True
-                    except Exception as _exc:
-                        LeenoUtils.log_errore('annulla partite: ottimizzazione altezza riga', _exc)
+                    except Exception:
+                        pass
                 insert_pos = end_R
 
         PL.numera_voci(oSheet)
@@ -3820,7 +3783,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     # L'area di stampa esclude la riga d'intestazione 'segue CdP' (stile 'uuuuu') e la riga vuota sotto di essa
     addr = oCdP.getCellRangeByPosition(0, base_start_row + 2, val_col, end_row_named).getRangeAddress()
     oCdP.setPrintAreas((addr,))
-    oCdP.setPrintTitleRows(False)
 
     oCdP.getCellRangeByPosition(0, start_row_named, val_col, end_row_named).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oCdP)

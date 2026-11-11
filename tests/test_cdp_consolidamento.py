@@ -32,9 +32,11 @@ class TestAnnullaUltimoSalCdP(unittest.TestCase):
         """Verifica che _annulla_ultimo_sal_core su SAL > 1 rimuova le righe e il NamedRange di CdP."""
         fn_ast = _estrai_funzione("_annulla_ultimo_sal_core")
         codice = ast.unparse(fn_ast)
-        self.assertIn("nome_cdp_del = '_CdP_' + nSal_str", codice)
-        self.assertIn("oSheet_C.Rows.removeByIndex", codice)
-        self.assertIn("oRanges.removeByName(nome_cdp_del)", codice)
+        self.assertIn("_rimuovi_blocco_cdp(oDoc, nSal_str)", codice)
+        helper = ast.unparse(_estrai_funzione("_rimuovi_blocco_cdp"))
+        self.assertIn("'_CdP_' + str(nSal)", helper)
+        self.assertIn("oSheet_C.Rows.removeByIndex", helper)
+        self.assertIn("oDoc.NamedRanges.removeByName(nome)", helper)
 
 
 class TestGeneraCdPComportamento(unittest.TestCase):

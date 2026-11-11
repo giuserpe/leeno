@@ -348,8 +348,8 @@ class TestImportXpwe(unittest.TestCase):
         self.assertEqual(art1['desbreve'], 'Scavo breve')
         self.assertIn('\nseconda riga con caratteri accentati: perimetro, quantita, societa', art1['destestesa'])
         self.assertEqual(art1['prezzo1'], 28.75)
-        self.assertEqual(art1['prezzo2'], '30.00')
-        self.assertEqual(art1['prezzo5'], '40.00')
+        self.assertEqual(art1['prezzo2'], 30.00)
+        self.assertEqual(art1['prezzo5'], 40.00)
         self.assertAlmostEqual(art1['IncMDO'], 0.355)
         self.assertAlmostEqual(art1['IncSIC'], 0.045)
         self.assertAlmostEqual(art1['IncMAT'], 0.50)
@@ -821,17 +821,13 @@ class TestImportXpwe(unittest.TestCase):
             self.assertEqual(capcat['SottoCategorie'][0]['dessintetica'], 'Tubazioni PEAD')
 
             # 3. Elenco Prezzi
-            # BUG NOTO: in leggiElencoPrezzi, Prezzo1 viene convertito con parse_price (float),
-            # mentre Prezzo2..Prezzo5 vengono letti come stringa grezza tramite get_xml_text.
-            # dcf_parser.generate_xpwe scrive '40' se float 40.0 ha parte decimale zero (f"{p:g}"),
-            # quindi art['prezzo2'] vale la stringa '40' invece del float 40.0.
             ep = self.IMP.leggiElencoPrezzi(mis)
             self.assertEqual(len(ep['ListaArticoli']), 1)
             art = ep['DizionarioArticoli']['500']
             self.assertEqual(art['tariffa'], 'IDR.01')
             self.assertEqual(art['unmisura'], 'm')
             self.assertEqual(art['prezzo1'], 35.80)
-            self.assertEqual(art['prezzo2'], '40')
+            self.assertEqual(art['prezzo2'], 40.0)
 
             # 4. Misurazioni
             misure = self.IMP.leggiMisurazioni(mis, ordina=False)

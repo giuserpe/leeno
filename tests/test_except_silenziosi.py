@@ -30,6 +30,9 @@ TARGET_MODIFIED_TRIES = [
     ("pyleeno.py", "dp", "oSheet = oDoc.Sheets.getByName(el)"),
     ("pyleeno.py", "ScriviNomeDocumentoPrincipale", "oSheet = oDoc.Sheets.getByName(el)"),
     ("LeenoContab.py", "annulla_partite_provvisorie_sospese", "OptimalHeight = True"),
+    ("LeenoContab.py", "struttura_CONTAB", "Rows.IsVisible = True"),
+    ("pyleeno.py", "show_sheets", "oSheet.IsVisible = True"),
+    ("pyleeno.py", "voce_breve", "adattaAltezzaRiga"),
 ]
 
 

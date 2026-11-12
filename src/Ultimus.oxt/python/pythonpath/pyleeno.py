@@ -1804,7 +1804,7 @@ def vai_a_Scorciatoie():
 
     oDoc = LeenoUtils.getDocument()
 
-    template_path = os.path.join(LeenoGlobals.dest(), 'template', 'leeno', 'Computo_LeenO.ods')
+    template_path = LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
     oTemplate = DocUtils.loadDocument(template_path, Hidden=True)
     if oTemplate is None:

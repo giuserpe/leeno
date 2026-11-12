@@ -22,4 +22,5 @@
  <library:element library:name="DlgSiNo"/>
  <library:element library:name="DlgSiNoCancel"/>
  <library:element library:name="Dlg_importi"/>
+ <library:element library:name="DlgCdPBis"/>
 </library:library>

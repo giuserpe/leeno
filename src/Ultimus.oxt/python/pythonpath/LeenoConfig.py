@@ -25,6 +25,14 @@ COLORE_GRIGIO_INATTIVA = 15066597
 COLORE_BIANCO_SFONDO = 16777215
 COLORE_ROSSO_AVVISO = 15506331
 
+# Aggiornamento voci a un nuovo prezzario (LeenoCdPBis): soglie di
+# similarita' della descrizione e colori di evidenziazione. Il VERDE non
+# colora le celle: le voci sostituite restano senza evidenziazione.
+CDPBIS_SOGLIA_VERDE = 0.95
+CDPBIS_SOGLIA_GIALLO = 0.80
+COLORE_CDPBIS_GIALLO = 16773792
+COLORE_CDPBIS_ROSSO = 16744319
+
 PASTEL_COLORS = [
     16764108,  # Pastel Red
     16777164,  # Pastel Yellow

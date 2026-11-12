@@ -8600,14 +8600,22 @@ class trun(threading.Thread):
             try:
                 minuti_conf = cfg.read('Generale', 'pausa_backup')
                 minuti = 60 * int(minuti_conf) if minuti_conf else 600
-            except:
+            except Exception as _exc:
+                LeenoUtils.log_errore('trun: lettura configurazione backup', _exc)
                 minuti = 600
 
             # Attende 'minuti' secondi o finché l'evento di stop non viene impostato
             if self._stop_event.wait(minuti):
                 break
-            if "Computo_LeenO.ods" not in LeenoUtils.getDocument().getURL():
-                bak()
+            try:
+                oDoc = LeenoUtils.getDocument()
+                if oDoc is None:
+                    break
+                if "Computo_LeenO.ods" not in oDoc.getURL():
+                    bak()
+            except Exception as _exc:
+                LeenoUtils.log_errore('trun: backup automatico', _exc)
+                break
 
 
 def autorun():
@@ -12335,6 +12343,8 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    import LeenoCdPBis
+    LeenoCdPBis.MENU_aggiorna_voci_prezzario()
     LeenoUtils.DocumentRefresh(True)
     return
     import LeenoContab

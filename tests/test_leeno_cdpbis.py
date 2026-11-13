@@ -405,32 +405,65 @@ def test_nome_report(cdp):
     assert cdp.nome_report('', '20261112_101500') == 'documento_CdPBis_20261112_101500.csv'
 
 
-# ------------------------------------------------------- sfondi registrati
+# --------------------------------------------------- registro degli esiti
 
-def test_codifica_decodifica_sfondo_roundtrip(cdp):
-    for sfondo in (('DEFAULT_VALUE', 16772089, False), ('DIRECT_VALUE', -5127, True),
-                   ('DIRECT_VALUE', 14942166, False)):
-        assert cdp.decodifica_sfondo(cdp.codifica_sfondo(*sfondo)) == sfondo
+def esiti_misti(cdp):
+    prez = [riga_ep('N_A.1', 'Tubo DN 100', 'm', 1.0),
+            riga_ep('N_A.2', 'Fornitura e posa in opera di tubazione in polietilene diametro 110 mm completa di pezzi speciali', 'm', 1.0),
+            riga_ep('N_A.3', 'Intonaco civile', 'mq', 1.0)]
+    doc = [riga_ep('O_A.1', 'Tubo DN 100', 'm', 1.0),
+           riga_ep('O_A.2', 'Fornitura e posa in opera di tubazione in polietilene diametro 110 mm completa', 'm', 1.0),
+           riga_ep('O_A.3', 'Scavo a sezione obbligata', 'mq', 1.0)]
+    voci = [voce(cdp, 'O_A.1', 5, 'COMPUTO', '1'), voce(cdp, 'O_A.2', 9, 'COMPUTO', '2'),
+            voce(cdp, 'O_A.3', 4, 'CONTABILITA', '1')]
+    return confronta(cdp, voci, doc, prez).esiti
 
 
-@pytest.mark.parametrize('testo', ['', 'abc', 'a|b|c', 'X|1', None, 'X|1|0|9'])
-def test_decodifica_sfondo_non_valida(cdp, testo):
-    assert cdp.decodifica_sfondo(testo) is None
+def test_voce_registrata_codice_dipende_dalla_sostituzione(cdp):
+    esiti = esiti_misti(cdp)
+    e = esiti[0]
+    sostituita = cdp.voce_registrata(e, True)
+    rifiutata = cdp.voce_registrata(e, False)
+    assert sostituita == ['N_A.1', 'V', 1.0, 1, 'O_A.1']
+    assert rifiutata == ['O_A.1', 'V', 1.0, 0, 'O_A.1']
 
 
-def test_unisci_registri_non_sovrascrive_il_primo(cdp):
-    esistente = {'standard': {'COMPUTO': {'comp Art-EP_R': 'DEFAULT_VALUE|1|0'}},
-                 'eccezioni': {'COMPUTO': {'5': ['A.1', 'X|9|0']}}}
-    nuovo = {'standard': {'COMPUTO': {'comp Art-EP_R': 'DIRECT_VALUE|2|0', 'altro': 'X|3|1'},
-                          'CONTABILITA': {'comp Art-EP_R': 'DIRECT_VALUE|-1|1'}},
-             'eccezioni': {'COMPUTO': {'5': ['B.2', 'Y|8|0'], '6': ['C.3', 'Z|7|1']}}}
-    unito = cdp.unisci_registri(esistente, nuovo)
-    assert unito['standard']['COMPUTO']['comp Art-EP_R'] == 'DEFAULT_VALUE|1|0'
-    assert unito['standard']['COMPUTO']['altro'] == 'X|3|1'
-    assert unito['standard']['CONTABILITA']['comp Art-EP_R'] == 'DIRECT_VALUE|-1|1'
-    assert unito['eccezioni']['COMPUTO']['5'] == ['A.1', 'X|9|0']
-    assert unito['eccezioni']['COMPUTO']['6'] == ['C.3', 'Z|7|1']
-    assert esistente['eccezioni']['COMPUTO'] == {'5': ['A.1', 'X|9|0']}
+def test_registro_esiti_per_foglio_e_riga(cdp):
+    esiti = esiti_misti(cdp)
+    registro = cdp.registro_esiti(esiti, [True, False, True])
+    assert set(registro) == {'COMPUTO', 'CONTABILITA'}
+    assert registro['COMPUTO']['5'][0] == 'N_A.1'
+    assert registro['COMPUTO']['9'][0] == 'O_A.2' and registro['COMPUTO']['9'][1] == 'G'
+    assert registro['CONTABILITA']['4'][1] == 'R'
+    # il registro e' serializzabile come JSON
+    import json
+    assert json.loads(json.dumps(registro)) == registro
+
+
+def test_aggiorna_registro_vale_il_piu_recente(cdp):
+    vecchio = {'COMPUTO': {'5': ['A', 'V', 1.0, 1, 'X'], '6': ['B', 'G', 0.9, 1, 'Y']}}
+    nuovo = {'COMPUTO': {'5': ['A2', 'R', 0.1, 0, 'X']}, 'CONTABILITA': {'1': ['C', 'V', 1.0, 1, 'Z']}}
+    unito = cdp.aggiorna_registro(vecchio, nuovo)
+    assert unito['COMPUTO']['5'] == ['A2', 'R', 0.1, 0, 'X']
+    assert unito['COMPUTO']['6'] == ['B', 'G', 0.9, 1, 'Y']
+    assert unito['CONTABILITA']['1'][0] == 'C'
+    assert vecchio['COMPUTO']['5'][0] == 'A'  # l'originale non cambia
+
+
+def test_cerca_voce_registrata_richiede_riga_e_codice(cdp):
+    reg = {'5': ['N_A.1', 'G', 0.9, 1, 'O_A.1'], '8': ['N_A.1', 'R', 0.2, 1, 'P_A.1']}
+    assert cdp.cerca_voce_registrata(reg, 5, 'n_a.1')[1] == 'G'
+    assert cdp.cerca_voce_registrata(reg, 8, 'N_A.1')[1] == 'R'
+    # stesso codice ma su una riga non registrata: non si colora
+    assert cdp.cerca_voce_registrata(reg, 77, 'N_A.1') is None
+    # riga registrata ma con un altro codice (righe spostate): non si colora
+    assert cdp.cerca_voce_registrata(reg, 5, 'ALTRO') is None
+    assert cdp.cerca_voce_registrata({}, 1, 'N_A.1') is None
+
+
+def test_colore_da_sigla(cdp):
+    assert [cdp.colore_da_sigla(x) for x in 'VGR'] == ['VERDE', 'GIALLO', 'ROSSO']
+    assert cdp.colore_da_sigla('Z') is None
 
 
 # ------------------------------------------- regole di progetto sul modulo

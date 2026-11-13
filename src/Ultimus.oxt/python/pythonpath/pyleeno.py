@@ -12350,7 +12350,7 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 @LeenoUtils.release_ram
 def MENU_debug():
     import LeenoCdPBis
-    LeenoCdPBis.MENU_aggiorna_voci_prezzario()
+    LeenoCdPBis.MENU_ripristina_evidenziazioni_cdpbis()
     LeenoUtils.DocumentRefresh(True)
     return
     import LeenoContab

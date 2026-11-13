@@ -86,6 +86,10 @@ Sub rimuovi_evidenziazioni_cdpbis
 	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_rimuovi_evidenziazioni_cdpbis&quot;)
 End Sub
 rem ######################################################################
+Sub ripristina_evidenziazioni_cdpbis
+	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_ripristina_evidenziazioni_cdpbis&quot;)
+End Sub
+rem ######################################################################
 Sub vai_a_M1
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_M1&quot;)
 End Sub

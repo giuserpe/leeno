@@ -351,32 +351,55 @@ def righe_report(risultato, sostituite):
     return righe
 
 
-def codifica_sfondo(stato, colore, trasparente):
-    '''Sfondo di una cella come testo: "stato|colore|trasparente".'''
-    return f'{stato}|{int(colore)}|{1 if trasparente else 0}'
+_SIGLE = {VERDE: 'V', GIALLO: 'G', ROSSO: 'R'}
+_DA_SIGLA = {'V': VERDE, 'G': GIALLO, 'R': ROSSO}
 
 
-def decodifica_sfondo(testo):
-    '''Inverso di codifica_sfondo: (stato, colore, trasparente) o None.'''
-    try:
-        stato, colore, trasparente = str(testo).split('|')
-        return stato, int(colore), trasparente == '1'
-    except ValueError:
-        return None
-
-
-def unisci_registri(esistente, nuovo):
+def voce_registrata(esito, sostituita):
     '''
-    Unione ricorsiva di due registri (dizionari annidati) senza
-    sovrascrivere quanto già registrato: vale il primo valore salvato.
+    Voce del registro degli esiti: [codice presente nella cella, sigla del
+    colore, similarità, sostituita (1/0), codice precedente]. Il codice
+    presente è quello nuovo se la voce è stata sostituita, altrimenti il
+    vecchio.
     '''
-    risultato = dict(esistente)
-    for chiave, valore in nuovo.items():
-        if chiave not in risultato:
-            risultato[chiave] = valore
-        elif isinstance(risultato[chiave], dict) and isinstance(valore, dict):
-            risultato[chiave] = unisci_registri(risultato[chiave], valore)
+    codice = esito.codice_nuovo if sostituita else esito.voce.codice
+    return [codice, _SIGLE[esito.colore], round(esito.similarita, 4),
+            1 if sostituita else 0, esito.voce.codice]
+
+
+def registro_esiti(esiti, spuntate):
+    '''Registro {foglio: {riga (testo): voce registrata}} di una elaborazione.'''
+    registro = {}
+    for esito, spuntata in zip(esiti, spuntate):
+        voce = esito.voce
+        registro.setdefault(voce.foglio, {})[str(voce.riga)] = voce_registrata(
+            esito, bool(spuntata))
+    return registro
+
+
+def aggiorna_registro(esistente, nuovo):
+    '''Unisce due registri: per la stessa riga vale l'elaborazione più recente.'''
+    risultato = {foglio: dict(righe) for foglio, righe in esistente.items()}
+    for foglio, righe in nuovo.items():
+        risultato.setdefault(foglio, {}).update(righe)
     return risultato
+
+
+def cerca_voce_registrata(registro_foglio, riga, codice):
+    '''
+    Voce registrata per la cella (riga, codice): vale solo se alla riga
+    registrata c'è ancora lo stesso codice. None se assente o se la riga
+    è cambiata (righe inserite o cancellate dopo l'adeguamento).
+    '''
+    voce = registro_foglio.get(str(riga))
+    if voce is not None and str(voce[0]).strip().upper() == str(codice).strip().upper():
+        return voce
+    return None
+
+
+def colore_da_sigla(sigla):
+    '''VERDE, GIALLO o ROSSO dalla sigla del registro; None se sconosciuta.'''
+    return _DA_SIGLA.get(sigla)
 
 
 def nome_report(nome_documento, marca_temporale):
@@ -745,114 +768,70 @@ def righe_da_aggiungere(scelti, righe_prezzario, righe_doc):
     return nuove
 
 
-_PROPRIETA_SFONDI = 'LeenoCdPBis.sfondi'
+_PROPRIETA_ESITI = 'LeenoCdPBis.esiti'
+_PROPRIETA_LEGACY = 'LeenoCdPBis.sfondi'
 _PREFISSO_STILE_CODICE = 'comp Art-EP'
 
 
-def _stato_sfondo(cella):
-    '''(stato proprietà, colore, trasparente) dello sfondo di una cella.'''
-    return (cella.getPropertyState('CellBackColor').value,
-            cella.CellBackColor,
-            bool(cella.IsCellBackgroundTransparent))
+def _colori_per_sigla():
+    return {'V': LeenoConfig.COLORE_CDPBIS_VERDE,
+            'G': LeenoConfig.COLORE_CDPBIS_GIALLO,
+            'R': LeenoConfig.COLORE_CDPBIS_ROSSO}
 
 
-def _colori_cdpbis():
-    return (LeenoConfig.COLORE_CDPBIS_VERDE, LeenoConfig.COLORE_CDPBIS_GIALLO,
-            LeenoConfig.COLORE_CDPBIS_ROSSO)
-
-
-def _sfondi_standard_foglio(oSheet):
-    '''
-    Sfondo più frequente della cella del codice, per stile, tra le celle
-    non evidenziate da questo modulo: {stile: sfondo codificato}.
-    '''
-    nostri = _colori_cdpbis()
-    conteggi = {}
-    for riga in range(SheetUtils.getLastUsedRow(oSheet) + 1):
-        cella = oSheet.getCellByPosition(1, riga)
-        stile = cella.CellStyle
-        if not stile.startswith(_PREFISSO_STILE_CODICE):
-            continue
-        if cella.CellBackColor in nostri:
-            continue
-        conteggi.setdefault(stile, Counter())[codifica_sfondo(*_stato_sfondo(cella))] += 1
-    return {stile: c.most_common(1)[0][0] for stile, c in conteggi.items()}
-
-
-def _leggi_sfondi_registrati(oDoc):
-    '''Registro degli sfondi nel documento ({} se assente o illeggibile).'''
+def _leggi_registro_esiti(oDoc):
+    '''Registro degli esiti nel documento ({} se assente o illeggibile).'''
     proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
-    if not proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
+    if not proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_ESITI):
         return {}
     try:
-        return json.loads(proprieta.getPropertyValue(_PROPRIETA_SFONDI))
+        return json.loads(proprieta.getPropertyValue(_PROPRIETA_ESITI))
     except ValueError as _exc:
-        LeenoUtils.log_errore('LeenoCdPBis: sfondi registrati illeggibili', _exc)
+        LeenoUtils.log_errore('LeenoCdPBis: registro esiti illeggibile', _exc)
         return {}
 
 
-def _registra_sfondi(oDoc, esiti):
+def _scrivi_registro_esiti(oDoc, registro):
     '''
-    Registra nel documento, prima di colorare, lo sfondo originale delle
-    celle codice: lo sfondo standard per foglio e stile, più le eccezioni
-    cella per cella (celle con uno sfondo diverso dallo standard, con il
-    codice presente in quel momento per riconoscerle al ripristino).
-    Così la rimozione ripristina lo stato originale anche quando quasi
-    tutte le voci sono evidenziate. Il primo valore registrato non viene
-    sovrascritto da evidenziazioni successive.
+    Salva il registro nelle proprietà utente del documento ed elimina il
+    vecchio registro degli sfondi, se presente.
     '''
-    nostri = _colori_cdpbis()
-    standard = {}
-    eccezioni = {}
-    for nome in {e.voce.foglio for e in esiti}:
-        oSheet = oDoc.getSheets().getByName(nome)
-        standard[nome] = _sfondi_standard_foglio(oSheet)
-        eccezioni[nome] = {}
-    for esito in esiti:
-        voce = esito.voce
-        cella = oDoc.getSheets().getByName(voce.foglio).getCellByPosition(1, voce.riga)
-        if cella.CellBackColor in nostri:
-            continue
-        sfondo = codifica_sfondo(*_stato_sfondo(cella))
-        if sfondo != standard[voce.foglio].get(cella.CellStyle):
-            eccezioni[voce.foglio][str(voce.riga)] = [cella.String, sfondo]
-    registro = unisci_registri(
-        _leggi_sfondi_registrati(oDoc),
-        {'standard': standard, 'eccezioni': eccezioni})
     proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
-    testo = json.dumps(registro, sort_keys=True)
-    if proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
-        proprieta.setPropertyValue(_PROPRIETA_SFONDI, testo)
+    info = proprieta.getPropertySetInfo()
+    testo = json.dumps(registro, sort_keys=True, separators=(',', ':'))
+    if info.hasPropertyByName(_PROPRIETA_ESITI):
+        proprieta.setPropertyValue(_PROPRIETA_ESITI, testo)
     else:
-        proprieta.addProperty(_PROPRIETA_SFONDI, 128, testo)
+        proprieta.addProperty(_PROPRIETA_ESITI, 128, testo)
+    if info.hasPropertyByName(_PROPRIETA_LEGACY):
+        proprieta.removeProperty(_PROPRIETA_LEGACY)
 
 
-def _cancella_sfondi_registrati(oDoc):
-    proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
-    if proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
-        proprieta.removeProperty(_PROPRIETA_SFONDI)
-
-
-def _evidenzia(oDoc, esiti):
-    '''Colora la cella del codice di tutte le voci proposte (anche rifiutate).'''
+def _evidenzia(oDoc, esiti, spuntate):
+    '''
+    Colora la cella del codice di tutte le voci proposte (anche rifiutate) e
+    registra nel documento l'esito di ciascuna (colore, similarità,
+    sostituita). Il colore si può perdere (per esempio con Ctrl+M di Calc):
+    ripristina_evidenziazioni() lo ricostruisce dal registro.
+    '''
     colori = {VERDE: LeenoConfig.COLORE_CDPBIS_VERDE,
               GIALLO: LeenoConfig.COLORE_CDPBIS_GIALLO,
               ROSSO: LeenoConfig.COLORE_CDPBIS_ROSSO}
-    _registra_sfondi(oDoc, esiti)
     for esito in esiti:
-        colore = colori.get(esito.colore)
-        if colore is None:
-            continue
         voce = esito.voce
         oSheet = oDoc.getSheets().getByName(voce.foglio)
-        oSheet.getCellByPosition(1, voce.riga).CellBackColor = colore
+        oSheet.getCellByPosition(1, voce.riga).CellBackColor = colori[esito.colore]
+    _scrivi_registro_esiti(
+        oDoc, aggiorna_registro(_leggi_registro_esiti(oDoc),
+                                registro_esiti(esiti, spuntate)))
 
 
 def applica_sostituzioni(oDoc, esiti, spuntate, righe_prezzario, righe_doc):
     '''
     Applica le sostituzioni spuntate: aggiunge le righe a Elenco Prezzi e
     cambia il codice nella cella B della voce (descrizione, unità di misura
-    e prezzo arrivano da Elenco Prezzi con VLOOKUP). Colora GIALLO e ROSSO.
+    e prezzo arrivano da Elenco Prezzi con VLOOKUP). Colora le voci proposte
+    e ne registra l'esito nel documento.
     Refresh disabilitato durante le scritture e ripristinato in finally.
     Restituisce (numero voci sostituite, righe aggiunte, insieme sostituite).
     '''
@@ -868,7 +847,7 @@ def applica_sostituzioni(oDoc, esiti, spuntate, righe_prezzario, righe_doc):
             oSheet = oDoc.getSheets().getByName(voce.foglio)
             oSheet.getCellByPosition(1, voce.riga).String = esito.codice_nuovo
             sostituite.add((voce.foglio, voce.riga))
-        _evidenzia(oDoc, esiti)
+        _evidenzia(oDoc, esiti, spuntate)
     finally:
         LeenoUtils.DocumentRefresh(True, oDoc=oDoc)
     _adatta_altezze(oDoc, scelti, aggiunte)
@@ -902,62 +881,67 @@ def _adatta_altezze(oDoc, scelti, aggiunte):
 # Rimozione delle evidenziazioni
 ########################################################################
 
-def _ripristina_sfondo(cella, sfondo):
-    '''Riporta lo sfondo della cella a (stato, colore, trasparente).'''
-    stato, colore, trasparente = sfondo
-    if stato == 'DEFAULT_VALUE':
-        cella.setPropertyToDefault('CellBackColor')
-    elif trasparente:
-        cella.CellBackColor = -1
-    else:
-        cella.CellBackColor = colore
+def _celle_codice(oSheet):
+    '''(riga, cella) delle celle codice di un foglio voci.'''
+    celle = []
+    for riga in range(SheetUtils.getLastUsedRow(oSheet) + 1):
+        cella = oSheet.getCellByPosition(1, riga)
+        if cella.CellStyle.startswith(_PREFISSO_STILE_CODICE):
+            celle.append((riga, cella))
+    return celle
 
 
 def rimuovi_evidenziazioni(oDoc):
     '''
-    Toglie le evidenziazioni di LeenoCdPBis da COMPUTO, VARIANTE e CONTABILITA
-    e ripristina lo sfondo originale della cella del codice.
-
-    Lo sfondo di partenza è quello registrato nel documento prima di
-    colorare (eccezioni cella per cella, poi standard del foglio). In assenza (documento evidenziato in altro modo) si usa il
-    più frequente tra le celle non evidenziate dello stesso foglio e stile;
-    se non ce ne sono, lo stile della cella. In CONTABILITA la cella ha uno
-    sfondo trasparente diretto diverso da quello dello stile, quindi il
-    solo ripristino dello stile cambierebbe l'aspetto del foglio.
-    Restituisce il numero di celle ripulite.
+    Toglie i colori di LeenoCdPBis da COMPUTO, VARIANTE e CONTABILITA
+    riportando lo sfondo della cella codice a quello dello stile (come
+    Ctrl+M di Calc). Il registro degli esiti resta nel documento, così
+    ripristina_evidenziazioni() può rimettere i colori. Restituisce il
+    numero di celle ripulite.
     '''
-    nostri = _colori_cdpbis()
-    registro = _leggi_sfondi_registrati(oDoc)
+    nostri = tuple(_colori_per_sigla().values())
     ripulite = 0
     for nome in FOGLI_VOCI:
         if not oDoc.getSheets().hasByName(nome):
             continue
         oSheet = oDoc.getSheets().getByName(nome)
-        ultima = SheetUtils.getLastUsedRow(oSheet)
-        evidenziate = []
-        for riga in range(ultima + 1):
+        for riga in range(SheetUtils.getLastUsedRow(oSheet) + 1):
             cella = oSheet.getCellByPosition(1, riga)
             if cella.CellBackColor in nostri:
-                evidenziate.append((riga, cella.CellStyle))
-        if not evidenziate:
-            continue
-        sfondi = dict(_sfondi_standard_foglio(oSheet))
-        sfondi.update(registro.get('standard', {}).get(nome, {}))
-        eccezioni = registro.get('eccezioni', {}).get(nome, {})
-        for riga, stile in evidenziate:
-            cella = oSheet.getCellByPosition(1, riga)
-            sfondo = None
-            eccezione = eccezioni.get(str(riga))
-            if eccezione and eccezione[0] == cella.String:
-                sfondo = decodifica_sfondo(eccezione[1])
-            if sfondo is None:
-                sfondo = decodifica_sfondo(sfondi.get(stile))
-            if sfondo is None:
-                sfondo = ('DEFAULT_VALUE', -1, False)
-            _ripristina_sfondo(cella, sfondo)
-            ripulite += 1
-    _cancella_sfondi_registrati(oDoc)
+                cella.setPropertyToDefault('CellBackColor')
+                ripulite += 1
     return ripulite
+
+
+def ripristina_evidenziazioni(oDoc):
+    '''
+    Rimette i colori di LeenoCdPBis in base al registro degli esiti salvato
+    nel documento, per esempio dopo Ctrl+M. La voce si riconosce per riga e
+    codice: se dopo l'adeguamento hai inserito o cancellato righe, le voci
+    spostate non vengono riconosciute (sono contate a parte).
+    Restituisce (celle colorate, voci del registro non più riconosciute).
+    '''
+    registro = _leggi_registro_esiti(oDoc)
+    colori = _colori_per_sigla()
+    colorate = 0
+    non_riconosciute = 0
+    for nome in FOGLI_VOCI:
+        voci_registro = registro.get(nome)
+        if not voci_registro or not oDoc.getSheets().hasByName(nome):
+            continue
+        oSheet = oDoc.getSheets().getByName(nome)
+        riconosciute = 0
+        for riga, cella in _celle_codice(oSheet):
+            voce = cerca_voce_registrata(voci_registro, riga, cella.String)
+            if voce is None:
+                continue
+            riconosciute += 1
+            colore = colori.get(voce[1])
+            if colore is not None:
+                cella.CellBackColor = colore
+                colorate += 1
+        non_riconosciute += len(voci_registro) - riconosciute
+    return colorate, non_riconosciute
 
 
 ########################################################################
@@ -1111,7 +1095,10 @@ def MENU_aggiorna_voci_prezzario():
 
 
 def MENU_rimuovi_evidenziazioni_cdpbis():
-    '''Rimuove le evidenziazioni lasciate dall'aggiornamento al prezzario.'''
+    '''
+    Rimuove le evidenziazioni lasciate dall'aggiornamento al prezzario. Gli
+    esiti restano registrati nel documento per ripristina_evidenziazioni().
+    '''
     oDoc = LeenoUtils.getDocument()
     if oDoc is None:
         return
@@ -1131,4 +1118,38 @@ def MENU_rimuovi_evidenziazioni_cdpbis():
     else:
         Dialogs.Info(
             Title='Evidenziazioni',
-            Text=f'Celle ripristinate: {ripulite}')
+            Text=f'Celle ripulite: {ripulite}')
+
+
+def MENU_ripristina_evidenziazioni_cdpbis():
+    '''
+    Rimette i colori dell'adeguamento prezzi (VERDE, GIALLO, ROSSO) in base
+    agli esiti registrati nel documento, per esempio dopo Ctrl+M di Calc.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        return
+    LeenoUtils.DocumentRefresh(False, oDoc=oDoc)
+    try:
+        risultato = ripristina_evidenziazioni(oDoc)
+    except Exception as _exc:
+        LeenoUtils.log_errore('MENU_ripristina_evidenziazioni_cdpbis', _exc)
+        risultato = None
+    finally:
+        LeenoUtils.DocumentRefresh(True, oDoc=oDoc)
+    if risultato is None:
+        Dialogs.Exclamation(
+            Title='ATTENZIONE!',
+            Text='Operazione interrotta per un errore. '
+                 'Dettagli in leeno_errori.log.')
+        return
+    colorate, non_riconosciute = risultato
+    if not colorate and not non_riconosciute:
+        Dialogs.Info(
+            Title='Evidenziazioni',
+            Text="Nel documento non ci sono esiti registrati dall'adeguamento prezzi.")
+        return
+    testo = f'Celle colorate: {colorate}'
+    if non_riconosciute:
+        testo += f'\nVoci registrate non più riconoscibili: {non_riconosciute}'
+    Dialogs.Info(Title='Evidenziazioni', Text=testo)

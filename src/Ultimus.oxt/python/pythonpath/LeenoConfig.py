@@ -14,7 +14,6 @@ import configparser
 from os.path import expanduser
 from datetime import date
 
-import LeenoUtils
 import PersistUtils
 
 COLORE_COLONNE_RAFFRONTO = 16645616
@@ -26,10 +25,10 @@ COLORE_BIANCO_SFONDO = 16777215
 COLORE_ROSSO_AVVISO = 15506331
 
 # Aggiornamento voci a un nuovo prezzario (LeenoCdPBis): soglie di
-# similarita' della descrizione e colori di evidenziazione. Il VERDE non
-# colora le celle: le voci sostituite restano senza evidenziazione.
+# similarita' della descrizione e colori di evidenziazione delle voci.
 CDPBIS_SOGLIA_VERDE = 0.95
 CDPBIS_SOGLIA_GIALLO = 0.80
+COLORE_CDPBIS_VERDE = 12050849
 COLORE_CDPBIS_GIALLO = 16773792
 COLORE_CDPBIS_ROSSO = 16744319
 
@@ -64,6 +63,9 @@ class Borg:
 
     def __init__(self):
         self.__dict__ = self._shared_state
+
+
+import LeenoUtils
 
 
 class Config(Borg):

@@ -12,7 +12,6 @@ import threading
 
 import LeenoUtils
 import LeenoGlobals
-import pyleeno as PL
 import Dialogs
 
 import inspect
@@ -193,7 +192,7 @@ def dlg_attesa(msg=''):
     sString = oDialogo_attesa.getControl("Label2")
     sString.Text = msg  # 'ATTENDI...'
     oDialogo_attesa.Title = 'Operazione in corso...'
-    sUrl = PL.LeenO_path() + '/icons/attendi.png'
+    sUrl = LeenoUtils.LeenO_path() + '/icons/attendi.png'
     oDialogo_attesa.getModel().ImageControl1.ImageURL = sUrl
     LeenoGlobals.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
     return oDialogo_attesa
@@ -231,7 +230,7 @@ def ScegliElaborato(Titolo="Titolo", flag="export"):
         "CONTABILITA": "CON_XLO",
     }
 
-    Image = PL.LeenO_path() + "/python/pythonpath/Icons-Big/ok.png"
+    Image = LeenoUtils.LeenO_path() + "/python/pythonpath/Icons-Big/ok.png"
     oDlgXLO.getModel().ImageControl1.ImageURL = Image
 
     if flag == "export":

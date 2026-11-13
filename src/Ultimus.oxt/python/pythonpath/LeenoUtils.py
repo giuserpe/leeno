@@ -14,6 +14,7 @@ from contextlib import contextmanager
 
 import calendar
 import PyPDF2
+import LeenoGlobals
 
 # ============================================================================
 # CORE INFRASTRUCTURE (Must be at the top to avoid circular import issues)
@@ -29,6 +30,15 @@ def getComponentContext():
         return uno.getComponentContext()
     except Exception:
         return uno.getComponentContext()
+
+
+def LeenO_path():
+    '''Restituisce il percorso di installazione di LeenO.oxt'''
+    ctx = getComponentContext()
+    pir = ctx.getValueByName(
+        '/singletons/com.sun.star.deployment.PackageInformationProvider')
+    expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
+    return expath
 
 
 def getDesktop():
@@ -504,16 +514,6 @@ def preserve_clipboard(func):
             return func(*args, **kwargs)
 
     return wrapper
-
-# ============================================================================
-# PROJECT IMPORTS
-# ============================================================================
-
-import LeenoDialogs as DLG
-import Dialogs
-from LeenoConfig import COLORE_ROSSO_AVVISO
-import LeenoGlobals
-import pyleeno as PL
 
 # ============================================================================
 # RIEPILOGO UTILIZZO
@@ -1026,6 +1026,7 @@ def ripristina_posizione(pos_data=None):
     if pos_data is None:
         pos_data = LeenoGlobals.getGlobalVar('ultima_posizione')
     if not pos_data:
+        import LeenoDialogs as DLG
         DLG.chi("Nessuna posizione memorizzata trovata")
         return
 
@@ -1050,6 +1051,7 @@ def ripristina_posizione(pos_data=None):
             controller.select(cell_range)
 
     except Exception as e:
+        import LeenoDialogs as DLG
         DLG.chi(f"Errore nel ripristino: {str(e)}")
 
 #############################################################################
@@ -1202,6 +1204,10 @@ def MENU_trova_duplicati():
     '''
     import SheetUtils
     import LeenoComputo
+    import Dialogs
+    from LeenoConfig import COLORE_ROSSO_AVVISO
+    import pyleeno as PL
+
     PL.struttura_off()
     oDoc = getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

@@ -137,11 +137,7 @@ def basic_LeenO(funcname, *args):
 
 def LeenO_path():
     '''Restituisce il percorso di installazione di LeenO.oxt'''
-    ctx = LeenoUtils.getComponentContext()
-    pir = ctx.getValueByName(
-        '/singletons/com.sun.star.deployment.PackageInformationProvider')
-    expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
-    return expath
+    return LeenoUtils.LeenO_path()
 
 
 ########################################################################

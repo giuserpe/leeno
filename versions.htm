@@ -452,6 +452,22 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-13 21:37</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/091c67faeb5b6564f8ce684105673e6ea1b50dba" target="_blank" rel="noopener"><code>091c67f</code></a></td>
+                <td class="commit-msg">test: add sample ODS files for SAL testing</td>
+            </tr>
+            <tr>
+                <td>2026-11-13 21:34</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/dcc4117e4cff2744396537860577d58253030877" target="_blank" rel="noopener"><code>dcc4117</code></a></td>
+                <td class="commit-msg">feat(ui): pulsante «Ripristina colori» nelle dialog Viste
+
+- Aggiunto in DialogViste_A e Dialogviste_N, collegato a
+  ripristina_evidenziazioni_cdpbis
+- Help text: rimette i colori VERDE/GIALLO/ROSSO dopo Ctrl+M
+- Chiude i dialoghi prima di eseguire l’azione (PY_bridge)
+- Layout adattato (altezza e posizioni) per ospitare il nuovo pulsante</td>
+            </tr>
+            <tr>
                 <td>2026-11-13 12:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/96b32a6f50fd4f07c1ed3888af4848a1f59ab85a" target="_blank" rel="noopener"><code>96b32a6</code></a></td>
                 <td class="commit-msg">feat(cdpbis): registro esiti al posto degli sfondi e ripristino colori dopo Ctrl+M
@@ -464,25 +480,6 @@
   riconoscendo le voci per riga+codice (ignora righe spostate)
 - MENU e bridge per ripristina_evidenziazioni_cdpbis
 - Test aggiornati su voce_registrata, registro_esiti e ricerca per codice</td>
-            </tr>
-            <tr>
-                <td>2026-11-13 10:58</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/b042497c388a9abf63bb38cf0fd38b1805b5dfc7" target="_blank" rel="noopener"><code>b042497</code></a></td>
-                <td class="commit-msg">fix(core): apre al primo click il foglio Scorciatoie dal menu principale</td>
-            </tr>
-            <tr>
-                <td>2026-11-13 09:33</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/f4ab4da384354ab3d9b37268ba76491674cc84fa" target="_blank" rel="noopener"><code>f4ab4da</code></a></td>
-                <td class="commit-msg">feat(ui): Adeguamento Prezzi nelle viste e ripristino robusto delle evidenziazioni CdPBis
-
-- Aggiunto il pulsante «Adeguamento Prezzi» in DialogViste_A e Dialogviste_N
-  (bridge verso MENU_aggiorna_voci_prezzario)
-- Prima di colorare, registra in proprietà utente del documento lo sfondo
-  originale delle celle codice (standard per foglio/stile + eccezioni)
-- La rimozione delle evidenziazioni ripristina correttamente anche VERDE
-  e i casi in cui quasi tutte le voci sono colorate
-- Helper codifica/decodifica sfondo e unione registri; test dedicati
-- .gitignore: non ignora più i file .xdl</td>
             </tr>
                     </tbody>
                 </table>
@@ -506,8 +503,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-13 12:02 UTC</p>
-                <p>Build Commit: <code>96b32a6</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-13 21:38 UTC</p>
+                <p>Build Commit: <code>091c67f</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

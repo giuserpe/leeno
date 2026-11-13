@@ -87,6 +87,7 @@ Sub rimuovi_evidenziazioni_cdpbis
 End Sub
 rem ######################################################################
 Sub ripristina_evidenziazioni_cdpbis
+	chiudi_dialoghi
 	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_ripristina_evidenziazioni_cdpbis&quot;)
 End Sub
 rem ######################################################################

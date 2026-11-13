@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="172" dlg:top="100" dlg:width="209" dlg:height="223" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="172" dlg:top="100" dlg:width="209" dlg:height="243" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -27,13 +27,13 @@
   <dlg:button dlg:style-id="3" dlg:id="CommandButton22" dlg:tab-index="9" dlg:left="14" dlg:top="74" dlg:width="80" dlg:height="15" dlg:help-text="&amp;65.DialogViste_A.CommandButton22.HelpText" dlg:value="&amp;66.DialogViste_A.CommandButton22.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.rigenera_tutte?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton10" dlg:tab-index="0" dlg:left="161" dlg:top="201" dlg:width="40" dlg:height="15" dlg:help-text="&amp;67.DialogViste_A.CommandButton10.HelpText" dlg:default="true" dlg:value="&amp;68.DialogViste_A.CommandButton10.Label" dlg:button-type="ok" dlg:toggled="1" dlg:multiline="true"/>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton12" dlg:tab-index="10" dlg:left="114" dlg:top="201" dlg:width="40" dlg:height="15" dlg:help-text="&amp;69.DialogViste_A.CommandButton12.HelpText" dlg:default="true" dlg:value="&amp;70.DialogViste_A.CommandButton12.Label" dlg:button-type="cancel" dlg:toggled="1" dlg:multiline="true">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton10" dlg:tab-index="0" dlg:left="161" dlg:top="221" dlg:width="40" dlg:height="15" dlg:help-text="&amp;67.DialogViste_A.CommandButton10.HelpText" dlg:default="true" dlg:value="&amp;68.DialogViste_A.CommandButton10.Label" dlg:button-type="ok" dlg:toggled="1" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton12" dlg:tab-index="10" dlg:left="114" dlg:top="221" dlg:width="40" dlg:height="15" dlg:help-text="&amp;69.DialogViste_A.CommandButton12.HelpText" dlg:default="true" dlg:value="&amp;70.DialogViste_A.CommandButton12.Label" dlg:button-type="cancel" dlg:toggled="1" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:style-id="3" dlg:id="Label1" dlg:tab-index="11" dlg:left="122" dlg:top="18" dlg:width="31" dlg:height="8" dlg:help-text="&amp;71.DialogViste_A.Label1.HelpText" dlg:value="&amp;72.DialogViste_A.Label1.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="3" dlg:id="Label2" dlg:tab-index="13" dlg:left="122" dlg:top="35" dlg:width="31" dlg:height="8" dlg:help-text="&amp;73.DialogViste_A.Label2.HelpText" dlg:value="&amp;74.DialogViste_A.Label2.Label" dlg:valign="center"/>
-  <dlg:fixedline dlg:style-id="5" dlg:id="FixedLine2" dlg:tab-index="15" dlg:left="102" dlg:top="10" dlg:width="9" dlg:height="185" dlg:help-text="&amp;75.DialogViste_A.FixedLine2.HelpText" dlg:value="&amp;76.DialogViste_A.FixedLine2.Label" dlg:align="vertical"/>
+  <dlg:fixedline dlg:style-id="5" dlg:id="FixedLine2" dlg:tab-index="15" dlg:left="102" dlg:top="10" dlg:width="9" dlg:height="205" dlg:help-text="&amp;75.DialogViste_A.FixedLine2.HelpText" dlg:value="&amp;76.DialogViste_A.FixedLine2.Label" dlg:align="vertical"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="16" dlg:left="123" dlg:top="152" dlg:width="68" dlg:height="10" dlg:help-text="&amp;79.DialogViste_A.CBMat.HelpText" dlg:value="&amp;80.DialogViste_A.CBMat.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:textfield dlg:style-id="5" dlg:id="TextField10" dlg:tab-index="12" dlg:left="159" dlg:top="18" dlg:width="30" dlg:height="11" dlg:help-text="&amp;81.DialogViste_A.TextField10.HelpText" dlg:align="center" dlg:value="&amp;82.DialogViste_A.TextField10.Text"/>
   <dlg:textfield dlg:style-id="5" dlg:id="TextField11" dlg:tab-index="14" dlg:left="159" dlg:top="34" dlg:width="30" dlg:height="11" dlg:help-text="&amp;83.DialogViste_A.TextField11.HelpText" dlg:align="center" dlg:value="&amp;84.DialogViste_A.TextField11.Text"/>
@@ -52,7 +52,7 @@
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:checkbox dlg:style-id="3" dlg:id="Descrizione_condensata" dlg:tab-index="20" dlg:left="123" dlg:top="92" dlg:width="80" dlg:height="10" dlg:help-text="&amp;1061.DialogViste_A.Descrizione_condensata.HelpText" dlg:value="&amp;1062.DialogViste_A.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:titledbox dlg:style-id="6" dlg:id="FrameControl2" dlg:tab-index="21" dlg:left="8" dlg:top="65" dlg:width="93" dlg:height="130" dlg:help-text="&amp;1105.DialogViste_A.FrameControl2.HelpText">
+  <dlg:titledbox dlg:style-id="6" dlg:id="FrameControl2" dlg:tab-index="21" dlg:left="8" dlg:top="65" dlg:width="93" dlg:height="150" dlg:help-text="&amp;1105.DialogViste_A.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;1106.DialogViste_A.FrameControl2.Label"/>
   </dlg:titledbox>
   <dlg:titledbox dlg:style-id="6" dlg:id="FrameControl5" dlg:tab-index="22" dlg:left="8" dlg:top="6" dlg:width="93" dlg:height="55" dlg:help-text="&amp;1111.DialogViste_A.FrameControl5.HelpText">
@@ -70,6 +70,9 @@
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="AdeguamentoPrezzi" dlg:tab-index="26" dlg:left="14" dlg:top="174" dlg:width="80" dlg:height="15" dlg:help-text="Sostituisce le voci selezionate con quelle di un nuovo prezzario .ods, in base al suffisso del codice." dlg:value="Adeguamento Prezzi">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.aggiorna_voci_prezzario?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="3" dlg:id="RipristinaEvidenziazioni" dlg:tab-index="27" dlg:left="14" dlg:top="194" dlg:width="80" dlg:height="15" dlg:help-text="Rimette i colori VERDE, GIALLO e ROSSO dell&apos;adeguamento prezzi, per esempio dopo Ctrl+M." dlg:value="Ripristina colori">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.ripristina_evidenziazioni_cdpbis?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-13 12:01</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/96b32a6f50fd4f07c1ed3888af4848a1f59ab85a" target="_blank" rel="noopener"><code>96b32a6</code></a></td>
+                <td class="commit-msg">feat(cdpbis): registro esiti al posto degli sfondi e ripristino colori dopo Ctrl+M
+
+- Sostituito il registro degli sfondi originali con un registro degli esiti
+  (codice, colore V/G/R, similarità, sostituita) nelle proprietà del documento
+- rimuovi_evidenziazioni: solo azzera i colori (come Ctrl+M), senza cancellare
+  il registro
+- Nuova ripristina_evidenziazioni: ricostruisce i colori dal registro
+  riconoscendo le voci per riga+codice (ignora righe spostate)
+- MENU e bridge per ripristina_evidenziazioni_cdpbis
+- Test aggiornati su voce_registrata, registro_esiti e ricerca per codice</td>
+            </tr>
+            <tr>
                 <td>2026-11-13 10:58</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/b042497c388a9abf63bb38cf0fd38b1805b5dfc7" target="_blank" rel="noopener"><code>b042497</code></a></td>
                 <td class="commit-msg">fix(core): apre al primo click il foglio Scorciatoie dal menu principale</td>
@@ -469,11 +483,6 @@
   e i casi in cui quasi tutte le voci sono colorate
 - Helper codifica/decodifica sfondo e unione registri; test dedicati
 - .gitignore: non ignora più i file .xdl</td>
-            </tr>
-            <tr>
-                <td>2026-11-13 08:37</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ae00ab566c033bf6ee140995f4fa8b491772796a" target="_blank" rel="noopener"><code>ae00ab5</code></a></td>
-                <td class="commit-msg">fix(core): risolve import circolare che bloccava DlgMain in pyleeno</td>
             </tr>
                     </tbody>
                 </table>
@@ -497,8 +506,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-13 10:59 UTC</p>
-                <p>Build Commit: <code>b042497</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-13 12:02 UTC</p>
+                <p>Build Commit: <code>96b32a6</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

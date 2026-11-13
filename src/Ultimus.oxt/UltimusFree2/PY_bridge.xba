@@ -77,6 +77,15 @@ Sub genera_variante
 	ScriptPy(&quot;LeenoVariante&quot;,&quot;MENU_generaVariante&quot;)
 End Sub
 rem ######################################################################
+Sub aggiorna_voci_prezzario
+	chiudi_dialoghi
+	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_aggiorna_voci_prezzario&quot;)
+End Sub
+rem ######################################################################
+Sub rimuovi_evidenziazioni_cdpbis
+	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_rimuovi_evidenziazioni_cdpbis&quot;)
+End Sub
+rem ######################################################################
 Sub vai_a_M1
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_M1&quot;)
 End Sub

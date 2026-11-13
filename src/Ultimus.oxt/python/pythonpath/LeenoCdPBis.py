@@ -19,6 +19,7 @@ tests/test_leeno_cdpbis.py.
 '''
 import csv
 import difflib
+import json
 import os
 import re
 import time
@@ -348,6 +349,34 @@ def righe_report(risultato, sostituite):
                 tipo, voce.foglio, voce.riga + 1, voce.numero, voce.codice,
                 '', '', '', '', '', '', '', '', '', 'NO', nota))
     return righe
+
+
+def codifica_sfondo(stato, colore, trasparente):
+    '''Sfondo di una cella come testo: "stato|colore|trasparente".'''
+    return f'{stato}|{int(colore)}|{1 if trasparente else 0}'
+
+
+def decodifica_sfondo(testo):
+    '''Inverso di codifica_sfondo: (stato, colore, trasparente) o None.'''
+    try:
+        stato, colore, trasparente = str(testo).split('|')
+        return stato, int(colore), trasparente == '1'
+    except ValueError:
+        return None
+
+
+def unisci_registri(esistente, nuovo):
+    '''
+    Unione ricorsiva di due registri (dizionari annidati) senza
+    sovrascrivere quanto già registrato: vale il primo valore salvato.
+    '''
+    risultato = dict(esistente)
+    for chiave, valore in nuovo.items():
+        if chiave not in risultato:
+            risultato[chiave] = valore
+        elif isinstance(risultato[chiave], dict) and isinstance(valore, dict):
+            risultato[chiave] = unisci_registri(risultato[chiave], valore)
+    return risultato
 
 
 def nome_report(nome_documento, marca_temporale):
@@ -716,10 +745,100 @@ def righe_da_aggiungere(scelti, righe_prezzario, righe_doc):
     return nuove
 
 
+_PROPRIETA_SFONDI = 'LeenoCdPBis.sfondi'
+_PREFISSO_STILE_CODICE = 'comp Art-EP'
+
+
+def _stato_sfondo(cella):
+    '''(stato proprietà, colore, trasparente) dello sfondo di una cella.'''
+    return (cella.getPropertyState('CellBackColor').value,
+            cella.CellBackColor,
+            bool(cella.IsCellBackgroundTransparent))
+
+
+def _colori_cdpbis():
+    return (LeenoConfig.COLORE_CDPBIS_VERDE, LeenoConfig.COLORE_CDPBIS_GIALLO,
+            LeenoConfig.COLORE_CDPBIS_ROSSO)
+
+
+def _sfondi_standard_foglio(oSheet):
+    '''
+    Sfondo più frequente della cella del codice, per stile, tra le celle
+    non evidenziate da questo modulo: {stile: sfondo codificato}.
+    '''
+    nostri = _colori_cdpbis()
+    conteggi = {}
+    for riga in range(SheetUtils.getLastUsedRow(oSheet) + 1):
+        cella = oSheet.getCellByPosition(1, riga)
+        stile = cella.CellStyle
+        if not stile.startswith(_PREFISSO_STILE_CODICE):
+            continue
+        if cella.CellBackColor in nostri:
+            continue
+        conteggi.setdefault(stile, Counter())[codifica_sfondo(*_stato_sfondo(cella))] += 1
+    return {stile: c.most_common(1)[0][0] for stile, c in conteggi.items()}
+
+
+def _leggi_sfondi_registrati(oDoc):
+    '''Registro degli sfondi nel documento ({} se assente o illeggibile).'''
+    proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
+    if not proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
+        return {}
+    try:
+        return json.loads(proprieta.getPropertyValue(_PROPRIETA_SFONDI))
+    except ValueError as _exc:
+        LeenoUtils.log_errore('LeenoCdPBis: sfondi registrati illeggibili', _exc)
+        return {}
+
+
+def _registra_sfondi(oDoc, esiti):
+    '''
+    Registra nel documento, prima di colorare, lo sfondo originale delle
+    celle codice: lo sfondo standard per foglio e stile, più le eccezioni
+    cella per cella (celle con uno sfondo diverso dallo standard, con il
+    codice presente in quel momento per riconoscerle al ripristino).
+    Così la rimozione ripristina lo stato originale anche quando quasi
+    tutte le voci sono evidenziate. Il primo valore registrato non viene
+    sovrascritto da evidenziazioni successive.
+    '''
+    nostri = _colori_cdpbis()
+    standard = {}
+    eccezioni = {}
+    for nome in {e.voce.foglio for e in esiti}:
+        oSheet = oDoc.getSheets().getByName(nome)
+        standard[nome] = _sfondi_standard_foglio(oSheet)
+        eccezioni[nome] = {}
+    for esito in esiti:
+        voce = esito.voce
+        cella = oDoc.getSheets().getByName(voce.foglio).getCellByPosition(1, voce.riga)
+        if cella.CellBackColor in nostri:
+            continue
+        sfondo = codifica_sfondo(*_stato_sfondo(cella))
+        if sfondo != standard[voce.foglio].get(cella.CellStyle):
+            eccezioni[voce.foglio][str(voce.riga)] = [cella.String, sfondo]
+    registro = unisci_registri(
+        _leggi_sfondi_registrati(oDoc),
+        {'standard': standard, 'eccezioni': eccezioni})
+    proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
+    testo = json.dumps(registro, sort_keys=True)
+    if proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
+        proprieta.setPropertyValue(_PROPRIETA_SFONDI, testo)
+    else:
+        proprieta.addProperty(_PROPRIETA_SFONDI, 128, testo)
+
+
+def _cancella_sfondi_registrati(oDoc):
+    proprieta = oDoc.getDocumentProperties().getUserDefinedProperties()
+    if proprieta.getPropertySetInfo().hasPropertyByName(_PROPRIETA_SFONDI):
+        proprieta.removeProperty(_PROPRIETA_SFONDI)
+
+
 def _evidenzia(oDoc, esiti):
-    '''Colora la cella del codice delle voci GIALLO e ROSSO (anche rifiutate).'''
-    colori = {GIALLO: LeenoConfig.COLORE_CDPBIS_GIALLO,
+    '''Colora la cella del codice di tutte le voci proposte (anche rifiutate).'''
+    colori = {VERDE: LeenoConfig.COLORE_CDPBIS_VERDE,
+              GIALLO: LeenoConfig.COLORE_CDPBIS_GIALLO,
               ROSSO: LeenoConfig.COLORE_CDPBIS_ROSSO}
+    _registra_sfondi(oDoc, esiti)
     for esito in esiti:
         colore = colori.get(esito.colore)
         if colore is None:
@@ -783,11 +902,15 @@ def _adatta_altezze(oDoc, scelti, aggiunte):
 # Rimozione delle evidenziazioni
 ########################################################################
 
-def _stato_sfondo(cella):
-    '''(stato proprietà, colore, trasparente) dello sfondo di una cella.'''
-    return (cella.getPropertyState('CellBackColor').value,
-            cella.CellBackColor,
-            bool(cella.IsCellBackgroundTransparent))
+def _ripristina_sfondo(cella, sfondo):
+    '''Riporta lo sfondo della cella a (stato, colore, trasparente).'''
+    stato, colore, trasparente = sfondo
+    if stato == 'DEFAULT_VALUE':
+        cella.setPropertyToDefault('CellBackColor')
+    elif trasparente:
+        cella.CellBackColor = -1
+    else:
+        cella.CellBackColor = colore
 
 
 def rimuovi_evidenziazioni(oDoc):
@@ -795,13 +918,16 @@ def rimuovi_evidenziazioni(oDoc):
     Toglie le evidenziazioni di LeenoCdPBis da COMPUTO, VARIANTE e CONTABILITA
     e ripristina lo sfondo originale della cella del codice.
 
-    Lo sfondo di partenza si ricava dalle altre celle del codice dello
-    stesso foglio e dello stesso stile (la più frequente tra quelle non
-    evidenziate): in CONTABILITA la cella ha uno sfondo trasparente diretto
-    diverso da quello dello stile, quindi il solo ripristino dello stile
-    cambierebbe l'aspetto del foglio. Restituisce il numero di celle ripulite.
+    Lo sfondo di partenza è quello registrato nel documento prima di
+    colorare (eccezioni cella per cella, poi standard del foglio). In assenza (documento evidenziato in altro modo) si usa il
+    più frequente tra le celle non evidenziate dello stesso foglio e stile;
+    se non ce ne sono, lo stile della cella. In CONTABILITA la cella ha uno
+    sfondo trasparente diretto diverso da quello dello stile, quindi il
+    solo ripristino dello stile cambierebbe l'aspetto del foglio.
+    Restituisce il numero di celle ripulite.
     '''
-    nostri = (LeenoConfig.COLORE_CDPBIS_GIALLO, LeenoConfig.COLORE_CDPBIS_ROSSO)
+    nostri = _colori_cdpbis()
+    registro = _leggi_sfondi_registrati(oDoc)
     ripulite = 0
     for nome in FOGLI_VOCI:
         if not oDoc.getSheets().hasByName(nome):
@@ -815,25 +941,22 @@ def rimuovi_evidenziazioni(oDoc):
                 evidenziate.append((riga, cella.CellStyle))
         if not evidenziate:
             continue
-        stili = {stile for _, stile in evidenziate}
-        riferimento = {stile: Counter() for stile in stili}
-        for riga in range(ultima + 1):
-            cella = oSheet.getCellByPosition(1, riga)
-            if cella.CellStyle in stili and cella.CellBackColor not in nostri:
-                riferimento[cella.CellStyle][_stato_sfondo(cella)] += 1
+        sfondi = dict(_sfondi_standard_foglio(oSheet))
+        sfondi.update(registro.get('standard', {}).get(nome, {}))
+        eccezioni = registro.get('eccezioni', {}).get(nome, {})
         for riga, stile in evidenziate:
             cella = oSheet.getCellByPosition(1, riga)
-            if riferimento[stile]:
-                stato, colore, trasparente = riferimento[stile].most_common(1)[0][0]
-            else:
-                stato, colore, trasparente = 'DEFAULT_VALUE', -1, False
-            if stato == 'DEFAULT_VALUE':
-                cella.setPropertyToDefault('CellBackColor')
-            elif trasparente:
-                cella.CellBackColor = -1
-            else:
-                cella.CellBackColor = colore
+            sfondo = None
+            eccezione = eccezioni.get(str(riga))
+            if eccezione and eccezione[0] == cella.String:
+                sfondo = decodifica_sfondo(eccezione[1])
+            if sfondo is None:
+                sfondo = decodifica_sfondo(sfondi.get(stile))
+            if sfondo is None:
+                sfondo = ('DEFAULT_VALUE', -1, False)
+            _ripristina_sfondo(cella, sfondo)
             ripulite += 1
+    _cancella_sfondi_registrati(oDoc)
     return ripulite
 
 

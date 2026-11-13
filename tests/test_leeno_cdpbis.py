@@ -405,6 +405,34 @@ def test_nome_report(cdp):
     assert cdp.nome_report('', '20261112_101500') == 'documento_CdPBis_20261112_101500.csv'
 
 
+# ------------------------------------------------------- sfondi registrati
+
+def test_codifica_decodifica_sfondo_roundtrip(cdp):
+    for sfondo in (('DEFAULT_VALUE', 16772089, False), ('DIRECT_VALUE', -5127, True),
+                   ('DIRECT_VALUE', 14942166, False)):
+        assert cdp.decodifica_sfondo(cdp.codifica_sfondo(*sfondo)) == sfondo
+
+
+@pytest.mark.parametrize('testo', ['', 'abc', 'a|b|c', 'X|1', None, 'X|1|0|9'])
+def test_decodifica_sfondo_non_valida(cdp, testo):
+    assert cdp.decodifica_sfondo(testo) is None
+
+
+def test_unisci_registri_non_sovrascrive_il_primo(cdp):
+    esistente = {'standard': {'COMPUTO': {'comp Art-EP_R': 'DEFAULT_VALUE|1|0'}},
+                 'eccezioni': {'COMPUTO': {'5': ['A.1', 'X|9|0']}}}
+    nuovo = {'standard': {'COMPUTO': {'comp Art-EP_R': 'DIRECT_VALUE|2|0', 'altro': 'X|3|1'},
+                          'CONTABILITA': {'comp Art-EP_R': 'DIRECT_VALUE|-1|1'}},
+             'eccezioni': {'COMPUTO': {'5': ['B.2', 'Y|8|0'], '6': ['C.3', 'Z|7|1']}}}
+    unito = cdp.unisci_registri(esistente, nuovo)
+    assert unito['standard']['COMPUTO']['comp Art-EP_R'] == 'DEFAULT_VALUE|1|0'
+    assert unito['standard']['COMPUTO']['altro'] == 'X|3|1'
+    assert unito['standard']['CONTABILITA']['comp Art-EP_R'] == 'DIRECT_VALUE|-1|1'
+    assert unito['eccezioni']['COMPUTO']['5'] == ['A.1', 'X|9|0']
+    assert unito['eccezioni']['COMPUTO']['6'] == ['C.3', 'Z|7|1']
+    assert esistente['eccezioni']['COMPUTO'] == {'5': ['A.1', 'X|9|0']}
+
+
 # ------------------------------------------- regole di progetto sul modulo
 
 def _albero():

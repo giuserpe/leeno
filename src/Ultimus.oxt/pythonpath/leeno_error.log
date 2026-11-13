@@ -8158,3 +8158,31 @@ File: pyleeno.py, Line: 2707, Function: scelta_viste
 File: pyleeno.py, Line: 1850, Function: GotoSheet
 ------------------------------------------------------------
 
+[2026-11-13 09:13:21]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.179-TESTING-20261112
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '86'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 287, Function: trigger
+File: LeenoBasicBridge.py, Line: 86, Function: DlgMain
+------------------------------------------------------------
+
+[2026-11-13 09:22:34]
+OS: win32 / LibreOffice-25.8.3.2 / LeenO-3.26.0.179-TESTING-20261112
+
+Errore: module 'pyleeno' has no attribute 'DlgMain'
+
+File: 'LeenoBasicBridge.py'
+Line: '86'
+Function: 'DlgMain'
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--
+BACKTRACE:
+File: LeenoDispatcher.py, Line: 287, Function: trigger
+File: LeenoBasicBridge.py, Line: 86, Function: DlgMain
+------------------------------------------------------------
+

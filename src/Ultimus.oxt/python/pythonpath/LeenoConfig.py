@@ -14,6 +14,7 @@ import configparser
 from os.path import expanduser
 from datetime import date
 
+import LeenoUtils
 import PersistUtils
 
 COLORE_COLONNE_RAFFRONTO = 16645616
@@ -63,9 +64,6 @@ class Borg:
 
     def __init__(self):
         self.__dict__ = self._shared_state
-
-
-import LeenoUtils
 
 
 class Config(Borg):

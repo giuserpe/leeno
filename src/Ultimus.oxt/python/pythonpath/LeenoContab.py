@@ -2030,7 +2030,9 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
             oSalSheet.getCellByPosition(5, current_row).Formula = f"=SUBTOTAL(9;F{dataStartRow+1}:F{lastDataRowSec+1})"
             oSalSheet.getCellByPosition(5, current_row).CellStyle = "Ultimus_destra_totali"
 
-        # current_row += 1
+        # Porta current_row alla prima riga libera dopo parziale/ribasso: senza,
+        # le righe inserite dopo spingono parziale e ribasso fuori dal blocco.
+        current_row += 1
 
         # RIEMPIMENTO PAGINA (filler) tra sezioni (solo se ne seguono altre)
         is_last_section = (title == sections[-1][0])

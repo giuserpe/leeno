@@ -1798,7 +1798,13 @@ def vai_a_variabili():
 def vai_a_Scorciatoie():
     chiudi_dialoghi()
 
+    # Il riferimento va preso una sola volta e passato a GotoSheet/fissa:
+    # dopo load/close del template e con il dialogo ancora in chiusura,
+    # una nuova getDocument() puo' tornare None e GotoSheet esce in silenzio,
+    # lasciando il foglio importato nascosto (il template lo ha display=false).
     oDoc = LeenoUtils.getDocument()
+    if oDoc is None:
+        return
 
     template_path = LeenO_path() + '/template/leeno/Computo_LeenO.ods'
 
@@ -1814,10 +1820,8 @@ def vai_a_Scorciatoie():
             oTemplate.close(True)
             return
 
-        try:
+        if oDoc.getSheets().hasByName('Scorciatoie'):
             oDoc.getSheets().removeByName('Scorciatoie')
-        except Exception:
-            pass
 
         # Dopo removeByName il conteggio fogli può essere diminuito:
         # clampare pos per evitare IndexOutOfBoundsException
@@ -1829,8 +1833,13 @@ def vai_a_Scorciatoie():
     finally:
         oTemplate.close(True)
 
-    GotoSheet('Scorciatoie')
-    fissa()
+    GotoSheet('Scorciatoie', oDoc=oDoc)
+    try:
+        # i decorator di fissa() richiamano getDocument(): puo' fallire
+        # nello stesso istante; il foglio e' gia' visibile e attivo
+        fissa(oDoc=oDoc)
+    except Exception as _exc:
+        LeenoUtils.log_errore('vai_a_Scorciatoie: fissa', _exc)
 
 
 ########################################################################
@@ -10990,13 +10999,14 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
 ########################################################################
 @LeenoUtils.preserva_posizione()
 @with_undo("Fissa Righe/Colonne")
-def fissa(cols_freeze=None, rows_freeze=None):
+def fissa(cols_freeze=None, rows_freeze=None, oDoc=None):
     '''
     Fissa le righe nel foglio attivo usando le API UNO di SpreadsheetView.
     Evita che le prime righe rimangano nascoste dopo il freeze.
     Supporta parametri facoltativi cols_freeze e rows_freeze passati da macro esterne o Basic.
+    oDoc { opzionale } : documento gia' risolto dal chiamante; se None usa getDocument()
     '''
-    oDoc = LeenoUtils.getDocument()
+    oDoc = LeenoUtils.resolve_document(oDoc)
     if not oDoc or not hasattr(oDoc, 'CurrentController'):
         return
 

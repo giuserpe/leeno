@@ -452,21 +452,28 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-13 09:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/f4ab4da384354ab3d9b37268ba76491674cc84fa" target="_blank" rel="noopener"><code>f4ab4da</code></a></td>
+                <td class="commit-msg">feat(ui): Adeguamento Prezzi nelle viste e ripristino robusto delle evidenziazioni CdPBis
+
+- Aggiunto il pulsante «Adeguamento Prezzi» in DialogViste_A e Dialogviste_N
+  (bridge verso MENU_aggiorna_voci_prezzario)
+- Prima di colorare, registra in proprietà utente del documento lo sfondo
+  originale delle celle codice (standard per foglio/stile + eccezioni)
+- La rimozione delle evidenziazioni ripristina correttamente anche VERDE
+  e i casi in cui quasi tutte le voci sono colorate
+- Helper codifica/decodifica sfondo e unione registri; test dedicati
+- .gitignore: non ignora più i file .xdl</td>
+            </tr>
+            <tr>
+                <td>2026-11-13 08:37</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ae00ab566c033bf6ee140995f4fa8b491772796a" target="_blank" rel="noopener"><code>ae00ab5</code></a></td>
+                <td class="commit-msg">fix(core): risolve import circolare che bloccava DlgMain in pyleeno</td>
+            </tr>
+            <tr>
                 <td>2026-11-12 19:19</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/8dd1a31bedeee07356ee1ba57648625502d31e99" target="_blank" rel="noopener"><code>8dd1a31</code></a></td>
                 <td class="commit-msg">fix(template): update template path construction in vai_a_Scorciatoie function</td>
-            </tr>
-            <tr>
-                <td>2026-11-12 19:07</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/a9e94a8e7d5377adf4cdc0eb57f95471785fcda8" target="_blank" rel="noopener"><code>a9e94a8</code></a></td>
-                <td class="commit-msg">fix(version): update version number to 3.26.0.179-TESTING-20261112
-
-fix(pyleeno): improve error handling in backup configuration and document retrieval</td>
-            </tr>
-            <tr>
-                <td>2026-11-12 17:33</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/37b14d968c8f6c7423cb15084619e41230c05608" target="_blank" rel="noopener"><code>37b14d9</code></a></td>
-                <td class="commit-msg">fix(version): update version number to 3.26.0.178-TESTING-20261112</td>
             </tr>
                     </tbody>
                 </table>
@@ -490,8 +497,8 @@ fix(pyleeno): improve error handling in backup configuration and document retrie
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-12 19:19 UTC</p>
-                <p>Build Commit: <code>8dd1a31</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-13 09:34 UTC</p>
+                <p>Build Commit: <code>f4ab4da</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -1658,7 +1658,7 @@ def GeneraRegistro(oDoc, dati):
                 current_row += 1
 
                 # Filler tra sezioni
-                num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000)
+                num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1)
                 if num_filler > 0:
                     oRegSheet.getCellRangeByPosition(0, current_row + num_filler, 9, current_row + num_filler).CellStyle = "Ultimus_"
                 current_row += num_filler + 1
@@ -1772,7 +1772,7 @@ def GeneraRegistro(oDoc, dati):
     oRegSheet.getCellRangeByPosition(0, riga_riportare, 9, riga_riportare).CellStyle = "Ultimus_Bordo_sotto"
 
     # 8. RIEMPIMENTO PAGINA finale
-    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000)
+    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1)
     riga_riportare += num_filler
 
     # 9. OTTIMIZZAZIONE E LAYOUT
@@ -2037,7 +2037,7 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
         # RIEMPIMENTO PAGINA (filler) tra sezioni (solo se ne seguono altre)
         is_last_section = (title == sections[-1][0])
         if not is_last_section:
-            num_filler = _riempi_pagina(oSalSheet, current_row, col=1, last_col=5, h_pagina=25850)
+            num_filler = _riempi_pagina(oSalSheet, current_row, col=1, last_col=5, h_pagina=25850, inizio_blocco=insRow + 1)
             current_row += num_filler
 
 
@@ -2079,7 +2079,7 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
 
     # --- 5. CHIUSURA CON FILLER E RIEPILOGO ---
     oDoc.calculate()
-    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial, stato_finale=stato_finale)
+    fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial, stato_finale=stato_finale, inizio_blocco=insRow + 1)
 
     if stato_finale:
         fineFirme = GeneraStatoFinale(oDoc, oSalSheet, fineFirme + 1, nSal, insRowRiepilogo)
@@ -2156,7 +2156,7 @@ def trova_cella_contratto_S2(oS2):
     return None
 
 
-def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None, stato_finale=False):
+def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_sic=None, stato_finale=False, inizio_blocco=None):
     '''
     Genera la pagina di riepilogo del SAL con filler dinamico.
     Traduzione dal VBasic originale: usa calcolo posizionale Y
@@ -2171,7 +2171,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
 
     # --- 1. FILLER DINAMICO (riempimento bordi fino a fine pagina) ---
     currRow = startRow
-    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)
+    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850, inizio_blocco=inizio_blocco)
     currRow += num_filler
 
     # Riga di chiusura con stile "comp Descr" come nel VBasic originale
@@ -2615,10 +2615,17 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
 ########################################################################
 
-def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100):
+def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100, inizio_blocco=None):
     """
     Riempie lo spazio residuo nella pagina corrente con righe tratteggiate.
-    Usa la stessa logica del Registro: calcolo posizionale Y con cap massimo.
+
+    Lo spazio già occupato nella pagina si ricava simulando l'impaginazione di Calc
+    riga per riga con le altezze reali: una riga non viene mai spezzata, quindi ogni
+    salto pagina automatico lascia un vuoto a fondo pagina. Una stima per modulo
+    sull'altezza totale lo ignora e produce pagine con solo filler.
+
+    inizio_blocco: indice della prima riga dell'area di stampa del blocco. Se None si
+    parte dall'ultimo salto pagina manuale prima di insertAt (o dalla prima riga).
 
     Ritorna il numero di righe filler effettivamente inserite.
     """
@@ -2647,9 +2654,11 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
 
     # Calcola l'altezza delle righe da ripetere (TitleRows) se presenti
     h_title = 0
+    t_start, t_end = -1, -1
     try:
         if oSheet.getPrintTitleRows():
             title_range = oSheet.getTitleRows()
+            t_start, t_end = title_range.StartRow, title_range.EndRow
             for i in range(title_range.StartRow, title_range.EndRow + 1):
                 r_title = oSheet.getRows().getByIndex(i)
                 if r_title.IsVisible:
@@ -2657,51 +2666,48 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     except Exception:
         pass
 
-    # Cerca l'ultimo salto pagina manuale (IsStartOfNewPage) prima di insertAt
-    y_page_start = 0
-    is_after_break = False
-    oRows = oSheet.getRows()
-    for r in range(insertAt - 1, 0, -1):
-        try:
-            if oRows.getByIndex(r).IsStartOfNewPage:
-                y_page_start = oSheet.getCellByPosition(col, r).Position.Y
-                is_after_break = True
-                break
-        except:
-            pass
-
-    # Position.Y reale di Calc: coordinata continua nel foglio
-    y_pos = oSheet.getCellByPosition(col, insertAt - 1).Position.Y
-    h_row = oSheet.getRows().getByIndex(insertAt - 1).Height
-    y_total = y_pos + h_row
-
-    # Altezza del contenuto dall'inizio della pagina corrente
-    content_on_page = y_total - y_page_start
-
-    # Area contenuto per pagina (ridotta dalle TitleRows sulle pagine 2+)
+    # Area utile di ogni pagina, al netto delle righe da ripetere
     h_content = h_pagina - h_title
     if h_content <= 0:
         h_content = h_pagina
 
-    if is_after_break:
-        # Dopo un salto pagina manuale: le TitleRows si ripetono
-        if content_on_page <= h_content:
-            ingombro_pag = h_title + content_on_page
-        else:
-            # Il contenuto ha generato ulteriori salti automatici
-            remaining = content_on_page - h_content
-            position_in_content = remaining % h_content
-            ingombro_pag = h_title + position_in_content
-    else:
-        # Nessun salto manuale: prima pagina o pagine con solo salti automatici
-        if y_total <= h_pagina:
-            ingombro_pag = y_total
-        else:
-            remaining = y_total - h_pagina
-            position_in_content = remaining % h_content
-            ingombro_pag = h_title + position_in_content
+    oRows = oSheet.getRows()
 
-    spazio_da_coprire = h_pagina - ingombro_pag - margine
+    # Prima riga della pagina da cui partire: inizio del blocco di stampa oppure
+    # ultimo salto pagina manuale prima di insertAt
+    if inizio_blocco is not None:
+        inizio = max(0, inizio_blocco)
+    else:
+        inizio = 0
+        for r in range(insertAt - 1, 0, -1):
+            try:
+                if oRows.getByIndex(r).IsStartOfNewPage:
+                    inizio = r
+                    break
+            except Exception as _exc:
+                LeenoUtils.log_errore('_riempi_pagina: ricerca salto pagina', _exc)
+                break
+
+    # Simula l'impaginazione: spazio occupato nell'ultima pagina prima di insertAt
+    try:
+        ingombro_pag = 0
+        for r in range(inizio, insertAt):
+            if t_start <= r <= t_end:
+                continue  # righe ripetute: già sottratte da h_content
+            riga = oRows.getByIndex(r)
+            if not riga.IsVisible:
+                continue
+            h_riga = riga.Height
+            if r > inizio and riga.IsStartOfNewPage:
+                ingombro_pag = 0
+            elif ingombro_pag > 0 and ingombro_pag + h_riga > h_content:
+                ingombro_pag = 0  # la riga non entra: Calc la porta nella pagina dopo
+            ingombro_pag += h_riga
+    except Exception as _exc:
+        LeenoUtils.log_errore('_riempi_pagina: simulazione impaginazione', _exc)
+        return 0
+
+    spazio_da_coprire = h_content - ingombro_pag - margine
 
     if spazio_da_coprire <= 0:
         return 0
@@ -2774,7 +2780,7 @@ def insrow():
     col = 2 if oSheet.Name == 'CONTABILITA' else 1
     last_col = 9  # Colonne A-J per CONTABILITA
 
-    num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col)
+    num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col, inizio_blocco=sRow)
 
     if num_righe > 0:
         # Applica stile "Ultimus_" alla riga vuota successiva all'ultimo filler

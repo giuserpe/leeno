@@ -2336,7 +2336,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
         oSheet.getCellRangeByPosition(fcol, currRow - 1, fcol + 5, currRow - 1).CellStyle = "Ultimus_centro_bordi_lati"
 
     # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
-    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)
+    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850, ottimizza_altezze=True)
     currRow += num_filler
 
     # Riga finale di chiusura (senza tratteggio, con bordi) richiesto dall'utente
@@ -2486,7 +2486,7 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
 
     # Riempi pagina
     curr_row = r_curr + 17
-    num_filler = _riempi_pagina(oSalSheet, curr_row, col=1, last_col=5, h_pagina=25850)
+    num_filler = _riempi_pagina(oSalSheet, curr_row, col=1, last_col=5, h_pagina=25850, ottimizza_altezze=True)
     curr_row += num_filler
     total_rows += num_filler
 
@@ -2615,7 +2615,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
 ########################################################################
 
-def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100, inizio_blocco=None, ottimizza_altezze=False):
+def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100, inizio_blocco=None, ottimizza_altezze=False, col_stampa_fine=None):
     """
     Riempie lo spazio residuo nella pagina corrente con righe tratteggiate.
 
@@ -2626,6 +2626,9 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
 
     inizio_blocco: indice della prima riga dell'area di stampa del blocco. Se None si
     parte dall'ultimo salto pagina manuale prima di insertAt (o dalla prima riga).
+
+    col_stampa_fine: ultima colonna dell'area di stampa, usata per la scala di stampa
+    quando l'area non è ancora definita (default: last_col).
 
     ottimizza_altezze: durante la generazione il ricalcolo delle altezze è spesso
     disattivato (DocumentRefresh(False) => IsAdjustHeightEnabled = False) e le righe
@@ -2638,6 +2641,7 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     """
     PL.comando('CalculateHard')
 
+    scala = 1.0
     try:
         oDoc = LeenoUtils.getDocument()
         pageStyles = oDoc.StyleFamilies.getByName("PageStyles")
@@ -2656,6 +2660,22 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
         h_pagina_calc = pageHeight - topMargin - bottomMargin - headerH - headerDist - footerH - footerDist
         if h_pagina_calc > 0:
             h_pagina = h_pagina_calc
+
+        # Scala di stampa: con "adatta alla larghezza di 1 pagina" Calc riduce la stampa
+        # se le colonne sono più larghe dell'area utile, e in ogni pagina entrano più righe
+        if getattr(pageStyle, "ScaleToPagesX", 0) == 1:
+            c_ini, c_fin = 0, (col_stampa_fine if col_stampa_fine is not None else last_col)
+            for _area in oSheet.getPrintAreas():
+                if _area.StartRow <= insertAt <= _area.EndRow:
+                    c_ini, c_fin = _area.StartColumn, _area.EndColumn
+                    break
+            larghezza = sum(oSheet.Columns.getByIndex(_c).Width
+                            for _c in range(c_ini, c_fin + 1) if oSheet.Columns.getByIndex(_c).IsVisible)
+            utile = pageStyle.Width - pageStyle.LeftMargin - pageStyle.RightMargin
+            if larghezza > utile > 0:
+                scala = max(10, int(utile * 100 / larghezza)) / 100.0
+        elif getattr(pageStyle, "ScaleToPages", 0) == 0 and 0 < getattr(pageStyle, "PageScale", 100) != 100:
+            scala = pageStyle.PageScale / 100.0
     except Exception:
         pass
 
@@ -2674,9 +2694,10 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
         pass
 
     # Area utile di ogni pagina, al netto delle righe da ripetere
-    h_content = h_pagina - h_title
+    # (altezze in unità del foglio: la pagina stampata contiene h_pagina / scala)
+    h_content = h_pagina / scala - h_title
     if h_content <= 0:
-        h_content = h_pagina
+        h_content = h_pagina / scala
 
     oRows = oSheet.getRows()
 
@@ -2695,15 +2716,23 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
                 LeenoUtils.log_errore('_riempi_pagina: ricerca salto pagina', _exc)
                 break
 
-    # Con il ricalcolo altezze disattivato Rows.OptimalHeight non ha effetto: lo si
-    # riabilita solo per il tempo della misura
+    # Con il ricalcolo altezze disattivato le righe a altezza automatica (OptimalHeight)
+    # hanno ancora l'altezza predefinita e Rows.OptimalHeight non ha effetto: lo si
+    # riabilita solo per il tempo della misura. Le righe a altezza fissa non si toccano
+    # e se il ricalcolo è già attivo le altezze sono aggiornate.
     oDocAltezze, adjust_prec = None, None
     if ottimizza_altezze and insertAt > inizio:
         try:
             oDocAltezze = LeenoUtils.getDocument()
             adjust_prec = oDocAltezze.IsAdjustHeightEnabled
-            oDocAltezze.IsAdjustHeightEnabled = True
-            oSheet.getCellRangeByPosition(0, inizio, last_col, insertAt - 1).Rows.OptimalHeight = True
+            if adjust_prec:
+                oDocAltezze, adjust_prec = None, None
+            else:
+                oDocAltezze.IsAdjustHeightEnabled = True
+                for r in range(inizio, insertAt):
+                    riga = oRows.getByIndex(r)
+                    if riga.IsVisible and riga.OptimalHeight:
+                        riga.OptimalHeight = True
         except Exception as _exc:
             LeenoUtils.log_errore('_riempi_pagina: ricalcolo altezze', _exc)
 
@@ -2805,7 +2834,8 @@ def insrow():
     col = 2 if oSheet.Name == 'CONTABILITA' else 1
     last_col = 9  # Colonne A-J per CONTABILITA
 
-    num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col, inizio_blocco=sRow)
+    num_righe = _riempi_pagina(oSheet, insertAt, col=col, last_col=last_col, inizio_blocco=sRow, ottimizza_altezze=True,
+                               col_stampa_fine=11 if oSheet.Name == 'CONTABILITA' else None)
 
     if num_righe > 0:
         # Applica stile "Ultimus_" alla riga vuota successiva all'ultimo filler

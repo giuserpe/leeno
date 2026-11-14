@@ -2330,6 +2330,10 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
     # Se stato_finale è True le firme vengono omesse: andranno nella pagina Stato Finale.
     if not stato_finale:
         currRow = firme_libretto(currRow, oSheet, col=1, aggiungi_spazio=False)
+        # La riga subito dopo il blocco firme non è inserita da firme_libretto (è la riga
+        # preesistente spinta in basso): le si assegna lo stile del resto del riepilogo,
+        # altrimenti resta "Predefinito".
+        oSheet.getCellRangeByPosition(fcol, currRow - 1, fcol + 5, currRow - 1).CellStyle = "Ultimus_centro_bordi_lati"
 
     # --- 4. FILLER FINALE (fino a fine pagina del riepilogo) ---
     num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850)

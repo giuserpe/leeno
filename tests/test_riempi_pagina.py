@@ -38,11 +38,46 @@ class FakeRows:
         del self.righe[i:i + n]
 
 
+class FakeDoc:
+    IsAdjustHeightEnabled = False
+
+
+class FakeRangeRows:
+    def __init__(self, sheet, a, b):
+        self.sheet, self.a, self.b = sheet, a, b
+
+    @property
+    def OptimalHeight(self):
+        return True
+
+    @OptimalHeight.setter
+    def OptimalHeight(self, _valore):
+        # con il ricalcolo altezze disattivato l'assegnazione non ha effetto
+        if self.sheet.doc.IsAdjustHeightEnabled:
+            for r in range(self.a, self.b + 1):
+                self.sheet.getRows().getByIndex(r).Height = self.sheet.reali[r]
+
+
+class FakeRange:
+    """Range generico (scritture ignorate) con Rows.OptimalHeight simulato."""
+
+    def __init__(self, sheet, a, b):
+        self.Rows = FakeRangeRows(sheet, a, b)
+        self._altro = MagicMock()
+
+    def __getattr__(self, nome):
+        return getattr(self._altro, nome)
+
+
 class FakeSheet:
     PageStyle = "stile"
 
-    def __init__(self, altezze, manuali=()):
-        self._rows = FakeRows([FakeRow(h, r in manuali) for r, h in enumerate(altezze)])
+    def __init__(self, altezze, manuali=(), stale=None, doc=None):
+        # altezze: valori reali; stale: altezze visibili finché non vengono ricalcolate
+        self.doc = doc or FakeDoc()
+        self.reali = list(altezze)
+        iniziali = stale if stale is not None else altezze
+        self._rows = FakeRows([FakeRow(h, r in manuali) for r, h in enumerate(iniziali)])
 
     def getRows(self):
         return self._rows
@@ -50,18 +85,21 @@ class FakeSheet:
     def getPrintTitleRows(self):
         return False
 
-    def getCellRangeByPosition(self, *a):
-        return MagicMock()
+    def getCellRangeByPosition(self, c1, r1, c2, r2):
+        return FakeRange(self, r1, r2)
 
     def getCellByPosition(self, *a):
         return MagicMock()
 
 
-def _riempi_pagina():
+def _riempi_pagina(doc=None):
     tree = ast.parse(SRC.read_text(encoding="utf-8"))
     nodo = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_riempi_pagina")
     leeno_utils = MagicMock()
-    leeno_utils.getDocument.side_effect = RuntimeError("nessun documento")  # usa h_pagina
+    if doc is None:
+        leeno_utils.getDocument.side_effect = RuntimeError("nessun documento")  # usa h_pagina
+    else:
+        leeno_utils.getDocument.return_value = doc
     ns = {"PL": MagicMock(), "LeenoUtils": leeno_utils}
     exec(compile(ast.Module(body=[nodo], type_ignores=[]), str(SRC), "exec"), ns)
     return ns["_riempi_pagina"]
@@ -91,6 +129,22 @@ class TestRiempiPagina(unittest.TestCase):
         sheet = FakeSheet([9900])
         self.assertEqual(_riempi_pagina()(sheet, 1, h_pagina=10000, margine=0, inizio_blocco=0), 0)
         self.assertEqual(len(sheet.getRows().righe), 1)
+
+    def test_altezze_non_ricalcolate_durante_la_generazione(self):
+        # Regressione: con IsAdjustHeightEnabled = False le righe con testo a capo
+        # hanno ancora l'altezza predefinita e il filler sovrastima lo spazio libero.
+        doc = FakeDoc()
+        sheet = FakeSheet([3000] * 5, stale=[H_FILLER] * 5, doc=doc)
+        giusto = (10000 - 6000) // H_FILLER
+        # senza ricalcolo la misura è sbagliata (qui sovrastima molto)
+        n_errato = _riempi_pagina(doc)(FakeSheet([3000] * 5, stale=[H_FILLER] * 5, doc=FakeDoc()),
+                                       5, h_pagina=10000, margine=0, inizio_blocco=0)
+        self.assertGreater(n_errato, giusto)
+        n = _riempi_pagina(doc)(sheet, 5, h_pagina=10000, margine=0, inizio_blocco=0,
+                                ottimizza_altezze=True)
+        self.assertEqual(n, giusto)
+        # lo stato del documento viene ripristinato
+        self.assertFalse(doc.IsAdjustHeightEnabled)
 
 
 if __name__ == "__main__":

@@ -1658,7 +1658,7 @@ def GeneraRegistro(oDoc, dati):
                 current_row += 1
 
                 # Filler tra sezioni
-                num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1)
+                num_filler = _riempi_pagina(oRegSheet, current_row, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1, ottimizza_altezze=True)
                 if num_filler > 0:
                     oRegSheet.getCellRangeByPosition(0, current_row + num_filler, 9, current_row + num_filler).CellStyle = "Ultimus_"
                 current_row += num_filler + 1
@@ -1772,7 +1772,7 @@ def GeneraRegistro(oDoc, dati):
     oRegSheet.getCellRangeByPosition(0, riga_riportare, 9, riga_riportare).CellStyle = "Ultimus_Bordo_sotto"
 
     # 8. RIEMPIMENTO PAGINA finale
-    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1)
+    num_filler = _riempi_pagina(oRegSheet, riga_riportare, col=1, last_col=9, h_pagina=25810, margine=2000, inizio_blocco=insRow + 1, ottimizza_altezze=True)
     riga_riportare += num_filler
 
     # 9. OTTIMIZZAZIONE E LAYOUT
@@ -2037,7 +2037,7 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
         # RIEMPIMENTO PAGINA (filler) tra sezioni (solo se ne seguono altre)
         is_last_section = (title == sections[-1][0])
         if not is_last_section:
-            num_filler = _riempi_pagina(oSalSheet, current_row, col=1, last_col=5, h_pagina=25850, inizio_blocco=insRow + 1)
+            num_filler = _riempi_pagina(oSalSheet, current_row, col=1, last_col=5, h_pagina=25850, inizio_blocco=insRow + 1, ottimizza_altezze=True)
             current_row += num_filler
 
 
@@ -2171,7 +2171,7 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
 
     # --- 1. FILLER DINAMICO (riempimento bordi fino a fine pagina) ---
     currRow = startRow
-    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850, inizio_blocco=inizio_blocco)
+    num_filler = _riempi_pagina(oSheet, currRow, col=1, last_col=5, h_pagina=25850, inizio_blocco=inizio_blocco, ottimizza_altezze=True)
     currRow += num_filler
 
     # Riga di chiusura con stile "comp Descr" come nel VBasic originale
@@ -2615,7 +2615,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
 
 ########################################################################
 
-def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100, inizio_blocco=None):
+def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=2000, max_filler=100, inizio_blocco=None, ottimizza_altezze=False):
     """
     Riempie lo spazio residuo nella pagina corrente con righe tratteggiate.
 
@@ -2626,6 +2626,13 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
 
     inizio_blocco: indice della prima riga dell'area di stampa del blocco. Se None si
     parte dall'ultimo salto pagina manuale prima di insertAt (o dalla prima riga).
+
+    ottimizza_altezze: durante la generazione il ricalcolo delle altezze è spesso
+    disattivato (DocumentRefresh(False) => IsAdjustHeightEnabled = False) e le righe
+    con testo a capo hanno ancora l'altezza predefinita, quindi lo spazio libero
+    risulterebbe sovrastimato. Con True le altezze delle righe del blocco vengono
+    ricalcolate prima della misura (stesso risultato della passata finale di
+    GeneraSAL/GeneraRegistro) e lo stato del documento viene ripristinato.
 
     Ritorna il numero di righe filler effettivamente inserite.
     """
@@ -2688,6 +2695,18 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
                 LeenoUtils.log_errore('_riempi_pagina: ricerca salto pagina', _exc)
                 break
 
+    # Con il ricalcolo altezze disattivato Rows.OptimalHeight non ha effetto: lo si
+    # riabilita solo per il tempo della misura
+    oDocAltezze, adjust_prec = None, None
+    if ottimizza_altezze and insertAt > inizio:
+        try:
+            oDocAltezze = LeenoUtils.getDocument()
+            adjust_prec = oDocAltezze.IsAdjustHeightEnabled
+            oDocAltezze.IsAdjustHeightEnabled = True
+            oSheet.getCellRangeByPosition(0, inizio, last_col, insertAt - 1).Rows.OptimalHeight = True
+        except Exception as _exc:
+            LeenoUtils.log_errore('_riempi_pagina: ricalcolo altezze', _exc)
+
     # Simula l'impaginazione: spazio occupato nell'ultima pagina prima di insertAt
     try:
         ingombro_pag = 0
@@ -2706,6 +2725,12 @@ def _riempi_pagina(oSheet, insertAt, col=2, last_col=9, h_pagina=25510, margine=
     except Exception as _exc:
         LeenoUtils.log_errore('_riempi_pagina: simulazione impaginazione', _exc)
         return 0
+    finally:
+        if oDocAltezze is not None and adjust_prec is not None:
+            try:
+                oDocAltezze.IsAdjustHeightEnabled = adjust_prec
+            except Exception as _exc:
+                LeenoUtils.log_errore('_riempi_pagina: ripristino IsAdjustHeightEnabled', _exc)
 
     spazio_da_coprire = h_content - ingombro_pag - margine
 

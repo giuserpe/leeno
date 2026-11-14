@@ -1132,7 +1132,7 @@ def annota_categorie_voci(oSheet=None, lrow=None):
             oSheet.getCellByPosition(2, start_row).CellStyle = "Comp-Bianche sopraS"
         # oSheet.getCellByPosition(1, start_row).String = num_cat
 
-        row = end_row + 1
+        row = LeenoSheetUtils.prossimaVoce(oSheet, start_row, 1)
 
 
 def MENU_annota_categorie_voci():

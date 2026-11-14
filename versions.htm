@@ -452,19 +452,28 @@
                     <tbody>
                         
             <tr>
-                <td>2026-11-14 14:44</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e519c3409ee6ff3514babdf1ec60f856707455d0" target="_blank" rel="noopener"><code>e519c34</code></a></td>
-                <td class="commit-msg">docs: add LeenO manual and related documentation files</td>
+                <td>2026-11-14 22:09</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/dc66b97ad43421df981d6b216f8c0e81b8f0c8c8" target="_blank" rel="noopener"><code>dc66b97</code></a></td>
+                <td class="commit-msg">fix(dialog): add missing HelpText and Title for DlgCdPBis</td>
             </tr>
             <tr>
-                <td>2026-11-14 13:04</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/4bd276405da5d6b06f477b6aa863b3e2995481e5" target="_blank" rel="noopener"><code>4bd2764</code></a></td>
-                <td class="commit-msg">fix(contab): calcola il filler di pagina simulando l'impaginazione reale</td>
+                <td>2026-11-14 22:08</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/415cc2ad3f63ba0315a0d6fb0053493c0cdebc76" target="_blank" rel="noopener"><code>415cc2a</code></a></td>
+                <td class="commit-msg">fix(computo): prossimaVoce al posto di end_row+1 in annota_categorie_voci</td>
             </tr>
             <tr>
-                <td>2026-11-14 12:46</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/0508f50d84b921e120b73ad04ccc26c7b838be2d" target="_blank" rel="noopener"><code>0508f50</code></a></td>
-                <td class="commit-msg">fix(contab): applica lo stile alla riga dopo le firme del SAL</td>
+                <td>2026-11-14 22:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/819fa0fbd9aed84c7cae30e21a752f2e5833209a" target="_blank" rel="noopener"><code>819fa0f</code></a></td>
+                <td class="commit-msg">fix(contab): considera scala di stampa e altezze in _riempi_pagina
+
+- Tiene conto di ScaleToPagesX / PageScale: con “adatta alla larghezza”
+  entrano più righe per pagina e il filler non viene sottostimato
+- Parametro col_stampa_fine per la larghezza dell’area di stampa
+- Ricalcolo altezze solo se disattivato e solo sulle righe a altezza
+  automatica (non tocca le altezze fisse)
+- Attivato ottimizza_altezze nei punti di chiamata (firme SAL, stato
+  finale, insrow)
+- Test: scala di stampa, righe a altezza fissa, ricalcolo già attivo</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +497,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-14 17:53 UTC</p>
-                <p>Build Commit: <code>e519c34</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-14 22:09 UTC</p>
+                <p>Build Commit: <code>dc66b97</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

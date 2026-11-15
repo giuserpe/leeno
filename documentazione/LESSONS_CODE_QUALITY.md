@@ -65,32 +65,43 @@ Regola in AGENTS.md: prima di scrivere una macro o funzione nuova, cercarne una 
 - Le omonimie tra `LeenoBasicBridge.py` e `pyleeno.py`/moduli (circa 35 nomi: `vai_a_M1`, `invia_voce`, `trova_np`, ...) sono il ponte voluto verso le macro Basic: non sono duplicati.
 - Falsi positivi dopo la normalizzazione delle stringhe: `setTabColor`, `setFormatoNumeri`, `txt_Format`, `setAdatta` (stesso schema di dispatch, azioni diverse), `read`/`write` di `LeenoConfig` e `pyleeno`, `MENU_undo`/`MENU_redo`.
 
-## Gia' eliminati (lotti 1 e 2)
+## Gia' eliminati (lotti 1-7)
 
-`benchmark.py`, `Calendario.pickDate` (ora `Dialogs.pickDate`), `pyleeno.getLastUsedCell` (ora `SheetUtils.getUsedArea`), `_get_ep_last_row` e `_get_analisi_last_row` (ora `SheetUtils.getRigaSentinella`), `_col_letter` in tre copie (ora `SheetUtils.colonnaInLettera`; `LeenoContab._col_letter` resta come delega per `LeenoComputo` e per i test CdP). Il lotto 1 ha anche corretto `LeenoImport.rimuovi_righe_ridondanti`, che chiamava `LeenoUtils.getLastUsedCell`, funzione inesistente: pyflakes non vede gli attributi di modulo, per questo il difetto era rimasto latente.
+| Era | Ora |
+|---|---|
+| `benchmark.py` | eliminato (nessun riferimento) |
+| `Calendario.pickDate`, `mkDayLabels`, `loadDate` | `Dialogs.pickDate` |
+| `pyleeno.getLastUsedCell` | `SheetUtils.getUsedArea` |
+| `_get_ep_last_row`, `_get_analisi_last_row` (3 copie) | `SheetUtils.getRigaSentinella` |
+| `_col_letter` e la funzione annidata in `getColumnWidths` (3 copie) | `SheetUtils.colonnaInLettera`; `LeenoContab._col_letter` resta come delega (la importa `LeenoComputo`, la stubbano i test CdP) |
+| `_leggi_iva/anticipo/infortuni_da_S2` | `LeenoContab._leggi_aliquota_da_S2` (le tre restano come delegate: le stubbano i test CdP) |
+| `inserSuperCapitolo`, `inserCapitolo` | `LeenoSheetUtils._inserisciCapitolo(..., livello)` |
+| `PdfElencoPrezzi`, `PdfComputoMetrico` | `LeenoPdf._esportaPdfFoglio` |
+| `SubSum_SuperCap`, `SubSum_SottoCap`, `SubSum_Cap` | `pyleeno._subsum_categoria` |
+| `DatiVoce._circoscrive_voce` | `LeenoComputo.circoscriveVoceComputo` |
+| sei `leggi*` di capitoli e categorie in `LeenoImport_XPWE` | `_leggiElementiCapCat(CapCat, tag, nuova_voce_da_estesa)` |
+| `LeenoContab.trova_r_S2` (funzione di modulo mai chiamata, due closure, due cicli inline) | `LeenoContab._cerca_riga_S2`; le due closure restano come wrapper (una restituisce l'offset, l'altra la riga assoluta) |
+
+Il lotto 1 ha corretto anche `LeenoImport.rimuovi_righe_ridondanti`, che chiamava `LeenoUtils.getLastUsedCell`, funzione inesistente. pyflakes non controlla gli attributi di modulo, per questo il difetto era rimasto latente. Un controllo sull'esistenza degli attributi chiamati come `Modulo.nome` resta un'estensione utile di `scripts/`.
+
+## Incoerenze preservate (scelte funzionali, non pulizia)
+
+- `SubSum_SottoCap`: in COMPUTO la colonna 30 ha stile `livello2 valuta mini`, in CONTABILITA `livello2 scritta mini`.
+- `leggiCapitoli` e `leggiSottoCapitoli` sostituiscono "Nuova voce" con la descrizione estesa; le altre quattro letture no.
+- `SubSum_SottoCap` scrive lo stile anche in colonna 28 in COMPUTO; le altre due no.
+
+Uniformarle cambia l'aspetto o i dati dei documenti esistenti: va deciso a parte.
 
 ## Duplicazione voluta: `LeenoDispatcher.py`
 
 `cerca_path_valido`, `dest`, `reloadLeenoModules` e `loVersion` esistono sia nel dispatcher sia in `pythonpath/`. Non vanno unificate: il dispatcher contiene `handle_exception`, l'ultimo gestore di errori, e deve funzionare anche quando un modulo di `pythonpath/` non si importa. Se importasse quei moduli, un errore di import li renderebbe inutilizzabili proprio quando servono. Vale anche per `LeenoDebug.py`, fuori da `pythonpath/`.
 
-## Da unificare con parametri (verificare su documenti reali)
-
-| Cluster | Soluzione |
-|---|---|
-| `LeenoContab.trova_r_S2`: funzione di modulo e due closure interne | Usare la funzione di modulo. Attenzione: le closure restituiscono a volte l'offset e a volte la riga assoluta |
-| `LeenoComputo.circoscriveVoceComputo` e `_circoscrive_voce` (metodo di classe) | Il metodo delega alla funzione (da confrontare riga per riga) |
-| `pyleeno.SubSum_SuperCap`, `SubSum_SottoCap`, `SubSum_Cap` | Una funzione con il livello di stile come parametro |
-| `LeenoSheetUtils.inserSuperCapitolo` e `inserCapitolo` | Una funzione con livello e testo di default come parametri |
-| `LeenoPdf.PdfElencoPrezzi` e `PdfComputoMetrico` | Una funzione con foglio, suffisso e oggetto come parametri (rimuovere anche il `print()` attivo) |
-| `LeenoContab._leggi_anticipo_da_S2`, `_leggi_infortuni_da_S2`, `_leggi_iva_da_S2` | Un helper con l'etichetta come parametro |
-| `LeenoImport_XPWE.leggiSuperCapitoli`, `leggiCapitoli`, `leggiSottoCapitoli`, `leggiSuperCategorie`, `leggiCategorie`, `leggiSottoCategorie` | Un lettore generico sul tag XML |
-
 ## Non toccare
 
 `Dialogs.py` contiene classi widget quasi gemelle (`CheckBox`/`RadioButton`, `ListBox`/`ComboBox`, `getProps`, `dump`, `_fixup` ripetute fino a 13 volte). Il refactor dipende dal comportamento UNO e non si delega a un agente.
 
-## Ordine di intervento
+## Metodo seguito per ogni cluster
 
-1. Copie esatte (prima tabella): rischio basso, un commit per cluster.
-2. Unificazioni con parametri: un commit per cluster, prova su documenti reali.
+1. Un commit per cluster.
+2. Prima della modifica, un confronto vecchio contro nuovo (codice di `HEAD` e codice nuovo, con un foglio simulato che registra le chiamate) su molti scenari casuali; per le funzioni estratte via AST nei test, aggiornare anche i test.
 3. Ogni PR: `scripts/check_pythonpath_safety.py`, pytest, `pyflakes` con nomi non definiti invariati, ricerca del nome rimosso in `Addons.xcu`, `Accelerators.xcu`, `.xba` e `.xdl`.

@@ -11913,18 +11913,6 @@ def copia_stili_celle(sheet_src, range_src, sheet_dest, range_dest):
 
 ########################################################################
 
-def getLastUsedCell(oSheet):
-    '''
-    Restitusce l'indirizzo dell'ultima cella usata
-    in forma di oggetto
-    '''
-    oCell = oSheet.getCellByPosition(0, 0)
-    oCursor = oSheet.createCursorByRange(oCell)
-    oCursor.gotoEndOfUsedArea(True)
-    aAddress = oCursor.RangeAddress
-    return aAddress#.EndColumn, aAddress.EndRow)
-
-
 ########################################################################
 @LeenoUtils.no_refresh
 def cerca_rosso_mancante():
@@ -11935,7 +11923,7 @@ def cerca_rosso_mancante():
     """
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    urow = getLastUsedCell(oSheet).EndRow + 1
+    urow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     row = LeggiPosizioneCorrente()[1] + 1
     for el in range(row, urow):
         if 'ROSSO' in oSheet.getCellByPosition(2, el).CellStyle or \

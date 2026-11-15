@@ -10131,7 +10131,6 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
                 LeenoSheetUtils.prossimaVoce(oSheet, sotto)
             i += 1
 
-
 def MENU_inserisci_nuova_riga_con_descrizione():
     '''
     inserisce, all'inizio di ogni voce di computo o variante,

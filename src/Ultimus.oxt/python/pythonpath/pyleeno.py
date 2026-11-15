@@ -1242,69 +1242,61 @@ def Tutti_Subtotali(oSheet):
 ########################################################################
 
 
-def SubSum_SuperCap(row):
+def _subsum_categoria(row, stili_stop, stili_comp, stili_contab):
     '''
-    row    { double } : id della riga di inserimento
-    inserisce i dati nella riga di SuperCategoria
+    Scrive formule e stili nella riga di categoria (super categoria,
+    categoria o sottocategoria) di COMPUTO, VARIANTE o CONTABILITA.
+
+    row          { int }   : indice della riga di categoria
+    stili_stop   { tuple } : stili in colonna S che chiudono la categoria
+    stili_comp   { dict }  : colonna -> stile, per COMPUTO e VARIANTE
+    stili_contab { dict }  : colonna -> stile, per CONTABILITA
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
-    # row = LeggiPosizioneCorrente()[1]
     rowE = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
     nextCap = rowE
     for n in range(row + 1, rowE):
-        if oSheet.getCellByPosition(
-                18,
-                n).CellStyle in ('Livello-0-scritta mini val', 'Comp TOTALI'):
-            # MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
+        if oSheet.getCellByPosition(18, n).CellStyle in stili_stop:
             nextCap = n + 1
             break
-    # oDoc.enableAutomaticCalculation(False)
+    r = str(row + 1)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        oSheet.getCellByPosition(
-            18, row
-        ).Formula = '=SUBTOTAL(9;S' + str(row + 1) + ':S' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            24, row).Formula = '=S' + str(row + 1) + '/S' + str(rowE)
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/S' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(18,
-                                 row).CellStyle = 'Livello-0-scritta mini val'
-        oSheet.getCellByPosition(24,
-                                 row).CellStyle = 'Livello-0-scritta mini %'
-        oSheet.getCellByPosition(29,
-                                 row).CellStyle = 'Livello-0-scritta mini %'
-        oSheet.getCellByPosition(30,
-                                 row).CellStyle = 'Livello-0-scritta mini val'
-    if oSheet.Name in ('CONTABILITA'):
-        oSheet.getCellByPosition(15, row).Formula = '=SUBTOTAL(9;P' + str(
-            row + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
-        oSheet.getCellByPosition(
-            16, row).Formula = '=P' + str(row + 1) + '/P' + str(
-                rowE)  # incidenza sul totale
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/P' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(15,
-                                 row).CellStyle = 'Livello-0-scritta mini val'
-        oSheet.getCellByPosition(16,
-                                 row).CellStyle = 'Livello-0-scritta mini %'
-        oSheet.getCellByPosition(29,
-                                 row).CellStyle = 'Livello-0-scritta mini %'
-        oSheet.getCellByPosition(28,
-                                 row).CellStyle = 'Livello-0-scritta mini val'
-        oSheet.getCellByPosition(30,
-                                 row).CellStyle = 'Livello-0-scritta mini val'
-    # oDoc.enableAutomaticCalculation(True)
+        oSheet.getCellByPosition(18, row).Formula = f'=SUBTOTAL(9;S{r}:S{nextCap})'
+        oSheet.getCellByPosition(24, row).Formula = f'=S{r}/S{rowE}'
+        oSheet.getCellByPosition(28, row).Formula = f'=SUBTOTAL(9;AC{r}:AC{nextCap})'
+        oSheet.getCellByPosition(29, row).Formula = f'=AE{r}/S{r}'
+        oSheet.getCellByPosition(30, row).Formula = f'=SUBTOTAL(9;AE{r}:AE{nextCap})'
+        stili = stili_comp
+    else:
+        oSheet.getCellByPosition(15, row).Formula = f'=SUBTOTAL(9;P{r}:P{nextCap})'  # IMPORTO
+        oSheet.getCellByPosition(16, row).Formula = f'=P{r}/P{rowE}'  # incidenza sul totale
+        oSheet.getCellByPosition(28, row).Formula = f'=SUBTOTAL(9;AC{r}:AC{nextCap})'
+        oSheet.getCellByPosition(29, row).Formula = f'=AE{r}/P{r}'
+        oSheet.getCellByPosition(30, row).Formula = f'=SUBTOTAL(9;AE{r}:AE{nextCap})'
+        stili = stili_contab
+    for col, stile in stili.items():
+        oSheet.getCellByPosition(col, row).CellStyle = stile
+
+
+########################################################################
+
+
+def SubSum_SuperCap(row):
+    '''
+    row    { double } : id della riga di inserimento
+    inserisce i dati nella riga di SuperCategoria
+    '''
+    _subsum_categoria(
+        row,
+        ('Livello-0-scritta mini val', 'Comp TOTALI'),
+        {18: 'Livello-0-scritta mini val', 24: 'Livello-0-scritta mini %',
+         29: 'Livello-0-scritta mini %', 30: 'Livello-0-scritta mini val'},
+        {15: 'Livello-0-scritta mini val', 16: 'Livello-0-scritta mini %',
+         29: 'Livello-0-scritta mini %', 28: 'Livello-0-scritta mini val',
+         30: 'Livello-0-scritta mini val'})
 
 
 ########################################################################
@@ -1315,55 +1307,16 @@ def SubSum_SottoCap(row):
     row    { double } : id della riga di inserimento
     inserisce i dati nella riga di subcategoria
     '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        return
-    # row = 0#LeggiPosizioneCorrente()[1]
-    rowE = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
-    nextCap = rowE
-    for n in range(row + 1, rowE):
-        if oSheet.getCellByPosition(
-                18,
-                n).CellStyle in ('livello2 scritta mini',
-                                 'Livello-0-scritta mini val',
-                                 'Livello-1-scritta mini val', 'Comp TOTALI'):
-            nextCap = n + 1
-            break
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        oSheet.getCellByPosition(
-            18, row
-        ).Formula = '=SUBTOTAL(9;S' + str(row + 1) + ':S' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            24, row).Formula = '=S' + str(row + 1) + '/S' + str(rowE)
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/S' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(18, row).CellStyle = 'livello2 scritta mini'
-        oSheet.getCellByPosition(24, row).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellByPosition(28, row).CellStyle = 'livello2 scritta mini'
-        oSheet.getCellByPosition(29, row).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellByPosition(30, row).CellStyle = 'livello2 valuta mini'
-    if oSheet.Name in ('CONTABILITA'):
-        oSheet.getCellByPosition(15, row).Formula = '=SUBTOTAL(9;P' + str(
-            row + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
-        oSheet.getCellByPosition(
-            16, row).Formula = '=P' + str(row + 1) + '/P' + str(
-                rowE)  # incidenza sul totale
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/P' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(15, row).CellStyle = 'livello2 scritta mini'
-        oSheet.getCellByPosition(16, row).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellByPosition(29, row).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellByPosition(28, row).CellStyle = 'livello2 scritta mini'
-        oSheet.getCellByPosition(30, row).CellStyle = 'livello2 scritta mini'
+    _subsum_categoria(
+        row,
+        ('livello2 scritta mini', 'Livello-0-scritta mini val',
+         'Livello-1-scritta mini val', 'Comp TOTALI'),
+        {18: 'livello2 scritta mini', 24: 'livello2 valuta mini %',
+         28: 'livello2 scritta mini', 29: 'livello2 valuta mini %',
+         30: 'livello2 valuta mini'},
+        {15: 'livello2 scritta mini', 16: 'livello2 valuta mini %',
+         29: 'livello2 valuta mini %', 28: 'livello2 scritta mini',
+         30: 'livello2 scritta mini'})
 
 
 ########################################################################
@@ -1374,62 +1327,14 @@ def SubSum_Cap(row):
     row    { double } : id della riga di inserimento
     inserisce i dati nella riga di categoria
     '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        return
-    # row = LeggiPosizioneCorrente()[1]
-    rowE = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
-    nextCap = rowE
-    for n in range(row + 1, rowE):
-        if oSheet.getCellByPosition(
-                18,
-                n).CellStyle in ('Livello-1-scritta mini val',
-                                 'Livello-0-scritta mini val', 'Comp TOTALI'):
-            # MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
-            nextCap = n + 1
-            break
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        oSheet.getCellByPosition(18, row).Formula = '=SUBTOTAL(9;S' + str(
-            row + 1) + ':S' + str(nextCap) + ')'  # IMPORTO
-        oSheet.getCellByPosition(
-            24, row).Formula = '=S' + str(row + 1) + '/S' + str(rowE)
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/S' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(18,
-                                 row).CellStyle = 'Livello-1-scritta mini val'
-        oSheet.getCellByPosition(24,
-                                 row).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellByPosition(29,
-                                 row).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellByPosition(30,
-                                 row).CellStyle = 'Livello-1-scritta mini val'
-    if oSheet.Name in ('CONTABILITA'):
-        oSheet.getCellByPosition(15, row).Formula = '=SUBTOTAL(9;P' + str(
-            row + 1) + ':P' + str(nextCap) + ')'  # IMPORTO
-        oSheet.getCellByPosition(
-            16, row).Formula = '=P' + str(row + 1) + '/P' + str(
-                rowE)  # incidenza sul totale
-        oSheet.getCellByPosition(28, row).Formula = '=SUBTOTAL(9;AC' + str(
-            row + 1) + ':AC' + str(nextCap) + ')'
-        oSheet.getCellByPosition(
-            29, row).Formula = '=AE' + str(row + 1) + '/P' + str(row + 1)
-        oSheet.getCellByPosition(30, row).Formula = '=SUBTOTAL(9;AE' + str(
-            row + 1) + ':AE' + str(nextCap) + ')'
-        oSheet.getCellByPosition(15,
-                                 row).CellStyle = 'Livello-1-scritta mini val'
-        oSheet.getCellByPosition(16,
-                                 row).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellByPosition(29,
-                                 row).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellByPosition(28,
-                                 row).CellStyle = 'Livello-1-scritta mini val'
-        oSheet.getCellByPosition(30,
-                                 row).CellStyle = 'Livello-1-scritta mini val'
+    _subsum_categoria(
+        row,
+        ('Livello-1-scritta mini val', 'Livello-0-scritta mini val', 'Comp TOTALI'),
+        {18: 'Livello-1-scritta mini val', 24: 'Livello-1-scritta mini %',
+         29: 'Livello-1-scritta mini %', 30: 'Livello-1-scritta mini val'},
+        {15: 'Livello-1-scritta mini val', 16: 'Livello-1-scritta mini %',
+         29: 'Livello-1-scritta mini %', 28: 'Livello-1-scritta mini val',
+         30: 'Livello-1-scritta mini val'})
 
 
 ########################################################################

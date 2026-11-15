@@ -279,7 +279,8 @@ class TestUtilsPure2(unittest.TestCase):
 
         # Passando il percorso di un file, estrae la cartella padre e garantisce separatore finale
         storeLastPath("/home/user/documenti/computo.ods")
-        self.assertEqual(salvati.get(("Generale", "ultimo_percorso")), "/home/user/documenti/")
+        # il separatore finale e' quello del sistema operativo (os.path.join)
+        self.assertEqual(salvati.get(("Generale", "ultimo_percorso")), "/home/user/documenti" + os.sep)
 
     # -------------------------------------------------------------------------
     # Debug.py: _format_time

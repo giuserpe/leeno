@@ -869,15 +869,17 @@ def adattaAltezzaRiga(oSheet=False, all=True, lrow=None):
 # ###############################################################
 
 
-def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
+def _inserisciCapitolo(oSheet, lrow, sTesto, livello):
     '''
-    lrow    { double } : id della riga di inserimento
-    sTesto  { string } : titolo della categoria
+    Inserisce una riga di categoria in COMPUTO, VARIANTE o CONTABILITA.
+    livello { int } : 0 per la super categoria, 1 per la categoria
+                      (stili 'Livello-0-scritta...' o 'Livello-1-scritta...')
     '''
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     if not sTesto:
-        sTesto ='senza_titolo'
+        sTesto = 'senza_titolo'
+    stile = f'Livello-{livello}-scritta'
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
         # se oltre la riga rossa
         lrow -= 2
@@ -889,24 +891,30 @@ def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
     oSheet.getCellByPosition(2, lrow).String = sTesto
 
     # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = 'Livello-0-scritta'
-    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
-    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
-    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-0-scritta mini %'
-    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-0-scritta mini %'
-    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-0-scritta mini val'
+    oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = stile
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = stile + ' mini'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = stile + ' mini val'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = stile + ' mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = stile + ' mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = stile + ' mini val'
     oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
 
     # rinumero e ricalcolo
-    # ocellBaseA = oSheet.getCellByPosition(1, lrow)
-    # ocellBaseR = oSheet.getCellByPosition(31, lrow)
     lrowProvv = lrow - 1
-    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-0-scritta':
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != stile:
         if lrowProvv > 4:
             lrowProvv -= 1
         else:
             break
     oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value + 1
+
+
+def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
+    '''
+    lrow    { double } : id della riga di inserimento
+    sTesto  { string } : titolo della super categoria
+    '''
+    _inserisciCapitolo(oSheet, lrow, sTesto, 0)
 
 
 # ###############################################################
@@ -917,39 +925,7 @@ def inserCapitolo(oSheet, lrow, sTesto='Categoria'):
     lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della categoria
     '''
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        return
-    if not sTesto:
-        sTesto ='senza_titolo'
-
-    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
-        # se oltre la riga rossa
-        lrow -= 2
-    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi':
-        # se riga rossa
-        lrow -= 1
-    oSheet.getRows().insertByIndex(lrow, 1)
-    oSheet.getCellByPosition(2, lrow).String = sTesto
-
-    # inserisco i valori e le formule
-    oSheet.getCellRangeByPosition(0, lrow, 36, lrow).CellStyle = 'Livello-1-scritta'
-    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
-    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
-    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
-    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-1-scritta mini %'
-    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-1-scritta mini val'
-    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
-
-    # rinumero e ricalcolo
-    # ocellBaseA = oSheet.getCellByPosition(1, lrow)
-    # ocellBaseR = oSheet.getCellByPosition(31, lrow)
-    lrowProvv = lrow - 1
-    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
-        if lrowProvv > 4:
-            lrowProvv -= 1
-        else:
-            break
-    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value + 1
+    _inserisciCapitolo(oSheet, lrow, sTesto, 1)
 
 
 # ###############################################################

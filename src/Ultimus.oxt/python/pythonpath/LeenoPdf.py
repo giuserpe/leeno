@@ -183,56 +183,34 @@ def PdfDialog():
     ])
 
 
-def PdfElencoPrezzi(destFolder, nTavola):
-    """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
+def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto):
+    """Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder."""
 
     oDoc = LeenoUtils.getDocument()
-    ep = oDoc.Sheets.getByName('Elenco Prezzi')
+    oSheet = oDoc.Sheets.getByName(nomeFoglio)
 
     # lancia l'export
     nDoc = str(nTavola)
-    baseName = ''
-    if nDoc != '' and nDoc is not None:
-        baseName = nDoc + '-'
-    destPath = os.path.join(destFolder, baseName + 'ElencoPrezzi.pdf')
-    print(f"Export to '{destPath}' file")
-    selection = [ep, ]
+    baseName = nDoc + '-' if nDoc else ''
+    destPath = os.path.join(destFolder, baseName + nomeFile)
+    selection = [oSheet, ]
     docSubst = {
-        '[OGGETTO]':'Elenco Prezzi',
+        '[OGGETTO]': oggetto,
         '[NUMERO_DOCUMENTO]': str(nTavola),
     }
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
-    nPages = len(ep.RowPageBreaks) - 1
-
-    # ~ nPages = LeenoUtils.countPdfPages(destPath)
-    docSubst['[PAGINE]'] = nPages
+    docSubst['[PAGINE]'] = len(oSheet.RowPageBreaks) - 1
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
+
+
+def PdfElencoPrezzi(destFolder, nTavola):
+    """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
+    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'Elenco Prezzi')
 
 
 def PdfComputoMetrico(destFolder, nTavola):
     """Esporta in formato PDF il foglio COMPUTO nella cartella specificata."""
-
-    oDoc = LeenoUtils.getDocument()
-    ep = oDoc.Sheets.getByName('COMPUTO')
-
-    # lancia l'export
-    nDoc = str(nTavola)
-    baseName = ''
-    if nDoc != '' and nDoc is not None:
-        baseName = nDoc + '-'
-    destPath = os.path.join(destFolder, baseName + 'ComputoMetrico.pdf')
-    # ~ print(f"Export to '{destPath}' file")
-    selection = [ep, ]
-    docSubst = {
-        '[OGGETTO]':'Computo Metrico',
-        '[NUMERO_DOCUMENTO]': str(nTavola),
-    }
-    headerFooter = prepareHeaderFooter(oDoc, docSubst)
-
-    nPages = len(ep.RowPageBreaks) - 1
-    # ~ nPages = LeenoUtils.countPdfPages(destPath)
-    docSubst['[PAGINE]'] = nPages
-    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
+    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'Computo Metrico')
 
 
 def MENU_Pdf():

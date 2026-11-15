@@ -3240,74 +3240,46 @@ def setup_foglio_CdP(oDoc, force_clean=False):
     return oDoc.getSheets().getByName('CdP')
 
 
-def _leggi_iva_da_S2(oS2):
+def _leggi_aliquota_da_S2(oS2, etichette, descrizione, default=0.0):
     '''
-    Cerca l'aliquota IVA in S2 cercando l'etichetta "I.V.A." nell'Anagrafica.
-    Ritorna il valore come float (es. 0.22 per 22%) oppure 0.22 di default.
-    Accetta anche 0% come valore valido (reverse charge, esenzione, ecc.).
+    Cerca in S2 (colonne A o B) la prima etichetta presente tra `etichette`,
+    nell'ordine dato, e restituisce il valore della colonna C sulla stessa
+    riga (anche 0). Se nessuna etichetta e' presente o la lettura fallisce
+    restituisce `default`. `descrizione` serve al registro errori.
     '''
     try:
-        # Cerca direttamente l'etichetta "I.V.A." in colonna A o B
-        for col in (0, 1):
-            row_iva = SheetUtils.uFindStringCol('I.V.A.', col, oS2, start=0)
-            if row_iva is not None:
-                iva_val = oS2.getCellByPosition(2, int(row_iva)).Value
-                return iva_val  # accetta anche 0%
-        # Fallback: cerca "IVA" senza punti
-        for col in (0, 1):
-            row_iva = SheetUtils.uFindStringCol('IVA', col, oS2, start=0)
-            if row_iva is not None:
-                iva_val = oS2.getCellByPosition(2, int(row_iva)).Value
-                return iva_val
+        for etichetta in etichette:
+            for col in (0, 1):
+                riga = SheetUtils.uFindStringCol(etichetta, col, oS2, start=0)
+                if riga is not None:
+                    return oS2.getCellByPosition(2, int(riga)).Value
     except Exception as _exc:
-        LeenoUtils.log_errore('CdP: lettura IVA da S2, uso 0%', _exc)
-    return 0  # default IVA 0%
+        LeenoUtils.log_errore(f'CdP: lettura {descrizione} da S2, uso {default}', _exc)
+    return default
+
+
+def _leggi_iva_da_S2(oS2):
+    '''
+    Aliquota IVA in S2 (etichetta "I.V.A.", poi "IVA"): float (es. 0.22 per
+    22%) oppure 0 di default. Accetta anche 0% (reverse charge, esenzione).
+    '''
+    return _leggi_aliquota_da_S2(oS2, ('I.V.A.', 'IVA'), 'IVA', 0)
 
 
 def _leggi_anticipo_da_S2(oS2):
     '''
-    Cerca l'aliquota di anticipazione in S2.
-    Ritorna il valore come float (es. 0.20 per 20%) oppure 0.0 di default.
+    Aliquota di anticipazione in S2: float (es. 0.20 per 20%) oppure 0.0.
     '''
-    try:
-        # Cerca direttamente l'etichetta specifica in colonna A o B
-        for col in (0, 1):
-            row_ant = SheetUtils.uFindStringCol('Incidenza Anticipazione:', col, oS2, start=0)
-            if row_ant is not None:
-                ant_val = oS2.getCellByPosition(2, int(row_ant)).Value
-                return ant_val
-        # Fallback: cerca "anticipazione"
-        for col in (0, 1):
-            row_ant = SheetUtils.uFindStringCol('anticipazione', col, oS2, start=0)
-            if row_ant is not None:
-                ant_val = oS2.getCellByPosition(2, int(row_ant)).Value
-                return ant_val
-    except Exception as _exc:
-        LeenoUtils.log_errore('CdP: lettura anticipazione da S2, uso 0', _exc)
-    return 0.0
+    return _leggi_aliquota_da_S2(
+        oS2, ('Incidenza Anticipazione:', 'anticipazione'), 'anticipazione')
 
 
 def _leggi_infortuni_da_S2(oS2):
     '''
-    Cerca l'aliquota ritenuta infortuni in S2.
-    Ritorna il valore come float (es. 0.005 per 0.5%) oppure 0.0 di default.
+    Aliquota ritenuta infortuni in S2: float (es. 0.005 per 0.5%) oppure 0.0.
     '''
-    try:
-        # Cerca direttamente l'etichetta specifica in colonna A o B
-        for col in (0, 1):
-            row_inf = SheetUtils.uFindStringCol('Ritenute per infortuni:', col, oS2, start=0)
-            if row_inf is not None:
-                inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
-                return inf_val
-        # Fallback: cerca "infortuni"
-        for col in (0, 1):
-            row_inf = SheetUtils.uFindStringCol('infortuni', col, oS2, start=0)
-            if row_inf is not None:
-                inf_val = oS2.getCellByPosition(2, int(row_inf)).Value
-                return inf_val
-    except Exception as _exc:
-        LeenoUtils.log_errore('CdP: lettura infortuni da S2, uso 0', _exc)
-    return 0.0
+    return _leggi_aliquota_da_S2(
+        oS2, ('Ritenute per infortuni:', 'infortuni'), 'infortuni')
 
 
 # Righe del template CdP (righe 0..44 del foglio CdP in Computo_LeenO.ods).

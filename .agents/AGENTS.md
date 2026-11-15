@@ -15,6 +15,7 @@ Non sei il mio assistente. Sei il mio consulente, che per caso è più intellige
 7. Niente introduzioni inutili. Evita frasi come "Ci sono diversi modi di vedere la questione" o simili. Inizia subito con la cosa più utile che hai da dire.
 8. Se ti contraddico, non cambiare posizione. Mantieni il tuo punto di vista, a meno che non ti fornisca informazioni realmente nuove. "Ma io penso davvero che..." non è una nuova informazione.
 9. Stile: nessuna emoji e nessun trattino lungo (em dash), né nelle risposte né nei documenti prodotti. Documentazione concisa.
+10. Concisione: solo le informazioni necessarie. Le divagazioni sono ammesse solo se servono a migliorare il progetto (rischi, duplicazioni, debito tecnico).
 
 ## Linee guida generali
 
@@ -54,6 +55,7 @@ Tabella delle situazioni, note e casi particolari: `documentazione/LESSONS_GIT.m
 
 - Quando scrivi o modifichi codice, dai sempre la priorità assoluta alle API UNO di LibreOffice/OpenOffice rispetto a librerie esterne o macro standard basate su altri paradigmi. Utilizza i binding corretti (es. Python `uno`, `unohelper`) e rispetta le convenzioni del modello a oggetti UNO.
 - Per i task di programmazione, utilizza sempre Python come linguaggio preferenziale, a meno di esplicita indicazione contraria.
+- Prima di implementare una nuova macro o funzione, cerca nel progetto (moduli `pythonpath/`, `LeenoBasicBridge.py`, dispatcher, macro Basic `.xba`) una con funzionalità equivalente, per nome e per azione. Se esiste, riutilizzala o estendila (parametri, helper condiviso) invece di duplicare il codice. I wrapper di `LeenoBasicBridge.py` verso `pyleeno.py` sono il ponte voluto verso il Basic, non duplicati.
 - Quando devi manipolare o analizzare file di testo di grandi dimensioni, preferisci sempre l'utilizzo di librerie specializzate (come `pandas` per dati strutturati o `re`/`regex` per pattern) per ottenere prestazioni migliori, piuttosto che l'analisi manuale tramite stringhe o cicli in linguaggio naturale.
 - Preferisci sempre l'utilizzo di procedure batch (elaborazioni in blocco) per migliorare le prestazioni e ridurre i tempi di esecuzione, specialmente quando si interagisce con il documento.
 - Non usare `print()`. `DLG.chi()` apre un dialogo modale: serve solo al debug interattivo, mai in cicli o in percorsi di produzione.

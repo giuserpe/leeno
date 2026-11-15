@@ -3256,6 +3256,24 @@ def _leggi_anticipo_da_S2(oS2):
         oS2, ('Incidenza Anticipazione:', 'anticipazione'), 'anticipazione')
 
 
+def _riferimento_anticipazione_S2(oS2):
+    '''
+    Riferimento assoluto (es. "$S2.$C$85") della cella "Anticipazione:"
+    (importo annotato in anagrafica S2), solo se contiene un valore > 0.
+    Altrimenti None: senza importo annotato non si applica alcun tetto.
+    '''
+    try:
+        for col in (0, 1):
+            riga = SheetUtils.uFindStringCol('Anticipazione:', col, oS2, start=0, equal=1)
+            if riga is not None:
+                if oS2.getCellByPosition(2, int(riga)).Value > 0:
+                    return f'$S2.$C${int(riga) + 1}'
+                return None
+    except Exception as _exc:
+        LeenoUtils.log_errore('CdP: lettura importo anticipazione da S2', _exc)
+    return None
+
+
 def _leggi_infortuni_da_S2(oS2):
     '''
     Aliquota ritenuta infortuni in S2: float (es. 0.005 per 0.5%) oppure 0.0.
@@ -3653,11 +3671,18 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
                 cell.String = new_lbl
                 break
 
+        # Il recupero non puo' superare l'Anticipazione annotata in S2
+        ref_ant_tot = _riferimento_anticipazione_S2(oS2)
+
         if aliquota_anticipo > 0 and r_sogg is not None:
-            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula =                 f'={v}{r_sogg + 1}*{aliquota_anticipo}'
+            expr_ant = f'{v}{r_sogg + 1}*{aliquota_anticipo}'
+            if ref_ant_tot:
+                expr_ant = f'MIN({expr_ant};{ref_ant_tot})'
+            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = f'={expr_ant}'
         elif r2_anticipo is not None:
             ref_ant = f'$S2.${s2_col}${r2_anticipo + 1}'
-            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula =                 f'=IF({ref_ant}=0;"";{ref_ant})'
+            expr_ant = f'MIN({ref_ant};{ref_ant_tot})' if ref_ant_tot else ref_ant
+            oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = f'=IF({ref_ant}=0;"";{expr_ant})'
         else:
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = '0'
 

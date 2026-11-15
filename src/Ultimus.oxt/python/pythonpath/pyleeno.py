@@ -10115,19 +10115,11 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
 
-        # attiva la progressbar
-        progress = Dialogs.Progress(Title='Inserimrnto in corso...', Text="Lettura dati")
-
-        progress.setLimits(0, SheetUtils.getUsedArea(oSheet).EndRow)
-        progress.setValue(0)
-
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
         descrizione = InputBox(t='Inserisci una descrizione per la nuova riga')
-        progress.show()
         i = 0
         while (i < SheetUtils.getUsedArea(oSheet).EndRow):
-            progress.setValue(i)
             if oSheet.getCellByPosition(2, i).CellStyle == 'comp 1-a':
                 sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
                 qui = sStRange.RangeAddress.StartRow + 1
@@ -10138,7 +10130,6 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
                 oSheet.getCellByPosition(2, qui + 1).String = descrizione
                 LeenoSheetUtils.prossimaVoce(oSheet, sotto)
             i += 1
-        progress.hide()
 
 
 def MENU_inserisci_nuova_riga_con_descrizione():
@@ -11047,25 +11038,6 @@ def trova_ricorrenze():
         if scelta:
             filtra_codice(scelta)
     return
-    DLG.chiudi_dialoghi()
-    psm = LeenoUtils.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlg = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application"
-    )
-    # oDialog1Model = oDlg.Model
-    #  oDlg.Title = 'Si ripetono '+ str(len(lista_ricorrenze)) + ' voci di prezzo'
-    oDlg.Title = 'Seleziona il codice e dai OK...'
-    oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
-    if oDlg.execute() == 0:
-        return
-    filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
-    #  if oDlg.getControl('CheckBox1').State == 1:
-    #  oDlg.getControl('ListBox1').removeItems(0, len(lista_ricorrenze))
-    #  lista_ricorrenze = ricorrenze()
-    #  oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
-    #  oDlg.getControl('CheckBox1').State = 0
-    #  oDlg.execute()
 
 ########################################################################
 @LeenoUtils.no_refresh

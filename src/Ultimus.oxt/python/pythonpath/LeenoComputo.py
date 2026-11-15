@@ -943,7 +943,7 @@ def MENU_inserisci_somme_lavori_sicurezza():
                 cell_right_4.CharWeight = 150
 
             except Exception as e:
-                DLG.error(f"Errore nell'inserimento delle somme: {e}")
+                DLG.MsgBox(f"Errore nell'inserimento delle somme: {e}", 'Errore')
             finally:
                 self.unregister()
 

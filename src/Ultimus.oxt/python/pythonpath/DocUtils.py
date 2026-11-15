@@ -43,7 +43,7 @@ def getDocUserDefinedAttribute(oDoc, name):
 
     try:
         sValue = userProps.getPropertyValue(name)
-        return PersistUtils.string2val(sValue)
+        return PersistUtils.string2var(sValue)
 
     except Exception:
         return None

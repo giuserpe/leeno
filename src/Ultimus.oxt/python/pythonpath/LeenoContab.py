@@ -2098,25 +2098,21 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
     oSalSheet.getCellRangeByPosition(0, 0, 5, fineFirme).Rows.OptimalHeight = True
     LeenoSheetUtils.adattaAltezzaRiga(oSalSheet)
 
-def trova_r_S2(oS2, testo, start_offset=0, xS2=None):
+def _cerca_riga_S2(oS2, testo, xS2, start_offset=0, max_righe=40):
     """
-    Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2 nel foglio S2.
+    Cerca nel foglio S2, in colonna E (indice 4), la prima riga il cui testo
+    contiene `testo` (senza distinguere maiuscole e minuscole), a partire da
+    xS2 + start_offset e per max_righe righe.
+
+    xS2 { int } : riga del marker "SITUAZIONE CONTABILE"
+    Restituisce l'indice di riga assoluto (0-based) oppure None.
+    Un errore di lettura della cella non viene intercettato.
     """
-    if xS2 is None:
-        markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
-        if markerS2:
-            xS2 = markerS2[1]
-        else:
-            xS2 = 0
-    # Cerca nelle righe successive
-    for i in range(start_offset, 100):
+    testo = testo.lower()
+    for i in range(start_offset, max_righe):
         riga = xS2 + i
-        try:
-            cell_text = oS2.getCellByPosition(4, riga).String.lower()
-            if testo.lower() in cell_text:
-                return riga
-        except Exception:
-            break
+        if testo in oS2.getCellByPosition(4, riga).String.lower():
+            return riga
     return None
 
 
@@ -2394,13 +2390,8 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     oSalSheet.getCellByPosition(fcol + 1, r + 6).String = "ANTICIPAZIONE euro"
     oSalSheet.getCellByPosition(fcol + 1, r + 6).CellStyle = "Ultimus_destra"
 
-    r_anticipo = None
-    for i in range(40):
-        riga = xS2 + i
-        cell_text = oS2.getCellByPosition(4, riga).String.lower()
-        if "anticipazione" in cell_text:
-            r_anticipo = i
-            break
+    riga = _cerca_riga_S2(oS2, "anticipazione", xS2)
+    r_anticipo = None if riga is None else riga - xS2
 
     if r_anticipo is not None:
         oSalSheet.getCellByPosition(5, r + 6).Formula = f"=$S2.{_col_letter(yS2 + nSal)}{xS2 + r_anticipo + 1}"
@@ -2413,13 +2404,8 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     oSalSheet.getCellByPosition(fcol + 1, r + 7).CellStyle = "Ultimus_destra"
 
     # Trova la riga dei certificati in S2
-    r_certif = None
-    for i in range(40):
-        riga = xS2 + i
-        cell_text = oS2.getCellByPosition(4, riga).String.lower()
-        if "certificato di pagamento" in cell_text:
-            r_certif = i
-            break
+    riga = _cerca_riga_S2(oS2, "certificato di pagamento", xS2)
+    r_certif = None if riga is None else riga - xS2
 
     cert_rows = []
     r_curr = r + 8
@@ -2522,12 +2508,8 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
         # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
         def trova_r_S2(testo, start_offset=0):
             """Cerca l'indice di riga relativo contenente il testo specificato nella colonna 4."""
-            for i in range(start_offset, 40):
-                riga = xS2 + i
-                cell_text = oS2.getCellByPosition(4, riga).String.lower()
-                if testo.lower() in cell_text:
-                    return i
-            return None
+            riga = _cerca_riga_S2(oS2, testo, xS2, start_offset)
+            return None if riga is None else riga - xS2
 
         # Troviamo gli offset relativi a yS2 per le varie voci
         r_misura = trova_r_S2("a misura")
@@ -3550,12 +3532,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     # Cerca dinamicamente le righe in colonna 4 (E) a partire da xS2
     def trova_r_S2(testo, start_offset=0):
         """Cerca il numero di riga assoluto contenente la stringa cercata in colonna 4."""
-        for i in range(start_offset, 40):
-            riga = xS2 + i
-            cell_text = oS2.getCellByPosition(4, riga).String.lower()
-            if testo.lower() in cell_text:
-                return riga
-        return None
+        return _cerca_riga_S2(oS2, testo, xS2, start_offset)
 
     r2_certif   = trova_r_S2("certificato di pagamento")
     r2_n_cert   = trova_r_S2("certificato n.")

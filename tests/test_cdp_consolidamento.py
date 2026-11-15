@@ -68,6 +68,7 @@ class TestGeneraCdPComportamento(unittest.TestCase):
         self.ns["date"].today.return_value.strftime.return_value = "01/01/2026"
 
         mod = ast.Module(body=[
+            _estrai_funzione("_cerca_riga_S2"),
             _estrai_funzione("_copia_blocco_template_cdp"),
             _estrai_funzione("setup_foglio_CdP"),
             _estrai_funzione("GeneraCdP")

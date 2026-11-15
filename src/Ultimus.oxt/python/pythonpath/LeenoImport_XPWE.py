@@ -69,102 +69,56 @@ def leggiAnagraficaGenerale(dati):
     return datiAnagrafici
 
 
-def leggiSuperCapitoli(CapCat):
-    ''' legge SuperCapitoli '''
-    listaSuperCapitoli = []
-    found = CapCat.find('PweDGSuperCapitoli')
+def _leggiElementiCapCat(CapCat, tag, nuova_voce_da_estesa=False):
+    '''
+    Legge gli elementi figli del nodo `tag` di PweDGCapitoliCategorie.
+    Se nuova_voce_da_estesa e la descrizione sintetica e' "Nuova voce",
+    usa al suo posto la descrizione estesa.
+    '''
+    lista = []
+    found = CapCat.find(tag)
     if found is not None:
         for elem in list(found):
-            listaSuperCapitoli.append({
+            dessintetica = get_xml_text(elem, 'DesSintetica')
+            if nuova_voce_da_estesa and dessintetica == "Nuova voce":
+                dessintetica = get_xml_text(elem, 'DesEstesa')
+            lista.append({
                 'id_sc': elem.get('ID'),
                 'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': get_xml_text(elem, 'DesSintetica'),
+                'dessintetica': dessintetica,
                 'percentuale': get_xml_text(elem, 'Percentuale')
             })
-    return listaSuperCapitoli
+    return lista
+
+
+def leggiSuperCapitoli(CapCat):
+    ''' legge SuperCapitoli '''
+    return _leggiElementiCapCat(CapCat, 'PweDGSuperCapitoli')
 
 
 def leggiCapitoli(CapCat):
     ''' legge Capitoli '''
-    listaCapitoli = []
-    found = CapCat.find('PweDGCapitoli')
-    if found is not None:
-        for elem in list(found):
-            dessintetica = get_xml_text(elem, 'DesSintetica')
-            if dessintetica == "Nuova voce":
-                dessintetica = get_xml_text(elem, 'DesEstesa')
-
-            listaCapitoli.append({
-                'id_sc': elem.get('ID'),
-                'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': dessintetica,
-                'percentuale': get_xml_text(elem, 'Percentuale')
-            })
-    return listaCapitoli
+    return _leggiElementiCapCat(CapCat, 'PweDGCapitoli', True)
 
 
 def leggiSottoCapitoli(CapCat):
     ''' legge SottoCapitoli '''
-    listaSottoCapitoli = []
-    found = CapCat.find('PweDGSubCapitoli')
-    if found is not None:
-        for elem in list(found):
-            dessintetica = get_xml_text(elem, 'DesSintetica')
-            if dessintetica == "Nuova voce":
-                dessintetica = get_xml_text(elem, 'DesEstesa')
-
-            listaSottoCapitoli.append({
-                'id_sc': elem.get('ID'),
-                'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': dessintetica,
-                'percentuale': get_xml_text(elem, 'Percentuale')
-            })
-    return listaSottoCapitoli
+    return _leggiElementiCapCat(CapCat, 'PweDGSubCapitoli', True)
 
 
 def leggiSuperCategorie(CapCat):
     ''' legge SuperCategorie '''
-    listaSuperCategorie = []
-    found = CapCat.find('PweDGSuperCategorie')
-    if found is not None:
-        for elem in list(found):
-            listaSuperCategorie.append({
-                'id_sc': elem.get('ID'),
-                'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': get_xml_text(elem, 'DesSintetica'),
-                'percentuale': get_xml_text(elem, 'Percentuale')
-            })
-    return listaSuperCategorie
+    return _leggiElementiCapCat(CapCat, 'PweDGSuperCategorie')
 
 
 def leggiCategorie(CapCat):
     ''' legge Categorie '''
-    listaCategorie = []
-    found = CapCat.find('PweDGCategorie')
-    if found is not None:
-        for elem in list(found):
-            listaCategorie.append({
-                'id_sc': elem.get('ID'),
-                'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': get_xml_text(elem, 'DesSintetica'),
-                'percentuale': get_xml_text(elem, 'Percentuale')
-            })
-    return listaCategorie
+    return _leggiElementiCapCat(CapCat, 'PweDGCategorie')
 
 
 def leggiSottoCategorie(CapCat):
     ''' legge SottoCategorie '''
-    listaSottoCategorie = []
-    found = CapCat.find('PweDGSubCategorie')
-    if found is not None:
-        for elem in list(found):
-            listaSottoCategorie.append({
-                'id_sc': elem.get('ID'),
-                'codice': get_xml_text(elem, 'Codice'),
-                'dessintetica': get_xml_text(elem, 'DesSintetica'),
-                'percentuale': get_xml_text(elem, 'Percentuale')
-            })
-    return listaSottoCategorie
+    return _leggiElementiCapCat(CapCat, 'PweDGSubCategorie')
 
 
 def leggiCapitoliCategorie(dati):

@@ -54,3 +54,49 @@ Difetti reali risolti:
 
 - **ElementTree truth value**: In Python 3.12+, valutare direttamente il booleano di un nodo `Element` (`if not elem:`) solleva un `DeprecationWarning` e diventerà un'eccezione nelle versioni successive. Usare sempre controlli espliciti: `if elem is None:` oppure `if len(list(elem)) < ...:`.
 - **Parser regionali coperti**: Tutti i parser XML regionali (`Basilicata`, `Liguria`, `Lombardia`, `Sardegna`, `SIX`, `Toscana`, `Veneto`) dispongono ora di test di caratterizzazione dedicati in `tests/test_import_xml_<regione>.py`. In caso di evoluzione dei formati o refactoring dei moduli `LeenoImport_Xml*.py`, verificare sempre che i relativi test continuino a passare senza introdurre dipendenze PyUNO non isolate.
+
+# Lezioni apprese: censimento dei duplicati di macro (novembre 2026)
+
+Regola in AGENTS.md: prima di scrivere una macro o funzione nuova, cercarne una equivalente (per nome e per azione) e riusarla o estenderla. Di seguito il censimento di partenza: 16 cluster reali su 1230 funzioni di `python/` e `pythonpath/`.
+
+## Metodo e falsi positivi
+
+- Hash dell'AST con nomi e costanti normalizzati (cloni esatti), poi similarita' testuale (`difflib`, soglia 0.85) sulle funzioni da 8 righe in su.
+- Le omonimie tra `LeenoBasicBridge.py` e `pyleeno.py`/moduli (circa 35 nomi: `vai_a_M1`, `invia_voce`, `trova_np`, ...) sono il ponte voluto verso le macro Basic: non sono duplicati.
+- Falsi positivi dopo la normalizzazione delle stringhe: `setTabColor`, `setFormatoNumeri`, `txt_Format`, `setAdatta` (stesso schema di dispatch, azioni diverse), `read`/`write` di `LeenoConfig` e `pyleeno`, `MENU_undo`/`MENU_redo`.
+
+## Da eliminare (copie esatte o quasi)
+
+| Duplicato | Intervento |
+|---|---|
+| `benchmark.py` (script usa e getta in `pythonpath/`) con `clean_text`, `_remove_illegal_*`, `get_text` gia' presenti in `pyleeno` e `LeenoImport_XmlSardegna` | Eliminare il file |
+| `Calendario.pickDate`, `mkDayLabels`, `loadDate` = `Dialogs.*` | `Calendario.calendario()` chiama `Dialogs.pickDate` |
+| `LeenoDispatcher.cerca_path_valido` = `LeenoDialogs.cerca_path_valido` (cambia solo il suffisso del percorso) | Una funzione, suffisso come parametro |
+| `LeenoDispatcher.dest` = `LeenoGlobals.dest` | Il dispatcher usa `LeenoGlobals.dest` |
+| `LeenoDispatcher.reloadLeenoModules` e `LeenoDebug.reloadLeenoModules` | Tenerne una |
+| `loVersion` in `LeenoDispatcher` e `pyleeno` | Un solo helper (`LeenoUtils`) |
+| `pyleeno.getLastUsedCell` = `SheetUtils.getUsedArea` (2 chiamanti contro 56) | Sostituire i 2 chiamanti, rimuovere la prima |
+| `_get_ep_last_row` in `LeenoTOL` e `LeenoNamedAreas`, piu' `_get_analisi_last_row` | Un helper in `SheetUtils` con la sentinella come parametro |
+| `_col_letter` in `pyleeno` e `LeenoContab` | Una sola versione in `SheetUtils` |
+
+## Da unificare con parametri (verificare su documenti reali)
+
+| Cluster | Soluzione |
+|---|---|
+| `LeenoContab.trova_r_S2`: funzione di modulo e due closure interne | Usare la funzione di modulo. Attenzione: le closure restituiscono a volte l'offset e a volte la riga assoluta |
+| `LeenoComputo.circoscriveVoceComputo` e `_circoscrive_voce` (metodo di classe) | Il metodo delega alla funzione (da confrontare riga per riga) |
+| `pyleeno.SubSum_SuperCap`, `SubSum_SottoCap`, `SubSum_Cap` | Una funzione con il livello di stile come parametro |
+| `LeenoSheetUtils.inserSuperCapitolo` e `inserCapitolo` | Una funzione con livello e testo di default come parametri |
+| `LeenoPdf.PdfElencoPrezzi` e `PdfComputoMetrico` | Una funzione con foglio, suffisso e oggetto come parametri (rimuovere anche il `print()` attivo) |
+| `LeenoContab._leggi_anticipo_da_S2`, `_leggi_infortuni_da_S2`, `_leggi_iva_da_S2` | Un helper con l'etichetta come parametro |
+| `LeenoImport_XPWE.leggiSuperCapitoli`, `leggiCapitoli`, `leggiSottoCapitoli`, `leggiSuperCategorie`, `leggiCategorie`, `leggiSottoCategorie` | Un lettore generico sul tag XML |
+
+## Non toccare
+
+`Dialogs.py` contiene classi widget quasi gemelle (`CheckBox`/`RadioButton`, `ListBox`/`ComboBox`, `getProps`, `dump`, `_fixup` ripetute fino a 13 volte). Il refactor dipende dal comportamento UNO e non si delega a un agente.
+
+## Ordine di intervento
+
+1. Copie esatte (prima tabella): rischio basso, un commit per cluster.
+2. Unificazioni con parametri: un commit per cluster, prova su documenti reali.
+3. Ogni PR: `scripts/check_pythonpath_safety.py`, pytest, `pyflakes` con nomi non definiti invariati, ricerca del nome rimosso in `Addons.xcu`, `Accelerators.xcu`, `.xba` e `.xdl`.

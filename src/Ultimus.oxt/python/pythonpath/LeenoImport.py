@@ -637,7 +637,7 @@ def rimuovi_righe_ridondanti():
         try:
             oDoc = LeenoUtils.getDocument()
             oSheet = oDoc.CurrentController.ActiveSheet
-            lrow = LeenoUtils.getLastUsedCell(oSheet).EndRow
+            lrow = SheetUtils.getUsedArea(oSheet).EndRow
             indicator = oDoc.getCurrentController().getStatusIndicator()
             indicator.start("Elimino le righe ridondanti...", lrow)
             for el in reversed(range(lrow)):

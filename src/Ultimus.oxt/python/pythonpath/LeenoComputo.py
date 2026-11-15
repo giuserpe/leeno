@@ -567,7 +567,7 @@ class DatiVoce:
     def range(self):
         """Restituisce l'intervallo di celle occupato dall'intera voce."""
         if self._range is None:
-            self._range = self._circoscrive_voce()
+            self._range = circoscriveVoceComputo(self.oSheet, self.lrow)
         return self._range
 
     @property
@@ -633,64 +633,6 @@ class DatiVoce:
     # ------------------------------------------------------------------
     # LOGICA INTERNA
     # ------------------------------------------------------------------
-
-    def _circoscrive_voce(self):
-        """Individua i limiti di riga della voce e ne restituisce l'intervallo di celle."""
-        oSheet = self.oSheet
-        lrow = self.lrow
-        start_row = lrow
-        end_row = lrow
-
-        scritte_stili = {'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'}
-        comp_stili = {
-            'comp progress', 'comp 10 s',
-            'Comp Start Attributo', 'Comp End Attributo',
-            'Comp Start Attributo_R', 'comp 10 s_R',
-            'Comp End Attributo_R'
-        }
-
-        while oSheet.getCellByPosition(0, lrow).CellStyle in scritte_stili:
-            lrow += 1
-            if lrow >= oSheet.Rows.Count:
-                return None
-
-        cs = oSheet.getCellByPosition(0, lrow).CellStyle
-
-        if cs in comp_stili.union(scritte_stili):
-            y = lrow
-            while oSheet.getCellByPosition(0, y).CellStyle not in {
-                'Comp End Attributo', 'Comp End Attributo_R'
-            }:
-                y += 1
-                if y >= oSheet.Rows.Count:
-                    return None
-            end_row = y
-
-            y = lrow
-            while y > 0 and oSheet.getCellByPosition(0, y).CellStyle not in {
-                'Comp Start Attributo', 'Comp Start Attributo_R'
-            }:
-                y -= 1
-            start_row = y
-
-        elif cs == 'Ultimus_centro_bordi_lati':
-            for y in reversed(range(0, lrow)):
-                if oSheet.getCellByPosition(0, y).CellStyle != cs:
-                    start_row = y + 1
-                    break
-            for y in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
-                if oSheet.getCellByPosition(0, y).CellStyle != cs:
-                    end_row = y - 1
-                    break
-
-        elif 'ULTIMUS' in cs:
-            start_row = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
-            end_row = LeenoSheetUtils.rRow(oSheet) - 1
-
-        else:
-            return None
-
-        return oSheet.getCellRangeByPosition(0, start_row, 50, end_row)
 
     # ------------------------------------------------------------------
 

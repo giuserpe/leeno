@@ -50,16 +50,16 @@ class TestDatiVoce(unittest.TestCase):
         with open(computo_path, 'r', encoding='utf-8') as f:
             tree = ast.parse(f.read())
 
-        target_node = None
-        for node in tree.body:
-            if isinstance(node, ast.ClassDef) and node.name == 'DatiVoce':
-                target_node = node
-                break
+        target_nodes = [
+            node for node in tree.body
+            if (isinstance(node, ast.ClassDef) and node.name == 'DatiVoce')
+            or (isinstance(node, ast.FunctionDef) and node.name == 'circoscriveVoceComputo')
+        ]
 
-        if target_node is None:
-            raise RuntimeError("class DatiVoce not found in LeenoComputo.py")
+        if {n.name for n in target_nodes} != {'DatiVoce', 'circoscriveVoceComputo'}:
+            raise RuntimeError("DatiVoce o circoscriveVoceComputo non trovati in LeenoComputo.py")
 
-        module_ast = ast.Module(body=[target_node], type_ignores=[])
+        module_ast = ast.Module(body=target_nodes, type_ignores=[])
         code = compile(module_ast, filename=str(computo_path), mode='exec')
         namespace = {}
         exec(code, namespace)

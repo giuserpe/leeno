@@ -16,11 +16,6 @@ def _carica_sheet_utils_pure():
     for n in tree.body:
         if isinstance(n, ast.FunctionDef) and n.name in ("optimize_visibility_string", "find_hidden_ranges"):
             nodi.append(n)
-        elif isinstance(n, ast.FunctionDef) and n.name == "getColumnWidths":
-            # Estrae la funzione interna col_index_to_letter
-            for sub_n in n.body:
-                if isinstance(sub_n, ast.FunctionDef) and sub_n.name == "col_index_to_letter":
-                    nodi.append(sub_n)
 
     ns = {
         "groupby": groupby,
@@ -32,24 +27,6 @@ def _carica_sheet_utils_pure():
 class TestSheetUtilsPure(unittest.TestCase):
     def setUp(self):
         self.utils = _carica_sheet_utils_pure()
-
-    def test_col_index_to_letter_base(self):
-        col_index_to_letter = self.utils["col_index_to_letter"]
-        self.assertEqual(col_index_to_letter(0), "A")
-        self.assertEqual(col_index_to_letter(1), "B")
-        self.assertEqual(col_index_to_letter(25), "Z")
-
-    def test_col_index_to_letter_doppia_lettera(self):
-        col_index_to_letter = self.utils["col_index_to_letter"]
-        self.assertEqual(col_index_to_letter(26), "AA")
-        self.assertEqual(col_index_to_letter(27), "AB")
-        self.assertEqual(col_index_to_letter(51), "AZ")
-        self.assertEqual(col_index_to_letter(52), "BA")
-        self.assertEqual(col_index_to_letter(701), "ZZ")
-
-    def test_col_index_to_letter_tripla_lettera(self):
-        col_index_to_letter = self.utils["col_index_to_letter"]
-        self.assertEqual(col_index_to_letter(702), "AAA")
 
     def test_optimize_visibility_string_corta(self):
         opt = self.utils["optimize_visibility_string"]

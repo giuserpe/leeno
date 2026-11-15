@@ -12168,14 +12168,6 @@ def ApriFileDaFormula():
 #########################################################################
 
 
-def _col_letter(col_num):
-    """Converte numero colonna in lettera (0->A, 1->B, etc.)"""
-    result = ""
-    while col_num >= 0:
-        result = chr(col_num % 26 + 65) + result
-        col_num = col_num // 26 - 1
-    return result
-
 #########################################################################
 #########################################################################
 #########################################################################
@@ -12238,7 +12230,7 @@ def somma_per_colore_nella_colonna():
     for riga in range(last_row + 1):
         cell = sheet.getCellByPosition(target_column, riga)
         if cell.CellBackColor == target_color and cell.getValue() != 0:
-            indirizzi_celle.append(f"{_col_letter(target_column)}{riga + 1}")
+            indirizzi_celle.append(f"{SheetUtils.colonnaInLettera(target_column)}{riga + 1}")
 
     if not indirizzi_celle:
         return

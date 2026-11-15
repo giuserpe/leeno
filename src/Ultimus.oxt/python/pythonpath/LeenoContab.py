@@ -3099,12 +3099,7 @@ def EseguiContabilita(oDoc):
 
 def _col_letter(n):
     '''Converte indice colonna 0-based in lettera/e (es. 0→A, 25→Z, 26→AA).'''
-    result = ''
-    n += 1
-    while n:
-        n, r = divmod(n - 1, 26)
-        result = chr(65 + r) + result
-    return result
+    return SheetUtils.colonnaInLettera(n)
 
 
 def _intero_in_lettere(n):

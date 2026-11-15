@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 UTILS_PATH = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/LeenoUtils.py"
-CONTAB_PATH = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/LeenoContab.py"
+SHEETUTILS_PATH = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/SheetUtils.py"
 GLOBALS_PATH = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath/LeenoGlobals.py"
 
 
@@ -40,14 +40,14 @@ def _carica_funzioni_utils():
     return ns
 
 
-def _carica_funzioni_contab():
-    tree = ast.parse(CONTAB_PATH.read_text(encoding="utf-8"))
+def _carica_funzioni_sheetutils():
+    tree = ast.parse(SHEETUTILS_PATH.read_text(encoding="utf-8"))
     nodi = []
     for n in tree.body:
-        if isinstance(n, ast.FunctionDef) and n.name == "_col_letter":
+        if isinstance(n, ast.FunctionDef) and n.name == "colonnaInLettera":
             nodi.append(n)
     ns = {}
-    exec(compile(ast.Module(body=nodi, type_ignores=[]), str(CONTAB_PATH), "exec"), ns)
+    exec(compile(ast.Module(body=nodi, type_ignores=[]), str(SHEETUTILS_PATH), "exec"), ns)
     return ns
 
 
@@ -109,7 +109,7 @@ class TestUtilsPure(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.utils_ns = _carica_funzioni_utils()
-        cls.contab_ns = _carica_funzioni_contab()
+        cls.sheetutils_ns = _carica_funzioni_sheetutils()
         cls.globals_ns = _carica_funzioni_globals()
 
     def test_days_in_month(self):
@@ -207,10 +207,12 @@ class TestUtilsPure(unittest.TestCase):
         self.assertFalse(non_trovato)
 
     def test_col_letter(self):
-        _col_letter = self.contab_ns["_col_letter"]
+        _col_letter = self.sheetutils_ns["colonnaInLettera"]
         self.assertEqual(_col_letter(0), "A")
+        self.assertEqual(_col_letter(1), "B")
         self.assertEqual(_col_letter(25), "Z")
         self.assertEqual(_col_letter(26), "AA")
+        self.assertEqual(_col_letter(27), "AB")
         self.assertEqual(_col_letter(51), "AZ")
         self.assertEqual(_col_letter(52), "BA")
         self.assertEqual(_col_letter(701), "ZZ")

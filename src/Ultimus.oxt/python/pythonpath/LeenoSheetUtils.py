@@ -148,16 +148,6 @@ def getColumnWidths(oSheet):
     Legge tutte le impostazioni delle colonne
     Restituisce: dict con widths, hidden_ranges, group_levels, visible_cols, freeze
     '''
-    def col_index_to_letter(n):
-        '''Converte un indice di colonna a base zero nella corrispondente lettera alfabetica.'''
-        name = ''
-        while n >= 0:
-            name = chr(ord('A') + (n % 26)) + name
-            n = n // 26 - 1
-            if n < 0:
-                break
-        return name or 'A'
-
     config = {
         'widths': {},
         'hidden_ranges': [],
@@ -184,7 +174,7 @@ def getColumnWidths(oSheet):
         for col_idx in range(col_count):
             try:
                 col = cols.getByIndex(col_idx)
-                col_letter = col_index_to_letter(col_idx)
+                col_letter = SheetUtils.colonnaInLettera(col_idx)
 
                 # Larghezza colonna
                 width = col.Width

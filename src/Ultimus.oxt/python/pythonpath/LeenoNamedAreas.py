@@ -54,10 +54,7 @@ def _get_ep_last_row(oSheet):
     'Fine elenco' nel foglio Elenco Prezzi.
     Se non trovata, usa getUsedArea().EndRow.
     """
-    row = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-    if row is None:
-        row = SheetUtils.getUsedArea(oSheet).EndRow
-    return row
+    return SheetUtils.getRigaSentinella(oSheet, 'Fine elenco')
 
 
 def _get_analisi_last_row(oSheet):
@@ -66,10 +63,7 @@ def _get_analisi_last_row(oSheet):
     'Fine ANALISI' nel foglio Analisi di Prezzo.
     Se non trovata, usa getUsedArea().EndRow.
     """
-    row = SheetUtils.uFindStringCol('Fine ANALISI', 0, oSheet)
-    if row is None:
-        row = SheetUtils.getUsedArea(oSheet).EndRow
-    return row
+    return SheetUtils.getRigaSentinella(oSheet, 'Fine ANALISI')
 
 
 # ---------------------------------------------------------------------------

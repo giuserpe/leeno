@@ -56,8 +56,8 @@ QUOTA_COMPENSAZIONE = 0.90
 
 def _get_ep_last_row(oSheet):
     """
-    Stessa logica di LeenoNamedAreas._get_ep_last_row: cerca la riga
-    sentinella 'Fine elenco', altrimenti usa l'ultima riga usata.
+    Riga sentinella 'Fine elenco' (vedi SheetUtils.getRigaSentinella),
+    altrimenti l'ultima riga usata.
 
     ATTENZIONE: la riga restituita e' la riga sentinella stessa, che nel
     template contiene anche il totale ('TOTALE') della colonna V su tutto
@@ -66,10 +66,7 @@ def _get_ep_last_row(oSheet):
     aggregazione, altrimenti il suo importo (= somma di tutto) finisce
     nel bucket 'non classificato' duplicando l'intero totale classificato.
     """
-    row = SheetUtils.uFindStringCol('Fine elenco', 0, oSheet)
-    if row is None:
-        row = SheetUtils.getUsedArea(oSheet).EndRow
-    return row
+    return SheetUtils.getRigaSentinella(oSheet, 'Fine elenco')
 
 
 def aggrega_importi_per_tol(oDoc):

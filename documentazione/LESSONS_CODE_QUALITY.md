@@ -65,19 +65,13 @@ Regola in AGENTS.md: prima di scrivere una macro o funzione nuova, cercarne una 
 - Le omonimie tra `LeenoBasicBridge.py` e `pyleeno.py`/moduli (circa 35 nomi: `vai_a_M1`, `invia_voce`, `trova_np`, ...) sono il ponte voluto verso le macro Basic: non sono duplicati.
 - Falsi positivi dopo la normalizzazione delle stringhe: `setTabColor`, `setFormatoNumeri`, `txt_Format`, `setAdatta` (stesso schema di dispatch, azioni diverse), `read`/`write` di `LeenoConfig` e `pyleeno`, `MENU_undo`/`MENU_redo`.
 
-## Da eliminare (copie esatte o quasi)
+## Gia' eliminati (lotti 1 e 2)
 
-| Duplicato | Intervento |
-|---|---|
-| `benchmark.py` (script usa e getta in `pythonpath/`) con `clean_text`, `_remove_illegal_*`, `get_text` gia' presenti in `pyleeno` e `LeenoImport_XmlSardegna` | Eliminare il file |
-| `Calendario.pickDate`, `mkDayLabels`, `loadDate` = `Dialogs.*` | `Calendario.calendario()` chiama `Dialogs.pickDate` |
-| `LeenoDispatcher.cerca_path_valido` = `LeenoDialogs.cerca_path_valido` (cambia solo il suffisso del percorso) | Una funzione, suffisso come parametro |
-| `LeenoDispatcher.dest` = `LeenoGlobals.dest` | Il dispatcher usa `LeenoGlobals.dest` |
-| `LeenoDispatcher.reloadLeenoModules` e `LeenoDebug.reloadLeenoModules` | Tenerne una |
-| `loVersion` in `LeenoDispatcher` e `pyleeno` | Un solo helper (`LeenoUtils`) |
-| `pyleeno.getLastUsedCell` = `SheetUtils.getUsedArea` (2 chiamanti contro 56) | Sostituire i 2 chiamanti, rimuovere la prima |
-| `_get_ep_last_row` in `LeenoTOL` e `LeenoNamedAreas`, piu' `_get_analisi_last_row` | Un helper in `SheetUtils` con la sentinella come parametro |
-| `_col_letter` in `pyleeno` e `LeenoContab` | Una sola versione in `SheetUtils` |
+`benchmark.py`, `Calendario.pickDate` (ora `Dialogs.pickDate`), `pyleeno.getLastUsedCell` (ora `SheetUtils.getUsedArea`), `_get_ep_last_row` e `_get_analisi_last_row` (ora `SheetUtils.getRigaSentinella`), `_col_letter` in tre copie (ora `SheetUtils.colonnaInLettera`; `LeenoContab._col_letter` resta come delega per `LeenoComputo` e per i test CdP). Il lotto 1 ha anche corretto `LeenoImport.rimuovi_righe_ridondanti`, che chiamava `LeenoUtils.getLastUsedCell`, funzione inesistente: pyflakes non vede gli attributi di modulo, per questo il difetto era rimasto latente.
+
+## Duplicazione voluta: `LeenoDispatcher.py`
+
+`cerca_path_valido`, `dest`, `reloadLeenoModules` e `loVersion` esistono sia nel dispatcher sia in `pythonpath/`. Non vanno unificate: il dispatcher contiene `handle_exception`, l'ultimo gestore di errori, e deve funzionare anche quando un modulo di `pythonpath/` non si importa. Se importasse quei moduli, un errore di import li renderebbe inutilizzabili proprio quando servono. Vale anche per `LeenoDebug.py`, fuori da `pythonpath/`.
 
 ## Da unificare con parametri (verificare su documenti reali)
 

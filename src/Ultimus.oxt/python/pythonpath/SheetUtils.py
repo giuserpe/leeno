@@ -423,6 +423,34 @@ def getUsedArea(oSheet):
     return aAddress  # .EndColumn, aAddress.EndRow)
 
 
+def getRigaSentinella(oSheet, sentinella):
+    '''
+    oSheet     { object } : foglio in cui cercare
+    sentinella { string } : testo della riga sentinella (es. 'Fine elenco')
+
+    Restituisce l'indice di riga (0-based) della prima riga con la
+    sentinella in colonna A. Se non esiste, l'ultima riga usata.
+    '''
+    row = uFindStringCol(sentinella, 0, oSheet)
+    if row is None:
+        row = getUsedArea(oSheet).EndRow
+    return row
+
+
+def colonnaInLettera(n):
+    '''
+    n { int } : indice di colonna 0-based
+
+    Restituisce il nome della colonna (0 -> A, 25 -> Z, 26 -> AA).
+    '''
+    result = ''
+    n += 1
+    while n:
+        n, r = divmod(n - 1, 26)
+        result = chr(65 + r) + result
+    return result
+
+
 def getLastUsedRow(oSheet):
     ''' l'ultima riga usata nello spreadsheet '''
     return getUsedArea(oSheet).EndRow

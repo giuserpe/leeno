@@ -384,6 +384,8 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
             SheetUtils.visualizza_PageBreak()
         for sal in range(1, len(listaSal) + 1):
             for el in d:
+                if uSal == 'FINALE' and el[0] != 'SAL':
+                    continue  # la vista del SAL finale non tocca gli altri atti
                 # ~ nomearea = el[1] + str(sal)
                 try:
                     nomearea = el[1] + str(sal)
@@ -420,6 +422,27 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
 
                     # ~ DLG.chi(f"Errore nell'accesso all'area nominata {nomearea}: {e}")
                     # ~ pass
+
+        # SAL FINALE: area propria nel foglio SAL, visibile solo se richiesta
+        if sal_finale_emesso(oDoc) and oDoc.Sheets.hasByName('SAL'):
+            try:
+                oSheet = oDoc.Sheets.getByName('SAL')
+                oNamedRange = oDoc.NamedRanges.getByName('_SAL_FINALE').ReferredCells.RangeAddress
+                oNamedRange.EndColumn = 5
+                oSheet.ungroup(oNamedRange, 1)
+                oSheet.group(oNamedRange, 1)
+                visibile = (uSal == 'FINALE')
+                oSheet.getCellRangeByPosition(oNamedRange.StartColumn, oNamedRange.StartRow,
+                                              oNamedRange.EndColumn, oNamedRange.EndRow).Rows.IsVisible = visibile
+                if visibile:
+                    oSheet.setPrintAreas((oNamedRange,))
+                    oSheet.setPrintTitleRows(True)
+                    if naviga:
+                        PL.GotoSheet(oSheet.Name)
+                        oDoc.CurrentController.setFirstVisibleRow(1)
+                        PL._gotoCella(0, oNamedRange.StartRow - 1)
+            except Exception as _exc:
+                LeenoUtils.log_errore('mostra_sal: SAL finale', _exc)
 
     if oDoc.Sheets.hasByName('CONTABILITA'):
         LeenoSheetUtils.raggruppa_colonne_contabilita(oDoc.Sheets.getByName('CONTABILITA'))
@@ -583,6 +606,13 @@ def _annulla_ultimo_sal_core(oDoc, indicator=None, listaSal=None, rigenera_cdp=T
     except Exception as _exc:
         errori.append('eliminazione del libretto in CONTABILITA')
         LeenoUtils.log_errore('annulla SAL: eliminazione libretto', _exc)
+
+    # 1b. Il SAL FINALE dipende da tutti i SAL: va rimosso insieme all'ultimo
+    try:
+        _rimuovi_sal_finale(oDoc)
+    except Exception as _exc:
+        errori.append('eliminazione del SAL finale')
+        LeenoUtils.log_errore('annulla SAL: eliminazione SAL finale', _exc)
 
     # 2. Elimina Registro, SAL, CdP (fogli interi se ultimo SAL rimasto)
     try:
@@ -1100,6 +1130,81 @@ def aggiorna_S2_libretto(oDoc, nSal, aVoce, nPag):
 
 
 
+def _raccogli_voci_sal(oSheet, r_start, r_end):
+    '''
+    Raccoglie le voci di CONTABILITA tra le righe r_start e r_end (cumulative,
+    incluse quelle gia' registrate nei libretti precedenti).
+    Ritorna (voci lavori, voci sicurezza analitica VDS_).
+    '''
+    SAL = []
+    SAL_VDS = []
+    c_i = r_start
+    voci_coll = set()
+    while c_i <= r_end:
+        resp = LeenoComputo.datiVoceComputo(oSheet, c_i)
+        if resp:
+            d_v = resp[1]
+            num_v = str(d_v[0]).strip()
+            if num_v not in voci_coll:
+                if 'VDS_' in str(d_v[1]):
+                    SAL_VDS.append(d_v)
+                else:
+                    SAL.append(d_v)
+                voci_coll.add(num_v)
+        c_i = LeenoSheetUtils.prossimaVoce(oSheet, c_i, saltaCat=True)
+    return SAL, SAL_VDS
+
+
+def _aggrega_dati_sal(SAL, SAL_VDS):
+    '''
+    Raggruppa per articolo le voci raccolte e numera in sequenza da 1.
+    Ritorna (datiSAL, datiSAL_VDS, totale sicurezza analitica, totale manodopera).
+    '''
+    tot_sic = sum([float(el[6]) for el in SAL_VDS if el[6]])
+    tot_mdo = sum([float(el[8]) for el in SAL if el[8]]) + sum([float(el[8]) for el in SAL_VDS if el[8]])
+
+    def raggruppa_voci(dati_lista):
+        """Raggruppa le voci per articolo sommando quantita' e importi."""
+        gruppi_quant = defaultdict(float)
+        gruppi_importo = defaultdict(float)
+        gruppo_dati = {}
+
+        for i, row in enumerate(dati_lista):
+            art = str(row[1]).strip()
+            if not art or art == "LAVORI":
+                continue
+
+            q = float(row[4]) if row[4] else 0.0
+            imp = float(row[6]) if row[6] else 0.0
+
+            if q == 0.0 and imp == 0.0:
+                continue
+
+            gruppi_quant[art] += q
+            gruppi_importo[art] += imp
+            if art not in gruppo_dati:
+                gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
+
+        res_list = []
+        for art in sorted(gruppo_dati.keys()):
+            desc, um, prezzo, _ = gruppo_dati[art]
+            res_list.append([art, desc, um, gruppi_quant[art], prezzo, gruppi_importo[art]])
+        return res_list
+
+    n_ord_global = 1
+    datiSAL = []
+    for art, desc, um, quant, prezzo, importo in raggruppa_voci(SAL):
+        datiSAL.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
+        n_ord_global += 1
+
+    datiSAL_VDS = []
+    for art, desc, um, quant, prezzo, importo in raggruppa_voci(SAL_VDS):
+        datiSAL_VDS.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
+        n_ord_global += 1
+
+    return datiSAL, datiSAL_VDS, tot_sic, tot_mdo
+
+
 def GeneraLibretto(oDoc):
     '''
     CONTABILITA' - Genera il Libretto delle Misure.
@@ -1172,9 +1277,6 @@ def GeneraLibretto(oDoc):
 
 
     # --- RACCOLTA DATI CUMULATIVA PER IL SAL ---
-    SAL = []
-    SAL_VDS = []
-
     # Cerchiamo la riga della prima voce assoluta (1)
     try:
         if oRanges.hasByName("_Lib_1"):
@@ -1184,21 +1286,7 @@ def GeneraLibretto(oDoc):
     except:
         r_start_abs = primariga
 
-    c_i = r_start_abs
-    voci_coll = set()
-    while c_i <= ultimariga:
-        resp = LeenoComputo.datiVoceComputo(oSheet, c_i)
-        if resp:
-            d_v = resp[1]
-            num_v = str(d_v[0]).strip()
-            if num_v not in voci_coll:
-                if 'VDS_' in str(d_v[1]):
-                    SAL_VDS.append(d_v)
-                else:
-                    SAL.append(d_v)
-                voci_coll.add(num_v)
-        c_i = LeenoSheetUtils.prossimaVoce(oSheet, c_i, saltaCat=True)
-    # -------------------------------------------
+    SAL, SAL_VDS = _raccogli_voci_sal(oSheet, r_start_abs, ultimariga)
 
     # Eseguiamo l'adattamento delle altezze prima del calcolo dei filler
     # per avere coordinate Y corrette
@@ -1293,63 +1381,7 @@ def GeneraLibretto(oDoc):
         curr_i = LeenoSheetUtils.prossimaVoce(oSheet, curr_i, saltaCat=True)
 
     try:
-        # Calcolo somme totali
-        # sic analitico = somma degli importi (indice 6) delle voci in SAL_VDS
-        tot_sic = sum([float(el[6]) for el in SAL_VDS if el[6]])
-        tot_mdo = sum([float(el[8]) for el in SAL if el[8]]) + sum([float(el[8]) for el in SAL_VDS if el[8]])
-
-        # Raggruppamento per datiSAL (Lavori) e datiSAL_VDS (Sicurezza) con N. ord. sequenziale e raggruppamento per Articolo
-        def raggruppa_voci(dati_lista):
-            """Raggruppa le voci per articolo sommando quantita' e importi."""
-            # Raggruppa per solo Articolo per garantire l'univocità
-            gruppi_quant = defaultdict(float)
-            gruppi_importo = defaultdict(float)
-            gruppo_dati = {} # Mappa articolo -> [desc, um, prezzo, first_appearance_index]
-
-            for i, row in enumerate(dati_lista):
-                art = str(row[1]).strip()
-                if not art or art == "LAVORI": # Filtra voci senza articolo o placeholder
-                    continue
-
-                q = float(row[4]) if row[4] else 0.0
-                imp = float(row[6]) if row[6] else 0.0
-
-                # Salta se sia quantità che importo sono zero (voce non eseguita/fantasma)
-                if q == 0.0 and imp == 0.0:
-                    continue
-
-                gruppi_quant[art] += q
-                gruppi_importo[art] += imp
-                if art not in gruppo_dati:
-                    gruppo_dati[art] = [row[2], row[3], float(row[5]), i]
-
-            # Restituiamo una lista ordinata per Codice Articolo
-            articoli_ordinati = sorted(gruppo_dati.keys())
-
-            res_list = []
-            for art in articoli_ordinati:
-                desc, um, prezzo, _ = gruppo_dati[art]
-                res_list.append([art, desc, um, gruppi_quant[art], prezzo, gruppi_importo[art]])
-
-            return res_list
-
-        raggruppati_lavori = raggruppa_voci(SAL)
-        raggruppati_vds = raggruppa_voci(SAL_VDS)
-
-        # Creazione dati finali con numerazione sequenziale da 1
-        n_ord_global = 1
-
-        datiSAL = []
-        for row in raggruppati_lavori:
-            art, desc, um, quant, prezzo, importo = row
-            datiSAL.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
-            n_ord_global += 1
-
-        datiSAL_VDS = []
-        for row in raggruppati_vds:
-            art, desc, um, quant, prezzo, importo = row
-            datiSAL_VDS.append([f"{n_ord_global}\n{art}", desc, um, quant, prezzo, importo])
-            n_ord_global += 1
+        datiSAL, datiSAL_VDS, tot_sic, tot_mdo = _aggrega_dati_sal(SAL, SAL_VDS)
 
         PL.comando('DeletePrintArea')
         SheetUtils.visualizza_PageBreak()
@@ -1882,8 +1914,12 @@ def setup_intestazioni_sal(oSheet, nSal, oDoc):
         oCell.Columns.Width = width
 
 
-def GeneraSAL(oDoc, dati, stato_finale=False):
-    """Genera il foglio di Stato Avanzamento Lavori compilando voci, riepiloghi e firme."""
+def GeneraSAL(oDoc, dati, stato_finale=False, finale=False):
+    """
+    Genera il foglio di Stato Avanzamento Lavori compilando voci, riepiloghi e firme.
+    Con finale=True accoda in SAL il SAL FINALE (area _SAL_FINALE, con pagina dello
+    Stato Finale), senza aggiornare S2: nSal e' allora il numero dell'ultimo SAL + 1.
+    """
     # Unpack dei dati
     nSal, daVoce, aVoce, _, _, datiSAL, sic, mdo, datiSAL_VDS = dati
 
@@ -1942,7 +1978,10 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
     oSalSheet.getRows().insertByIndex(insRow, 1)
     oSalSheet.getCellRangeByPosition(0, insRow, 5, insRow).CellStyle = "uuuuu"
     # oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - {daVoce}÷{aVoce}"
-    oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - 1÷{aVoce}"
+    if finale:
+        oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL FINALE - 1÷{aVoce}"
+    else:
+        oSalSheet.getCellByPosition(1, insRow).String = f"segue SAL n.{nSal} - 1÷{aVoce}"
 
     # --- 3. Scrittura Voci SAL per sezioni ---
     current_row = insRow + 1
@@ -2082,17 +2121,19 @@ def GeneraSAL(oDoc, dati, stato_finale=False):
     fineFirme, insRowRiepilogo = firme_contabili_sal(oDoc, oSalSheet, r + 1, sic, mdo, riga_parziale, riga_sic_partial, stato_finale=stato_finale, inizio_blocco=insRow + 1)
 
     if stato_finale:
-        fineFirme = GeneraStatoFinale(oDoc, oSalSheet, fineFirme + 1, nSal, insRowRiepilogo)
+        fineFirme = GeneraStatoFinale(oDoc, oSalSheet, fineFirme + 1, nSal, insRowRiepilogo,
+                                      nSal_anticipo=(nSal - 1 if finale else nSal))
 
     # --- 5. NamedRange ---
     # Escludiamo la riga "segue SAL" (insRow) dall'area del NamedRange
     # insRow è 0-indexed, quindi la riga dati successiva è insRow + 1
     # Per Calc $A$2 è riga 1, quindi insRow+2 è la coordinata corretta se insRow=1.
     area_sal = f"$A${insRow+2}:$F${fineFirme+1}"
-    LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, f"_SAL_{nSal}")
+    LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, "_SAL_FINALE" if finale else f"_SAL_{nSal}")
 
-    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 ---
-    aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo)
+    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 (non per il SAL finale) ---
+    if not finale:
+        aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo)
 
     # Altezza ottimale finale
     oSalSheet.getCellRangeByPosition(0, 0, 5, fineFirme).Rows.OptimalHeight = True
@@ -2343,11 +2384,14 @@ def firme_contabili_sal(oDoc, oSheet, startRow, sic, mdo, riga_subtotale, riga_s
     # Restituisce (ultima riga del blocco, inizio riepilogo) per NamedRange e S2
     return currRow - 1, insRow
 
-def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
+def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo, nSal_anticipo=None):
     '''
     Genera la pagina di Riepilogo dello Stato Finale dei Lavori.
+    nSal_anticipo: colonna S2 usata come ripiego se in S2 colonna C non e' annotata l'anticipazione (default nSal).
     '''
     fcol = 0
+    if nSal_anticipo is None:
+        nSal_anticipo = nSal
 
     oS2 = oDoc.getSheets().getByName('S2')
     markerS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
@@ -2393,8 +2437,12 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     riga = _cerca_riga_S2(oS2, "anticipazione", xS2)
     r_anticipo = None if riga is None else riga - xS2
 
-    if r_anticipo is not None:
-        oSalSheet.getCellByPosition(5, r + 6).Formula = f"=$S2.{_col_letter(yS2 + nSal)}{xS2 + r_anticipo + 1}"
+    # L'anticipazione e' l'importo annotato in S2 (colonna C, "Anticipazione:")
+    ref_anticipazione = _riferimento_anticipazione_S2(oS2)
+    if ref_anticipazione:
+        oSalSheet.getCellByPosition(5, r + 6).Formula = f"={ref_anticipazione}"
+    elif r_anticipo is not None:
+        oSalSheet.getCellByPosition(5, r + 6).Formula = f"=$S2.{_col_letter(yS2 + nSal_anticipo)}{xS2 + r_anticipo + 1}"
     else:
         oSalSheet.getCellByPosition(5, r + 6).Value = 0.0
     oSalSheet.getCellByPosition(5, r + 6).CellStyle = "ULTIMUS"
@@ -2480,6 +2528,73 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo):
     oSalSheet.getCellRangeByPosition(fcol, curr_row, fcol + 5, curr_row).CellStyle = "Ultimus_"
 
     return start_row + total_rows - 1
+
+
+def tutte_voci_registrate(oSheet):
+    '''
+    True se in CONTABILITA non resta nulla da registrare: la riga sopra
+    "T O T A L E" e' una riga di chiusura atti (stile Ultimus_centro_bordi_lati).
+    '''
+    riga = SheetUtils.uFindStringCol('T O T A L E', 2, oSheet)
+    if riga is None:
+        return False
+    return oSheet.getCellByPosition(0, int(riga) - 1).CellStyle == 'Ultimus_centro_bordi_lati'
+
+
+def sal_finale_emesso(oDoc):
+    '''True se il SAL FINALE (area _SAL_FINALE) e' gia' presente.'''
+    return oDoc.NamedRanges.hasByName('_SAL_FINALE')
+
+
+def GeneraSALFinale(oDoc):
+    '''
+    Emette il SAL FINALE: ripropone tutte le voci gia' registrate come un SAL
+    ordinario, in coda al foglio SAL, con la pagina dello Stato Finale.
+    Non genera Libretto, Registro e CdP e non tocca S2. Area: _SAL_FINALE.
+    Ritorna True se emesso.
+    '''
+    oSheet = oDoc.CurrentController.ActiveSheet
+    listaSal = ultimo_sal()
+    if oSheet.Name != 'CONTABILITA' or not listaSal:
+        return False
+    if sal_finale_emesso(oDoc):
+        Dialogs.Info(Text="Il SAL finale e' gia' stato emesso.")
+        return False
+
+    oRanges = oDoc.NamedRanges
+    nSal = int(listaSal[-1]) + 1
+    r_start = oRanges.getByName('_Lib_1').ReferredCells.RangeAddress.StartRow
+
+    aVoce = 0
+    for el in reversed(range(3, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1)):
+        s_val = oSheet.getCellByPosition(0, el).String.strip()
+        if s_val.isdigit():
+            aVoce = int(s_val)
+            break
+    if not aVoce:
+        return False
+    lrow_end = SheetUtils.uFindStringCol(str(aVoce), 0, oSheet, equal=1)
+    if lrow_end is None:
+        return False
+    ultimariga = LeenoComputo.circoscriveVoceComputo(oSheet, int(lrow_end)).RangeAddress.EndRow
+
+    SAL, SAL_VDS = _raccogli_voci_sal(oSheet, r_start, ultimariga)
+    datiSAL, datiSAL_VDS, tot_sic, tot_mdo = _aggrega_dati_sal(SAL, SAL_VDS)
+    dati = (nSal, 1, aVoce, 0, 0, datiSAL, tot_sic, tot_mdo, datiSAL_VDS)
+    GeneraSAL(oDoc, dati, stato_finale=True, finale=True)
+    return sal_finale_emesso(oDoc)
+
+
+def _rimuovi_sal_finale(oDoc):
+    '''Rimuove dal foglio SAL il blocco _SAL_FINALE e il suo nome area.'''
+    if not sal_finale_emesso(oDoc):
+        return
+    if oDoc.Sheets.hasByName('SAL'):
+        oSheet_S = oDoc.Sheets.getByName('SAL')
+        oNR = oDoc.NamedRanges.getByName('_SAL_FINALE').ReferredCells.RangeAddress
+        oSheet_S.ungroup(oNR, 1)
+        oSheet_S.Rows.removeByIndex(oNR.StartRow - 1, oNR.EndRow - oNR.StartRow + 2)
+    oDoc.NamedRanges.removeByName('_SAL_FINALE')
 
 
 
@@ -2976,6 +3091,15 @@ def EseguiContabilita(oDoc):
             oDialog1.dispose()
             Dialogs.Info(Text = 'Devi prima inserire un valore nella casella "a voce".', Title = 'Informazione')
             # PL.scelta_viste()
+            return
+
+        # Voci gia' tutte registrate e atti emessi: si puo' emettere solo il SAL finale
+        oSheetAtt = oDoc.CurrentController.ActiveSheet
+        if oSheetAtt.Name == 'CONTABILITA' and ultimo_sal() and tutte_voci_registrate(oSheetAtt):
+            PL.chiudi_dialoghi()
+            if GeneraSALFinale(oDoc):
+                mostra_sal('FINALE')
+                Dialogs.Info(Text='SAL finale emesso con successo.')
             return
 
         # Controlli preliminari su S2 per evitare di processare tutto se mancano dati

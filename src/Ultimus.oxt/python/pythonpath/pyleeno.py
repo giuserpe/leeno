@@ -2842,6 +2842,8 @@ def scelta_viste_run():
 
     # Mostra SAL n.
         oDialog1.getControl('ComboBox1').addItems(listaSal, 1)
+        if LeenoContab.sal_finale_emesso(oDoc):
+            oDialog1.getControl('ComboBox1').addItem('FINALE', len(listaSal))
         try:
             oDialog1.getControl('ComboBox1').Text = listaSal[-1]
         except:
@@ -2861,9 +2863,15 @@ def scelta_viste_run():
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
             oDialog1.getControl('EliminaMisure').Enable = False
 
-        if oSheet.getCellByPosition(0, SheetUtils.uFindStringCol('T O T A L E', 2, oSheet) - 1).CellStyle == 'Ultimus_centro_bordi_lati':
-            oDialog1.getControl('GeneraAtti').Enable = False
-            oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. #'
+        if LeenoContab.tutte_voci_registrate(oSheet):
+            if listaSal and not LeenoContab.sal_finale_emesso(oDoc):
+                # tutto registrato: resta possibile emettere solo il SAL finale
+                oDialog1.getControl('StatoFinale').State = 1
+                oDialog1.getControl('StatoFinale').Enable = False
+                oDialog1.getControl('GeneraAtti').Label = 'Genera SAL Finale'
+            else:
+                oDialog1.getControl('GeneraAtti').Enable = False
+                oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. #'
 
         # Ricicla voci da
         sString = oDialog1.getControl('ComboBox3')
@@ -2924,6 +2932,8 @@ def scelta_viste_run():
             if val_sal.isdigit():
                 nSal = int(val_sal)
                 LeenoContab.mostra_sal(nSal, pagebreak=False, naviga=False)
+            elif val_sal == 'FINALE':
+                LeenoContab.mostra_sal('FINALE', pagebreak=False, naviga=False)
         except Exception as _exc:
             LeenoUtils.log_errore('scelta_viste_run: mostra_sal', _exc)
 

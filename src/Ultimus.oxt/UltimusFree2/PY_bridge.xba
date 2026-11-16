@@ -82,12 +82,7 @@ Sub aggiorna_voci_prezzario
 	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_aggiorna_voci_prezzario&quot;)
 End Sub
 rem ######################################################################
-Sub rimuovi_evidenziazioni_cdpbis
-	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_rimuovi_evidenziazioni_cdpbis&quot;)
-End Sub
-rem ######################################################################
 Sub ripristina_evidenziazioni_cdpbis
-	chiudi_dialoghi
 	ScriptPy(&quot;LeenoCdPBis&quot;,&quot;MENU_ripristina_evidenziazioni_cdpbis&quot;)
 End Sub
 rem ######################################################################

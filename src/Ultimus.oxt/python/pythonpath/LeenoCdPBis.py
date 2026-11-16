@@ -891,27 +891,6 @@ def _celle_codice(oSheet):
     return celle
 
 
-def rimuovi_evidenziazioni(oDoc):
-    '''
-    Toglie i colori di LeenoCdPBis da COMPUTO, VARIANTE e CONTABILITA
-    riportando lo sfondo della cella codice a quello dello stile (come
-    Ctrl+M di Calc). Il registro degli esiti resta nel documento, così
-    ripristina_evidenziazioni() può rimettere i colori. Restituisce il
-    numero di celle ripulite.
-    '''
-    nostri = tuple(_colori_per_sigla().values())
-    ripulite = 0
-    for nome in FOGLI_VOCI:
-        if not oDoc.getSheets().hasByName(nome):
-            continue
-        oSheet = oDoc.getSheets().getByName(nome)
-        for riga in range(SheetUtils.getLastUsedRow(oSheet) + 1):
-            cella = oSheet.getCellByPosition(1, riga)
-            if cella.CellBackColor in nostri:
-                cella.setPropertyToDefault('CellBackColor')
-                ripulite += 1
-    return ripulite
-
 
 def ripristina_evidenziazioni(oDoc):
     '''
@@ -1093,32 +1072,6 @@ def MENU_aggiorna_voci_prezzario():
             Text='Operazione interrotta per un errore. '
                  'Dettagli in leeno_errori.log.')
 
-
-def MENU_rimuovi_evidenziazioni_cdpbis():
-    '''
-    Rimuove le evidenziazioni lasciate dall'aggiornamento al prezzario. Gli
-    esiti restano registrati nel documento per ripristina_evidenziazioni().
-    '''
-    oDoc = LeenoUtils.getDocument()
-    if oDoc is None:
-        return
-    LeenoUtils.DocumentRefresh(False, oDoc=oDoc)
-    try:
-        ripulite = rimuovi_evidenziazioni(oDoc)
-    except Exception as _exc:
-        LeenoUtils.log_errore('MENU_rimuovi_evidenziazioni_cdpbis', _exc)
-        ripulite = None
-    finally:
-        LeenoUtils.DocumentRefresh(True, oDoc=oDoc)
-    if ripulite is None:
-        Dialogs.Exclamation(
-            Title='ATTENZIONE!',
-            Text='Operazione interrotta per un errore. '
-                 'Dettagli in leeno_errori.log.')
-    else:
-        Dialogs.Info(
-            Title='Evidenziazioni',
-            Text=f'Celle ripulite: {ripulite}')
 
 
 def MENU_ripristina_evidenziazioni_cdpbis():

@@ -452,6 +452,21 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-16 16:38</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d825ea430ecf0d26e29bc419b44916d70d1f5ca8" target="_blank" rel="noopener"><code>d825ea4</code></a></td>
+                <td class="commit-msg">feat(contab): emette il SAL FINALE e ne gestisce vista e annullamento
+
+- GeneraSALFinale: ripropone tutte le voci già registrate in coda al
+  foglio SAL con la pagina dello Stato Finale (area _SAL_FINALE), senza
+  Libretto/Registro/CdP e senza aggiornare S2
+- GeneraSAL(finale=True), mostra_sal('FINALE') e rimozione del blocco
+  all’annullamento dell’ultimo SAL
+- Estratte _raccogli_voci_sal e _aggrega_dati_sal per riuso in libretto
+  e SAL finale
+- Anticipazione nello Stato Finale: riferimento esplicito da S2
+- EseguiContabilita propone il SAL finale se tutte le voci sono registrate</td>
+            </tr>
+            <tr>
                 <td>2026-11-16 12:55</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/c0391dd6fd153e9cc8bdc0c55ecd623100c900d2" target="_blank" rel="noopener"><code>c0391dd</code></a></td>
                 <td class="commit-msg">Implement refactoring of core modules for improved performance and maintainability</td>
@@ -460,11 +475,6 @@
                 <td>2026-11-16 08:59</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/b3a778dd3dc32a721882abc4542495f59a554023" target="_blank" rel="noopener"><code>b3a778d</code></a></td>
                 <td class="commit-msg">feat: add new data file 000.ods for testing purposes</td>
-            </tr>
-            <tr>
-                <td>2026-11-16 07:30</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/cfce59947fe2f8794bd73a9a817e161a657ebd35" target="_blank" rel="noopener"><code>cfce599</code></a></td>
-                <td class="commit-msg">refactor: remove unused functions and clean up code in LeenoCdPBis.py and PY_bridge</td>
             </tr>
                     </tbody>
                 </table>
@@ -488,8 +498,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-16 12:55 UTC</p>
-                <p>Build Commit: <code>c0391dd</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-16 16:39 UTC</p>
+                <p>Build Commit: <code>d825ea4</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

@@ -452,6 +452,11 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-17 14:14</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/61a87bffb6096021fd995bbc0d46acd10638fb8d" target="_blank" rel="noopener"><code>61a87bf</code></a></td>
+                <td class="commit-msg">fix(GeneraCdP): update logic for 'Recupero anticipazione' label handling</td>
+            </tr>
+            <tr>
                 <td>2026-11-17 12:05</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/f4f7436b358921787406f66be054e3008f9ad6e7" target="_blank" rel="noopener"><code>f4f7436</code></a></td>
                 <td class="commit-msg">fix(DialogStrings): remove duplicate entry for 'Ripristina evidenziazioni'</td>
@@ -468,21 +473,6 @@
 - Header n/FINALE per SAL ordinario con Stato Finale
 - Pulizia della colonna FINALE in S2 all’annullamento
 - EseguiContabilita non genera il CdP quando è attivo lo Stato Finale</td>
-            </tr>
-            <tr>
-                <td>2026-11-16 16:38</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d825ea430ecf0d26e29bc419b44916d70d1f5ca8" target="_blank" rel="noopener"><code>d825ea4</code></a></td>
-                <td class="commit-msg">feat(contab): emette il SAL FINALE e ne gestisce vista e annullamento
-
-- GeneraSALFinale: ripropone tutte le voci già registrate in coda al
-  foglio SAL con la pagina dello Stato Finale (area _SAL_FINALE), senza
-  Libretto/Registro/CdP e senza aggiornare S2
-- GeneraSAL(finale=True), mostra_sal('FINALE') e rimozione del blocco
-  all’annullamento dell’ultimo SAL
-- Estratte _raccogli_voci_sal e _aggrega_dati_sal per riuso in libretto
-  e SAL finale
-- Anticipazione nello Stato Finale: riferimento esplicito da S2
-- EseguiContabilita propone il SAL finale se tutte le voci sono registrate</td>
             </tr>
                     </tbody>
                 </table>
@@ -506,8 +496,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-17 12:06 UTC</p>
-                <p>Build Commit: <code>f4f7436</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-17 14:14 UTC</p>
+                <p>Build Commit: <code>61a87bf</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

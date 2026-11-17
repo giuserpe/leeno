@@ -97,7 +97,7 @@
   <dlg:button dlg:id="AdeguamentoPrezzi" dlg:tab-index="38" dlg:left="12" dlg:top="158" dlg:width="95" dlg:height="15" dlg:help-text="Sostituisce le voci selezionate con quelle di un nuovo prezzario .ods, in base al suffisso del codice." dlg:value="Adeguamento Prezzi">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.aggiorna_voci_prezzario?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:id="RipristinaEvidenziazioni" dlg:tab-index="39" dlg:left="12" dlg:top="179" dlg:width="95" dlg:height="15" dlg:help-text="Rimette i colori VERDE, GIALLO e ROSSO dell&apos;adeguamento prezzi, per esempio dopo Ctrl+M." dlg:value="Ripristina colori">
+  <dlg:button dlg:id="RipristinaEvidenziazioni" dlg:tab-index="39" dlg:left="12" dlg:top="179" dlg:width="95" dlg:height="15" dlg:help-text="Rimette i colori VERDE, GIALLO e ROSSO dell&apos;adeguamento prezzi, per esempio dopo Ctrl+M." dlg:value="Ripristina evidenziazioni">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.ripristina_evidenziazioni_cdpbis?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

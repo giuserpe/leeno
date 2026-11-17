@@ -84,7 +84,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.svuotaContabilita?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="0" dlg:id="StatoFinale" dlg:tab-index="33" dlg:left="12" dlg:top="118" dlg:width="42" dlg:height="8" dlg:help-text="&amp;1381.Dialogviste_N.StatoFinale.HelpText" dlg:value="&amp;1382.Dialogviste_N.StatoFinale.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:button dlg:style-id="4" dlg:id="GeneraAtti" dlg:tab-index="34" dlg:left="57" dlg:top="114" dlg:width="50" dlg:height="15" dlg:help-text="&amp;1385.Dialogviste_N.GeneraAtti.HelpText" dlg:value="&amp;1386.Dialogviste_N.GeneraAtti.Label">
+  <dlg:button dlg:style-id="4" dlg:id="GeneraAtti" dlg:tab-index="34" dlg:left="52" dlg:top="114" dlg:width="55" dlg:height="15" dlg:help-text="&amp;1385.Dialogviste_N.GeneraAtti.HelpText" dlg:value="&amp;1386.Dialogviste_N.GeneraAtti.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.GeneraAttiContabili?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:id="sal_revisionale" dlg:tab-index="35" dlg:left="12" dlg:top="137" dlg:width="95" dlg:height="15" dlg:help-text="&amp;1395.Dialogviste_N.sal_revisionale.HelpText" dlg:value="&amp;1396.Dialogviste_N.sal_revisionale.Label">

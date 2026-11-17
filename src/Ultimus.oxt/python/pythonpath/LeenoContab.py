@@ -2131,9 +2131,15 @@ def GeneraSAL(oDoc, dati, stato_finale=False, finale=False):
     area_sal = f"$A${insRow+2}:$F${fineFirme+1}"
     LeenoBasicBridge.rifa_nomearea(oDoc, "SAL", area_sal, "_SAL_FINALE" if finale else f"_SAL_{nSal}")
 
-    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 (non per il SAL finale) ---
-    if not finale:
-        aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo)
+    # --- 6. Aggiornamento SITUAZIONE CONTABILE in S2 (per il SAL finale: colonna dopo l'ultimo SAL) ---
+    credito = None
+    if stato_finale:
+        # credito complessivo dell'impresa, dalla pagina dello Stato Finale
+        riga_cr = SheetUtils.uFindStringCol('RISULTA IL CREDITO', 1, oSalSheet, start=insRowRiepilogo)
+        if riga_cr is not None:
+            credito = oSalSheet.getCellByPosition(5, int(riga_cr)).Value
+    aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo, finale=finale,
+                    aVoce=aVoce if finale else None, credito=credito, stato_finale=stato_finale)
 
     # Altezza ottimale finale
     oSalSheet.getCellRangeByPosition(0, 0, 5, fineFirme).Rows.OptimalHeight = True
@@ -2596,12 +2602,27 @@ def _rimuovi_sal_finale(oDoc):
         oSheet_S.Rows.removeByIndex(oNR.StartRow - 1, oNR.EndRow - oNR.StartRow + 2)
     oDoc.NamedRanges.removeByName('_SAL_FINALE')
 
+    # pulisce la colonna del SAL finale nella Situazione Contabile di S2
+    try:
+        oS2 = oDoc.Sheets.getByName('S2')
+        yS2, xS2 = SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
+        # la colonna si riconosce dall'intestazione: ultimo_sal() puo' gia' non
+        # comprendere piu' il SAL in corso di annullamento
+        for col in range(yS2 + 1, yS2 + 40):
+            if oS2.getCellByPosition(col, xS2 + 1).String == 'FINALE':
+                oS2.getCellRangeByPosition(col, xS2 + 1, col, xS2 + 30).clearContents(1 | 2 | 4 | 16)
+                break
+    except Exception as _exc:
+        LeenoUtils.log_errore('SAL finale: pulizia colonna S2', _exc)
 
 
-def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
+
+def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo, finale=False, aVoce=None, credito=None,
+                    stato_finale=False):
     '''
-    Popola la SITUAZIONE CONTABILE nel foglio S2 con formule
-    che puntano alle celle del riepilogo SAL.
+    Popola la SITUAZIONE CONTABILE nel foglio S2 con i valori del riepilogo SAL.
+    Le celle vengono calcolate con formule temporanee e poi convertite in valori:
+    in S2 non restano formule scritte da questa funzione.
 
     Parametri
     ---------
@@ -2609,6 +2630,13 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
     nSal : int – numero del SAL corrente
     insRowRiepilogo : int – riga 0-indexed di inizio del riepilogo SAL
     mdo : float – totale manodopera
+    finale : bool – annota il SAL FINALE nella colonna dopo l'ultimo SAL
+             (intestazione "FINALE", data odierna, ultima voce)
+    aVoce : int – ultima voce registrata (solo per il SAL finale)
+    credito : float – credito complessivo dell'impresa (Stato Finale), riportato
+              come Importo Certificato di pagamento
+    stato_finale : bool – SAL ordinario emesso con lo Stato Finale: l'intestazione
+              della colonna diventa "n/FINALE"
     '''
     try:
         oS2 = oDoc.getSheets().getByName('S2')
@@ -2642,18 +2670,35 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
         r_garanzia = trova_r_S2("per garanzia")
         r_infortuni = trova_r_S2("per infortuni")
         r_anticipo = trova_r_S2("anticipazione")
-        r_cert_prec = trova_r_S2("certificati precedenti")
+        # Riga sotto il recupero: era "Certificati precedenti / Ultimo riporto" (mai usata),
+        # ora riporta l'anticipazione ancora da recuperare.
+        r_residuo = trova_r_S2("ancora da recuperare")
+        if r_residuo is None:
+            r_residuo = trova_r_S2("certificati precedenti")
         r_detraz = trova_r_S2("totale detrazioni")
         r_certif = trova_r_S2("Certificato di pagamento")
 
+        celle_scritte = []
+
+        if stato_finale and not finale:
+            oS2.getCellByPosition(col, xS2 + 1).String = f'{nSal}/FINALE'
+
         def scrivi(offset, formula_o_valore):
-            """Scrive un valore o una formula nella cella all'offset indicato."""
+            """Scrive un valore o una formula (poi convertita in valore) all'offset indicato."""
             if offset is not None:
                 cell = oS2.getCellByPosition(col, xS2 + offset)
                 if isinstance(formula_o_valore, str) and formula_o_valore.startswith('='):
                     cell.Formula = formula_o_valore
+                    celle_scritte.append(cell)
                 else:
                     cell.Value = formula_o_valore
+
+        if finale:
+            # annotazione del SAL finale nella tabella
+            oS2.getCellByPosition(col, xS2 + 1).String = 'FINALE'
+            oS2.getCellByPosition(col, xS2 + 2).Value = date.today().toordinal() - 693594
+            if aVoce:
+                oS2.getCellByPosition(col, xS2 + 24).Value = aVoce
 
         # Scriviamo i valori collegati al riepilogo SAL
         scrivi(r_misura, f"=$SAL.$F${R + 6}")
@@ -2683,24 +2728,40 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo):
         # Anticipazione = (Importo ribassato + Sicurezza) * Incidenza anticipazione (Anagrafica C80)
         row_ant = SheetUtils.uFindStringCol('Incidenza Anticipazione:', 1, oS2, start=0, equal=1)
 
-        if r_anticipo is not None:
-            scrivi(r_anticipo, f"=({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C${row_ant + 1}")
+        # Il recupero non supera l'Anticipazione annotata in S2 (colonna C)
+        ref_ant_tot = _riferimento_anticipazione_S2(oS2)
 
-        # Totale detrazioni = Garanzia + Infortuni + Anticipo + Cert. Precedenti
+        if r_anticipo is not None:
+            expr_ant = f"({rf(r_imp_rib)}+{rf(r_sic_mis)})*$S2.$C${row_ant + 1}"
+            if ref_ant_tot:
+                expr_ant = f"MIN({expr_ant};{ref_ant_tot})"
+            scrivi(r_anticipo, f"={expr_ant}")
+
+            # Anticipazione ancora da recuperare (importo ancora garantito)
+            if r_residuo is not None and ref_ant_tot:
+                oS2.getCellByPosition(4, xS2 + r_residuo).String = "Anticipazione ancora da recuperare"
+                scrivi(r_residuo, f"={ref_ant_tot}-{rf(r_anticipo)}")
+
+        # Totale detrazioni = Garanzia + Infortuni + Recupero anticipazione
         if r_detraz is not None:
-            somma_detraz = "+".join(filter(lambda x: x != "0", [rf(r_garanzia), rf(r_infortuni), rf(r_anticipo), rf(r_cert_prec)]))
+            somma_detraz = "+".join(filter(lambda x: x != "0", [rf(r_garanzia), rf(r_infortuni), rf(r_anticipo)]))
             if somma_detraz:
                 scrivi(r_detraz, f"={somma_detraz}")
 
         # Importo Certificato = Importo ribassato + Sicurezza - Totale detrazioni
         if r_certif is not None:
-            if nSal == 1:
+            if credito is not None:
+                scrivi(r_certif, credito)
+            elif nSal == 1:
                 scrivi(r_certif, f"={rf(r_imp_rib)}+{rf(r_sic_mis)}-{rf(r_detraz)}")
             else:
                 # cert_prec = _col_letter(col - 1) + str(xS2 + r_detraz + 2)
                 certif = f"SUM({_col_letter(yS2+1)}{r_certif+3}:{_col_letter(col-1)}{r_certif+3})"
                 scrivi(r_certif, f"={rf(r_imp_rib)}+{rf(r_sic_mis)}-{rf(r_detraz)}-{certif}")
 
+        # In S2 vanno solo valori: le formule temporanee diventano numeri
+        for cell in celle_scritte:
+            cell.Value = cell.Value
 
     except Exception as e:
         # Non bloccante: errore nel popolamento S2 non deve interrompere il SAL
@@ -3078,6 +3139,7 @@ def GeneraAttiContabili():
 
 def EseguiContabilita(oDoc):
     ''' Coordina la generazione degli atti contabili con barra di stato visibile '''
+    riepilogo = None  # resta None con lo Stato Finale: nessun CdP
     indicator = oDoc.getCurrentController().getStatusIndicator()
     riepilogo = None
     try:
@@ -3160,9 +3222,10 @@ def EseguiContabilita(oDoc):
         GeneraSAL(oDoc, dati, stato_finale=stato_finale)
         indicator.setValue(4)
 
-        # 4. Genera il Certificato di Pagamento
-        indicator.setText("Compilazione Certificato di Pagamento...")
-        riepilogo = GeneraCdP(oDoc, dati)
+        # 4. Genera il Certificato di Pagamento (non con lo Stato Finale)
+        if not stato_finale:
+            indicator.setText("Compilazione Certificato di Pagamento...")
+            riepilogo = GeneraCdP(oDoc, dati)
 
         indicator.setValue(5)
 

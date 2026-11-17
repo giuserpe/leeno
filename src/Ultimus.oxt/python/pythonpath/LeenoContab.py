@@ -3850,13 +3850,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     r_anticipo_cdp = R('b) Recupero anticipazione') or R('Recupero anticipazione')
 
     if r_anticipo_cdp is not None:
-        for c in range(val_col - 1, -1, -1):
-            cell = oCdP.getCellByPosition(c, r_anticipo_cdp)
-            lbl = cell.String
-            if 'ANTICIP' in lbl.upper():
-                new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
-                cell.String = new_lbl
-                break
 
         # Il recupero non puo' superare l'Anticipazione annotata in S2
         ref_ant_tot = _riferimento_anticipazione_S2(oS2)
@@ -3872,6 +3865,16 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = f'=IF({ref_ant}=0;"";{expr_ant})'
         else:
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = '0'
+
+        for c in range(val_col - 1, -1, -1):
+            cell = oCdP.getCellByPosition(c, r_anticipo_cdp)
+            lbl = cell.String
+            if 'ANTICIP' in lbl.upper():
+                new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
+                if expr_ant == ref_ant:
+                    new_lbl = 'b) Recupero anticipazione'
+                cell.String = new_lbl
+                break
 
     if r_totdet is not None and r_ritenuta is not None and r_certprec is not None:
         r_det_fine = max(r_ritenuta, r_certprec,

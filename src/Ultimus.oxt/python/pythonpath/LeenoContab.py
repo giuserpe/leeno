@@ -4007,6 +4007,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
         # Il recupero non puo' superare l'Anticipazione annotata in S2
         ref_ant_tot = _riferimento_anticipazione_S2(oS2)
+        ref_ant = None
 
         if aliquota_anticipo > 0 and r_sogg is not None:
             expr_ant = f'{v}{r_sogg + 1}*{aliquota_anticipo}'
@@ -4018,6 +4019,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             expr_ant = f'MIN({ref_ant};{ref_ant_tot})' if ref_ant_tot else ref_ant
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = f'=IF({ref_ant}=0;"";{expr_ant})'
         else:
+            expr_ant = None
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = '0'
 
         for c in range(val_col - 1, -1, -1):
@@ -4025,7 +4027,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             lbl = cell.String
             if 'ANTICIP' in lbl.upper():
                 new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
-                if expr_ant == ref_ant:
+                if ref_ant is None or expr_ant == ref_ant:
                     new_lbl = 'b) Recupero anticipazione'
                 cell.String = new_lbl
                 break

@@ -259,15 +259,18 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
 
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
-    data = 0.0
+    data = None
     for n in reversed(range(0, sopra)):
         if oSheet.getCellByPosition(1, n).CellStyle == 'Ultimus_centro_bordi_lati':
             break
         if oSheet.getCellByPosition(1, n).CellStyle == 'Data_bianca':
-            data = oSheet.getCellByPosition(1, n).Value
+            data = _leggi_data_misura(oSheet.getCellByPosition(1, n))
             break
     try:
-        oSheet.getCellByPosition(1, sopra + 2).Value = data
+        if data:
+            _scrivi_data_misura(oSheet.getCellByPosition(1, sopra + 2), data)
+        else:
+            oSheet.getCellByPosition(1, sopra + 2).Value = 0.0
     except Exception:
         oSheet.getCellByPosition(1, sopra + 2).Value = date.today().toordinal() - 693594
 
@@ -316,6 +319,23 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
 
 import Calendario
 
+_DATA_ATTI = None  # data di emissione scelta nel dialogo (None = oggi)
+
+
+def data_atti():
+    """Data di emissione degli atti contabili: quella del dialogo, altrimenti oggi."""
+    return _DATA_ATTI or date.today()
+
+
+def _leggi_data_atti_dialogo(dlg):
+    """Legge il campo "Data atti" del dialogo; None se non valido."""
+    try:
+        d = dlg.getControl('DataAtti').Date
+        return date(d.Year, d.Month, d.Day)
+    except Exception:
+        return None
+
+
 def _leggi_data_misura(cell):
     """Data di una cella misura (valore vero o testo gg/mm/aaaa): date oppure None."""
     try:
@@ -328,6 +348,16 @@ def _leggi_data_misura(cell):
     except (ValueError, OverflowError):
         pass
     return None
+
+
+def copia_data_misura(origine, destinazione):
+    """Copia la data tra due celle misura (valore vero o testo), nel formato dello stile."""
+    d = _leggi_data_misura(origine)
+    if d:
+        _scrivi_data_misura(destinazione, d)
+    else:
+        destinazione.setPropertyToDefault('NumberFormat')
+        destinazione.Value = 0.0
 
 
 def _scrivi_data_misura(cell, data):
@@ -361,11 +391,6 @@ def imposta_date_atti_core(oSheet, da_voce, a_voce, data, sovrascrivi):
             _scrivi_data_misura(cell, data)
             n += 1
     return n, len(celle)
-
-
-def date_mancanti(oSheet, da_voce, a_voce):
-    """Numero di misure delle voci da_voce..a_voce prive di data."""
-    return sum(1 for c in _celle_data_voci(oSheet, da_voce, a_voce) if _leggi_data_misura(c) is None)
 
 
 def nascondi_date_libretto(oDoc, nSal):
@@ -1220,7 +1245,7 @@ def aggiorna_S2_libretto(oDoc, nSal, aVoce, nPag):
         # Riferimenti basati sull'immagine: Riga 2 (SAL n.), Riga 3 (A tutto il)
         oS2.getCellByPosition(col_sal, 1).Value = nSal
         # Conversione data corretta per LibreOffice
-        oS2.getCellByPosition(col_sal, 2).Value = date.today().toordinal() - 693594
+        oS2.getCellByPosition(col_sal, 2).Value = data_atti().toordinal() - 693594
 
         # 3. Aggiorno i riferimenti a fondo pagina tramite ricerca etichette
         # Questo rende il codice immune all'inserimento di nuove righe nel foglio S2
@@ -1622,7 +1647,7 @@ def GeneraLibretto(oDoc):
 
     # --- 11. AGGIORNAMENTO S2 ---
     oS2.getCellByPosition(yS2 + nSal, xS2 + 1).Value = nSal
-    oS2.getCellByPosition(yS2 + nSal, xS2 + 2).Value = date.today().toordinal() - 693594
+    oS2.getCellByPosition(yS2 + nSal, xS2 + 2).Value = data_atti().toordinal() - 693594
     oS2.getCellByPosition(yS2 + nSal, xS2 + 24).Value = int(aVoce)
     oS2.getCellByPosition(yS2 + nSal, xS2 + 25).Value = nPagFinale
 
@@ -2623,7 +2648,7 @@ def GeneraStatoFinale(oDoc, oSalSheet, start_row, nSal, insRowRiepilogo, nSal_an
     dl = _leggi_dato_anagrafico(oS2, 'Direttore Lavori') or _leggi_dato_anagrafico(oS2, 'Direttore dei Lavori')
 
     # Data
-    oSalSheet.getCellByPosition(fcol + 1, r_curr + 8).String = f"{luogo}{date.today().strftime('%d/%m/%Y')}"
+    oSalSheet.getCellByPosition(fcol + 1, r_curr + 8).String = f"{luogo}{data_atti().strftime('%d/%m/%Y')}"
     oSalSheet.getCellByPosition(fcol + 1, r_curr + 8).CellStyle = "Ultimus_sx_italic"
 
     # Impresa
@@ -2810,7 +2835,7 @@ def aggiorna_S2_sal(oDoc, nSal, insRowRiepilogo, mdo, finale=False, aVoce=None, 
         if finale:
             # annotazione del SAL finale nella tabella
             oS2.getCellByPosition(col, xS2 + 1).String = 'FINALE'
-            oS2.getCellByPosition(col, xS2 + 2).Value = date.today().toordinal() - 693594
+            oS2.getCellByPosition(col, xS2 + 2).Value = data_atti().toordinal() - 693594
             if aVoce:
                 oS2.getCellByPosition(col, xS2 + 24).Value = aVoce
 
@@ -3253,9 +3278,9 @@ def GeneraAttiContabili():
 
 def EseguiContabilita(oDoc):
     ''' Coordina la generazione degli atti contabili con barra di stato visibile '''
-    riepilogo = None  # resta None con lo Stato Finale: nessun CdP
+    global _DATA_ATTI
     indicator = oDoc.getCurrentController().getStatusIndicator()
-    riepilogo = None
+    riepilogo = None  # resta None con lo Stato Finale: nessun CdP
     try:
         from pyleeno import oDialog1
         while oDialog1.getControl('a_voce').Text == '&1367.Dialogviste_N.a_voce.Text':
@@ -3268,6 +3293,9 @@ def EseguiContabilita(oDoc):
             Dialogs.Info(Text = 'Devi prima inserire un valore nella casella "a voce".', Title = 'Informazione')
             # PL.scelta_viste()
             return
+
+        # Data di emissione degli atti, scelta nel dialogo (None = oggi)
+        _DATA_ATTI = _leggi_data_atti_dialogo(oDialog1)
 
         # Voci gia' tutte registrate e atti emessi: si puo' emettere solo il SAL finale
         oSheetAtt = oDoc.CurrentController.ActiveSheet
@@ -3310,20 +3338,12 @@ def EseguiContabilita(oDoc):
         indicator.start("Inizializzazione contabilità...", 5)
         indicator.setValue(1)
 
-        # Flag "Stampa date" e controllo delle misure senza data
+        # Flag "Stampa date" e data di emissione degli atti
         stampa_date = True
         try:
             from pyleeno import oDialog1 as _dlg0
             stampa_date = bool(_dlg0.getControl('StampaDate').State)
             cfg.write('Contabilita', 'stampa_date', '1' if stampa_date else '0')
-            if stampa_date:
-                mancanti = date_mancanti(oDoc.CurrentController.ActiveSheet,
-                                         int(_dlg0.getControl('da_voce').Text),
-                                         int(_dlg0.getControl('a_voce').Text))
-                if mancanti and not Dialogs.YesNoDialog(
-                        Title='Date misure',
-                        Text=f"{mancanti} misure non hanno una data.\nGenerare comunque gli atti?"):
-                    return
         except Exception as _exc:
             LeenoUtils.log_errore('Atti: lettura "Stampa date"', _exc)
 
@@ -3365,6 +3385,7 @@ def EseguiContabilita(oDoc):
     except Exception as e:
         DLG.errore(f"Errore durante l'esecuzione: {str(e)}")
     finally:
+        _DATA_ATTI = None
         # Molto importante: sblocca sempre i controller e chiudi l'indicatore
         try:
             indicator.end()
@@ -3766,7 +3787,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     nome_resp   = _leggi_dato_anagrafico(oS2, 'Responsabile') or _leggi_dato_anagrafico(oS2, 'R.U.P.') or _leggi_dato_anagrafico(oS2, 'RUP')
     luogo_raw   = _leggi_dato_anagrafico(oS2, 'Località')
     luogo       = luogo_raw.split(' ')[-1] if luogo_raw else ''
-    data_odierna = date.today().strftime('%d/%m/%Y')
+    data_odierna = data_atti().strftime('%d/%m/%Y')
 
     # Dati contratto
     data_contr  = _leggi_dato_anagrafico(oS2, 'Data contratto')

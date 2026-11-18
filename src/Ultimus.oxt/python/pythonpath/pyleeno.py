@@ -2849,21 +2849,24 @@ def scelta_viste_run():
         except:
             pass
         if len(listaSal) != 0:
-            oDialog1.getControl('RimuoviSAL').Label = "Elimina atti SAL n. " + str(len(listaSal))
+            oDialog1.getControl('RimuoviSAL').Label = "Elimina SAL n. " + str(len(listaSal))
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. ' + str(len(listaSal)+1)
         else:
             oDialog1.getControl('ComboBox1').Text = ''
             oDialog1.getControl('ComboBox1').Enable = False
             oDialog1.getControl('RimuoviSAL').Enable = False
-            oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL da rimuovere"
+            oDialog1.getControl('RimuoviSAL').Label = "Nessun SAL"
             oDialog1.getControl('RimuoviTuttiSAL').Enable = False
-            oDialog1.getControl('RimuoviTuttiSAL').Label = "Nessun SAL da rimuovere"
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. 1'
 
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
             oDialog1.getControl('EliminaMisure').Enable = False
 
         oDialog1.getControl('StampaDate').State = 0 if cfg.read('Contabilita', 'stampa_date') == '0' else 1
+        _oggi = datetime.now()
+        _data = uno.createUnoStruct('com.sun.star.util.Date')
+        _data.Year, _data.Month, _data.Day = _oggi.year, _oggi.month, _oggi.day
+        oDialog1.getControl('DataAtti').Date = _data
 
         if LeenoContab.tutte_voci_registrate(oSheet):
             # nessuna misura da registrare: le date non sono applicabili
@@ -4877,7 +4880,7 @@ def copia_riga_contab(row, num_righe=1):
 
         if blocca_data:
             oSheet.getCellByPosition(1, row + 1).CellStyle = 'Data_bianca'
-            oSheet.getCellByPosition(1, row + 1).Value = oSheet.getCellByPosition(1, row + 2).Value
+            LeenoContab.copia_data_misura(oSheet.getCellByPosition(1, row + 2), oSheet.getCellByPosition(1, row + 1))
             oSheet.getCellByPosition(1, row + 2).String = ""
             oSheet.getCellByPosition(1, row + 2).CellStyle = 'Comp-Bianche in mezzo_R'
 
@@ -12220,6 +12223,8 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    sistema_cose()
+    return
     import LeenoCdPBis
     LeenoCdPBis.MENU_ripristina_evidenziazioni_cdpbis()
     LeenoUtils.DocumentRefresh(True)

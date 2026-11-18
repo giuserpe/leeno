@@ -143,6 +143,7 @@ class Config(Borg):
             ('Contabilita', 'abilitaconfigparser', '0'),
             ('Contabilita', 'idxsal', '20'),
             ('Contabilita', 'ricicla_da', 'COMPUTO'),
+            ('Contabilita', 'stampa_date', '1'),
 
             ('Analisi', 'sicurezza', '15,00%'),
             ('Analisi', 'spese_generali', '15,00%'),

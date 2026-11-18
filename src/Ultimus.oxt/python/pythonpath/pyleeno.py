@@ -2863,7 +2863,12 @@ def scelta_viste_run():
         if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
             oDialog1.getControl('EliminaMisure').Enable = False
 
+        oDialog1.getControl('StampaDate').State = 0 if cfg.read('Contabilita', 'stampa_date') == '0' else 1
+
         if LeenoContab.tutte_voci_registrate(oSheet):
+            # nessuna misura da registrare: le date non sono applicabili
+            oDialog1.getControl('StampaDate').Enable = False
+            oDialog1.getControl('ImpostaDateAtti').Enable = False
             if listaSal and not LeenoContab.sal_finale_emesso(oDoc):
                 # tutto registrato: resta possibile emettere solo il SAL finale
                 oDialog1.getControl('StatoFinale').State = 1

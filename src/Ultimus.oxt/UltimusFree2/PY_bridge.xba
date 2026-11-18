@@ -186,6 +186,10 @@ Sub ImpostaData
 	ScriptPy(&quot;LeenoContab&quot;,&quot;imposta_data&quot;)
 End Sub
 rem ######################################################################
+Sub ImpostaDateAtti
+	ScriptPy(&quot;LeenoContab&quot;,&quot;imposta_date_atti&quot;)
+End Sub
+rem ######################################################################
 Sub GeneraAttiContabili
 	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)
 End Sub

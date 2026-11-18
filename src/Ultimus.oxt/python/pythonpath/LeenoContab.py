@@ -14,6 +14,7 @@ LeenoContab.py - Contabilità per Leeno
 # _gotoCella è disponibile tramite 'import pyleeno as PL' (vedi sotto)
 import LeenoSettings
 from LeenoDispatcher import handle_exception
+import re
 from datetime import date
 # pyrefly: ignore [missing-import]
 from com.sun.star.table import CellRangeAddress
@@ -315,6 +316,118 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
 
 import Calendario
 
+def _leggi_data_misura(cell):
+    """Data di una cella misura (valore vero o testo gg/mm/aaaa): date oppure None."""
+    try:
+        tipo = cell.Type.value
+        if tipo == 'VALUE':
+            return date.fromordinal(int(cell.Value) + 693594) if cell.Value > 0 else None
+        m = re.match(r'^\s*(\d{1,2})/(\d{1,2})/(\d{4})\s*$', cell.String)
+        if m:
+            return date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+    except (ValueError, OverflowError):
+        pass
+    return None
+
+
+def _scrivi_data_misura(cell, data):
+    """Scrive la data come valore vero, con il formato dello stile (GG/MM/AAAA)."""
+    cell.setPropertyToDefault('NumberFormat')
+    cell.Value = data.toordinal() - 693594
+
+
+def _celle_data_voci(oSheet, da_voce, a_voce):
+    """Celle data (colonna B, stile Data_bianca) delle voci da_voce..a_voce di CONTABILITA."""
+    r0 = SheetUtils.uFindStringCol(str(da_voce), 0, oSheet, equal=1)
+    r1 = SheetUtils.uFindStringCol(str(a_voce), 0, oSheet, equal=1)
+    if r0 is None or r1 is None or int(r1) < int(r0):
+        return []
+    inizio = LeenoComputo.circoscriveVoceComputo(oSheet, int(r0)).RangeAddress.StartRow
+    fine = LeenoComputo.circoscriveVoceComputo(oSheet, int(r1)).RangeAddress.EndRow
+    return [oSheet.getCellByPosition(1, r) for r in range(inizio, fine + 1)
+            if oSheet.getCellByPosition(1, r).CellStyle == 'Data_bianca']
+
+
+def imposta_date_atti_core(oSheet, da_voce, a_voce, data, sovrascrivi):
+    """
+    Imposta la data nelle misure delle voci da_voce..a_voce.
+    sovrascrivi=False: solo le misure senza data.
+    Ritorna (misure modificate, misure totali).
+    """
+    celle = _celle_data_voci(oSheet, da_voce, a_voce)
+    n = 0
+    for cell in celle:
+        if sovrascrivi or _leggi_data_misura(cell) is None:
+            _scrivi_data_misura(cell, data)
+            n += 1
+    return n, len(celle)
+
+
+def date_mancanti(oSheet, da_voce, a_voce):
+    """Numero di misure delle voci da_voce..a_voce prive di data."""
+    return sum(1 for c in _celle_data_voci(oSheet, da_voce, a_voce) if _leggi_data_misura(c) is None)
+
+
+def nascondi_date_libretto(oDoc, nSal):
+    """
+    Non stampa le date delle misure nel libretto del SAL nSal: le celle
+    mantengono il valore ma il formato (;;;) non lo mostra.
+    """
+    nome = '_Lib_' + str(nSal)
+    if not oDoc.NamedRanges.hasByName(nome):
+        return
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+    a = oDoc.NamedRanges.getByName(nome).ReferredCells.RangeAddress
+    from com.sun.star.lang import Locale
+    loc = Locale()
+    loc.Language, loc.Country = 'it', 'IT'
+    nf = oDoc.NumberFormats
+    chiave = nf.queryKey(';;;', loc, False)
+    if chiave == -1:
+        chiave = nf.addNew(';;;', loc)
+    for r in range(a.StartRow, a.EndRow + 1):
+        cell = oSheet.getCellByPosition(1, r)
+        if cell.CellStyle == 'Data_bianca':
+            cell.NumberFormat = chiave
+
+
+def imposta_date_atti():
+    """
+    Dal dialogo degli atti contabili: sceglie una data e la imposta nelle
+    misure comprese tra "Da voce" e "a voce", chiedendo se sovrascrivere
+    quelle che hanno gia' una data diversa.
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        from pyleeno import oDialog1 as dlg
+        da_voce = int(dlg.getControl('da_voce').Text)
+        a_voce = int(dlg.getControl('a_voce').Text)
+    except Exception:
+        Dialogs.Exclamation(Title='ATTENZIONE!', Text="Indicare un intervallo di voci valido.")
+        return
+    celle = _celle_data_voci(oSheet, da_voce, a_voce)
+    if not celle:
+        Dialogs.Info(Title='Date misure', Text="Nessuna misura nell'intervallo indicato.")
+        return
+    esistenti = [d for d in (_leggi_data_misura(c) for c in celle) if d]
+    data = Dialogs.pickDate(esistenti[-1] if esistenti else None)
+    if data is None:
+        return
+    diverse = [d for d in esistenti if d != data]
+    sovrascrivi = True
+    if diverse:
+        r = Dialogs.YesNoCancelDialog(
+            Title='Date misure',
+            Text=f"{len(diverse)} misure su {len(celle)} hanno gia' una data diversa.\n"
+                 "Si: sovrascrive tutte le date. No: imposta solo le misure senza data.")
+        if r == 2:
+            return
+        sovrascrivi = (r == 1)
+    n, tot = imposta_date_atti_core(oSheet, da_voce, a_voce, data, sovrascrivi)
+    Dialogs.Info(Title='Date misure', Text=f"Data {data.strftime('%d/%m/%Y')} impostata in {n} misure su {tot}.")
+
+
 def imposta_data():
     """ Imposta la data scelta nelle misure selezionate."""
     PL.chiudi_dialoghi()
@@ -339,7 +452,8 @@ def imposta_data():
         cell = oSheet.getCellByPosition(1, el)  # colonna B
         if cell.CellStyle == 'Data_bianca':
             try:
-                cell.String = testo
+                g, m, a = (int(x) for x in str(testo).split('/'))
+                _scrivi_data_misura(cell, date(a, m, g))
             except Exception:
                 return
     return
@@ -3196,12 +3310,31 @@ def EseguiContabilita(oDoc):
         indicator.start("Inizializzazione contabilità...", 5)
         indicator.setValue(1)
 
+        # Flag "Stampa date" e controllo delle misure senza data
+        stampa_date = True
+        try:
+            from pyleeno import oDialog1 as _dlg0
+            stampa_date = bool(_dlg0.getControl('StampaDate').State)
+            cfg.write('Contabilita', 'stampa_date', '1' if stampa_date else '0')
+            if stampa_date:
+                mancanti = date_mancanti(oDoc.CurrentController.ActiveSheet,
+                                         int(_dlg0.getControl('da_voce').Text),
+                                         int(_dlg0.getControl('a_voce').Text))
+                if mancanti and not Dialogs.YesNoDialog(
+                        Title='Date misure',
+                        Text=f"{mancanti} misure non hanno una data.\nGenerare comunque gli atti?"):
+                    return
+        except Exception as _exc:
+            LeenoUtils.log_errore('Atti: lettura "Stampa date"', _exc)
+
         # 1. Genera il Libretto
         PL.struttura_off()
         indicator.setText("Generazione Libretto delle Misure...")
         dati = GeneraLibretto(oDoc)
         if not dati:
             return
+        if not stampa_date:
+            nascondi_date_libretto(oDoc, dati[0])
 
         indicator.setValue(2)
 
@@ -3851,13 +3984,6 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
 
     if r_anticipo_cdp is not None:
 
-        for c in range(val_col - 1, -1, -1):
-            cell = oCdP.getCellByPosition(c, r_anticipo_cdp)
-            lbl = cell.String
-            if 'ANTICIP' in lbl.upper():
-                new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
-                cell.String = new_lbl
-                break
         # Il recupero non puo' superare l'Anticipazione annotata in S2
         ref_ant_tot = _riferimento_anticipazione_S2(oS2)
 
@@ -3872,6 +3998,16 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = f'=IF({ref_ant}=0;"";{expr_ant})'
         else:
             oCdP.getCellByPosition(val_col, r_anticipo_cdp).Formula = '0'
+
+        for c in range(val_col - 1, -1, -1):
+            cell = oCdP.getCellByPosition(c, r_anticipo_cdp)
+            lbl = cell.String
+            if 'ANTICIP' in lbl.upper():
+                new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
+                if expr_ant == ref_ant:
+                    new_lbl = 'b) Recupero anticipazione'
+                cell.String = new_lbl
+                break
 
     if r_totdet is not None and r_ritenuta is not None and r_certprec is not None:
         r_det_fine = max(r_ritenuta, r_certprec,

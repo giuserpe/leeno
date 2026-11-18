@@ -452,6 +452,20 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-18 12:59</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/ae663f5e645758734ce4b08dbfb3d57cfcbfb36d" target="_blank" rel="noopener"><code>ae663f5</code></a></td>
+                <td class="commit-msg">feat(contab): data di emissione atti nel dialogo e uso negli elaborati
+
+- Campo «Data atti» in Dialogviste_N (default oggi) per intestazione S2,
+  firme SAL/CdP e Stato Finale
+- data_atti() / _DATA_ATTI: la data scelta nel dialogo sostituisce
+  date.today() in libretto, SAL, S2 e CdP
+- copia_data_misura e scrittura date misure coerente con lo stile
+- Layout dialog: Elimina SAL / Elimina tutti affiancati, etichette più
+  concise, help di Stampa date e Imposta date aggiornati
+- Rimosso il blocco su misure senza data in fase di generazione atti</td>
+            </tr>
+            <tr>
                 <td>2026-11-18 07:04</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/979096835e5fdeef65b39895a070f7ae674902ca" target="_blank" rel="noopener"><code>9790968</code></a></td>
                 <td class="commit-msg">feat(contab): riorganizza il menu degli atti e gestisce le date delle misure</td>
@@ -464,11 +478,6 @@
 In GeneraCdP l’etichetta «b) Recupero anticipazione» riporta sempre la
 percentuale, anche quando il recupero coincide con l’anticipazione totale.
 Rinominato il pulsante in «Ripristina evidenziazioni» (Dialogviste_N).</td>
-            </tr>
-            <tr>
-                <td>2026-11-17 14:14</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/61a87bffb6096021fd995bbc0d46acd10638fb8d" target="_blank" rel="noopener"><code>61a87bf</code></a></td>
-                <td class="commit-msg">fix(GeneraCdP): update logic for 'Recupero anticipazione' label handling</td>
             </tr>
                     </tbody>
                 </table>
@@ -492,8 +501,8 @@ Rinominato il pulsante in «Ripristina evidenziazioni» (Dialogviste_N).</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-18 07:05 UTC</p>
-                <p>Build Commit: <code>9790968</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-18 12:59 UTC</p>
+                <p>Build Commit: <code>ae663f5</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

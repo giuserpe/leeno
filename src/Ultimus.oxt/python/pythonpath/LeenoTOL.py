@@ -236,10 +236,10 @@ def calcola_riepilogo(oDoc, periodo_sal=None, mese_aggiudicazione=None):
                     'contributo_ponderato': contributo,
                 })
                 indice_sintetico += contributo
-            except (ValueError, RuntimeError) as e:
+            except (ValueError, RuntimeError) as _exc:
                 # non interrompe il riepilogo per una singola TOL non raggiungibile:
                 # la riga resta con indici vuoti, visibile nel foglio come anomalia
-                DLG.chi("Indice TOL %d non disponibile: %s" % (numero, e))
+                LeenoUtils.log_errore('calcola_riepilogo: TOL %d' % numero, _exc)
 
         righe.append(riga)
 

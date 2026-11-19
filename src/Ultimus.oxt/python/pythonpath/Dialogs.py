@@ -1380,75 +1380,75 @@ class PathControl(HSizer):
         self.setPath(d)
 
 
-class DateControl(HSizer):
-    '''
-    A text field with a button
-    used to select a date
-    '''
-    def __init__(self, *, Id=None,  Date=None,
-                 MinWidth=None, MinHeight=None,
-                 MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None,
-                 InternalHandler=None):
-        ''' constructor '''
-        super().__init__(Id=Id)
-        btnIcon = 'Icons-24x24/calendar.png'
-        btnWidth, btnHeight = getButtonSize('', Icon=btnIcon)
-        dateWidth, dummy = getTextBox('88 SETTEMBRE 9999XX')
-        if Date is None:
-            Date = date.today()
-        self.add(Edit(Text='', ReadOnly=True, FixedWidth=dateWidth))
-        # self.add(Spacer())
-        self.add(Button(Id=self._id +'.select', Icon=btnIcon, FixedWidth=btnWidth, InternalHandler=self.dateHandler))
-        self._date = Date
+# class DateControl(HSizer):
+#     '''
+#     A text field with a button
+#     used to select a date
+#     '''
+#     def __init__(self, *, Id=None,  Date=None,
+#                  MinWidth=None, MinHeight=None,
+#                  MaxWidth=None, MaxHeight=None,
+#                  FixedWidth=None, FixedHeight=None,
+#                  InternalHandler=None):
+#         ''' constructor '''
+#         super().__init__(Id=Id)
+#         btnIcon = 'Icons-24x24/calendar.png'
+#         btnWidth, btnHeight = getButtonSize('', Icon=btnIcon)
+#         dateWidth, dummy = getTextBox('88 SETTEMBRE 9999XX')
+#         if Date is None:
+#             Date = date.today()
+#         self.add(Edit(Text='', ReadOnly=True, FixedWidth=dateWidth))
+#         # self.add(Spacer())
+#         self.add(Button(Id=self._id +'.select', Icon=btnIcon, FixedWidth=btnWidth, InternalHandler=self.dateHandler))
+#         self._date = Date
 
-    def _fixup(self):
-        """Aggiorna la casella di testo con la data formattata come stringa."""
-        txtBox = self._items[0]
-        txtBox.setText(LeenoUtils.date2String(self._date))
+#     def _fixup(self):
+#         """Aggiorna la casella di testo con la data formattata come stringa."""
+#         txtBox = self._items[0]
+#         txtBox.setText(LeenoUtils.date2String(self._date))
 
-    def getProps(self):
-        '''
-        Get control's properties (name+value)
-        to be set in UNO
-        MUST be redefined on each visible control
-        '''
-        return {'Text': LeenoUtils.date2String(self._date)}
+#     def getProps(self):
+#         '''
+#         Get control's properties (name+value)
+#         to be set in UNO
+#         MUST be redefined on each visible control
+#         '''
+#         return {'Text': LeenoUtils.date2String(self._date)}
 
-    def dump(self,  indent):
-        '''
-        convert object to string
-        '''
-        dat = self._date
-        return super().dump(indent) + f", Date: '{LeenoUtils.date2String(dat)}'" + '}'
+#     def dump(self,  indent):
+#         '''
+#         convert object to string
+#         '''
+#         dat = self._date
+#         return super().dump(indent) + f", Date: '{LeenoUtils.date2String(dat)}'" + '}'
 
-    # handler per il button di selezione data
-    def dateHandler(self, owner, cmdStr):
-        """Apre il calendario di selezione data e aggiorna il valore visualizzato."""
-        nDate = pickDate(self._date)
-        if nDate is not None:
-            self._date = nDate
-        self._fixup()
-        # stop event processing
-        return True
+#     # handler per il button di selezione data
+#     def dateHandler(self, owner, cmdStr):
+#         """Apre il calendario di selezione data e aggiorna il valore visualizzato."""
+#         nDate = pickDate(self._date)
+#         if nDate is not None:
+#             self._date = nDate
+#         self._fixup()
+#         # stop event processing
+#         return True
 
-    def setDate(self, dat):
-        """Imposta la data e aggiorna il testo nel modello del controllo UNO."""
-        self._date = dat
-        if self._UNOControlModel is not None:
-            self._UNOControlModel.Text = LeenoUtils.date2String(self._date)
+#     def setDate(self, dat):
+#         """Imposta la data e aggiorna il testo nel modello del controllo UNO."""
+#         self._date = dat
+#         if self._UNOControlModel is not None:
+#             self._UNOControlModel.Text = LeenoUtils.date2String(self._date)
 
-    def getDate(self):
-        """Restituisce la data memorizzata nel controllo."""
-        return self._date
+#     def getDate(self):
+#         """Restituisce la data memorizzata nel controllo."""
+#         return self._date
 
-    def getData(self):
-        """Restituisce la data del controllo."""
-        return self.getDate()
+#     def getData(self):
+#         """Restituisce la data del controllo."""
+#         return self.getDate()
 
-    def setData(self, d):
-        """Imposta la data del controllo."""
-        self.setDate(d)
+#     def setData(self, d):
+#         """Imposta la data del controllo."""
+#         self.setDate(d)
 
 
 class ImageControl(DialogItem):

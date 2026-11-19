@@ -416,41 +416,44 @@ def nascondi_date_libretto(oDoc, nSal):
             cell.NumberFormat = chiave
 
 
+_DATA_MISURE_RIF = None  # data mostrata dal campo "Data misure" e gia' applicata
+
+
+def data_misure_iniziale(oSheet, da_voce, a_voce):
+    """
+    Data da mostrare nel campo "Data misure" all'apertura del dialogo: quella della
+    prima misura tra da_voce e a_voce, altrimenti oggi. La memorizza come riferimento
+    per riconoscere le modifiche dell'utente.
+    """
+    global _DATA_MISURE_RIF
+    try:
+        date_presenti = [d for d in (_leggi_data_misura(c) for c in _celle_data_voci(oSheet, da_voce, a_voce)) if d]
+    except Exception:
+        date_presenti = []
+    _DATA_MISURE_RIF = date_presenti[0] if date_presenti else date.today()
+    return _DATA_MISURE_RIF
+
+
 def imposta_date_atti():
     """
-    Dal dialogo degli atti contabili: sceglie una data e la imposta nelle
-    misure comprese tra "Da voce" e "a voce", chiedendo se sovrascrivere
-    quelle che hanno gia' una data diversa.
+    Evento del campo "Data misure" (uscita dal campo): se la data e' cambiata la
+    imposta in tutte le misure ancora da registrare comprese tra "Da voce" e "a voce".
     """
+    global _DATA_MISURE_RIF
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         from pyleeno import oDialog1 as dlg
+        d = dlg.getControl('DataMisure').Date
+        data = date(d.Year, d.Month, d.Day)
         da_voce = int(dlg.getControl('da_voce').Text)
         a_voce = int(dlg.getControl('a_voce').Text)
     except Exception:
-        Dialogs.Exclamation(Title='ATTENZIONE!', Text="Indicare un intervallo di voci valido.")
         return
-    celle = _celle_data_voci(oSheet, da_voce, a_voce)
-    if not celle:
-        Dialogs.Info(Title='Date misure', Text="Nessuna misura nell'intervallo indicato.")
+    if data == _DATA_MISURE_RIF:
         return
-    esistenti = [d for d in (_leggi_data_misura(c) for c in celle) if d]
-    data = Dialogs.pickDate(esistenti[-1] if esistenti else None)
-    if data is None:
-        return
-    diverse = [d for d in esistenti if d != data]
-    sovrascrivi = True
-    if diverse:
-        r = Dialogs.YesNoCancelDialog(
-            Title='Date misure',
-            Text=f"{len(diverse)} misure su {len(celle)} hanno gia' una data diversa.\n"
-                 "Si: sovrascrive tutte le date. No: imposta solo le misure senza data.")
-        if r == 2:
-            return
-        sovrascrivi = (r == 1)
-    n, tot = imposta_date_atti_core(oSheet, da_voce, a_voce, data, sovrascrivi)
-    Dialogs.Info(Title='Date misure', Text=f"Data {data.strftime('%d/%m/%Y')} impostata in {n} misure su {tot}.")
+    imposta_date_atti_core(oSheet, da_voce, a_voce, data, True)
+    _DATA_MISURE_RIF = data
 
 
 def imposta_data():
@@ -1913,7 +1916,7 @@ def GeneraRegistro(oDoc, dati):
     # Posizionamento firme
     riga_base_firme = current_row + 4
     oRegSheet.getCellByPosition(1, riga_base_firme).CellStyle = "Ultimus_destra"
-    oRegSheet.getCellByPosition(1, riga_base_firme).Formula = f'=CONCATENATE("{datafirme}";TEXT(NOW();"GG/mm/aaaa"))'
+    oRegSheet.getCellByPosition(1, riga_base_firme).String = datafirme + data_atti().strftime('%d/%m/%Y')
 
     oRegSheet.getCellByPosition(1, riga_base_firme + 2).String = f'L\'Impresa esecutrice\n({nome_impresa})'
     oRegSheet.getCellByPosition(1, riga_base_firme + 2).IsTextWrapped = True
@@ -4025,7 +4028,11 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             lbl = cell.String
             if 'ANTICIP' in lbl.upper():
                 new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
-                if expr_ant == ref_ant:
+                # ref_ant e' definita solo nel ramo elif (r2_anticipo is not None).
+                # Nel ramo aliquota_anticipo > 0, expr_ant e ref_ant sono entrambi
+                # assenti: il confronto non ha senso, si mantiene la label con %.
+                _ref_ant = locals().get('ref_ant')
+                if _ref_ant is not None and expr_ant == _ref_ant:
                     new_lbl = 'b) Recupero anticipazione'
                 cell.String = new_lbl
                 break

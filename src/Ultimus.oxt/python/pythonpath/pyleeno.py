@@ -2867,11 +2867,20 @@ def scelta_viste_run():
         _data = uno.createUnoStruct('com.sun.star.util.Date')
         _data.Year, _data.Month, _data.Day = _oggi.year, _oggi.month, _oggi.day
         oDialog1.getControl('DataAtti').Date = _data
+        try:
+            _dm = LeenoContab.data_misure_iniziale(oSheet, int(oDialog1.getControl('da_voce').Text),
+                                                   int(oDialog1.getControl('a_voce').Text))
+            _data_m = uno.createUnoStruct('com.sun.star.util.Date')
+            _data_m.Year, _data_m.Month, _data_m.Day = _dm.year, _dm.month, _dm.day
+            oDialog1.getControl('DataMisure').Date = _data_m
+        except Exception as _exc:
+            LeenoUtils.log_errore('Dialogo atti: data misure iniziale', _exc)
 
         if LeenoContab.tutte_voci_registrate(oSheet):
             # nessuna misura da registrare: le date non sono applicabili
             oDialog1.getControl('StampaDate').Enable = False
-            oDialog1.getControl('ImpostaDateAtti').Enable = False
+            oDialog1.getControl('DataMisure').Enable = False
+            oDialog1.getControl('LabelDataMisure').Enable = False
             if listaSal and not LeenoContab.sal_finale_emesso(oDoc):
                 # tutto registrato: resta possibile emettere solo il SAL finale
                 oDialog1.getControl('StatoFinale').State = 1
@@ -12223,8 +12232,6 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 
 @LeenoUtils.release_ram
 def MENU_debug():
-    sistema_cose()
-    return
     import LeenoCdPBis
     LeenoCdPBis.MENU_ripristina_evidenziazioni_cdpbis()
     LeenoUtils.DocumentRefresh(True)

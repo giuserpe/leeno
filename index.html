@@ -452,6 +452,18 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-19 07:30</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/d152865bb061866a7866752f2dd3252b75cfc709" target="_blank" rel="noopener"><code>d152865</code></a></td>
+                <td class="commit-msg">feat(contab): separa Data misure e Data atti nel dialogo Viste
+
+- Campo «Data misure»: applica le date alle misure ancora da registrare
+  all’uscita dal campo (on-blur), senza dialogo di conferma
+- Campo «Data atti» resta per emissione documenti (S2, firme SAL/CdP)
+- data_misure_iniziale: precompila con la prima data dell’intervallo
+- Firme Registro con data_atti() al posto di NOW()
+- Ripristina evidenziazioni spostato nel riquadro Revisione prezzi</td>
+            </tr>
+            <tr>
                 <td>2026-11-18 21:01</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/7a7e8103c0d540a5ffda96139c5505dec71e8dcf" target="_blank" rel="noopener"><code>7a7e810</code></a></td>
                 <td class="commit-msg">fix(contab): corregge UnboundLocalError su ref_ant in GeneraCdP</td>
@@ -461,20 +473,6 @@
                 <td><a href="https://github.com/giuserpe/leeno/commit/d42e74a768376c230af00074a63f6cfda56c6973" target="_blank" rel="noopener"><code>d42e74a</code></a></td>
                 <td class="commit-msg">feat(contab): riorganizza il menu degli atti e aggiunge gestione date
 fix(dialogo): rinomina il pulsante in "Ripristina evidenziazioni prezzi" e lo sposta in Revisione prezzi</td>
-            </tr>
-            <tr>
-                <td>2026-11-18 12:59</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/ae663f5e645758734ce4b08dbfb3d57cfcbfb36d" target="_blank" rel="noopener"><code>ae663f5</code></a></td>
-                <td class="commit-msg">feat(contab): data di emissione atti nel dialogo e uso negli elaborati
-
-- Campo «Data atti» in Dialogviste_N (default oggi) per intestazione S2,
-  firme SAL/CdP e Stato Finale
-- data_atti() / _DATA_ATTI: la data scelta nel dialogo sostituisce
-  date.today() in libretto, SAL, S2 e CdP
-- copia_data_misura e scrittura date misure coerente con lo stile
-- Layout dialog: Elimina SAL / Elimina tutti affiancati, etichette più
-  concise, help di Stampa date e Imposta date aggiornati
-- Rimosso il blocco su misure senza data in fase di generazione atti</td>
             </tr>
                     </tbody>
                 </table>
@@ -498,8 +496,8 @@ fix(dialogo): rinomina il pulsante in "Ripristina evidenziazioni prezzi" e lo sp
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-18 21:01 UTC</p>
-                <p>Build Commit: <code>7a7e810</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-19 07:32 UTC</p>
+                <p>Build Commit: <code>ba254a1</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

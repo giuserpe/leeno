@@ -2849,7 +2849,10 @@ def scelta_viste_run():
         except:
             pass
         if len(listaSal) != 0:
-            oDialog1.getControl('RimuoviSAL').Label = "Elimina SAL n. " + str(len(listaSal))
+            if LeenoContab.sal_finale_emesso(oDoc):
+                oDialog1.getControl('RimuoviSAL').Label = "Elimina Finale"
+            else:
+                oDialog1.getControl('RimuoviSAL').Label = "Elimina SAL n. " + str(len(listaSal))
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. ' + str(len(listaSal)+1)
         else:
             oDialog1.getControl('ComboBox1').Text = ''
@@ -12232,6 +12235,41 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.Sheets.getByName("Elenco Prezzi")
+    
+    testi = []
+    
+    # 1. Estrazione dei testi dalle righe 275-429
+    for el in range(275, 430):
+        cell_0 = oSheet.getCellByPosition(0, el)
+        testo = cell_0.String
+        if testo != "":
+            testi.append(testo)
+            cell_0.CellBackColor = COLORE_VERDE_SPUNTA
+    importi = {}
+    # 2. Ricerca degli importi nelle righe 0-274
+    for i in testi:
+        for el in range(0, 275):
+            cell_0 = oSheet.getCellByPosition(0, el)
+            if i in cell_0.String:
+                cell_13 = oSheet.getCellByPosition(13, el)
+                cell_21 = oSheet.getCellByPosition(21, el)
+                importi[i] = cell_13.Value,cell_21.Value
+                cell_21.CellBackColor = COLORE_VERDE_SPUNTA
+                
+    # Chiamata al dialogo (se presente)
+    # DLG.chi(importi)
+    # 3. Scrittura degli importi trovati nella colonna 1 (righe 275-429)
+    for el in range(275, 430):
+        testo = oSheet.getCellByPosition(0, el).String
+        if testo != "":
+            valore_importo = importi.get(testo)
+            if valore_importo is not None:
+                oSheet.getCellByPosition(13, el).Value = valore_importo[0]
+                oSheet.getCellByPosition(21, el).Value = valore_importo[1]
+                
+    return
     import LeenoCdPBis
     LeenoCdPBis.MENU_ripristina_evidenziazioni_cdpbis()
     LeenoUtils.DocumentRefresh(True)

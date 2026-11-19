@@ -595,6 +595,7 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
 def MENU_AnnullaAttiContabili():
     '''
     Annulla gli atti dell'ultimo SAL registrato (Libretto, Registro, SAL, CdP).
+    Con il SAL finale presente elimina solo quello.
     '''
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
@@ -602,6 +603,20 @@ def MENU_AnnullaAttiContabili():
 
     if len(listaSal) == 0:
         Dialogs.Exclamation(Title='ATTENZIONE!', Text="Nessun SAL registrato da eliminare.")
+        return
+
+    # Con il SAL finale presente, "Elimina" toglie solo quello (Libretto, Registro, SAL e CdP restano)
+    if sal_finale_emesso(oDoc):
+        messaggio = ("Stai per eliminare il SAL finale (pagina dello Stato Finale e colonna FINALE in S2).\n"
+                     "Gli altri atti non vengono toccati.\n\nVuoi procedere?")
+        if Dialogs.DLG_ask(IconType="warning", Title='*** A T T E N Z I O N E ! ***', Text=messaggio) == 1:
+            try:
+                _rimuovi_sal_finale(oDoc)
+                mostra_sal(listaSal[-1], pagebreak=False, naviga=False)
+                Dialogs.Info(Text="SAL finale eliminato.")
+            except Exception as _exc:
+                LeenoUtils.log_errore('Elimina SAL finale', _exc)
+                Dialogs.Exclamation(Title='ATTENZIONE!', Text="Eliminazione del SAL finale non riuscita. Dettagli nel file leeno_errori.log.")
         return
 
     messaggio = 'Stai per eliminare gli atti del SAL n.' + listaSal[-1] + '\n\nVuoi procedere?'
@@ -3205,7 +3220,8 @@ def firme_libretto(lrowF=None, oSheet=None, col=None, aggiungi_spazio=True):
 
     # --- 3. Composizione Lista Firme ---
     firme = []
-    firme.append(f"{luogo} ___/___/_________") # Data
+    data_firma = _DATA_ATTI.strftime('%d/%m/%Y') if _DATA_ATTI else '___/___/_________'
+    firme.append(f"{luogo} {data_firma}") # Data
 
     impresa = R('Appaltatore') or R('Impresa')
     if impresa:
@@ -3790,7 +3806,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
     nome_resp   = _leggi_dato_anagrafico(oS2, 'Responsabile') or _leggi_dato_anagrafico(oS2, 'R.U.P.') or _leggi_dato_anagrafico(oS2, 'RUP')
     luogo_raw   = _leggi_dato_anagrafico(oS2, 'Località')
     luogo       = luogo_raw.split(' ')[-1] if luogo_raw else ''
-    data_odierna = data_atti().strftime('%d/%m/%Y')
+    data_odierna = date.today().strftime('%d/%m/%Y')  # il CdP non usa la "Data atti" del dialogo
 
     # Dati contratto
     data_contr  = _leggi_dato_anagrafico(oS2, 'Data contratto')

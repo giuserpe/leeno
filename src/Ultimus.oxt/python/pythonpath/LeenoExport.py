@@ -6,7 +6,6 @@
 ########################################################################
 
 import os
-import threading
 import codecs
 import logging
 from xml.etree.ElementTree import Element, SubElement, tostring
@@ -82,7 +81,7 @@ def XPWE_export_run():
         return
     # Richiede il file di output
     out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
-    if out_file == '':
+    if not out_file:
         return
     # Se l'utente ha selezionato "Analisi di Prezzo", assicurati che "Elenco Prezzi" sia nella lista
     # if analisi and "Elenco Prezzi" not in lista:
@@ -90,7 +89,11 @@ def XPWE_export_run():
     # Esporta i dati selezionati
     for el in lista:
         # XPWE_out(el, out_file, analisi)
-        XPWE_out(el, out_file)
+        try:
+            XPWE_out(el, out_file)
+        except Exception as e:
+            DLG.chi(f"Errore durante l'esportazione XPWE di {el}:\n{e}")
+            return
 
 
 
@@ -1203,28 +1206,13 @@ def MENU_esporta_markdown():
 
 
 
-class XPWE_export_th(threading.Thread):
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    def __init__(self):
-        '''Inizializza il thread per l'esportazione del file XPWE.'''
-        threading.Thread.__init__(self)
-
-    def run(self):
-        '''Esegue la procedura di esportazione XPWE nel thread in background.'''
-        XPWE_export_run()
-
-
-
-
-
-
 def MENU_XPWE_export():
     '''
-    @@ DA DOCUMENTARE
+    Esporta il computo in formato XPWE (PriMus).
+    Eseguito nel thread principale: i dialoghi nativi (file picker) su macOS
+    non funzionano da thread secondari.
     '''
-    XPWE_export_th().start()
+    XPWE_export_run()
 
 
 

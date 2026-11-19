@@ -4028,11 +4028,7 @@ def GeneraCdP(oDoc, dati=None, nSal=None, silent=False):
             lbl = cell.String
             if 'ANTICIP' in lbl.upper():
                 new_lbl = f'b) Recupero anticipazione {perc_anticipo_str}%'
-                # ref_ant e' definita solo nel ramo elif (r2_anticipo is not None).
-                # Nel ramo aliquota_anticipo > 0, expr_ant e ref_ant sono entrambi
-                # assenti: il confronto non ha senso, si mantiene la label con %.
-                _ref_ant = locals().get('ref_ant')
-                if _ref_ant is not None and expr_ant == _ref_ant:
+                if expr_ant == ref_ant:
                     new_lbl = 'b) Recupero anticipazione'
                 cell.String = new_lbl
                 break

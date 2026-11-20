@@ -60,8 +60,6 @@ if 'LeenoDispatcher' not in sys.modules:
     sys.modules['LeenoDispatcher'] = MagicMock()
 if 'LeenoComputo' not in sys.modules:
     sys.modules['LeenoComputo'] = MagicMock()
-if 'Calendario' not in sys.modules:
-    sys.modules['Calendario'] = MagicMock()
 
 import LeenoGlobals
 import LeenoUtils

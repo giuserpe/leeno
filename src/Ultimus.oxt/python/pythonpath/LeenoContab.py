@@ -317,8 +317,6 @@ def insertVoceContabilita(lrow=0, arg=1, cod=None):
 
 # ###############################################################
 
-import Calendario
-
 _DATA_ATTI = None  # data di emissione scelta nel dialogo (None = oggi)
 
 
@@ -461,7 +459,9 @@ def imposta_data():
     PL.chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    testo = Calendario.calendario()
+    data = Dialogs.pickDate()
+    if data is None:
+        return 0
 
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
@@ -480,9 +480,9 @@ def imposta_data():
         cell = oSheet.getCellByPosition(1, el)  # colonna B
         if cell.CellStyle == 'Data_bianca':
             try:
-                g, m, a = (int(x) for x in str(testo).split('/'))
-                _scrivi_data_misura(cell, date(a, m, g))
-            except Exception:
+                _scrivi_data_misura(cell, data)
+            except Exception as _exc:
+                LeenoUtils.log_errore('imposta_data: scrittura data', _exc)
                 return
     return
 

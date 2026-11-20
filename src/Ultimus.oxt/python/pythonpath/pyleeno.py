@@ -8933,12 +8933,9 @@ def vista_configurazione(tipo_configurazione):
 
 
         elif tipo_configurazione == "Semplificata":
-            # Raggruppa e chiude colonne 19-28
-            target_sheet.group(create_cell_range(iSheet, 19, 28), 0)
-            target_sheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
+            # Colonne 19-30 gestite da raggruppa_colonne_contabilita (una sola volta)
             # Raggruppa e chiude colonne 31-37
-            target_sheet.group(create_cell_range(iSheet, 31, 37), 0)
-            target_sheet.getCellRangeByPosition(31, 0, 37, 0).Columns.IsVisible = False
+            LeenoSheetUtils.raggruppa_colonne(target_sheet, 31, 37)
 
         if target_sheet.Name == 'CONTABILITA':
             LeenoSheetUtils.raggruppa_colonne_contabilita(target_sheet)

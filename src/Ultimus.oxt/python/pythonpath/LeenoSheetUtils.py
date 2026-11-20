@@ -110,23 +110,45 @@ def DelPrintSheetArea ():
 
 # ###############################################################
 
+def raggruppa_colonne(oSheet, start, end, nascondi=True):
+    '''
+    Raggruppa le colonne start-end (indici 0-based) UNA SOLA VOLTA.
+    Ogni group() aggiunge un livello di struttura: prima si eliminano
+    i livelli eventualmente presenti sullo stesso intervallo, poi si
+    raggruppa e, se richiesto, si chiude il gruppo.
+    '''
+    addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    addr.Sheet = oSheet.RangeAddress.Sheet
+    addr.StartColumn = start
+    addr.EndColumn = end
+    addr.StartRow = 0
+    addr.EndRow = 0
+    for _ in range(10):
+        oSheet.ungroup(addr, 0)
+    oSheet.group(addr, 0)
+    if nascondi:
+        oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible = False
+
+
 def raggruppa_colonne_contabilita(oSheet):
     '''
-    Garantisce che le colonne da T ad AC (indici 19-28) rimangano raggruppate e chiuse nel foglio CONTABILITA.
+    Nel foglio CONTABILITA garantisce che:
+    - le colonne T:AC (19-28) siano raggruppate una sola volta e chiuse
+    - le colonne AD:AE (29-30) siano raggruppate una sola volta e chiuse
+    - le colonne K e M (10 e 12) restano sempre chiuse (larghezza 0)
     '''
     if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
         return
     try:
-        addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-        addr.Sheet = oSheet.RangeAddress.Sheet
-        addr.StartColumn = 19
-        addr.EndColumn = 28
-        addr.StartRow = 0
-        addr.EndRow = 0
-        oSheet.group(addr, 0)
-        oSheet.getCellRangeByPosition(19, 0, 28, 0).Columns.IsVisible = False
+        raggruppa_colonne(oSheet, 19, 28)
+        raggruppa_colonne(oSheet, 29, 30)
     except Exception as _exc:
-        LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AC', _exc)
+        LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AE', _exc)
+    try:
+        for col in (10, 12):
+            oSheet.getColumns().getByIndex(col).IsVisible = False
+    except Exception as _exc:
+        LeenoUtils.log_errore('raggruppa_colonne_contabilita: chiusura K e M', _exc)
 
 
 def setVisibilitaColonne(oSheet, sValori):
@@ -336,7 +358,7 @@ def setLarghezzaColonne(oSheet):
                 'AX': 1900, 'AY': 1900
             },
             'freeze': (0, 3),
-            'visible_cols': 'TTTFFTTTTTFTFTFTFFFTTFTTFFFFTTTFFFFFF',
+            'visible_cols': 'TTTFFTTTTTFTFTFTFFFTTFTTFFFFTFFFFFFFF',
             'range_widths': [
                 (13, 1023, 1900),
                 (19, 23, 1000)

@@ -130,6 +130,28 @@ def raggruppa_colonne(oSheet, start, end, nascondi=True):
         oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible = False
 
 
+MARCATORE_GRUPPI_CONTABILITA = 'LeenO_gruppi_colonne_contabilita'
+
+
+def _gruppi_contabilita_normalizzati(oDoc):
+    '''True se il documento è già passato dalla struttura a gruppi di CONTABILITA.'''
+    try:
+        props = oDoc.getDocumentProperties().getUserDefinedProperties()
+        return bool(props.getPropertySetInfo().hasPropertyByName(MARCATORE_GRUPPI_CONTABILITA))
+    except Exception as _exc:
+        LeenoUtils.log_errore('_gruppi_contabilita_normalizzati', _exc)
+        return False
+
+
+def _segna_gruppi_contabilita_normalizzati(oDoc):
+    try:
+        props = oDoc.getDocumentProperties().getUserDefinedProperties()
+        if not props.getPropertySetInfo().hasPropertyByName(MARCATORE_GRUPPI_CONTABILITA):
+            props.addProperty(MARCATORE_GRUPPI_CONTABILITA, 128, '1')
+    except Exception as _exc:
+        LeenoUtils.log_errore('_segna_gruppi_contabilita_normalizzati', _exc)
+
+
 def raggruppa_colonne_contabilita(oSheet):
     '''
     Nel foglio CONTABILITA garantisce che:
@@ -156,6 +178,7 @@ def raggruppa_colonne_contabilita(oSheet):
         raggruppa_colonne(oSheet, 27, 28)
         raggruppa_colonne(oSheet, 29, 30)
         raggruppa_colonne(oSheet, 31, 37)
+        _segna_gruppi_contabilita_normalizzati(LeenoUtils.getDocument())
     except Exception as _exc:
         LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AL', _exc)
     try:
@@ -165,21 +188,41 @@ def raggruppa_colonne_contabilita(oSheet):
         LeenoUtils.log_errore('raggruppa_colonne_contabilita: chiusura K, M, Y, Z, AA', _exc)
 
 
-def ripristina_vista_contabilita(oSheet):
+GRUPPI_CONTABILITA = ((19, 23), (27, 28), (29, 30), (31, 37))
+
+
+def gruppi_contabilita_aperti(oSheet):
+    '''
+    Restituisce i gruppi di colonne di CONTABILITA che al momento sono aperti
+    (prima colonna del gruppo visibile). Un documento non ancora normalizzato
+    non ha gruppi scelti dall'utente: restituisce [] e la vista parte chiusa.
+    '''
+    if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
+        return []
+    if not _gruppi_contabilita_normalizzati(LeenoUtils.getDocument()):
+        return []
+    try:
+        oCols = oSheet.getColumns()
+        return [g for g in GRUPPI_CONTABILITA if oCols.getByIndex(g[0]).IsVisible]
+    except Exception as _exc:
+        LeenoUtils.log_errore('gruppi_contabilita_aperti', _exc)
+        return []
+
+
+def ripristina_vista_contabilita(oSheet, aperti=None):
     '''
     Ripristina la vista predefinita di CONTABILITA (larghezze, colonne
-    nascoste, gruppi) senza chiudere i gruppi che l'utente ha aperto
-    con il pulsante + prima della chiamata.
+    nascoste, gruppi) senza chiudere i gruppi che l'utente aveva aperto
+    con il pulsante +.
+    Args:
+        aperti: gruppi da lasciare aperti, letti con gruppi_contabilita_aperti
+            prima di operazioni che possono richiuderli; se None vengono
+            letti al momento della chiamata.
     '''
     if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
         return
-    gruppi = ((19, 23), (27, 28), (29, 30), (31, 37))
-    aperti = []
-    try:
-        oCols = oSheet.getColumns()
-        aperti = [g for g in gruppi if oCols.getByIndex(g[0]).IsVisible]
-    except Exception as _exc:
-        LeenoUtils.log_errore('ripristina_vista_contabilita: lettura stato gruppi', _exc)
+    if aperti is None:
+        aperti = gruppi_contabilita_aperti(oSheet)
     setLarghezzaColonne(oSheet, altezza_righe=False)
     try:
         for start, end in aperti:

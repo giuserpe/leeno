@@ -2907,6 +2907,10 @@ def scelta_viste_run():
         if oDialog1.execute() == 0:
             return
 
+        # stato dei gruppi di colonne aperti dall'utente, letto prima che
+        # le operazioni successive (es. mostra_sal) li richiudano
+        gruppi_aperti = LeenoSheetUtils.gruppi_contabilita_aperti(oSheet)
+
         # se StatoFinale è selezionato, imposta il flag di modulo
         if oDialog1.getControl('StatoFinale').State == 1:
             StatoFinale = True
@@ -2957,7 +2961,7 @@ def scelta_viste_run():
         except Exception as _exc:
             LeenoUtils.log_errore('scelta_viste_run: mostra_sal', _exc)
 
-        LeenoSheetUtils.ripristina_vista_contabilita(oSheet)
+        LeenoSheetUtils.ripristina_vista_contabilita(oSheet, gruppi_aperti)
 
 
 #Elenco Prezzi

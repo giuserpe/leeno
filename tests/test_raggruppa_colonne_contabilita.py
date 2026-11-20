@@ -150,12 +150,20 @@ class TestRaggruppaColonneContabilita(unittest.TestCase):
                 sheet_contab.getByIndex(col).IsVisible = False
         sheet_contab.getByIndex(19).IsVisible = True
         ns = {"LeenoUtils": self.mock_utils, "setLarghezzaColonne": MagicMock()}
-        exec(_estrai_funzione(SRC_SHEET_UTILS, "ripristina_vista_contabilita"), ns)
+        exec("GRUPPI_CONTABILITA = ((19, 23), (27, 28), (29, 30), (31, 37))", ns)
+        exec("MARCATORE_GRUPPI_CONTABILITA = 'x'", ns)
+        for nome in ("_gruppi_contabilita_normalizzati", "gruppi_contabilita_aperti", "ripristina_vista_contabilita"):
+            exec(_estrai_funzione(SRC_SHEET_UTILS, nome), ns)
         ns["ripristina_vista_contabilita"](sheet_contab)
         ns["setLarghezzaColonne"].assert_called_once_with(sheet_contab, altezza_righe=False)
         self.assertTrue(sheet_contab.getCellRangeByPosition(19, 0, 23, 0).Columns.IsVisible)
         self.assertFalse(sheet_contab.getByIndex(27).IsVisible)
         self.assertFalse(sheet_contab.getByIndex(29).IsVisible)
+
+        # stato letto prima e passato esplicitamente: vale quello passato
+        sheet_contab.getByIndex(19).IsVisible = False
+        ns["ripristina_vista_contabilita"](sheet_contab, [(19, 23)])
+        self.assertTrue(sheet_contab.getCellRangeByPosition(19, 0, 23, 0).Columns.IsVisible)
 
     def test_raggruppa_colonne_contabilita_ignora_altri_fogli(self):
         sheet_computo = MockSheet("COMPUTO", 0)
@@ -213,6 +221,21 @@ class TestRaggruppaColonneContabilita(unittest.TestCase):
         ns["struttura_CONTAB"]()
 
         ns["LeenoSheetUtils"].raggruppa_colonne_contabilita.assert_called_with(sheet_contab)
+
+    def test_documento_non_normalizzato_parte_chiuso(self):
+        sheet_contab = MockSheet("CONTABILITA", 2)
+        sheet_contab.getByIndex(29).IsVisible = True  # AD:AE visibili nel vecchio template
+        utils = MagicMock()
+        info = utils.getDocument.return_value.getDocumentProperties.return_value \
+            .getUserDefinedProperties.return_value.getPropertySetInfo.return_value
+        info.hasPropertyByName.return_value = False
+        ns = {"LeenoUtils": utils}
+        exec("GRUPPI_CONTABILITA = ((19, 23), (27, 28), (29, 30), (31, 37))", ns)
+        exec("MARCATORE_GRUPPI_CONTABILITA = 'x'", ns)
+        for nome in ("_gruppi_contabilita_normalizzati", "gruppi_contabilita_aperti"):
+            exec(_estrai_funzione(SRC_SHEET_UTILS, nome), ns)
+        self.assertEqual(ns["gruppi_contabilita_aperti"](sheet_contab), [])
+
 
 
 if __name__ == '__main__':

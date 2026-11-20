@@ -133,22 +133,35 @@ def raggruppa_colonne(oSheet, start, end, nascondi=True):
 def raggruppa_colonne_contabilita(oSheet):
     '''
     Nel foglio CONTABILITA garantisce che:
-    - le colonne T:AC (19-28) siano raggruppate una sola volta e chiuse
-    - le colonne AD:AE (29-30) siano raggruppate una sola volta e chiuse
-    - le colonne K e M (10 e 12) restano sempre chiuse (larghezza 0)
+    - T:X (19-23) e AB:AC (27-28) siano raggruppate una sola volta e chiuse
+    - AD:AE (29-30) siano raggruppate una sola volta e chiuse
+    - K, M, Y, Z e AA (10, 12, 24, 25, 26) restino sempre a larghezza 0
+
+    Y:AA restano fuori da ogni gruppo: se fossero dentro un unico gruppo
+    T:AC, il pulsante + li riaprirebbe.
     '''
     if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
         return
     try:
-        raggruppa_colonne(oSheet, 19, 28)
+        # pulizia del vecchio gruppo unico T:AC (anche con livelli duplicati)
+        addr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        addr.Sheet = oSheet.RangeAddress.Sheet
+        addr.StartColumn = 19
+        addr.EndColumn = 28
+        addr.StartRow = 0
+        addr.EndRow = 0
+        for _ in range(10):
+            oSheet.ungroup(addr, 0)
+        raggruppa_colonne(oSheet, 19, 23)
+        raggruppa_colonne(oSheet, 27, 28)
         raggruppa_colonne(oSheet, 29, 30)
     except Exception as _exc:
         LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AE', _exc)
     try:
-        for col in (10, 12):
+        for col in (10, 12, 24, 25, 26):
             oSheet.getColumns().getByIndex(col).IsVisible = False
     except Exception as _exc:
-        LeenoUtils.log_errore('raggruppa_colonne_contabilita: chiusura K e M', _exc)
+        LeenoUtils.log_errore('raggruppa_colonne_contabilita: chiusura K, M, Y, Z, AA', _exc)
 
 
 def setVisibilitaColonne(oSheet, sValori):

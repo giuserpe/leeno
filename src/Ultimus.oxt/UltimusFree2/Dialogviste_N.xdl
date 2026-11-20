@@ -62,20 +62,14 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="22" dlg:left="14" dlg:top="266" dlg:width="104" dlg:height="14" dlg:help-text="&amp;1346.Dialogviste_N.CommandButton6.HelpText" dlg:value="&amp;1347.Dialogviste_N.CommandButton6.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trasferimento_onfly?language=Basic&amp;location=application" script:language="Script" />
   </dlg:button>
-  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl6" dlg:tab-index="23" dlg:left="133" dlg:top="22" dlg:width="95" dlg:height="87" dlg:help-text="&amp;1081.Dialogviste_N.FrameControl6.HelpText">
+  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl6" dlg:tab-index="23" dlg:left="133" dlg:top="22" dlg:width="95" dlg:height="71" dlg:help-text="&amp;1081.Dialogviste_N.FrameControl6.HelpText">
    <dlg:title dlg:value="&amp;1082.Dialogviste_N.FrameControl6.Label" />
   </dlg:titledbox>
-  <dlg:combobox dlg:style-id="0" dlg:id="ComboVISTA" dlg:tab-index="24" dlg:left="139" dlg:top="35" dlg:width="83" dlg:height="12" dlg:help-text="&amp;1072.Dialogviste_N.ComboVISTA.HelpText" dlg:value="&amp;1076.Dialogviste_N.ComboVISTA.Text" dlg:spin="true">
-   <dlg:menupopup>
-    <dlg:menuitem dlg:value="&amp;1410.ComboVISTA.StringItemList" />
-    <dlg:menuitem dlg:value="&amp;1411.ComboVISTA.StringItemList" />
-   </dlg:menupopup>
-  </dlg:combobox>
-  <dlg:combobox dlg:style-id="0" dlg:id="ComboBox1" dlg:tab-index="25" dlg:left="169" dlg:top="51" dlg:width="53" dlg:height="12" dlg:help-text="&amp;944.Dialogviste_N.ComboBox1.HelpText" dlg:value="&amp;945.Dialogviste_N.ComboBox1.Text" dlg:spin="true" />
-  <dlg:text dlg:style-id="0" dlg:id="Label6" dlg:tab-index="26" dlg:left="139" dlg:top="51" dlg:width="28" dlg:height="12" dlg:help-text="&amp;942.Dialogviste_N.Label6.HelpText" dlg:value="&amp;943.Dialogviste_N.Label6.Label" dlg:valign="center" />
-  <dlg:checkbox dlg:style-id="0" dlg:id="Descrizione_condensata" dlg:tab-index="27" dlg:left="139" dlg:top="68" dlg:width="83" dlg:height="10" dlg:help-text="&amp;1103.Dialogviste_N.Descrizione_condensata.HelpText" dlg:value="&amp;1104.Dialogviste_N.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false" />
-  <dlg:checkbox dlg:style-id="0" dlg:id="Dettaglio" dlg:tab-index="28" dlg:left="139" dlg:top="81" dlg:width="83" dlg:height="10" dlg:help-text="&amp;610.Dialogviste_N.Dettaglio.HelpText" dlg:value="&amp;611.Dialogviste_N.Dettaglio.Label" dlg:valign="center" dlg:checked="false" />
-  <dlg:checkbox dlg:id="mostra_categorie" dlg:tab-index="29" dlg:left="139" dlg:top="94" dlg:width="83" dlg:height="10" dlg:help-text="&amp;1401.Dialogviste_N.mostra_categorie.HelpText" dlg:value="&amp;1402.Dialogviste_N.mostra_categorie.Label" dlg:checked="false" />
+  <dlg:combobox dlg:style-id="0" dlg:id="ComboBox1" dlg:tab-index="25" dlg:left="169" dlg:top="35" dlg:width="53" dlg:height="12" dlg:help-text="&amp;944.Dialogviste_N.ComboBox1.HelpText" dlg:value="&amp;945.Dialogviste_N.ComboBox1.Text" dlg:spin="true" />
+  <dlg:text dlg:style-id="0" dlg:id="Label6" dlg:tab-index="26" dlg:left="139" dlg:top="35" dlg:width="28" dlg:height="12" dlg:help-text="&amp;942.Dialogviste_N.Label6.HelpText" dlg:value="&amp;943.Dialogviste_N.Label6.Label" dlg:valign="center" />
+  <dlg:checkbox dlg:style-id="0" dlg:id="Descrizione_condensata" dlg:tab-index="27" dlg:left="139" dlg:top="52" dlg:width="83" dlg:height="10" dlg:help-text="&amp;1103.Dialogviste_N.Descrizione_condensata.HelpText" dlg:value="&amp;1104.Dialogviste_N.Descrizione_condensata.Label" dlg:valign="center" dlg:checked="false" />
+  <dlg:checkbox dlg:style-id="0" dlg:id="Dettaglio" dlg:tab-index="28" dlg:left="139" dlg:top="65" dlg:width="83" dlg:height="10" dlg:help-text="&amp;610.Dialogviste_N.Dettaglio.HelpText" dlg:value="&amp;611.Dialogviste_N.Dettaglio.Label" dlg:valign="center" dlg:checked="false" />
+  <dlg:checkbox dlg:id="mostra_categorie" dlg:tab-index="29" dlg:left="139" dlg:top="78" dlg:width="83" dlg:height="10" dlg:help-text="&amp;1401.Dialogviste_N.mostra_categorie.HelpText" dlg:value="&amp;1402.Dialogviste_N.mostra_categorie.Label" dlg:checked="false" />
   <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl5" dlg:tab-index="30" dlg:left="133" dlg:top="115" dlg:width="95" dlg:height="43" dlg:help-text="&amp;1079.Dialogviste_N.FrameControl5.HelpText">
    <dlg:title dlg:value="&amp;1080.Dialogviste_N.FrameControl5.Label" />
   </dlg:titledbox>

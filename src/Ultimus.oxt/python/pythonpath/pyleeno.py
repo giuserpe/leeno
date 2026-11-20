@@ -2785,8 +2785,6 @@ def scelta_viste_run():
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
 
-        oDialog1.getControl('ComboVISTA').setText('Scegli...')
-
         # 2. SUGGERIMENTO INTERVALLO VOCI (daVoce / aVoce)
         daVoceSuggerita = 1
         libretti = SheetUtils.sStrColtoList('segue Libretto delle Misure n.', 2, oSheet, start=2)
@@ -2957,17 +2955,7 @@ def scelta_viste_run():
         except Exception as _exc:
             LeenoUtils.log_errore('scelta_viste_run: mostra_sal', _exc)
 
-        if oDialog1.getControl('ComboVISTA').getText() == 'Predefinita':
-            # _vSintetica_core(oDoc, oSheet, False)
-            # vista_configurazione('terra_terra')
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
-        elif oDialog1.getControl('ComboVISTA').getText() == 'Semplificata':
-            vista_configurazione('Semplificata')
-            LeenoSheetUtils.setLarghezzaColonne(oSheet)
-        # elif oDialog1.getControl('ComboVISTA').getText() == 'Sintetica':
-        #     _vSintetica_core(oDoc, oSheet, True)
-        #     LeenoSheetUtils.setLarghezzaColonne(oSheet)
-        LeenoSheetUtils.raggruppa_colonne_contabilita(oSheet)
+        LeenoSheetUtils.ripristina_vista_contabilita(oSheet)
 
 
 #Elenco Prezzi
@@ -8931,11 +8919,6 @@ def vista_configurazione(tipo_configurazione):
 
             target_sheet.getColumns().getByIndex(2).Width = 7900
 
-
-        elif tipo_configurazione == "Semplificata":
-            # Colonne 19-30 gestite da raggruppa_colonne_contabilita (una sola volta)
-            # Raggruppa e chiude colonne 31-37
-            LeenoSheetUtils.raggruppa_colonne(target_sheet, 31, 37)
 
         if target_sheet.Name == 'CONTABILITA':
             LeenoSheetUtils.raggruppa_colonne_contabilita(target_sheet)

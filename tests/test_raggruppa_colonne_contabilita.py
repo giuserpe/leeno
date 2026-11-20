@@ -49,12 +49,28 @@ class MockSheet:
         self.RangeAddress = MockCellRangeAddress(sheet=sheet_idx)
         self.grouped_calls = []
         self._ranges = {}
+        self._cols = {}
         self.Columns = {}
         for col_name in ['A', 'B', 'C', 'F', 'G', 'H', 'I', 'J', 'L', 'N', 'P', 'T', 'U', 'W', 'X', 'Z', 'AC', 'AD', 'AE', 'AX', 'AY']:
             self.Columns[col_name] = MockColumns()
 
     def group(self, addr, orientation):
         self.grouped_calls.append((addr.StartColumn, addr.EndColumn, addr.StartRow, addr.EndRow, orientation))
+
+    def ungroup(self, addr, orientation):
+        # rimuove i gruppi interamente contenuti nell'intervallo, come LibreOffice
+        self.grouped_calls = [
+            g for g in self.grouped_calls
+            if not (addr.StartColumn <= g[0] and g[1] <= addr.EndColumn)
+        ]
+
+    def getColumns(self):
+        return self
+
+    def getByIndex(self, idx):
+        if idx not in self._cols:
+            self._cols[idx] = MockColumns()
+        return self._cols[idx]
 
     def getCellRangeByPosition(self, start_col, start_row, end_col, end_row):
         key = (start_col, start_row, end_col, end_row)
@@ -84,8 +100,8 @@ class TestRaggruppaColonneContabilita(unittest.TestCase):
             "LeenoUtils": self.mock_utils,
             "SheetUtils": MagicMock(),
         }
-        code_fn = _estrai_funzione(SRC_SHEET_UTILS, "raggruppa_colonne_contabilita")
-        exec(code_fn, self.ns_sheet_utils)
+        for nome in ("raggruppa_colonne", "raggruppa_colonne_contabilita"):
+            exec(_estrai_funzione(SRC_SHEET_UTILS, nome), self.ns_sheet_utils)
         self.raggruppa_colonne_contabilita = self.ns_sheet_utils["raggruppa_colonne_contabilita"]
 
         # Configurazione namespace per pyleeno
@@ -103,13 +119,43 @@ class TestRaggruppaColonneContabilita(unittest.TestCase):
         sheet_contab = MockSheet("CONTABILITA", 2)
         self.raggruppa_colonne_contabilita(sheet_contab)
 
-        # Deve raggruppare colonne 19..28 con orientamento 0 (colonne)
-        self.assertEqual(len(sheet_contab.grouped_calls), 1)
-        self.assertEqual(sheet_contab.grouped_calls[0], (19, 28, 0, 0, 0))
+        # Un solo gruppo per intervallo, orientamento 0 (colonne); Y:AA restano fuori
+        self.assertEqual(sorted(sheet_contab.grouped_calls), [
+            (19, 23, 0, 0, 0), (27, 28, 0, 0, 0), (29, 30, 0, 0, 0), (31, 37, 0, 0, 0)])
 
-        # Deve nascondere le colonne 19..28 (chiuse)
-        range_19_28 = sheet_contab.getCellRangeByPosition(19, 0, 28, 0)
-        self.assertFalse(range_19_28.Columns.IsVisible)
+        # Gruppi chiusi
+        for start, end in ((19, 23), (27, 28), (29, 30), (31, 37)):
+            self.assertFalse(sheet_contab.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible)
+
+        # K, M, Y, Z, AA sempre a larghezza 0
+        for col in (10, 12, 24, 25, 26):
+            self.assertFalse(sheet_contab.getByIndex(col).IsVisible)
+
+    def test_raggruppa_colonne_contabilita_idempotente(self):
+        sheet_contab = MockSheet("CONTABILITA", 2)
+        # vecchio gruppo unico T:AC, anche duplicato
+        for _ in range(2):
+            sheet_contab.group(MockCellRangeAddress(2, 19, 0, 28, 0), 0)
+        for _ in range(3):
+            self.raggruppa_colonne_contabilita(sheet_contab)
+        self.assertEqual(sorted(sheet_contab.grouped_calls), [
+            (19, 23, 0, 0, 0), (27, 28, 0, 0, 0), (29, 30, 0, 0, 0), (31, 37, 0, 0, 0)])
+
+    def test_ripristina_vista_mantiene_gruppi_aperti(self):
+        sheet_contab = MockSheet("CONTABILITA", 2)
+        # T:X aperto dall'utente, gli altri gruppi chiusi
+        for start, end in ((27, 28), (29, 30), (31, 37)):
+            sheet_contab.getCellRangeByPosition(start, 0, end, 0)
+            for col in range(start, end + 1):
+                sheet_contab.getByIndex(col).IsVisible = False
+        sheet_contab.getByIndex(19).IsVisible = True
+        ns = {"LeenoUtils": self.mock_utils, "setLarghezzaColonne": MagicMock()}
+        exec(_estrai_funzione(SRC_SHEET_UTILS, "ripristina_vista_contabilita"), ns)
+        ns["ripristina_vista_contabilita"](sheet_contab)
+        ns["setLarghezzaColonne"].assert_called_once_with(sheet_contab, altezza_righe=False)
+        self.assertTrue(sheet_contab.getCellRangeByPosition(19, 0, 23, 0).Columns.IsVisible)
+        self.assertFalse(sheet_contab.getByIndex(27).IsVisible)
+        self.assertFalse(sheet_contab.getByIndex(29).IsVisible)
 
     def test_raggruppa_colonne_contabilita_ignora_altri_fogli(self):
         sheet_computo = MockSheet("COMPUTO", 0)
@@ -121,8 +167,7 @@ class TestRaggruppaColonneContabilita(unittest.TestCase):
     def test_raggruppa_colonne_contabilita_reexport_pyleeno(self):
         sheet_contab = MockSheet("CONTABILITA", 2)
         self.pyleeno_raggruppa(sheet_contab)
-        self.assertEqual(len(sheet_contab.grouped_calls), 1)
-        self.assertEqual(sheet_contab.grouped_calls[0], (19, 28, 0, 0, 0))
+        self.assertEqual(len(sheet_contab.grouped_calls), 4)
 
     def test_struttura_off_integrazione_contabilita(self):
         sheet_contab = MockSheet("CONTABILITA", 2)

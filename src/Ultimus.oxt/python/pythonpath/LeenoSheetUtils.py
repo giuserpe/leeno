@@ -134,7 +134,7 @@ def raggruppa_colonne_contabilita(oSheet):
     '''
     Nel foglio CONTABILITA garantisce che:
     - T:X (19-23) e AB:AC (27-28) siano raggruppate una sola volta e chiuse
-    - AD:AE (29-30) siano raggruppate una sola volta e chiuse
+    - AD:AE (29-30) e AF:AL (31-37) siano raggruppate una sola volta e chiuse
     - K, M, Y, Z e AA (10, 12, 24, 25, 26) restino sempre a larghezza 0
 
     Y:AA restano fuori da ogni gruppo: se fossero dentro un unico gruppo
@@ -155,13 +155,37 @@ def raggruppa_colonne_contabilita(oSheet):
         raggruppa_colonne(oSheet, 19, 23)
         raggruppa_colonne(oSheet, 27, 28)
         raggruppa_colonne(oSheet, 29, 30)
+        raggruppa_colonne(oSheet, 31, 37)
     except Exception as _exc:
-        LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AE', _exc)
+        LeenoUtils.log_errore('raggruppa_colonne_contabilita: raggruppamento T:AL', _exc)
     try:
         for col in (10, 12, 24, 25, 26):
             oSheet.getColumns().getByIndex(col).IsVisible = False
     except Exception as _exc:
         LeenoUtils.log_errore('raggruppa_colonne_contabilita: chiusura K, M, Y, Z, AA', _exc)
+
+
+def ripristina_vista_contabilita(oSheet):
+    '''
+    Ripristina la vista predefinita di CONTABILITA (larghezze, colonne
+    nascoste, gruppi) senza chiudere i gruppi che l'utente ha aperto
+    con il pulsante + prima della chiamata.
+    '''
+    if not oSheet or getattr(oSheet, 'Name', None) != 'CONTABILITA':
+        return
+    gruppi = ((19, 23), (27, 28), (29, 30), (31, 37))
+    aperti = []
+    try:
+        oCols = oSheet.getColumns()
+        aperti = [g for g in gruppi if oCols.getByIndex(g[0]).IsVisible]
+    except Exception as _exc:
+        LeenoUtils.log_errore('ripristina_vista_contabilita: lettura stato gruppi', _exc)
+    setLarghezzaColonne(oSheet, altezza_righe=False)
+    try:
+        for start, end in aperti:
+            oSheet.getCellRangeByPosition(start, 0, end, 0).Columns.IsVisible = True
+    except Exception as _exc:
+        LeenoUtils.log_errore('ripristina_vista_contabilita: riapertura gruppi', _exc)
 
 
 def setVisibilitaColonne(oSheet, sValori):
@@ -346,11 +370,12 @@ sheet_configs = {
 
 
 
-def setLarghezzaColonne(oSheet):
+def setLarghezzaColonne(oSheet, altezza_righe=True):
     '''
     Regola la larghezza delle colonne e altre proprietà visive in base al foglio specifico
     Args:
         oSheet: L'oggetto foglio di lavoro su cui operare
+        altezza_righe: se False salta l'adattamento dell'altezza righe (lento su fogli grandi)
     '''
     # Configurazioni predefinite per tutti i fogli
     SHEET_CONFIGS = {
@@ -528,7 +553,8 @@ def setLarghezzaColonne(oSheet):
         if 'freeze' in config:
             SheetUtils.freezeRowCol(oSheet, *config['freeze'])
 
-        adattaAltezzaRiga(oSheet)
+        if altezza_righe:
+            adattaAltezzaRiga(oSheet)
         # finally:
         LeenoUtils.ripristina_posizione()
 # ###############################################################

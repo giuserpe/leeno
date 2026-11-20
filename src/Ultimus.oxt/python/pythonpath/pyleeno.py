@@ -2860,8 +2860,10 @@ def scelta_viste_run():
             oDialog1.getControl('RimuoviTuttiSAL').Enable = False
             oDialog1.getControl('GeneraAtti').Label = 'Genera SAL n. 1'
 
-        if oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
-            oDialog1.getControl('EliminaMisure').Enable = False
+        # EliminaMisure non e' presente in tutte le versioni del dialogo
+        ctrl_elimina = oDialog1.getControl('EliminaMisure')
+        if ctrl_elimina is not None and oSheet.getCellRangeByName('A4').CellStyle == 'Comp TOTALI':
+            ctrl_elimina.Enable = False
 
         oDialog1.getControl('StampaDate').State = 0 if cfg.read('Contabilita', 'stampa_date') == '0' else 1
         _oggi = datetime.now()

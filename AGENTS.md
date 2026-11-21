@@ -123,6 +123,8 @@ Regola da tenere a mente comunque, perché il mancato rispetto ha già causato u
 
 Test round-trip con istanze reali di LibreOffice, senza mock (XPWE e codice che scrive percorsi relativi al documento o inserisce righe in un blocco esistente, come il modulo di import dell'agenda di cantiere): dettagli in `documentazione/LESSONS_TESTING.md`. Questi file di test non vivono in `pythonpath/` (vedi sopra).
 
+Per ogni prova che richiede un documento reale usa `tests/data/LeenO_Esempio.ods`, aprendone una copia temporanea e mai il file tracciato: va lasciato invariato (vedi regola sui `.ods` tracciati in "Ambiente di sviluppo e macchine").
+
 Le funzioni senza UNO (parser, utilità pure) si testano in `tests/` con `pytest`, eseguito dalla CI a ogni push e PR su `dev`. Un difetto trovato si documenta con un commento `BUG NOTO:` nel test e si corregge in un commit a parte. Dettagli: `documentazione/LESSONS_TESTING.md`.
 
 ## Sistema icone

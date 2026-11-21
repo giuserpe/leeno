@@ -2055,11 +2055,13 @@ Menu_voce_breve = MENU_voce_breve
 ########################################################################
 
 
-def s1_cella(oS1, chiave, fallback_cell=''):
+def s1_cella(oS1, chiave, fallback_cell='', solo_esatta=False):
     '''
     Restituisce la cella nella colonna H (indice 7) del foglio S1
     rintracciandone la posizione sulla base dell'etichetta nella colonna G (indice 6).
     Se non trovata, ricorre alla coordinata di fallback (es. 'H335') o a 'S1.'+fallback_cell.
+    solo_esatta { bool } : nella ricerca generica esclude la corrispondenza per sottostringa
+    (che puo' agganciare un'altra riga, es. 'spese_generali' in 'utili_e_spese_generali')
     '''
     if oS1 is None:
         return None
@@ -2127,7 +2129,7 @@ def s1_cella(oS1, chiave, fallback_cell=''):
                     r_trovata = r
                     break
             # 2. Corrispondenza per sottostringa (se non trovata esatta)
-            if r_trovata is None:
+            if r_trovata is None and not solo_esatta:
                 for r, row in enumerate(dati_s1):
                     g = str(row[0]).strip().lower()
                     if ch_low in g:
@@ -3509,75 +3511,57 @@ def scelta_viste_run():
 
         oS1 = oDoc.getSheets().getByName('S1')
 
-        sString = oDialog1.getControl('TextField5')
-        sString.Text = cfg.read('Analisi', 'sicurezza')
-        # c_sic = s1_cella(oS1, 'Oneri_di_Sicurezza', 'H319')
-        # sString.Text = (c_sic.Value if c_sic is not None else 0.0) * 100  # sicurezza
+        # controllo -> etichetta in colonna G di S1 (corrispondenza esatta):
+        # la posizione della cella e' data dall'etichetta, non dall'indirizzo
+        etichette = {
+            'TextField5': 'Oneri_di_Sicurezza',
+            'TextField6': 'spese_generali',
+            'TextField7': "utili d'impresa",
+            'CheckBox4': 'Spese_Utili_Accorpati',
+            'TextField8': 'Sconto',
+            'TextField9': 'maggiorazione',
+        }
+        celle = {k: s1_cella(oS1, v, solo_esatta=True) for k, v in etichette.items()}
 
-        sString = oDialog1.getControl('TextField6')
-        # sString.Text = cfg.read('Analisi', 'spese_generali')
-        c_spese = s1_cella(oS1, 'spese_generali', 'H320')
-        sString.Text = (c_spese.Value if c_spese is not None else 0.15) * 100  # spese_generali
-
-        sString = oDialog1.getControl('TextField7')
-        # sString.Text = cfg.read('Analisi', 'utile_impresa')
-        c_utili = s1_cella(oS1, "utili d'impresa", 'H321')
-        sString.Text = (c_utili.Value if c_utili is not None else 0.10) * 100  # utile_impresa
-
+        for ctrl in ('TextField5', 'TextField6', 'TextField7', 'TextField8', 'TextField9'):
+            if celle[ctrl] is not None:
+                valore = round(celle[ctrl].Value * 100, 6)
+                oDialog1.getControl(ctrl).Text = f'{valore:g}'.replace('.', ',')
         # accorpa_spese_utili
-        c_accorpa = s1_cella(oS1, 'Spese_Utili_Accorpati', 'H323')
-        if c_accorpa is not None and c_accorpa.Value == 1:
+        if celle['CheckBox4'] is not None and celle['CheckBox4'].Value == 1:
             oDialog1.getControl('CheckBox4').State = 1
-        sString = oDialog1.getControl('TextField8')
-        c_sconto = s1_cella(oS1, 'Sconto', 'H324')
-        sString.Text = (c_sconto.Value if c_sconto is not None else -0.10) * 100  # sconto
-        sString = oDialog1.getControl('TextField9')
-        c_magg = s1_cella(oS1, 'maggiorazione', 'H326')
-        sString.Text = (c_magg.Value if c_magg is not None else 0.10) * 100  # maggiorazione
 
         if oDialog1.execute() == 0:
             return
 
+        # valida tutti i campi prima di scrivere: un valore non numerico non deve
+        # lasciare S1 parzialmente aggiornato
+        valori = {}
+        for ctrl in ('TextField5', 'TextField6', 'TextField7', 'TextField8', 'TextField9'):
+            testo = oDialog1.getControl(ctrl).getText().strip().replace(',', '.')
+            try:
+                valori[ctrl] = float(testo)
+            except ValueError:
+                Dialogs.Exclamation(
+                    Title='Avviso!',
+                    Text=f"Il valore '{testo}' non e' numerico ({etichette[ctrl]}).\n\nNessuna modifica applicata.")
+                return
 
-        sicurezza = oDialog1.getControl('TextField5').getText().replace(',', '.')
-        c_sic = s1_cella(oS1, 'Oneri_di_Sicurezza', 'H319')
-        if c_sic is not None:
-            c_sic.Value = float(sicurezza) / 100  # sicurezza
-        cfg.write('Analisi', 'sicurezza', sicurezza)
+        for ctrl, valore in valori.items():
+            if celle[ctrl] is not None:
+                celle[ctrl].Value = round(valore / 100, 8)
+        cfg.write('Analisi', 'sicurezza', f"{valori['TextField5']:g}")
+        cfg.write('Analisi', 'spese_generali', f"{valori['TextField6']:g}")
+        cfg.write('Analisi', 'utile_impresa', f"{valori['TextField7']:g}")
+        if celle['CheckBox4'] is not None:
+            celle['CheckBox4'].Value = oDialog1.getControl('CheckBox4').State
 
-        spese_generali = oDialog1.getControl('TextField6').getText().replace(',', '.')
-        c_spese = s1_cella(oS1, 'spese_generali', 'H320')
-        if c_spese is not None:
-            c_spese.Value = float(spese_generali) / 100  # spese_generali
-        cfg.write('Analisi', 'spese_generali', spese_generali)
-
-        utile_impresa = oDialog1.getControl('TextField7').getText().replace(',', '.')
-        c_utili = s1_cella(oS1, "utili d'impresa", 'H321')
-        if c_utili is not None:
-            c_utili.Value = float(utile_impresa) / 100  # utile_impresa
-        cfg.write('Analisi', 'utile_impresa', utile_impresa)
-
-        c_accorpa = s1_cella(oS1, 'Spese_Utili_Accorpati', 'H323')
-        if c_accorpa is not None:
-            c_accorpa.Value = oDialog1.getControl('CheckBox4').State
-        c_sconto = s1_cella(oS1, 'Sconto', 'H324')
-        if c_sconto is not None:
-            c_sconto.Value = float(
-                oDialog1.getControl('TextField8').getText().replace(
-                    ',', '.')) / 100  # sconto
-        c_magg = s1_cella(oS1, 'maggiorazione', 'H326')
-        if c_magg is not None:
-            c_magg.Value = float(
-                oDialog1.getControl('TextField9').getText().replace(
-                    ',', '.')) / 100  # maggiorazione
-
-        # accorpa_spese_utili
-        if c_accorpa is not None and c_accorpa.Value == 1:
-            oDialog1.getControl('CheckBox4').State = 1
-        sString = oDialog1.getControl('TextField8')
-        sString.Text = (c_sconto.Value if c_sconto is not None else -0.10) * 100  # sconto
-        sString = oDialog1.getControl('TextField9')
-        sString.Text = (c_magg.Value if c_magg is not None else 0.10) * 100  # maggiorazione
+        mancanti = [etichette[k] for k, c in celle.items() if c is None]
+        if mancanti:
+            Dialogs.Exclamation(
+                Title='Avviso!',
+                Text="Etichette non trovate nella colonna G del foglio S1, valori non riportati:\n\n"
+                + "\n".join(mancanti))
 
     fissa()
     LeenoUtils.ripristina_posizione()

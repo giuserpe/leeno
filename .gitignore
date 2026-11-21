@@ -4,14 +4,15 @@
 *.xlb
 *.zip
 *.log
+*.bak.ods
+*.ods.old
 staged_diff.txt
 .directory
 DialogStrings_it_IT.*
 RegisteredFlag
 bin/
-*/leeno-bk/
+/tests/data/leeno-bk/
 documentazione/*.pdf
-Esempio_LeenO.ods
 icons/Thumbs.db
 
 src/Ultimus.oxt/python/pythonpath/.eric6project/

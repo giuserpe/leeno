@@ -2055,6 +2055,104 @@ Menu_voce_breve = MENU_voce_breve
 ########################################################################
 
 
+def s1_cella(oS1, chiave, fallback_cell=''):
+    '''
+    Restituisce la cella nella colonna H (indice 7) del foglio S1
+    rintracciandone la posizione sulla base dell'etichetta nella colonna G (indice 6).
+    Se non trovata, ricorre alla coordinata di fallback (es. 'H335') o a 'S1.'+fallback_cell.
+    '''
+    if oS1 is None:
+        return None
+
+    try:
+        max_row = max(SheetUtils.getLastUsedRow(oS1), 350)
+        dati_s1 = oS1.getCellRangeByPosition(6, 0, 8, max_row).getDataArray()
+    except Exception as _exc:
+        LeenoUtils.log_errore('s1_cella: lettura matrice S1', _exc)
+        dati_s1 = None
+
+    r_trovata = None
+    if dati_s1:
+        ch_low = str(chiave).strip().lower()
+
+        if ch_low in ('cont_inizio', 'h335', 'cont_inizio_voci_abbreviate'):
+            for r, row in enumerate(dati_s1):
+                g = str(row[0]).strip().lower()
+                if 'contabilit' in g and 'primi' in g:
+                    r_trovata = r
+                    break
+        elif ch_low in ('cont_fine', 'h336', 'cont_fine_voci_abbreviate'):
+            for r, row in enumerate(dati_s1):
+                g = str(row[0]).strip().lower()
+                i = str(row[2]).strip().lower() if len(row) > 2 else ''
+                if ('contabilit' in g and 'ultimi' in g) or ('contabilit' in i and 'ultimi' in i):
+                    r_trovata = r
+                    break
+            if r_trovata is None:
+                r_ci = None
+                for r, row in enumerate(dati_s1):
+                    g = str(row[0]).strip().lower()
+                    if 'contabilit' in g and 'primi' in g:
+                        r_ci = r
+                        break
+                if r_ci is not None and r_ci + 1 < len(dati_s1):
+                    r_trovata = r_ci + 1
+        elif ch_low in ('comp_inizio', 'h337', 'inizio_voci_abbreviate'):
+            for r, row in enumerate(dati_s1):
+                g = str(row[0]).strip().lower()
+                if 'computo' in g and 'primi' in g and 'vedi voce' not in g:
+                    r_trovata = r
+                    break
+            if r_trovata is None:
+                for r, row in enumerate(dati_s1):
+                    g = str(row[0]).strip().lower()
+                    if 'descrizioni abbreviate' in g and 'primi' in g and 'contabilit' not in g:
+                        i = str(row[2]).strip().lower() if len(row) > 2 else ''
+                        if 'contabilit' in i:
+                            continue
+                        r_trovata = r
+                        break
+        elif ch_low in ('comp_fine', 'h338', 'fine_voci_abbreviate'):
+            for r, row in enumerate(dati_s1):
+                g = str(row[0]).strip().lower()
+                if ('computo' in g and 'ultimi' in g) or ('descrizioni abbreviate' in g and 'ultimi' in g and 'contabilit' not in g):
+                    r_trovata = r
+                    break
+        else:
+            # Ricerca generica per etichetta in colonna G:
+            # 1. Corrispondenza esatta (case-insensitive)
+            for r, row in enumerate(dati_s1):
+                g = str(row[0]).strip()
+                if g.lower() == ch_low:
+                    r_trovata = r
+                    break
+            # 2. Corrispondenza per sottostringa (se non trovata esatta)
+            if r_trovata is None:
+                for r, row in enumerate(dati_s1):
+                    g = str(row[0]).strip().lower()
+                    if ch_low in g:
+                        r_trovata = r
+                        break
+
+    if r_trovata is not None:
+        try:
+            return oS1.getCellByPosition(7, r_trovata)
+        except Exception as _exc:
+            LeenoUtils.log_errore('s1_cella: getCellByPosition', _exc)
+
+    if fallback_cell:
+        fb = fallback_cell if fallback_cell.startswith('S1.') else f'S1.{fallback_cell}'
+        try:
+            return oS1.getCellRangeByName(fb)
+        except Exception:
+            try:
+                return oS1.getCellRangeByName(fallback_cell)
+            except Exception as _exc:
+                LeenoUtils.log_errore(f's1_cella: fallback {fallback_cell}', _exc)
+
+    return None
+
+
 def voce_breve():
     '''
     Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
@@ -2079,43 +2177,51 @@ def voce_breve():
         fogli_lavoro = ['COMPUTO']
     else:
         fogli_lavoro = ['COMPUTO', 'CONTABILITA']
-        oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'S1.H335').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H337').Value
-        oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'S1.H336').Value = oDoc.getSheets().getByName('S1').getCellRangeByName('S1.H338').Value
+        c_cont_in = s1_cella(oDoc.getSheets().getByName('S1'), 'cont_inizio', 'H335')
+        c_cont_fi = s1_cella(oDoc.getSheets().getByName('S1'), 'cont_fine', 'H336')
+        c_comp_in = s1_cella(oDoc.getSheets().getByName('S1'), 'comp_inizio', 'H337')
+        c_comp_fi = s1_cella(oDoc.getSheets().getByName('S1'), 'comp_fine', 'H338')
+        if c_cont_in and c_comp_in:
+            c_cont_in.Value = c_comp_in.Value
+        if c_cont_fi and c_comp_fi:
+            c_cont_fi.Value = c_comp_fi.Value
 
     oSheet = oDoc.getSheets().getByName('S1')
     for nome_foglio in fogli_lavoro:
         if nome_foglio == 'CONTABILITA':
-            if oSheet.getCellRangeByName('S1.H335').Value < 10000:
+            c_in = s1_cella(oSheet, 'cont_inizio', 'H335')
+            c_fi = s1_cella(oSheet, 'cont_fine', 'H336')
+            if c_in and c_in.Value < 10000:
                 cfg.write('Contabilita', 'cont_inizio_voci_abbreviate',
-                          oSheet.getCellRangeByName('S1.H335').String)
-                oSheet.getCellRangeByName('S1.H335').Value = 10000
-            else:
-                oSheet.getCellRangeByName('S1.H335').Value = int(
+                          c_in.String)
+                c_in.Value = 10000
+            elif c_in:
+                c_in.Value = int(
                     cfg.read('Contabilita', 'cont_inizio_voci_abbreviate'))
-            if oSheet.getCellRangeByName('S1.H336').Value < 10000:
+            if c_fi and c_fi.Value < 10000:
                 cfg.write('Contabilita', 'cont_fine_voci_abbreviate',
-                          oSheet.getCellRangeByName('S1.H336').String)
-                oSheet.getCellRangeByName('S1.H336').Value = 10000
-            else:
-                oSheet.getCellRangeByName('S1.H336').Value = int(
+                          c_fi.String)
+                c_fi.Value = 10000
+            elif c_fi:
+                c_fi.Value = int(
                     cfg.read('Contabilita', 'cont_fine_voci_abbreviate'))
 
         else:
-            if oSheet.getCellRangeByName('S1.H337').Value < 10000:
+            c_in = s1_cella(oSheet, 'comp_inizio', 'H337')
+            c_fi = s1_cella(oSheet, 'comp_fine', 'H338')
+            if c_in and c_in.Value < 10000:
                 cfg.write('Computo', 'inizio_voci_abbreviate',
-                          oSheet.getCellRangeByName('S1.H337').String)
-                oSheet.getCellRangeByName('S1.H337').Value = 10000
-            else:
-                oSheet.getCellRangeByName('S1.H337').Value = int(
+                          c_in.String)
+                c_in.Value = 10000
+            elif c_in:
+                c_in.Value = int(
                     cfg.read('Computo', 'inizio_voci_abbreviate'))
-            if oSheet.getCellRangeByName('S1.H338').Value < 10000:
+            if c_fi and c_fi.Value < 10000:
                 cfg.write('Computo', 'fine_voci_abbreviate',
-                          oSheet.getCellRangeByName('S1.H338').String)
-                oSheet.getCellRangeByName('S1.H338').Value = 10000
-            else:
-                oSheet.getCellRangeByName('S1.H338').Value = int(
+                          c_fi.String)
+                c_fi.Value = 10000
+            elif c_fi:
+                c_fi.Value = int(
                     cfg.read('Computo', 'fine_voci_abbreviate'))
 
     fogli_da_adattare = [f for f in fogli_lavoro if oDoc.getSheets().hasByName(f)]
@@ -2675,15 +2781,15 @@ def scelta_viste_run():
 
         sString = oDialog1.getControl('TextField10')
         try:
-            oDoc.getSheets().getByName('S1')
+            oS1 = oDoc.getSheets().getByName('S1')
         except:
             return
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H337').Value  # inizio_voci_abbreviate
+        c_comp_in = s1_cella(oS1, 'comp_inizio', 'H337')
+        sString.Text = c_comp_in.Value if c_comp_in is not None else 100  # inizio_voci_abbreviate
         sString = oDialog1.getControl('TextField11')
 
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H338').Value  # fine_voci_abbreviate
+        c_comp_fi = s1_cella(oS1, 'comp_fine', 'H338')
+        sString.Text = c_comp_fi.Value if c_comp_fi is not None else 120  # fine_voci_abbreviate
         oDialog1.getControl('ComboVISTA').setText('Scegli...')
 
 # VARIANTE
@@ -2706,11 +2812,15 @@ def scelta_viste_run():
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField10').getText() != '10000':
             cfg.write('Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H337').Value = float(oDialog1.getControl('TextField10').getText())
+        c_comp_in = s1_cella(oS1, 'comp_inizio', 'H337')
+        if c_comp_in is not None:
+            c_comp_in.Value = float(oDialog1.getControl('TextField10').getText())
 
         if oDialog1.getControl('TextField11').getText() != '10000':
             cfg.write('Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
+        c_comp_fi = s1_cella(oS1, 'comp_fine', 'H338')
+        if c_comp_fi is not None:
+            c_comp_fi.Value = float(oDialog1.getControl('TextField11').getText())
 
         if oDialog1.getControl("CBMis").State == 0:  # misure
             for el in range (5, 9):
@@ -2819,13 +2929,14 @@ def scelta_viste_run():
 
         # Inizio voce
         sString = oDialog1.getControl('TextField3')
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H335').Value  # cont_inizio_voci_abbreviate
+        oS1 = oDoc.getSheets().getByName('S1') if oDoc.getSheets().hasByName('S1') else None
+        c_cont_in = s1_cella(oS1, 'cont_inizio', 'H335')
+        sString.Text = c_cont_in.Value if c_cont_in is not None else 100  # cont_inizio_voci_abbreviate
 
         # Fine voce
         sString = oDialog1.getControl('TextField2')
-        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H336').Value  # cont_fine_voci_abbreviate
+        c_cont_fi = s1_cella(oS1, 'cont_fine', 'H336')
+        sString.Text = c_cont_fi.Value if c_cont_fi is not None else 120  # cont_fine_voci_abbreviate
 
         # descrizione_in_una_colonna
         for i in range (10):
@@ -2923,11 +3034,15 @@ def scelta_viste_run():
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField3').getText() != '10000':
             cfg.write('Contabilita', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value = float(oDialog1.getControl('TextField3').getText())
+        c_cont_in = s1_cella(oS1, 'cont_inizio', 'H335')
+        if c_cont_in is not None:
+            c_cont_in.Value = float(oDialog1.getControl('TextField3').getText())
 
         if oDialog1.getControl('TextField2').getText() != '10000':
             cfg.write('Contabilita', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
+        c_cont_fi = s1_cella(oS1, 'cont_fine', 'H336')
+        if c_cont_fi is not None:
+            c_cont_fi.Value = float(oDialog1.getControl('TextField2').getText())
 
         if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
             cfg.write('Contabilita', 'ricicla_da', 'COMPUTO')
@@ -3396,58 +3511,73 @@ def scelta_viste_run():
 
         sString = oDialog1.getControl('TextField5')
         sString.Text = cfg.read('Analisi', 'sicurezza')
-        # sString.Text = oS1.getCellRangeByName('S1.H319').Value * 100  # sicurezza
+        # c_sic = s1_cella(oS1, 'Oneri_di_Sicurezza', 'H319')
+        # sString.Text = (c_sic.Value if c_sic is not None else 0.0) * 100  # sicurezza
 
         sString = oDialog1.getControl('TextField6')
         # sString.Text = cfg.read('Analisi', 'spese_generali')
-        sString.Text = oS1.getCellRangeByName('S1.H320').Value * 100  # spese_generali
+        c_spese = s1_cella(oS1, 'spese_generali', 'H320')
+        sString.Text = (c_spese.Value if c_spese is not None else 0.15) * 100  # spese_generali
 
         sString = oDialog1.getControl('TextField7')
         # sString.Text = cfg.read('Analisi', 'utile_impresa')
-        sString.Text = oS1.getCellRangeByName('S1.H321').Value * 100  # utile_impresa
+        c_utili = s1_cella(oS1, "utili d'impresa", 'H321')
+        sString.Text = (c_utili.Value if c_utili is not None else 0.10) * 100  # utile_impresa
 
         # accorpa_spese_utili
-        if oS1.getCellRangeByName('S1.H323').Value == 1:
+        c_accorpa = s1_cella(oS1, 'Spese_Utili_Accorpati', 'H323')
+        if c_accorpa is not None and c_accorpa.Value == 1:
             oDialog1.getControl('CheckBox4').State = 1
         sString = oDialog1.getControl('TextField8')
-        sString.Text = oS1.getCellRangeByName('S1.H324').Value * 100  # sconto
+        c_sconto = s1_cella(oS1, 'Sconto', 'H324')
+        sString.Text = (c_sconto.Value if c_sconto is not None else -0.10) * 100  # sconto
         sString = oDialog1.getControl('TextField9')
-        sString.Text = oS1.getCellRangeByName(
-            'S1.H326').Value * 100  # maggiorazione
+        c_magg = s1_cella(oS1, 'maggiorazione', 'H326')
+        sString.Text = (c_magg.Value if c_magg is not None else 0.10) * 100  # maggiorazione
 
         if oDialog1.execute() == 0:
             return
 
 
         sicurezza = oDialog1.getControl('TextField5').getText().replace(',', '.')
-        oS1.getCellRangeByName('S1.H319').Value = float(sicurezza) / 100  # sicurezza
+        c_sic = s1_cella(oS1, 'Oneri_di_Sicurezza', 'H319')
+        if c_sic is not None:
+            c_sic.Value = float(sicurezza) / 100  # sicurezza
         cfg.write('Analisi', 'sicurezza', sicurezza)
 
         spese_generali = oDialog1.getControl('TextField6').getText().replace(',', '.')
-        oS1.getCellRangeByName('S1.H320').Value = float(spese_generali) / 100  # spese_generali
+        c_spese = s1_cella(oS1, 'spese_generali', 'H320')
+        if c_spese is not None:
+            c_spese.Value = float(spese_generali) / 100  # spese_generali
         cfg.write('Analisi', 'spese_generali', spese_generali)
 
         utile_impresa = oDialog1.getControl('TextField7').getText().replace(',', '.')
-        oS1.getCellRangeByName('S1.H321').Value = float(utile_impresa) / 100  # utile_impresa
+        c_utili = s1_cella(oS1, "utili d'impresa", 'H321')
+        if c_utili is not None:
+            c_utili.Value = float(utile_impresa) / 100  # utile_impresa
         cfg.write('Analisi', 'utile_impresa', utile_impresa)
 
-        oS1.getCellRangeByName('S1.H323').Value = oDialog1.getControl(
-            'CheckBox4').State
-        oS1.getCellRangeByName('S1.H324').Value = float(
-            oDialog1.getControl('TextField8').getText().replace(
-                ',', '.')) / 100  # sconto
-        oS1.getCellRangeByName('S1.H326').Value = float(
-            oDialog1.getControl('TextField9').getText().replace(
-                ',', '.')) / 100  # maggiorazione
+        c_accorpa = s1_cella(oS1, 'Spese_Utili_Accorpati', 'H323')
+        if c_accorpa is not None:
+            c_accorpa.Value = oDialog1.getControl('CheckBox4').State
+        c_sconto = s1_cella(oS1, 'Sconto', 'H324')
+        if c_sconto is not None:
+            c_sconto.Value = float(
+                oDialog1.getControl('TextField8').getText().replace(
+                    ',', '.')) / 100  # sconto
+        c_magg = s1_cella(oS1, 'maggiorazione', 'H326')
+        if c_magg is not None:
+            c_magg.Value = float(
+                oDialog1.getControl('TextField9').getText().replace(
+                    ',', '.')) / 100  # maggiorazione
 
         # accorpa_spese_utili
-        if oS1.getCellRangeByName('S1.H323').Value == 1:
+        if c_accorpa is not None and c_accorpa.Value == 1:
             oDialog1.getControl('CheckBox4').State = 1
         sString = oDialog1.getControl('TextField8')
-        sString.Text = oS1.getCellRangeByName('S1.H324').Value * 100  # sconto
+        sString.Text = (c_sconto.Value if c_sconto is not None else -0.10) * 100  # sconto
         sString = oDialog1.getControl('TextField9')
-        sString.Text = oS1.getCellRangeByName(
-            'S1.H326').Value * 100  # maggiorazione
+        sString.Text = (c_magg.Value if c_magg is not None else 0.10) * 100  # maggiorazione
 
     fissa()
     LeenoUtils.ripristina_posizione()

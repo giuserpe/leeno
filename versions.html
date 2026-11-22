@@ -452,6 +452,18 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-22 19:08</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/43a79dd59a399c9eaa24b58aace22f1050be47e5" target="_blank" rel="noopener"><code>43a79dd</code></a></td>
+                <td class="commit-msg">feat(pdf): esportazione atti contabili per SAL nel dialogo PDF
+
+- DlgEsportazionePdf: selezione SAL e checkbox Libretto, Registro,
+  SAL e CdP con numeri di tavola dedicati
+- PdfAttoSal e printAreas in pdfExport per esportare solo l’area
+  nominata del SAL scelto
+- AREE_SAL condivisa con mostra_sal; default in LeenoConfig
+- Disabilita gli atti se non ci sono SAL; avviso se l’area manca</td>
+            </tr>
+            <tr>
                 <td>2026-11-22 18:15</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/46dbe7efb59f35d0acf6f03aa28a26bd9a4525d6" target="_blank" rel="noopener"><code>46dbe7e</code></a></td>
                 <td class="commit-msg">style(ui): align textfields in DlgEsportazionePdf to center</td>
@@ -465,11 +477,6 @@ Sostituiti i dialoghi costruiti a runtime (Dialogs API) con
 DlgImpostazioniStampa e DlgEsportazionePdf definiti in XDL.
 LeenoSettings e LeenoPdf usano DialogProvider, listener per
 sfoglia cartella/copertine e lettura modelli al posto di setData/getData.</td>
-            </tr>
-            <tr>
-                <td>2026-11-22 12:57</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/5761fe711a29647bbb7441147ebc033e6982761b" target="_blank" rel="noopener"><code>5761fe7</code></a></td>
-                <td class="commit-msg">chore: update version to 3.26.0.186-TESTING-20261122</td>
             </tr>
                     </tbody>
                 </table>
@@ -493,8 +500,8 @@ sfoglia cartella/copertine e lettura modelli al posto di setData/getData.</td>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-22 18:16 UTC</p>
-                <p>Build Commit: <code>46dbe7e</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-22 19:09 UTC</p>
+                <p>Build Commit: <code>43a79dd</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

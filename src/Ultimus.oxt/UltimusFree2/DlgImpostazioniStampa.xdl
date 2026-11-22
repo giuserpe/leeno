@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgImpostazioniStampa" dlg:left="100" dlg:top="60" dlg:width="300" dlg:height="282" dlg:closeable="true" dlg:moveable="true" dlg:title="Impostazioni stampa / PDF">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:text dlg:style-id="0" dlg:id="lblIntestazione" dlg:tab-index="0" dlg:left="8" dlg:top="8" dlg:width="150" dlg:height="10" dlg:value="Intestazione:"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_intSx" dlg:tab-index="1" dlg:left="8" dlg:top="20" dlg:width="88" dlg:height="10" dlg:value="~Sinistra:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="intSx" dlg:tab-index="2" dlg:left="8" dlg:top="31" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_intCenter" dlg:tab-index="3" dlg:left="106" dlg:top="20" dlg:width="88" dlg:height="10" dlg:value="~Centro:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="intCenter" dlg:tab-index="4" dlg:left="106" dlg:top="31" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_intDx" dlg:tab-index="5" dlg:left="204" dlg:top="20" dlg:width="88" dlg:height="10" dlg:value="~Destra:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="intDx" dlg:tab-index="6" dlg:left="204" dlg:top="31" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:img dlg:style-id="0" dlg:id="imgAnteprima" dlg:tab-index="7" dlg:tabstop="false" dlg:left="108" dlg:top="52" dlg:width="84" dlg:height="118" dlg:scale-image="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="lblPiePagina" dlg:tab-index="8" dlg:left="8" dlg:top="176" dlg:width="150" dlg:height="10" dlg:value="Piè di pagina:"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_ppSx" dlg:tab-index="9" dlg:left="8" dlg:top="188" dlg:width="88" dlg:height="10" dlg:value="~Sinistra:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="ppSx" dlg:tab-index="10" dlg:left="8" dlg:top="199" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_ppCenter" dlg:tab-index="11" dlg:left="106" dlg:top="188" dlg:width="88" dlg:height="10" dlg:value="~Centro:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="ppCenter" dlg:tab-index="12" dlg:left="106" dlg:top="199" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:text dlg:style-id="0" dlg:id="lbl_ppDx" dlg:tab-index="13" dlg:left="204" dlg:top="188" dlg:width="88" dlg:height="10" dlg:value="~Destra:"/>
+  <dlg:combobox dlg:style-id="0" dlg:id="ppDx" dlg:tab-index="14" dlg:left="204" dlg:top="199" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:fixedline dlg:style-id="0" dlg:id="linea" dlg:tab-index="15" dlg:left="8" dlg:top="222" dlg:width="284" dlg:height="4"/>
+  <dlg:text dlg:style-id="0" dlg:id="lblFileCopertine" dlg:tab-index="16" dlg:left="8" dlg:top="234" dlg:width="62" dlg:height="12" dlg:value="Doc de~lle copertine:"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="fileCopertine" dlg:tab-index="17" dlg:left="72" dlg:top="232" dlg:width="62" dlg:height="13" dlg:readonly="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnSfoglia" dlg:tab-index="18" dlg:left="136" dlg:top="232" dlg:width="14" dlg:height="13" dlg:help-text="Seleziona il file .ods delle copertine"/>
+  <dlg:text dlg:style-id="0" dlg:id="lblCopertina" dlg:tab-index="19" dlg:left="158" dlg:top="234" dlg:width="54" dlg:height="12" dlg:value="Copertina ~in uso:"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="copertina" dlg:tab-index="20" dlg:left="214" dlg:top="232" dlg:width="78" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnOk" dlg:tab-index="21" dlg:left="186" dlg:top="256" dlg:width="52" dlg:height="16" dlg:default="true" dlg:value="O~k" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnAnnulla" dlg:tab-index="22" dlg:left="240" dlg:top="256" dlg:width="52" dlg:height="16" dlg:value="~Annulla" dlg:button-type="cancel"/>
+ </dlg:bulletinboard>
+</dlg:window>

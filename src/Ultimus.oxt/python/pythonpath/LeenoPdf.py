@@ -5,6 +5,9 @@
 ########################################################################
 
 import os
+import unohelper
+from com.sun.star.awt import XActionListener
+
 import LeenoUtils
 import DocUtils
 import SheetUtils
@@ -126,61 +129,76 @@ def prepareHeaderFooter(oDoc, docSubst):
 
     return res
 
-def PdfDialog():
-    """Crea e restituisce la finestra di dialogo per l'esportazione dei documenti in PDF."""
-    # dimensione verticale dei checkbox == dimensione bottoni
-    #dummy, hItems = Dialogs.getButtonSize('', Icon="Icons-24x24/settings.png")
-    nWidth, hItems = Dialogs.getEditBox('aa')
+_DLG_ESPORTAZIONE_PDF = (
+    'vnd.sun.star.script:UltimusFree2.DlgEsportazionePdf'
+    '?language=Basic&location=application')
 
-    # dimensione dell'icona col PDF
-    imgW = Dialogs.getBigIconSize()[0] * 2
+_EXPORTSETTINGSCHECKS = tuple(k for k in _EXPORTSETTINGSITEMS if k.startswith('cb'))
 
-    return Dialogs.Dialog(Title='Esportazione documenti PDF',  Horz=False, CanClose=True,  Items=[
-        Dialogs.HSizer(Items=[
-            Dialogs.VSizer(Items=[
-                Dialogs.Spacer(),
-                Dialogs.ImageControl(Image='Icons-Big/pdf.png', MinWidth=imgW),
-                Dialogs.Spacer(),
-            ]),
-            Dialogs.VSizer(Items=[
-                Dialogs.FixedText(Text='Tavola'),
-                Dialogs.Spacer(),
-                Dialogs.Edit(Id='npElencoPrezzi', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                Dialogs.Spacer(),
-                Dialogs.Edit(Id='npComputoMetrico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                Dialogs.Spacer(),
-                Dialogs.Edit(Id='npCostiManodopera', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                Dialogs.Spacer(),
-                Dialogs.Edit(Id='npQuadroEconomico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-            ]),
-            Dialogs.Spacer(),
-            Dialogs.VSizer(Items=[
-                Dialogs.FixedText(Text='Oggetto'),
-                Dialogs.Spacer(),
-                Dialogs.CheckBox(Id="cbElencoPrezzi", Label="Elenco prezzi", FixedHeight=hItems),
-                Dialogs.Spacer(),
-                Dialogs.CheckBox(Id="cbComputoMetrico", Label="Computo metrico", FixedHeight=hItems),
-                Dialogs.Spacer(),
-                Dialogs.CheckBox(Id="cbCostiManodopera", Label="Costi manodopera", FixedHeight=hItems),
-                Dialogs.Spacer(),
-                Dialogs.CheckBox(Id="cbQuadroEconomico", Label="Quadro economico", FixedHeight=hItems),
-            ]),
-            Dialogs.Spacer(),
-        ]),
-        Dialogs.Spacer(),
-        Dialogs.Spacer(),
-        Dialogs.FixedText(Text='Cartella di destinazione:'),
-        Dialogs.Spacer(),
-        Dialogs.PathControl(Id="pathEdit"),
-        Dialogs.Spacer(),
-        Dialogs.HSizer(Items=[
-            Dialogs.Spacer(),
-            Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
-            Dialogs.Spacer(),
-            Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
-            Dialogs.Spacer()
-        ])
-    ])
+
+class _SfogliaCartella(unohelper.Base, XActionListener):
+    """Pulsante di selezione della cartella di destinazione."""
+    def __init__(self, oDlg):
+        self._oDlg = oDlg
+
+    def actionPerformed(self, ev):
+        try:
+            folder = Dialogs.FolderSelect()
+            if folder is not None:
+                oEdit = self._oDlg.getModel().getByName('pathEdit')
+                oEdit.Text = os.path.join(folder, '')
+                oEdit.HelpText = oEdit.Text
+        except Exception as _exc:
+            LeenoUtils.log_errore('PdfDialog: selezione cartella', _exc)
+
+    def disposing(self, ev):
+        return None
+
+
+def PdfDialog(es):
+    """
+    Crea la finestra di dialogo per l'esportazione dei documenti in PDF
+    (UltimusFree2.DlgEsportazionePdf) precompilata con le impostazioni es.
+    Restituisce (oDlg, listener): il listener va tenuto vivo fino alla chiusura.
+    """
+    ctx = LeenoUtils.getComponentContext()
+    dp = ctx.ServiceManager.createInstance('com.sun.star.awt.DialogProvider')
+    oDlg = dp.createDialog(_DLG_ESPORTAZIONE_PDF)
+    oModel = oDlg.getModel()
+
+    base = LeenoUtils.LeenO_path() + '/python/pythonpath/'
+    oModel.getByName('imgPdf').ImageURL = base + 'Icons-Big/pdf.png'
+    for nome, icona in (('btnOk', 'Icons-24x24/ok.png'),
+                        ('btnAnnulla', 'Icons-24x24/cancel.png'),
+                        ('btnCartella', 'Icons-16x16/folder.png')):
+        oModel.getByName(nome).ImageURL = base + icona
+        oModel.getByName(nome).ImageAlign = 0
+
+    for key in _EXPORTSETTINGSITEMS:
+        if key in _EXPORTSETTINGSCHECKS:
+            oModel.getByName(key).State = 1 if es.get(key, False) else 0
+        else:
+            oModel.getByName(key).Text = str(es.get(key, ''))
+
+    percorso = Dialogs.getDefaultPath()
+    oModel.getByName('pathEdit').Text = percorso
+    oModel.getByName('pathEdit').HelpText = percorso
+
+    azione = _SfogliaCartella(oDlg)
+    oDlg.getControl('btnCartella').addActionListener(azione)
+    return oDlg, azione
+
+
+def _leggiImpostazioniExport(oDlg):
+    """Legge dal dialogo i valori elencati in _EXPORTSETTINGSITEMS."""
+    oModel = oDlg.getModel()
+    res = {}
+    for key in _EXPORTSETTINGSITEMS:
+        if key in _EXPORTSETTINGSCHECKS:
+            res[key] = bool(oModel.getByName(key).State)
+        else:
+            res[key] = oModel.getByName(key).Text
+    return res
 
 
 def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto):
@@ -219,29 +237,25 @@ def MENU_Pdf():
     oDoc = LeenoUtils.getDocument()
     es = loadExportSettings(oDoc)
 
-    dlg = PdfDialog()
-    dlg.setData(es)
+    oDlg, azione = PdfDialog(es)
+    try:
+        esito = oDlg.execute()
+        if esito == 1:
+            es = _leggiImpostazioniExport(oDlg)
+            destFolder = oDlg.getModel().getByName('pathEdit').Text
+    finally:
+        oDlg.dispose()
 
     # se premuto "annulla" non fa nulla
-    if dlg.run() < 0:
+    if esito != 1:
         return
 
-    es = dlg.getData(_EXPORTSETTINGSITEMS)
     storeExportSettings(oDoc, es)
 
-    # estrae la path
-    destFolder = dlg['pathEdit'].getPath()
-    # ~ destFolder = 'W:\\_dwg\\ULTIMUSFREE\\_SRC'
-    
-    # ~ import LeenoDialogs as DLG
-    # ~ DLG.chi(destFolder)
-    # ~ return
-
     # controlla se selezionato elenco prezzi
-    if dlg['cbElencoPrezzi'].getState():
+    if es['cbElencoPrezzi']:
         PdfElencoPrezzi(destFolder, es['npElencoPrezzi'])
 
     # controlla se selezionato computo metrico
-    if dlg['cbComputoMetrico'].getState():
+    if es['cbComputoMetrico']:
         PdfComputoMetrico(destFolder, es['npComputoMetrico'])
-

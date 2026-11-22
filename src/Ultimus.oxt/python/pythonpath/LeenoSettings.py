@@ -7,6 +7,9 @@
 '''
 Modulo per la modifica delle impostazioni di LeenO
 '''
+import unohelper
+from com.sun.star.awt import XActionListener
+
 import Dialogs
 import LeenoConfig
 import LeenoUtils
@@ -266,104 +269,99 @@ def storePrintSettings(oDoc, js):
     DocUtils.storeDataBlock(oDoc, 'ImpostazioniStampa', js)
     cfg.writeBlock('ImpostazioniStampa', js, True)
 
-def PrintSettingsDialog():
-    '''Crea il dialogo di configurazione per l'intestazione e il piè di pagina di stampa.'''
-    # dimensione dell'icona grande
-    imgW = Dialogs.getBigIconSize()[0] * 2
-    fieldW, dummy = Dialogs.getTextBox("W" * 30)
-    posW, dummy = Dialogs.getTextBox("SinistraXX")
-    return Dialogs.Dialog(Title='Impostazioni stampa / PDF',  Horz=False, CanClose=True,  Items=[
-        Dialogs.VSizer(Items=[
-            Dialogs.FixedText(Text='Intestazione:'),
-                # ~ Dialogs.Spacer(),
-            Dialogs.HSizer(Items=[
-                    Dialogs.VSizer(Items=[
-                        Dialogs.FixedText(Text='Sinistra: '),
-                        Dialogs.ComboBox(Id="intSx", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                    ]),
-                    Dialogs.Spacer(),
-                    Dialogs.VSizer(Items=[
-                        Dialogs.FixedText(Text='Centro: '),
-                        Dialogs.ComboBox(Id="intCenter", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                    ]),
-                    Dialogs.Spacer(),
-                    Dialogs.VSizer(Items=[
-                        Dialogs.FixedText(Text='Destra: '),
-                        Dialogs.ComboBox(Id="intDx", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                    ]),
-            ]),
+_DLG_IMPOSTAZIONI_STAMPA = (
+    'vnd.sun.star.script:UltimusFree2.DlgImpostazioniStampa'
+    '?language=Basic&location=application')
 
-            # ~ Dialogs.Spacer(MinSize = 10),
-            Dialogs.Spacer(MinSize = 30),
-            Dialogs.HSizer(Items=[
-                # ~ Dialogs.Spacer(),
-                Dialogs.ImageControl(Image='Icons-Big/preview.png', MinWidth=imgW * 1.5),
-                # ~ Dialogs.Spacer(),
-            ]),
-            Dialogs.Spacer(MinSize = 30),
+_PRINTSETTINGSCOMBOS = ('intSx', 'intCenter', 'intDx', 'ppSx', 'ppCenter', 'ppDx')
 
-                Dialogs.FixedText(Text='Piè di pagina:'),
-                # ~ Dialogs.Spacer(),
-            Dialogs.HSizer(Items=[
-                Dialogs.VSizer(Items=[
-                    Dialogs.FixedText(Text='Sinistra: ', FixedWidth=posW),
-                    # ~ Dialogs.FixedText(Text='Sinistra: '),
-                    Dialogs.ComboBox(Id="ppSx", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                ]),
-                Dialogs.Spacer(MinSize = 45),
-                Dialogs.VSizer(Items=[
-                    Dialogs.FixedText(Text='Centro: '),
-                    Dialogs.ComboBox(Id="ppCenter", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                ]),
-                Dialogs.Spacer(MinSize = 45),
-                Dialogs.VSizer(Items=[
-                    Dialogs.FixedText(Text='Destra: '),
-                    Dialogs.ComboBox(Id="ppDx", List=_DOCSTRINGS, FixedHeight=20, MaxWidth=200),
-                ]),
-            ]),
-        ]),
-        Dialogs.Spacer(),
-        Dialogs.HSizer(Items=[
-            ]),
-            # ~ Dialogs.VSizer(Items=[
-            Dialogs.FixedText(Text='–' * 85),
-            Dialogs.Spacer(),
-            Dialogs.HSizer(Items=[
-                Dialogs.FixedText(Text='Doc delle copertine: '),  # Testo fisso per indicare il file di copertina
-                Dialogs.FileControl(Id="fileCopertine", Types='*.ods', MinWidth=150),  # Controllo file con larghezza minima
-                Dialogs.Spacer(),  # Spaziatore per separare gli elementi
-                Dialogs.FixedText(Text='Copertina in uso: ', FixedHeight=25),  # Testo fisso per la copertina selezionata
-                Dialogs.ListBox(Id='copertina', MinWidth=150),  # ListBox con larghezza minima per le copertine
-                # ~ Dialogs.Spacer(),  # Spaziatore per separare ulteriormente se necessario
-            ]),
-        Dialogs.Spacer(),
-        Dialogs.HSizer(Items=[
-            Dialogs.Spacer(),  # Spaziatore per spingere i pulsanti verso destra
-            Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png', RetVal=1),
-            # ~ Dialogs.Spacer(),  # Spaziatore per separare i pulsanti
-            Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png', RetVal=-1),
-            # ~ Dialogs.Spacer(),  # Spaziatore per separare i pulsanti
-        ]),
-    ])
+
+class _SfogliaCopertine(unohelper.Base, XActionListener):
+    '''Pulsante di selezione del file delle copertine (solo file .ods).'''
+    def __init__(self, oDlg):
+        self._oDlg = oDlg
+
+    def actionPerformed(self, ev):
+        try:
+            file = Dialogs.FileSelect(est='*.ods')
+            if file is not None:
+                self._oDlg.getModel().getByName('fileCopertine').Text = file
+                self._oDlg.getModel().getByName('fileCopertine').HelpText = file
+        except Exception as _exc:
+            LeenoUtils.log_errore('PrintSettingsDialog: selezione file copertine', _exc)
+
+    def disposing(self, ev):
+        return None
+
+
+def PrintSettingsDialog(ps, covers):
+    '''
+    Crea il dialogo di configurazione per l'intestazione e il piè di pagina di stampa
+    (UltimusFree2.DlgImpostazioniStampa) precompilato con ps e con l'elenco covers.
+    Restituisce (oDlg, listener): il listener va tenuto vivo fino alla chiusura.
+    '''
+    ctx = LeenoUtils.getComponentContext()
+    dp = ctx.ServiceManager.createInstance('com.sun.star.awt.DialogProvider')
+    oDlg = dp.createDialog(_DLG_IMPOSTAZIONI_STAMPA)
+    oModel = oDlg.getModel()
+
+    base = LeenoUtils.LeenO_path() + '/python/pythonpath/'
+    oModel.getByName('imgAnteprima').ImageURL = base + 'Icons-Big/preview.png'
+    for nome, icona in (('btnOk', 'ok.png'), ('btnAnnulla', 'cancel.png'),
+                        ('btnSfoglia', 'file.png')):
+        oModel.getByName(nome).ImageURL = base + (
+            'Icons-16x16/' if nome == 'btnSfoglia' else 'Icons-24x24/') + icona
+        oModel.getByName(nome).ImageAlign = 0
+
+    for nome in _PRINTSETTINGSCOMBOS:
+        oDlg.getControl(nome).addItems(_DOCSTRINGS, 0)
+        oModel.getByName(nome).Text = ps.get(nome, '') or ''
+
+    percorso = ps.get('fileCopertine', '') or ''
+    oModel.getByName('fileCopertine').Text = percorso
+    oModel.getByName('fileCopertine').HelpText = percorso
+
+    oList = oDlg.getControl('copertina')
+    if len(covers) > 0:
+        oList.addItems(tuple(covers), 0)
+        corrente = ps.get('copertina', '')
+        oList.selectItem(corrente if corrente in covers else covers[0], True)
+
+    azione = _SfogliaCopertine(oDlg)
+    oDlg.getControl('btnSfoglia').addActionListener(azione)
+    return oDlg, azione
+
+
+def _leggiImpostazioniStampa(oDlg):
+    '''Legge dal dialogo i valori elencati in _PRINTSETTINGSITEMS.'''
+    oModel = oDlg.getModel()
+    res = {}
+    for key in _PRINTSETTINGSITEMS:
+        if key == 'copertina':
+            res[key] = oDlg.getControl('copertina').getSelectedItem() or ''
+        else:
+            res[key] = oModel.getByName(key).Text
+    return res
 
 
 def MENU_PrintSettings():
     """
-    Crea e restituisce una finestra di dialogo per modificare le impostazioni di stampa.
-
-    Returns:
-        Dialogs.Dialog: La finestra di dialogo per le impostazioni di stampa.
+    Mostra il dialogo per modificare le impostazioni di stampa e le salva
+    nel documento e nella configurazione predefinita.
     """
 
     oDoc = LeenoUtils.getDocument()
     ps, covers = loadPrintSettings(oDoc)
 
-    dlg = PrintSettingsDialog()
-    dlg.getWidget('copertina').setList(covers)
-    dlg.setData(ps)
+    oDlg, azione = PrintSettingsDialog(ps, covers)
+    try:
+        esito = oDlg.execute()
+        if esito == 1:
+            ps = _leggiImpostazioniStampa(oDlg)
+    finally:
+        oDlg.dispose()
 
-    if dlg.run() >= 0:
-        ps = dlg.getData(_PRINTSETTINGSITEMS)
+    if esito == 1:
         storePrintSettings(oDoc, ps)
 
 ########################################################################

@@ -8,13 +8,13 @@
    <dlg:img dlg:style-id="0" dlg:id="imgPdf" dlg:tab-index="0" dlg:tabstop="false" dlg:left="8" dlg:top="8" dlg:width="40" dlg:height="49" dlg:scale-image="true"/>
    <dlg:text dlg:style-id="0" dlg:id="lblTavola" dlg:tab-index="1" dlg:left="60" dlg:top="8" dlg:width="44" dlg:height="10" dlg:value="Tavola"/>
    <dlg:text dlg:style-id="0" dlg:id="lblOggetto" dlg:tab-index="2" dlg:left="116" dlg:top="8" dlg:width="100" dlg:height="10" dlg:value="Oggetto"/>
-   <dlg:textfield dlg:style-id="0" dlg:id="npElencoPrezzi" dlg:tab-index="3" dlg:left="60" dlg:top="20" dlg:width="44" dlg:height="13" dlg:align="1"/>
+   <dlg:textfield dlg:style-id="0" dlg:id="npElencoPrezzi" dlg:tab-index="3" dlg:left="60" dlg:top="20" dlg:width="44" dlg:height="13" dlg:align="center"/>
    <dlg:checkbox dlg:style-id="0" dlg:id="cbElencoPrezzi" dlg:tab-index="4" dlg:left="116" dlg:top="20" dlg:width="100" dlg:height="13" dlg:value="Elenco prezzi"/>
-   <dlg:textfield dlg:style-id="0" dlg:id="npComputoMetrico" dlg:tab-index="5" dlg:left="60" dlg:top="38" dlg:width="44" dlg:height="13" dlg:align="1"/>
+   <dlg:textfield dlg:style-id="0" dlg:id="npComputoMetrico" dlg:tab-index="5" dlg:left="60" dlg:top="38" dlg:width="44" dlg:height="13" dlg:align="center"/>
    <dlg:checkbox dlg:style-id="0" dlg:id="cbComputoMetrico" dlg:tab-index="6" dlg:left="116" dlg:top="38" dlg:width="100" dlg:height="13" dlg:value="Computo metrico"/>
-   <dlg:textfield dlg:style-id="0" dlg:id="npCostiManodopera" dlg:tab-index="7" dlg:left="60" dlg:top="56" dlg:width="44" dlg:height="13" dlg:align="1"/>
+   <dlg:textfield dlg:style-id="0" dlg:id="npCostiManodopera" dlg:tab-index="7" dlg:left="60" dlg:top="56" dlg:width="44" dlg:height="13" dlg:align="center"/>
    <dlg:checkbox dlg:style-id="0" dlg:id="cbCostiManodopera" dlg:tab-index="8" dlg:left="116" dlg:top="56" dlg:width="100" dlg:height="13" dlg:value="Costi manodopera"/>
-   <dlg:textfield dlg:style-id="0" dlg:id="npQuadroEconomico" dlg:tab-index="9" dlg:left="60" dlg:top="74" dlg:width="44" dlg:height="13" dlg:align="1"/>
+   <dlg:textfield dlg:style-id="0" dlg:id="npQuadroEconomico" dlg:tab-index="9" dlg:left="60" dlg:top="74" dlg:width="44" dlg:height="13" dlg:align="center"/>
    <dlg:checkbox dlg:style-id="0" dlg:id="cbQuadroEconomico" dlg:tab-index="10" dlg:left="116" dlg:top="74" dlg:width="100" dlg:height="13" dlg:value="Quadro economico"/>
    <dlg:text dlg:style-id="0" dlg:id="lblCartella" dlg:tab-index="11" dlg:left="8" dlg:top="98" dlg:width="200" dlg:height="10" dlg:value="Cartella di ~destinazione:"/>
    <dlg:textfield dlg:style-id="0" dlg:id="pathEdit" dlg:tab-index="12" dlg:left="8" dlg:top="109" dlg:width="250" dlg:height="13" dlg:readonly="true"/>

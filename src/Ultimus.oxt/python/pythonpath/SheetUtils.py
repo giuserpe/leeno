@@ -229,12 +229,15 @@ def paginationFields(oDoc, oTxt):
         LeenoUtils.replacePatternWithField(oTxt, '[PAGINE]', oField)
 
 
-def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
+def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None, printAreas=None):
     '''
     export a sequence of spreadsheets to a PDF file
     coverBuilder(oDoc, nDoc) takes current document as parameter, the
     print document and adds a cover to the latter at end
     if coverBuilder is None, no cover will be added
+    printAreas e' un dizionario opzionale {nome foglio: CellRangeAddress}: l'area
+    sostituisce quella del foglio sorgente e le sue righe vengono rese visibili
+    nel solo documento temporaneo (es. un singolo SAL dentro un foglio condiviso)
     '''
     # create an empty document
     nDoc = DocUtils.createSheetDocument(Hidden=False)
@@ -273,6 +276,11 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
         nDoc.Sheets[pos].PageStyle = sheet.PageStyle
         if len(sheet.PrintAreas) > 0:
             nDoc.Sheets[pos].PrintAreas = sheet.PrintAreas
+        if printAreas and sheet.Name in printAreas:
+            area = printAreas[sheet.Name]
+            nDoc.Sheets[pos].PrintAreas = (area,)
+            nDoc.Sheets[pos].getCellRangeByPosition(
+                area.StartColumn, area.StartRow, area.EndColumn, area.EndRow).Rows.IsVisible = True
     nDoc.Sheets.removeByName(nDoc.Sheets[0].Name)
 
     # PrintAnnotations sopra sopprime solo l'elenco testuale delle note a

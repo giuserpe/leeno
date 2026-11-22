@@ -12,7 +12,7 @@
   <dlg:combobox dlg:style-id="0" dlg:id="intCenter" dlg:tab-index="4" dlg:left="106" dlg:top="31" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
   <dlg:text dlg:style-id="0" dlg:id="lbl_intDx" dlg:tab-index="5" dlg:left="204" dlg:top="20" dlg:width="88" dlg:height="10" dlg:value="~Destra:"/>
   <dlg:combobox dlg:style-id="0" dlg:id="intDx" dlg:tab-index="6" dlg:left="204" dlg:top="31" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
-  <dlg:img dlg:style-id="0" dlg:id="imgAnteprima" dlg:tab-index="7" dlg:tabstop="false" dlg:left="108" dlg:top="52" dlg:width="84" dlg:height="118" dlg:scale-image="true"/>
+  <dlg:img dlg:id="imgAnteprima" dlg:tab-index="7" dlg:left="108" dlg:top="52" dlg:width="84" dlg:height="118" dlg:tabstop="false"/>
   <dlg:text dlg:style-id="0" dlg:id="lblPiePagina" dlg:tab-index="8" dlg:left="8" dlg:top="176" dlg:width="150" dlg:height="10" dlg:value="Piè di pagina:"/>
   <dlg:text dlg:style-id="0" dlg:id="lbl_ppSx" dlg:tab-index="9" dlg:left="8" dlg:top="188" dlg:width="88" dlg:height="10" dlg:value="~Sinistra:"/>
   <dlg:combobox dlg:style-id="0" dlg:id="ppSx" dlg:tab-index="10" dlg:left="8" dlg:top="199" dlg:width="88" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>

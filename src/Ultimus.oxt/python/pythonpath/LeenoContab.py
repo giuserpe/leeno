@@ -488,6 +488,15 @@ def imposta_data():
 
 
 # ###############################################################
+# Per ogni atto contabile: (foglio, prefisso del nome area per SAL, ultima colonna di stampa)
+AREE_SAL = {
+    'Libretto': ('CONTABILITA', '_Lib_', 11),
+    'Registro': ('Registro', '_Reg_', 9),
+    'SAL': ('SAL', '_SAL_', 5),
+    'CdP': ('CdP', '_CdP_', 5),
+}
+
+
 def ultimo_sal():
     '''
     restituisce il numero di sal registrati
@@ -512,12 +521,7 @@ def mostra_sal(uSal, pagebreak=True, naviga=True):
     '''
     oDoc = LeenoUtils.getDocument()
 
-    d = [
-        ('CONTABILITA', '_Lib_', 11),
-        ('Registro', '_Reg_', 9),
-        ('SAL', '_SAL_', 5),
-        ('CdP', '_CdP_', 5)
-    ]
+    d = list(AREE_SAL.values())
 
     listaSal = ultimo_sal()
 

@@ -177,6 +177,14 @@ class Config(Borg):
             ('ImpostazioniExport', 'cbComputoMetrico', '(bool)True'),
             ('ImpostazioniExport', 'cbCostiManodopera', '(bool)True'),
             ('ImpostazioniExport', 'cbQuadroEconomico', '(bool)True'),
+            ('ImpostazioniExport', 'npLibretto', '(str)5'),
+            ('ImpostazioniExport', 'npRegistro', '(str)6'),
+            ('ImpostazioniExport', 'npSAL', '(str)7'),
+            ('ImpostazioniExport', 'npCdP', '(str)8'),
+            ('ImpostazioniExport', 'cbLibretto', '(bool)False'),
+            ('ImpostazioniExport', 'cbRegistro', '(bool)False'),
+            ('ImpostazioniExport', 'cbSAL', '(bool)False'),
+            ('ImpostazioniExport', 'cbCdP', '(bool)False'),
 
             # In LeenoConfig.py -> _initDefaults()
             ('DecimaliStili', 'parti_uguali', '2'),

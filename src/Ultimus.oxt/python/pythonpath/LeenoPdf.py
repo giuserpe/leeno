@@ -9,6 +9,7 @@ import unohelper
 from com.sun.star.awt import XActionListener
 
 import LeenoUtils
+import LeenoContab
 import DocUtils
 import SheetUtils
 import Dialogs
@@ -22,11 +23,30 @@ _EXPORTSETTINGSITEMS = (
     'npComputoMetrico',
     'npCostiManodopera',
     'npQuadroEconomico',
+    'npLibretto',
+    'npRegistro',
+    'npSAL',
+    'npCdP',
     'cbElencoPrezzi',
     'cbComputoMetrico',
     'cbCostiManodopera',
     'cbQuadroEconomico',
+    'cbLibretto',
+    'cbRegistro',
+    'cbSAL',
+    'cbCdP',
 )
+
+# numero di tavola proposto se il valore manca (documenti o config precedenti)
+_EXPORTNPDEFAULT = {'npLibretto': '5', 'npRegistro': '6', 'npSAL': '7', 'npCdP': '8'}
+
+# atti contabili esportabili per singolo SAL: (nome file, oggetto)
+_DOCUMENTI_SAL = {
+    'Libretto': ('LibrettoMisure', 'Libretto delle Misure'),
+    'Registro': ('RegistroContabilita', 'Registro di Contabilità'),
+    'SAL': ('SAL', 'Stato di Avanzamento Lavori'),
+    'CdP': ('CertificatoPagamento', 'Certificato di Pagamento'),
+}
 
 def loadExportSettings(oDoc):
     """Carica le impostazioni di esportazione PDF dal documento o dalla configurazione."""
@@ -155,11 +175,13 @@ class _SfogliaCartella(unohelper.Base, XActionListener):
         return None
 
 
-def PdfDialog(es):
+def PdfDialog(es, listaSal=()):
     """
     Crea la finestra di dialogo per l'esportazione dei documenti in PDF
     (UltimusFree2.DlgEsportazionePdf) precompilata con le impostazioni es.
-    Restituisce (oDlg, listener): il listener va tenuto vivo fino alla chiusura.
+    listaSal: numeri di SAL registrati (stringhe); se vuota gli atti contabili
+    vengono disabilitati. Restituisce (oDlg, listener): il listener va tenuto
+    vivo fino alla chiusura.
     """
     ctx = LeenoUtils.getComponentContext()
     dp = ctx.ServiceManager.createInstance('com.sun.star.awt.DialogProvider')
@@ -168,17 +190,29 @@ def PdfDialog(es):
 
     base = LeenoUtils.LeenO_path() + '/python/pythonpath/'
     oModel.getByName('imgPdf').ImageURL = base + 'Icons-Big/pdf.png'
-    for nome, icona in (('btnOk', 'Icons-24x24/ok.png'),
-                        ('btnAnnulla', 'Icons-24x24/cancel.png'),
-                        ('btnCartella', 'Icons-16x16/folder.png')):
-        oModel.getByName(nome).ImageURL = base + icona
-        oModel.getByName(nome).ImageAlign = 0
+    # for nome, icona in (('btnOk', 'Icons-24x24/ok.png'),
+    #                     ('btnAnnulla', 'Icons-24x24/cancel.png'),
+    #                     ('btnCartella', 'Icons-16x16/folder.png')):
+    #     oModel.getByName(nome).ImageURL = base + icona
+    #     oModel.getByName(nome).ImageAlign = 0
 
     for key in _EXPORTSETTINGSITEMS:
         if key in _EXPORTSETTINGSCHECKS:
             oModel.getByName(key).State = 1 if es.get(key, False) else 0
         else:
-            oModel.getByName(key).Text = str(es.get(key, ''))
+            oModel.getByName(key).Text = str(es.get(key, _EXPORTNPDEFAULT.get(key, '')))
+
+    # atti contabili: disponibili solo se esiste almeno un SAL
+    oList = oDlg.getControl('listSal')
+    if len(listaSal) > 0:
+        oList.addItems(tuple(listaSal), 0)
+        oList.selectItem(listaSal[-1], True)
+    else:
+        for tipo in _DOCUMENTI_SAL:
+            oModel.getByName('np' + tipo).Enabled = False
+            oModel.getByName('cb' + tipo).Enabled = False
+            oModel.getByName('cb' + tipo).State = 0
+        oModel.getByName('listSal').Enabled = False
 
     percorso = Dialogs.getDefaultPath()
     oModel.getByName('pathEdit').Text = percorso
@@ -189,22 +223,41 @@ def PdfDialog(es):
     return oDlg, azione
 
 
-def _leggiImpostazioniExport(oDlg):
-    """Legge dal dialogo i valori elencati in _EXPORTSETTINGSITEMS."""
+def _leggiImpostazioniExport(oDlg, es):
+    """
+    Legge dal dialogo i valori elencati in _EXPORTSETTINGSITEMS.
+    I controlli disabilitati conservano il valore precedente di es.
+    """
     oModel = oDlg.getModel()
     res = {}
     for key in _EXPORTSETTINGSITEMS:
-        if key in _EXPORTSETTINGSCHECKS:
-            res[key] = bool(oModel.getByName(key).State)
+        oItem = oModel.getByName(key)
+        if not oItem.Enabled:
+            res[key] = es.get(key, _EXPORTNPDEFAULT.get(key, False if key in _EXPORTSETTINGSCHECKS else ''))
+        elif key in _EXPORTSETTINGSCHECKS:
+            res[key] = bool(oItem.State)
         else:
-            res[key] = oModel.getByName(key).Text
+            res[key] = oItem.Text
     return res
 
 
-def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto):
-    """Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder."""
+def _pagineFoglio(oSheet, area=None):
+    """Numero di pagine di stampa del foglio o, se indicata, dell'area."""
+    breaks = oSheet.RowPageBreaks
+    if area is None:
+        return len(breaks) - 1
+    # interruzioni interne all'area + 1
+    return len([b for b in breaks if area.StartRow < b.Position <= area.EndRow]) + 1
 
-    oDoc = LeenoUtils.getDocument()
+
+def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto, area=None, oDoc=None):
+    """
+    Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder.
+    Se area (CellRangeAddress) e' indicata esporta solo quell'area.
+    """
+
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName(nomeFoglio)
 
     # lancia l'export
@@ -217,8 +270,10 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto):
         '[NUMERO_DOCUMENTO]': str(nTavola),
     }
     headerFooter = prepareHeaderFooter(oDoc, docSubst)
-    docSubst['[PAGINE]'] = len(oSheet.RowPageBreaks) - 1
-    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter, lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst))
+    docSubst['[PAGINE]'] = _pagineFoglio(oSheet, area)
+    printAreas = {nomeFoglio: area} if area is not None else None
+    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter,
+                         lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst), printAreas)
 
 
 def PdfElencoPrezzi(destFolder, nTavola):
@@ -231,18 +286,38 @@ def PdfComputoMetrico(destFolder, nTavola):
     _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'Computo Metrico')
 
 
+def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None):
+    """
+    Esporta in formato PDF un atto contabile (tipo: Libretto, Registro, SAL, CdP)
+    del SAL nSal. Ritorna False se l'area del SAL non esiste.
+    """
+    if oDoc is None:
+        oDoc = LeenoUtils.getDocument()
+    nomeFoglio, prefisso, colFine = LeenoContab.AREE_SAL[tipo]
+    nomeArea = prefisso + str(nSal)
+    if not oDoc.NamedRanges.hasByName(nomeArea):
+        return False
+    area = oDoc.NamedRanges.getByName(nomeArea).ReferredCells.RangeAddress
+    area.EndColumn = colFine
+    nomeFile, oggetto = _DOCUMENTI_SAL[tipo]
+    _esportaPdfFoglio(destFolder, nTavola, nomeFoglio,
+                      f'{nomeFile}_SAL{nSal}.pdf', oggetto, area, oDoc)
+    return True
+
+
 def MENU_Pdf():
     """Mostra la finestra di dialogo ed esegue l'esportazione PDF dei documenti selezionati."""
 
     oDoc = LeenoUtils.getDocument()
     es = loadExportSettings(oDoc)
 
-    oDlg, azione = PdfDialog(es)
+    oDlg, azione = PdfDialog(es, LeenoContab.ultimo_sal())
     try:
         esito = oDlg.execute()
         if esito == 1:
-            es = _leggiImpostazioniExport(oDlg)
+            es = _leggiImpostazioniExport(oDlg, es)
             destFolder = oDlg.getModel().getByName('pathEdit').Text
+            nSal = oDlg.getControl('listSal').getSelectedItem()
     finally:
         oDlg.dispose()
 
@@ -259,3 +334,19 @@ def MENU_Pdf():
     # controlla se selezionato computo metrico
     if es['cbComputoMetrico']:
         PdfComputoMetrico(destFolder, es['npComputoMetrico'])
+
+    # atti contabili del SAL scelto
+    mancanti = []
+    if nSal:
+        for tipo in _DOCUMENTI_SAL:
+            if es['cb' + tipo]:
+                try:
+                    if not PdfAttoSal(destFolder, es['np' + tipo], tipo, nSal, oDoc):
+                        mancanti.append(_DOCUMENTI_SAL[tipo][1])
+                except Exception as _exc:
+                    LeenoUtils.log_errore('MENU_Pdf: esportazione ' + tipo, _exc)
+                    mancanti.append(_DOCUMENTI_SAL[tipo][1])
+    if mancanti:
+        Dialogs.Exclamation(Title='Esportazione PDF',
+                            Text='Per il SAL n. ' + str(nSal) + ' non sono stati esportati: '
+                            + ', '.join(mancanti) + '.')

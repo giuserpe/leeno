@@ -11647,66 +11647,66 @@ def somma():
 ########################################################################
 
 
-def PdfDlg():
-    # dimensione verticale dei checkbox == dimensione bottoni
-    #dummy, hItems = Dialogs.getButtonSize('', Icon="Icons-24x24/settings.png")
-    nWidth, hItems = Dialogs.getEditBox('aa')
+# def PdfDlg():
+#     # dimensione verticale dei checkbox == dimensione bottoni
+#     #dummy, hItems = Dialogs.getButtonSize('', Icon="Icons-24x24/settings.png")
+#     nWidth, hItems = Dialogs.getEditBox('aa')
 
-    # dimensione dell'icona col PDF
-    imgW = Dialogs.getBigIconSize()[0] * 2
+#     # dimensione dell'icona col PDF
+#     imgW = Dialogs.getBigIconSize()[0] * 2
 
-    oDoc = LeenoUtils.getDocument()
-    oSheets = list(oDoc.getSheets().getElementNames())
+#     oDoc = LeenoUtils.getDocument()
+#     oSheets = list(oDoc.getSheets().getElementNames())
 
 
-    return Dialogs.Dialog(Title='Esportazione PDFPDFPDFPDFPDF',  Horz=False, CanClose=True,  Items=[
-        Dialogs.HSizer(Items=[
-            Dialogs.VSizer(Items=[
-                Dialogs.Spacer(),
-                Dialogs.ImageControl(Image='Icons-Big/pdf.png', MinWidth=imgW / 10),
-                Dialogs.Spacer(),
-            ]),
-            # Dialogs.VSizer(Items=[
-                # Dialogs.FixedText(Text='Elenco_prova'),
-                # Dialogs.Spacer(),
-                # Dialogs.Edit(Id='npElencoPrezzi', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                # Dialogs.Spacer(),
-                # Dialogs.Edit(Id='npComputoMetrico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                # Dialogs.Spacer(),
-                # Dialogs.Edit(Id='npCostiManodopera', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-                # Dialogs.Spacer(),
-                # Dialogs.Edit(Id='npQuadroEconomico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
-            # ]),
-            Dialogs.Spacer(),
-            Dialogs.VSizer(Items=[
-                Dialogs.FixedText(Text='Oggetto'),
-                Dialogs.Spacer(),
-                Dialogs.ListBox(List=oSheets, FixedHeight=hItems * 1, FixedWidth=nWidth * 6),
-                # Dialogs.Spacer(),
-                # Dialogs.CheckBox(Id="cbElencoPrezzi", Label="Elenco prezzi", FixedHeight=hItems),
-                # Dialogs.Spacer(),
-                # Dialogs.CheckBox(Id="cbComputoMetrico", Label="Computo metrico", FixedHeight=hItems),
-                # Dialogs.Spacer(),
-                # Dialogs.CheckBox(Id="cbCostiManodopera", Label="Costi manodopera", FixedHeight=hItems),
-                # Dialogs.Spacer(),
-                # Dialogs.CheckBox(Id="cbQuadroEconomico", Label="Quadro economico", FixedHeight=hItems),
-            ]),
-            Dialogs.Spacer(),
-        ]),
-        Dialogs.Spacer(),
-        Dialogs.Spacer(),
-        Dialogs.FixedText(Text='Cartella di destinazione:'),
-        Dialogs.Spacer(),
-        Dialogs.PathControl(Id="pathEdit"),
-        Dialogs.Spacer(),
-        Dialogs.HSizer(Items=[
-            Dialogs.Spacer(),
-            Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
-            Dialogs.Spacer(),
-            Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
-            Dialogs.Spacer()
-        ])
-    ])
+#     return Dialogs.Dialog(Title='Esportazione PDFPDFPDFPDFPDF',  Horz=False, CanClose=True,  Items=[
+#         Dialogs.HSizer(Items=[
+#             Dialogs.VSizer(Items=[
+#                 Dialogs.Spacer(),
+#                 Dialogs.ImageControl(Image='Icons-Big/pdf.png', MinWidth=imgW / 10),
+#                 Dialogs.Spacer(),
+#             ]),
+#             # Dialogs.VSizer(Items=[
+#                 # Dialogs.FixedText(Text='Elenco_prova'),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.Edit(Id='npElencoPrezzi', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.Edit(Id='npComputoMetrico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.Edit(Id='npCostiManodopera', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.Edit(Id='npQuadroEconomico', Align=1, FixedHeight=hItems, FixedWidth=nWidth),
+#             # ]),
+#             Dialogs.Spacer(),
+#             Dialogs.VSizer(Items=[
+#                 Dialogs.FixedText(Text='Oggetto'),
+#                 Dialogs.Spacer(),
+#                 Dialogs.ListBox(List=oSheets, FixedHeight=hItems * 1, FixedWidth=nWidth * 6),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.CheckBox(Id="cbElencoPrezzi", Label="Elenco prezzi", FixedHeight=hItems),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.CheckBox(Id="cbComputoMetrico", Label="Computo metrico", FixedHeight=hItems),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.CheckBox(Id="cbCostiManodopera", Label="Costi manodopera", FixedHeight=hItems),
+#                 # Dialogs.Spacer(),
+#                 # Dialogs.CheckBox(Id="cbQuadroEconomico", Label="Quadro economico", FixedHeight=hItems),
+#             ]),
+#             Dialogs.Spacer(),
+#         ]),
+#         Dialogs.Spacer(),
+#         Dialogs.Spacer(),
+#         Dialogs.FixedText(Text='Cartella di destinazione:'),
+#         Dialogs.Spacer(),
+#         Dialogs.PathControl(Id="pathEdit"),
+#         Dialogs.Spacer(),
+#         Dialogs.HSizer(Items=[
+#             Dialogs.Spacer(),
+#             Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
+#             Dialogs.Spacer(),
+#             Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
+#             Dialogs.Spacer()
+#         ])
+#     ])
 
 ########################################################################
 

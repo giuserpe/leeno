@@ -452,6 +452,16 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-22 18:07</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/a40c8e259969fef1933dc7b898e87809e2b0f2c8" target="_blank" rel="noopener"><code>a40c8e2</code></a></td>
+                <td class="commit-msg">refactor(ui): dialoghi stampa e PDF in XDL nativi
+
+Sostituiti i dialoghi costruiti a runtime (Dialogs API) con
+DlgImpostazioniStampa e DlgEsportazionePdf definiti in XDL.
+LeenoSettings e LeenoPdf usano DialogProvider, listener per
+sfoglia cartella/copertine e lettura modelli al posto di setData/getData.</td>
+            </tr>
+            <tr>
                 <td>2026-11-22 12:57</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5761fe711a29647bbb7441147ebc033e6982761b" target="_blank" rel="noopener"><code>5761fe7</code></a></td>
                 <td class="commit-msg">chore: update version to 3.26.0.186-TESTING-20261122</td>
@@ -468,14 +478,6 @@
 - Allineate le sezioni contabilità (SAL finale, Data misure/atti,
   Stampa date) e Ripristina evidenziazioni
 - Rigenerati MAPPA_SEZIONI.md, TRACKING_MANUALE.md e PDF</td>
-            </tr>
-            <tr>
-                <td>2026-11-22 12:53</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/00b28891a0964cd0409f2210eb12392c262634e1" target="_blank" rel="noopener"><code>00b2889</code></a></td>
-                <td class="commit-msg">style(ui): allinea layout DialogViste_A e etichetta Ripristina
-
-Pulsanti e cornici più larghi, colonna destra riallineata, etichetta
-«Ripristina evidenziazioni prezzi» coerente con Dialogviste_N.</td>
             </tr>
                     </tbody>
                 </table>
@@ -499,8 +501,8 @@ Pulsanti e cornici più larghi, colonna destra riallineata, etichetta
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-22 12:58 UTC</p>
-                <p>Build Commit: <code>5761fe7</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-22 18:07 UTC</p>
+                <p>Build Commit: <code>a40c8e2</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

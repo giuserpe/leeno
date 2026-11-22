@@ -9,116 +9,117 @@ Usare questa mappa per individuare rapidamente il punto di inserimento.
 
 Formato: `L<riga> | Lv<livello> | <titolo> | bookmark: <nome>`
 
-- L9150 | Lv1 | PREMESSE | bookmark: `__RefHeading___Toc12589_579480652`
-    - L9153 | Lv3 | Note legali - Licenza per il Software e la Documentazione Libera GNU | bookmark: `__RefHeading__17771_1192499583`
-    - L9397 | Lv3 | Scarico di Responsabilità e Avvertenze | bookmark: `__RefHeading__7407_1364689504`
-    - L9580 | Lv3 | Contatti | bookmark: `__RefHeading__17773_1192499583`
-    - L9585 | Lv3 | L staff | bookmark: `__RefHeading___Toc13013_579480652`
-    - L9598 | Lv3 | Crediti e ringraziamenti | bookmark: `__RefHeading__7409_1364689504`
-    - L9615 | Lv3 | Introduzione | bookmark: `__RefHeading__7411_1364689504`
-    - L9727 | Lv3 | Glossario e Convenzioni | bookmark: `__RefHeading__7413_1364689504`
-- L10516 | Lv1 | COSA È LeenO | bookmark: `__RefHeading__20673_1854915992`
-    - L10519 | Lv3 | Presentazione | bookmark: `__RefHeading__20675_1854915992`
-    - L10528 | Lv3 | Per cosa starebbe “LeenO”? | bookmark: `__RefHeading___Toc16486_1943282150`
-    - L10541 | Lv3 | Il Computo su formato OpenDocumentFile (ODF) | bookmark: `__RefHeading__16247_539796941`
-    - L10544 | Lv3 | A chi è destinato | bookmark: `__RefHeading__7419_1364689504`
-    - L10549 | Lv3 | Caratteristiche | bookmark: `__RefHeading__20679_1854915992`
-    - L10627 | Lv3 | Requisiti | bookmark: `__RefHeading__20681_1854915992`
-    - L10670 | Lv3 | Avvertenze | bookmark: `__RefHeading___Toc17096_618147405`
-- L10773 | Lv1 | INSTALLAZIONE E AGGIORNAMENTO | bookmark: `__RefHeading__7427_1364689504`
-    - L10776 | Lv3 | Installazione | bookmark: `__RefHeading__7429_1364689504`
-    - L10903 | Lv3 | Aggiornamento di LeenO.oxt | bookmark: `aggiornamento`
-    - L11118 | Lv3 | Se qualcosa va storto | bookmark: `__RefHeading__20689_1854915992`
-    - L11216 | Lv3 | Tenere un archivio delle estensioni | bookmark: `__RefHeading__20691_1854915992`
-    - L11565 | Lv3 | La gestione delle versioni (vecchi lavori e software aggiornato) | bookmark: `__RefHeading__7431_1364689504`
-- L11709 | Lv1 | ZOOM, VISTE E VISIBILITÀ | bookmark: `__RefHeading__20963_246142066`
-    - L11713 | Lv3 | Zoom | bookmark: `__RefHeading__20965_246142066`
-    - L11759 | Lv3 | Viste | bookmark: `__RefHeading__20967_246142066`
-    - L13679 | Lv3 | Vista in struttura | bookmark: `__RefHeading__7439_1364689504`
-    - L13699 | Lv3 | Visualizza&gt;Schermo intero | bookmark: `__RefHeading__10176_1704602542`
-- L13771 | Lv1 | FILTRI, RICERCHE ED ALTRO | bookmark: `__RefHeading__20969_246142066`
-    - L13777 | Lv3 | Filtra Codice della voce corrente | bookmark: `__RefHeading__20971_246142066`
-    - L13805 | Lv3 | Filtra descrizione corrente | bookmark: `__RefHeading___Toc17427_10608698371`
-    - L13807 | Lv3 | Inserimento di link a documenti esterni, indirizzi web o e-mail | bookmark: `__RefHeading___Toc18019_696203312`
-    - L20232 | Lv3 | Trova voce in Elenco Prezzi/Analisi | bookmark: `__RefHeading__20973_246142066`
-    - L20235 | Lv3 | Evidenzia voci in Elenco Prezzi | bookmark: `__RefHeading__evidenzia_voci_elenco_prezzi`
-    - L20237 | Lv3 | Il comando taglia (Ctrl+X) | bookmark: `__RefHeading__20973_2461420662`
-    - L20239 | Lv3 | Misure e pesi | bookmark: `__RefHeading__20973_24614206621`
-- L20618 | Lv1 | ORGANIZZAZIONE DEL FILE DI LAVORO | bookmark: `__RefHeading__20975_246142066`
-    - L21595 | Lv3 | Le tabelle principali | bookmark: `__RefHeading___Toc18526_16200932582`
-    - L21901 | Lv3 | Stili e colori | bookmark: `stili e colori`
-      - L21991 | Lv4 | Stili di Cella | bookmark: `__RefHeading__55542_517197219`
-      - L22003 | Lv4 | Stili di Pagina | bookmark: `__RefHeading__7493_1364689504`
-    - L22005 | Lv3 | Anagrafica Generale | bookmark: `__RefHeading___Toc15584_1866005348`
-    - L22009 | Lv3 | Impostazioni di Configurazione | bookmark: `__RefHeading___Toc15584_18660053481`
-- L22410 | Lv1 | L’ESECUZIONE DEI COMANDI | bookmark: `__RefHeading___Toc17873_1786373728`
-    - L24489 | Lv3 | Menù Principale | bookmark: `__RefHeading___Toc17057_992325285`
-    - L24493 | Lv3 | Menù a tendina | bookmark: `__RefHeading__20977_246142066`
-    - L24496 | Lv3 | Toolbar (icone) | bookmark: `__RefHeading__20977_2461420661`
-    - L24512 | Lv3 | Scorciatoie di tastiera | bookmark: `__RefHeading__7445_1364689504`
-- L24517 | Lv1 | L&apos;ELENCO PREZZI | bookmark: `__RefHeading__14651_1613112675`
-    - L24520 | Lv3 | Inserire un nuovo prezzo | bookmark: `__RefHeading__7465_1364689504`
-      - L24537 | Lv4 | Inserire voci da file già predisposti | bookmark: `__RefHeading___Toc18796_1990409921`
-      - L24553 | Lv4 | Importazione da altri formati | bookmark: `__RefHeading___Toc18798_1990409921`
-      - L24661 | Lv4 | Codici doppi in Elenco prezzi | bookmark: `__RefHeading___Toc18942_1990409921`
-    - L24750 | Lv3 | Sommari e Quadri di raffronto | bookmark: `__RefHeading__14655_1613112675`
-    - L26203 | Lv3 | Prefisso a Codice Articolo | bookmark: `__RefHeading__17443_11924995831`
-    - L26205 | Lv3 | Richiesta Offerta Prezzi (Lista delle Lavorazioni e delle Forniture) | bookmark: `__RefHeading__17443_1192499583`
-    - L26208 | Lv3 | Trascrizione delle cifre in lettere | bookmark: `__RefHeading__17445_1192499583`
-    - L26301 | Lv3 | Aggiornamento dell&apos;Elenco Prezzi | bookmark: `__RefHeading__14659_1613112675`
-- L26307 | Lv1 | L&apos;ANALISI DI PREZZO | bookmark: `__RefHeading__14661_1613112675`
-    - L26310 | Lv3 | Creare una voce di Analisi di Prezzo | bookmark: `__RefHeading__7469_1364689504`
-    - L27563 | Lv3 | Rinumerazione selettiva delle schede di Analisi di Prezzo | bookmark: `__RefHeading___rinumerazione_selettiva_analisi`
-- L27567 | Lv1 | IL COMPUTO METRICO E LA VARIANTE | bookmark: `__RefHeading___Toc16811_1072714345`
-    - L27661 | Lv3 | Nuovo computo | bookmark: `__RefHeading__14637_1613112675`
-      - L28784 | Lv4 | Inserire una nuova voce di computo | bookmark: `__RefHeading___Toc15565_3159759860`
-      - L28790 | Lv4 | Spostare una voce di computo | bookmark: `sposta`
-      - L28792 | Lv4 | Vedi voce precedente | bookmark: `__RefHeading___Toc11015_4274954234`
-      - L30060 | Lv4 | Elimina voce | bookmark: `__RefHeading__15972_19491889571`
-      - L30200 | Lv4 | Azzeramento della quantità di una voce | bookmark: `__RefHeading___Toc18649_277457152`
-      - L30217 | Lv4 | Inserisci parziale | bookmark: `__RefHeading___Toc18651_277457152`
-    - L30220 | Lv3 | Viste COMPUTO e VARIANTE | bookmark: `__RefHeading__14641_1613112675`
-      - L30558 | Lv4 | Vista | bookmark: `__RefHeading___Toc34018_3095985442`
-      - L30560 | Lv4 | Visualizza | bookmark: `__RefHeading___Toc33635_30959854421`
-      - L30563 | Lv4 | Caratteri Descrizione | bookmark: `__RefHeading___Toc33635_309598544211`
-      - L30566 | Lv4 | Trova voci ricorrenti | bookmark: `__RefHeading___Toc33635_3095985442111`
-      - L30568 | Lv4 | Somma per Colore nella Colonna | bookmark: `__RefHeading___Toc11387_3263472496`
-      - L30571 | Lv4 | Riepilogo quantitativo | bookmark: `__RefHeading___Riepilogo_quantitativo`
-      - L30574 | Lv4 | Inserisci somme LAVORI e SICUREZZA | bookmark: `__RefHeading___Inserisci_somme_LAVORI_e_SICUREZZA`
-      - L30579 | Lv4 | Riepilogo importi | bookmark: `__RefHeading___Riepilogo_importi`
-      - L30582 | Lv4 | Inserisci Riferimento Esterno | bookmark: `__RefHeading___Inserisci_riferimento_esterno`
-      - L30585 | Lv4 | Adeguamento Prezzi | bookmark: `__RefHeading___Adeguamento_Prezzi`
-      - L30590 | Lv4 | Ripristina colori | bookmark: `__RefHeading___Ripristina_colori`
-      - L30593 | Lv4 | VARIANTE | bookmark: `__RefHeading___Toc12204_2625308554`
-      - L30595 | Lv4 | CONTABILITÀ | bookmark: `__RefHeading___Toc12206_2625308554`
-      - L30597 | Lv4 | SAL revisionale (Revisione Prezzi) | bookmark: `__RefHeading___SAL_revisionale`
-      - L30600 | Lv4 | Suddivisione in Categorie | bookmark: `__RefHeading___Toc16042_3389968414`
-      - L31462 | Lv4 | Riepilogo e/o firme in calce | bookmark: `__RefHeading___Toc18316_1283375541`
-      - L31467 | Lv4 | Documenti per richiesta di offerta | bookmark: `__RefHeading___Toc15567_3159759860`
-- L31490 | Lv1 | LA CONTABILITÀ | bookmark: `__RefHeading__7499_1364689504`
-    - L33117 | Lv3 | Gestione delle Voci Della Sicurezza | bookmark: `__RefHeading___Toc21969_3615506971`
-    - L33119 | Lv3 | Trasferimento dati al foglio CONTABILITA | bookmark: `__RefHeading___trasferimento_onfly_contab`
-    - L33122 | Lv3 | Generazione Atti Contabili | bookmark: `__RefHeading___Toc21670_4184712957`
-    - L33624 | Lv3 | Generazione dello Stato Finale | bookmark: `__RefHeading__generazione_stato_finale`
-    - L33629 | Lv3 | Annullamento Atti Contabili | bookmark: `__RefHeading___Annullamento_Atti_Contabili`
-- L33641 | Lv1 | COPERTINE E DOCUMENTI DI GESTIONE | bookmark: `__RefHeading__7499_13646895041`
-- L34372 | Lv1 | MANIPOLAZIONI FINALI E STAMPA | bookmark: `stampa`
-    - L34375 | Lv3 | Premesse | bookmark: `__RefHeading__9717_467177799`
-    - L34720 | Lv3 | Tre diversi metodi di produrre stampe in formato PDF | bookmark: `__RefHeading___Toc30794_423558766`
-    - L34733 | Lv3 | I metodo | bookmark: `__RefHeading___Toc30796_423558766`
-    - L34912 | Lv3 | II metodo | bookmark: `__RefHeading___Toc30798_423558766`
-    - L36235 | Lv3 | III metodo | bookmark: `__RefHeading___Toc30800_423558766`
-- L36445 | Lv1 | TRASFERIRE I DATI TRA FILE | bookmark: `__RefHeading__46795_246142066`
-    - L36449 | Lv3 | Invia Voce al DP | bookmark: `__RefHeading__7511_136468950411`
-    - L36482 | Lv3 | Accodare più file di Computo | bookmark: `__RefHeading__7511_13646895041`
-    - L37231 | Lv3 | Adeguamento di un vecchio file | bookmark: `__RefHeading__9332_758364849`
-    - L37373 | Lv3 | Esporta selezione in formato Markdown | bookmark: `__RefHeading__esporta_selezione_markdown`
-- L37378 | Lv1 | BROGLIACCIO: L&apos;AGENDA DI CANTIERE SUL TELEFONO | bookmark: `__RefHeading__brogliaccio`
-    - L37383 | Lv3 | Avvio e uso sul telefono | bookmark: `__RefHeading__brogliaccio_uso`
-    - L37476 | Lv3 | Cantieri | bookmark: `__RefHeading__brogliaccio_cantieri`
-    - L39904 | Lv3 | Compilare una giornata | bookmark: `__RefHeading__brogliaccio_giornata`
-    - L41642 | Lv3 | Esportare per LeenO | bookmark: `__RefHeading__brogliaccio_esporta`
-    - L41647 | Lv3 | Stampa o PDF | bookmark: `__RefHeading__brogliaccio_pdf`
-    - L42663 | Lv3 | Ripristinare da file | bookmark: `__RefHeading__brogliaccio_ripristina`
-    - L42669 | Lv3 | Importare l&apos;agenda in LeenO | bookmark: `__RefHeading__brogliaccio_import`
-- L42677 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`
+- L9165 | Lv1 | PREMESSE | bookmark: `__RefHeading___Toc12589_579480652`
+    - L9168 | Lv3 | Note legali - Licenza per il Software e la Documentazione Libera GNU | bookmark: `__RefHeading__17771_1192499583`
+    - L9412 | Lv3 | Scarico di Responsabilità e Avvertenze | bookmark: `__RefHeading__7407_1364689504`
+    - L9595 | Lv3 | Contatti | bookmark: `__RefHeading__17773_1192499583`
+    - L9600 | Lv3 | L staff | bookmark: `__RefHeading___Toc13013_579480652`
+    - L9613 | Lv3 | Crediti e ringraziamenti | bookmark: `__RefHeading__7409_1364689504`
+    - L9630 | Lv3 | Introduzione | bookmark: `__RefHeading__7411_1364689504`
+    - L9742 | Lv3 | Glossario e Convenzioni | bookmark: `__RefHeading__7413_1364689504`
+- L10531 | Lv1 | COSA È LeenO | bookmark: `__RefHeading__20673_1854915992`
+    - L10534 | Lv3 | Presentazione | bookmark: `__RefHeading__20675_1854915992`
+    - L10543 | Lv3 | Per cosa starebbe “LeenO”? | bookmark: `__RefHeading___Toc16486_1943282150`
+    - L10556 | Lv3 | Il Computo su formato OpenDocumentFile (ODF) | bookmark: `__RefHeading__16247_539796941`
+    - L10559 | Lv3 | A chi è destinato | bookmark: `__RefHeading__7419_1364689504`
+    - L10564 | Lv3 | Caratteristiche | bookmark: `__RefHeading__20679_1854915992`
+    - L10642 | Lv3 | Requisiti | bookmark: `__RefHeading__20681_1854915992`
+    - L10685 | Lv3 | Avvertenze | bookmark: `__RefHeading___Toc17096_618147405`
+- L10788 | Lv1 | INSTALLAZIONE E AGGIORNAMENTO | bookmark: `__RefHeading__7427_1364689504`
+    - L10791 | Lv3 | Installazione | bookmark: `__RefHeading__7429_1364689504`
+    - L10918 | Lv3 | Aggiornamento di LeenO.oxt | bookmark: `aggiornamento`
+    - L11133 | Lv3 | Se qualcosa va storto | bookmark: `__RefHeading__20689_1854915992`
+    - L11231 | Lv3 | Tenere un archivio delle estensioni | bookmark: `__RefHeading__20691_1854915992`
+    - L11580 | Lv3 | La gestione delle versioni (vecchi lavori e software aggiornato) | bookmark: `__RefHeading__7431_1364689504`
+- L11724 | Lv1 | ZOOM, VISTE E VISIBILITÀ | bookmark: `__RefHeading__20963_246142066`
+    - L11728 | Lv3 | Zoom | bookmark: `__RefHeading__20965_246142066`
+    - L11774 | Lv3 | Viste | bookmark: `__RefHeading__20967_246142066`
+    - L14186 | Lv3 | Vista in struttura | bookmark: `__RefHeading__7439_1364689504`
+    - L14206 | Lv3 | Visualizza&gt;Schermo intero | bookmark: `__RefHeading__10176_1704602542`
+- L14278 | Lv1 | FILTRI, RICERCHE ED ALTRO | bookmark: `__RefHeading__20969_246142066`
+    - L14284 | Lv3 | Filtra Codice della voce corrente | bookmark: `__RefHeading__20971_246142066`
+    - L14312 | Lv3 | Filtra descrizione corrente | bookmark: `__RefHeading___Toc17427_10608698371`
+    - L14314 | Lv3 | Inserimento di link a documenti esterni, indirizzi web o e-mail | bookmark: `__RefHeading___Toc18019_696203312`
+    - L20739 | Lv3 | Trova voce in Elenco Prezzi/Analisi | bookmark: `__RefHeading__20973_246142066`
+    - L20742 | Lv3 | Evidenzia voci in Elenco Prezzi | bookmark: `__RefHeading__evidenzia_voci_elenco_prezzi`
+    - L20744 | Lv3 | Il comando taglia (Ctrl+X) | bookmark: `__RefHeading__20973_2461420662`
+    - L20746 | Lv3 | Misure e pesi | bookmark: `__RefHeading__20973_24614206621`
+- L21125 | Lv1 | ORGANIZZAZIONE DEL FILE DI LAVORO | bookmark: `__RefHeading__20975_246142066`
+    - L22102 | Lv3 | Le tabelle principali | bookmark: `__RefHeading___Toc18526_16200932582`
+    - L22408 | Lv3 | Stili e colori | bookmark: `stili e colori`
+      - L22498 | Lv4 | Stili di Cella | bookmark: `__RefHeading__55542_517197219`
+      - L22510 | Lv4 | Stili di Pagina | bookmark: `__RefHeading__7493_1364689504`
+    - L22512 | Lv3 | Anagrafica Generale | bookmark: `__RefHeading___Toc15584_1866005348`
+    - L22516 | Lv3 | Impostazioni di Configurazione | bookmark: `__RefHeading___Toc15584_18660053481`
+- L22917 | Lv1 | L’ESECUZIONE DEI COMANDI | bookmark: `__RefHeading___Toc17873_1786373728`
+    - L24996 | Lv3 | Menù Principale | bookmark: `__RefHeading___Toc17057_992325285`
+    - L25000 | Lv3 | Menù a tendina | bookmark: `__RefHeading__20977_246142066`
+    - L25003 | Lv3 | Toolbar (icone) | bookmark: `__RefHeading__20977_2461420661`
+    - L25019 | Lv3 | Scorciatoie di tastiera | bookmark: `__RefHeading__7445_1364689504`
+- L25024 | Lv1 | L&apos;ELENCO PREZZI | bookmark: `__RefHeading__14651_1613112675`
+    - L25027 | Lv3 | Inserire un nuovo prezzo | bookmark: `__RefHeading__7465_1364689504`
+      - L25044 | Lv4 | Inserire voci da file già predisposti | bookmark: `__RefHeading___Toc18796_1990409921`
+      - L25060 | Lv4 | Importazione da altri formati | bookmark: `__RefHeading___Toc18798_1990409921`
+      - L25168 | Lv4 | Codici doppi in Elenco prezzi | bookmark: `__RefHeading___Toc18942_1990409921`
+    - L25257 | Lv3 | Sommari e Quadri di raffronto | bookmark: `__RefHeading__14655_1613112675`
+    - L26710 | Lv3 | Prefisso a Codice Articolo | bookmark: `__RefHeading__17443_11924995831`
+    - L26712 | Lv3 | Genera base Concordamento | bookmark: `__RefHeading___Genera_base_concordamento`
+    - L26714 | Lv3 | Richiesta Offerta Prezzi (Lista delle Lavorazioni e delle Forniture) | bookmark: `__RefHeading__17443_1192499583`
+    - L26717 | Lv3 | Trascrizione delle cifre in lettere | bookmark: `__RefHeading__17445_1192499583`
+    - L26810 | Lv3 | Aggiornamento dell&apos;Elenco Prezzi | bookmark: `__RefHeading__14659_1613112675`
+- L26816 | Lv1 | L&apos;ANALISI DI PREZZO | bookmark: `__RefHeading__14661_1613112675`
+    - L26819 | Lv3 | Creare una voce di Analisi di Prezzo | bookmark: `__RefHeading__7469_1364689504`
+    - L28110 | Lv3 | Rinumerazione selettiva delle schede di Analisi di Prezzo | bookmark: `__RefHeading___rinumerazione_selettiva_analisi`
+- L28114 | Lv1 | IL COMPUTO METRICO E LA VARIANTE | bookmark: `__RefHeading___Toc16811_1072714345`
+    - L28208 | Lv3 | Nuovo computo | bookmark: `__RefHeading__14637_1613112675`
+      - L29331 | Lv4 | Inserire una nuova voce di computo | bookmark: `__RefHeading___Toc15565_3159759860`
+      - L29337 | Lv4 | Spostare una voce di computo | bookmark: `sposta`
+      - L29339 | Lv4 | Vedi voce precedente | bookmark: `__RefHeading___Toc11015_4274954234`
+      - L30607 | Lv4 | Elimina voce | bookmark: `__RefHeading__15972_19491889571`
+      - L30747 | Lv4 | Azzeramento della quantità di una voce | bookmark: `__RefHeading___Toc18649_277457152`
+      - L30764 | Lv4 | Inserisci parziale | bookmark: `__RefHeading___Toc18651_277457152`
+    - L30767 | Lv3 | Viste COMPUTO e VARIANTE | bookmark: `__RefHeading__14641_1613112675`
+      - L31105 | Lv4 | Vista | bookmark: `__RefHeading___Toc34018_3095985442`
+      - L31107 | Lv4 | Visualizza | bookmark: `__RefHeading___Toc33635_30959854421`
+      - L31110 | Lv4 | Caratteri Descrizione | bookmark: `__RefHeading___Toc33635_309598544211`
+      - L31113 | Lv4 | Trova voci ricorrenti | bookmark: `__RefHeading___Toc33635_3095985442111`
+      - L31115 | Lv4 | Somma per Colore nella Colonna | bookmark: `__RefHeading___Toc11387_3263472496`
+      - L31118 | Lv4 | Riepilogo quantitativo | bookmark: `__RefHeading___Riepilogo_quantitativo`
+      - L31121 | Lv4 | Inserisci somme LAVORI e SICUREZZA | bookmark: `__RefHeading___Inserisci_somme_LAVORI_e_SICUREZZA`
+      - L31126 | Lv4 | Riepilogo importi | bookmark: `__RefHeading___Riepilogo_importi`
+      - L31129 | Lv4 | Inserisci Riferimento Esterno | bookmark: `__RefHeading___Inserisci_riferimento_esterno`
+      - L31132 | Lv4 | Adeguamento Prezzi | bookmark: `__RefHeading___Adeguamento_Prezzi`
+      - L31137 | Lv4 | Ripristina colori | bookmark: `__RefHeading___Ripristina_colori`
+      - L31140 | Lv4 | VARIANTE | bookmark: `__RefHeading___Toc12204_2625308554`
+      - L31142 | Lv4 | CONTABILITÀ | bookmark: `__RefHeading___Toc12206_2625308554`
+      - L31144 | Lv4 | SAL revisionale (Revisione Prezzi) | bookmark: `__RefHeading___SAL_revisionale`
+      - L31147 | Lv4 | Suddivisione in Categorie | bookmark: `__RefHeading___Toc16042_3389968414`
+      - L32009 | Lv4 | Riepilogo e/o firme in calce | bookmark: `__RefHeading___Toc18316_1283375541`
+      - L32014 | Lv4 | Documenti per richiesta di offerta | bookmark: `__RefHeading___Toc15567_3159759860`
+- L32038 | Lv1 | LA CONTABILITÀ | bookmark: `__RefHeading__7499_1364689504`
+    - L33665 | Lv3 | Gestione delle Voci Della Sicurezza | bookmark: `__RefHeading___Toc21969_3615506971`
+    - L33667 | Lv3 | Trasferimento dati al foglio CONTABILITA | bookmark: `__RefHeading___trasferimento_onfly_contab`
+    - L33671 | Lv3 | Generazione Atti Contabili | bookmark: `__RefHeading___Toc21670_4184712957`
+    - L34335 | Lv3 | Generazione dello Stato Finale | bookmark: `__RefHeading__generazione_stato_finale`
+    - L34340 | Lv3 | Annullamento Atti Contabili | bookmark: `__RefHeading___Annullamento_Atti_Contabili`
+- L34352 | Lv1 | COPERTINE E DOCUMENTI DI GESTIONE | bookmark: `__RefHeading__7499_13646895041`
+- L35083 | Lv1 | MANIPOLAZIONI FINALI E STAMPA | bookmark: `stampa`
+    - L35086 | Lv3 | Premesse | bookmark: `__RefHeading__9717_467177799`
+    - L35431 | Lv3 | Tre diversi metodi di produrre stampe in formato PDF | bookmark: `__RefHeading___Toc30794_423558766`
+    - L35444 | Lv3 | I metodo | bookmark: `__RefHeading___Toc30796_423558766`
+    - L35623 | Lv3 | II metodo | bookmark: `__RefHeading___Toc30798_423558766`
+    - L36946 | Lv3 | III metodo | bookmark: `__RefHeading___Toc30800_423558766`
+- L37156 | Lv1 | TRASFERIRE I DATI TRA FILE | bookmark: `__RefHeading__46795_246142066`
+    - L37160 | Lv3 | Invia Voce al DP | bookmark: `__RefHeading__7511_136468950411`
+    - L37193 | Lv3 | Accodare più file di Computo | bookmark: `__RefHeading__7511_13646895041`
+    - L37942 | Lv3 | Adeguamento di un vecchio file | bookmark: `__RefHeading__9332_758364849`
+    - L38084 | Lv3 | Esporta selezione in formato Markdown | bookmark: `__RefHeading__esporta_selezione_markdown`
+- L38089 | Lv1 | BROGLIACCIO: L&apos;AGENDA DI CANTIERE SUL TELEFONO | bookmark: `__RefHeading__brogliaccio`
+    - L38094 | Lv3 | Avvio e uso sul telefono | bookmark: `__RefHeading__brogliaccio_uso`
+    - L38187 | Lv3 | Cantieri | bookmark: `__RefHeading__brogliaccio_cantieri`
+    - L40615 | Lv3 | Compilare una giornata | bookmark: `__RefHeading__brogliaccio_giornata`
+    - L42353 | Lv3 | Esportare per LeenO | bookmark: `__RefHeading__brogliaccio_esporta`
+    - L42358 | Lv3 | Stampa o PDF | bookmark: `__RefHeading__brogliaccio_pdf`
+    - L43374 | Lv3 | Ripristinare da file | bookmark: `__RefHeading__brogliaccio_ripristina`
+    - L43380 | Lv3 | Importare l&apos;agenda in LeenO | bookmark: `__RefHeading__brogliaccio_import`
+- L43388 | Lv1 | CONCLUSIONI | bookmark: `__RefHeading__7541_1364689504`

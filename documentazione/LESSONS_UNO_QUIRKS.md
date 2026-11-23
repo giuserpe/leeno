@@ -27,3 +27,7 @@ Percorsi proposti ma mai provati, scartati senza test: `.uno:SetOptimalRowHeight
 ## Stili di pagina: valori riletti diversi da quelli scritti
 
 Provato su LibreOffice 24.2 con `tests/data/LeenO_Esempio.ods`: scrivendo `BottomMargin = 1350` lo stesso valore viene riletto come 1349 (conversione in unita' interne). Con `ScaleToPagesX = 1` attivo, `PageScale` viene riletto come 100 anche se scritto a 0. Nei test confrontare i margini con tolleranza di 1/100 di mm e non asserire `PageScale`; il confronto tra due scritture sullo stesso stile resta esatto. Margini, scala e bordi si scrivono con `LeenoSettings.set_page_margins`, `set_page_scale` e `set_page_borders` (una sola chiamata `setPropertyValues` con nomi ordinati), non con costanti sparse.
+
+## Contenuto di intestazione e piè di pagina: tenere un riferimento
+
+`stile.RightPageFooterContent.CenterText.String` in una sola catena di attributi può dare `UnknownPropertyException`: il contenuto è un oggetto temporaneo e viene rilasciato prima della lettura di `CenterText`. Assegnarlo prima a una variabile (`contenuto = stile.RightPageFooterContent`) e leggere `contenuto.CenterText.String`.

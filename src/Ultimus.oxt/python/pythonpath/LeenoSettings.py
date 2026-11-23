@@ -7,6 +7,9 @@
 '''
 Modulo per la modifica delle impostazioni di LeenO
 '''
+import os
+import re
+
 import uno
 import unohelper
 from com.sun.star.awt import XActionListener
@@ -62,6 +65,85 @@ _DOCSTRINGS = (
     '[RUP]',
     '[STAZIONE_APPALTANTE]',
 )
+
+# Segnaposto di intestazione e piè di pagina che si risolvono leggendo il foglio S2.
+# Ogni voce: (segnaposto, etichette cercate in colonna B di S2, chiave 'Lavoro' di ripiego).
+# Il valore di S2 prevale; se e' vuoto si usa l'impostazione di lavoro (MENU_JobSettings).
+_SEGNAPOSTI_S2 = (
+    ('[COMMITTENTE]', ('Committente',), 'committente'),
+    ('[STAZIONE_APPALTANTE]', ('Stazione Appaltante',), 'stazioneAppaltante'),
+    ('[OGGETTO]', ('OGGETTO',), None),
+    ('[RUP]', ('Responsabile del Progetto',), 'rup'),
+    ('[PROGETTISTA]', ('Progettista',), 'progettista'),
+    ('[DIRETTORE_LAVORI]', ('Direttore Lavori', 'Direttore dei Lavori'), None),
+)
+
+# Segnaposto senza dato corrispondente in S2: solo impostazioni di lavoro.
+_SEGNAPOSTI_LAVORO = (
+    ('[PROGETTO]', 'progetto'),
+    ('[DATA]', 'data'),
+    ('[REVISIONE]', 'revisione'),
+    ('[DATA_REVISIONE]', 'dataRevisione'),
+)
+
+# Riga delle firme dei piè di pagina del Libretto (e, a scelta, del Registro):
+# stesso testo dello stile Page_Style_Libretto_Misure2 del template.
+_FIRME_TESTO = "L'IMPRESA\t\t\t\t\t\tIL DIRETTORE DEI LAVORI    "
+
+
+def nome_file_documento(oDoc):
+    """Nome del file del documento, senza percorso (segnaposto [FILE])."""
+    return os.path.basename(oDoc.getURL().replace('%20', ' '))
+
+
+def valori_segnaposto(oDoc, documento='', nSal=None, nomefile='', extra=None, lavoro=None):
+    """
+    Valori dei segnaposto di intestazione e piè di pagina per il documento oDoc.
+
+    documento : titolo del documento prodotto ([DOCUMENTO]), es. 'Libretto delle Misure'
+    nSal      : numero del SAL ([SAL]); None se non pertinente
+    nomefile  : nome del file ([FILE]), vedi nome_file_documento
+    extra     : altri segnaposto {'[NOME]': valore} che prevalgono su quelli calcolati
+    lavoro    : impostazioni di lavoro; se None si caricano con loadJobSettings
+
+    I dati di S2 si leggono per etichetta (colonna B, valore in colonna C) e prevalgono
+    sulle impostazioni di lavoro. [PAGINA] e [PAGINE] non sono qui: diventano campi
+    numerici del piè di pagina.
+    """
+    if lavoro is None:
+        lavoro = loadJobSettings(oDoc)
+    oS2 = oDoc.Sheets.getByName('S2')
+
+    res = {}
+    for segnaposto, etichette, chiave in _SEGNAPOSTI_S2:
+        valore = ''
+        for etichetta in etichette:
+            valore = SheetUtils.leggi_dato_etichettato(oS2, etichetta)
+            if valore:
+                break
+        if not valore and chiave:
+            valore = str(lavoro.get(chiave, '') or '')
+        res[segnaposto] = valore
+    for segnaposto, chiave in _SEGNAPOSTI_LAVORO:
+        res[segnaposto] = str(lavoro.get(chiave, '') or '')
+
+    res['[DOCUMENTO]'] = documento
+    res['[SAL]'] = '' if nSal is None else str(nSal)
+    res['[FILE]'] = nomefile
+    res['[FIRME]'] = _FIRME_TESTO
+    if extra:
+        res.update(extra)
+    return res
+
+
+def sostituisci_segnaposto(testo, valori):
+    """
+    Sostituisce in testo i segnaposto presenti in valori, in un solo passaggio: un valore
+    che contiene un segnaposto non viene espanso di nuovo. I segnaposto sconosciuti e
+    [PAGINA] e [PAGINE] restano invariati.
+    """
+    return re.sub(r'\[[A-Z_]+\]', lambda m: valori.get(m.group(0), m.group(0)), testo)
+
 
 def loadJobSettings(oDoc):
     """

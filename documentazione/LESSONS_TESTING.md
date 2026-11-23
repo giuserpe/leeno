@@ -45,3 +45,7 @@ Aperti, documentati nei test:
 - "ventitre" e simili sono scritti senza accento nei numeri in lettere, in entrambe le funzioni (decisione da prendere).
 - `leggiElencoPrezzi` lascia `prezzo2`-`prezzo5` come stringhe, ma nessuno li usa.
 - `Debug._format_time` non ha le ore. `LeenoImport.MENU_ValdAosta` è dichiarata non funzionante nella docstring.
+
+## Test su documento reale con LibreOffice headless
+
+`tests/uno_harness.py` avvia (o riusa) un LibreOffice headless e apre copie temporanee di `tests/data/LeenO_Esempio.ods`. Si attiva solo con `LEENO_TEST_UNO=1`; richiede il modulo `uno`, quindi su Windows va usato il Python di LibreOffice con `unittest` (`& "C:/Program Files/LibreOffice/program/python.exe" -m unittest tests.test_lettura_etichette -v`). Senza la variabile i test restano saltati e la CI non dipende da LibreOffice. Porta predefinita 2002, cambiabile con `LEENO_UNO_PORTA`. Per un refactor conviene confrontare il comportamento storico (copiato nel test) con quello nuovo sul documento reale, oltre ai test con oggetti finti.

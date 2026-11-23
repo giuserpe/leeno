@@ -14,17 +14,16 @@ Tre livelli:
     & "C:/Program Files/LibreOffice/program/python.exe" -m unittest tests.test_geometria_pagina -v
 """
 import ast
-import os
 import re
-import shutil
-import socket
-import subprocess
-import tempfile
-import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock
+
+try:
+    from tests import uno_harness
+except ImportError:  # esecuzione con la cartella tests nel percorso di ricerca
+    import uno_harness
 
 ROOT = Path(__file__).resolve().parent.parent
 PYTHONPATH_DIR = ROOT / "src/Ultimus.oxt/python/pythonpath"
@@ -142,57 +141,6 @@ class TestNessunaDuplicazione(unittest.TestCase):
 # --------------------------------------------------------------------------------------
 # Documento reale
 # --------------------------------------------------------------------------------------
-HOST = "127.0.0.1"
-PORTA = int(os.environ.get("LEENO_UNO_PORTA", "2002"))
-
-
-def _trova_soffice():
-    """Percorso di soffice: dal PATH o, su Windows, dalle cartelle di installazione standard."""
-    if os.name == "nt":
-        for var in ("ProgramFiles", "ProgramFiles(x86)"):
-            base = os.environ.get(var)
-            if base:
-                candidato = Path(base) / "LibreOffice" / "program" / "soffice.exe"
-                if candidato.exists():
-                    return str(candidato)
-    return shutil.which("soffice")
-
-
-def _uno_disponibile():
-    if os.environ.get("LEENO_TEST_UNO") != "1" or not ESEMPIO.exists():
-        return False
-    try:
-        import uno  # noqa: F401
-    except ImportError:
-        return False
-    return _trova_soffice() is not None
-
-
-def _porta_aperta():
-    with socket.socket() as s:
-        s.settimeout(0.5)
-        return s.connect_ex((HOST, PORTA)) == 0
-
-
-def _connetti(attesa=120):
-    """Attende che la porta UNO sia aperta e si collega; l'avvio con profilo nuovo e' lento."""
-    import uno
-    ctx = uno.getComponentContext()
-    resolver = ctx.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", ctx)
-    ultimo = None
-    fine = time.time() + attesa
-    while time.time() < fine:
-        if _porta_aperta():
-            try:
-                return resolver.resolve(
-                    "uno:socket,host=%s,port=%d;urp;StarOffice.ComponentContext" % (HOST, PORTA))
-            except Exception as exc:
-                ultimo = exc
-        time.sleep(1)
-    raise RuntimeError("LibreOffice non raggiungibile su %s:%d entro %d s (porta aperta: %s, ultimo errore: %s)"
-                       % (HOST, PORTA, attesa, _porta_aperta(), ultimo))
-
-
 PROPRIETA_LETTE = tuple(MARGINI_ATTESI) + tuple(SCALA_ATTESA) + (
     "Width", "Height", "IsLandscape", "HeaderIsOn", "FooterIsOn", "HeaderHeight", "FooterHeight")
 
@@ -215,65 +163,18 @@ def _applica_riferimento(uno, p):
     p.LeftBorder = bordo
 
 
-@unittest.skipUnless(_uno_disponibile(), "richiede LEENO_TEST_UNO=1, uno, soffice e LeenO_Esempio.ods")
+@unittest.skipUnless(uno_harness.uno_disponibile(ESEMPIO),
+                     "richiede LEENO_TEST_UNO=1, uno, soffice e LeenO_Esempio.ods")
 class TestDocumentoReale(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         import uno
         cls.uno = uno
-        cls.processo = None
-        cls.tmp = tempfile.mkdtemp(prefix="leeno_geom_")
-        cls.addClassCleanup(shutil.rmtree, cls.tmp, ignore_errors=True)
-        cls.log = os.path.join(cls.tmp, "soffice.log")
-        if not _porta_aperta():
-            extra = {"start_new_session": True} if os.name == "posix" else {}
-            with open(cls.log, "w") as log:
-                cls.processo = subprocess.Popen(
-                    [_trova_soffice(), "--headless", "--invisible", "--norestore", "--nologo",
-                     "-env:UserInstallation=" + (Path(cls.tmp) / "profilo").as_uri(),
-                     "--accept=socket,host=%s,port=%d;urp;" % (HOST, PORTA)],
-                    stdout=log, stderr=log, **extra)
-            cls.addClassCleanup(cls._chiudi_processo)
-        try:
-            ctx = _connetti()
-        except RuntimeError as exc:
-            dettagli = ""
-            if cls.processo is not None:
-                dettagli = " [codice uscita avvio: %s]" % cls.processo.poll()
-                try:
-                    dettagli += " log: " + Path(cls.log).read_text(errors="replace")[-500:]
-                except OSError:
-                    pass
-            raise RuntimeError(str(exc) + dettagli)
-        cls.desktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-        cls.docs = []
-        for tag in ("nuovo", "riferimento"):
-            copia = os.path.join(cls.tmp, tag + ".ods")
-            shutil.copy(ESEMPIO, copia)
-            doc = cls.desktop.loadComponentFromURL(
-                uno.systemPathToFileUrl(copia), "_blank", 0,
-                (uno.createUnoStruct("com.sun.star.beans.PropertyValue", "Hidden", 0, True, 0),))
-            cls.docs.append(doc)
+        cls.sessione = uno_harness.SessioneUno()
+        cls.addClassCleanup(cls.sessione.chiudi)
+        cls.sessione.avvia()
+        cls.docs = [cls.sessione.apri_copia(ESEMPIO, tag) for tag in ("nuovo", "riferimento")]
         cls.ns = _carica(uno)
-
-    @classmethod
-    def _chiudi_processo(cls):
-        try:
-            cls.desktop.terminate()
-        except Exception:
-            pass
-        try:
-            cls.processo.terminate()
-        except Exception:
-            pass
-
-    @classmethod
-    def tearDownClass(cls):
-        for d in cls.docs:
-            try:
-                d.close(True)
-            except Exception:
-                pass
 
     def _stili(self, doc):
         return doc.StyleFamilies.getByName("PageStyles")

@@ -18,8 +18,10 @@ from unittest.mock import MagicMock
 
 try:
     from tests import uno_harness
+    from tests.estrai_sorgente import FoglioFinto, carica
 except ImportError:  # esecuzione con la cartella tests nel percorso di ricerca
     import uno_harness
+    from estrai_sorgente import FoglioFinto, carica
 
 ROOT = Path(__file__).resolve().parent.parent
 PYTHONPATH_DIR = ROOT / "src/Ultimus.oxt/python/pythonpath"
@@ -49,30 +51,9 @@ def _leggi_dato_storico(oSheet, label):
 
 def _carica(log_errore=None):
     """Compila leggi_dato_etichettato da SheetUtils senza importare il modulo (richiede uno)."""
-    sorgente = PYTHONPATH_DIR / "SheetUtils.py"
-    albero = ast.parse(sorgente.read_text(encoding="utf-8"))
-    nodo = [n for n in albero.body if isinstance(n, ast.FunctionDef) and n.name == "leggi_dato_etichettato"]
-    assert len(nodo) == 1
-    leeno_utils = SimpleNamespace(log_errore=log_errore or MagicMock())
-    ns = {"LeenoUtils": leeno_utils}
-    exec(compile(ast.Module(body=nodo, type_ignores=[]), str(sorgente), "exec"), ns)
+    ns = {"LeenoUtils": SimpleNamespace(log_errore=log_errore or MagicMock())}
+    carica(PYTHONPATH_DIR / "SheetUtils.py", ("leggi_dato_etichettato",), ns=ns)
     return ns["leggi_dato_etichettato"]
-
-
-class FoglioFinto:
-    """Foglio con celle in un dizionario {(colonna, riga): testo}."""
-
-    def __init__(self, celle, righe=None):
-        self.celle = celle
-        self.ultima = righe if righe is not None else max((r for _, r in celle), default=0)
-
-    def getCellByPosition(self, col, riga):
-        return SimpleNamespace(String=self.celle.get((col, riga), ""))
-
-    def createCursorByRange(self, _cella):
-        return SimpleNamespace(
-            gotoEndOfUsedArea=lambda _x: None,
-            RangeAddress=SimpleNamespace(EndRow=self.ultima))
 
 
 class TestLetturaEtichette(unittest.TestCase):

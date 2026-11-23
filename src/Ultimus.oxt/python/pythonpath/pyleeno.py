@@ -10894,31 +10894,6 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
     # nomefile calcolato una sola volta fuori dal loop
     nomefile = os.path.basename(oDoc.getURL().replace('%20', ' '))
 
-    # Struttura bordo azzerato costruita una sola volta e riusata
-    bordo_zero = uno.createUnoStruct('com.sun.star.table.BorderLine2')
-    bordo_zero.LineWidth = 0
-    bordo_zero.OuterLineWidth = 0
-
-    # Nomi e valori delle 14 proprietà comuni da impostare su ogni stile.
-    # setPropertyValues() riduce a 1 chiamata UNO invece di 14 separate,
-    # eliminando le notifiche di aggiornamento intermedie che causavano il freeze.
-    PROPS_COMUNI_NOMI = (
-        'TopMargin', 'BottomMargin', 'LeftMargin', 'RightMargin',
-        'FooterLeftMargin', 'FooterRightMargin',
-        'HeaderLeftMargin', 'HeaderRightMargin',
-        'HeaderBodyDistance', 'FooterBodyDistance',
-        'PageScale', 'CenterHorizontally',
-        'ScaleToPagesX', 'ScaleToPagesY',
-    )
-    PROPS_COMUNI_VALORI = (
-        1000, 1350, 1000, 1000,
-        0, 0,
-        0, 0,
-        0, 0,
-        0, True,
-        1, 0,
-    )
-
     # Cache della collezione stili: evita due getByName('PageStyles') per ogni iterazione
     oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
     nCount = oPageStyles.Count
@@ -10934,40 +10909,13 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
         oAktPage.HeaderIsOn = not senza_intestazione
         oAktPage.FooterIsOn = not senza_intestazione
 
-        # Batch write proprietà comuni: 1 chiamata UNO invece di 14
-        try:
-            oAktPage.setPropertyValues(PROPS_COMUNI_NOMI, PROPS_COMUNI_VALORI)
-        except Exception:
-            # fallback singolo se XMultiPropertySet non supportato
-            oAktPage.TopMargin = 1000
-            oAktPage.BottomMargin = 1350
-            oAktPage.LeftMargin = 1000
-            oAktPage.RightMargin = 1000
-            oAktPage.FooterLeftMargin = 0
-            oAktPage.FooterRightMargin = 0
-            oAktPage.HeaderLeftMargin = 0
-            oAktPage.HeaderRightMargin = 0
-            oAktPage.HeaderBodyDistance = 0
-            oAktPage.FooterBodyDistance = 0
-            oAktPage.PageScale = 0
-            oAktPage.CenterHorizontally = True
-            oAktPage.ScaleToPagesX = 1
-            oAktPage.ScaleToPagesY = 0
+        # margini, scala e centratura: definizione unica in LeenoSettings
+        LS.set_page_margins(oAktPage)
 
         if displayName in STILI_CON_HEADER:
             htxt = HTXT_ANALISI if oSheet.Name == 'Analisi di Prezzo' else HTXT_DEFAULT
 
-            # Azzera i 4 bordi in 1 chiamata batch invece di 4 read-modify-write
-            try:
-                oAktPage.setPropertyValues(
-                    ('TopBorder', 'BottomBorder', 'RightBorder', 'LeftBorder'),
-                    (bordo_zero, bordo_zero, bordo_zero, bordo_zero)
-                )
-            except Exception:
-                oAktPage.TopBorder = bordo_zero
-                oAktPage.BottomBorder = bordo_zero
-                oAktPage.RightBorder = bordo_zero
-                oAktPage.LeftBorder = bordo_zero
+            LS.set_page_borders(oAktPage)
 
             # HEADER: leggi una volta, modifica in memoria, riscrivi una volta
             oHeader = oAktPage.RightPageHeaderContent

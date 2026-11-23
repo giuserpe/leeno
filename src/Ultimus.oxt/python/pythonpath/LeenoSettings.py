@@ -7,6 +7,7 @@
 '''
 Modulo per la modifica delle impostazioni di LeenO
 '''
+import uno
 import unohelper
 from com.sun.star.awt import XActionListener
 
@@ -427,11 +428,7 @@ def setPageStyle(silent = False):
 
             # Applica le impostazioni di scala allo stile di pagina
             if oPageStyles.hasByName(stile_nome):
-                oAktPage = oPageStyles.getByName(stile_nome)
-                oAktPage.PageScale = 0          # scala automatica
-                oAktPage.CenterHorizontally = True
-                oAktPage.ScaleToPagesX = 1      # adatta alla larghezza
-                oAktPage.ScaleToPagesY = 0      # altezza non specificata
+                set_page_scale(oPageStyles.getByName(stile_nome))
         except Exception:
             continue
 
@@ -501,52 +498,71 @@ def npagina ():
     return
 
 
+# Geometria comune a tutti gli stili di pagina (margini e distanze in 1/100 di mm).
+# Unica sorgente: la usano set_page_margins, set_page_scale e MENU_sistema_pagine.
+_PAGINA_MARGINI = {
+    'TopMargin': 1000,
+    'BottomMargin': 1350,
+    'LeftMargin': 1000,
+    'RightMargin': 1000,
+    'FooterLeftMargin': 0,
+    'FooterRightMargin': 0,
+    'HeaderLeftMargin': 0,
+    'HeaderRightMargin': 0,
+    'HeaderBodyDistance': 0,
+    'FooterBodyDistance': 0,
+}
+
+# PageScale = 0 e ScaleToPagesX = 1: scala automatica, adatta alla larghezza
+# di una pagina, altezza non specificata.
+_PAGINA_SCALA = {
+    'PageScale': 0,
+    'CenterHorizontally': True,
+    'ScaleToPagesX': 1,
+    'ScaleToPagesY': 0,
+}
+
+
+def _imposta_proprieta(oAktPage, valori):
+    """
+    Scrive le proprieta' di valori {nome: valore} sullo stile di pagina con una
+    sola chiamata UNO (evita le notifiche intermedie che causavano il freeze).
+    I nomi sono ordinati, come richiede XMultiPropertySet; PageScale precede
+    ScaleToPagesX/Y, quindi la scala automatica prevale. Se la scrittura multipla
+    non e' supportata ripiega sull'assegnazione una per una.
+    """
+    nomi = tuple(sorted(valori))
+    try:
+        oAktPage.setPropertyValues(nomi, tuple(valori[n] for n in nomi))
+    except Exception:
+        for nome in nomi:
+            setattr(oAktPage, nome, valori[nome])
+
+
 def set_page_margins(oAktPage):
     """
-    Imposta i margini, le distanze di intestazione e piè di pagina,
-    la scala di pagina e il centraggio orizzontale per l'oggetto di pagina fornito.
-
-    Args:
-        oAktPage: Oggetto rappresentante lo stile di pagina.
+    Imposta margini, distanze di intestazione e piè di pagina, scala di pagina
+    e centratura orizzontale per lo stile di pagina oAktPage.
     """
-    # ~ oDoc = LeenoUtils.getDocument()
-    # ~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
+    _imposta_proprieta(oAktPage, {**_PAGINA_MARGINI, **_PAGINA_SCALA})
 
-    # Imposta i margini della pagina
-    oAktPage.TopMargin = 1000
-    oAktPage.BottomMargin = 1350
-    oAktPage.LeftMargin = 1000
-    oAktPage.RightMargin = 1000
-    oAktPage.FooterLeftMargin = 0
-    oAktPage.FooterRightMargin = 0
-    oAktPage.HeaderLeftMargin = 0
-    oAktPage.HeaderRightMargin = 0
-    oAktPage.HeaderBodyDistance = 0
-    oAktPage.FooterBodyDistance = 0
-    oAktPage.PageScale = 0
-    oAktPage.CenterHorizontally = True
-    oAktPage.ScaleToPagesX = 1
-    oAktPage.ScaleToPagesY = 0
+
+def set_page_scale(oAktPage):
+    """Imposta solo scala automatica e centratura orizzontale dello stile oAktPage."""
+    _imposta_proprieta(oAktPage, _PAGINA_SCALA)
+
 
 def set_page_borders(oAktPage):
-    """
-    Rimuove i bordi superiore, inferiore, sinistro e destro
-    dell'oggetto pagina fornito, impostando sia la larghezza della linea
-    che la larghezza della linea esterna a zero.
-
-    Args:
-        oAktPage: Oggetto rappresentante lo stile di pagina.
-    """
-    # ~ oDoc = LeenoUtils.getDocument()
-    # ~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-
-    # Azzera i bordi
-    borders = ['TopBorder', 'BottomBorder', 'LeftBorder', 'RightBorder']
-    for border in borders:
-        bordo = getattr(oAktPage, border)
-        bordo.LineWidth = 0
-        bordo.OuterLineWidth = 0
-        setattr(oAktPage, border, bordo)
+    """Azzera i quattro bordi dello stile di pagina oAktPage."""
+    bordo_zero = uno.createUnoStruct('com.sun.star.table.BorderLine2')
+    bordo_zero.LineWidth = 0
+    bordo_zero.OuterLineWidth = 0
+    _imposta_proprieta(oAktPage, {
+        'TopBorder': bordo_zero,
+        'BottomBorder': bordo_zero,
+        'RightBorder': bordo_zero,
+        'LeftBorder': bordo_zero,
+    })
 
 def set_header(oAktPage, str1='', str2='', str3=''):
     """

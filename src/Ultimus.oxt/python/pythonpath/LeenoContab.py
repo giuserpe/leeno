@@ -3168,28 +3168,10 @@ def insrow():
 
 def _leggi_dato_anagrafico(oSheet, label):
     '''
-    Cerca `label` (case-insensitive) nelle colonne B (1) e A (0).
-    Ritorna il valore della colonna C (2) sulla stessa riga.
-    Se non trova nulla, ritorna stringa vuota.
+    Ritorna il valore della colonna C accanto all'etichetta `label` (colonne B e A).
+    Vedi SheetUtils.leggi_dato_etichettato, che gestisce anche le etichette ripetute.
     '''
-    try:
-        label_up = label.upper()
-        # Ottieni l'area usata per limitare la ricerca
-        oCell = oSheet.getCellByPosition(0, 0)
-        oCursor = oSheet.createCursorByRange(oCell)
-        oCursor.gotoEndOfUsedArea(True)
-        max_row = oCursor.RangeAddress.EndRow
-
-        for col in (1, 0):
-            for r in range(max_row + 1):
-                cell_txt = oSheet.getCellByPosition(col, r).String.upper()
-                if label_up in cell_txt:
-                    val = oSheet.getCellByPosition(2, r).String
-                    if val:
-                        return val.strip()
-    except Exception:
-        pass
-    return ""
+    return SheetUtils.leggi_dato_etichettato(oSheet, label)
 
 
 def firme_libretto(lrowF=None, oSheet=None, col=None, aggiungi_spazio=True):

@@ -80,6 +80,46 @@ def replaceText(sheet, replaceDict):
 # ###############################################################
 
 
+def leggi_dato_etichettato(oSheet, label, occorrenza=None):
+    '''
+    Legge un dato "etichetta e valore" (come nel foglio S2): cerca `label`
+    (senza distinguere maiuscole e minuscole, anche come parte del testo) nelle
+    colonne B (1) e A (0) e ritorna il valore della colonna C (2) della stessa riga,
+    senza spazi iniziali e finali.
+
+    occorrenza None : ritorna il primo valore non vuoto trovato.
+    occorrenza n >= 1: ritorna il valore della n-esima riga che contiene l'etichetta,
+                       anche se vuoto; serve per le etichette ripetute, come
+                       "Importo contrattuale" nei tre blocchi dei dati contratto.
+    Se non trova nulla ritorna una stringa vuota.
+    '''
+    try:
+        label_up = label.upper()
+        # Ottieni l'area usata per limitare la ricerca
+        oCell = oSheet.getCellByPosition(0, 0)
+        oCursor = oSheet.createCursorByRange(oCell)
+        oCursor.gotoEndOfUsedArea(True)
+        max_row = oCursor.RangeAddress.EndRow
+
+        for col in (1, 0):
+            trovate = 0
+            for r in range(max_row + 1):
+                cell_txt = oSheet.getCellByPosition(col, r).String.upper()
+                if label_up not in cell_txt:
+                    continue
+                val = oSheet.getCellByPosition(2, r).String
+                if occorrenza is None:
+                    if val:
+                        return val.strip()
+                else:
+                    trovate += 1
+                    if trovate == occorrenza:
+                        return val.strip()
+    except Exception as _exc:
+        LeenoUtils.log_errore('leggi_dato_etichettato: ' + str(label), _exc)
+    return ""
+
+
 def getDocumentFromSheet(oSheet):
     '''
     given a sheet object returns containing document

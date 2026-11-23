@@ -21,10 +21,14 @@ def _estrai_funzione(nome_funzione):
 
 class TestMostraSalCdP(unittest.TestCase):
     def test_mostra_sal_include_cdp(self):
-        """Verifica che in mostra_sal la tupla ('CdP', '_CdP_', 5) sia inclusa tra gli atti gestiti."""
-        fn_ast = _estrai_funzione("mostra_sal")
-        codice = ast.unparse(fn_ast)
-        self.assertIn("('CdP', '_CdP_', 5)", codice)
+        """Verifica che mostra_sal usi AREE_SAL e che questa includa ('CdP', '_CdP_', 5)."""
+        codice = ast.unparse(_estrai_funzione("mostra_sal"))
+        self.assertIn("AREE_SAL", codice)
+        albero = ast.parse(LEENO_CONTAB_PATH.read_text(encoding="utf-8"))
+        aree = [n for n in albero.body
+                if isinstance(n, ast.Assign) and getattr(n.targets[0], "id", None) == "AREE_SAL"]
+        self.assertEqual(len(aree), 1)
+        self.assertEqual(ast.literal_eval(aree[0].value)["CdP"], ("CdP", "_CdP_", 5))
 
 
 class TestAnnullaUltimoSalCdP(unittest.TestCase):

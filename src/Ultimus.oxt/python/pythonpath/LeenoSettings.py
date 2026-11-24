@@ -199,6 +199,11 @@ def testi_predefiniti(chiave):
     return testi
 
 
+def titolo_documento(chiave):
+    """Titolo del documento `chiave` (valore di [OGGETTO]); stringa vuota se sconosciuto."""
+    return dict(_DOCUMENTI_STAMPA).get(chiave, '')
+
+
 def _testi_personalizzati(ps):
     """Stringhe personalizzate per documento, lette da ps['documenti'] (JSON); tollera dati non validi."""
     try:

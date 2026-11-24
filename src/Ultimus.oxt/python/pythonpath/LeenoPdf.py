@@ -40,12 +40,12 @@ _EXPORTSETTINGSITEMS = (
 # numero di tavola proposto se il valore manca (documenti o config precedenti)
 _EXPORTNPDEFAULT = {'npLibretto': '5', 'npRegistro': '6', 'npSAL': '7', 'npCdP': '8'}
 
-# atti contabili esportabili per singolo SAL: (nome file, oggetto)
+# atti contabili esportabili per singolo SAL: (nome file, chiave del documento in LeenoSettings)
 _DOCUMENTI_SAL = {
-    'Libretto': ('LibrettoMisure', 'Libretto delle Misure'),
-    'Registro': ('RegistroContabilita', 'Registro di Contabilità'),
-    'SAL': ('SAL', 'Stato di Avanzamento Lavori'),
-    'CdP': ('CertificatoPagamento', 'Certificato di Pagamento'),
+    'Libretto': ('LibrettoMisure', 'LIBRETTO'),
+    'Registro': ('RegistroContabilita', 'REGISTRO'),
+    'SAL': ('SAL', 'SAL'),
+    'CdP': ('CertificatoPagamento', 'CDP'),
 }
 
 def loadExportSettings(oDoc):
@@ -94,7 +94,6 @@ def prepareCover(oDoc, nDoc, docSubst):
     sheet = cDoc.Sheets[copertina]
     pageStyle = sheet.PageStyle
     if pageStyle is not None and pageStyle != '':
-        print("PAGE HAS STYLE")
         pageStyles = cDoc.StyleFamilies.getByName('PageStyles')
         style = pageStyles.getByName(pageStyle)
         SheetUtils.copyPageStyle(nDoc, style)
@@ -106,13 +105,11 @@ def prepareCover(oDoc, nDoc, docSubst):
     # if page has a print area, copy it too...
     nDoc.Sheets[pos].PageStyle = sheet.PageStyle
     if len(sheet.PrintAreas) > 0:
-        print("PAGE HAS PRINT AREA")
         nDoc.Sheets[pos].PrintAreas = sheet.PrintAreas
 
-    # replaces all placeholders with settings ones
-    settings = LeenoSettings.loadPageReplacements(oDoc)
-    for key, val in docSubst.items():
-        settings[key] = val
+    # replaces all placeholders: dati di S2 (con ripiego sulle impostazioni di lavoro) e docSubst
+    settings = LeenoSettings.valori_segnaposto(
+        oDoc, nomefile=LeenoSettings.nome_file_documento(oDoc), extra=docSubst)
     SheetUtils.replaceText(nDoc.Sheets[pos], settings)
 
     # close cover document and return
@@ -120,34 +117,21 @@ def prepareCover(oDoc, nDoc, docSubst):
     del cDoc
     return True
 
-def prepareHeaderFooter(oDoc, docSubst):
-    """Prepara il dizionario di intestazione e piè di pagina sostituendo i segnaposto."""
-
-    res = {}
-
-    # load print settings, we need header and footer data
+def prepareHeaderFooter(oDoc, docSubst, chiave):
+    """
+    Prepara il dizionario di intestazione e piè di pagina del documento `chiave`
+    (vedi LeenoSettings._DOCUMENTI_STAMPA) sostituendo i segnaposto.
+    docSubst: segnaposto legati al documento prodotto ([OGGETTO], [NUMERO_DOCUMENTO], [SAL]).
+    [PAGINA] e [PAGINE] restano: diventano campi numerici in SheetUtils.pdfExport.
+    """
     printSettings, dummy = LeenoSettings.loadPrintSettings(oDoc)
-
-    # load replacement templates
-    replDict = LeenoSettings.loadPageReplacements(oDoc)
-    for key, val in docSubst.items():
-        replDict[key] = val
-
-    # replace placeholders
-    for psKey in ('intSx', 'intCenter', 'intDx', 'ppSx', 'ppCenter', 'ppDx'):
-        if psKey in printSettings:
-            psVal = printSettings[psKey]
-            for replKey, replVal in replDict.items():
-
-                # pagination needs some extra steps
-                if replKey in ('[PAGINA]', '[PAGINE]'):
-                    continue
-
-                while replKey in psVal:
-                    psVal = psVal.replace(replKey, replVal)
-            res[psKey] = psVal
-
-    return res
+    testi = LeenoSettings.impostazioni_documento(printSettings, chiave)
+    valori = LeenoSettings.valori_segnaposto(
+        oDoc, nomefile=LeenoSettings.nome_file_documento(oDoc), extra=docSubst)
+    # la paginazione richiede passaggi in piu': restano segnaposto fino a SheetUtils.pdfExport
+    for segnaposto in ('[PAGINA]', '[PAGINE]'):
+        valori.pop(segnaposto, None)
+    return {psKey: LeenoSettings.sostituisci_segnaposto(psVal, valori) for psKey, psVal in testi.items()}
 
 _DLG_ESPORTAZIONE_PDF = (
     'vnd.sun.star.script:UltimusFree2.DlgEsportazionePdf'
@@ -250,10 +234,11 @@ def _pagineFoglio(oSheet, area=None):
     return len([b for b in breaks if area.StartRow < b.Position <= area.EndRow]) + 1
 
 
-def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto, area=None, oDoc=None):
+def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=None, oDoc=None, nSal=None):
     """
     Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder.
-    Se area (CellRangeAddress) e' indicata esporta solo quell'area.
+    chiave: documento (intestazione e piè di pagina da LeenoSettings); nSal: numero del SAL
+    per gli atti contabili. Se area (CellRangeAddress) e' indicata esporta solo quell'area.
     """
 
     if oDoc is None:
@@ -266,10 +251,11 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto, area=N
     destPath = os.path.join(destFolder, baseName + nomeFile)
     selection = [oSheet, ]
     docSubst = {
-        '[OGGETTO]': oggetto,
+        '[OGGETTO]': LeenoSettings.titolo_documento(chiave),
         '[NUMERO_DOCUMENTO]': str(nTavola),
+        '[SAL]': '' if nSal is None else str(nSal),
     }
-    headerFooter = prepareHeaderFooter(oDoc, docSubst)
+    headerFooter = prepareHeaderFooter(oDoc, docSubst, chiave)
     docSubst['[PAGINE]'] = _pagineFoglio(oSheet, area)
     printAreas = {nomeFoglio: area} if area is not None else None
     SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter,
@@ -278,12 +264,12 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, oggetto, area=N
 
 def PdfElencoPrezzi(destFolder, nTavola):
     """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
-    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'Elenco Prezzi')
+    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'ELENCO')
 
 
 def PdfComputoMetrico(destFolder, nTavola):
     """Esporta in formato PDF il foglio COMPUTO nella cartella specificata."""
-    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'Computo Metrico')
+    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'COMPUTO')
 
 
 def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None):
@@ -299,9 +285,9 @@ def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None):
         return False
     area = oDoc.NamedRanges.getByName(nomeArea).ReferredCells.RangeAddress
     area.EndColumn = colFine
-    nomeFile, oggetto = _DOCUMENTI_SAL[tipo]
+    nomeFile, chiave = _DOCUMENTI_SAL[tipo]
     _esportaPdfFoglio(destFolder, nTavola, nomeFoglio,
-                      f'{nomeFile}_SAL{nSal}.pdf', oggetto, area, oDoc)
+                      f'{nomeFile}_SAL{nSal}.pdf', chiave, area, oDoc, nSal)
     return True
 
 
@@ -342,10 +328,10 @@ def MENU_Pdf():
             if es['cb' + tipo]:
                 try:
                     if not PdfAttoSal(destFolder, es['np' + tipo], tipo, nSal, oDoc):
-                        mancanti.append(_DOCUMENTI_SAL[tipo][1])
+                        mancanti.append(LeenoSettings.titolo_documento(_DOCUMENTI_SAL[tipo][1]))
                 except Exception as _exc:
                     LeenoUtils.log_errore('MENU_Pdf: esportazione ' + tipo, _exc)
-                    mancanti.append(_DOCUMENTI_SAL[tipo][1])
+                    mancanti.append(LeenoSettings.titolo_documento(_DOCUMENTI_SAL[tipo][1]))
     if mancanti:
         Dialogs.Exclamation(Title='Esportazione PDF',
                             Text='Per il SAL n. ' + str(nSal) + ' non sono stati esportati: '

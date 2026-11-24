@@ -351,13 +351,9 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None, pr
             pageStyle.FirstPageNumber = 0
 
             if pageStyle.HeaderIsOn:
-                print("HEADER")
                 left = HeaderFooter.get('intSx', '')
                 center = HeaderFooter.get('intCenter', '')
                 right = HeaderFooter.get('intDx', '')
-                print("  Left  :", left)
-                print("  Center:", center)
-                print("  Right :", right)
                 content = pageStyle.LeftPageHeaderContent
                 content.LeftText.String = left
                 content.CenterText.String = center
@@ -371,13 +367,9 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None, pr
                 pageStyle.RightPageHeaderContent = content
 
             if pageStyle.FooterIsOn:
-                print("FOOTER")
                 left = HeaderFooter.get('ppSx', '')
                 center = HeaderFooter.get('ppCenter', '')
                 right = HeaderFooter.get('ppDx', '')
-                print("  Left  :", left)
-                print("  Center:", center)
-                print("  Right :", right)
                 content = pageStyle.LeftPageFooterContent
                 content.LeftText.String = left
                 content.CenterText.String = center

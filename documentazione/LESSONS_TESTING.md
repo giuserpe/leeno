@@ -49,3 +49,5 @@ Aperti, documentati nei test:
 ## Test su documento reale con LibreOffice headless
 
 `tests/uno_harness.py` avvia (o riusa) un LibreOffice headless e apre copie temporanee di `tests/data/LeenO_Esempio.ods`. Si attiva solo con `LEENO_TEST_UNO=1`; richiede il modulo `uno`, quindi su Windows va usato il Python di LibreOffice con `unittest` (`& "C:/Program Files/LibreOffice/program/python.exe" -m unittest tests.test_lettura_etichette -v`). Senza la variabile i test restano saltati e la CI non dipende da LibreOffice. Porta predefinita 2002, cambiabile con `LEENO_UNO_PORTA`. Per un refactor conviene confrontare il comportamento storico (copiato nel test) con quello nuovo sul documento reale, oltre ai test con oggetti finti.
+
+`tests/test_giornale_import.py` sostituisce `com.sun.star` con oggetti finti in `sys.modules` durante la raccolta dei test. I test su documento reale non devono fare `from com.sun.star... import X` (prenderebbero i finti, con errori tipo "metaclass conflict" solo nella suite completa): usare `uno.getClass("com.sun.star....")` e importare `uno` e `unohelper` veri in fase di raccolta, come fa `uno_harness.uno_disponibile`.

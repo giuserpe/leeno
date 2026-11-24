@@ -168,6 +168,7 @@ class Config(Borg):
             ('ImpostazioniStampa', 'ppSx', '(str)[OGGETTO]'),
             ('ImpostazioniStampa', 'ppCenter', '(str)'),
             ('ImpostazioniStampa', 'ppDx', '(str)Pagina [PAGINA] di [PAGINE]'),
+            ('ImpostazioniStampa', 'documenti', '(str){}'),
 
             ('ImpostazioniExport', 'npElencoPrezzi', '(str)1'),
             ('ImpostazioniExport', 'npComputoMetrico', '(str)2'),

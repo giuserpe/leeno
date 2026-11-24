@@ -7,6 +7,7 @@
 '''
 Modulo per la modifica delle impostazioni di LeenO
 '''
+import json
 import os
 import re
 
@@ -46,6 +47,7 @@ _PRINTSETTINGSITEMS = (
     'ppSx',
     'ppCenter',
     'ppDx',
+    'documenti',
 )
 
 _DOCSTRINGS = (
@@ -143,6 +145,112 @@ def sostituisci_segnaposto(testo, valori):
     [PAGINA] e [PAGINE] restano invariati.
     """
     return re.sub(r'\[[A-Z_]+\]', lambda m: valori.get(m.group(0), m.group(0)), testo)
+
+
+# Documenti per i quali si configurano intestazione e piè di pagina: (chiave, titolo).
+# Il titolo e' il valore di [OGGETTO].
+_DOCUMENTI_STAMPA = (
+    ('COMPUTO', 'Computo Metrico'),
+    ('VARIANTE', 'Variante'),
+    ('ELENCO', 'Elenco Prezzi'),
+    ('ANALISI', 'Analisi di Prezzo'),
+    ('LIBRETTO', 'Libretto delle Misure'),
+    ('REGISTRO', 'Registro di Contabilità'),
+    ('SAL', 'Stato di Avanzamento Lavori'),
+    ('CDP', 'Certificato di Pagamento'),
+)
+
+# Il Certificato di Pagamento riporta i propri dati nel corpo: niente intestazione e piè di pagina.
+_DOCUMENTI_SENZA_TESTATA = ('CDP',)
+
+# Documenti che possono avere la riga delle firme ([FIRME]) al centro del piè di pagina.
+_DOCUMENTI_CON_FIRME = ('LIBRETTO', 'REGISTRO')
+
+# Le sei stringhe di intestazione (sinistra, centro, destra) e piè di pagina.
+_TESTI_STAMPA = ('intSx', 'intCenter', 'intDx', 'ppSx', 'ppCenter', 'ppDx')
+
+# Valori della versione con un solo set di stringhe per tutti i documenti.
+_TESTI_PRECEDENTI = {
+    'intSx': '[COMMITTENTE]',
+    'intCenter': '',
+    'intDx': '[PROGETTO]',
+    'ppSx': '[OGGETTO]',
+    'ppCenter': '',
+    'ppDx': 'Pagina [PAGINA] di [PAGINE]',
+}
+
+
+def testi_predefiniti(chiave):
+    """Le sei stringhe predefinite del documento `chiave` (copia indipendente)."""
+    testi = {
+        'intSx': 'Committente: [COMMITTENTE]',
+        'intCenter': '[PROGETTO]',
+        'intDx': '[OGGETTO]',
+        'ppSx': 'realizzato con LeenO: [FILE]',
+        'ppCenter': '',
+        'ppDx': 'Pagina [PAGINA] di [PAGINE]',
+    }
+    if chiave in ('LIBRETTO', 'REGISTRO', 'SAL'):
+        testi['intDx'] = '[OGGETTO] n. [SAL]'
+    if chiave == 'LIBRETTO':
+        testi['ppCenter'] = '[FIRME]'
+    if chiave in _DOCUMENTI_SENZA_TESTATA:
+        testi = dict.fromkeys(_TESTI_STAMPA, '')
+    return testi
+
+
+def _testi_personalizzati(ps):
+    """Stringhe personalizzate per documento, lette da ps['documenti'] (JSON); tollera dati non validi."""
+    try:
+        dati = json.loads(ps.get('documenti') or '{}')
+    except (TypeError, ValueError):
+        return {}
+    if not isinstance(dati, dict):
+        return {}
+    res = {}
+    for chiave, testi in dati.items():
+        if isinstance(testi, dict):
+            res[chiave] = {k: v for k, v in testi.items() if k in _TESTI_STAMPA and isinstance(v, str)}
+    return res
+
+
+def impostazioni_documento(ps, chiave):
+    """
+    Le sei stringhe di intestazione e piè di pagina del documento `chiave`.
+
+    Parte dai predefiniti, applica le personalizzazioni della versione con un solo set di
+    stringhe (se diverse dai vecchi valori) e infine quelle specifiche del documento.
+    """
+    testi = testi_predefiniti(chiave)
+    if chiave in _DOCUMENTI_SENZA_TESTATA:
+        return testi
+    for k in _TESTI_STAMPA:
+        valore = ps.get(k)
+        if isinstance(valore, str) and valore != _TESTI_PRECEDENTI[k]:
+            testi[k] = valore
+    testi.update(_testi_personalizzati(ps).get(chiave, {}))
+    return testi
+
+
+def aggiorna_impostazioni_documenti(ps, valori):
+    """
+    Ritorna una copia di ps con le stringhe `valori` {chiave documento: {sei stringhe}}.
+
+    Salva in ps['documenti'] (JSON) solo le differenze dai predefiniti; riporta ai vecchi
+    valori le sei stringhe comuni, ormai assorbite nei singoli documenti.
+    """
+    nuovo = dict(ps)
+    personalizzati = {}
+    for chiave, testi in valori.items():
+        if chiave in _DOCUMENTI_SENZA_TESTATA:
+            continue
+        predefiniti = testi_predefiniti(chiave)
+        diff = {k: testi[k] for k in _TESTI_STAMPA if k in testi and testi[k] != predefiniti[k]}
+        if diff:
+            personalizzati[chiave] = diff
+    nuovo['documenti'] = json.dumps(personalizzati, ensure_ascii=False, sort_keys=True)
+    nuovo.update(_TESTI_PRECEDENTI)
+    return nuovo
 
 
 def loadJobSettings(oDoc):

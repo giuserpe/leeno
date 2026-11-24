@@ -13,7 +13,7 @@ import re
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XItemListener, XTextListener
 
 import Dialogs
 import LeenoConfig
@@ -57,6 +57,8 @@ _DOCSTRINGS = (
     '[DATI_COMMITTENTE]',
     '[DATI_PROGETTISTA]',
     '[DIRETTORE_LAVORI]',
+    '[FILE]',
+    '[FIRME]',
     '[NUMERO_DOCUMENTO]',
     '[OGGETTO]',
     '[PAGINA]',
@@ -65,6 +67,7 @@ _DOCSTRINGS = (
     '[PROGETTO]',
     '[REVISIONE]',
     '[RUP]',
+    '[SAL]',
     '[STAZIONE_APPALTANTE]',
 )
 
@@ -469,49 +472,192 @@ _DLG_IMPOSTAZIONI_STAMPA = (
     'vnd.sun.star.script:UltimusFree2.DlgImpostazioniStampa'
     '?language=Basic&location=application')
 
-_PRINTSETTINGSCOMBOS = ('intSx', 'intCenter', 'intDx', 'ppSx', 'ppCenter', 'ppDx')
+# Promemoria dei segnaposto e nota per i documenti senza intestazione.
+_LEGENDA_SEGNAPOSTI = 'Segnaposto: [COMMITTENTE] [PROGETTO] [OGGETTO] [SAL] [FILE] [FIRME] [PAGINA] [PAGINE]'
+_NOTA_SENZA_TESTATA = ('Il Certificato di Pagamento riporta i propri dati nel corpo: '
+                       'nessuna intestazione e nessun piè di pagina.')
+
+# Foglio attivo -> documento mostrato all'apertura del dialogo.
+_DOCUMENTO_DEL_FOGLIO = {
+    'COMPUTO': 'COMPUTO',
+    'VARIANTE': 'VARIANTE',
+    'Elenco Prezzi': 'ELENCO',
+    'Analisi di Prezzo': 'ANALISI',
+    'CONTABILITA': 'LIBRETTO',
+    'Registro': 'REGISTRO',
+    'SAL': 'SAL',
+    'CdP': 'CDP',
+}
 
 
-class _SfogliaCopertine(unohelper.Base, XActionListener):
-    '''Pulsante di selezione del file delle copertine (solo file .ods).'''
-    def __init__(self, oDlg):
+def documento_stampa_iniziale(oDoc):
+    """Chiave del documento da mostrare per primo: quello del foglio attivo, altrimenti COMPUTO."""
+    try:
+        nome = oDoc.CurrentController.ActiveSheet.Name
+    except Exception:
+        return 'COMPUTO'
+    return _DOCUMENTO_DEL_FOGLIO.get(nome, 'COMPUTO')
+
+
+class _ControlloImpostazioniStampa:
+    """
+    Logica del dialogo: tiene in memoria le sei stringhe di ogni documento e mostra
+    quelle del documento selezionato. La riga delle firme e' la stringa [FIRME] al centro
+    del piè di pagina: la casella e il campo si tengono allineati.
+    """
+
+    def __init__(self, oModel, ps, chiave):
+        self._m = oModel
+        self.valori = {c: impostazioni_documento(ps, c) for c, _ in _DOCUMENTI_STAMPA}
+        self.corrente = None
+        self._occupato = False
+        self.mostra(chiave)
+
+    def _modello(self, nome):
+        return self._m.getByName(nome)
+
+    def _salva_corrente(self):
+        if self.corrente is None or self.corrente in _DOCUMENTI_SENZA_TESTATA:
+            return
+        for k in _TESTI_STAMPA:
+            self.valori[self.corrente][k] = self._modello(k).Text
+
+    def mostra(self, chiave):
+        """Salva i testi del documento mostrato e mostra quelli di `chiave`."""
+        self._salva_corrente()
+        self.corrente = chiave
+        senza = chiave in _DOCUMENTI_SENZA_TESTATA
+        testi = self.valori[chiave]
+        self._occupato = True
+        try:
+            for k in _TESTI_STAMPA:
+                self._modello(k).Text = testi[k]
+                self._modello(k).Enabled = not senza
+                self._modello('lbl_' + k).Enabled = not senza
+            self._modello('btnPredefiniti').Enabled = not senza
+            self._modello('cbFirme').Enabled = chiave in _DOCUMENTI_CON_FIRME
+            self._modello('cbFirme').State = 1 if testi['ppCenter'].strip() == '[FIRME]' else 0
+            self._modello('lblSegnaposto').Label = _NOTA_SENZA_TESTATA if senza else _LEGENDA_SEGNAPOSTI
+        finally:
+            self._occupato = False
+
+    def cambia_documento(self, indice):
+        if 0 <= indice < len(_DOCUMENTI_STAMPA):
+            self.mostra(_DOCUMENTI_STAMPA[indice][0])
+
+    def ripristina(self):
+        """Riporta il documento mostrato ai testi predefiniti."""
+        if self.corrente is None or self.corrente in _DOCUMENTI_SENZA_TESTATA:
+            return
+        chiave = self.corrente
+        self.valori[chiave] = testi_predefiniti(chiave)
+        self.corrente = None  # i testi mostrati non vanno salvati sopra i predefiniti
+        self.mostra(chiave)
+
+    def firme_cambiate(self):
+        """Casella delle firme: scrive o toglie [FIRME] al centro del piè di pagina."""
+        if self._occupato or self.corrente not in _DOCUMENTI_CON_FIRME:
+            return
+        centro = self._modello('ppCenter')
+        self._occupato = True
+        try:
+            if self._modello('cbFirme').State:
+                centro.Text = '[FIRME]'
+            elif centro.Text.strip() == '[FIRME]':
+                centro.Text = ''
+        finally:
+            self._occupato = False
+
+    def centro_cambiato(self):
+        """Centro del piè di pagina modificato a mano: allinea la casella delle firme."""
+        if self._occupato or self.corrente not in _DOCUMENTI_CON_FIRME:
+            return
+        self._occupato = True
+        try:
+            self._modello('cbFirme').State = 1 if self._modello('ppCenter').Text.strip() == '[FIRME]' else 0
+        finally:
+            self._occupato = False
+
+    def risultato(self):
+        """Le sei stringhe di tutti i documenti: {chiave: {stringhe}}."""
+        self._salva_corrente()
+        return {c: dict(t) for c, t in self.valori.items()}
+
+
+class _AscoltatoreImpostazioniStampa(unohelper.Base, XActionListener, XItemListener, XTextListener):
+    """Collega i controlli del dialogo alla logica di _ControlloImpostazioniStampa."""
+
+    def __init__(self, oDlg, controllo):
         self._oDlg = oDlg
+        self._controllo = controllo
+
+    @staticmethod
+    def _nome(ev):
+        return ev.Source.getModel().Name
 
     def actionPerformed(self, ev):
         try:
-            file = Dialogs.FileSelect(est='*.ods')
-            if file is not None:
-                self._oDlg.getModel().getByName('fileCopertine').Text = file
-                self._oDlg.getModel().getByName('fileCopertine').HelpText = file
+            nome = self._nome(ev)
+            if nome == 'btnPredefiniti':
+                self._controllo.ripristina()
+            elif nome == 'btnSfoglia':
+                file = Dialogs.FileSelect(est='*.ods')
+                if file is not None:
+                    self._oDlg.getModel().getByName('fileCopertine').Text = file
+                    self._oDlg.getModel().getByName('fileCopertine').HelpText = file
         except Exception as _exc:
-            LeenoUtils.log_errore('PrintSettingsDialog: selezione file copertine', _exc)
+            LeenoUtils.log_errore('PrintSettingsDialog: azione', _exc)
+
+    def itemStateChanged(self, ev):
+        try:
+            nome = self._nome(ev)
+            if nome == 'docSel':
+                self._controllo.cambia_documento(ev.Selected)
+            elif nome == 'cbFirme':
+                self._controllo.firme_cambiate()
+        except Exception as _exc:
+            LeenoUtils.log_errore('PrintSettingsDialog: selezione', _exc)
+
+    def textChanged(self, ev):
+        try:
+            if self._nome(ev) == 'ppCenter':
+                self._controllo.centro_cambiato()
+        except Exception as _exc:
+            LeenoUtils.log_errore('PrintSettingsDialog: testo', _exc)
 
     def disposing(self, ev):
         return None
 
 
-def PrintSettingsDialog(ps, covers):
+def PrintSettingsDialog(ps, covers, chiave='COMPUTO', url=_DLG_IMPOSTAZIONI_STAMPA, immagini=True):
     '''
-    Crea il dialogo di configurazione per l'intestazione e il piè di pagina di stampa
-    (UltimusFree2.DlgImpostazioniStampa) precompilato con ps e con l'elenco covers.
-    Restituisce (oDlg, listener): il listener va tenuto vivo fino alla chiusura.
+    Crea il dialogo di configurazione dell'intestazione e del piè di pagina di stampa
+    (UltimusFree2.DlgImpostazioniStampa) precompilato con ps, con l'elenco covers e con il
+    documento `chiave`. Restituisce (oDlg, ascoltatore, controllo): l'ascoltatore va tenuto
+    vivo fino alla chiusura; il controllo fornisce le stringhe di tutti i documenti.
     '''
     ctx = LeenoUtils.getComponentContext()
     dp = ctx.ServiceManager.createInstance('com.sun.star.awt.DialogProvider')
-    oDlg = dp.createDialog(_DLG_IMPOSTAZIONI_STAMPA)
+    oDlg = dp.createDialog(url)
     oModel = oDlg.getModel()
 
-    base = LeenoUtils.LeenO_path() + '/python/pythonpath/'
-    oModel.getByName('imgAnteprima').ImageURL = base + 'Icons-Big/preview.png'
-    for nome, icona in (('btnOk', 'ok.png'), ('btnAnnulla', 'cancel.png'),
-                        ('btnSfoglia', 'file.png')):
-        oModel.getByName(nome).ImageURL = base + (
-            'Icons-16x16/' if nome == 'btnSfoglia' else 'Icons-24x24/') + icona
-        oModel.getByName(nome).ImageAlign = 0
+    if immagini:
+        base = LeenoUtils.LeenO_path() + '/python/pythonpath/'
+        oModel.getByName('imgAnteprima').ImageURL = base + 'Icons-Big/preview.png'
+        for nome, icona in (('btnOk', 'ok.png'), ('btnAnnulla', 'cancel.png'),
+                            ('btnSfoglia', 'file.png')):
+            oModel.getByName(nome).ImageURL = base + (
+                'Icons-16x16/' if nome == 'btnSfoglia' else 'Icons-24x24/') + icona
+            oModel.getByName(nome).ImageAlign = 0
 
-    for nome in _PRINTSETTINGSCOMBOS:
+    for nome in _TESTI_STAMPA:
         oDlg.getControl(nome).addItems(_DOCSTRINGS, 0)
-        oModel.getByName(nome).Text = ps.get(nome, '') or ''
+
+    oDlg.getControl('docSel').addItems(tuple(titolo for _, titolo in _DOCUMENTI_STAMPA), 0)
+    chiavi = [c for c, _ in _DOCUMENTI_STAMPA]
+    if chiave not in chiavi:
+        chiave = 'COMPUTO'
+    oModel.getByName('docSel').SelectedItems = (chiavi.index(chiave),)
 
     percorso = ps.get('fileCopertine', '') or ''
     oModel.getByName('fileCopertine').Text = percorso
@@ -523,21 +669,22 @@ def PrintSettingsDialog(ps, covers):
         corrente = ps.get('copertina', '')
         oList.selectItem(corrente if corrente in covers else covers[0], True)
 
-    azione = _SfogliaCopertine(oDlg)
-    oDlg.getControl('btnSfoglia').addActionListener(azione)
-    return oDlg, azione
+    controllo = _ControlloImpostazioniStampa(oModel, ps, chiave)
+    ascoltatore = _AscoltatoreImpostazioniStampa(oDlg, controllo)
+    for nome in ('btnPredefiniti', 'btnSfoglia'):
+        oDlg.getControl(nome).addActionListener(ascoltatore)
+    oDlg.getControl('docSel').addItemListener(ascoltatore)
+    oDlg.getControl('cbFirme').addItemListener(ascoltatore)
+    oDlg.getControl('ppCenter').addTextListener(ascoltatore)
+    return oDlg, ascoltatore, controllo
 
 
-def _leggiImpostazioniStampa(oDlg):
-    '''Legge dal dialogo i valori elencati in _PRINTSETTINGSITEMS.'''
-    oModel = oDlg.getModel()
-    res = {}
-    for key in _PRINTSETTINGSITEMS:
-        if key == 'copertina':
-            res[key] = oDlg.getControl('copertina').getSelectedItem() or ''
-        else:
-            res[key] = oModel.getByName(key).Text
-    return res
+def _leggiImpostazioniStampa(oDlg, ps, controllo):
+    '''Impostazioni da salvare: file e copertina del dialogo, stringhe di tutti i documenti.'''
+    res = dict(ps)
+    res['fileCopertine'] = oDlg.getModel().getByName('fileCopertine').Text
+    res['copertina'] = oDlg.getControl('copertina').getSelectedItem() or ''
+    return aggiorna_impostazioni_documenti(res, controllo.risultato())
 
 
 def MENU_PrintSettings():
@@ -549,11 +696,11 @@ def MENU_PrintSettings():
     oDoc = LeenoUtils.getDocument()
     ps, covers = loadPrintSettings(oDoc)
 
-    oDlg, azione = PrintSettingsDialog(ps, covers)
+    oDlg, ascoltatore, controllo = PrintSettingsDialog(ps, covers, documento_stampa_iniziale(oDoc))
     try:
         esito = oDlg.execute()
         if esito == 1:
-            ps = _leggiImpostazioniStampa(oDlg)
+            ps = _leggiImpostazioniStampa(oDlg, ps, controllo)
     finally:
         oDlg.dispose()
 

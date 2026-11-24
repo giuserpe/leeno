@@ -38,7 +38,9 @@ def uno_disponibile(*file_richiesti):
     if any(not Path(f).exists() for f in file_richiesti):
         return False
     try:
+        # importati ora, in fase di raccolta: altri test sostituiscono moduli UNO con oggetti finti
         import uno  # noqa: F401
+        import unohelper  # noqa: F401
     except ImportError:
         return False
     return trova_soffice() is not None

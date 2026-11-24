@@ -8,7 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-def carica(percorso, funzioni=(), costanti=(), ns=None):
+def carica(percorso, funzioni=(), costanti=(), ns=None, classi=()):
     """Ritorna il namespace con le funzioni e le costanti indicate, compilate dal sorgente."""
     percorso = Path(percorso)
     albero = ast.parse(percorso.read_text(encoding="utf-8"))
@@ -16,10 +16,12 @@ def carica(percorso, funzioni=(), costanti=(), ns=None):
     for n in albero.body:
         if isinstance(n, ast.FunctionDef) and n.name in funzioni:
             nodi.append(n)
+        elif isinstance(n, ast.ClassDef) and n.name in classi:
+            nodi.append(n)
         elif isinstance(n, ast.Assign) and getattr(n.targets[0], "id", None) in costanti:
             nodi.append(n)
     trovati = {getattr(n, "name", None) or n.targets[0].id for n in nodi}
-    mancanti = (set(funzioni) | set(costanti)) - trovati
+    mancanti = (set(funzioni) | set(costanti) | set(classi)) - trovati
     assert not mancanti, "non trovati in %s: %s" % (percorso.name, sorted(mancanti))
     ns = {} if ns is None else ns
     exec(compile(ast.Module(body=nodi, type_ignores=[]), str(percorso), "exec"), ns)

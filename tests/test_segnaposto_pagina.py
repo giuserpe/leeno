@@ -3,7 +3,7 @@
 Test dei segnaposto di intestazione e piè di pagina (LeenoSettings).
 
 - unitari, senza UNO: S2 prevale sulle impostazioni di lavoro, ripiego, segnaposto
-  calcolati ([DOCUMENTO], [SAL], [FILE], [FIRME]), sostituzione in un solo passaggio,
+  calcolati ([OGGETTO] = titolo del documento, [SAL], [FILE], [FIRME]), sostituzione in un solo passaggio,
   equivalenza con la sostituzione storica di prepareHeaderFooter;
 - documento reale (opzionale, LEENO_TEST_UNO=1): valori letti dal vero S2 di
   tests/data/LeenO_Esempio.ods e testo delle firme uguale a quello del template.
@@ -76,7 +76,7 @@ class TestValoriSegnaposto(unittest.TestCase):
 
     def test_i_dati_di_s2_vengono_letti_per_etichetta(self):
         v = self.valori(self.doc, lavoro={})
-        self.assertEqual(v["[OGGETTO]"], "Lavori di prova")
+        self.assertEqual(v["[PROGETTO]"], "Lavori di prova")
         self.assertEqual(v["[COMMITTENTE]"], "Comune di Matera")
         self.assertEqual(v["[STAZIONE_APPALTANTE]"], "Comune di Matera")
         self.assertEqual(v["[PROGETTISTA]"], "arch. Rossi")
@@ -95,25 +95,29 @@ class TestValoriSegnaposto(unittest.TestCase):
         self.assertEqual(v["[COMMITTENTE]"], "Altro Ente")
         self.assertEqual(v["[RUP]"], "dott. Neri")
 
-    def test_oggetto_non_ha_ripiego(self):
-        doc = _documento_finto({(1, 2): "OGGETTO:"})
-        v = self.valori(doc, lavoro={"progetto": "Progetto X", "oggetto": "non usato"})
-        self.assertEqual(v["[OGGETTO]"], "")
-        self.assertEqual(v["[PROGETTO]"], "Progetto X")
+    def test_progetto_da_s2_con_ripiego_su_lavoro(self):
+        vuoto = _documento_finto({(1, 2): "OGGETTO:"})
+        self.assertEqual(self.valori(vuoto, lavoro={"progetto": "Progetto X"})["[PROGETTO]"], "Progetto X")
+        self.assertEqual(self.valori(self.doc, lavoro={"progetto": "Progetto X"})["[PROGETTO]"], "Lavori di prova")
+
+    def test_oggetto_e_il_titolo_del_documento_e_non_legge_s2(self):
+        self.assertEqual(self.valori(self.doc, lavoro={})["[OGGETTO]"], "")
+        v = self.valori(self.doc, documento="Computo Metrico", lavoro={})
+        self.assertEqual(v["[OGGETTO]"], "Computo Metrico")
+        self.assertNotIn("[DOCUMENTO]", v)
 
     def test_etichetta_alternativa_del_direttore_dei_lavori(self):
         doc = _documento_finto({(1, 4): "Direttore dei Lavori:", (2, 4): "ing. Gialli"})
         self.assertEqual(self.valori(doc, lavoro={})["[DIRETTORE_LAVORI]"], "ing. Gialli")
 
     def test_segnaposto_solo_da_impostazioni_di_lavoro(self):
-        lavoro = {"progetto": "Progetto X", "data": "01/02/2026", "revisione": 3, "dataRevisione": None}
+        lavoro = {"data": "01/02/2026", "revisione": 3, "dataRevisione": None}
         v = self.valori(self.doc, lavoro=lavoro)
-        self.assertEqual((v["[PROGETTO]"], v["[DATA]"], v["[REVISIONE]"], v["[DATA_REVISIONE]"]),
-                         ("Progetto X", "01/02/2026", "3", ""))
+        self.assertEqual((v["[DATA]"], v["[REVISIONE]"], v["[DATA_REVISIONE]"]), ("01/02/2026", "3", ""))
 
     def test_documento_sal_file_e_firme(self):
         v = self.valori(self.doc, documento="Libretto delle Misure", nSal=2, nomefile="lavori.ods", lavoro={})
-        self.assertEqual(v["[DOCUMENTO]"], "Libretto delle Misure")
+        self.assertEqual(v["[OGGETTO]"], "Libretto delle Misure")
         self.assertEqual(v["[SAL]"], "2")
         self.assertEqual(v["[FILE]"], "lavori.ods")
         self.assertEqual(v["[FIRME]"], FIRME_TEMPLATE)
@@ -122,8 +126,8 @@ class TestValoriSegnaposto(unittest.TestCase):
         self.assertEqual(self.valori(self.doc, lavoro={})["[SAL]"], "")
 
     def test_extra_prevale_sui_valori_calcolati(self):
-        v = self.valori(self.doc, documento="A", extra={"[DOCUMENTO]": "B", "[NUMERO_DOCUMENTO]": "5"}, lavoro={})
-        self.assertEqual((v["[DOCUMENTO]"], v["[NUMERO_DOCUMENTO]"]), ("B", "5"))
+        v = self.valori(self.doc, documento="A", extra={"[OGGETTO]": "B", "[NUMERO_DOCUMENTO]": "5"}, lavoro={})
+        self.assertEqual((v["[OGGETTO]"], v["[NUMERO_DOCUMENTO]"]), ("B", "5"))
 
     def test_pagina_e_pagine_non_sono_valori(self):
         v = self.valori(self.doc, lavoro={})
@@ -133,7 +137,7 @@ class TestValoriSegnaposto(unittest.TestCase):
     def test_insieme_dei_segnaposto(self):
         atteso = {"[COMMITTENTE]", "[STAZIONE_APPALTANTE]", "[OGGETTO]", "[RUP]", "[PROGETTISTA]",
                   "[DIRETTORE_LAVORI]", "[PROGETTO]", "[DATA]", "[REVISIONE]", "[DATA_REVISIONE]",
-                  "[DOCUMENTO]", "[SAL]", "[FILE]", "[FIRME]"}
+                  "[SAL]", "[FILE]", "[FIRME]"}
         self.assertEqual(set(self.valori(self.doc, lavoro={})), atteso)
 
     def test_lavoro_caricato_da_loadjobsettings_se_non_passato(self):
@@ -215,7 +219,8 @@ class TestDocumentoReale(unittest.TestCase):
 
     def test_valori_dal_vero_s2(self):
         v = self.ns["valori_segnaposto"](self.doc, "Libretto delle Misure", 2, "x.ods", lavoro={})
-        self.assertEqual(v["[OGGETTO]"], "Lavori di prova")
+        self.assertEqual(v["[PROGETTO]"], "Lavori di prova")
+        self.assertEqual(v["[OGGETTO]"], "Libretto delle Misure")
         for segnaposto, inizio in (("[PROGETTISTA]", "Progettista"), ("[DIRETTORE_LAVORI]", "Direttore Lavori"),
                                    ("[RUP]", "Responsabile del Progetto")):
             with self.subTest(segnaposto=segnaposto):
@@ -233,7 +238,7 @@ class TestDocumentoReale(unittest.TestCase):
 
     def test_intestazione_completa_con_il_dato_reale(self):
         valori = self.ns["valori_segnaposto"](self.doc, "Computo Metrico", lavoro={})
-        testo = self.ns["sostituisci_segnaposto"]("[OGGETTO] ([DOCUMENTO]) Pagina [PAGINA]", valori)
+        testo = self.ns["sostituisci_segnaposto"]("[PROGETTO] ([OGGETTO]) Pagina [PAGINA]", valori)
         self.assertEqual(testo, "Lavori di prova (Computo Metrico) Pagina [PAGINA]")
 
 

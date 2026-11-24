@@ -72,7 +72,7 @@ _DOCSTRINGS = (
 _SEGNAPOSTI_S2 = (
     ('[COMMITTENTE]', ('Committente',), 'committente'),
     ('[STAZIONE_APPALTANTE]', ('Stazione Appaltante',), 'stazioneAppaltante'),
-    ('[OGGETTO]', ('OGGETTO',), None),
+    ('[PROGETTO]', ('OGGETTO',), 'progetto'),
     ('[RUP]', ('Responsabile del Progetto',), 'rup'),
     ('[PROGETTISTA]', ('Progettista',), 'progettista'),
     ('[DIRETTORE_LAVORI]', ('Direttore Lavori', 'Direttore dei Lavori'), None),
@@ -80,7 +80,6 @@ _SEGNAPOSTI_S2 = (
 
 # Segnaposto senza dato corrispondente in S2: solo impostazioni di lavoro.
 _SEGNAPOSTI_LAVORO = (
-    ('[PROGETTO]', 'progetto'),
     ('[DATA]', 'data'),
     ('[REVISIONE]', 'revisione'),
     ('[DATA_REVISIONE]', 'dataRevisione'),
@@ -100,14 +99,15 @@ def valori_segnaposto(oDoc, documento='', nSal=None, nomefile='', extra=None, la
     """
     Valori dei segnaposto di intestazione e piè di pagina per il documento oDoc.
 
-    documento : titolo del documento prodotto ([DOCUMENTO]), es. 'Libretto delle Misure'
+    documento : titolo del documento prodotto ([OGGETTO]), es. 'Computo Metrico', 'Libretto delle Misure'
     nSal      : numero del SAL ([SAL]); None se non pertinente
     nomefile  : nome del file ([FILE]), vedi nome_file_documento
     extra     : altri segnaposto {'[NOME]': valore} che prevalgono su quelli calcolati
     lavoro    : impostazioni di lavoro; se None si caricano con loadJobSettings
 
-    I dati di S2 si leggono per etichetta (colonna B, valore in colonna C) e prevalgono
-    sulle impostazioni di lavoro. [PAGINA] e [PAGINE] non sono qui: diventano campi
+    [PROGETTO] e' l'oggetto dei lavori (etichetta OGGETTO in S2); [OGGETTO] e' il titolo del
+    documento. I dati di S2 si leggono per etichetta (colonna B, valore in colonna C) e
+    prevalgono sulle impostazioni di lavoro. [PAGINA] e [PAGINE] non sono qui: diventano campi
     numerici del piè di pagina.
     """
     if lavoro is None:
@@ -127,7 +127,7 @@ def valori_segnaposto(oDoc, documento='', nSal=None, nomefile='', extra=None, la
     for segnaposto, chiave in _SEGNAPOSTI_LAVORO:
         res[segnaposto] = str(lavoro.get(chiave, '') or '')
 
-    res['[DOCUMENTO]'] = documento
+    res['[OGGETTO]'] = documento
     res['[SAL]'] = '' if nSal is None else str(nSal)
     res['[FILE]'] = nomefile
     res['[FIRME]'] = _FIRME_TESTO

@@ -3,7 +3,7 @@
 Test dei segnaposto di intestazione e piè di pagina (LeenoSettings).
 
 - unitari, senza UNO: S2 prevale sulle impostazioni di lavoro, ripiego, segnaposto
-  calcolati ([OGGETTO] = titolo del documento, [SAL], [FILE], [FIRME]), sostituzione in un solo passaggio,
+  calcolati ([OGGETTO] = titolo del documento, [SAL], [FILE]), sostituzione in un solo passaggio,
   equivalenza con la sostituzione storica di prepareHeaderFooter;
 - documento reale (opzionale, LEENO_TEST_UNO=1): valori letti dal vero S2 di
   tests/data/LeenO_Esempio.ods e testo delle firme uguale a quello del template.
@@ -115,12 +115,14 @@ class TestValoriSegnaposto(unittest.TestCase):
         v = self.valori(self.doc, lavoro=lavoro)
         self.assertEqual((v["[DATA]"], v["[REVISIONE]"], v["[DATA_REVISIONE]"]), ("01/02/2026", "3", ""))
 
-    def test_documento_sal_file_e_firme(self):
+    def test_documento_sal_e_file(self):
         v = self.valori(self.doc, documento="Libretto delle Misure", nSal=2, nomefile="lavori.ods", lavoro={})
         self.assertEqual(v["[OGGETTO]"], "Libretto delle Misure")
         self.assertEqual(v["[SAL]"], "2")
         self.assertEqual(v["[FILE]"], "lavori.ods")
-        self.assertEqual(v["[FIRME]"], FIRME_TEMPLATE)
+
+    def test_le_firme_non_sono_un_segnaposto(self):
+        self.assertNotIn("[FIRME]", self.valori(self.doc, lavoro={}))
 
     def test_sal_assente_e_vuoto(self):
         self.assertEqual(self.valori(self.doc, lavoro={})["[SAL]"], "")
@@ -137,7 +139,7 @@ class TestValoriSegnaposto(unittest.TestCase):
     def test_insieme_dei_segnaposto(self):
         atteso = {"[COMMITTENTE]", "[STAZIONE_APPALTANTE]", "[OGGETTO]", "[RUP]", "[PROGETTISTA]",
                   "[DIRETTORE_LAVORI]", "[PROGETTO]", "[DATA]", "[REVISIONE]", "[DATA_REVISIONE]",
-                  "[SAL]", "[FILE]", "[FIRME]"}
+                  "[SAL]", "[FILE]"}
         self.assertEqual(set(self.valori(self.doc, lavoro={})), atteso)
 
     def test_lavoro_caricato_da_loadjobsettings_se_non_passato(self):
@@ -172,7 +174,7 @@ class TestSostituisci(unittest.TestCase):
 
     def test_testo_vuoto_e_firme_con_tabulazioni(self):
         self.assertEqual(self.sostituisci("", {"[SAL]": "2"}), "")
-        self.assertEqual(self.sostituisci("[FIRME]", {"[FIRME]": FIRME_TEMPLATE}), FIRME_TEMPLATE)
+        self.assertEqual(self.sostituisci("[TESTO]", {"[TESTO]": FIRME_TEMPLATE}), FIRME_TEMPLATE)
 
     def test_equivale_alla_sostituzione_storica(self):
         valori = {"[COMMITTENTE]": "Comune di Matera", "[PROGETTO]": "Progetto X", "[OGGETTO]": "Libretto",

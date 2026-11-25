@@ -13,7 +13,7 @@ import re
 
 import uno
 import unohelper
-from com.sun.star.awt import XActionListener, XItemListener, XTextListener
+from com.sun.star.awt import XActionListener, XItemListener
 
 import Dialogs
 import LeenoConfig
@@ -58,7 +58,6 @@ _DOCSTRINGS = (
     '[DATI_PROGETTISTA]',
     '[DIRETTORE_LAVORI]',
     '[FILE]',
-    '[FIRME]',
     '[NUMERO_DOCUMENTO]',
     '[OGGETTO]',
     '[PAGINA]',
@@ -90,8 +89,8 @@ _SEGNAPOSTI_LAVORO = (
     ('[DATA_REVISIONE]', 'dataRevisione'),
 )
 
-# Riga delle firme dei piè di pagina del Libretto (e, a scelta, del Registro):
-# stesso testo dello stile Page_Style_Libretto_Misure2 del template.
+# Riga delle firme dei piè di pagina del Libretto (e, a scelta, del Registro), sempre da sola
+# in fondo (vedi piede_con_firme): stesso testo dello stile Page_Style_Libretto_Misure2.
 _FIRME_TESTO = "L'IMPRESA\t\t\t\t\t\tIL DIRETTORE DEI LAVORI    "
 
 
@@ -135,7 +134,6 @@ def valori_segnaposto(oDoc, documento='', nSal=None, nomefile='', extra=None, la
     res['[OGGETTO]'] = documento
     res['[SAL]'] = '' if nSal is None else str(nSal)
     res['[FILE]'] = nomefile
-    res['[FIRME]'] = _FIRME_TESTO
     if extra:
         res.update(extra)
     return res
@@ -166,7 +164,7 @@ _DOCUMENTI_STAMPA = (
 # Il Certificato di Pagamento riporta i propri dati nel corpo: niente intestazione e piè di pagina.
 _DOCUMENTI_SENZA_TESTATA = ('CDP',)
 
-# Documenti che possono avere la riga delle firme ([FIRME]) al centro del piè di pagina.
+# Documenti che possono avere la riga delle firme in fondo al piè di pagina.
 _DOCUMENTI_CON_FIRME = ('LIBRETTO', 'REGISTRO')
 
 # Le sei stringhe di intestazione (sinistra, centro, destra) e piè di pagina.
@@ -195,20 +193,21 @@ def testi_predefiniti(chiave):
     }
     if chiave in ('LIBRETTO', 'REGISTRO', 'SAL'):
         testi['intDx'] = '[OGGETTO] n. [SAL]'
-    if chiave == 'LIBRETTO':
-        testi['ppCenter'] = '[FIRME]'
     if chiave in _DOCUMENTI_SENZA_TESTATA:
         testi = dict.fromkeys(_TESTI_STAMPA, '')
     return testi
 
 
-def titolo_documento(chiave):
-    """Titolo del documento `chiave` (valore di [OGGETTO]); stringa vuota se sconosciuto."""
-    return dict(_DOCUMENTI_STAMPA).get(chiave, '')
+def firme_predefinite(chiave):
+    """True se il documento `chiave` ha per impostazione predefinita la riga delle firme."""
+    return chiave == 'LIBRETTO'
 
 
-def _testi_personalizzati(ps):
-    """Stringhe personalizzate per documento, lette da ps['documenti'] (JSON); tollera dati non validi."""
+def _personalizzazioni(ps):
+    """
+    Personalizzazioni per documento lette da ps['documenti'] (JSON): per ogni documento le
+    sei stringhe e, per i documenti con firme, l'opzione 'firme' (bool). Tollera dati non validi.
+    """
     try:
         dati = json.loads(ps.get('documenti') or '{}')
     except (TypeError, ValueError):
@@ -216,10 +215,27 @@ def _testi_personalizzati(ps):
     if not isinstance(dati, dict):
         return {}
     res = {}
-    for chiave, testi in dati.items():
-        if isinstance(testi, dict):
-            res[chiave] = {k: v for k, v in testi.items() if k in _TESTI_STAMPA and isinstance(v, str)}
+    for chiave, valori in dati.items():
+        if not isinstance(valori, dict):
+            continue
+        voci = {k: v for k, v in valori.items() if k in _TESTI_STAMPA and isinstance(v, str)}
+        if isinstance(valori.get('firme'), bool):
+            voci['firme'] = valori['firme']
+        res[chiave] = voci
     return res
+
+
+def _testi_effettivi(ps, chiave):
+    """Le sei stringhe del documento, come salvate (compreso un eventuale [FIRME] di versioni precedenti)."""
+    testi = testi_predefiniti(chiave)
+    if chiave in _DOCUMENTI_SENZA_TESTATA:
+        return testi
+    for k in _TESTI_STAMPA:
+        valore = ps.get(k)
+        if isinstance(valore, str) and valore != _TESTI_PRECEDENTI[k]:
+            testi[k] = valore
+    testi.update({k: v for k, v in _personalizzazioni(ps).get(chiave, {}).items() if k in _TESTI_STAMPA})
+    return testi
 
 
 def impostazioni_documento(ps, chiave):
@@ -229,31 +245,75 @@ def impostazioni_documento(ps, chiave):
     Parte dai predefiniti, applica le personalizzazioni della versione con un solo set di
     stringhe (se diverse dai vecchi valori) e infine quelle specifiche del documento.
     """
-    testi = testi_predefiniti(chiave)
-    if chiave in _DOCUMENTI_SENZA_TESTATA:
-        return testi
-    for k in _TESTI_STAMPA:
-        valore = ps.get(k)
-        if isinstance(valore, str) and valore != _TESTI_PRECEDENTI[k]:
-            testi[k] = valore
-    testi.update(_testi_personalizzati(ps).get(chiave, {}))
+    testi = _testi_effettivi(ps, chiave)
+    if testi['ppCenter'].strip() == '[FIRME]':
+        testi['ppCenter'] = ''  # le firme sono ora un'opzione a parte, vedi firme_documento
     return testi
+
+
+def firme_documento(ps, chiave):
+    """True se il documento `chiave` ha la riga delle firme in fondo al piè di pagina."""
+    if chiave not in _DOCUMENTI_CON_FIRME:
+        return False
+    scelta = _personalizzazioni(ps).get(chiave, {}).get('firme')
+    if isinstance(scelta, bool):
+        return scelta
+    if _testi_effettivi(ps, chiave)['ppCenter'].strip() == '[FIRME]':
+        return True  # [FIRME] scritto al centro in una versione precedente
+    return firme_predefinite(chiave)
+
+
+def piede_con_firme(testi):
+    """
+    Le tre parti del piè di pagina (ppSx, ppCenter, ppDx) con la riga delle firme da sola in fondo.
+    `testi`: le sei stringhe gia' risolte. Ritorna {'ppSx', 'ppCenter', 'ppDx'}.
+
+    Le tre parti sono centrate verticalmente sulla stessa linea e le righe vuote hanno l'altezza
+    delle altre (provato con LibreOffice): se hanno tutte lo stesso numero di righe, il testo
+    resta in alto e le firme, ultima riga del centro, finiscono sotto "realizzato con", i numeri
+    di pagina e ogni altra riga, senza sovrapporsi.
+    """
+    sx, centro, dx = (testi.get(k, '') for k in ('ppSx', 'ppCenter', 'ppDx'))
+
+    def righe(testo):
+        return testo.count('\n') + 1
+
+    def completa(testo, n):
+        return testo + '\n' * (n - righe(testo))
+
+    occupate = [righe(t) for t in (sx, centro, dx) if t.strip()]
+    if not occupate:
+        return {'ppSx': sx, 'ppCenter': _FIRME_TESTO, 'ppDx': dx}
+    n = max(occupate)
+    return {
+        'ppSx': completa(sx, n + 1),
+        'ppCenter': completa(centro, n) + '\n' + _FIRME_TESTO,
+        'ppDx': completa(dx, n + 1),
+    }
+
+
+def titolo_documento(chiave):
+    """Titolo del documento `chiave` (valore di [OGGETTO]); stringa vuota se sconosciuto."""
+    return dict(_DOCUMENTI_STAMPA).get(chiave, '')
 
 
 def aggiorna_impostazioni_documenti(ps, valori):
     """
-    Ritorna una copia di ps con le stringhe `valori` {chiave documento: {sei stringhe}}.
+    Ritorna una copia di ps con le impostazioni `valori` {chiave documento: {sei stringhe e,
+    se pertinente, 'firme'}}.
 
     Salva in ps['documenti'] (JSON) solo le differenze dai predefiniti; riporta ai vecchi
     valori le sei stringhe comuni, ormai assorbite nei singoli documenti.
     """
     nuovo = dict(ps)
     personalizzati = {}
-    for chiave, testi in valori.items():
+    for chiave, voci in valori.items():
         if chiave in _DOCUMENTI_SENZA_TESTATA:
             continue
         predefiniti = testi_predefiniti(chiave)
-        diff = {k: testi[k] for k in _TESTI_STAMPA if k in testi and testi[k] != predefiniti[k]}
+        diff = {k: voci[k] for k in _TESTI_STAMPA if k in voci and voci[k] != predefiniti[k]}
+        if chiave in _DOCUMENTI_CON_FIRME and 'firme' in voci and bool(voci['firme']) != firme_predefinite(chiave):
+            diff['firme'] = bool(voci['firme'])
         if diff:
             personalizzati[chiave] = diff
     nuovo['documenti'] = json.dumps(personalizzati, ensure_ascii=False, sort_keys=True)
@@ -473,7 +533,7 @@ _DLG_IMPOSTAZIONI_STAMPA = (
     '?language=Basic&location=application')
 
 # Promemoria dei segnaposto e nota per i documenti senza intestazione.
-_LEGENDA_SEGNAPOSTI = 'Segnaposto: [COMMITTENTE] [PROGETTO] [OGGETTO] [SAL] [FILE] [FIRME] [PAGINA] [PAGINE]'
+_LEGENDA_SEGNAPOSTI = 'Segnaposto: [COMMITTENTE] [PROGETTO] [OGGETTO] [SAL] [FILE] [PAGINA] [PAGINE]'
 _NOTA_SENZA_TESTATA = ('Il Certificato di Pagamento riporta i propri dati nel corpo: '
                        'nessuna intestazione e nessun piè di pagina.')
 
@@ -501,14 +561,15 @@ def documento_stampa_iniziale(oDoc):
 
 class _ControlloImpostazioniStampa:
     """
-    Logica del dialogo: tiene in memoria le sei stringhe di ogni documento e mostra
-    quelle del documento selezionato. La riga delle firme e' la stringa [FIRME] al centro
-    del piè di pagina: la casella e il campo si tengono allineati.
+    Logica del dialogo: tiene in memoria le sei stringhe di ogni documento, e per Libretto
+    e Registro l'opzione 'firme' (riga delle firme da sola in fondo al piè di pagina), e mostra
+    quelle del documento selezionato.
     """
 
     def __init__(self, oModel, ps, chiave):
         self._m = oModel
-        self.valori = {c: impostazioni_documento(ps, c) for c, _ in _DOCUMENTI_STAMPA}
+        self.valori = {c: dict(impostazioni_documento(ps, c), firme=firme_documento(ps, c))
+                       for c, _ in _DOCUMENTI_STAMPA}
         self.corrente = None
         self._occupato = False
         self.mostra(chiave)
@@ -521,6 +582,8 @@ class _ControlloImpostazioniStampa:
             return
         for k in _TESTI_STAMPA:
             self.valori[self.corrente][k] = self._modello(k).Text
+        if self.corrente in _DOCUMENTI_CON_FIRME:
+            self.valori[self.corrente]['firme'] = bool(self._modello('cbFirme').State)
 
     def mostra(self, chiave):
         """Salva i testi del documento mostrato e mostra quelli di `chiave`."""
@@ -536,7 +599,7 @@ class _ControlloImpostazioniStampa:
                 self._modello('lbl_' + k).Enabled = not senza
             self._modello('btnPredefiniti').Enabled = not senza
             self._modello('cbFirme').Enabled = chiave in _DOCUMENTI_CON_FIRME
-            self._modello('cbFirme').State = 1 if testi['ppCenter'].strip() == '[FIRME]' else 0
+            self._modello('cbFirme').State = 1 if testi['firme'] else 0
             self._modello('lblSegnaposto').Label = _NOTA_SENZA_TESTATA if senza else _LEGENDA_SEGNAPOSTI
         finally:
             self._occupato = False
@@ -550,41 +613,17 @@ class _ControlloImpostazioniStampa:
         if self.corrente is None or self.corrente in _DOCUMENTI_SENZA_TESTATA:
             return
         chiave = self.corrente
-        self.valori[chiave] = testi_predefiniti(chiave)
+        self.valori[chiave] = dict(testi_predefiniti(chiave), firme=firme_predefinite(chiave))
         self.corrente = None  # i testi mostrati non vanno salvati sopra i predefiniti
         self.mostra(chiave)
 
-    def firme_cambiate(self):
-        """Casella delle firme: scrive o toglie [FIRME] al centro del piè di pagina."""
-        if self._occupato or self.corrente not in _DOCUMENTI_CON_FIRME:
-            return
-        centro = self._modello('ppCenter')
-        self._occupato = True
-        try:
-            if self._modello('cbFirme').State:
-                centro.Text = '[FIRME]'
-            elif centro.Text.strip() == '[FIRME]':
-                centro.Text = ''
-        finally:
-            self._occupato = False
-
-    def centro_cambiato(self):
-        """Centro del piè di pagina modificato a mano: allinea la casella delle firme."""
-        if self._occupato or self.corrente not in _DOCUMENTI_CON_FIRME:
-            return
-        self._occupato = True
-        try:
-            self._modello('cbFirme').State = 1 if self._modello('ppCenter').Text.strip() == '[FIRME]' else 0
-        finally:
-            self._occupato = False
-
     def risultato(self):
-        """Le sei stringhe di tutti i documenti: {chiave: {stringhe}}."""
+        """Le impostazioni di tutti i documenti: {chiave: {sei stringhe e 'firme'}}."""
         self._salva_corrente()
         return {c: dict(t) for c, t in self.valori.items()}
 
 
-class _AscoltatoreImpostazioniStampa(unohelper.Base, XActionListener, XItemListener, XTextListener):
+class _AscoltatoreImpostazioniStampa(unohelper.Base, XActionListener, XItemListener):
     """Collega i controlli del dialogo alla logica di _ControlloImpostazioniStampa."""
 
     def __init__(self, oDlg, controllo):
@@ -613,17 +652,8 @@ class _AscoltatoreImpostazioniStampa(unohelper.Base, XActionListener, XItemListe
             nome = self._nome(ev)
             if nome == 'docSel':
                 self._controllo.cambia_documento(ev.Selected)
-            elif nome == 'cbFirme':
-                self._controllo.firme_cambiate()
         except Exception as _exc:
             LeenoUtils.log_errore('PrintSettingsDialog: selezione', _exc)
-
-    def textChanged(self, ev):
-        try:
-            if self._nome(ev) == 'ppCenter':
-                self._controllo.centro_cambiato()
-        except Exception as _exc:
-            LeenoUtils.log_errore('PrintSettingsDialog: testo', _exc)
 
     def disposing(self, ev):
         return None
@@ -674,8 +704,6 @@ def PrintSettingsDialog(ps, covers, chiave='COMPUTO', url=_DLG_IMPOSTAZIONI_STAM
     for nome in ('btnPredefiniti', 'btnSfoglia'):
         oDlg.getControl(nome).addActionListener(ascoltatore)
     oDlg.getControl('docSel').addItemListener(ascoltatore)
-    oDlg.getControl('cbFirme').addItemListener(ascoltatore)
-    oDlg.getControl('ppCenter').addTextListener(ascoltatore)
     return oDlg, ascoltatore, controllo
 
 

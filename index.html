@@ -452,33 +452,34 @@
                     <tbody>
                         
             <tr>
-                <td>2026-11-23 08:47</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/4c280e9b13f3e40ff197015a577c2e77b158ec99" target="_blank" rel="noopener"><code>4c280e9</code></a></td>
-                <td class="commit-msg">refactor(S2): leggi_dato_etichettato in SheetUtils con indice di occorrenza
+                <td>2026-11-24 07:43</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/9400144a6201df15b0fd551c4d346c8920b83346" target="_blank" rel="noopener"><code>9400144</code></a></td>
+                <td class="commit-msg">fix(pagina): [PROGETTO] legge OGGETTO di S2 e [OGGETTO] e' il titolo del documento
 
-Il lettore etichetta in B e valore in C di _leggi_dato_anagrafico passa in SheetUtils,
-modulo importabile anche da LeenoSettings senza import circolari. Comportamento storico
-invariato (occorrenza=None); occorrenza=n legge la n-esima riga con l'etichetta, utile per
-'Importo contrattuale' ripetuto. _leggi_dato_anagrafico resta come involucro sottile.
-Test: equivalenza su griglie casuali e su tutte le etichette del vero S2.</td>
+Come nel PDF attuale, [OGGETTO] indica il documento (Computo Metrico, Libretto delle Misure...)
+e [PROGETTO] l'oggetto dei lavori, letto da S2 con ripiego sulle impostazioni di lavoro.
+Elimina il segnaposto [DOCUMENTO], non necessario.</td>
             </tr>
             <tr>
-                <td>2026-11-23 08:47</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/34e78da9b7a5e28a4b843bce76d6055b3a34532a" target="_blank" rel="noopener"><code>34e78da</code></a></td>
-                <td class="commit-msg">test: sessione LibreOffice condivisa in tests/uno_harness.py
+                <td>2026-11-23 23:19</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/0a70935731a9d4d7ce85426ee0c2742141335dc1" target="_blank" rel="noopener"><code>0a70935</code></a></td>
+                <td class="commit-msg">feat(pagina): segnaposto di intestazione e piè di pagina letti da S2
 
-Sposta in un modulo comune avvio, connessione e chiusura di LibreOffice headless usati
-dal test di geometria, per riusarli nei test su documento reale senza duplicarli.</td>
+valori_segnaposto risolve [COMMITTENTE], [STAZIONE_APPALTANTE], [OGGETTO], [RUP],
+[PROGETTISTA], [DIRETTORE_LAVORI] leggendo S2 per etichetta, con ripiego sulle impostazioni
+di lavoro; [PROGETTO], [DATA], [REVISIONE], [DATA_REVISIONE] dalle sole impostazioni di
+lavoro; calcola [DOCUMENTO], [SAL], [FILE] e [FIRME] (testo del Libretto nel template).
+sostituisci_segnaposto sostituisce in un solo passaggio e lascia [PAGINA] e [PAGINE].
+nome_file_documento ricava il nome del file. Non ancora collegate a dialogo, export e
+MENU_sistema_pagine: nessun cambiamento visibile.</td>
             </tr>
             <tr>
-                <td>2026-11-23 08:44</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/e4dd48ea7ba4890c4e7a3617169cf2081876d1c7" target="_blank" rel="noopener"><code>e4dd48e</code></a></td>
-                <td class="commit-msg">refactor(pagina): centralizza margini, scala e bordi degli stili di pagina
+                <td>2026-11-23 23:19</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/e562b16d78ff1f3ab6e2c7b7e4177f5542eeadd0" target="_blank" rel="noopener"><code>e562b16</code></a></td>
+                <td class="commit-msg">test: helper comune per estrarre funzioni dai sorgenti e foglio finto
 
-MENU_sistema_pagine e setPageStyle usano LeenoSettings.set_page_margins,
-set_page_scale e set_page_borders: costanti in un solo punto, scrittura con
-una sola chiamata setPropertyValues a nomi ordinati e ripiego per proprieta'.
-Documenta in LESSONS_UNO_QUIRKS i valori riletti da LibreOffice (1349, PageScale 100).</td>
+Sposta in tests/estrai_sorgente.py la compilazione di funzioni e costanti senza importare
+il modulo e il foglio finto con celle in memoria; test_lettura_etichette li riusa.</td>
             </tr>
                     </tbody>
                 </table>
@@ -502,8 +503,8 @@ Documenta in LESSONS_UNO_QUIRKS i valori riletti da LibreOffice (1349, PageScale
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-23 09:10 UTC</p>
-                <p>Build Commit: <code>4c280e9</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-25 07:29 UTC</p>
+                <p>Build Commit: <code>9400144</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

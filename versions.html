@@ -452,6 +452,25 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-26 20:33</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/47f94aeca84f1ecafa778cbf86db52922844a142" target="_blank" rel="noopener"><code>47f94ae</code></a></td>
+                <td class="commit-msg">feat(pagina): MENU_sistema_pagine usa le stringhe di Impostazioni stampa
+
+Intestazione e piè di pagina degli stili del Computo, della Variante, dell'Analisi di Prezzo e
+dell'Elenco Prezzi vengono dalle sei stringhe del documento (dialogo Impostazioni stampa), con i
+dati di S2 letti per etichetta. Il testo predefinito riproduce quello di prima (provato sul PDF:
+stessa posizione e dimensione); il piè di pagina di destra diventa 'Pagina N di M'. [FIRME] aggiunge
+la riga delle firme da sola in fondo, con una sola dimensione per tutto il piè di pagina.
+Ogni stile segue il proprio documento: Elenco Prezzi non prende piu' il titolo e la dimensione del
+foglio attivo; per lo stile condiviso conta il foglio attivo (Computo, Variante, Analisi) e per ogni
+altro foglio vale il Computo, non piu' il nome del foglio (prima 'CdP' finiva nell'intestazione).</td>
+            </tr>
+            <tr>
+                <td>2026-11-26 10:31</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/7456a04b1a73f1d7738ea7bd4f5823797aac60fa" target="_blank" rel="noopener"><code>7456a04</code></a></td>
+                <td class="commit-msg">feat(pagina): impostazioni di stampa per documento, [FIRME] da sole in fondo al piè di pagina</td>
+            </tr>
+            <tr>
                 <td>2026-11-25 21:35</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/5d3aea5906b26cd54e9e9c917fb2d7dafca6f29f" target="_blank" rel="noopener"><code>5d3aea5</code></a></td>
                 <td class="commit-msg">feat(pagina): la riga delle firme sta da sola in fondo al piè di pagina
@@ -462,26 +481,6 @@ numero di righe, con il testo in alto e le firme sull'ultima riga del centro: ne
 sovrapposizione con 'realizzato con' e con i numeri di pagina. Provato su PDF reale del Libretto
 (pdftotext -bbox) e con il numero di pagine invariato. [FIRME] non è più un segnaposto; i valori
 [FIRME] salvati al centro nella versione precedente vengono convertiti nell'opzione.</td>
-            </tr>
-            <tr>
-                <td>2026-11-24 19:49</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/d92ab95d3ca2fbdb891cc00a85d17d3cda2b0547" target="_blank" rel="noopener"><code>d92ab95</code></a></td>
-                <td class="commit-msg">feat(pagina): dialogo Impostazioni stampa con selettore del documento
-
-Nuovo DlgImpostazioniStampa.xdl: selettore dei documenti, ripristino dei testi predefiniti,
-casella delle firme ([FIRME] al centro del piè di pagina), legenda dei segnaposto. Logica in
-_ControlloImpostazioniStampa e ascoltatori; salvataggio per documento. Il Certificato di Pagamento
-disabilita i campi. Aggiunge [FILE], [FIRME] e [SAL] all'elenco a discesa.</td>
-            </tr>
-            <tr>
-                <td>2026-11-24 19:57</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/f0af13d1c03a156488b9df51caf895c8ccd607fc" target="_blank" rel="noopener"><code>f0af13d</code></a></td>
-                <td class="commit-msg">feat(pdf): intestazione, piè di pagina e copertina dell'export per documento
-
-prepareHeaderFooter usa le sei stringhe del documento (LeenoSettings.impostazioni_documento) e
-i segnaposto letti da S2: il Libretto conserva la riga delle firme e tutti gli atti contabili
-riportano il numero del SAL. [PAGINA] e [PAGINE] restano campi numerici. La copertina usa gli
-stessi segnaposto. Elimina i print di debug di pdfExport e prepareCover; aggiunge titolo_documento.</td>
             </tr>
                     </tbody>
                 </table>
@@ -505,8 +504,8 @@ stessi segnaposto. Elimina i print di debug di pdfExport e prepareCover; aggiung
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-25 21:48 UTC</p>
-                <p>Build Commit: <code>5d3aea5</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-26 20:43 UTC</p>
+                <p>Build Commit: <code>47f94ae</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

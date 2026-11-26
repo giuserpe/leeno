@@ -35,3 +35,7 @@ Provato su LibreOffice 24.2 con `tests/data/LeenO_Esempio.ods`: scrivendo `Botto
 ## Piè di pagina di Calc: le tre parti sono centrate verticalmente
 
 Provato su LibreOffice 24.2 con il PDF del Libretto: sinistra, centro e destra del piè di pagina sono centrate sulla stessa linea verticale, e le righe vuote hanno l'altezza delle altre. Una riga in fondo al centro (come le firme) non finisce quindi sotto il testo delle altre parti, ma le si sovrappone. Per averla davvero per ultima le tre parti devono avere lo stesso numero di righe: testo in alto, righe vuote in coda, firme sull'ultima riga del centro (`LeenoSettings.piede_con_firme`). Misurare con `pdftotext -bbox` (vedi `tests/test_piede_firme_reale.py`). Nel template il centro del Libretto ha le firme seguite da quattro righe vuote.
+
+## Intestazione e piè di pagina: String e CharHeight non dicono cosa viene stampato
+
+Provato su LibreOffice 24.2: `contenuto.LeftText.String` restituisce gli "a capo" come spazi, e i paragrafi enumerati mostrano `CharHeight` 10 anche dopo `Text.Text.CharHeight = 8` (la dimensione e' applicata, ma l'enumerazione non la riflette). Per verificare testo e disposizione leggere i paragrafi con `createEnumeration()`, e per le dimensioni misurare il PDF con `pdftotext -bbox` (altezza della parola: 9 pt per un font da 8 pt). Vedi `tests/test_testata_a_schermo.py`.

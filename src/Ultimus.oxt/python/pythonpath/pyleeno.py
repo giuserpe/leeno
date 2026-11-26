@@ -10854,45 +10854,16 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
     # adatta solo la riga corrente (non l'intero foglio) per evitare freeze su EP grandi
     LeenoSheetUtils.adattaAltezzaRiga(oSheet, all=False)
 
-    #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
-    oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
-    committente = "\n\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
-    luogo = '\n' + oSheet.Name
-    if oSheet.Name == 'COMPUTO':
-        if oSheet.getColumns().getByIndex(30).Columns.IsVisible == True:
-            luogo = '\n\nIncidenza MdO'
-        else:
-            luogo = '\n\nComputo Metrico Estimativo'
-    elif oSheet.Name == 'VARIANTE':
-        if oSheet.getColumns().getByIndex(30).Columns.IsVisible == True:
-            luogo = '\n\nIncidenza MdO (Variante)'
-        else:
-            luogo = '\n\nPerizia di Variante'
-    elif oSheet.Name == 'Elenco Prezzi':
-        if oSheet.getColumns().getByIndex(11).IsVisible == False or \
-            oSheet.getColumns().getByIndex(12).IsVisible == False or \
-                oSheet.getColumns().getByIndex(13).IsVisible == False:
-            luogo = '\n\nQuadro di Raffronto'
-        else:
-            luogo = '\n\nElenco Prezzi'
-
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(1)
     else:
         dettaglio_misure(0)
 
-    # --- Costanti pre-calcolate (evita ricalcoli dentro il loop) ---
-    STILI_CON_HEADER = frozenset((
-        'PageStyle_Analisi di Prezzo',
-        'PageStyle_COMPUTO_A4',
-        'PageStyle_Elenco Prezzi',
-    ))
-    FONT = 'Liberation Sans Narrow'
-    # htxt: dimensione font in punti (FISSO — PageScale è 0, quindi 8/100*0 = 0 era un bug)
-    HTXT_DEFAULT = 8.0
-    HTXT_ANALISI  = 9.0
-    # nomefile calcolato una sola volta fuori dal loop
-    nomefile = os.path.basename(oDoc.getURL().replace('%20', ' '))
+    # --- Dati calcolati una sola volta fuori dal loop ---
+    # stringhe di intestazione e piè di pagina per documento (dialogo Impostazioni stampa)
+    printSettings, dummy = LS.loadPrintSettings(oDoc)
+    nomefile = LS.nome_file_documento(oDoc)
+    testate = {}  # documento -> (testata pronta, dimensione, con firme)
 
     # Cache della collezione stili: evita due getByName('PageStyles') per ogni iterazione
     oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
@@ -10912,36 +10883,18 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
         # margini, scala e centratura: definizione unica in LeenoSettings
         LS.set_page_margins(oAktPage)
 
-        if displayName in STILI_CON_HEADER:
-            htxt = HTXT_ANALISI if oSheet.Name == 'Analisi di Prezzo' else HTXT_DEFAULT
+        if displayName in LS.STILI_TESTATA:
+            chiave = LS.documento_dello_stile(displayName, oSheet.Name)
+            if chiave not in testate:
+                testi = LS.impostazioni_documento(printSettings, chiave)
+                valori = LS.valori_segnaposto(oDoc, documento=LS.titolo_a_schermo(chiave, oDoc),
+                                              nomefile=nomefile)
+                testate[chiave] = (LS.testata_a_schermo(testi, valori, chiave),
+                                   LS.dimensione_testata(chiave), LS.ha_firme(testi))
+            testata, htxt, con_firme = testate[chiave]
 
             LS.set_page_borders(oAktPage)
-
-            # HEADER: leggi una volta, modifica in memoria, riscrivi una volta
-            oHeader = oAktPage.RightPageHeaderContent
-            oHeader.LeftText.Text.String = committente
-            oHeader.LeftText.Text.Text.CharFontName = FONT
-            oHeader.LeftText.Text.Text.CharHeight = htxt
-
-            oHeader.CenterText.Text.String = oggetto
-            oHeader.CenterText.Text.Text.CharFontName = FONT
-            oHeader.CenterText.Text.Text.CharHeight = htxt
-
-            oHeader.RightText.Text.String = luogo
-            oHeader.RightText.Text.Text.CharFontName = FONT
-            oHeader.RightText.Text.Text.CharHeight = htxt
-
-            oAktPage.RightPageHeaderContent = oHeader
-
-            # FOOTER: leggi una volta, modifica in memoria, riscrivi una volta
-            oFooter = oAktPage.RightPageFooterContent
-            oFooter.CenterText.Text.String = ''
-            oFooter.LeftText.Text.String = "\nrealizzato con LeenO: " + nomefile
-            oFooter.LeftText.Text.Text.CharFontName = FONT
-            oFooter.LeftText.Text.Text.CharHeight = htxt * 0.5
-            oFooter.RightText.Text.Text.CharFontName = FONT
-            oFooter.RightText.Text.Text.CharHeight = htxt
-            oAktPage.RightPageFooterContent = oFooter
+            LS.scrivi_testata_stile(oDoc, oAktPage, testata, htxt, con_firme)
 
         # if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
         #     scelta_viste()

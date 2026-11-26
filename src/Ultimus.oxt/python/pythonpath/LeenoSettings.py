@@ -316,6 +316,120 @@ def aggiorna_impostazioni_documenti(ps, valori):
     return nuovo
 
 
+# ---------------------------------------------------------------------------------------
+# Intestazione e piè di pagina a schermo (anteprima e stampa da Calc): MENU_sistema_pagine
+# ---------------------------------------------------------------------------------------
+
+# Stili di pagina di cui MENU_sistema_pagine scrive intestazione e piè di pagina.
+STILI_TESTATA = frozenset((
+    'PageStyle_Analisi di Prezzo',
+    'PageStyle_COMPUTO_A4',
+    'PageStyle_Elenco Prezzi',
+))
+
+# Font e dimensioni (punti) del testo di intestazione e piè di pagina.
+_FONT_TESTATA = 'Liberation Sans Narrow'
+_HTXT_PREDEFINITO = 8.0
+_HTXT_ANALISI = 9.0
+
+# Foglio del documento e foglio attivo che scelgono il documento dello stile condiviso.
+_FOGLIO_DEL_DOCUMENTO = {
+    'COMPUTO': 'COMPUTO',
+    'VARIANTE': 'VARIANTE',
+    'ELENCO': 'Elenco Prezzi',
+    'ANALISI': 'Analisi di Prezzo',
+}
+
+
+def documento_dello_stile(nome_stile, foglio_attivo):
+    """
+    Chiave del documento (vedi _DOCUMENTI_STAMPA) di cui lo stile di pagina porta la testata.
+    PageStyle_COMPUTO_A4 e' condiviso da COMPUTO, VARIANTE e Analisi di Prezzo: vale il foglio
+    attivo, e per ogni altro foglio il Computo. None se lo stile non e' tra STILI_TESTATA.
+    """
+    if nome_stile == 'PageStyle_Elenco Prezzi':
+        return 'ELENCO'
+    if nome_stile == 'PageStyle_Analisi di Prezzo':
+        return 'ANALISI'
+    if nome_stile == 'PageStyle_COMPUTO_A4':
+        return {'VARIANTE': 'VARIANTE', 'Analisi di Prezzo': 'ANALISI'}.get(foglio_attivo, 'COMPUTO')
+    return None
+
+
+def dimensione_testata(chiave):
+    """Dimensione in punti del testo di intestazione e piè di pagina del documento."""
+    return _HTXT_ANALISI if chiave == 'ANALISI' else _HTXT_PREDEFINITO
+
+
+def titolo_a_schermo(chiave, oDoc):
+    """
+    Titolo del documento a schermo ([OGGETTO]): dipende dalle colonne visibili del suo foglio,
+    come prima di MENU_sistema_pagine ('Incidenza MdO', 'Quadro di Raffronto'...).
+    Se il foglio manca ripiega su titolo_documento.
+    """
+    base = titolo_documento(chiave)
+    nome = _FOGLIO_DEL_DOCUMENTO.get(chiave)
+    if nome is None or not oDoc.Sheets.hasByName(nome):
+        return base
+    oSheet = oDoc.Sheets.getByName(nome)
+    if chiave == 'COMPUTO':
+        visibile = oSheet.getColumns().getByIndex(30).Columns.IsVisible
+        return 'Incidenza MdO' if visibile else 'Computo Metrico Estimativo'
+    if chiave == 'VARIANTE':
+        visibile = oSheet.getColumns().getByIndex(30).Columns.IsVisible
+        return 'Incidenza MdO (Variante)' if visibile else 'Perizia di Variante'
+    if chiave == 'ELENCO':
+        nascoste = any(oSheet.getColumns().getByIndex(i).IsVisible == False for i in (11, 12, 13))
+        return 'Quadro di Raffronto' if nascoste else 'Elenco Prezzi'
+    return oSheet.Name
+
+
+def testata_a_schermo(testi, valori, chiave):
+    """
+    Le sei stringhe di intestazione e piè di pagina pronte per lo stile di pagina del documento.
+
+    Risolve i segnaposto con `valori` e aggiunge le righe vuote che dispongono il testo come
+    prima: committente e titolo in basso, oggetto in alto, "realizzato con" sotto. Poi
+    piede_con_firme porta la riga delle firme da sola in fondo, se c'e' [FIRME].
+    [PAGINA] e [PAGINE] restano: diventano campi numerici in scrivi_testata_stile.
+    """
+    t = {k: sostituisci_segnaposto(v, valori) for k, v in testi.items()}
+    t['intSx'] = '\n\n' + t['intSx']
+    t['intCenter'] = t['intCenter'] + '\n\n'
+    t['intDx'] = ('\n' if chiave == 'ANALISI' else '\n\n') + t['intDx']
+    t['ppSx'] = '\n' + t['ppSx']
+    t.update(piede_con_firme(t))
+    return t
+
+
+def scrivi_testata_stile(oDoc, oAktPage, testata, htxt, con_firme):
+    """
+    Scrive nello stile di pagina intestazione e piè di pagina `testata` (vedi testata_a_schermo)
+    con font _FONT_TESTATA e dimensione `htxt`; [PAGINA] e [PAGINE] diventano campi numerici.
+    Con le firme tutto il piè di pagina ha la stessa dimensione, altrimenti le righe delle tre
+    parti non si allineano; senza firme la parte sinistra resta a meta' dimensione, come prima.
+    """
+    oHeader = oAktPage.RightPageHeaderContent
+    for oTesto, chiave in ((oHeader.LeftText, 'intSx'), (oHeader.CenterText, 'intCenter'),
+                           (oHeader.RightText, 'intDx')):
+        oTesto.Text.String = testata[chiave]
+        oTesto.Text.Text.CharFontName = _FONT_TESTATA
+        oTesto.Text.Text.CharHeight = htxt
+        SheetUtils.paginationFields(oDoc, oTesto.Text)
+    oAktPage.RightPageHeaderContent = oHeader
+
+    oFooter = oAktPage.RightPageFooterContent
+    dimensioni = (htxt if con_firme else htxt * 0.5, htxt, htxt)
+    for oTesto, chiave, dimensione in ((oFooter.LeftText, 'ppSx', dimensioni[0]),
+                                       (oFooter.CenterText, 'ppCenter', dimensioni[1]),
+                                       (oFooter.RightText, 'ppDx', dimensioni[2])):
+        oTesto.Text.String = testata[chiave]
+        oTesto.Text.Text.CharFontName = _FONT_TESTATA
+        oTesto.Text.Text.CharHeight = dimensione
+        SheetUtils.paginationFields(oDoc, oTesto.Text)
+    oAktPage.RightPageFooterContent = oFooter
+
+
 def loadJobSettings(oDoc):
     """
     Carica le impostazioni di lavoro dal documento o dalla configurazione predefinita.

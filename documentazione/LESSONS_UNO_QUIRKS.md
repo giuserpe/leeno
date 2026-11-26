@@ -31,3 +31,7 @@ Provato su LibreOffice 24.2 con `tests/data/LeenO_Esempio.ods`: scrivendo `Botto
 ## Contenuto di intestazione e piè di pagina: tenere un riferimento
 
 `stile.RightPageFooterContent.CenterText.String` in una sola catena di attributi può dare `UnknownPropertyException`: il contenuto è un oggetto temporaneo e viene rilasciato prima della lettura di `CenterText`. Assegnarlo prima a una variabile (`contenuto = stile.RightPageFooterContent`) e leggere `contenuto.CenterText.String`.
+
+## Piè di pagina di Calc: le tre parti sono centrate verticalmente
+
+Provato su LibreOffice 24.2 con il PDF del Libretto: sinistra, centro e destra del piè di pagina sono centrate sulla stessa linea verticale, e le righe vuote hanno l'altezza delle altre. Una riga in fondo al centro (come le firme) non finisce quindi sotto il testo delle altre parti, ma le si sovrappone. Per averla davvero per ultima le tre parti devono avere lo stesso numero di righe: testo in alto, righe vuote in coda, firme sull'ultima riga del centro (`LeenoSettings.piede_con_firme`). Misurare con `pdftotext -bbox` (vedi `tests/test_piede_firme_reale.py`). Nel template il centro del Libretto ha le firme seguite da quattro righe vuote.

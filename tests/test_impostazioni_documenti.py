@@ -17,10 +17,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SETTINGS = ROOT / "src/Ultimus.oxt/python/pythonpath/LeenoSettings.py"
 CONFIG = ROOT / "src/Ultimus.oxt/python/pythonpath/LeenoConfig.py"
 
-FUNZIONI = ("testi_predefiniti", "_testi_personalizzati", "impostazioni_documento",
-            "aggiorna_impostazioni_documenti")
-COSTANTI = ("_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME",
-            "_TESTI_STAMPA", "_TESTI_PRECEDENTI", "_PRINTSETTINGSITEMS")
+FUNZIONI = ("testi_predefiniti", "_personalizzazioni", "impostazioni_documento", "senza_firme",
+            "ha_firme", "piede_con_firme", "aggiorna_impostazioni_documenti")
+COSTANTI = ("_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME", "_TESTI_STAMPA",
+            "_TESTI_PRECEDENTI", "_PRINTSETTINGSITEMS", "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE")
 
 TESTI = ("intSx", "intCenter", "intDx", "ppSx", "ppCenter", "ppDx")
 
@@ -60,8 +60,9 @@ class TestPredefiniti(unittest.TestCase):
                 self.assertEqual(self.ns["testi_predefiniti"](chiave)["intDx"], "[OGGETTO] n. [SAL]")
 
     def test_firme_solo_nel_libretto_per_impostazione_predefinita(self):
+        con_firme = [c for c in self.chiavi if self.ns["ha_firme"](self.ns["testi_predefiniti"](c))]
+        self.assertEqual(con_firme, ["LIBRETTO"])
         self.assertEqual(self.ns["testi_predefiniti"]("LIBRETTO")["ppCenter"], "[FIRME]")
-        self.assertEqual(self.ns["testi_predefiniti"]("REGISTRO")["ppCenter"], "")
         self.assertEqual(self.ns["_DOCUMENTI_CON_FIRME"], ("LIBRETTO", "REGISTRO"))
 
     def test_certificato_di_pagamento_senza_testata(self):
@@ -123,6 +124,130 @@ class TestLetturaImpostazioni(unittest.TestCase):
         self.assertEqual(self.leggi(ps, "CDP"), dict.fromkeys(TESTI, ""))
 
 
+class TestRigaFirme(unittest.TestCase):
+    def setUp(self):
+        self.ns = _carica()
+        self.con_firme = self.ns["piede_con_firme"]
+        self.firme = self.ns["_FIRME_TESTO"]
+
+    @staticmethod
+    def _righe(testo):
+        return testo.count("\n") + 1
+
+    def test_testo_delle_firme_come_nel_template(self):
+        self.assertEqual(self.firme, "L'IMPRESA\t\t\t\t\t\tIL DIRETTORE DEI LAVORI    ")
+        self.assertEqual(self.ns["_SEGNAPOSTO_FIRME"], "[FIRME]")
+
+    def test_senza_il_segnaposto_il_piede_non_cambia(self):
+        testi = {"ppSx": "a", "ppCenter": "b\nc", "ppDx": ""}
+        self.assertEqual(self.con_firme(testi), testi)
+        self.assertEqual(self.con_firme({}), {"ppSx": "", "ppCenter": "", "ppDx": ""})
+
+    def test_firme_sotto_una_riga_di_piede(self):
+        piede = self.con_firme({"ppSx": "realizzato con LeenO: a.ods", "ppCenter": "[FIRME]",
+                                "ppDx": "Pagina 1 di 2"})
+        self.assertEqual(piede, {"ppSx": "realizzato con LeenO: a.ods\n", "ppCenter": "\n" + self.firme,
+                                 "ppDx": "Pagina 1 di 2\n"})
+        self.assertNotIn("[FIRME]", "".join(piede.values()))
+
+    def test_firme_dopo_il_centro_esistente(self):
+        piede = self.con_firme({"ppSx": "sx", "ppCenter": "centro [FIRME]", "ppDx": "dx"})
+        self.assertEqual(piede["ppCenter"], "centro\n" + self.firme)
+        self.assertEqual((piede["ppSx"], piede["ppDx"]), ("sx\n", "dx\n"))
+
+    def test_il_segnaposto_vale_in_qualsiasi_parte(self):
+        for parte in ("ppSx", "ppCenter", "ppDx"):
+            with self.subTest(parte=parte):
+                testi = {"ppSx": "a", "ppCenter": "b", "ppDx": "c"}
+                testi[parte] += " [FIRME]"
+                piede = self.con_firme(testi)
+                self.assertEqual(piede["ppCenter"].split("\n")[-1], self.firme)
+                self.assertEqual((piede["ppSx"].rstrip(), piede["ppDx"].rstrip()), ("a", "c"))
+                self.assertEqual(piede["ppCenter"].split("\n")[0], "b")
+
+    def test_segnaposto_ripetuto_aggiunge_una_sola_riga(self):
+        piede = self.con_firme({"ppSx": "[FIRME]", "ppCenter": "[FIRME]", "ppDx": "x [FIRME]"})
+        self.assertEqual(sum(v.count(self.firme) for v in piede.values()), 1)
+
+    def test_firme_dopo_tutte_le_righe_delle_tre_parti(self):
+        piede = self.con_firme({"ppSx": "sx 1\nsx 2", "ppCenter": "c\n[FIRME]", "ppDx": "dx 1\ndx 2\ndx 3"})
+        self.assertEqual(piede["ppSx"], "sx 1\nsx 2\n\n")
+        self.assertEqual(piede["ppCenter"], "c\n\n\n" + self.firme)
+        self.assertEqual(piede["ppDx"], "dx 1\ndx 2\ndx 3\n")
+        # la riga delle firme e' la quarta, sotto le tre righe piu' lunghe
+        self.assertEqual(piede["ppCenter"].split("\n").index(self.firme), 3)
+
+    def test_firme_da_sole_se_il_piede_e_vuoto(self):
+        piede = self.con_firme({"ppSx": "", "ppCenter": " [FIRME] ", "ppDx": ""})
+        self.assertEqual(piede, {"ppSx": "", "ppCenter": self.firme, "ppDx": ""})
+        self.assertEqual(self.con_firme({"ppCenter": "[FIRME]"})["ppCenter"], self.firme)
+
+    def test_le_tre_parti_hanno_sempre_lo_stesso_numero_di_righe(self):
+        valori = ("", "a", "a\nb", "a\nb\nc", "a\n", " ")
+        for sx in valori:
+            for centro in valori:
+                for dx in valori:
+                    testi = {"ppSx": sx, "ppCenter": centro + "[FIRME]", "ppDx": dx}
+                    with self.subTest(testi=testi):
+                        piede = self.con_firme(testi)
+                        pulite = [self.ns["senza_firme"](v) for v in testi.values()]
+                        if not any(v.strip() for v in pulite):
+                            self.assertEqual(piede["ppCenter"], self.firme)
+                            continue
+                        righe = {self._righe(v) for v in piede.values()}
+                        self.assertEqual(len(righe), 1)
+                        massimo = max(self._righe(v) for v in pulite if v.strip())
+                        self.assertEqual(righe.pop(), massimo + 1)
+
+    def test_le_firme_sono_l_ultima_riga_e_il_testo_resta_al_suo_posto(self):
+        valori = ("", "a", "a\nb", "a\nb\nc")
+        for sx in valori:
+            for centro in valori:
+                for dx in valori:
+                    testi = {"ppSx": sx, "ppCenter": centro, "ppDx": dx}
+                    if not any(testi.values()):
+                        continue
+                    testi["ppCenter"] = (centro + " [FIRME]").strip()
+                    with self.subTest(testi=testi):
+                        piede = self.con_firme(testi)
+                        self.assertEqual(piede["ppCenter"].split("\n")[-1], self.firme)
+                        self.assertNotIn(self.firme, piede["ppSx"] + piede["ppDx"])
+                        for k, originale in (("ppSx", sx), ("ppCenter", centro), ("ppDx", dx)):
+                            self.assertTrue(piede[k].startswith(originale), k)
+                        massimo = max(self._righe(v) for v in (sx, centro, dx) if v.strip())
+                        # nessuna riga di testo sta alla riga delle firme o sotto
+                        self.assertEqual(piede["ppCenter"].split("\n").index(self.firme), massimo)
+
+    def test_non_modifica_il_dizionario_ricevuto(self):
+        testi = {"ppSx": "a", "ppCenter": "[FIRME]", "ppDx": "c"}
+        copia = dict(testi)
+        self.con_firme(testi)
+        self.assertEqual(testi, copia)
+
+
+class TestSenzaFirmeEHaFirme(unittest.TestCase):
+    def setUp(self):
+        self.ns = _carica()
+
+    def test_senza_firme(self):
+        f = self.ns["senza_firme"]
+        self.assertEqual(f("[FIRME]"), "")
+        self.assertEqual(f("  [FIRME]  "), "")
+        self.assertEqual(f("Centro [FIRME]"), "Centro")
+        self.assertEqual(f("Centro\n[FIRME]"), "Centro")
+        self.assertEqual(f("[FIRME] x"), " x")
+        self.assertEqual(f("senza"), "senza")
+        self.assertEqual(f("a [FIRME] b [FIRME]"), "a  b")
+
+    def test_ha_firme_in_una_qualsiasi_delle_tre_parti(self):
+        h = self.ns["ha_firme"]
+        for parte in ("ppSx", "ppCenter", "ppDx"):
+            self.assertTrue(h({parte: "x [FIRME]"}), parte)
+        self.assertFalse(h({"ppSx": "a", "ppCenter": "b", "ppDx": "c"}))
+        self.assertFalse(h({"intSx": "[FIRME]"}))  # le intestazioni non contano
+        self.assertFalse(h({}))
+
+
 class TestSalvataggio(unittest.TestCase):
     def setUp(self):
         self.ns = _carica()
@@ -168,6 +293,16 @@ class TestSalvataggio(unittest.TestCase):
         salvato = self.aggiorna(ps, valori)
         self.assertEqual(self.leggi(salvato, "COMPUTO"), self.pred("COMPUTO"))
         self.assertEqual(self.leggi(salvato, "VARIANTE")["intSx"], "Mio ente")
+
+    def test_il_segnaposto_firme_si_salva_come_testo_del_piede(self):
+        valori = self._tutti({})
+        valori["REGISTRO"]["ppCenter"] = "[FIRME]"
+        valori["LIBRETTO"]["ppCenter"] = ""
+        salvato = self.aggiorna({}, valori)
+        self.assertEqual(json.loads(salvato["documenti"]),
+                         {"LIBRETTO": {"ppCenter": ""}, "REGISTRO": {"ppCenter": "[FIRME]"}})
+        self.assertEqual(self.leggi(salvato, "REGISTRO")["ppCenter"], "[FIRME]")
+        self.assertEqual(self.leggi(salvato, "LIBRETTO")["ppCenter"], "")
 
     def test_cdp_non_viene_salvato(self):
         valori = self._tutti({})

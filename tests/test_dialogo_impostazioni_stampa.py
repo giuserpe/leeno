@@ -5,7 +5,8 @@ Test del dialogo Impostazioni stampa / PDF con un set di stringhe per documento.
 - unitari, senza UNO: logica del controllo (cambio documento, ripristino, firme, documento
   senza testata) su un modello finto i cui nomi devono esistere nell'xdl reale;
 - documento reale (opzionale, LEENO_TEST_UNO=1): dialogo vero creato dall'xdl senza schermo,
-  con ascoltatori e salvataggio completo.
+  con ascoltatori e salvataggio completo. La riga delle firme e' un'opzione per documento
+  (casella), non un testo del piè di pagina.
 """
 import json
 import re
@@ -26,13 +27,13 @@ XDL = ROOT / "src/Ultimus.oxt/UltimusFree2/DlgImpostazioniStampa.xdl"
 ESEMPIO = ROOT / "tests/data/LeenO_Esempio.ods"
 
 TESTI = ("intSx", "intCenter", "intDx", "ppSx", "ppCenter", "ppDx")
-FUNZIONI = ("testi_predefiniti", "_testi_personalizzati", "impostazioni_documento",
-            "aggiorna_impostazioni_documenti", "documento_stampa_iniziale",
-            "PrintSettingsDialog", "_leggiImpostazioniStampa")
+FUNZIONI = ("testi_predefiniti", "_personalizzazioni", "impostazioni_documento", "senza_firme", "ha_firme",
+            "aggiorna_impostazioni_documenti", "documento_stampa_iniziale", "PrintSettingsDialog",
+            "_leggiImpostazioniStampa")
 CLASSI = ("_ControlloImpostazioniStampa", "_AscoltatoreImpostazioniStampa")
 COSTANTI = ("_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME", "_TESTI_STAMPA",
             "_TESTI_PRECEDENTI", "_DOCSTRINGS", "_LEGENDA_SEGNAPOSTI", "_NOTA_SENZA_TESTATA",
-            "_DOCUMENTO_DEL_FOGLIO", "_DLG_IMPOSTAZIONI_STAMPA")
+            "_DOCUMENTO_DEL_FOGLIO", "_DLG_IMPOSTAZIONI_STAMPA", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE")
 
 
 def _ids_xdl():
@@ -159,8 +160,9 @@ class TestLogicaDialogo(unittest.TestCase):
         c.ripristina()  # non fa nulla
         self.assertEqual(c.risultato()["CDP"], dict.fromkeys(TESTI, ""))
 
-    def test_casella_firme_scrive_e_toglie_firme(self):
+    def test_casella_firme_inserisce_e_toglie_il_segnaposto(self):
         c = self._controllo(chiave="REGISTRO")
+        self.assertEqual(self.modello.getByName("cbFirme").State, 0)
         self.modello.getByName("cbFirme").State = 1
         c.firme_cambiate()
         self.assertEqual(self.modello.getByName("ppCenter").Text, "[FIRME]")
@@ -168,27 +170,76 @@ class TestLogicaDialogo(unittest.TestCase):
         c.firme_cambiate()
         self.assertEqual(self.modello.getByName("ppCenter").Text, "")
 
-    def test_togliere_le_firme_non_cancella_un_altro_testo_al_centro(self):
+    def test_la_casella_aggiunge_il_segnaposto_dopo_il_testo_del_centro(self):
         c = self._controllo(chiave="REGISTRO")
-        self.modello.getByName("ppCenter").Text = "Pagina [PAGINA]"
+        self.modello.getByName("ppCenter").Text = "Centro"
+        self.modello.getByName("cbFirme").State = 1
+        c.firme_cambiate()
+        self.assertEqual(self.modello.getByName("ppCenter").Text, "Centro [FIRME]")
         self.modello.getByName("cbFirme").State = 0
         c.firme_cambiate()
-        self.assertEqual(self.modello.getByName("ppCenter").Text, "Pagina [PAGINA]")
+        self.assertEqual(self.modello.getByName("ppCenter").Text, "Centro")
 
-    def test_casella_firme_inattiva_per_i_documenti_senza_firme(self):
-        c = self._controllo(chiave="COMPUTO")
+    def test_togliere_le_firme_le_toglie_da_tutte_le_parti(self):
+        c = self._controllo(chiave="LIBRETTO")
+        self.modello.getByName("ppSx").Text = "sx [FIRME]"
+        self.modello.getByName("ppDx").Text = "[FIRME] dx"
+        self.modello.getByName("cbFirme").State = 0
+        c.firme_cambiate()
+        self.assertEqual([self.modello.getByName(k).Text for k in ("ppSx", "ppCenter", "ppDx")],
+                         ["sx", "", " dx"])
+
+    def test_casella_se_il_segnaposto_c_e_gia_non_lo_raddoppia(self):
+        c = self._controllo(chiave="REGISTRO")
+        self.modello.getByName("ppSx").Text = "x [FIRME]"
         self.modello.getByName("cbFirme").State = 1
         c.firme_cambiate()
         self.assertEqual(self.modello.getByName("ppCenter").Text, "")
 
-    def test_scrivere_firme_a_mano_spunta_la_casella(self):
+    def test_scrivere_il_segnaposto_a_mano_spunta_la_casella(self):
         c = self._controllo(chiave="REGISTRO")
-        self.modello.getByName("ppCenter").Text = " [FIRME] "
-        c.centro_cambiato()
+        self.modello.getByName("ppDx").Text = "Pagina [PAGINA] [FIRME]"
+        c.piede_cambiato()
         self.assertEqual(self.modello.getByName("cbFirme").State, 1)
-        self.modello.getByName("ppCenter").Text = "altro"
-        c.centro_cambiato()
+        self.modello.getByName("ppDx").Text = "Pagina [PAGINA]"
+        c.piede_cambiato()
         self.assertEqual(self.modello.getByName("cbFirme").State, 0)
+
+    def test_casella_inattiva_per_i_documenti_senza_firme(self):
+        c = self._controllo(chiave="COMPUTO")
+        self.assertFalse(self.modello.getByName("cbFirme").Enabled)
+        self.modello.getByName("cbFirme").State = 1
+        c.firme_cambiate()
+        self.assertEqual(self.modello.getByName("ppCenter").Text, "")
+
+    def test_il_segnaposto_si_puo_scrivere_in_qualsiasi_documento(self):
+        c = self._controllo(chiave="COMPUTO")
+        self.modello.getByName("ppCenter").Text = "[FIRME]"
+        self.assertEqual(c.risultato()["COMPUTO"]["ppCenter"], "[FIRME]")
+
+    def test_ripristina_riporta_anche_le_firme_ai_predefiniti(self):
+        c = self._controllo(chiave="LIBRETTO")
+        self.modello.getByName("ppCenter").Text = ""
+        c.piede_cambiato()
+        self.assertEqual(self.modello.getByName("cbFirme").State, 0)
+        c.ripristina()
+        self.assertEqual(self.modello.getByName("cbFirme").State, 1)
+        self.assertEqual(self.modello.getByName("ppCenter").Text, "[FIRME]")
+
+    def test_la_casella_segue_il_documento_mostrato(self):
+        c = self._controllo(chiave="REGISTRO")
+        self.assertEqual(self.modello.getByName("cbFirme").State, 0)
+        c.cambia_documento(4)  # Libretto: firme predefinite
+        self.assertEqual(self.modello.getByName("cbFirme").State, 1)
+        c.cambia_documento(5)
+        self.assertEqual(self.modello.getByName("cbFirme").State, 0)
+
+    def test_il_risultato_salva_il_segnaposto(self):
+        c = self._controllo(chiave="REGISTRO")
+        self.modello.getByName("cbFirme").State = 1
+        c.firme_cambiate()
+        salvato = self.ns["aggiorna_impostazioni_documenti"]({}, c.risultato())
+        self.assertEqual(json.loads(salvato["documenti"]), {"REGISTRO": {"ppCenter": "[FIRME]"}})
 
     def test_indice_documento_non_valido_e_ignorato(self):
         c = self._controllo()
@@ -256,8 +307,8 @@ class TestDialogoReale(unittest.TestCase):
             LeenO_path=lambda: str(ROOT / "src/Ultimus.oxt"),
             log_errore=lambda contesto, exc=None, percorso=None: cls.errori.append((contesto, exc)))
         cls.ns = _carica(uno=uno, unohelper=unohelper, XActionListener=XActionListener,
-                         XItemListener=XItemListener, XTextListener=XTextListener,
-                         LeenoUtils=leeno_utils, Dialogs=SimpleNamespace(FileSelect=lambda **kw: None))
+                         XItemListener=XItemListener,
+                         XTextListener=XTextListener, LeenoUtils=leeno_utils, Dialogs=SimpleNamespace(FileSelect=lambda **kw: None))
         cls.url = uno.systemPathToFileUrl(str(XDL))
 
     def setUp(self):
@@ -281,6 +332,7 @@ class TestDialogoReale(unittest.TestCase):
         self.assertEqual(m.getByName("ppCenter").Text, "[FIRME]")
         self.assertEqual(m.getByName("cbFirme").State, 1)
         self.assertEqual(m.getByName("lblSegnaposto").Label, self.ns["_LEGENDA_SEGNAPOSTI"])
+        self.assertIn("[FIRME]", m.getByName("lblSegnaposto").Label)
         self.assertIn("[FIRME]", tuple(m.getByName("ppSx").StringItemList))
         self.assertIn("[SAL]", tuple(m.getByName("ppSx").StringItemList))
 
@@ -330,8 +382,12 @@ class TestDialogoReale(unittest.TestCase):
         oDlg.getControl("copertina").selectItem("B", True)
         ps = self.ns["_leggiImpostazioniStampa"](oDlg, {"fileCopertine": "x.ods"}, controllo)
         self.assertEqual(ps["copertina"], "B")
+        m.getByName("cbFirme").State = 0
+        ascolt.itemStateChanged(self._evento(oDlg, "cbFirme"))
+        ps = self.ns["_leggiImpostazioniStampa"](oDlg, {"fileCopertine": "x.ods"}, controllo)
         self.assertEqual(json.loads(ps["documenti"]),
-                         {"COMPUTO": {"intSx": "Ente di prova"}, "LIBRETTO": {"ppSx": "Libretto [FILE]"}})
+                         {"COMPUTO": {"intSx": "Ente di prova"},
+                          "LIBRETTO": {"ppSx": "Libretto [FILE]", "ppCenter": ""}})
         for k, v in self.ns["_TESTI_PRECEDENTI"].items():
             self.assertEqual(ps[k], v)
 

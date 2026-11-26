@@ -35,9 +35,11 @@ def _impostazioni(ps):
     ns = carica(
         PYTHONPATH_DIR / "LeenoSettings.py",
         ("nome_file_documento", "valori_segnaposto", "sostituisci_segnaposto", "testi_predefiniti",
-         "_testi_personalizzati", "impostazioni_documento", "titolo_documento"),
-        ("_SEGNAPOSTI_S2", "_SEGNAPOSTI_LAVORO", "_FIRME_TESTO", "_DOCUMENTI_STAMPA",
-         "_DOCUMENTI_SENZA_TESTATA", "_TESTI_STAMPA", "_TESTI_PRECEDENTI"),
+         "_personalizzazioni", "impostazioni_documento", "senza_firme", "ha_firme", "piede_con_firme",
+         "titolo_documento"),
+        ("_SEGNAPOSTI_S2", "_SEGNAPOSTI_LAVORO", "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE",
+         "_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME", "_TESTI_STAMPA",
+         "_TESTI_PRECEDENTI"),
         {"os": os, "re": re, "json": json,
          "SheetUtils": SimpleNamespace(leggi_dato_etichettato=lettore["leggi_dato_etichettato"]),
          "loadJobSettings": lambda _doc: {}})
@@ -82,17 +84,42 @@ class TestTestata(unittest.TestCase):
             "ppSx": "realizzato con LeenO: Prova Esempio.ods", "ppCenter": "",
             "ppDx": "Pagina [PAGINA] di [PAGINE]"})
 
-    def test_libretto_conserva_la_riga_delle_firme_e_il_numero_del_sal(self):
+    def test_libretto_ha_le_firme_da_sole_in_fondo_e_il_numero_del_sal(self):
         t = self._testata("LIBRETTO", {"[OGGETTO]": "Libretto delle Misure", "[SAL]": "2"})
-        self.assertEqual(t["ppCenter"], FIRME)
+        self.assertEqual(t["ppCenter"], "\n" + FIRME)
         self.assertEqual(t["intDx"], "Libretto delle Misure n. 2")
+
+    def test_le_firme_non_si_sovrappongono_a_realizzato_con_e_alle_pagine(self):
+        t = self._testata("LIBRETTO", {"[OGGETTO]": "Libretto delle Misure", "[SAL]": "2"})
+        # tutte e tre le parti hanno due righe: testo sulla prima, firme sulla seconda del centro
+        self.assertEqual(t["ppSx"], "realizzato con LeenO: Prova Esempio.ods\n")
+        self.assertEqual(t["ppDx"], "Pagina [PAGINA] di [PAGINE]\n")
+        self.assertEqual(t["ppCenter"].split("\n"), ["", FIRME])
 
     def test_registro_senza_firme_salvo_scelta(self):
         docSubst = {"[OGGETTO]": "Registro di Contabilità", "[SAL]": "3"}
         self.assertEqual(self._testata("REGISTRO", docSubst)["ppCenter"], "")
         ps = {"documenti": json.dumps({"REGISTRO": {"ppCenter": "[FIRME]"}})}
         t = self._testata("REGISTRO", docSubst, ps)
-        self.assertEqual((t["ppCenter"], t["intDx"]), (FIRME, "Registro di Contabilità n. 3"))
+        self.assertEqual((t["ppCenter"], t["intDx"]), ("\n" + FIRME, "Registro di Contabilità n. 3"))
+
+    def test_libretto_senza_firme_se_l_utente_le_toglie(self):
+        ps = {"documenti": json.dumps({"LIBRETTO": {"ppCenter": ""}})}
+        t = self._testata("LIBRETTO", {"[OGGETTO]": "Libretto delle Misure"}, ps)
+        self.assertEqual(t["ppCenter"], "")
+
+    def test_firme_sotto_un_piede_su_piu_righe(self):
+        ps = {"documenti": json.dumps({"LIBRETTO": {"ppSx": "riga 1\nriga 2 [FILE]", "ppCenter": "Centro [FIRME]"}})}
+        t = self._testata("LIBRETTO", {"[OGGETTO]": "Libretto delle Misure"}, ps)
+        self.assertEqual(t["ppCenter"], "Centro\n\n" + FIRME)
+        self.assertEqual(t["ppCenter"].split("\n")[-1], FIRME)
+        self.assertEqual(len(t["ppSx"].split("\n")), 3)
+        self.assertEqual(len(t["ppDx"].split("\n")), 3)
+
+    def test_firme_da_sole_se_il_piede_e_vuoto(self):
+        ps = {"documenti": json.dumps({"LIBRETTO": {"ppSx": "", "ppDx": ""}})}  # centro: [FIRME]
+        t = self._testata("LIBRETTO", {"[OGGETTO]": "Libretto delle Misure"}, ps)
+        self.assertEqual((t["ppSx"], t["ppCenter"], t["ppDx"]), ("", FIRME, ""))
 
     def test_certificato_di_pagamento_senza_testata(self):
         t = self._testata("CDP", {"[OGGETTO]": "Certificato di Pagamento"}, {"intSx": "Mio ente"})
@@ -108,6 +135,18 @@ class TestTestata(unittest.TestCase):
         ps = {"intSx": "Ente: [COMMITTENTE]", "ppDx": "Pag. [PAGINA]"}
         t = self._testata("COMPUTO", {"[OGGETTO]": "Computo Metrico"}, ps)
         self.assertEqual((t["intSx"], t["ppDx"]), ("Ente: Comune di Matera", "Pag. [PAGINA]"))
+
+    def test_firme_scritte_in_un_documento_senza_firme_predefinite(self):
+        ps = {"documenti": json.dumps({"COMPUTO": {"ppSx": "realizzato con LeenO: [FILE] [FIRME]"}})}
+        t = self._testata("COMPUTO", {"[OGGETTO]": "Computo Metrico"}, ps)
+        self.assertEqual(t["ppSx"], "realizzato con LeenO: Prova Esempio.ods\n")
+        self.assertEqual(t["ppCenter"], "\n" + FIRME)
+
+    def test_il_segnaposto_firme_non_resta_nel_testo(self):
+        for chiave in ("COMPUTO", "VARIANTE", "ELENCO", "ANALISI", "LIBRETTO", "REGISTRO", "SAL", "CDP"):
+            with self.subTest(chiave=chiave):
+                t = self._testata(chiave, {"[OGGETTO]": "x"})
+                self.assertNotIn("[FIRME]", "".join(t.values()))
 
     def test_pagina_e_pagine_restano_per_i_campi_numerici(self):
         t = self._testata("COMPUTO", {"[OGGETTO]": "x", "[PAGINE]": "9"})
@@ -165,7 +204,7 @@ class TestEsportazione(unittest.TestCase):
         self.assertTrue(esito)
         oDoc, fogli, dest, testata, cover, aree = self._argomenti_pdfexport()
         self.assertEqual(dest, os.path.join("c", "5-LibrettoMisure_SAL2.pdf"))
-        self.assertEqual(testata["ppCenter"], FIRME)
+        self.assertEqual(testata["ppCenter"], "\n" + FIRME)
         self.assertEqual(testata["intDx"], "Libretto delle Misure n. 2")
         self.assertEqual(aree, {"CONTABILITA": area})
         self.assertEqual(area.EndColumn, 11)

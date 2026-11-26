@@ -131,7 +131,10 @@ def prepareHeaderFooter(oDoc, docSubst, chiave):
     # la paginazione richiede passaggi in piu': restano segnaposto fino a SheetUtils.pdfExport
     for segnaposto in ('[PAGINA]', '[PAGINE]'):
         valori.pop(segnaposto, None)
-    return {psKey: LeenoSettings.sostituisci_segnaposto(psVal, valori) for psKey, psVal in testi.items()}
+    testata = {psKey: LeenoSettings.sostituisci_segnaposto(psVal, valori) for psKey, psVal in testi.items()}
+    # [FIRME] nel piè di pagina: la riga delle firme va da sola in fondo, senza sovrapporsi al resto
+    testata.update(LeenoSettings.piede_con_firme(testata))
+    return testata
 
 _DLG_ESPORTAZIONE_PDF = (
     'vnd.sun.star.script:UltimusFree2.DlgEsportazionePdf'

@@ -24,7 +24,7 @@
   <dlg:combobox dlg:style-id="0" dlg:id="ppCenter" dlg:tab-index="16" dlg:left="126" dlg:top="237" dlg:width="108" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
   <dlg:text dlg:style-id="0" dlg:id="lbl_ppDx" dlg:tab-index="17" dlg:left="244" dlg:top="226" dlg:width="108" dlg:height="10" dlg:value="~Destra:"/>
   <dlg:combobox dlg:style-id="0" dlg:id="ppDx" dlg:tab-index="18" dlg:left="244" dlg:top="237" dlg:width="108" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="cbFirme" dlg:tab-index="19" dlg:left="8" dlg:top="256" dlg:width="250" dlg:height="12" dlg:value="Riga delle ~firme al centro del piè di pagina"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="cbFirme" dlg:tab-index="19" dlg:left="8" dlg:top="256" dlg:width="250" dlg:height="12" dlg:value="Riga delle ~firme ([FIRME]) da sola in fondo al piè di pagina"/>
   <dlg:text dlg:style-id="0" dlg:id="lblSegnaposto" dlg:tab-index="20" dlg:left="8" dlg:top="272" dlg:width="344" dlg:height="20" dlg:value="" dlg:multiline="true"/>
   <dlg:fixedline dlg:style-id="0" dlg:id="linea" dlg:tab-index="21" dlg:left="8" dlg:top="296" dlg:width="344" dlg:height="4"/>
   <dlg:text dlg:style-id="0" dlg:id="lblFileCopertine" dlg:tab-index="22" dlg:left="8" dlg:top="308" dlg:width="68" dlg:height="12" dlg:value="Doc de~lle copertine:"/>

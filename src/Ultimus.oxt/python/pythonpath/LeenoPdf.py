@@ -172,6 +172,9 @@ def PdfDialog(es, listaSal=()):
     #     oModel.getByName(nome).ImageAlign = 0
 
     for key in _EXPORTSETTINGSITEMS:
+        # il dialogo installato puo' essere piu' vecchio del codice: un controllo assente non blocca
+        if not oModel.hasByName(key):
+            continue
         if key in _EXPORTSETTINGSCHECKS:
             oModel.getByName(key).State = 1 if es.get(key, _EXPORTCBDEFAULT.get(key, False)) else 0
         else:
@@ -206,6 +209,10 @@ def _leggiImpostazioniExport(oDlg, es):
     oModel = oDlg.getModel()
     res = {}
     for key in _EXPORTSETTINGSITEMS:
+        if not oModel.hasByName(key):
+            res[key] = es.get(key, _EXPORTNPDEFAULT.get(key, _EXPORTCBDEFAULT.get(key, False)
+                                                        if key in _EXPORTSETTINGSCHECKS else ''))
+            continue
         oItem = oModel.getByName(key)
         if not oItem.Enabled:
             res[key] = es.get(key, _EXPORTNPDEFAULT.get(key, _EXPORTCBDEFAULT.get(key, False) if key in _EXPORTSETTINGSCHECKS else ''))

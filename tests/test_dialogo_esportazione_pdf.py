@@ -59,6 +59,38 @@ class TestDialogoEsportazione(unittest.TestCase):
         self.assertLess(int(c["btnOk"].get(DLG + "top")) + int(c["btnOk"].get(DLG + "height")), altezza)
 
 
+class TestDialogoPiuVecchioDelCodice(unittest.TestCase):
+    """Dialogo installato senza la casella del fondo bianco: niente errore, valore predefinito."""
+
+    def setUp(self):
+        self.ns = {"LeenoUtils": MagicMock(), "Dialogs": MagicMock(), "os": __import__("os"),
+                   "_SfogliaCartella": MagicMock()}
+        carica(PYTHONPATH_DIR / "LeenoPdf.py", ("PdfDialog", "_leggiImpostazioniExport"),
+               ("_EXPORTSETTINGSITEMS", "_EXPORTSETTINGSCHECKS", "_EXPORTCBDEFAULT", "_EXPORTNPDEFAULT",
+                "_DLG_ESPORTAZIONE_PDF", "_DOCUMENTI_SAL"), self.ns)
+
+    def _dialogo(self):
+        oDlg = MagicMock()
+        oModel = oDlg.getModel.return_value
+        oModel.hasByName.side_effect = lambda nome: nome != "cbFondoBianco"
+        self.ns["LeenoUtils"].getComponentContext.return_value.ServiceManager.createInstance \
+            .return_value.createDialog.return_value = oDlg
+        return oDlg, oModel
+
+    def test_apertura_senza_la_casella(self):
+        oDlg, oModel = self._dialogo()
+        self.ns["PdfDialog"]({}, ())
+        richiesti = [c.args[0] for c in oModel.getByName.call_args_list]
+        self.assertNotIn("cbFondoBianco", richiesti)
+
+    def test_lettura_senza_la_casella_usa_il_predefinito(self):
+        oDlg, oModel = self._dialogo()
+        res = self.ns["_leggiImpostazioniExport"](oDlg, {})
+        self.assertIs(res["cbFondoBianco"], True)
+        res = self.ns["_leggiImpostazioniExport"](oDlg, {"cbFondoBianco": False})
+        self.assertIs(res["cbFondoBianco"], False)
+
+
 class TestCopiaDiStampa(unittest.TestCase):
     def test_il_documento_copia_non_viene_mostrato(self):
         sorgente = (PYTHONPATH_DIR / "SheetUtils.py").read_text(encoding="utf-8")

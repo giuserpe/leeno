@@ -256,7 +256,8 @@ def dialogo_gestione_decimali():
 
     try:
         oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgDecimali?language=Basic&location=application")
-    except:
+    except Exception as _exc:
+        LeenoUtils.log_errore("dialogo_gestione_decimali: createDialog", _exc)
         return
 
     cfg = LeenoConfig.Config()

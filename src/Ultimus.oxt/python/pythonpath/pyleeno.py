@@ -12239,6 +12239,11 @@ def cancella_annotazioni_categorie_voci(oSheet=None):
 
 @LeenoUtils.release_ram
 def MENU_debug():
+    import LeenoTheme
+    LeenoTheme.dialogo_gestione_decimali()
+    return
+    LeenoUtils.DocumentRefresh(True)
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName("Elenco Prezzi")
     

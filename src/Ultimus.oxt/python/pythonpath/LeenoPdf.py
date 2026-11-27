@@ -15,6 +15,7 @@ import SheetUtils
 import Dialogs
 import LeenoSettings
 import LeenoPagina
+import LeenoSheetUtils
 import LeenoConfig
 import LeenoDialogs as DLG
 
@@ -36,7 +37,11 @@ _EXPORTSETTINGSITEMS = (
     'cbRegistro',
     'cbSAL',
     'cbCdP',
+    'cbFondoBianco',
 )
+
+# caselle attive se il valore manca (documenti o config precedenti)
+_EXPORTCBDEFAULT = {'cbFondoBianco': True}
 
 # numero di tavola proposto se il valore manca (documenti o config precedenti)
 _EXPORTNPDEFAULT = {'npLibretto': '5', 'npRegistro': '6', 'npSAL': '7', 'npCdP': '8'}
@@ -168,7 +173,7 @@ def PdfDialog(es, listaSal=()):
 
     for key in _EXPORTSETTINGSITEMS:
         if key in _EXPORTSETTINGSCHECKS:
-            oModel.getByName(key).State = 1 if es.get(key, False) else 0
+            oModel.getByName(key).State = 1 if es.get(key, _EXPORTCBDEFAULT.get(key, False)) else 0
         else:
             oModel.getByName(key).Text = str(es.get(key, _EXPORTNPDEFAULT.get(key, '')))
 
@@ -203,7 +208,7 @@ def _leggiImpostazioniExport(oDlg, es):
     for key in _EXPORTSETTINGSITEMS:
         oItem = oModel.getByName(key)
         if not oItem.Enabled:
-            res[key] = es.get(key, _EXPORTNPDEFAULT.get(key, False if key in _EXPORTSETTINGSCHECKS else ''))
+            res[key] = es.get(key, _EXPORTNPDEFAULT.get(key, _EXPORTCBDEFAULT.get(key, False) if key in _EXPORTSETTINGSCHECKS else ''))
         elif key in _EXPORTSETTINGSCHECKS:
             res[key] = bool(oItem.State)
         else:
@@ -220,11 +225,13 @@ def _pagineFoglio(oSheet, area=None):
     return len([b for b in breaks if area.StartRow < b.Position <= area.EndRow]) + 1
 
 
-def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=None, oDoc=None, nSal=None):
+def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=None, oDoc=None, nSal=None,
+                      fondoBianco=True):
     """
     Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder.
     chiave: documento (intestazione e piè di pagina da LeenoSettings); nSal: numero del SAL
     per gli atti contabili. Se area (CellRangeAddress) e' indicata esporta solo quell'area.
+    fondoBianco: sfondo bianco delle celle nel PDF (come MENU_sistema_pagine), solo nella copia.
     """
 
     if oDoc is None:
@@ -246,29 +253,31 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
     # applicato agli stili della copia usa-e-getta; dati e titolo dal documento vivo
     ctx = LeenoPagina.contesto_stampa(oDoc, nSal, {'[NUMERO_DOCUMENTO]': str(nTavola)})
 
-    def applicaStili(nDocPdf, nomiStili):
+    def preparaCopia(nDocPdf, nomiStili):
         pageStyles = nDocPdf.StyleFamilies.getByName('PageStyles')
         for nomeStile in nomiStili:
             LeenoPagina.applica_stile_pagina(oDoc, pageStyles.getByName(nomeStile),
                                              nomeFoglio, ctx, nDocPdf)
+        if fondoBianco:
+            LeenoSheetUtils.SbiancaCellePrintArea(nDocPdf.Sheets.getByName(nomeFoglio))
 
     docSubst['[PAGINE]'] = _pagineFoglio(oSheet, area)
     printAreas = {nomeFoglio: area} if area is not None else None
-    SheetUtils.pdfExport(oDoc, selection, destPath, applicaStili,
+    SheetUtils.pdfExport(oDoc, selection, destPath, preparaCopia,
                          lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst), printAreas)
 
 
-def PdfElencoPrezzi(destFolder, nTavola):
+def PdfElencoPrezzi(destFolder, nTavola, fondoBianco=True):
     """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
-    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'ELENCO')
+    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'ELENCO', fondoBianco=fondoBianco)
 
 
-def PdfComputoMetrico(destFolder, nTavola):
+def PdfComputoMetrico(destFolder, nTavola, fondoBianco=True):
     """Esporta in formato PDF il foglio COMPUTO nella cartella specificata."""
-    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'COMPUTO')
+    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'ComputoMetrico.pdf', 'COMPUTO', fondoBianco=fondoBianco)
 
 
-def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None):
+def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None, fondoBianco=True):
     """
     Esporta in formato PDF un atto contabile (tipo: Libretto, Registro, SAL, CdP)
     del SAL nSal. Ritorna False se l'area del SAL non esiste.
@@ -283,7 +292,7 @@ def PdfAttoSal(destFolder, nTavola, tipo, nSal, oDoc=None):
     area.EndColumn = colFine
     nomeFile, chiave = _DOCUMENTI_SAL[tipo]
     _esportaPdfFoglio(destFolder, nTavola, nomeFoglio,
-                      f'{nomeFile}_SAL{nSal}.pdf', chiave, area, oDoc, nSal)
+                      f'{nomeFile}_SAL{nSal}.pdf', chiave, area, oDoc, nSal, fondoBianco)
     return True
 
 
@@ -311,11 +320,11 @@ def MENU_Pdf():
 
     # controlla se selezionato elenco prezzi
     if es['cbElencoPrezzi']:
-        PdfElencoPrezzi(destFolder, es['npElencoPrezzi'])
+        PdfElencoPrezzi(destFolder, es['npElencoPrezzi'], es['cbFondoBianco'])
 
     # controlla se selezionato computo metrico
     if es['cbComputoMetrico']:
-        PdfComputoMetrico(destFolder, es['npComputoMetrico'])
+        PdfComputoMetrico(destFolder, es['npComputoMetrico'], es['cbFondoBianco'])
 
     # atti contabili del SAL scelto
     mancanti = []
@@ -323,7 +332,7 @@ def MENU_Pdf():
         for tipo in _DOCUMENTI_SAL:
             if es['cb' + tipo]:
                 try:
-                    if not PdfAttoSal(destFolder, es['np' + tipo], tipo, nSal, oDoc):
+                    if not PdfAttoSal(destFolder, es['np' + tipo], tipo, nSal, oDoc, es['cbFondoBianco']):
                         mancanti.append(LeenoSettings.titolo_documento(_DOCUMENTI_SAL[tipo][1]))
                 except Exception as _exc:
                     LeenoUtils.log_errore('MENU_Pdf: esportazione ' + tipo, _exc)

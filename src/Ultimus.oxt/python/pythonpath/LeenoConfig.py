@@ -186,6 +186,7 @@ class Config(Borg):
             ('ImpostazioniExport', 'cbRegistro', '(bool)False'),
             ('ImpostazioniExport', 'cbSAL', '(bool)False'),
             ('ImpostazioniExport', 'cbCdP', '(bool)False'),
+            ('ImpostazioniExport', 'cbFondoBianco', '(bool)True'),
 
             # In LeenoConfig.py -> _initDefaults()
             ('DecimaliStili', 'parti_uguali', '2'),

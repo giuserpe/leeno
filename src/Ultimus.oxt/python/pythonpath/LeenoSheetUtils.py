@@ -73,14 +73,19 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
 
 # ###############################################################
 
-def SbiancaCellePrintArea():
+def SbiancaCellePrintArea(oSheet=None):
     '''
-    area
+    Attribuisce lo sfondo bianco alle celle dell'area di stampa (grigio alle righe di categoria).
+    oSheet { UNO | None } : foglio da trattare; se None il foglio attivo del documento corrente.
+        Senza area di stampa non fa nulla.
     '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet is None:
+        oDoc = LeenoUtils.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
 
     oPrintArea = oSheet.getPrintAreas()
+    if len(oPrintArea) == 0:
+        return
 
     oSheet.getCellRangeByPosition(
         oPrintArea[0].StartColumn, oPrintArea[0].StartRow,

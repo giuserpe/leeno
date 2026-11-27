@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgEsportazionePdf" dlg:left="100" dlg:top="60" dlg:width="280" dlg:height="256" dlg:help-text="&amp;1454.DlgEsportazionePdf.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;1455.DlgEsportazionePdf.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgEsportazionePdf" dlg:left="100" dlg:top="60" dlg:width="280" dlg:height="272" dlg:help-text="&amp;1454.DlgEsportazionePdf.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;1455.DlgEsportazionePdf.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Segoe UI" dlg:font-height="9" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
@@ -27,10 +27,11 @@
   <dlg:checkbox dlg:style-id="0" dlg:id="cbSAL" dlg:tab-index="19" dlg:left="116" dlg:top="156" dlg:width="156" dlg:height="13" dlg:value="Stato di avanzamento lavori" dlg:checked="false"/>
   <dlg:textfield dlg:style-id="0" dlg:id="npCdP" dlg:tab-index="20" dlg:left="60" dlg:top="174" dlg:width="44" dlg:height="13" dlg:align="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="cbCdP" dlg:tab-index="21" dlg:left="116" dlg:top="174" dlg:width="156" dlg:height="13" dlg:value="Certificato di pagamento" dlg:checked="false"/>
-  <dlg:text dlg:style-id="0" dlg:id="lblCartella" dlg:tab-index="22" dlg:left="8" dlg:top="198" dlg:width="200" dlg:height="10" dlg:value="Cartella di ~destinazione:"/>
-  <dlg:textfield dlg:style-id="0" dlg:id="pathEdit" dlg:tab-index="23" dlg:left="8" dlg:top="209" dlg:width="250" dlg:height="13" dlg:readonly="true"/>
-  <dlg:button dlg:style-id="0" dlg:id="btnCartella" dlg:tab-index="24" dlg:left="260" dlg:top="209" dlg:width="14" dlg:height="13" dlg:help-text="Seleziona la cartella di destinazione" dlg:image-src="file:///J:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath/Icons-16x16/folder.png"/>
-  <dlg:button dlg:style-id="0" dlg:id="btnOk" dlg:tab-index="25" dlg:left="84" dlg:top="232" dlg:width="52" dlg:height="16" dlg:default="true" dlg:value="O~k" dlg:button-type="ok"/>
-  <dlg:button dlg:style-id="0" dlg:id="btnAnnulla" dlg:tab-index="26" dlg:left="144" dlg:top="232" dlg:width="52" dlg:height="16" dlg:value="~Annulla" dlg:button-type="cancel"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="cbFondoBianco" dlg:tab-index="22" dlg:left="60" dlg:top="192" dlg:width="212" dlg:height="13" dlg:help-text="Sfondo bianco delle celle nel PDF; il documento di lavoro non viene modificato" dlg:value="Fondo bianco delle celle" dlg:checked="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="lblCartella" dlg:tab-index="23" dlg:left="8" dlg:top="214" dlg:width="200" dlg:height="10" dlg:value="Cartella di ~destinazione:"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="pathEdit" dlg:tab-index="24" dlg:left="8" dlg:top="225" dlg:width="250" dlg:height="13" dlg:readonly="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnCartella" dlg:tab-index="25" dlg:left="260" dlg:top="225" dlg:width="14" dlg:height="13" dlg:help-text="Seleziona la cartella di destinazione" dlg:image-src="file:///J:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt/python/pythonpath/Icons-16x16/folder.png"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnOk" dlg:tab-index="26" dlg:left="84" dlg:top="248" dlg:width="52" dlg:height="16" dlg:default="true" dlg:value="O~k" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="btnAnnulla" dlg:tab-index="27" dlg:left="144" dlg:top="248" dlg:width="52" dlg:height="16" dlg:value="~Annulla" dlg:button-type="cancel"/>
  </dlg:bulletinboard>
 </dlg:window>

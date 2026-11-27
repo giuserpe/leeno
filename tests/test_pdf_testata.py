@@ -63,6 +63,7 @@ def _carica_pdf(ps=None, **extra):
         "LeenoContab": SimpleNamespace(AREE_SAL=aree),
         "LeenoUtils": SimpleNamespace(getDocument=MagicMock()),
         "LeenoPagina": MagicMock(),
+        "LeenoSheetUtils": MagicMock(),
         "SheetUtils": MagicMock(),
         "DocUtils": MagicMock(),
     }
@@ -186,6 +187,7 @@ class TestEsportazione(unittest.TestCase):
         self.ns["prepareCover"] = self.prepareCover  # sostituisce la funzione vera compilata dal sorgente
         self.ns["LeenoUtils"].getDocument.return_value = self.doc
         self.pagina = self.ns["LeenoPagina"]
+        self.sbianca = self.ns["LeenoSheetUtils"].SbiancaCellePrintArea
 
     def _argomenti_pdfexport(self):
         (args, _kw), = self.sheet_utils.pdfExport.call_args_list
@@ -219,6 +221,32 @@ class TestEsportazione(unittest.TestCase):
         self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "1"})
         ctx = self._applica_stili("PageStyle_COMPUTO_A4", "COMPUTO")
         self.assertIs(ctx, self.pagina.contesto_stampa.return_value)
+
+    def _prepara_copia(self):
+        preparaCopia = self._argomenti_pdfexport()[3]
+        copia = MagicMock()
+        preparaCopia(copia, ["PageStyle_COMPUTO_A4"])
+        return copia
+
+    def test_fondo_bianco_sulla_copia_per_il_foglio_esportato(self):
+        self.ns["PdfComputoMetrico"]("c", 1)
+        copia = self._prepara_copia()
+        copia.Sheets.getByName.assert_called_once_with("COMPUTO")
+        self.sbianca.assert_called_once_with(copia.Sheets.getByName.return_value)
+
+    def test_fondo_bianco_predefinito_attivo_e_disattivabile(self):
+        self.ns["PdfElencoPrezzi"]("c", 1, False)
+        self._prepara_copia()
+        self.sbianca.assert_not_called()
+        self.sheet_utils.pdfExport.reset_mock()
+        self.ns["PdfElencoPrezzi"]("c", 1)
+        self._prepara_copia()
+        self.sbianca.assert_called_once()
+
+    def test_fondo_bianco_negli_atti_contabili(self):
+        self._atto("SAL", 3, ["_SAL_3"])
+        self.ns["PdfAttoSal"]("c", 5, "SAL", 3, self.doc, False)
+        self.sbianca.assert_not_called()
 
     def test_pagine_nella_copertina_dopo_la_testata(self):
         self.ns["PdfComputoMetrico"]("c", 1)

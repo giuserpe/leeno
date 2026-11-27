@@ -269,11 +269,11 @@ def paginationFields(oDoc, oTxt):
         LeenoUtils.replacePatternWithField(oTxt, '[PAGINE]', oField)
 
 
-def pdfExport(oDoc, sheets, destPath, applicaStili=None, coverBuilder = None, printAreas=None):
+def pdfExport(oDoc, sheets, destPath, preparaCopia=None, coverBuilder = None, printAreas=None):
     '''
     export a sequence of spreadsheets to a PDF file
-    applicaStili(nDoc, nomiStili) applica agli stili di pagina dei fogli esportati, nel
-    documento di stampa, geometria, intestazione e piè di pagina (vedi LeenoPagina)
+    preparaCopia(nDoc, nomiStili) prepara il documento di stampa: stili di pagina dei fogli
+    esportati (geometria, intestazione e piè di pagina, vedi LeenoPagina) e aspetto delle celle
     coverBuilder(oDoc, nDoc) takes current document as parameter, the
     print document and adds a cover to the latter at end
     if coverBuilder is None, no cover will be added
@@ -281,8 +281,8 @@ def pdfExport(oDoc, sheets, destPath, applicaStili=None, coverBuilder = None, pr
     sostituisce quella del foglio sorgente e le sue righe vengono rese visibili
     nel solo documento temporaneo (es. un singolo SAL dentro un foglio condiviso)
     '''
-    # create an empty document
-    nDoc = DocUtils.createSheetDocument(Hidden=False)
+    # create an empty document, senza mostrarlo all'utente
+    nDoc = DocUtils.createSheetDocument(Hidden=True)
 
     # if there's a cover, copy it inside the new document
     # and fill it
@@ -344,8 +344,8 @@ def pdfExport(oDoc, sheets, destPath, applicaStili=None, coverBuilder = None, pr
 
     # geometria, intestazione e piè di pagina: solo sugli stili dei fogli esportati,
     # la copertina ha il suo stile e non si tocca
-    if applicaStili:
-        applicaStili(nDoc, sorted(styleSet))
+    if preparaCopia:
+        preparaCopia(nDoc, sorted(styleSet))
 
     # SelectPdfVersion=2 forza l'export in PDF/A-2b: formato idoneo alla
     # conservazione a norma degli atti contabili (registro, computo, ecc.),

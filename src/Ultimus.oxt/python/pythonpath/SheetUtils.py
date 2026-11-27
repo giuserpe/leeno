@@ -269,9 +269,11 @@ def paginationFields(oDoc, oTxt):
         LeenoUtils.replacePatternWithField(oTxt, '[PAGINE]', oField)
 
 
-def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None, printAreas=None):
+def pdfExport(oDoc, sheets, destPath, applicaStili=None, coverBuilder = None, printAreas=None):
     '''
     export a sequence of spreadsheets to a PDF file
+    applicaStili(nDoc, nomiStili) applica agli stili di pagina dei fogli esportati, nel
+    documento di stampa, geometria, intestazione e piè di pagina (vedi LeenoPagina)
     coverBuilder(oDoc, nDoc) takes current document as parameter, the
     print document and adds a cover to the latter at end
     if coverBuilder is None, no cover will be added
@@ -334,53 +336,16 @@ def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None, pr
         for i in range(annots.getCount() - 1, -1, -1):
             annots.removeByIndex(i)
 
-    # finally we must apply header/footers to page styles
-    # we do it ONLY on page styles which already have
-    # header or footer enabled. Other page styles (like cover ones)
-    # are left alone
-    if HeaderFooter:
-        pageStyles = nDoc.StyleFamilies.getByName('PageStyles')
-        styleSet = set()
-        for sheet in nDoc.Sheets:
-            styleSet.add(sheet.PageStyle)
-        for styleName in styleSet:
-            pageStyle = pageStyles.getByName(styleName)
+    # do NOT specity first page number
+    # otherwise numbering in header/footer will be wrong
+    nPageStyles = nDoc.StyleFamilies.getByName('PageStyles')
+    for nSheet in nDoc.Sheets:
+        nPageStyles.getByName(nSheet.PageStyle).FirstPageNumber = 0
 
-            # do NOT specity first page number
-            # otherwise numbering in header/footer will be wrong
-            pageStyle.FirstPageNumber = 0
-
-            if pageStyle.HeaderIsOn:
-                left = HeaderFooter.get('intSx', '')
-                center = HeaderFooter.get('intCenter', '')
-                right = HeaderFooter.get('intDx', '')
-                content = pageStyle.LeftPageHeaderContent
-                content.LeftText.String = left
-                content.CenterText.String = center
-                content.RightText.String = right
-
-                # do PAGINA and PAGINE fields management
-                paginationFields(nDoc, content.LeftText)
-                paginationFields(nDoc, content.CenterText)
-                paginationFields(nDoc, content.RightText)
-
-                pageStyle.RightPageHeaderContent = content
-
-            if pageStyle.FooterIsOn:
-                left = HeaderFooter.get('ppSx', '')
-                center = HeaderFooter.get('ppCenter', '')
-                right = HeaderFooter.get('ppDx', '')
-                content = pageStyle.LeftPageFooterContent
-                content.LeftText.String = left
-                content.CenterText.String = center
-                content.RightText.String = right
-
-                # do PAGINA and PAGINE fields management
-                paginationFields(nDoc, content.LeftText)
-                paginationFields(nDoc, content.CenterText)
-                paginationFields(nDoc, content.RightText)
-
-                pageStyle.RightPageFooterContent = content
+    # geometria, intestazione e piè di pagina: solo sugli stili dei fogli esportati,
+    # la copertina ha il suo stile e non si tocca
+    if applicaStili:
+        applicaStili(nDoc, sorted(styleSet))
 
     # SelectPdfVersion=2 forza l'export in PDF/A-2b: formato idoneo alla
     # conservazione a norma degli atti contabili (registro, computo, ecc.),

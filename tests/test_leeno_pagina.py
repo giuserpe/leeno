@@ -111,7 +111,19 @@ class TestApplicaStilePagina(unittest.TestCase):
     def test_valori_segnaposto_con_titolo_sal_e_nomefile(self):
         self._applica(SAL)
         self.ls.valori_segnaposto.assert_called_once_with(
-            "doc", documento="Titolo SAL", nSal="2", nomefile="prova.ods")
+            "doc", documento="Titolo SAL", nSal="2", nomefile="prova.ods", extra=None)
+
+    def test_segnaposto_extra_arrivano_ai_valori(self):
+        ctx = self.ns["contesto_stampa"]("doc", "2", {"[NUMERO_DOCUMENTO]": "7"})
+        self.ns["applica_stile_pagina"]("doc", _stile(SAL), "SAL", ctx)
+        self.assertEqual(self.ls.valori_segnaposto.call_args[1]["extra"], {"[NUMERO_DOCUMENTO]": "7"})
+
+    def test_copia_per_il_pdf_dati_dal_documento_vivo_campi_nella_copia(self):
+        stile = _stile(COMPUTO)
+        self.ns["applica_stile_pagina"]("vivo", stile, "COMPUTO", self.ctx, "copia")
+        self.assertEqual(self.ls.valori_segnaposto.call_args[0][0], "vivo")
+        self.assertEqual(self.ls.titolo_a_schermo.call_args[0][1], "vivo")
+        self.assertEqual(self.ls.scrivi_testata_stile.call_args[0][0], "copia")
 
 
 if __name__ == "__main__":

@@ -17,31 +17,38 @@ import LeenoSettings as LS
 _STILE_COPERTINA = 'Page_Style_COPERTINE'
 
 
-def contesto_stampa(oDoc, n_sal=None):
+def contesto_stampa(oDoc, n_sal=None, extra=None):
     '''
-    Dati calcolati una sola volta per tutti gli stili di pagina di `oDoc`.
+    Dati calcolati una sola volta per tutti gli stili di pagina da applicare.
 
-    n_sal { str | None } : [SAL] degli atti contabili, l'ultimo registrato.
+    oDoc { UNO } : documento di LeenO da cui leggere dati (S2, impostazioni, colonne visibili)
+    n_sal { str | None } : [SAL] degli atti contabili
+    extra { dict | None } : altri segnaposto {'[NOME]': valore}, es. [NUMERO_DOCUMENTO] del PDF
     '''
     printSettings, dummy = LS.loadPrintSettings(oDoc)
     return {
         'printSettings': printSettings,
         'nomefile': LS.nome_file_documento(oDoc),
         'n_sal': n_sal,
+        'extra': extra,
         'testate': {},  # documento -> (testata pronta, dimensione, con firme)
     }
 
 
-def applica_stile_pagina(oDoc, oStile, foglio_attivo, ctx):
+def applica_stile_pagina(oDoc, oStile, foglio_attivo, ctx, oDocStili=None):
     '''
     Applica allo stile di pagina `oStile` geometria e, per gli stili di LeenO che la
     portano, intestazione e piè di pagina.
 
-    oDoc { UNO } : documento a cui appartiene lo stile (vivo o copia)
+    oDoc { UNO } : documento di LeenO, sorgente dei dati
     oStile { UNO } : stile di pagina
+    oDocStili { UNO | None } : documento a cui appartiene lo stile, se e' una copia di oDoc
+        (esportazione PDF): i campi numerici di pagina vanno creati li'. Se None e' oDoc
     foglio_attivo { str } : nome del foglio attivo, che sceglie il documento degli stili condivisi
     ctx { dict } : risultato di contesto_stampa
     '''
+    if oDocStili is None:
+        oDocStili = oDoc
     nome = oStile.DisplayName
     senza_intestazione = nome in (_STILE_COPERTINA, LS.STILE_PAGINA_CDP)
     oStile.HeaderIsOn = not senza_intestazione
@@ -58,11 +65,12 @@ def applica_stile_pagina(oDoc, oStile, foglio_attivo, ctx):
     if chiave not in testate:
         testi = LS.impostazioni_documento(ctx['printSettings'], chiave)
         valori = LS.valori_segnaposto(oDoc, documento=LS.titolo_a_schermo(chiave, oDoc),
-                                      nSal=ctx['n_sal'], nomefile=ctx['nomefile'])
+                                      nSal=ctx['n_sal'], nomefile=ctx['nomefile'],
+                                      extra=ctx['extra'])
         testate[chiave] = (LS.testata_a_schermo(testi, valori, chiave),
                            LS.dimensione_testata(chiave), LS.ha_firme(testi))
     testata, htxt, con_firme = testate[chiave]
 
     if nome in LS.STILI_TESTATA:
         LS.set_page_borders(oStile)
-    LS.scrivi_testata_stile(oDoc, oStile, testata, htxt, con_firme)
+    LS.scrivi_testata_stile(oDocStili, oStile, testata, htxt, con_firme)

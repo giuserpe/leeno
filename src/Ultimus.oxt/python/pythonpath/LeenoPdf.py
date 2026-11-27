@@ -14,6 +14,7 @@ import DocUtils
 import SheetUtils
 import Dialogs
 import LeenoSettings
+import LeenoPagina
 import LeenoConfig
 import LeenoDialogs as DLG
 
@@ -117,24 +118,6 @@ def prepareCover(oDoc, nDoc, docSubst):
     del cDoc
     return True
 
-def prepareHeaderFooter(oDoc, docSubst, chiave):
-    """
-    Prepara il dizionario di intestazione e piè di pagina del documento `chiave`
-    (vedi LeenoSettings._DOCUMENTI_STAMPA) sostituendo i segnaposto.
-    docSubst: segnaposto legati al documento prodotto ([OGGETTO], [NUMERO_DOCUMENTO], [SAL]).
-    [PAGINA] e [PAGINE] restano: diventano campi numerici in SheetUtils.pdfExport.
-    """
-    printSettings, dummy = LeenoSettings.loadPrintSettings(oDoc)
-    testi = LeenoSettings.impostazioni_documento(printSettings, chiave)
-    valori = LeenoSettings.valori_segnaposto(
-        oDoc, nomefile=LeenoSettings.nome_file_documento(oDoc), extra=docSubst)
-    # la paginazione richiede passaggi in piu': restano segnaposto fino a SheetUtils.pdfExport
-    for segnaposto in ('[PAGINA]', '[PAGINE]'):
-        valori.pop(segnaposto, None)
-    testata = {psKey: LeenoSettings.sostituisci_segnaposto(psVal, valori) for psKey, psVal in testi.items()}
-    # [FIRME] nel piè di pagina: la riga delle firme va da sola in fondo, senza sovrapporsi al resto
-    testata.update(LeenoSettings.piede_con_firme(testata))
-    return testata
 
 _DLG_ESPORTAZIONE_PDF = (
     'vnd.sun.star.script:UltimusFree2.DlgEsportazionePdf'
@@ -253,15 +236,25 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
     baseName = nDoc + '-' if nDoc else ''
     destPath = os.path.join(destFolder, baseName + nomeFile)
     selection = [oSheet, ]
+    # il titolo segue le colonne visibili del foglio, come a schermo
     docSubst = {
-        '[OGGETTO]': LeenoSettings.titolo_documento(chiave),
+        '[OGGETTO]': LeenoSettings.titolo_a_schermo(chiave, oDoc),
         '[NUMERO_DOCUMENTO]': str(nTavola),
         '[SAL]': '' if nSal is None else str(nSal),
     }
-    headerFooter = prepareHeaderFooter(oDoc, docSubst, chiave)
+    # intestazione, piè di pagina e geometria: stesso motore di MENU_sistema_pagine,
+    # applicato agli stili della copia usa-e-getta; dati e titolo dal documento vivo
+    ctx = LeenoPagina.contesto_stampa(oDoc, nSal, {'[NUMERO_DOCUMENTO]': str(nTavola)})
+
+    def applicaStili(nDocPdf, nomiStili):
+        pageStyles = nDocPdf.StyleFamilies.getByName('PageStyles')
+        for nomeStile in nomiStili:
+            LeenoPagina.applica_stile_pagina(oDoc, pageStyles.getByName(nomeStile),
+                                             nomeFoglio, ctx, nDocPdf)
+
     docSubst['[PAGINE]'] = _pagineFoglio(oSheet, area)
     printAreas = {nomeFoglio: area} if area is not None else None
-    SheetUtils.pdfExport(oDoc, selection, destPath, headerFooter,
+    SheetUtils.pdfExport(oDoc, selection, destPath, applicaStili,
                          lambda oDoc, nDoc: prepareCover(oDoc, nDoc, docSubst), printAreas)
 
 

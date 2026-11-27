@@ -36,10 +36,10 @@ def _impostazioni(ps):
         PYTHONPATH_DIR / "LeenoSettings.py",
         ("nome_file_documento", "valori_segnaposto", "sostituisci_segnaposto", "testi_predefiniti",
          "_personalizzazioni", "impostazioni_documento", "senza_firme", "ha_firme", "piede_con_firme",
-         "titolo_documento"),
+         "titolo_documento", "titolo_a_schermo", "testata_a_schermo"),
         ("_SEGNAPOSTI_S2", "_SEGNAPOSTI_LAVORO", "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE",
          "_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME", "_TESTI_STAMPA",
-         "_TESTI_PRECEDENTI"),
+         "_TESTI_PRECEDENTI", "_ATTI_CONTABILI", "_FOGLIO_DEL_DOCUMENTO"),
         {"os": os, "re": re, "json": json,
          "SheetUtils": SimpleNamespace(leggi_dato_etichettato=lettore["leggi_dato_etichettato"]),
          "loadJobSettings": lambda _doc: {}})
@@ -50,7 +50,8 @@ def _impostazioni(ps):
 def _documento():
     s2 = FoglioFinto(S2)
     return SimpleNamespace(
-        Sheets=SimpleNamespace(getByName=lambda nome: s2 if nome == "S2" else MagicMock(name=nome)),
+        Sheets=SimpleNamespace(getByName=lambda nome: s2 if nome == "S2" else MagicMock(name=nome),
+                               hasByName=lambda nome: nome == "S2"),
         getURL=lambda: "file:///W:/lavori/Prova%20Esempio.ods")
 
 
@@ -61,27 +62,37 @@ def _carica_pdf(ps=None, **extra):
         "LeenoSettings": _impostazioni(ps or {}),
         "LeenoContab": SimpleNamespace(AREE_SAL=aree),
         "LeenoUtils": SimpleNamespace(getDocument=MagicMock()),
+        "LeenoPagina": MagicMock(),
         "SheetUtils": MagicMock(),
         "DocUtils": MagicMock(),
     }
     ns.update(extra)
     return carica(
         PYTHONPATH_DIR / "LeenoPdf.py",
-        ("prepareCover", "prepareHeaderFooter", "_pagineFoglio", "_esportaPdfFoglio",
+        ("prepareCover", "_pagineFoglio", "_esportaPdfFoglio",
          "PdfElencoPrezzi", "PdfComputoMetrico", "PdfAttoSal"),
         ("_DOCUMENTI_SAL",), ns)
 
 
 class TestTestata(unittest.TestCase):
+    """Le stringhe che il motore (LeenoPagina) scrive negli stili, con le funzioni vere di LeenoSettings."""
+
     def _testata(self, chiave, docSubst, ps=None):
-        ns = _carica_pdf(ps)
-        return ns["prepareHeaderFooter"](_documento(), docSubst, chiave)
+        ls = _impostazioni(ps or {})
+        doc = _documento()
+        valori = ls.valori_segnaposto(
+            doc, documento=docSubst.get("[OGGETTO]", ""), nSal=docSubst.get("[SAL]") or None,
+            nomefile=ls.nome_file_documento(doc),
+            extra={k: v for k, v in docSubst.items() if k == "[NUMERO_DOCUMENTO]"})
+        testi = ls.impostazioni_documento(ls.loadPrintSettings(doc)[0], chiave)
+        return ls.testata_a_schermo(testi, valori, chiave)
 
     def test_computo_come_la_stampa_a_schermo(self):
         t = self._testata("COMPUTO", {"[OGGETTO]": "Computo Metrico", "[NUMERO_DOCUMENTO]": "1"})
         self.assertEqual(t, {
-            "intSx": "Committente: Comune di Matera", "intCenter": "Lavori di prova", "intDx": "Computo Metrico",
-            "ppSx": "realizzato con LeenO: Prova Esempio.ods", "ppCenter": "",
+            "intSx": "\n\nCommittente: Comune di Matera", "intCenter": "Lavori di prova\n\n",
+            "intDx": "\n\nComputo Metrico",
+            "ppSx": "\nrealizzato con LeenO: Prova Esempio.ods", "ppCenter": "",
             "ppDx": "Pagina [PAGINA] di [PAGINE]"})
 
     def test_libretto_ha_le_firme_da_sole_in_fondo_e_il_numero_del_sal(self):
@@ -129,18 +140,27 @@ class TestTestata(unittest.TestCase):
     def test_personalizzazione_del_documento(self):
         ps = {"documenti": json.dumps({"ELENCO": {"ppSx": "Tavola [NUMERO_DOCUMENTO] - [OGGETTO]"}})}
         t = self._testata("ELENCO", {"[OGGETTO]": "Elenco Prezzi", "[NUMERO_DOCUMENTO]": "2"}, ps)
-        self.assertEqual(t["ppSx"], "Tavola 2 - Elenco Prezzi")
+        self.assertEqual(t["ppSx"], "\nTavola 2 - Elenco Prezzi")
 
     def test_stringhe_comuni_della_versione_precedente_restano_valide(self):
         ps = {"intSx": "Ente: [COMMITTENTE]", "ppDx": "Pag. [PAGINA]"}
         t = self._testata("COMPUTO", {"[OGGETTO]": "Computo Metrico"}, ps)
-        self.assertEqual((t["intSx"], t["ppDx"]), ("Ente: Comune di Matera", "Pag. [PAGINA]"))
+        self.assertEqual((t["intSx"], t["ppDx"]), ("\n\nEnte: Comune di Matera", "Pag. [PAGINA]"))
 
     def test_firme_scritte_in_un_documento_senza_firme_predefinite(self):
         ps = {"documenti": json.dumps({"COMPUTO": {"ppSx": "realizzato con LeenO: [FILE] [FIRME]"}})}
         t = self._testata("COMPUTO", {"[OGGETTO]": "Computo Metrico"}, ps)
-        self.assertEqual(t["ppSx"], "realizzato con LeenO: Prova Esempio.ods\n")
-        self.assertEqual(t["ppCenter"], "\n" + FIRME)
+        self.assertEqual(t["ppSx"], "\nrealizzato con LeenO: Prova Esempio.ods\n")
+        # tre righe a sinistra (la prima vuota dell'impaginazione): le firme sulla terza del centro
+        self.assertEqual(t["ppCenter"], "\n\n" + FIRME)
+
+    def test_titoli_degli_altri_atti_contabili(self):
+        for chiave, oggetto, atteso in (
+                ("REGISTRO", "Registro di Contabilità", "Registro di Contabilità n. 4"),
+                ("SAL", "Stato di Avanzamento Lavori", "Stato di Avanzamento Lavori n. 4")):
+            with self.subTest(chiave=chiave):
+                t = self._testata(chiave, {"[OGGETTO]": oggetto, "[SAL]": "4"})
+                self.assertEqual(t["intDx"], atteso)
 
     def test_il_segnaposto_firme_non_resta_nel_testo(self):
         for chiave in ("COMPUTO", "VARIANTE", "ELENCO", "ANALISI", "LIBRETTO", "REGISTRO", "SAL", "CDP"):
@@ -158,30 +178,47 @@ class TestEsportazione(unittest.TestCase):
     def setUp(self):
         self.doc = _documento()
         self.foglio = SimpleNamespace(RowPageBreaks=[SimpleNamespace(Position=p) for p in (2, 50, 100, 150, 200)])
-        self.doc.Sheets = SimpleNamespace(getByName=lambda nome: self.foglio if nome != "S2" else FoglioFinto(S2))
+        self.doc.Sheets = SimpleNamespace(getByName=lambda nome: self.foglio if nome != "S2" else FoglioFinto(S2),
+                                          hasByName=lambda nome: nome == "S2")
         self.prepareCover = MagicMock()
         self.sheet_utils = MagicMock()
         self.ns = _carica_pdf(SheetUtils=self.sheet_utils)
         self.ns["prepareCover"] = self.prepareCover  # sostituisce la funzione vera compilata dal sorgente
         self.ns["LeenoUtils"].getDocument.return_value = self.doc
+        self.pagina = self.ns["LeenoPagina"]
 
     def _argomenti_pdfexport(self):
         (args, _kw), = self.sheet_utils.pdfExport.call_args_list
         return args
 
+    def _applica_stili(self, nome_stile, foglio):
+        """Esegue la funzione degli stili passata a pdfExport su una copia finta e ritorna (stile, copia)."""
+        applicaStili = self._argomenti_pdfexport()[3]
+        stile = SimpleNamespace(DisplayName=nome_stile)
+        copia = MagicMock()
+        copia.StyleFamilies.getByName.return_value.getByName.return_value = stile
+        applicaStili(copia, [nome_stile])
+        (args, _), = self.pagina.applica_stile_pagina.call_args_list
+        self.assertEqual(args[0], self.doc)
+        self.assertIs(args[1], stile)
+        self.assertEqual(args[2], foglio)
+        self.assertIs(args[4], copia)
+        return args[3]
+
     def test_elenco_prezzi(self):
         self.ns["PdfElencoPrezzi"](os.path.join("cartella", ""), 3)
-        oDoc, fogli, dest, testata, cover, aree = self._argomenti_pdfexport()
+        oDoc, fogli, dest, applicaStili, cover, aree = self._argomenti_pdfexport()
         self.assertEqual(dest, os.path.join("cartella", "3-ElencoPrezzi.pdf"))
         self.assertEqual(fogli, [self.foglio])
-        self.assertEqual(testata["intDx"], "Elenco Prezzi")
         self.assertIsNone(aree)
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "3"})
+        self._applica_stili("PageStyle_Elenco Prezzi", "Elenco Prezzi")
 
     def test_computo_metrico(self):
         self.ns["PdfComputoMetrico"]("c", 1)
-        testata = self._argomenti_pdfexport()[3]
-        self.assertEqual(testata["intDx"], "Computo Metrico")
-        self.assertEqual(testata["intCenter"], "Lavori di prova")
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "1"})
+        ctx = self._applica_stili("PageStyle_COMPUTO_A4", "COMPUTO")
+        self.assertIs(ctx, self.pagina.contesto_stampa.return_value)
 
     def test_pagine_nella_copertina_dopo_la_testata(self):
         self.ns["PdfComputoMetrico"]("c", 1)
@@ -202,25 +239,26 @@ class TestEsportazione(unittest.TestCase):
     def test_libretto_del_sal(self):
         esito, area = self._atto("Libretto", 2, ["_Lib_2"])
         self.assertTrue(esito)
-        oDoc, fogli, dest, testata, cover, aree = self._argomenti_pdfexport()
+        oDoc, fogli, dest, applicaStili, cover, aree = self._argomenti_pdfexport()
         self.assertEqual(dest, os.path.join("c", "5-LibrettoMisure_SAL2.pdf"))
-        self.assertEqual(testata["ppCenter"], "\n" + FIRME)
-        self.assertEqual(testata["intDx"], "Libretto delle Misure n. 2")
         self.assertEqual(aree, {"CONTABILITA": area})
         self.assertEqual(area.EndColumn, 11)
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, 2, {"[NUMERO_DOCUMENTO]": "5"})
+        self._applica_stili("Page_Style_Libretto_Misure2", "CONTABILITA")
 
     def test_altri_atti_contabili(self):
-        for tipo, prefisso, file, titolo, colonna in (
-                ("Registro", "_Reg_", "RegistroContabilita_SAL4.pdf", "Registro di Contabilità n. 4", 9),
-                ("SAL", "_SAL_", "SAL_SAL4.pdf", "Stato di Avanzamento Lavori n. 4", 5),
-                ("CdP", "_CdP_", "CertificatoPagamento_SAL4.pdf", "", 5)):
+        for tipo, prefisso, file, colonna in (
+                ("Registro", "_Reg_", "RegistroContabilita_SAL4.pdf", 9),
+                ("SAL", "_SAL_", "SAL_SAL4.pdf", 5),
+                ("CdP", "_CdP_", "CertificatoPagamento_SAL4.pdf", 5)):
             with self.subTest(tipo=tipo):
                 self.sheet_utils.pdfExport.reset_mock()
+                self.pagina.contesto_stampa.reset_mock()
                 esito, area = self._atto(tipo, 4, [prefisso + "4"])
                 self.assertTrue(esito)
                 args = self._argomenti_pdfexport()
                 self.assertEqual(args[2], os.path.join("c", "5-" + file))
-                self.assertEqual(args[3]["intDx"], titolo)
+                self.assertEqual(self.pagina.contesto_stampa.call_args[0][1], 4)
                 self.assertEqual(area.EndColumn, colonna)
 
     def test_area_del_sal_mancante(self):

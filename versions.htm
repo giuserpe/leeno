@@ -452,6 +452,17 @@
                     <tbody>
                         
             <tr>
+                <td>2026-11-27 10:38</td>
+                <td><a href="https://github.com/giuserpe/leeno/commit/85672965e3404713b6b1f935ffe7f5da1d5e4869" target="_blank" rel="noopener"><code>8567296</code></a></td>
+                <td class="commit-msg">feat(pagina): MENU_sistema_pagine applica la testata anche a Libretto, Registro e SAL
+
+Gli stili degli atti contabili ricevono le stringhe del loro documento, con [SAL] uguale all'ultimo
+SAL registrato, senza le righe vuote di impaginazione e senza cambiare le altezze degli stili: la
+paginazione delle aree dei SAL gia' emessi non peggiora (test su tutte le aree di LeenO_Esempio.ods:
+nessuna pagina con meno righe di prima). Libretto: firme da sole in fondo, come nel PDF.
+L'emissione del Registro (LeenoContab) e npagina non sono modificate.</td>
+            </tr>
+            <tr>
                 <td>2026-11-26 20:45</td>
                 <td><a href="https://github.com/giuserpe/leeno/commit/97f10772821ae0b8e523ac2fbd56dc2904d21c66" target="_blank" rel="noopener"><code>97f1077</code></a></td>
                 <td class="commit-msg">feat(version): update version to 3.26.0.187-TESTING-20261126</td>
@@ -469,11 +480,6 @@ la riga delle firme da sola in fondo, con una sola dimensione per tutto il piè 
 Ogni stile segue il proprio documento: Elenco Prezzi non prende piu' il titolo e la dimensione del
 foglio attivo; per lo stile condiviso conta il foglio attivo (Computo, Variante, Analisi) e per ogni
 altro foglio vale il Computo, non piu' il nome del foglio (prima 'CdP' finiva nell'intestazione).</td>
-            </tr>
-            <tr>
-                <td>2026-11-26 10:31</td>
-                <td><a href="https://github.com/giuserpe/leeno/commit/7456a04b1a73f1d7738ea7bd4f5823797aac60fa" target="_blank" rel="noopener"><code>7456a04</code></a></td>
-                <td class="commit-msg">feat(pagina): impostazioni di stampa per documento, [FIRME] da sole in fondo al piè di pagina</td>
             </tr>
                     </tbody>
                 </table>
@@ -497,8 +503,8 @@ altro foglio vale il Computo, non piu' il nome del foglio (prima 'CdP' finiva ne
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Generato automaticamente il 2026-11-26 22:20 UTC</p>
-                <p>Build Commit: <code>97f1077</code> — Server: GitHub Actions</p>
+                <p>Generato automaticamente il 2026-11-27 15:19 UTC</p>
+                <p>Build Commit: <code>8567296</code> — Server: GitHub Actions</p>
             </div>
         </div>
     </footer>

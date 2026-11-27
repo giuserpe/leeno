@@ -10864,6 +10864,8 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
     printSettings, dummy = LS.loadPrintSettings(oDoc)
     nomefile = LS.nome_file_documento(oDoc)
     testate = {}  # documento -> (testata pronta, dimensione, con firme)
+    ultimi_sal = LeenoContab.ultimo_sal()  # [SAL] degli atti contabili: l'ultimo registrato
+    n_sal = ultimi_sal[-1] if ultimi_sal else None
 
     # Cache della collezione stili: evita due getByName('PageStyles') per ogni iterazione
     oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
@@ -10883,17 +10885,18 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
         # margini, scala e centratura: definizione unica in LeenoSettings
         LS.set_page_margins(oAktPage)
 
-        if displayName in LS.STILI_TESTATA:
+        if displayName in LS.STILI_TESTATA or displayName in LS.STILI_ATTI_CONTABILI:
             chiave = LS.documento_dello_stile(displayName, oSheet.Name)
             if chiave not in testate:
                 testi = LS.impostazioni_documento(printSettings, chiave)
                 valori = LS.valori_segnaposto(oDoc, documento=LS.titolo_a_schermo(chiave, oDoc),
-                                              nomefile=nomefile)
+                                              nSal=n_sal, nomefile=nomefile)
                 testate[chiave] = (LS.testata_a_schermo(testi, valori, chiave),
                                    LS.dimensione_testata(chiave), LS.ha_firme(testi))
             testata, htxt, con_firme = testate[chiave]
 
-            LS.set_page_borders(oAktPage)
+            if displayName in LS.STILI_TESTATA:
+                LS.set_page_borders(oAktPage)
             LS.scrivi_testata_stile(oDoc, oAktPage, testata, htxt, con_firme)
 
         # if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':

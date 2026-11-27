@@ -32,7 +32,8 @@ FUNZIONI = ("testi_predefiniti", "_personalizzazioni", "impostazioni_documento",
             "piede_con_firme", "sostituisci_segnaposto", "titolo_documento", "documento_dello_stile",
             "dimensione_testata", "titolo_a_schermo", "testata_a_schermo", "scrivi_testata_stile")
 COSTANTI = ("_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_TESTI_STAMPA", "_TESTI_PRECEDENTI",
-            "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE", "STILI_TESTATA", "_FONT_TESTATA",
+            "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE", "STILI_TESTATA", "STILI_ATTI_CONTABILI",
+            "_ATTI_CONTABILI", "_FONT_TESTATA",
             "_HTXT_PREDEFINITO", "_HTXT_ANALISI", "_FOGLIO_DEL_DOCUMENTO")
 FIRME = "L'IMPRESA\t\t\t\t\t\tIL DIRETTORE DEI LAVORI    "
 
@@ -76,13 +77,23 @@ class TestDocumentoDelloStile(unittest.TestCase):
         for foglio in ("CdP", "S2", "QUADRO ECONOMICO", "CONTABILITA", "Elenco Prezzi", ""):
             self.assertEqual(self.doc("PageStyle_COMPUTO_A4", foglio), "COMPUTO", foglio)
 
-    def test_stile_analisi_e_altri_stili(self):
+    def test_stile_analisi(self):
         self.assertEqual(self.doc("PageStyle_Analisi di Prezzo", "COMPUTO"), "ANALISI")
-        for nome in ("Page_Style_Libretto_Misure2", "PageStyle_REGISTRO_A4", "PageStyle_SAL_A4", "Default"):
-            self.assertIsNone(self.doc(nome, "COMPUTO"))
+
+    def test_stili_degli_atti_contabili_non_dipendono_dal_foglio_attivo(self):
+        for stile, chiave in (("Page_Style_Libretto_Misure2", "LIBRETTO"), ("PageStyle_REGISTRO_A4", "REGISTRO"),
+                              ("PageStyle_SAL_A4", "SAL")):
+            for foglio in ("COMPUTO", "CONTABILITA", "Registro", "S2"):
+                self.assertEqual(self.doc(stile, foglio), chiave, (stile, foglio))
+        self.assertEqual(self.ns["STILI_ATTI_CONTABILI"], {"Page_Style_Libretto_Misure2", "PageStyle_REGISTRO_A4",
+                                                           "PageStyle_SAL_A4"})
+
+    def test_altri_stili_senza_testata(self):
+        for nome in ("Default", "Page_Style_COPERTINE", "PageStyle_CdP", ""):
+            self.assertIsNone(self.doc(nome, "COMPUTO"), nome)
 
     def test_ogni_stile_con_testata_ha_un_documento(self):
-        for stile in self.ns["STILI_TESTATA"]:
+        for stile in self.ns["STILI_TESTATA"] | self.ns["STILI_ATTI_CONTABILI"]:
             self.assertIn(self.doc(stile, "COMPUTO"), [c for c, _ in self.ns["_DOCUMENTI_STAMPA"]])
 
     def test_dimensione_del_testo(self):
@@ -151,6 +162,31 @@ class TestTestataAschermo(unittest.TestCase):
         self.assertEqual(t["intDx"], "\nAnalisi di Prezzo")
         self.assertEqual(t["intSx"], "\n\nCommittente: Comune di Matera")
 
+    def test_atti_contabili_senza_righe_vuote_per_non_alzare_intestazione_e_piede(self):
+        valori = dict(self.VALORI, **{"[OGGETTO]": "Libretto delle Misure", "[SAL]": "3"})
+        for chiave in ("LIBRETTO", "REGISTRO", "SAL"):
+            t = self.testata(self.pred(chiave), valori, chiave)
+            with self.subTest(chiave=chiave):
+                self.assertEqual(t["intSx"], "Committente: Comune di Matera")
+                self.assertEqual(t["intCenter"], "Lavori di prova")
+                self.assertEqual(t["intDx"], "Libretto delle Misure n. 3")
+                for parte in ("intSx", "intCenter", "intDx"):
+                    self.assertNotIn("\n", t[parte], parte)
+
+    def test_libretto_ha_le_firme_su_due_righe_per_parte(self):
+        valori = dict(self.VALORI, **{"[OGGETTO]": "Libretto delle Misure", "[SAL]": "3"})
+        t = self.testata(self.pred("LIBRETTO"), valori, "LIBRETTO")
+        self.assertEqual(t["ppSx"], "realizzato con LeenO: lavori.ods\n")
+        self.assertEqual(t["ppCenter"], "\n" + FIRME)
+        self.assertEqual(t["ppDx"], "Pagina [PAGINA] di [PAGINE]\n")
+
+    def test_registro_e_sal_senza_firme_e_con_il_piede_su_una_riga(self):
+        valori = dict(self.VALORI, **{"[SAL]": "3"})
+        for chiave in ("REGISTRO", "SAL"):
+            t = self.testata(self.pred(chiave), valori, chiave)
+            self.assertEqual((t["ppSx"], t["ppCenter"], t["ppDx"]),
+                             ("realizzato con LeenO: lavori.ods", "", "Pagina [PAGINA] di [PAGINE]"), chiave)
+
     def test_i_testi_personalizzati_seguono_le_stesse_regole(self):
         testi = dict(self.pred("ELENCO"), intSx="Ente: [COMMITTENTE]", ppDx="Foglio [PAGINA]")
         t = self.testata(testi, self.VALORI, "ELENCO")
@@ -192,7 +228,8 @@ class TestSorgenteDiSistemaPagine(unittest.TestCase):
         corpo = sorgente[inizio:fine]
         for atteso in ("LS.documento_dello_stile(", "LS.impostazioni_documento(", "LS.valori_segnaposto(",
                        "LS.titolo_a_schermo(", "LS.testata_a_schermo(", "LS.scrivi_testata_stile(",
-                       "LS.STILI_TESTATA", "LS.set_page_margins(", "LS.set_page_borders("):
+                       "LS.STILI_TESTATA", "LS.STILI_ATTI_CONTABILI", "LeenoContab.ultimo_sal()",
+                       "LS.set_page_margins(", "LS.set_page_borders("):
             self.assertIn(atteso, corpo)
         for vecchio in ("realizzato con LeenO", "Committente: ", "getCellRangeByName(\"C3\")",
                         "Incidenza MdO", "Liberation Sans Narrow"):
@@ -301,26 +338,29 @@ class TestTestataReale(unittest.TestCase):
         sheet.getCellRangeByName("C6").String = s2.get("c6", "Comune di Matera")
         return doc
 
-    def _applica(self, doc, foglio_attivo, ps=None, nomefile="lavori.ods"):
-        """Applica le nuove funzioni come fa MENU_sistema_pagine, per il foglio attivo dato."""
+    def _applica(self, doc, foglio_attivo, ps=None, nomefile="lavori.ods", n_sal="5", atti=False):
+        """
+        Applica le nuove funzioni come fa MENU_sistema_pagine, per il foglio attivo dato.
+        atti=True include gli stili degli atti contabili (Libretto, Registro, SAL).
+        """
         ns = self.ns
         ps = ps or {}
         stili = doc.StyleFamilies.getByName("PageStyles")
         for n in range(stili.Count):
             pagina = stili.getByIndex(n)
-            if pagina.DisplayName not in ns["STILI_TESTATA"]:
+            nome = pagina.DisplayName
+            if nome not in ns["STILI_TESTATA"] and not (atti and nome in ns["STILI_ATTI_CONTABILI"]):
                 continue
-            chiave = ns["documento_dello_stile"](pagina.DisplayName, foglio_attivo)
+            chiave = ns["documento_dello_stile"](nome, foglio_attivo)
             testi = ns["impostazioni_documento"](ps, chiave)
-            valori = SimpleNamespace  # segnaposto reali di S2, senza le impostazioni di lavoro
-            valori = self._valori(doc, ns["titolo_a_schermo"](chiave, doc), nomefile)
+            valori = self._valori(doc, ns["titolo_a_schermo"](chiave, doc), nomefile, n_sal)
             testata = ns["testata_a_schermo"](testi, valori, chiave)
             ns["scrivi_testata_stile"](doc, pagina, testata, ns["dimensione_testata"](chiave), ns["ha_firme"](testi))
 
-    def _valori(self, doc, titolo, nomefile):
+    def _valori(self, doc, titolo, nomefile, n_sal=""):
         s2 = doc.Sheets.getByName("S2")
         return {"[COMMITTENTE]": s2.getCellRangeByName("C6").String, "[PROGETTO]": s2.getCellRangeByName("C3").String,
-                "[OGGETTO]": titolo, "[FILE]": nomefile, "[SAL]": ""}
+                "[OGGETTO]": titolo, "[FILE]": nomefile, "[SAL]": n_sal}
 
     def test_computo_come_il_vecchio_codice(self):
         for visibile in (False, True):  # False: "Computo Metrico Estimativo", True: "Incidenza MdO"
@@ -348,6 +388,61 @@ class TestTestataReale(unittest.TestCase):
             self.assertEqual(pn[parte], pv[parte], "%s (%s)" % (parte, foglio_attivo))
         # il piè di pagina di destra prima restava il testo del template; ora e' "Pagina N di M"
         self.assertEqual(len(pn["ppDx"]), 1)
+
+    def test_gli_atti_contabili_ricevono_la_testata_del_loro_documento(self):
+        doc = self._doc()
+        self._applica(doc, "COMPUTO", atti=True, n_sal="5")
+        stili = doc.StyleFamilies.getByName("PageStyles")
+        attesi = (("Page_Style_Libretto_Misure2", "Libretto delle Misure", True),
+                  ("PageStyle_REGISTRO_A4", "Registro di Contabilità", False),
+                  ("PageStyle_SAL_A4", "Stato di Avanzamento Lavori", False))
+        for stile, titolo, firme in attesi:
+            with self.subTest(stile=stile):
+                pagina = stili.getByName(stile)
+                parti = _parti(pagina)
+                self.assertEqual([p[0] for p in parti["intSx"]], ["Committente: Comune di Matera"])
+                self.assertEqual([p[0] for p in parti["intCenter"]], ["Lavori di prova"])
+                self.assertEqual([p[0] for p in parti["intDx"]], [titolo + " n. 5"])
+                self.assertEqual([p[0] for p in parti["ppCenter"]], ["", FIRME] if firme else [""])
+                self.assertEqual(len(parti["ppSx"]), 2 if firme else 1)
+                self.assertEqual(len(parti["ppDx"]), 2 if firme else 1)
+
+    def test_senza_atti_gli_stili_contabili_restano_come_sono(self):
+        doc = self._doc()
+        prima = _parti(doc.StyleFamilies.getByName("PageStyles").getByName("Page_Style_Libretto_Misure2"))
+        self._applica(doc, "COMPUTO")
+        dopo = _parti(doc.StyleFamilies.getByName("PageStyles").getByName("Page_Style_Libretto_Misure2"))
+        self.assertEqual(dopo, prima)
+
+    def test_la_paginazione_degli_atti_gia_emessi_non_peggiora(self):
+        """
+        Le interruzioni di pagina di ogni area di SAL (Libretto, Registro, SAL) non devono
+        anticipare: una pagina che contiene meno righe di prima sfalserebbe i riempimenti.
+        """
+        prima, dopo = self._doc(), self._doc()
+        self._applica(dopo, "COMPUTO", atti=True, n_sal="5")
+        aree = (("CONTABILITA", "_Lib_", 11), ("Registro", "_Reg_", 9), ("SAL", "_SAL_", 5))
+        controllate = 0
+        for foglio, prefisso, colonna in aree:
+            nomi = [n for n in prima.NamedRanges.ElementNames if n.startswith(prefisso)]
+            for nome in nomi:
+                interruzioni = []
+                for doc in (prima, dopo):
+                    area = doc.NamedRanges.getByName(nome).ReferredCells.RangeAddress
+                    area.EndColumn = colonna
+                    sheet = doc.Sheets.getByName(foglio)
+                    sheet.PrintAreas = (area,)
+                    sheet.getCellRangeByPosition(area.StartColumn, area.StartRow, area.EndColumn,
+                                                 area.EndRow).Rows.IsVisible = True
+                    interruzioni.append([b.Position for b in sheet.RowPageBreaks
+                                         if area.StartRow <= b.Position <= area.EndRow + 1])
+                a, d = interruzioni
+                with self.subTest(area=nome):
+                    self.assertEqual(len(d), len(a), "numero di pagine")
+                    for prima_pos, dopo_pos in zip(a, d):
+                        self.assertGreaterEqual(dopo_pos, prima_pos, "pagina con meno righe di prima")
+                controllate += 1
+        self.assertGreaterEqual(controllate, 10)
 
     def test_il_numero_di_pagina_diventa_un_campo_nello_stile(self):
         doc = self._doc()

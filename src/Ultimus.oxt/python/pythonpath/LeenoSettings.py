@@ -327,10 +327,20 @@ STILI_TESTATA = frozenset((
     'PageStyle_Elenco Prezzi',
 ))
 
+# Stili degli atti contabili: stessa testata, ma senza le righe vuote di impaginazione, che
+# alzerebbero intestazione e piè di pagina e sposterebbero i salti pagina dei SAL gia' emessi.
+STILI_ATTI_CONTABILI = frozenset((
+    'Page_Style_Libretto_Misure2',
+    'PageStyle_REGISTRO_A4',
+    'PageStyle_SAL_A4',
+))
+
 # Font e dimensioni (punti) del testo di intestazione e piè di pagina.
 _FONT_TESTATA = 'Liberation Sans Narrow'
 _HTXT_PREDEFINITO = 8.0
 _HTXT_ANALISI = 9.0
+
+_ATTI_CONTABILI = ('LIBRETTO', 'REGISTRO', 'SAL', 'CDP')
 
 # Foglio del documento e foglio attivo che scelgono il documento dello stile condiviso.
 _FOGLIO_DEL_DOCUMENTO = {
@@ -345,7 +355,8 @@ def documento_dello_stile(nome_stile, foglio_attivo):
     """
     Chiave del documento (vedi _DOCUMENTI_STAMPA) di cui lo stile di pagina porta la testata.
     PageStyle_COMPUTO_A4 e' condiviso da COMPUTO, VARIANTE e Analisi di Prezzo: vale il foglio
-    attivo, e per ogni altro foglio il Computo. None se lo stile non e' tra STILI_TESTATA.
+    attivo, e per ogni altro foglio il Computo. None se lo stile non e' tra STILI_TESTATA o
+    STILI_ATTI_CONTABILI.
     """
     if nome_stile == 'PageStyle_Elenco Prezzi':
         return 'ELENCO'
@@ -353,7 +364,8 @@ def documento_dello_stile(nome_stile, foglio_attivo):
         return 'ANALISI'
     if nome_stile == 'PageStyle_COMPUTO_A4':
         return {'VARIANTE': 'VARIANTE', 'Analisi di Prezzo': 'ANALISI'}.get(foglio_attivo, 'COMPUTO')
-    return None
+    return {'Page_Style_Libretto_Misure2': 'LIBRETTO', 'PageStyle_REGISTRO_A4': 'REGISTRO',
+            'PageStyle_SAL_A4': 'SAL'}.get(nome_stile)
 
 
 def dimensione_testata(chiave):
@@ -388,16 +400,19 @@ def testata_a_schermo(testi, valori, chiave):
     """
     Le sei stringhe di intestazione e piè di pagina pronte per lo stile di pagina del documento.
 
-    Risolve i segnaposto con `valori` e aggiunge le righe vuote che dispongono il testo come
-    prima: committente e titolo in basso, oggetto in alto, "realizzato con" sotto. Poi
-    piede_con_firme porta la riga delle firme da sola in fondo, se c'e' [FIRME].
-    [PAGINA] e [PAGINE] restano: diventano campi numerici in scrivi_testata_stile.
+    Risolve i segnaposto con `valori`. Per Computo, Variante, Analisi ed Elenco Prezzi aggiunge
+    le righe vuote che dispongono il testo come prima: committente e titolo in basso, oggetto in
+    alto, "realizzato con" sotto. Gli atti contabili restano senza righe vuote: intestazione e
+    piè di pagina non devono diventare piu' alti. Poi piede_con_firme porta la riga delle firme
+    da sola in fondo, se c'e' [FIRME]. [PAGINA] e [PAGINE] restano: diventano campi numerici
+    in scrivi_testata_stile.
     """
     t = {k: sostituisci_segnaposto(v, valori) for k, v in testi.items()}
-    t['intSx'] = '\n\n' + t['intSx']
-    t['intCenter'] = t['intCenter'] + '\n\n'
-    t['intDx'] = ('\n' if chiave == 'ANALISI' else '\n\n') + t['intDx']
-    t['ppSx'] = '\n' + t['ppSx']
+    if chiave not in _ATTI_CONTABILI:
+        t['intSx'] = '\n\n' + t['intSx']
+        t['intCenter'] = t['intCenter'] + '\n\n'
+        t['intDx'] = ('\n' if chiave == 'ANALISI' else '\n\n') + t['intDx']
+        t['ppSx'] = '\n' + t['ppSx']
     t.update(piede_con_firme(t))
     return t
 

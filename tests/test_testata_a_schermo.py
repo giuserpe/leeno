@@ -226,14 +226,19 @@ class TestSorgenteDiSistemaPagine(unittest.TestCase):
         inizio = sorgente.index("def MENU_sistema_pagine")
         fine = sorgente.index("\ndef ", inizio + 10)
         corpo = sorgente[inizio:fine]
+        for atteso in ("LeenoPagina.contesto_stampa(", "LeenoPagina.applica_stile_pagina(",
+                       "LeenoContab.ultimo_sal()"):
+            self.assertIn(atteso, corpo)
+        motore = (PYTHONPATH_DIR / "LeenoPagina.py").read_text(encoding="utf-8")
         for atteso in ("LS.documento_dello_stile(", "LS.impostazioni_documento(", "LS.valori_segnaposto(",
                        "LS.titolo_a_schermo(", "LS.testata_a_schermo(", "LS.scrivi_testata_stile(",
-                       "LS.STILI_TESTATA", "LS.STILI_ATTI_CONTABILI", "LeenoContab.ultimo_sal()",
+                       "LS.STILI_TESTATA", "LS.STILI_ATTI_CONTABILI",
                        "LS.set_page_margins(", "LS.set_page_borders("):
-            self.assertIn(atteso, corpo)
+            self.assertIn(atteso, motore)
         for vecchio in ("realizzato con LeenO", "Committente: ", "getCellRangeByName(\"C3\")",
                         "Incidenza MdO", "Liberation Sans Narrow"):
             self.assertNotIn(vecchio, corpo)
+            self.assertNotIn(vecchio, motore)
 
 
 # --------------------------------------------------------------------------------------

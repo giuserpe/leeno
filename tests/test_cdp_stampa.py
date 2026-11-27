@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 PYTHONPATH_DIR = Path(__file__).resolve().parent.parent / "src/Ultimus.oxt/python/pythonpath"
 PYLEENO = PYTHONPATH_DIR / "pyleeno.py"
 SETTINGS = PYTHONPATH_DIR / "LeenoSettings.py"
+PAGINA = PYTHONPATH_DIR / "LeenoPagina.py"
 
 
 def _funzione(percorso, nome):
@@ -109,7 +110,7 @@ class TestStilePaginaCdP(unittest.TestCase):
         self.assertIn("'CdP': STILE_PAGINA_CDP", codice)
 
     def test_sistema_pagine_non_riattiva_intestazione_del_cdp(self):
-        fn = _funzione(PYLEENO, "MENU_sistema_pagine")
+        fn = _funzione(PAGINA, "applica_stile_pagina")
         esclusione = None
         for n in ast.walk(fn):
             if isinstance(n, ast.Assign) and any(

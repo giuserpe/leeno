@@ -78,6 +78,7 @@ import LeenoAnalysis
 import LeenoDialogs as DLG
 import LeenoEvents
 import LeenoSettings as LS
+import LeenoPagina
 import DocUtils
 # import Debug
 import LeenoVariante
@@ -10860,47 +10861,15 @@ Prima di procedere, vuoi il fondo bianco in tutte le celle?''')
         dettaglio_misure(0)
 
     # --- Dati calcolati una sola volta fuori dal loop ---
-    # stringhe di intestazione e piè di pagina per documento (dialogo Impostazioni stampa)
-    printSettings, dummy = LS.loadPrintSettings(oDoc)
-    nomefile = LS.nome_file_documento(oDoc)
-    testate = {}  # documento -> (testata pronta, dimensione, con firme)
     ultimi_sal = LeenoContab.ultimo_sal()  # [SAL] degli atti contabili: l'ultimo registrato
-    n_sal = ultimi_sal[-1] if ultimi_sal else None
+    ctx = LeenoPagina.contesto_stampa(oDoc, ultimi_sal[-1] if ultimi_sal else None)
 
     # Cache della collezione stili: evita due getByName('PageStyles') per ogni iterazione
     oPageStyles = oDoc.StyleFamilies.getByName('PageStyles')
     nCount = oPageStyles.Count
 
     for n in range(nCount):
-        oAktPage = oPageStyles.getByIndex(n)
-        displayName = oAktPage.DisplayName
-
-        # chi((n , displayName))
-        is_copertina = (displayName == 'Page_Style_COPERTINE')
-        # il CdP riporta nel corpo i propri dati: niente intestazione e piè di pagina comuni
-        senza_intestazione = is_copertina or displayName == LS.STILE_PAGINA_CDP
-        oAktPage.HeaderIsOn = not senza_intestazione
-        oAktPage.FooterIsOn = not senza_intestazione
-
-        # margini, scala e centratura: definizione unica in LeenoSettings
-        LS.set_page_margins(oAktPage)
-
-        if displayName in LS.STILI_TESTATA or displayName in LS.STILI_ATTI_CONTABILI:
-            chiave = LS.documento_dello_stile(displayName, oSheet.Name)
-            if chiave not in testate:
-                testi = LS.impostazioni_documento(printSettings, chiave)
-                valori = LS.valori_segnaposto(oDoc, documento=LS.titolo_a_schermo(chiave, oDoc),
-                                              nSal=n_sal, nomefile=nomefile)
-                testate[chiave] = (LS.testata_a_schermo(testi, valori, chiave),
-                                   LS.dimensione_testata(chiave), LS.ha_firme(testi))
-            testata, htxt, con_firme = testate[chiave]
-
-            if displayName in LS.STILI_TESTATA:
-                LS.set_page_borders(oAktPage)
-            LS.scrivi_testata_stile(oDoc, oAktPage, testata, htxt, con_firme)
-
-        # if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
-        #     scelta_viste()
+        LeenoPagina.applica_stile_pagina(oDoc, oPageStyles.getByIndex(n), oSheet.Name, ctx)
 
     # Attiva i salti di pagina DOPO aver configurato tutti gli stili:
     # il ridisegno avviene una volta sola, a elaborazione completata

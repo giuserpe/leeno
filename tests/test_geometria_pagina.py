@@ -133,9 +133,11 @@ class TestNessunaDuplicazione(unittest.TestCase):
         src = (PYTHONPATH_DIR / "pyleeno.py").read_text(encoding="utf-8")
         inizio = src.index("def MENU_sistema_pagine")
         corpo = src[inizio:inizio + 12000]
-        self.assertIn("LS.set_page_margins(", corpo)
-        self.assertIn("LS.set_page_borders(", corpo)
+        self.assertIn("LeenoPagina.applica_stile_pagina(", corpo)
         self.assertNotIn("PROPS_COMUNI", corpo)
+        motore = (PYTHONPATH_DIR / "LeenoPagina.py").read_text(encoding="utf-8")
+        self.assertIn("LS.set_page_margins(", motore)
+        self.assertIn("LS.set_page_borders(", motore)
 
 
 # --------------------------------------------------------------------------------------

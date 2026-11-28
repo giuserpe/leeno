@@ -37,7 +37,7 @@ class TestPredefiniti(unittest.TestCase):
     def test_elenco_dei_documenti(self):
         self.assertEqual(self.ns["_DOCUMENTI_STAMPA"], (
             ("COMPUTO", "Computo Metrico"), ("VARIANTE", "Variante"), ("ELENCO", "Elenco Prezzi"),
-            ("ANALISI", "Analisi di Prezzo"), ("LIBRETTO", "Libretto delle Misure"),
+            ("RAFFRONTO", "Quadro di Raffronto"), ("ANALISI", "Analisi di Prezzo"), ("LIBRETTO", "Libretto delle Misure"),
             ("REGISTRO", "Registro di Contabilità"), ("SAL", "Stato di Avanzamento Lavori"),
             ("CDP", "Certificato di Pagamento")))
 

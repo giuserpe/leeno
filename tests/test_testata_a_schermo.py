@@ -32,7 +32,7 @@ FUNZIONI = ("testi_predefiniti", "_personalizzazioni", "impostazioni_documento",
             "piede_con_firme", "sostituisci_segnaposto", "titolo_documento", "documento_dello_stile",
             "dimensione_testata", "titolo_a_schermo", "testata_a_schermo", "scrivi_testata_stile")
 COSTANTI = ("_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_TESTI_STAMPA", "_TESTI_PRECEDENTI",
-            "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE", "STILI_TESTATA", "STILI_ATTI_CONTABILI",
+            "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE", "STILE_PAGINA_RAFFRONTO", "STILI_TESTATA", "STILI_ATTI_CONTABILI",
             "_ATTI_CONTABILI", "_FONT_TESTATA",
             "_HTXT_PREDEFINITO", "_HTXT_ANALISI", "_FOGLIO_DEL_DOCUMENTO")
 FIRME = "L'IMPRESA\t\t\t\t\t\tIL DIRETTORE DEI LAVORI    "
@@ -87,6 +87,12 @@ class TestDocumentoDelloStile(unittest.TestCase):
                 self.assertEqual(self.doc(stile, foglio), chiave, (stile, foglio))
         self.assertEqual(self.ns["STILI_ATTI_CONTABILI"], {"Page_Style_Libretto_Misure2", "PageStyle_REGISTRO_A4",
                                                            "PageStyle_SAL_A4"})
+
+    def test_stile_del_quadro_di_raffronto(self):
+        for foglio in ("Elenco Prezzi", "COMPUTO"):
+            self.assertEqual(self.doc("PageStyle_Raffronto_A4", foglio), "RAFFRONTO")
+        self.assertIn("PageStyle_Raffronto_A4", self.ns["STILI_TESTATA"])
+        self.assertEqual(self.ns["dimensione_testata"]("RAFFRONTO"), 8.0)
 
     def test_altri_stili_senza_testata(self):
         for nome in ("Default", "Page_Style_COPERTINE", "PageStyle_CdP", ""):

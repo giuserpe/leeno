@@ -24,7 +24,7 @@ _EXPORTSETTINGSITEMS = (
     'npElencoPrezzi',
     'npComputoMetrico',
     'npCostiManodopera',
-    'npQuadroEconomico',
+    'npQuadroRaffronto',
     'npLibretto',
     'npRegistro',
     'npSAL',
@@ -32,7 +32,7 @@ _EXPORTSETTINGSITEMS = (
     'cbElencoPrezzi',
     'cbComputoMetrico',
     'cbCostiManodopera',
-    'cbQuadroEconomico',
+    'cbQuadroRaffronto',
     'cbLibretto',
     'cbRegistro',
     'cbSAL',
@@ -232,13 +232,29 @@ def _pagineFoglio(oSheet, area=None):
     return len([b for b in breaks if area.StartRow < b.Position <= area.EndRow]) + 1
 
 
+def _areaElenco(oSheet, raffronto):
+    """
+    Area di stampa dell'Elenco Prezzi (colonne fino alla J: quelle nascoste non si stampano) o,
+    con raffronto, del Quadro di Raffronto (fino alla Z). Righe come in set_area_stampa.
+    """
+    ultima = SheetUtils.getLastUsedRow(oSheet)
+    if raffronto:
+        colonna, riga = 25, max(2, ultima)
+    else:
+        colonna, riga = 9, max(2, ultima - 1)
+    return oSheet.getCellRangeByPosition(0, 2, colonna, riga).RangeAddress
+
+
 def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=None, oDoc=None, nSal=None,
-                      fondoBianco=True):
+                      fondoBianco=True, titolo=None, areaDa=None, stileOrizzontale=None):
     """
     Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder.
     chiave: documento (intestazione e piè di pagina da LeenoSettings); nSal: numero del SAL
     per gli atti contabili. Se area (CellRangeAddress) e' indicata esporta solo quell'area.
     fondoBianco: sfondo bianco delle celle nel PDF (come MENU_sistema_pagine), solo nella copia.
+    titolo: [OGGETTO] fisso (altrimenti segue le colonne visibili, come a schermo).
+    areaDa: funzione che dal foglio ricava l'area da esportare, in alternativa ad area.
+    stileOrizzontale: nome dello stile A4 orizzontale da creare nella copia per questo foglio.
     """
 
     if oDoc is None:
@@ -250,18 +266,25 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
     baseName = nDoc + '-' if nDoc else ''
     destPath = os.path.join(destFolder, baseName + nomeFile)
     selection = [oSheet, ]
-    # il titolo segue le colonne visibili del foglio, come a schermo
+    if areaDa is not None:
+        area = areaDa(oSheet)
+    # senza titolo fisso segue le colonne visibili del foglio, come a schermo
     docSubst = {
-        '[OGGETTO]': LeenoSettings.titolo_a_schermo(chiave, oDoc),
+        '[OGGETTO]': titolo or LeenoSettings.titolo_a_schermo(chiave, oDoc),
         '[NUMERO_DOCUMENTO]': str(nTavola),
         '[SAL]': '' if nSal is None else str(nSal),
     }
     # intestazione, piè di pagina e geometria: stesso motore di MENU_sistema_pagine,
     # applicato agli stili della copia usa-e-getta; dati e titolo dal documento vivo
-    ctx = LeenoPagina.contesto_stampa(oDoc, nSal, {'[NUMERO_DOCUMENTO]': str(nTavola)})
+    ctx = LeenoPagina.contesto_stampa(oDoc, nSal, {'[NUMERO_DOCUMENTO]': str(nTavola)}, titolo)
 
     def preparaCopia(nDocPdf, nomiStili):
         pageStyles = nDocPdf.StyleFamilies.getByName('PageStyles')
+        if stileOrizzontale:
+            nSheet = nDocPdf.Sheets.getByName(nomeFoglio)
+            SheetUtils.copiaStilePaginaOrizzontale(nDocPdf, nSheet.PageStyle, stileOrizzontale)
+            nSheet.PageStyle = stileOrizzontale
+            nomiStili = [stileOrizzontale]
         for nomeStile in nomiStili:
             LeenoPagina.applica_stile_pagina(oDoc, pageStyles.getByName(nomeStile),
                                              nomeFoglio, ctx, nDocPdf)
@@ -276,7 +299,17 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
 
 def PdfElencoPrezzi(destFolder, nTavola, fondoBianco=True):
     """Esporta in formato PDF il foglio Elenco Prezzi nella cartella specificata."""
-    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'ELENCO', fondoBianco=fondoBianco)
+    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'ElencoPrezzi.pdf', 'ELENCO',
+                      fondoBianco=fondoBianco, titolo=LeenoSettings.titolo_documento('ELENCO'),
+                      areaDa=lambda oSheet: _areaElenco(oSheet, False))
+
+
+def PdfQuadroRaffronto(destFolder, nTavola, fondoBianco=True):
+    """Esporta in formato PDF, A4 orizzontale, il Quadro di Raffronto: il foglio Elenco Prezzi fino alla colonna Z."""
+    _esportaPdfFoglio(destFolder, nTavola, 'Elenco Prezzi', 'QuadroRaffronto.pdf', 'RAFFRONTO',
+                      fondoBianco=fondoBianco, titolo=LeenoSettings.titolo_documento('RAFFRONTO'),
+                      areaDa=lambda oSheet: _areaElenco(oSheet, True),
+                      stileOrizzontale=LeenoSettings.STILE_PAGINA_RAFFRONTO)
 
 
 def PdfComputoMetrico(destFolder, nTavola, fondoBianco=True):
@@ -328,6 +361,10 @@ def MENU_Pdf():
     # controlla se selezionato elenco prezzi
     if es['cbElencoPrezzi']:
         PdfElencoPrezzi(destFolder, es['npElencoPrezzi'], es['cbFondoBianco'])
+
+    # controlla se selezionato il quadro di raffronto
+    if es['cbQuadroRaffronto']:
+        PdfQuadroRaffronto(destFolder, es['npQuadroRaffronto'], es['cbFondoBianco'])
 
     # controlla se selezionato computo metrico
     if es['cbComputoMetrico']:

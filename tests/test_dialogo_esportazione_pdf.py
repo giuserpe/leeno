@@ -100,6 +100,82 @@ class TestCopiaDiStampa(unittest.TestCase):
         self.assertNotIn("Hidden=False", corpo)
 
 
+class _StileFinto:
+    """Stile di pagina con proprieta' in un dizionario; alcune di sola lettura."""
+    _SOLA_LETTURA = ("DisplayName",)
+
+    def __init__(self, props):
+        object.__setattr__(self, "p", dict(props))
+        object.__setattr__(self, "PropertySetInfo",
+                           SimpleNamespace(Properties=[SimpleNamespace(Name=k) for k in props]))
+
+    def getPropertyValue(self, nome):
+        return self.p[nome]
+
+    def setPropertyValue(self, nome, valore):
+        if nome in self._SOLA_LETTURA:
+            raise RuntimeError(nome)
+        self.p[nome] = valore
+
+    def __getattr__(self, nome):
+        return self.p[nome]
+
+    def __setattr__(self, nome, valore):
+        self.p[nome] = valore
+
+
+class _FamigliaFinta:
+    def __init__(self, stili):
+        self.stili = dict(stili)
+
+    def getByName(self, nome):
+        return self.stili[nome]
+
+    def hasByName(self, nome):
+        return nome in self.stili
+
+    def insertByName(self, nome, stile):
+        self.stili[nome] = stile
+
+
+class TestStileOrizzontale(unittest.TestCase):
+    def _doc(self):
+        origine = _StileFinto({"DisplayName": "Elenco", "Width": 21000, "Height": 29700, "IsLandscape": False,
+                               "LeftMargin": 1000, "PageScale": 100})
+        famiglia = _FamigliaFinta({"PageStyle_Elenco Prezzi": origine})
+        doc = MagicMock()
+        doc.StyleFamilies.getByName.return_value = famiglia
+        doc.createInstance.side_effect = lambda servizio: _StileFinto({})
+        return doc, famiglia, origine
+
+    def _copia(self, doc, nome="PageStyle_Raffronto_A4"):
+        ns = carica(PYTHONPATH_DIR / "SheetUtils.py", ("copiaStilePaginaOrizzontale",))
+        return ns["copiaStilePaginaOrizzontale"](doc, "PageStyle_Elenco Prezzi", nome)
+
+    def test_copia_in_orizzontale_scambiando_larghezza_e_altezza(self):
+        doc, famiglia, origine = self._doc()
+        nuovo = self._copia(doc)
+        self.assertIs(famiglia.getByName("PageStyle_Raffronto_A4"), nuovo)
+        self.assertEqual((nuovo.Width, nuovo.Height, nuovo.IsLandscape), (29700, 21000, True))
+        self.assertEqual((nuovo.LeftMargin, nuovo.PageScale), (1000, 100))
+
+    def test_lo_stile_di_origine_non_cambia(self):
+        doc, famiglia, origine = self._doc()
+        self._copia(doc)
+        self.assertEqual((origine.Width, origine.Height, origine.IsLandscape), (21000, 29700, False))
+
+    def test_proprieta_di_sola_lettura_non_bloccano(self):
+        doc, _, _ = self._doc()
+        self.assertNotIn("DisplayName", self._copia(doc).p)
+
+    def test_secondo_passaggio_aggiorna_lo_stile_esistente(self):
+        doc, famiglia, _ = self._doc()
+        primo = self._copia(doc)
+        secondo = self._copia(doc)
+        self.assertIs(primo, secondo)
+        self.assertEqual(doc.createInstance.call_count, 1)
+
+
 class _Intervallo:
     def __init__(self):
         self.CellBackColor = None

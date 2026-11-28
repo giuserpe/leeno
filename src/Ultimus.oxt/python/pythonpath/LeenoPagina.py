@@ -17,13 +17,14 @@ import LeenoSettings as LS
 _STILE_COPERTINA = 'Page_Style_COPERTINE'
 
 
-def contesto_stampa(oDoc, n_sal=None, extra=None):
+def contesto_stampa(oDoc, n_sal=None, extra=None, titolo=None):
     '''
     Dati calcolati una sola volta per tutti gli stili di pagina da applicare.
 
     oDoc { UNO } : documento di LeenO da cui leggere dati (S2, impostazioni, colonne visibili)
     n_sal { str | None } : [SAL] degli atti contabili
     extra { dict | None } : altri segnaposto {'[NOME]': valore}, es. [NUMERO_DOCUMENTO] del PDF
+    titolo { str | None } : [OGGETTO] fisso; se None segue le colonne visibili (titolo_a_schermo)
     '''
     printSettings, dummy = LS.loadPrintSettings(oDoc)
     return {
@@ -31,6 +32,7 @@ def contesto_stampa(oDoc, n_sal=None, extra=None):
         'nomefile': LS.nome_file_documento(oDoc),
         'n_sal': n_sal,
         'extra': extra,
+        'titolo': titolo,
         'testate': {},  # documento -> (testata pronta, dimensione, con firme)
     }
 
@@ -64,7 +66,7 @@ def applica_stile_pagina(oDoc, oStile, foglio_attivo, ctx, oDocStili=None):
     testate = ctx['testate']
     if chiave not in testate:
         testi = LS.impostazioni_documento(ctx['printSettings'], chiave)
-        valori = LS.valori_segnaposto(oDoc, documento=LS.titolo_a_schermo(chiave, oDoc),
+        valori = LS.valori_segnaposto(oDoc, documento=ctx['titolo'] or LS.titolo_a_schermo(chiave, oDoc),
                                       nSal=ctx['n_sal'], nomefile=ctx['nomefile'],
                                       extra=ctx['extra'])
         testate[chiave] = (LS.testata_a_schermo(testi, valori, chiave),

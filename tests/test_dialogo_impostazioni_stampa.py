@@ -114,7 +114,7 @@ class TestLogicaDialogo(unittest.TestCase):
     def test_le_modifiche_restano_al_cambio_documento(self):
         c = self._controllo()
         self.modello.getByName("intSx").Text = "Ente di prova"
-        c.cambia_documento(4)  # Libretto delle Misure
+        c.cambia_documento(5)  # Libretto delle Misure
         self.assertEqual(self.modello.getByName("intSx").Text, self.pred("LIBRETTO")["intSx"])
         c.cambia_documento(0)
         self.assertEqual(self.modello.getByName("intSx").Text, "Ente di prova")
@@ -139,7 +139,7 @@ class TestLogicaDialogo(unittest.TestCase):
 
     def test_certificato_di_pagamento_senza_testata(self):
         c = self._controllo()
-        c.cambia_documento(7)
+        c.cambia_documento(8)
         for k in TESTI:
             self.assertFalse(self.modello.getByName(k).Enabled, k)
             self.assertFalse(self.modello.getByName("lbl_" + k).Enabled, k)
@@ -155,7 +155,7 @@ class TestLogicaDialogo(unittest.TestCase):
     def test_certificato_di_pagamento_ignora_il_testo_dei_campi_disabilitati(self):
         c = self._controllo()
         self.modello.getByName("intSx").Text = "residuo"
-        c.cambia_documento(7)
+        c.cambia_documento(8)
         self.assertEqual(c.risultato()["CDP"], dict.fromkeys(TESTI, ""))
         c.ripristina()  # non fa nulla
         self.assertEqual(c.risultato()["CDP"], dict.fromkeys(TESTI, ""))
@@ -229,9 +229,9 @@ class TestLogicaDialogo(unittest.TestCase):
     def test_la_casella_segue_il_documento_mostrato(self):
         c = self._controllo(chiave="REGISTRO")
         self.assertEqual(self.modello.getByName("cbFirme").State, 0)
-        c.cambia_documento(4)  # Libretto: firme predefinite
+        c.cambia_documento(5)  # Libretto: firme predefinite
         self.assertEqual(self.modello.getByName("cbFirme").State, 1)
-        c.cambia_documento(5)
+        c.cambia_documento(6)
         self.assertEqual(self.modello.getByName("cbFirme").State, 0)
 
     def test_il_risultato_salva_il_segnaposto(self):
@@ -328,7 +328,7 @@ class TestDialogoReale(unittest.TestCase):
         m = oDlg.getModel()
         self.assertEqual(tuple(m.getByName("docSel").StringItemList),
                          tuple(t for _, t in self.ns["_DOCUMENTI_STAMPA"]))
-        self.assertEqual(m.getByName("docSel").SelectedItems, (4,))
+        self.assertEqual(m.getByName("docSel").SelectedItems, (5,))
         self.assertEqual(m.getByName("ppCenter").Text, "[FIRME]")
         self.assertEqual(m.getByName("cbFirme").State, 1)
         self.assertEqual(m.getByName("lblSegnaposto").Label, self.ns["_LEGENDA_SEGNAPOSTI"])
@@ -340,7 +340,7 @@ class TestDialogoReale(unittest.TestCase):
         oDlg, ascolt, _ = self._dialogo()
         m = oDlg.getModel()
         m.getByName("intSx").Text = "Ente"
-        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=5))  # Registro
+        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=6))  # Registro
         self.assertEqual(m.getByName("intDx").Text, "[OGGETTO] n. [SAL]")
         ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=0))
         self.assertEqual(m.getByName("intSx").Text, "Ente")
@@ -368,7 +368,7 @@ class TestDialogoReale(unittest.TestCase):
     def test_certificato_di_pagamento_disabilita_i_campi(self):
         oDlg, ascolt, _ = self._dialogo()
         m = oDlg.getModel()
-        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=7))
+        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=8))
         self.assertFalse(m.getByName("intSx").Enabled)
         self.assertFalse(m.getByName("btnPredefiniti").Enabled)
         self.assertEqual(m.getByName("lblSegnaposto").Label, self.ns["_NOTA_SENZA_TESTATA"])
@@ -377,7 +377,7 @@ class TestDialogoReale(unittest.TestCase):
         oDlg, ascolt, controllo = self._dialogo(ps={"fileCopertine": "", "copertina": ""}, covers=("A", "B"))
         m = oDlg.getModel()
         m.getByName("intSx").Text = "Ente di prova"
-        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=4))
+        ascolt.itemStateChanged(self._evento(oDlg, "docSel", Selected=5))
         m.getByName("ppSx").Text = "Libretto [FILE]"
         oDlg.getControl("copertina").selectItem("B", True)
         ps = self.ns["_leggiImpostazioniStampa"](oDlg, {"fileCopertine": "x.ods"}, controllo)

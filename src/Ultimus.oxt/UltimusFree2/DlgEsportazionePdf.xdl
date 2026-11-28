@@ -14,8 +14,8 @@
   <dlg:checkbox dlg:style-id="0" dlg:id="cbComputoMetrico" dlg:tab-index="6" dlg:left="116" dlg:top="38" dlg:width="156" dlg:height="13" dlg:value="Computo metrico" dlg:checked="false"/>
   <dlg:textfield dlg:style-id="0" dlg:id="npCostiManodopera" dlg:tab-index="7" dlg:left="60" dlg:top="56" dlg:width="44" dlg:height="13" dlg:align="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="cbCostiManodopera" dlg:tab-index="8" dlg:left="116" dlg:top="56" dlg:width="156" dlg:height="13" dlg:value="Costi manodopera" dlg:checked="false"/>
-  <dlg:textfield dlg:style-id="0" dlg:id="npQuadroEconomico" dlg:tab-index="9" dlg:left="60" dlg:top="74" dlg:width="44" dlg:height="13" dlg:align="center"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="cbQuadroEconomico" dlg:tab-index="10" dlg:left="116" dlg:top="74" dlg:width="156" dlg:height="13" dlg:value="Quadro economico" dlg:checked="false"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="npQuadroRaffronto" dlg:tab-index="9" dlg:left="60" dlg:top="74" dlg:width="44" dlg:height="13" dlg:align="center"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="cbQuadroRaffronto" dlg:tab-index="10" dlg:left="116" dlg:top="74" dlg:width="156" dlg:height="13" dlg:value="Quadro di raffronto (A4 orizzontale)" dlg:checked="false"/>
   <dlg:fixedline dlg:style-id="0" dlg:id="lineaSal" dlg:tab-index="11" dlg:left="60" dlg:top="95" dlg:width="212" dlg:height="4"/>
   <dlg:text dlg:style-id="0" dlg:id="lblSal" dlg:tab-index="12" dlg:left="60" dlg:top="104" dlg:width="92" dlg:height="12" dlg:value="Atti contabili, ~SAL n.:"/>
   <dlg:menulist dlg:style-id="0" dlg:id="listSal" dlg:tab-index="13" dlg:left="156" dlg:top="102" dlg:width="44" dlg:height="13" dlg:spin="true" dlg:linecount="10"/>

@@ -118,6 +118,12 @@ class TestApplicaStilePagina(unittest.TestCase):
         self.ns["applica_stile_pagina"]("doc", _stile(SAL), "SAL", ctx)
         self.assertEqual(self.ls.valori_segnaposto.call_args[1]["extra"], {"[NUMERO_DOCUMENTO]": "7"})
 
+    def test_titolo_fisso_del_contesto_prevale_su_quello_a_schermo(self):
+        ctx = self.ns["contesto_stampa"]("doc", None, None, "Elenco Prezzi")
+        self.ns["applica_stile_pagina"]("doc", _stile(COMPUTO), "COMPUTO", ctx)
+        self.assertEqual(self.ls.valori_segnaposto.call_args[1]["documento"], "Elenco Prezzi")
+        self.ls.titolo_a_schermo.assert_not_called()
+
     def test_copia_per_il_pdf_dati_dal_documento_vivo_campi_nella_copia(self):
         stile = _stile(COMPUTO)
         self.ns["applica_stile_pagina"]("vivo", stile, "COMPUTO", self.ctx, "copia")

@@ -158,6 +158,7 @@ _DOCUMENTI_STAMPA = (
     ('COMPUTO', 'Computo Metrico'),
     ('VARIANTE', 'Variante'),
     ('ELENCO', 'Elenco Prezzi'),
+    ('RAFFRONTO', 'Quadro di Raffronto'),
     ('ANALISI', 'Analisi di Prezzo'),
     ('LIBRETTO', 'Libretto delle Misure'),
     ('REGISTRO', 'Registro di Contabilità'),
@@ -320,11 +321,16 @@ def aggiorna_impostazioni_documenti(ps, valori):
 # Intestazione e piè di pagina a schermo (anteprima e stampa da Calc): MENU_sistema_pagine
 # ---------------------------------------------------------------------------------------
 
+# Stile A4 orizzontale del Quadro di Raffronto: lo crea l'esportazione PDF nella copia del
+# documento (e' lo stesso foglio Elenco Prezzi, stampato su un'area piu' larga).
+STILE_PAGINA_RAFFRONTO = 'PageStyle_Raffronto_A4'
+
 # Stili di pagina di cui MENU_sistema_pagine scrive intestazione e piè di pagina.
 STILI_TESTATA = frozenset((
     'PageStyle_Analisi di Prezzo',
     'PageStyle_COMPUTO_A4',
     'PageStyle_Elenco Prezzi',
+    STILE_PAGINA_RAFFRONTO,
 ))
 
 # Stili degli atti contabili: stessa testata, ma senza le righe vuote di impaginazione, che
@@ -360,6 +366,8 @@ def documento_dello_stile(nome_stile, foglio_attivo):
     """
     if nome_stile == 'PageStyle_Elenco Prezzi':
         return 'ELENCO'
+    if nome_stile == STILE_PAGINA_RAFFRONTO:
+        return 'RAFFRONTO'
     if nome_stile == 'PageStyle_Analisi di Prezzo':
         return 'ANALISI'
     if nome_stile == 'PageStyle_COMPUTO_A4':

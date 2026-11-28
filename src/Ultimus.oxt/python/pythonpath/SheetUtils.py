@@ -258,6 +258,31 @@ def copyPageStyle(nDoc, style):
     nPageStyle.setPropertyValue('PageScale', style.getPropertyValue('PageScale'))
 
 
+def copiaStilePaginaOrizzontale(oDoc, nomeOrigine, nomeNuovo):
+    '''
+    Crea in oDoc lo stile di pagina nomeNuovo: copia di nomeOrigine in orizzontale (larghezza e
+    altezza scambiate). Se nomeNuovo esiste ne aggiorna le proprieta'. Ritorna il nuovo stile.
+    '''
+    pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+    origine = pageStyles.getByName(nomeOrigine)
+    if pageStyles.hasByName(nomeNuovo):
+        nuovo = pageStyles.getByName(nomeNuovo)
+    else:
+        nuovo = oDoc.createInstance('com.sun.star.style.PageStyle')
+        pageStyles.insertByName(nomeNuovo, nuovo)
+    for prop in origine.PropertySetInfo.Properties:
+        try:
+            nuovo.setPropertyValue(prop.Name, origine.getPropertyValue(prop.Name))
+        except Exception:
+            pass  # proprieta' di sola lettura (nome, stile fisico...)
+    nuovo.setPropertyValue('PageScale', origine.getPropertyValue('PageScale'))
+    larghezza, altezza = origine.Width, origine.Height
+    nuovo.IsLandscape = True
+    nuovo.Width = max(larghezza, altezza)
+    nuovo.Height = min(larghezza, altezza)
+    return nuovo
+
+
 def paginationFields(oDoc, oTxt):
     """Sostituisce i segnaposto [PAGINA] e [PAGINE] nell'oggetto di testo con i relativi campi numerici."""
     if oTxt.String.find('[PAGINA]') >= 0:

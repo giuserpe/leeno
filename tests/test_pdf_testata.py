@@ -39,7 +39,8 @@ def _impostazioni(ps):
          "titolo_documento", "titolo_a_schermo", "testata_a_schermo"),
         ("_SEGNAPOSTI_S2", "_SEGNAPOSTI_LAVORO", "_FIRME_TESTO", "_SEGNAPOSTO_FIRME", "_PARTI_PIEDE",
          "_DOCUMENTI_STAMPA", "_DOCUMENTI_SENZA_TESTATA", "_DOCUMENTI_CON_FIRME", "_TESTI_STAMPA",
-         "_TESTI_PRECEDENTI", "_ATTI_CONTABILI", "_FOGLIO_DEL_DOCUMENTO"),
+         "_TESTI_PRECEDENTI", "_ATTI_CONTABILI", "_FOGLIO_DEL_DOCUMENTO",
+         "STILE_PAGINA_RAFFRONTO"),
         {"os": os, "re": re, "json": json,
          "SheetUtils": SimpleNamespace(leggi_dato_etichettato=lettore["leggi_dato_etichettato"]),
          "loadJobSettings": lambda _doc: {}})
@@ -70,9 +71,14 @@ def _carica_pdf(ps=None, **extra):
     ns.update(extra)
     return carica(
         PYTHONPATH_DIR / "LeenoPdf.py",
-        ("prepareCover", "_pagineFoglio", "_esportaPdfFoglio",
-         "PdfElencoPrezzi", "PdfComputoMetrico", "PdfAttoSal"),
+        ("prepareCover", "_pagineFoglio", "_esportaPdfFoglio", "_areaElenco",
+         "PdfElencoPrezzi", "PdfQuadroRaffronto", "PdfComputoMetrico", "PdfAttoSal"),
         ("_DOCUMENTI_SAL",), ns)
+
+
+def _area(colonna_iniziale, riga_iniziale, colonna_finale, riga_finale):
+    return SimpleNamespace(StartColumn=colonna_iniziale, StartRow=riga_iniziale,
+                           EndColumn=colonna_finale, EndRow=riga_finale)
 
 
 class TestTestata(unittest.TestCase):
@@ -178,11 +184,16 @@ class TestTestata(unittest.TestCase):
 class TestEsportazione(unittest.TestCase):
     def setUp(self):
         self.doc = _documento()
-        self.foglio = SimpleNamespace(RowPageBreaks=[SimpleNamespace(Position=p) for p in (2, 50, 100, 150, 200)])
+        self.range_chiesti = []
+        self.foglio = SimpleNamespace(
+            RowPageBreaks=[SimpleNamespace(Position=p) for p in (2, 50, 100, 150, 200)],
+            getCellRangeByPosition=lambda *a: (self.range_chiesti.append(a)
+                                               or SimpleNamespace(RangeAddress=_area(*a))))
         self.doc.Sheets = SimpleNamespace(getByName=lambda nome: self.foglio if nome != "S2" else FoglioFinto(S2),
                                           hasByName=lambda nome: nome == "S2")
         self.prepareCover = MagicMock()
         self.sheet_utils = MagicMock()
+        self.sheet_utils.getLastUsedRow.return_value = 120
         self.ns = _carica_pdf(SheetUtils=self.sheet_utils)
         self.ns["prepareCover"] = self.prepareCover  # sostituisce la funzione vera compilata dal sorgente
         self.ns["LeenoUtils"].getDocument.return_value = self.doc
@@ -212,13 +223,15 @@ class TestEsportazione(unittest.TestCase):
         oDoc, fogli, dest, applicaStili, cover, aree = self._argomenti_pdfexport()
         self.assertEqual(dest, os.path.join("cartella", "3-ElencoPrezzi.pdf"))
         self.assertEqual(fogli, [self.foglio])
-        self.assertIsNone(aree)
-        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "3"})
+        # colonne fino alla J (le nascoste non si stampano); righe come set_area_stampa: da 2 a ultima - 1
+        self.assertEqual(aree, {"Elenco Prezzi": _area(0, 2, 9, 119)})
+        self.pagina.contesto_stampa.assert_called_once_with(
+            self.doc, None, {"[NUMERO_DOCUMENTO]": "3"}, "Elenco Prezzi")
         self._applica_stili("PageStyle_Elenco Prezzi", "Elenco Prezzi")
 
     def test_computo_metrico(self):
         self.ns["PdfComputoMetrico"]("c", 1)
-        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "1"})
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "1"}, None)
         ctx = self._applica_stili("PageStyle_COMPUTO_A4", "COMPUTO")
         self.assertIs(ctx, self.pagina.contesto_stampa.return_value)
 
@@ -248,6 +261,31 @@ class TestEsportazione(unittest.TestCase):
         self.ns["PdfAttoSal"]("c", 5, "SAL", 3, self.doc, False)
         self.sbianca.assert_not_called()
 
+    def test_quadro_di_raffronto_a4_orizzontale_fino_alla_colonna_z(self):
+        self.ns["PdfQuadroRaffronto"](os.path.join("cartella", ""), 4)
+        oDoc, fogli, dest, preparaCopia, cover, aree = self._argomenti_pdfexport()
+        self.assertEqual(dest, os.path.join("cartella", "4-QuadroRaffronto.pdf"))
+        self.assertEqual(aree, {"Elenco Prezzi": _area(0, 2, 25, 120)})
+        self.pagina.contesto_stampa.assert_called_once_with(
+            self.doc, None, {"[NUMERO_DOCUMENTO]": "4"}, "Quadro di Raffronto")
+        copia = MagicMock()
+        foglio_copia = copia.Sheets.getByName.return_value
+        foglio_copia.PageStyle = "PageStyle_Elenco Prezzi"
+        preparaCopia(copia, ["PageStyle_Elenco Prezzi"])
+        # nuovo stile orizzontale ricavato da quello dell'Elenco e assegnato al foglio della copia
+        self.sheet_utils.copiaStilePaginaOrizzontale.assert_called_once_with(
+            copia, "PageStyle_Elenco Prezzi", "PageStyle_Raffronto_A4")
+        self.assertEqual(foglio_copia.PageStyle, "PageStyle_Raffronto_A4")
+        # il motore lavora solo sullo stile orizzontale, con il foglio Elenco Prezzi
+        (args, _), = self.pagina.applica_stile_pagina.call_args_list
+        self.assertEqual(args[2], "Elenco Prezzi")
+        self.assertIs(args[4], copia)
+
+    def test_elenco_prezzi_resta_verticale(self):
+        self.ns["PdfElencoPrezzi"]("c", 1)
+        self._argomenti_pdfexport()[3](MagicMock(), ["PageStyle_Elenco Prezzi"])
+        self.sheet_utils.copiaStilePaginaOrizzontale.assert_not_called()
+
     def test_pagine_nella_copertina_dopo_la_testata(self):
         self.ns["PdfComputoMetrico"]("c", 1)
         cover = self._argomenti_pdfexport()[4]
@@ -271,7 +309,7 @@ class TestEsportazione(unittest.TestCase):
         self.assertEqual(dest, os.path.join("c", "5-LibrettoMisure_SAL2.pdf"))
         self.assertEqual(aree, {"CONTABILITA": area})
         self.assertEqual(area.EndColumn, 11)
-        self.pagina.contesto_stampa.assert_called_once_with(self.doc, 2, {"[NUMERO_DOCUMENTO]": "5"})
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, 2, {"[NUMERO_DOCUMENTO]": "5"}, None)
         self._applica_stili("Page_Style_Libretto_Misure2", "CONTABILITA")
 
     def test_altri_atti_contabili(self):

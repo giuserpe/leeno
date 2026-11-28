@@ -71,9 +71,10 @@ def _carica_pdf(ps=None, **extra):
     ns.update(extra)
     return carica(
         PYTHONPATH_DIR / "LeenoPdf.py",
-        ("prepareCover", "_pagineFoglio", "_esportaPdfFoglio", "_areaElenco",
-         "PdfElencoPrezzi", "PdfQuadroRaffronto", "PdfComputoMetrico", "PdfAttoSal"),
-        ("_DOCUMENTI_SAL",), ns)
+        ("prepareCover", "_pagineFoglio", "_esportaPdfFoglio", "_areaElenco", "_areaAnalisi",
+         "PdfElencoPrezzi", "PdfQuadroRaffronto", "PdfComputoMetrico", "PdfVariante",
+         "PdfAnalisiPrezzo", "PdfCostiManodopera", "PdfAttoSal"),
+        ("_DOCUMENTI_SAL", "_COLONNE_MANODOPERA"), ns)
 
 
 def _area(colonna_iniziale, riga_iniziale, colonna_finale, riga_finale):
@@ -280,6 +281,42 @@ class TestEsportazione(unittest.TestCase):
         (args, _), = self.pagina.applica_stile_pagina.call_args_list
         self.assertEqual(args[2], "Elenco Prezzi")
         self.assertIs(args[4], copia)
+
+    def test_variante_segue_le_colonne_visibili(self):
+        self.ns["PdfVariante"](os.path.join("c", ""), 9)
+        oDoc, fogli, dest, preparaCopia, cover, aree = self._argomenti_pdfexport()
+        self.assertEqual(dest, os.path.join("c", "9-Variante.pdf"))
+        self.assertIsNone(aree)
+        self.pagina.contesto_stampa.assert_called_once_with(self.doc, None, {"[NUMERO_DOCUMENTO]": "9"}, None)
+        self._applica_stili("PageStyle_COMPUTO_A4", "VARIANTE")
+
+    def test_analisi_di_prezzo_area_a_g(self):
+        self.ns["PdfAnalisiPrezzo"](os.path.join("c", ""), 10)
+        oDoc, fogli, dest, preparaCopia, cover, aree = self._argomenti_pdfexport()
+        self.assertEqual(dest, os.path.join("c", "10-AnalisiPrezzo.pdf"))
+        self.assertEqual(aree, {"Analisi di Prezzo": _area(0, 1, 6, 119)})
+        self._applica_stili("PageStyle_Analisi di Prezzo", "Analisi di Prezzo")
+
+    def _colonne_della_copia(self, funzione):
+        self.ns[funzione]("c", 3)
+        copia = MagicMock()
+        colonne = {}
+        copia.Sheets.getByName.return_value.getColumns.return_value.getByIndex.side_effect = \
+            lambda i: colonne.setdefault(i, SimpleNamespace(IsVisible=False))
+        self._argomenti_pdfexport()[3](copia, ["PageStyle_COMPUTO_A4"])
+        return copia, colonne
+
+    def test_costi_manodopera_mostra_ad_ae_nella_copia(self):
+        copia, colonne = self._colonne_della_copia("PdfCostiManodopera")
+        copia.Sheets.getByName.assert_any_call("COMPUTO")
+        self.assertEqual({i: c.IsVisible for i, c in colonne.items()}, {29: True, 30: True})
+        self.pagina.contesto_stampa.assert_called_once_with(
+            self.doc, None, {"[NUMERO_DOCUMENTO]": "3"}, "Incidenza MdO")
+        self.assertTrue(self._argomenti_pdfexport()[2].endswith("3-CostiManodopera.pdf"))
+
+    def test_computo_non_cambia_la_visibilita_delle_colonne(self):
+        copia, colonne = self._colonne_della_copia("PdfComputoMetrico")
+        self.assertEqual(colonne, {})
 
     def test_elenco_prezzi_resta_verticale(self):
         self.ns["PdfElencoPrezzi"]("c", 1)

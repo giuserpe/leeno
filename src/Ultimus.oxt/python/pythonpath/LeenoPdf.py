@@ -25,6 +25,8 @@ _EXPORTSETTINGSITEMS = (
     'npComputoMetrico',
     'npCostiManodopera',
     'npQuadroRaffronto',
+    'npVariante',
+    'npAnalisi',
     'npLibretto',
     'npRegistro',
     'npSAL',
@@ -33,6 +35,8 @@ _EXPORTSETTINGSITEMS = (
     'cbComputoMetrico',
     'cbCostiManodopera',
     'cbQuadroRaffronto',
+    'cbVariante',
+    'cbAnalisi',
     'cbLibretto',
     'cbRegistro',
     'cbSAL',
@@ -44,7 +48,8 @@ _EXPORTSETTINGSITEMS = (
 _EXPORTCBDEFAULT = {'cbFondoBianco': True}
 
 # numero di tavola proposto se il valore manca (documenti o config precedenti)
-_EXPORTNPDEFAULT = {'npLibretto': '5', 'npRegistro': '6', 'npSAL': '7', 'npCdP': '8'}
+_EXPORTNPDEFAULT = {'npVariante': '9', 'npAnalisi': '10',
+                    'npLibretto': '5', 'npRegistro': '6', 'npSAL': '7', 'npCdP': '8'}
 
 # atti contabili esportabili per singolo SAL: (nome file, chiave del documento in LeenoSettings)
 _DOCUMENTI_SAL = {
@@ -245,8 +250,19 @@ def _areaElenco(oSheet, raffronto):
     return oSheet.getCellRangeByPosition(0, 2, colonna, riga).RangeAddress
 
 
+def _areaAnalisi(oSheet):
+    """Area di stampa di Analisi di Prezzo: colonne A:G, righe come in set_area_stampa."""
+    ultima = SheetUtils.getLastUsedRow(oSheet)
+    return oSheet.getCellRangeByPosition(0, 1, 6, max(1, ultima - 1)).RangeAddress
+
+
+# colonne AD-AE di COMPUTO e VARIANTE: incidenza della manodopera (indici 0-based)
+_COLONNE_MANODOPERA = (29, 30)
+
+
 def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=None, oDoc=None, nSal=None,
-                      fondoBianco=True, titolo=None, areaDa=None, stileOrizzontale=None):
+                      fondoBianco=True, titolo=None, areaDa=None, stileOrizzontale=None,
+                      colonneVisibili=()):
     """
     Esporta in formato PDF il foglio nomeFoglio nella cartella destFolder.
     chiave: documento (intestazione e piè di pagina da LeenoSettings); nSal: numero del SAL
@@ -255,6 +271,7 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
     titolo: [OGGETTO] fisso (altrimenti segue le colonne visibili, come a schermo).
     areaDa: funzione che dal foglio ricava l'area da esportare, in alternativa ad area.
     stileOrizzontale: nome dello stile A4 orizzontale da creare nella copia per questo foglio.
+    colonneVisibili: indici di colonna da mostrare nella copia, qualunque sia la vista del foglio vivo.
     """
 
     if oDoc is None:
@@ -288,6 +305,8 @@ def _esportaPdfFoglio(destFolder, nTavola, nomeFoglio, nomeFile, chiave, area=No
         for nomeStile in nomiStili:
             LeenoPagina.applica_stile_pagina(oDoc, pageStyles.getByName(nomeStile),
                                              nomeFoglio, ctx, nDocPdf)
+        for colonna in colonneVisibili:
+            nDocPdf.Sheets.getByName(nomeFoglio).getColumns().getByIndex(colonna).IsVisible = True
         if fondoBianco:
             LeenoSheetUtils.SbiancaCellePrintArea(nDocPdf.Sheets.getByName(nomeFoglio))
 
@@ -310,6 +329,24 @@ def PdfQuadroRaffronto(destFolder, nTavola, fondoBianco=True):
                       fondoBianco=fondoBianco, titolo=LeenoSettings.titolo_documento('RAFFRONTO'),
                       areaDa=lambda oSheet: _areaElenco(oSheet, True),
                       stileOrizzontale=LeenoSettings.STILE_PAGINA_RAFFRONTO)
+
+
+def PdfAnalisiPrezzo(destFolder, nTavola, fondoBianco=True):
+    """Esporta in formato PDF il foglio Analisi di Prezzo nella cartella specificata."""
+    _esportaPdfFoglio(destFolder, nTavola, 'Analisi di Prezzo', 'AnalisiPrezzo.pdf', 'ANALISI',
+                      fondoBianco=fondoBianco, areaDa=_areaAnalisi)
+
+
+def PdfVariante(destFolder, nTavola, fondoBianco=True):
+    """Esporta in formato PDF il foglio VARIANTE nella cartella specificata."""
+    _esportaPdfFoglio(destFolder, nTavola, 'VARIANTE', 'Variante.pdf', 'VARIANTE', fondoBianco=fondoBianco)
+
+
+def PdfCostiManodopera(destFolder, nTavola, fondoBianco=True):
+    """Esporta in formato PDF il COMPUTO con le colonne AD-AE (incidenza della manodopera) aperte."""
+    _esportaPdfFoglio(destFolder, nTavola, 'COMPUTO', 'CostiManodopera.pdf', 'COMPUTO',
+                      fondoBianco=fondoBianco, titolo='Incidenza MdO',  # come titolo_a_schermo con AE visibile
+                      colonneVisibili=_COLONNE_MANODOPERA)
 
 
 def PdfComputoMetrico(destFolder, nTavola, fondoBianco=True):
@@ -365,6 +402,21 @@ def MENU_Pdf():
     # controlla se selezionato il quadro di raffronto
     if es['cbQuadroRaffronto']:
         PdfQuadroRaffronto(destFolder, es['npQuadroRaffronto'], es['cbFondoBianco'])
+
+    # documenti ricavati dai fogli del computo; la Variante e' un foglio facoltativo
+    fogliAssenti = []
+    if es['cbCostiManodopera']:
+        PdfCostiManodopera(destFolder, es['npCostiManodopera'], es['cbFondoBianco'])
+    if es['cbVariante']:
+        if oDoc.Sheets.hasByName('VARIANTE'):
+            PdfVariante(destFolder, es['npVariante'], es['cbFondoBianco'])
+        else:
+            fogliAssenti.append('Variante')
+    if es['cbAnalisi']:
+        PdfAnalisiPrezzo(destFolder, es['npAnalisi'], es['cbFondoBianco'])
+    if fogliAssenti:
+        Dialogs.Exclamation(Title='Esportazione PDF',
+                            Text='Non esportati perché il foglio manca: ' + ', '.join(fogliAssenti) + '.')
 
     # controlla se selezionato computo metrico
     if es['cbComputoMetrico']:
